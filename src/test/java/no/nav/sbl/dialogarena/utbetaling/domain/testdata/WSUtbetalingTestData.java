@@ -1,330 +1,210 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.testdata;
 
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSPeriode;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static org.joda.time.DateTime.now;
 
 
 public class WSUtbetalingTestData {
 
-    public static final String KONTO_NR = "12345678900";
-    public static final String NAVN = "Kjell Olsen";
-    public static final String UTBETALT = "UTBETALT";
-    public static final String MOTTATT_KONTOFORER = "MOTTATT KONTOFØRER";
-    public static final String STATUS_KODE = "0018";
-    public static final Double BELOP = 1000.0;
-    public static final Double SKATTE_PROSENT = -0.35;
-    public static final String GRUNNBELOP = "Grunnbeløp";
-    public static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
-    public static final String FORSKUDDSTREKK = "Forskuddstrekk";
-    public static final String SKATT = "Skatt";
-    public static final String DAGPENGER = "Dagpenger";
-    public static final String FORELDREPENGER = "Foreldrepenger";
-    public static final String VALUTA = "NOK";
-    public static final DateTime forsteDesember = new DateTime(2013, 12, 1, 12, 0);
-    public static final String SPESIFIKASJON = "";
-    public static final String SPESIFIKASJON_1 = "Ekstra detaljinfo";
-    public static final String UFORE = "UFØRE";
-    public static final String TILLEGGSYTELSE = "TILLEGGSYTELSE";
-    public static final String TILLEGGSYTELSE_TILBAKEBETALT = "Tilleggsytelse tilbakebetalt";
-    public static final String YTELSE = "YTELSE";
-    private static String fnr;
-
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
-        fnr = fNr;
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
-        utbetalinger.add(createUtbetaling1());
-        utbetalinger.add(createUtbetaling2());
-        utbetalinger.add(createUtbetaling3());
-        utbetalinger.add(createUtbetaling4());
-        utbetalinger.add(createUtbetaling5());
-        utbetalinger.add(createUtbetaling6());
-        utbetalinger.add(createUtbetaling7());
-        utbetalinger.add(createUtbetaling8());
-        utbetalinger.add(createUtbetaling9());
-        utbetalinger.add(createUtbetaling10());
-        utbetalinger.add(createUtbetaling11());
+        utbetalinger.add(createOlaNordmannUtbetaling());
+        utbetalinger.add(createOsloKommuneUtbetaling());
+        utbetalinger.addAll(createKariNordmannUtbetaling());
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
         	public boolean evaluate(WSUtbetaling object) {
-        		return periode.contains(object.getUtbetalingDato());
+        		return periode.contains(object.getUtbetalingsdato());
         	}
         };
         return on(utbetalinger).filter(innenPeriode).collect();
     }
 
-    public static WSUtbetaling createUtbetaling1() {
-        double trekk = BELOP * SKATTE_PROSENT;
-        Double belop = BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 12d, 123.0, belop, SPESIFIKASJON_1);
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("Dette er bilagsmelding 1", "Sykepenger", posteringsdetalj1, posteringsdetalj2);
-        WSBilag bilag2 = createBilag("Dette er bilagsmelding 2", YTELSE, posteringsdetalj1, posteringsdetalj2);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(2 * (belop + trekk))
-                .withBruttobelop(2 * belop)
-                .withTrekk(2 * trekk)
-                .withValuta(VALUTA)
-                .withGironr(KONTO_NR)
-                .withStatusBeskrivelse(MOTTATT_KONTOFORER)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createTrygdetMottaker())
-                .withUtbetalingDato(forsteDesember)
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 1, 23, 0, 0), new DateTime(2011, 1, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1, bilag2);
-        return utbetaling;
+    private static List<WSUtbetaling> createKariNordmannUtbetaling() {
+        return asList(new WSUtbetaling()
+                        .withPosteringsdato(now().minusYears(1))
+                        .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                        .withUtbetalingNettobeloep(19724.00)
+                        .withUtbetalingsmelding("Alderspensjon med 3 mnd etterbetaling")
+                        .withYtelseListe(
+                                new WSYtelse()
+                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(1)).withTom(now().minusYears(1)))
+                                        .withYtelseskomponentListe(
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentBeloep(5200.00),
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentBeloep(1456.00))
+                                        .withSumYtelseskomponenter(6656.00)
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                        .withSumTrekk(-1500.00)
+                                        .withYtelseNettobeloep(5156.00)
+                                        .withBilagsnummer("10201436985"),
+                                new WSYtelse()
+                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1)).withTom(now().minusYears(1).plusMonths(1)))
+                                        .withYtelseskomponentListe(
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentBeloep(5200.00),
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentBeloep(1456.00))
+                                        .withSumYtelseskomponenter(6656.00)
+                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                        .withSumSkatt(-1500.00)
+                                        .withYtelseNettobeloep(5156.00)
+                                        .withBilagsnummer("10201436985"),
+                                new WSYtelse()
+                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
+                                        .withYtelseskomponentListe(
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentBeloep(5200.00),
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentBeloep(1456.00))
+                                        .withSumYtelseskomponenter(6656.00)
+                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                        .withSumSkatt(-1500.00)
+                                        .withYtelseNettobeloep(5156.00)
+                                        .withBilagsnummer("10201436985"),
+                                new WSYtelse()
+                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
+                                        .withYtelseskomponentListe(
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentBeloep(5200.00),
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentBeloep(1456.00))
+                                        .withSumYtelseskomponenter(6656.00)
+                                        .withTrekkListe(new WSTrekk().withTrekkstype(new WSTrekktyper().withValue("Kreditorsjekk")).withTrekkbeloep(-900.00).withKreditor("00911111111"))
+                                        .withSumTrekk(-900.00)
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                        .withSumSkatt(-1500.00)
+                                        .withYtelseNettobeloep(4256.00)
+                                        .withBilagsnummer("10201436985"))
+                        .withUtbetalingsdato(now().minusYears(1).plusMonths(2))
+                        .withForfallsdato(now().minusYears(1).plusMonths(2))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype(new WSBankkontotyper().withValue("Konto - Utland")))
+                        .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
+                        .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Utbetalt")),
+                new WSUtbetaling()
+                        .withPosteringsdato(now().minusYears(1).minusMonths(2))
+                        .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                        .withUtbetalingNettobeloep(4389.00)
+                        .withUtbetalingsmelding("Alderspensjon for desember")
+                        .withYtelseListe(
+                                new WSYtelse()
+                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(3)).withTom(now().minusYears(1).minusMonths(2)))
+                                        .withYtelseskomponentListe(
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentBeloep(5200.00),
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentBeloep(1456.00))
+                                        .withSumYtelseskomponenter(6656.00)
+                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
+                                        .withSumSkatt(-2267.00)
+                                        .withYtelseNettobeloep(4389.00)
+                                        .withBilagsnummer("10201445961"))
+                        .withForfallsdato(now().minusYears(1).minusMonths(2))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype(new WSBankkontotyper().withValue("Konto - Utland")))
+                        .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
+                        .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Under saksbehandling"))
+        );
     }
 
-    public static WSUtbetaling createUtbetaling2() {
-        double belop0 = BELOP * 1.5;
-        double trekk = SKATTE_PROSENT * BELOP * 2;
-        Double belop1 = BELOP;
-        Double belop4 = -BELOP;
-        Double belop2 = BELOP;
-        WSPosteringsdetaljer uforeDetalj1 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1d, 1.0, belop0, SPESIFIKASJON);
-        WSPosteringsdetaljer uforeDetalj2 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1d, 1.0, belop1, SPESIFIKASJON);
-        WSPosteringsdetaljer uforeDetalj3 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE_TILBAKEBETALT, 1d, 1.0, belop4, SPESIFIKASJON);
-        WSPosteringsdetaljer foreldrePengerDetalj = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1d, 1.0, belop2, SPESIFIKASJON);
-        WSPosteringsdetaljer skatt = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
-        WSBilag bilag2 = createBilag("bilag2", YTELSE, uforeDetalj1, uforeDetalj2, foreldrePengerDetalj, skatt, uforeDetalj3);
+    private static WSUtbetaling createOsloKommuneUtbetaling() {
+        return new WSUtbetaling()
+                .withPosteringsdato(now().minusDays(19))
+                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("00999999999").withNavn("Oslo kommune Utbetaling 4"))
+                .withUtbetalingNettobeloep(11833.00)
+                .withUtbetalingsmelding("Sykepenger")
+                .withYtelseListe(
+                        new WSYtelse()
+                        .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
+                        .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
+                        .withRefundertForOrg(new WSOrganisasjon().withAktoerId("00970236541").withNavn("Plan- og bygningsetaten"))
+                        .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(2).minusDays(15)).withTom(now().minusMonths(1).minusDays(15)))
+                        .withYtelseskomponentListe(
+                                new WSYtelseskomponent()
+                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Sykepenger, arbeidstakere"))
+                                        .withYtelseskomponentBeloep(15000.00))
+                        .withSumYtelseskomponenter(15000.00)
+                        .withTrekkListe(
+                                new WSTrekk()
+                                        .withTrekkstype(new WSTrekktyper().withValue("Kreditortrekk"))
+                                        .withTrekkbeloep(-900.00)
+                                        .withKreditor("00911111111"))
+                        .withSumTrekk(-900.00)
+                        .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
+                        .withSumSkatt(-2267.00)
+                        .withYtelseNettobeloep(11833.00)
+                        .withBilagsnummer("10201498456"))
+                .withUtbetalingsdato(now().minusMonths(2))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Konto - Norge")).withKontonummer("22222222222"))
+                .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
+                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Utbetalt"))
 
-        double brutto = belop0 + belop1 + belop2 + belop4;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(brutto + trekk)
-                .withBruttobelop(brutto)
-                .withTrekk(trekk)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createTrygdetMottaker())
-                .withUtbetalingDato(now().minusDays(7))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 2, 23, 0, 0), new DateTime(2011, 2, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag2);
-        return utbetaling;
+                ;
     }
 
-    public static WSUtbetaling createUtbetaling3() {
-        double trekk = SKATTE_PROSENT * BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1d, 1.0, BELOP, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1, posteringsdetalj3);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(BELOP + trekk)
-                .withBruttobelop(BELOP)
-                .withTrekk(trekk)
-                .withValuta(VALUTA)
-                .withStatusBeskrivelse(UTBETALT)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingDato(forsteDesember)
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
+    private static WSUtbetaling createOlaNordmannUtbetaling() {
+        return new WSUtbetaling()
+                        .withPosteringsdato(now().minusMonths(1))
+                        .withUtbetaltTil(new WSPerson()
+                                .withAktoerId("22222222222")
+                                .withNavn("Ola Nordmann Utbetaling 2"))
+                        .withUtbetalingNettobeloep(19152.75)
+                        .withUtbetalingsmelding("Utbetalt dagpenger")
+                        .withYtelseListe(
+                                new WSYtelse()
+                                        .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
+                                        .withRettighetshaver(new WSPerson()
+                                                .withAktoerId("22222222222")
+                                                .withNavn("Ola Nordmann Utbetaling 2"))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
+                                        .withYtelseskomponentListe(
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Dagpenger"))
+                                                        .withSatsbeloep(389.45)
+                                                        .withSatstype(new WSSatstyper().withValue("DAG"))
+                                                        .withSatsantall(55.0)
+                                                        .withYtelseskomponentBeloep(21419.75))
+                                        .withSumYtelseskomponenter(21419.75)
+                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
+                                        .withSumSkatt(-2267.00)
+                                        .withYtelseNettobeloep(19152.75)
+                                        .withBilagsnummer("30742-5731"))
+                        .withForfallsdato(now().minusMonths(1).plusDays(14))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Utbetalingskort - Norge")))
+                        .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Utbetalingskort"))
+                        .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Sendt kontofører, avventer forfallsdato"));
     }
-
-    public static WSUtbetaling createUtbetaling4() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, TILLEGGSYTELSE, 13d, 1.45, BELOP, "97 uker igjen av stønadsperioden");
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Feilretting", 13d, 1.45, -BELOP, SPESIFIKASJON);
-        WSBilag bilag2 = createBilag("bilag2", DAGPENGER, posteringsdetalj1, posteringsdetalj2);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(0.0)
-                .withBruttobelop(0.0)
-                .withTrekk(0.0)
-                .withValuta(VALUTA)
-                .withStatusBeskrivelse(UTBETALT)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingDato(now().minusDays(40))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 4, 23, 0, 0), new DateTime(2011, 4, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag2);
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling5() {
-        double trekk = SKATTE_PROSENT * BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 1d, 1.0, BELOP, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1, posteringsdetalj3);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(BELOP + trekk)
-                .withBruttobelop(BELOP)
-                .withTrekk(trekk)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withUtbetalingDato(now().minusDays(84))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 5, 23, 0, 0), new DateTime(2011, 5, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling6() {
-        double trekk = SKATTE_PROSENT * BELOP;
-        Double belop = BELOP * 3;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Løpende", 1d, 1.0, belop, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1, posteringsdetalj3);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(belop + trekk)
-                .withBruttobelop(belop)
-                .withTrekk(trekk)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withUtbetalingDato(now().minusMonths(5))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
-    }
-    public static WSUtbetaling createUtbetaling7() {
-        double trekk = SKATTE_PROSENT * BELOP;
-        Double belop = BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Løpende", 1d, 1.0, belop, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK, 1d, 1.0, trekk, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1, posteringsdetalj3);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(belop + trekk)
-                .withBruttobelop(belop)
-                .withTrekk(trekk)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withUtbetalingDato(now().minusMonths(5))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
-    }
-    public static WSUtbetaling createUtbetaling8() {
-        double utbetalt = BELOP * 0.7;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1d, 1.0, utbetalt, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(utbetalt)
-                .withTrekk(0.0)
-                .withBruttobelop(utbetalt)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withUtbetalingDato(now().minusMonths(5))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling9() {
-        double utbetalt = BELOP * 0.7;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1d, 1.0, utbetalt, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(utbetalt)
-                .withTrekk(0.0)
-                .withGironr("44442255555")
-                .withBruttobelop(utbetalt)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withUtbetalingDato(now().minusMonths(24))
-                .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling10() {
-        double utbetalt = BELOP * 0.87;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1d, 1.0, utbetalt, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(utbetalt)
-                .withTrekk(0.0)
-                .withGironr("44442255555")
-                .withBruttobelop(utbetalt)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createTrygdetMottaker())
-                .withUtbetalingDato(now())
-                .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling11() {
-        double utbetalt = BELOP * 0.45;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 2d, 1.0, utbetalt, SPESIFIKASJON);
-        WSBilag bilag1 = createBilag("bilag1", YTELSE, posteringsdetalj1);
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(utbetalt)
-                .withTrekk(0.0)
-                .withGironr("44442255555")
-                .withBruttobelop(utbetalt)
-                .withStatusBeskrivelse(UTBETALT)
-                .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createAnnenMottaker())
-                .withUtbetalingDato(now().minusDays(1))
-                .withUtbetalingsPeriode(createPeriode(now().minusMonths(8).toDateTime(), now().minusMonths(6).toDateTime()));
-        utbetaling.withBilagListe(bilag1);
-        return utbetaling;
-    }
-
-
-    public static WSPeriode createPeriode(DateTime fomDate, DateTime tomDate) {
-        return new WSPeriode().withPeriodeFomDato(fomDate).withPeriodeTomDato(tomDate);
-    }
-
-    public static WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr, String underbeskrivelse, Double antall, Double sats, Double belop, String spesifikasjon) {
-        return new WSPosteringsdetaljer()
-                        .withKontoBeskrHoved(hovedBeskrivelse)
-                        .withKontoBeskrUnder(underbeskrivelse)
-                        .withAntall(antall)
-                        .withSats(sats)
-                        .withKontonr(kontoNr)
-                        .withSpesifikasjon(spesifikasjon)
-                        .withBelop(belop);
-    }
-
-    public static WSBilag createBilag(String melding, String ytelse, WSPosteringsdetaljer... posteringsdetaljer) {
-        return new WSBilag()
-                .withYtelseBeskrivelse(ytelse)
-                .withMeldingListe(new WSMelding().withMeldingtekst(melding)).withPosteringsdetaljerListe(posteringsdetaljer)
-                .withBilagPeriode(new WSPeriode().withPeriodeFomDato(now().minusDays(7)).withPeriodeTomDato(now().minusDays(1)));
-    }
-
-    private static WSMottaker createTrygdetMottaker() {
-        WSMottaker wsMottaker = new WSMottaker();
-        wsMottaker.withMottakerId(fnr)
-                .withMottakertypeKode("")
-                .withNavn(NAVN);
-        return wsMottaker;
-    }
-
-    private static WSMottaker createAnnenMottaker() {
-        WSMottaker wsMottaker = new WSMottaker();
-        wsMottaker.withMottakerId("51321")
-                .withMottakertypeKode("")
-                .withNavn("RIMI");
-        return wsMottaker;
-    }
-
-
 }

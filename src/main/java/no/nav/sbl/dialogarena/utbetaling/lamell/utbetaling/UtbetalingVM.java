@@ -1,82 +1,92 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import org.joda.time.DateTime;
 
 import java.util.List;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT_UTEN_LITERAL;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class UtbetalingVM {
 
-    private Utbetaling utbetaling;
+    private transient Record<Hovedytelse> ytelse;
 
-    public UtbetalingVM(Utbetaling utbetaling) {
-        this.utbetaling = utbetaling;
+    public UtbetalingVM(Record<Hovedytelse> ytelse) {
+        this.ytelse = ytelse;
     }
 
     public String getUtbetalingId() {
-        return utbetaling.getUtbetalingId();
+        return ytelse.get(Hovedytelse.id).toString();
     }
 
     public String getStatus() {
-        return utbetaling.getStatus();
+        return ytelse.get(Hovedytelse.utbetalingsstatus);
     }
 
     public String getBeskrivelse() {
-        return utbetaling.getHovedytelse();
+        return ytelse.get(Hovedytelse.ytelse);
     }
 
     public String getMelding() {
-        return utbetaling.getMelding();
+        return ytelse.get(Hovedytelse.utbetalingsmelding);
     }
 
     public String getMottakerNavn() {
-        return utbetaling.getMottakernavn();
+        return ytelse.get(Hovedytelse.utbetaltTil).get(Aktoer.navn);
     }
 
-    public Mottaktertype getMottakertype() {
-        return utbetaling.getMottakertype();
+    public Mottakertype getMottakertype() {
+        return ytelse.get(Hovedytelse.mottakertype);
     }
 
     public String getKontonr() {
-        return utbetaling.getKontonr();
+        if(ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer) != null) {
+            return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer);
+        }
+        return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontotype);
     }
 
-    public List<Underytelse> getUnderytelser() {
-        return utbetaling.getUnderytelser();
+    public List<Record<Underytelse>> getUnderytelser() {
+        return ytelse.get(Hovedytelse.underytelseListe);
+    }
+
+    public List<Record<Trekk>> getTrekkListe() {
+        return ytelse.get(Hovedytelse.trekkListe);
+    }
+
+    public List<Double> getSkatteTrekk() {
+        return ytelse.get(Hovedytelse.skattListe);
     }
 
     public String getKortUtbetalingsDato() {
-        return optional(utbetaling.getUtbetalingsdato()).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
+        return optional(ytelse.get(Hovedytelse.utbetalingsDato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
     }
 
     public String getPeriodeMedKortDato() {
-        return optional(utbetaling.getPeriode().getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
-                + optional(utbetaling.getPeriode().getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
+        return optional(ytelse.get(Hovedytelse.ytelsesperiode).getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
+                + optional(ytelse.get(Hovedytelse.ytelsesperiode).getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
     }
 
-    public String getBruttoBelopMedValuta() {
-        return getBelopString(utbetaling.getBrutto());
+    public String getBruttoBelop() {
+        return getBelopString(ytelse.get(Hovedytelse.aggregertBruttoBeloep));
     }
 
-    public String getTrekkMedValuta() {
-        return getBelopString(utbetaling.getTrekk());
+    public String getTrekk() {
+        return getBelopString(ytelse.get(Hovedytelse.aggregertTrekkBeloep));
     }
 
-    public String getBelopMedValuta() {
-        return getBelopString(utbetaling.getUtbetalt());
+    public String getBelop() {
+        return getBelopString(ytelse.get(Hovedytelse.ytelseNettoBeloep));
     }
 
     public DateTime getStartDato() {
-        return utbetaling.getPeriode().getStart();
+        return ytelse.get(Hovedytelse.ytelsesperiode).getStart();
     }
 
     public DateTime getSluttDato() {
-        return utbetaling.getPeriode().getEnd();
+        return ytelse.get(Hovedytelse.ytelsesperiode).getEnd();
     }
 }

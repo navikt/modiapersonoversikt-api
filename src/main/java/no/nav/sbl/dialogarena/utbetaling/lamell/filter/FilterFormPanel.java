@@ -4,6 +4,7 @@ import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
@@ -18,11 +19,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -30,7 +27,6 @@ import java.util.List;
 
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 import static org.joda.time.LocalDate.now;
@@ -63,8 +59,8 @@ public class FilterFormPanel extends Panel {
                 valideringsfeil.setOutputMarkupId(true),
                 createDateRangePicker(),
                 createSokKnapp(),
-                createMottakerButton("visBruker", Mottaktertype.BRUKER),
-                createMottakerButton("visAnnenMottaker", Mottaktertype.ANNEN_MOTTAKER),
+                createMottakerButton("visBruker", Mottakertype.BRUKER),
+                createMottakerButton("visAnnenMottaker", Mottakertype.ANNEN_MOTTAKER),
                 ytelsesContainer)
                 .setOutputMarkupId(true);
     }
@@ -119,7 +115,7 @@ public class FilterFormPanel extends Panel {
                 .setOutputMarkupId(true);
     }
 
-    private AjaxCheckBox createMottakerButton(final String id, final Mottaktertype mottaker) {
+    private AjaxCheckBox createMottakerButton(final String id, final Mottakertype mottaker) {
         return new AjaxCheckBox(id, new Model<>(filterParametere.viseMottaker(mottaker))) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {

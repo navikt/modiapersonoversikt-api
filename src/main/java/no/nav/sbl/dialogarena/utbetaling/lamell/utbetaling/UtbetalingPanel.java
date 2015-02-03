@@ -21,9 +21,9 @@ public class UtbetalingPanel extends Panel {
                 new Label("status", utbetalingVM.getStatus()),
                 new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
                 getHovedYtelsesPeriodeLabel(utbetalingVM),
-                new Label("bruttoBelopMedValuta", utbetalingVM.getBruttoBelopMedValuta()),
-                new Label("trekkMedValuta", utbetalingVM.getTrekkMedValuta()),
-                new Label("belopMedValuta", utbetalingVM.getBelopMedValuta())
+                new Label("bruttoBelopMedValuta", utbetalingVM.getBruttoBelop()),
+                new Label("trekkMedValuta", utbetalingVM.getTrekk()),
+                new Label("belopMedValuta", utbetalingVM.getBelop())
         );
     }
 
