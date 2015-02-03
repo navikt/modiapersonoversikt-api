@@ -53,6 +53,14 @@ public class UtbetalingVM {
         return ytelse.get(Hovedytelse.underytelseListe);
     }
 
+    public List<Record<Trekk>> getTrekkListe() {
+        return ytelse.get(Hovedytelse.trekkListe);
+    }
+
+    public List<Double> getSkatteTrekk() {
+        return ytelse.get(Hovedytelse.skattListe);
+    }
+
     public String getKortUtbetalingsDato() {
         return optional(ytelse.get(Hovedytelse.utbetalingsDato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
     }
@@ -67,7 +75,7 @@ public class UtbetalingVM {
     }
 
     public String getTrekk() {
-        return getBelopString(ytelse.get(Hovedytelse.sumTrekk));
+        return getBelopString(ytelse.get(Hovedytelse.aggregertTrekkBeloep));
     }
 
     public String getBelop() {
