@@ -79,7 +79,8 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.sumSkatt, skattTrekkListe.get(0))
                 .with(Hovedytelse.ytelseNettoBeloep, 0d)
                 .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertTrekkBeloep, 0d)
                 .with(Hovedytelse.skattListe, skattTrekkListe);
 
         Record<Hovedytelse> dagpenger1 = new Record<Hovedytelse>()
@@ -91,7 +92,8 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.skattListe, skattTrekkListe)
                 .with(Hovedytelse.ytelseNettoBeloep, 0d)
                 .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertTrekkBeloep, 0d)
                 .with(Hovedytelse.sumSkatt, skattTrekkListe.get(0));
 
         Record<Hovedytelse> dagpenger2 = new Record<Hovedytelse>()
@@ -100,7 +102,8 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.utbetalingsDato, now())
                 .with(Hovedytelse.ytelseNettoBeloep, 0d)
                 .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertTrekkBeloep, 0d)
                 .with(Hovedytelse.ytelsesperiode, new Interval(now(), now()))
                 .with(Hovedytelse.underytelseListe, asList(ytelse2));
 
@@ -152,7 +155,8 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.utbetalingsDato, now())
                 .with(Hovedytelse.ytelseNettoBeloep, 0d)
                 .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertTrekkBeloep, 0d)
                 .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(14), now()));
 
         List<Record<Hovedytelse>> utbetalinger = asList(hovedytelse);
@@ -174,7 +178,8 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.utbetalingsDato, dato)
                 .with(Hovedytelse.ytelseNettoBeloep, 0d)
                 .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
+                .with(Hovedytelse.aggregertTrekkBeloep, 0d)
+                .with(Hovedytelse.aggregertBruttoBeloep, 0d)
                 .with(Hovedytelse.ytelsesperiode, new Interval(dato.minusDays(14), dato));
     }
 

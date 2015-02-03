@@ -47,7 +47,7 @@ public class Transformers {
         @Override
         public Record<Trekk> transform(WSTrekk wsTrekk) {
             return new Record<Trekk>()
-                    .with(Trekk.trekksType, wsTrekk.getTrekkstype().getValue())
+                    .with(Trekk.trekksType, wsTrekk.getTrekkstype() != null ? wsTrekk.getTrekkstype().getValue() : "")
                     .with(Trekk.trekkBeloep, wsTrekk.getTrekkbeloep())
                     .with(kreditor, wsTrekk.getKreditor());
         }
@@ -96,7 +96,8 @@ public class Transformers {
                     .with(rettighetshaver, createAktoer(wsYtelse.getRettighetshaver()))
                     .with(refundertForOrg, createAktoer(wsYtelse.getRefundertForOrg()));
 
-                    hovedytelse = hovedytelse.with(ytelseBruttoBeloep, aggregateBruttoBeloep(hovedytelse));
+                    hovedytelse = hovedytelse.with(aggregertBruttoBeloep, aggregateBruttoBeloep(hovedytelse));
+                    hovedytelse = hovedytelse.with(aggregertTrekkBeloep, aggregateTrekkBeloep(hovedytelse));
 
                     hovedytelser.add(hovedytelse);
                 }
@@ -106,10 +107,26 @@ public class Transformers {
         }
     };
 
-    private static Double aggregateBruttoBeloep(Record<Hovedytelse> hovedytelse) {
-        Double netto = hovedytelse.get(Hovedytelse.ytelseNettoBeloep);
+    private static Double aggregateTrekkBeloep(Record<Hovedytelse> hovedytelse) {
         Double trekk = hovedytelse.get(Hovedytelse.sumTrekk);
         Double skatt = hovedytelse.get(Hovedytelse.sumSkatt);
+
+        if(trekk == null) {
+            trekk = 0.0;
+        }
+
+        if(skatt == null) {
+            skatt = 0.0;
+        }
+
+        return trekk + skatt;
+    }
+
+    private static Double aggregateBruttoBeloep(Record<Hovedytelse> hovedytelse) {
+        Double netto = hovedytelse.get(Hovedytelse.ytelseNettoBeloep);
+        Double trekk = -hovedytelse.get(Hovedytelse.sumTrekk);
+        Double skatt = -hovedytelse.get(Hovedytelse.sumSkatt);
+
 
         if(netto == null) {
             netto = 0.0;

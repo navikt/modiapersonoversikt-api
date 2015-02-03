@@ -63,7 +63,7 @@ public class UtbetalingVM {
     }
 
     public String getBruttoBelop() {
-        return getBelopString(ytelse.get(Hovedytelse.ytelseBruttoBeloep));
+        return getBelopString(ytelse.get(Hovedytelse.aggregertBruttoBeloep));
     }
 
     public String getTrekk() {
