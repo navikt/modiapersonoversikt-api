@@ -99,7 +99,7 @@ public class Transformers {
         }
     };
 
-    private static Double aggregateTrekkBeloep(Record<Hovedytelse> hovedytelse) {
+    protected static Double aggregateTrekkBeloep(Record<Hovedytelse> hovedytelse) {
         Double trekk = hovedytelse.get(Hovedytelse.sumTrekk);
         Double skatt = hovedytelse.get(Hovedytelse.sumSkatt);
 
@@ -114,7 +114,7 @@ public class Transformers {
         return trekk + skatt;
     }
 
-    private static Double aggregateBruttoBeloep(Record<Hovedytelse> hovedytelse) {
+    protected static Double aggregateBruttoBeloep(Record<Hovedytelse> hovedytelse) {
         Double netto = hovedytelse.get(Hovedytelse.ytelseNettoBeloep);
         Double trekk = hovedytelse.get(Hovedytelse.sumTrekk);
         Double skatt = hovedytelse.get(Hovedytelse.sumSkatt);
@@ -132,31 +132,31 @@ public class Transformers {
             skatt = 0.0;
         }
 
-        return netto + (-trekk) + (-skatt);
+        return netto + trekk + skatt;
     }
 
-    private static List<Double> createSkatteListe(List<WSSkatt> skattListe) {
+    protected static List<Double> createSkatteListe(List<WSSkatt> skattListe) {
         if(skattListe == null) {
             return new ArrayList<>();
         }
         return on(skattListe).map(SKATT_TRANSFORMER).collect();
     }
 
-    private static List<Record<Trekk>> createTrekkliste(List<WSTrekk> trekkListe) {
+    protected static List<Record<Trekk>> createTrekkliste(List<WSTrekk> trekkListe) {
         if(trekkListe == null) {
             return new ArrayList<>();
         }
         return on(trekkListe).map(TREKK_TRANSFORMER).collect();
     }
 
-    private static List<Record<Underytelse>> createUnderytelser(List<WSYtelseskomponent> ytelseskomponentListe) {
+    protected static List<Record<Underytelse>> createUnderytelser(List<WSYtelseskomponent> ytelseskomponentListe) {
         if(ytelseskomponentListe == null) {
             return new ArrayList<>();
         }
         return on(ytelseskomponentListe).map(UNDERYTELSE_TRANSFORMER).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
     }
 
-    private static Interval createPeriode(WSPeriode ytelsesperiode) {
+    protected static Interval createPeriode(WSPeriode ytelsesperiode) {
         if(ytelsesperiode == null) {
             LOGGER.debug("Ytelsesperiode er null, setter interval til new Interval(0,0)");
             return new Interval(0,0);
@@ -164,7 +164,7 @@ public class Transformers {
         return new Interval(ytelsesperiode.getFom(), ytelsesperiode.getTom());
     }
 
-    private static Record<Konto> createKonto(WSBankkonto utbetaltTilKonto) {
+    protected static Record<Konto> createKonto(WSBankkonto utbetaltTilKonto) {
         if(utbetaltTilKonto == null) {
             return null;
         }
@@ -173,7 +173,7 @@ public class Transformers {
                 .with(kontotype, utbetaltTilKonto.getKontotype().getValue());
     }
 
-    private static Record<Aktoer> createAktoer(WSAktoer utbetaltTil) {
+    protected static Record<Aktoer> createAktoer(WSAktoer utbetaltTil) {
         if(utbetaltTil == null) {
             return null;
         }
