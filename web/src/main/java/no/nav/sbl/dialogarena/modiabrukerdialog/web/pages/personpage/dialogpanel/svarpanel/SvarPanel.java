@@ -54,6 +54,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKS
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public class SvarPanel extends Panel {
@@ -151,11 +152,10 @@ public class SvarPanel extends Panel {
     }
 
     private Temagruppe getTemagruppeFraSporsmal() {
-        Temagruppe temagruppe = Temagruppe.valueOf(sporsmal.temagruppe);
-        if (temagruppe == null) {
-            throw new ApplicationException("Fant ingen temagruppe med navn: "+sporsmal.temagruppe);
+        if (isBlank(sporsmal.temagruppe)) {
+            return null;
         }
-        return temagruppe;
+        return  Temagruppe.valueOf(sporsmal.temagruppe);
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)
