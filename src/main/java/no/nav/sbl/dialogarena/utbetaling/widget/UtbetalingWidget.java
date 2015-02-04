@@ -8,7 +8,6 @@ import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
-import no.nav.sbl.dialogarena.utbetaling.widget.hentutbetalinger.HentUtbetalingerPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.UtbetalingV
 public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
 
     private static final Logger LOG = LoggerFactory.getLogger(UtbetalingWidget.class);
-    private static final int MAX_NUMBER_OF_UTBETALINGER = 6;
+    private static final int MAX_NUMBER_OF_UTBETALINGER = 4;
 
     @Inject
     private UtbetalingService utbetalingService;
@@ -35,19 +34,19 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
     private String fnr;
 
     public UtbetalingWidget(String id, String initial, String fnr) {
-        super(id, initial, true);
+        super(id, initial, true, "widget.utbetalingWidget.flereUtbetalinger");
 
         this.fnr = fnr;
 
-        setDefaultModel(new ListModel<>(asList(new GenericListing(new HentUtbetalingerPanel(this)))));
+        hentUTbetalingOgSettDefaultModel();
+        setMaxNumberOfFeedItems(MAX_NUMBER_OF_UTBETALINGER+1);
     }
 
     private List<HovedytelseVM> transformUtbetalingToVM(List<Record<Hovedytelse>> utbetalinger) {
-        List<HovedytelseVM> hovedytelseVMs = on(utbetalinger).map(TIL_HOVEDYTELSEVM).collect(new UtbetalingVMComparator());
-        return on(hovedytelseVMs).take(MAX_NUMBER_OF_UTBETALINGER).collect();
+        return on(utbetalinger).map(TIL_HOVEDYTELSEVM).collect(new UtbetalingVMComparator());
     }
 
-    public void hentUtbetalinger() {
+    protected void hentUTbetalingOgSettDefaultModel() {
         try {
             List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
             if (hovedytelser.isEmpty()) {
