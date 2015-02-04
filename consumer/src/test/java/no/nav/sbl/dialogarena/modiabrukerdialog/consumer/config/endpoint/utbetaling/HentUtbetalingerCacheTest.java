@@ -2,14 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbeta
 
 import no.nav.modig.cache.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
-import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
-import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSYtelsesfilter;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkkeTilgjengelig;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
-import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSForespurtPeriode;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSIdent;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -35,18 +32,18 @@ import static org.mockito.Mockito.verify;
 public class HentUtbetalingerCacheTest {
 
     @Inject
-    private UtbetalingPortType utbetalingPortType;
+    private UtbetalingV1 utbetalingPortType;
 
     @Inject
     private EhCacheCacheManager cm;
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapperMock")
-    private Wrapper<UtbetalingPortType> mockPortWrapper;
+    private Wrapper<UtbetalingV1> mockPortWrapper;
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapper")
-    private Wrapper<UtbetalingPortType> realPortWrapper;
+    private Wrapper<UtbetalingV1> realPortWrapper;
 
     @BeforeClass
     public static void setUp() {
@@ -56,27 +53,25 @@ public class HentUtbetalingerCacheTest {
     }
 
     @Test
-    public void identicalRequestsOnlySentOnce()
-            throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeUgyldigDato, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig {
+    public void identicalRequestsOnlySentOnce() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
 
         DateTime fom = now().minusDays(10);
         DateTime tom = now();
 
-        final WSHentUtbetalingListeRequest request = createRequest(fom, tom);
-        final WSHentUtbetalingListeRequest request2 = createRequest(fom, tom);
+        final WSHentUtbetalingsinformasjonRequest request = createRequest(fom, tom);
+        final WSHentUtbetalingsinformasjonRequest request2 = createRequest(fom, tom);
 
-        utbetalingPortType.hentUtbetalingListe(request);
-        utbetalingPortType.hentUtbetalingListe(request2);
+        utbetalingPortType.hentUtbetalingsinformasjon(request);
+        utbetalingPortType.hentUtbetalingsinformasjon(request2);
 
-        verify(realPortWrapper.wrappedObject, times(0)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
-        verify(mockPortWrapper.wrappedObject, times(1)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
+        verify(realPortWrapper.wrappedObject, times(0)).hentUtbetalingsinformasjon(any(WSHentUtbetalingsinformasjonRequest.class));
+        verify(mockPortWrapper.wrappedObject, times(1)).hentUtbetalingsinformasjon(any(WSHentUtbetalingsinformasjonRequest.class));
     }
 
-    private WSHentUtbetalingListeRequest createRequest(DateTime fom, DateTime tom) {
-        return new WSHentUtbetalingListeRequest()
-                .withMottaker("11223312345")
-                .withYtelsesfilter(new WSYtelsesfilter())
-                .withPeriode(new WSPeriode()
+    private WSHentUtbetalingsinformasjonRequest createRequest(DateTime fom, DateTime tom) {
+        return new WSHentUtbetalingsinformasjonRequest()
+                .withId(new WSIdent().withIdent("11223312345"))
+                .withPeriode(new WSForespurtPeriode()
                         .withFom(fom)
                         .withTom(tom));
     }

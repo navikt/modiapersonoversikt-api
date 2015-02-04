@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbeta
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
-import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,13 +18,13 @@ public class UtbetalingWrapperConfig {
 
     @Bean
     @Qualifier("utbetalingPortTypeWrapper")
-    public Wrapper<UtbetalingPortType> utbetalingPortTypeWrapper() {
+    public Wrapper<UtbetalingV1> utbetalingPortTypeWrapper() {
         return new Wrapper<>(new UtbetalingPortTypeImpl(endpoint).utbetalingPortType());
     }
 
     @Bean
     @Qualifier("utbetalingPortTypeWrapperMock")
-    public Wrapper<UtbetalingPortType> utbetalingPortTypeWrapperMock() {
+    public Wrapper<UtbetalingV1> utbetalingPortTypeWrapperMock() {
         return new Wrapper<>(new UtbetalingPortTypeMock().utbetalingPortType());
     }
 }
