@@ -14,7 +14,7 @@ public class UtbetalingLamellContext {
 
     private static final String ARENA_MELDINGER_UTBETALINGER = "?oppstart_skj=UB_22_MELDEHISTORIKK&fodselsnr=";
 
-    @Bean
+    @Bean(name = "arenaUtbetalingUrl")
     public String arenaUtbetalingUrl() {
         return arenaServerUrl + ARENA_MELDINGER_UTBETALINGER;
     }
