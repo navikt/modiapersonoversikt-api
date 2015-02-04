@@ -19,10 +19,10 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.LES
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.STATUS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.JOURNALFORT_DATO;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.JOURNALFORT_SAKSID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.JOURNALFORT_TEMA;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.lagXMLHenvendelse;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.JOURNALFORT_DATO;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.JOURNALFORT_SAKSID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.JOURNALFORT_TEMA;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.lagXMLHenvendelse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;

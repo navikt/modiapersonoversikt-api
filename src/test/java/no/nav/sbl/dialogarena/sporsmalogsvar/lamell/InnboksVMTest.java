@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;

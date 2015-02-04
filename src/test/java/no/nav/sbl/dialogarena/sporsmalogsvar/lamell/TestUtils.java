@@ -1,10 +1,9 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
 import java.util.*;

@@ -1,17 +1,18 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM.grupperMeldingerPaaJournalfortdato;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.DATE_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.ID_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.TRAAD_LENGDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMeldingVMer;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
@@ -146,28 +147,6 @@ public class TraadVMTest {
         traadVM.getMeldinger().add(meldingVM);
 
         assertThat(traadVM.erFeilsendt(), is(true));
-    }
-
-    @Test
-    public void settFlaggPaaDenNyesteMeldingenInneforEnJournalfortgruppe() {
-        Melding melding1 = createMeldingMedJournalfortDato(ID_1, SAMTALEREFERAT_OPPMOTE, DATE_1, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding2 = createMeldingMedJournalfortDato(ID_2, SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding3 = createMeldingMedJournalfortDato(ID_3, SAMTALEREFERAT_OPPMOTE, DATE_3, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
-        Melding melding4 = createMeldingMedJournalfortDato(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
-        List<MeldingVM> meldinger = new ArrayList<>(Arrays.asList(
-                new MeldingVM(melding1, 4),
-                new MeldingVM(melding2, 4),
-                new MeldingVM(melding3, 4),
-                new MeldingVM(melding4, 4)));
-
-        for (MeldingVM meldingVM : grupperMeldingerPaaJournalfortdato(meldinger)) {
-            if (meldingVM.melding.id.equals(ID_1) || meldingVM.melding.id.equals(ID_3)) {
-                assertThat(meldingVM.nyesteMeldingISinJournalfortgruppe, is(true));
-            } else {
-                assertThat(meldingVM.nyesteMeldingISinJournalfortgruppe, is(false));
-            }
-        }
-
     }
 
 }

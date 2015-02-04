@@ -11,7 +11,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMockSaker;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMockSaker;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -65,7 +65,6 @@ public class SakerVMTest {
         sakerVM.getFagsakerGruppertPaaTema();
 
         verify(traadVM, times(2)).getEldsteMelding();
-
     }
 
     private MeldingVM opprettMeldingVM(String temagruppe) {

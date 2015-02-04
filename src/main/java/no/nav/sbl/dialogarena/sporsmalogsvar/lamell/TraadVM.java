@@ -2,21 +2,18 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import org.joda.time.LocalDate;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_NAV;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
 
 public class TraadVM implements Serializable {
 
@@ -25,7 +22,7 @@ public class TraadVM implements Serializable {
     public Sak journalfortSak;
 
     public TraadVM(List<MeldingVM> meldinger) {
-        this.meldinger = grupperMeldingerPaaJournalfortdato(meldinger);
+        this.meldinger = meldinger;
     }
 
     public List<MeldingVM> getMeldinger() {
@@ -73,18 +70,6 @@ public class TraadVM implements Serializable {
 
     public boolean bleInitiertAvEtSporsmal() {
         return SPORSMAL.contains(getEldsteMelding().melding.meldingstype);
-    }
-
-    public static List<MeldingVM> grupperMeldingerPaaJournalfortdato(List<MeldingVM> meldinger) {
-        Map<LocalDate, List<MeldingVM>> mapMeldingVMPaJournalfortDato = on(meldinger).reduce(indexBy(JOURNALFORT_DATO));
-
-        for (Entry<LocalDate, List<MeldingVM>> journalfortDatoEntry : mapMeldingVMPaJournalfortDato.entrySet()) {
-            if (journalfortDatoEntry.getKey() != null) {
-                journalfortDatoEntry.getValue().get(0).nyesteMeldingISinJournalfortgruppe = true;
-            }
-        }
-
-        return meldinger;
     }
 
 }

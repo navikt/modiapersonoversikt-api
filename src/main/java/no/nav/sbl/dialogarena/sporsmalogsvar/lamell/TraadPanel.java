@@ -5,10 +5,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
@@ -18,14 +15,12 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingsty
 public class TraadPanel extends Panel {
     public TraadPanel(String id, InnboksVM innboksVM) {
         super(id, new CompoundPropertyModel<>(innboksVM));
-
         add(new PropertyListView<MeldingVM>("valgtTraad.meldinger") {
             @Override
             protected void populateItem(ListItem<MeldingVM> item) {
                 String meldingTypeKlasse = meldingKlasse(item.getModelObject());
                 item.add(cssClass(meldingTypeKlasse));
 
-                item.add(new JournalfortSkiller("journalfortSkiller", item.getModel()));
                 item.add(new FeilsendtInfoPanel("feilsendtInfo", item.getModel()));
                 item.add(new AvsenderBilde("avsenderBilde", item.getModel()).add(cssClass(meldingTypeKlasse)));
                 item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
@@ -35,6 +30,7 @@ public class TraadPanel extends Panel {
                         item.getModelObject().melding.fritekst != null ?
                                 new PropertyModel(item.getModel(), "melding.fritekst") :
                                 new ResourceModel("innhold.kassert")));
+                item.add(new Journalpost("journalpost", item.getModel()));
             }
         });
     }

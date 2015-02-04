@@ -5,7 +5,6 @@ import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -14,7 +13,6 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_NAV;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
-
 
 public class MeldingVM implements Serializable {
 
@@ -26,7 +24,6 @@ public class MeldingVM implements Serializable {
     public final Melding melding;
 
     public final int traadlengde;
-    public boolean nyesteMeldingISinJournalfortgruppe;
 
     public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
@@ -120,15 +117,5 @@ public class MeldingVM implements Serializable {
         result = 31 * result + traadlengde;
         return result;
     }
-
-    public static final Transformer<MeldingVM, LocalDate> JOURNALFORT_DATO = new Transformer<MeldingVM, LocalDate>() {
-        @Override
-        public LocalDate transform(MeldingVM meldingVM) {
-            if (meldingVM.melding.journalfortDato != null) {
-                return meldingVM.melding.journalfortDato.toLocalDate();
-            }
-            return null;
-        }
-    };
 
 }

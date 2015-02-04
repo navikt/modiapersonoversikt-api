@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeld
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -21,12 +22,18 @@ import static org.apache.wicket.event.Broadcast.BREADTH;
 @RefreshOnEvents({VALGT_MELDING_EVENT, INNBOKS_OPPDATERT_EVENT})
 public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
 
-    public TraaddetaljerPanel(String id, InnboksVM innboksVM) {
+    public TraaddetaljerPanel(String id, final InnboksVM innboksVM) {
         super(id, new CompoundPropertyModel<>(innboksVM));
         setOutputMarkupId(true);
 
         add(new HaandterMeldingPanel("haandterMelding", innboksVM));
         add(new KontorsperreInfoPanel("kontorsperretInfo", innboksVM));
+        add(new Label("valgtTraad.eldsteMelding.melding.journalfortTemanavn").add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return innboksVM.getValgtTraad().getEldsteMelding().isJournalfort();
+            }
+        })));
         add(new NyMeldingContainer("nyMelding"));
         add(new TraadPanel("traad", innboksVM));
     }

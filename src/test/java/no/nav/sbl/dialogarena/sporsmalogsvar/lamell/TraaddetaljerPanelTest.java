@@ -4,6 +4,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -33,8 +34,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBruker() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createStandardMelding()));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
@@ -52,7 +52,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     @Test
     public void skalKunneBesvareTraadInitiertAvBrukerMedTidligereSvar() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1"),
+                createStandardMelding(),
                 createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
@@ -61,13 +61,36 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Test
     public void skalKunneBesvareTraadSomErMarkertSomKontorsperret() {
-        Melding melding = createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1");
+        Melding melding = createStandardMelding();
         melding.kontorsperretEnhet = "kontorsperretEnhet";
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                melding));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
     }
 
+    @Test
+    public void skalIkkeViseTemanavnDersomTraadensEldsteMeldingIkkeErJournalfort() {
+        Melding melding = createStandardMelding();
+        melding.journalfortTemanavn = "journalfortTemanavnSomIkkeSkalVises";
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
+
+        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+                .should().notContainPatterns(melding.journalfortTemanavn);
+    }
+
+    @Test
+    public void skalViseTemanavnDersomTraadensEldsteMeldingErJournalfort() {
+        Melding melding = createStandardMelding();
+        melding.journalfortDato = DateTime.now();
+        melding.journalfortTemanavn = "journalfortTemanavnSomSkalVises";
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
+
+        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+                .should().containPatterns(melding.journalfortTemanavn);
+    }
+
+    private Melding createStandardMelding() {
+        return createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1");
+    }
 }

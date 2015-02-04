@@ -3,6 +3,7 @@
 @rammefarge: #d1d1d1;
 @modiagraaskrift: #b7b1a9;
 @sidemargin: 30px;
+@grayDark: #3e3832;
 
 .lamell.meldinger .lerret {
   padding: 0;
@@ -155,6 +156,11 @@
             border-right-color: #e5e5dc;
           }
         }
+        .journalpost-element {
+          float: right;
+          background-color: #e6e6dd;
+          border: 1px solid @rammefarge;
+        }
       }
       &.utgaaende {
         .meldingData {
@@ -171,6 +177,40 @@
             border-left-color: @rammefarge;
           }
         }
+        .journalpost-element {
+          float: left;
+          background-color: #ffffff;
+          border-bottom: 1px solid @rammefarge;
+          border-left: 1px solid @rammefarge;
+          border-right: 1px solid @rammefarge;
+        }
+      }
+      .journalpost-element {
+        clear: both;
+        width: 85%;
+        padding: 6px 25px;
+        color: @grayDark;
+        text-decoration: none;
+        span {
+          text-align: center;
+        }
+        .ikon {
+          text-align: left;
+          padding-right: 1.4rem;
+          background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
+        }
+        .pil {
+          display: inline-block;
+          margin-bottom: 1px;
+          text-align: right;
+          float: right;
+          width: 20%;
+          .pil(8px, @grayDark); // definisjon i common.less
+        }
+      }
+
+      .journalpostinformasjon {
+        display: none;
       }
     }
 
@@ -182,17 +222,6 @@
       font-size: 0.75rem;
       .ikon {
         padding-right: 1.4rem;
-      }
-      &.journalfort-skiller {
-        .ikon {
-          background: url(../img/journalfore_graa.svg) no-repeat;
-        }
-        .skillestrek {
-          margin: 0 5px;
-        }
-        &.nyeste {
-          margin-top: 0;
-        }
       }
       &.kontorsperret-info, &.feilsendt-info {
         .ikon {
@@ -384,7 +413,7 @@
     background-image: url(../img/melding_sporsmaal_hoyre.svg);
   }
   &.svar {
-    background-image: url(../img/melding_svar_lest.svg)
+    background-image: url(../img/melding_svar_lest.svg);
   }
   &.sporsmal-ikke-lest-av-bruker {
     background-image: url(../img/melding_sporsmaal_hoyre.svg);
@@ -421,4 +450,8 @@ hr.linje {
     height: 0px !important;
     display: inline-block;
   }
+}
+
+.midtstilt {
+  text-align: center;
 }
