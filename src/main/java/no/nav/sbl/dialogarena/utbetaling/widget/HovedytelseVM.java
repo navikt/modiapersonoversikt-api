@@ -91,7 +91,7 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
         if(nettoBelop == null) {
             return "";
         }
-        
+
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.getDefault());
         nf.setGroupingUsed(true);
         nf.setMinimumFractionDigits(2);
