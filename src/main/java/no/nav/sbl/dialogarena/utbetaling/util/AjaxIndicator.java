@@ -9,7 +9,7 @@ public class AjaxIndicator {
 
     private static final String AJAX_INDIKATOR_ID = "ajax-indikator";
 
-    public static abstract class SnurrepippAjaxLink extends AjaxLink implements IAjaxIndicatorAware {
+    public abstract static class SnurrepippAjaxLink extends AjaxLink implements IAjaxIndicatorAware {
 
         public SnurrepippAjaxLink(String id) {
             super(id);

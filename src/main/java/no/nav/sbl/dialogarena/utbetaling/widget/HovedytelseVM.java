@@ -30,7 +30,6 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
     private String belop;
     private String status;
     private Interval periode;
-    private DateTime sluttDato;
     private String utbetalingId;
     private Mottakertype mottakertype;
 
