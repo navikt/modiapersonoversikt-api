@@ -33,7 +33,7 @@ public class UtbetalingService {
         utbetalingV1.ping();
     }
 
-    private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    protected List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
             logger.info("---- Spør etter utebetalinger. Fnr: {}. ----", fnr);
         try {
             return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
@@ -45,22 +45,21 @@ public class UtbetalingService {
         }
     }
 
-    private WSHentUtbetalingsinformasjonRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    protected WSHentUtbetalingsinformasjonRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
         return new WSHentUtbetalingsinformasjonRequest()
-                .withId(new WSIdent().withIdent(fnr).withIdentType(new WSIdenttyper()
-                        .withValue("asdasd"))                                   //TODO: Hva skal her?
-                        .withRolle(new WSIdentroller().withValue("asdads")))    //TODO: Hva skal her?
-                .withPeriode(createPeriode(startDato, sluttDato))
-                .withYtelsestypeListe()                                         //TODO: Hva skal her?
-                .withYtelsestypeListe();                                        //TODO: Hva skal her?
-
+                .withId(new WSIdent().withIdent(fnr))
+                .withPeriode(createPeriode(startDato, sluttDato));
     }
 
-    private WSForespurtPeriode createPeriode(LocalDate startDato, LocalDate sluttDato) {
+
+    protected WSForespurtPeriode createPeriode(LocalDate startDato, LocalDate sluttDato) {
         return new WSForespurtPeriode()
                 .withFom(startDato.toDateTimeAtStartOfDay())
-        .withTom(sluttDato.toDateTimeAtStartOfDay())
-        .withPeriodeType(new WSPeriodetyper().withValue("adasd"));              //TODO: Hva skal her?
+        .withTom(sluttDato.toDateTimeAtStartOfDay());
+    }
+
+    protected void setUtbetalingV1(UtbetalingV1 utbetalingV1) {
+        this.utbetalingV1 = utbetalingV1;
     }
 
 }
