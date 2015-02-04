@@ -7,6 +7,7 @@ import org.joda.time.Interval;
 
 import java.util.List;
 
+@SuppressWarnings("all")
 public interface Hovedytelse {
     Key<String> id = new Key<>("ID");
 
