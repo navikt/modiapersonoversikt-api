@@ -130,6 +130,8 @@ public class GsakService {
 
         String beskrivelse = "Oppgave opprettet fra Modia med beskrivelse:\n" + nyOppgave.beskrivelse;
 
+        GsakKodeTema.Underkategori underkategori = optional(nyOppgave.underkategori).getOrElse(new GsakKodeTema.Underkategori(null, null));
+
         oppgavebehandlingWS.opprettOppgave(
                 new WSOpprettOppgaveRequest()
                         .withOpprettetAvEnhetId(valgtEnhetId)
@@ -142,7 +144,7 @@ public class GsakService {
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
                                         .withBeskrivelse(leggTilBeskrivelse(beskrivelse, valgtEnhetIdString))
                                         .withFagomradeKode(nyOppgave.tema.kode)
-                                        .withUnderkategoriKode(nyOppgave.underkategori.kode)
+                                        .withUnderkategoriKode(underkategori.kode)
                                         .withBrukerId(nyOppgave.brukerId)
                                         .withOppgavetypeKode(nyOppgave.type.kode)
                                         .withPrioritetKode(nyOppgave.prioritet.kode)

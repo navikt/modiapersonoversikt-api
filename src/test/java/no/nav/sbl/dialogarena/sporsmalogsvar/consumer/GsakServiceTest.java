@@ -22,6 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -69,6 +70,29 @@ public class GsakServiceTest {
         assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet.enhetId));
         assertThat(request.getOpprettOppgave().getBeskrivelse(), containsString(nyOppgave.beskrivelse));
         assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema.kode));
+        assertThat(request.getOpprettOppgave().getUnderkategoriKode(), is(nyOppgave.underkategori.kode));
+        assertThat(request.getOpprettOppgave().getOppgavetypeKode(), is(nyOppgave.type.kode));
+        assertThat(request.getOpprettOppgave().getPrioritetKode(), is(nyOppgave.prioritet.kode));
+        assertThat(request.getOpprettOppgave().isLest(), is(false));
+        assertThat(request.getOpprettOppgave().getHenvendelseId(), is(nyOppgave.henvendelseId));
+        assertThat(request.getOpprettOppgave().getBrukerId(), is(nyOppgave.brukerId));
+    }
+
+    @Test
+    public void senderKallOmOpprettelseAvOppgaveMedRiktigeFelterSelvomGjelderIkkeErSatt() {
+        NyOppgave nyOppgave = createNyOppgave();
+        nyOppgave.underkategori = null;
+
+        gsakService.opprettGsakOppgave(nyOppgave);
+
+        verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
+        WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
+
+        assertThat(request.getOpprettetAvEnhetId(), is(Integer.parseInt(JOURNALFORENDE_ENHET)));
+        assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet.enhetId));
+        assertThat(request.getOpprettOppgave().getBeskrivelse(), containsString(nyOppgave.beskrivelse));
+        assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema.kode));
+        assertThat(request.getOpprettOppgave().getUnderkategoriKode(), is(nullValue()));
         assertThat(request.getOpprettOppgave().getOppgavetypeKode(), is(nyOppgave.type.kode));
         assertThat(request.getOpprettOppgave().getPrioritetKode(), is(nyOppgave.prioritet.kode));
         assertThat(request.getOpprettOppgave().isLest(), is(false));
