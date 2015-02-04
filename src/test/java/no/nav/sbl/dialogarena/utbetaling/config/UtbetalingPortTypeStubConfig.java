@@ -14,6 +14,7 @@ public class UtbetalingPortTypeStubConfig {
 
     private static final String FNR = "***REMOVED***";
 
+
     @Bean
     public UtbetalingV1 utbetalingPortType() {
         return new UtbetalingV1() {
