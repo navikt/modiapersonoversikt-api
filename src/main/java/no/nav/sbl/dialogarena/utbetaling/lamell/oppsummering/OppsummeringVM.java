@@ -56,7 +56,7 @@ public class OppsummeringVM implements Serializable {
 
 
 
-            List<Record<Underytelse>> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(toTotalOfUnderytelser);
+            List<Record<Underytelse>> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(TO_TOTAL_OF_UNDERYTELSER);
             sammenlagteUnderytelser = on(sammenlagteUnderytelser).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
 
             Double brutto = on(sammenlagteUnderytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
@@ -82,7 +82,7 @@ public class OppsummeringVM implements Serializable {
     }
 
 
-    public static ReduceFunction<List<Record<?>>, List<Record<Underytelse>>> toTotalOfUnderytelser = new ReduceFunction<List<Record<?>>, List<Record<Underytelse>>>() {
+    public static final ReduceFunction<List<Record<?>>, List<Record<Underytelse>>> TO_TOTAL_OF_UNDERYTELSER = new ReduceFunction<List<Record<?>>, List<Record<Underytelse>>>() {
         @Override
         public List<Record<Underytelse>> reduce(List<Record<Underytelse>> accumulator, List<Record<?>> ytelser) {
             if (ytelser.isEmpty()) {
