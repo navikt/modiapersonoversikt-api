@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel;
 
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
@@ -155,7 +154,7 @@ public class SvarPanel extends Panel {
         if (isBlank(sporsmal.temagruppe)) {
             return null;
         }
-        return  Temagruppe.valueOf(sporsmal.temagruppe);
+        return Temagruppe.valueOf(sporsmal.temagruppe);
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)
