@@ -10,6 +10,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ORT_HJE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.OVRG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.PENS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -28,7 +29,7 @@ public class LokaltKodeverkImplTest {
         assertThat(kodeverk.hentTemagruppeForTema("FOS"), is(ARBD.name()));
         assertThat(kodeverk.hentTemagruppeForTema("HEL"), is(ORT_HJE.name()));
         assertThat(kodeverk.hentTemagruppeForTema("TRK"), is(OVRG.name()));
-        assertThat(kodeverk.hentTemagruppeForTema("UFO"), is("PENS"));
+        assertThat(kodeverk.hentTemagruppeForTema("UFO"), is(PENS.name()));
     }
 
     @Test

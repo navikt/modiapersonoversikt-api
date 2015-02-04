@@ -22,7 +22,7 @@ public class LokaltKodeverkImpl implements LokaltKodeverk {
             put(BIL.name(), asList("BIL"));
             put(ORT_HJE.name(), asList("HEL"));
             put(OVRG.name(), asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
-            put("PENS", asList("PEN", "SUP", "UFO"));
+            put(PENS.name(), asList("PEN", "SUP", "UFO"));
         }
     };
 
