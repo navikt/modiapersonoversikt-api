@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.sbl.dialogarena.common.records.Key;
 
+@SuppressWarnings("all")
 public interface Underytelse {
     Key<String> ytelsesType = new Key<>("YTELSE_TYPE");
     Key<Double> satsBeloep = new Key<>("SATS_BELOEP");
