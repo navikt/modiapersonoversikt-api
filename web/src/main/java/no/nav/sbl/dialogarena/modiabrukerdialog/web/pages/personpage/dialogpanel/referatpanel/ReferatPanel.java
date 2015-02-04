@@ -278,7 +278,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Melding referat = felles()
                 .withKanal(getModelObject().kanal.name())
                 .withTemagruppe(getModelObject().temagruppe.name())
-                .withType(referatType(getModelObject().kanal));
+                .withType(referatType(getModelObject().kanal))
+                .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         henvendelseUtsendingService.sendHenvendelse(referat);
     }
 
