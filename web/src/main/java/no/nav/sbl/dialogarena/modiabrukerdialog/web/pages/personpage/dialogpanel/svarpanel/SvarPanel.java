@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
@@ -150,12 +151,11 @@ public class SvarPanel extends Panel {
     }
 
     private Temagruppe getTemagruppeFraSporsmal() {
-        for (Temagruppe temagruppe : Temagruppe.INNGAAENDE) {
-            if (temagruppe.name().equals(sporsmal.temagruppe)) {
-                return temagruppe;
-            }
+        Temagruppe temagruppe = Temagruppe.valueOf(sporsmal.temagruppe);
+        if (temagruppe == null) {
+            throw new ApplicationException("Fant ingen temagruppe med navn: "+sporsmal.temagruppe);
         }
-        return Temagruppe.ARBD; //Bruker denne som default
+        return temagruppe;
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)
