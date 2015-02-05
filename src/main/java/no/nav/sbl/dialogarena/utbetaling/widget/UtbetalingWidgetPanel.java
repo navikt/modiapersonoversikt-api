@@ -24,7 +24,6 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
                 new Label("beskrivelse", hovedytelseVM.getBeskrivelse()),
                 createPeriodeLabel(hovedytelseVM),
                 new Label("belop", hovedytelseVM.getBelop()),
-                new Label("valuta", "utbetaling.valuta"),
                 new WebMarkupContainer("mottakerIndikator")
                         .add(new AttributeAppender("class", hovedytelseVM.getMottakertype()).setSeparator(" ")),
                 new Label("statusTekst", hovedytelseVM.getStatus())
