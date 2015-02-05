@@ -17,10 +17,9 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.utbetalingsDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelse;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.UTBETALING_DAG_YTELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.POSTERINGSDATO_COMPARATOR;
 
 /**
  * Hjelpefunksjoner for å jobbe med Hovedytelser.
@@ -33,11 +32,11 @@ public class HovedytelseUtils {
 
     public static List<Record<Hovedytelse>> hentHovedytelserFraPeriode(List<Record<Hovedytelse>> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         final Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
-        return on(hovedytelser).filter(where(Hovedytelse.utbetalingsDato, isWithinRange(intervall))).collect();
+        return on(hovedytelser).filter(where(Hovedytelse.posteringsdato, isWithinRange(intervall))).collect();
     }
 
     public static List<List<Record<Hovedytelse>>> splittUtbetalingerPerMaaned(List<Record<Hovedytelse>> hovedytelser) {
-        List<Record<Hovedytelse>> hovedytelserSortert = on(hovedytelser).collect(UTBETALING_DAG_YTELSE);
+        List<Record<Hovedytelse>> hovedytelserSortert = on(hovedytelser).collect(POSTERINGSDATO_COMPARATOR);
         Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap = new LinkedHashMap<>();
         leggTilUtbetalingerIAarsMap(hovedytelserSortert, aarsMap);
         return trekkUtUtbetalingerPerMaaned(aarsMap);
@@ -90,8 +89,8 @@ public class HovedytelseUtils {
 
     private static void leggTilUtbetalingerIAarsMap(List<Record<Hovedytelse>> sorterteUtbetalinger, Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap) {
         for (Record<Hovedytelse> utbetaling : sorterteUtbetalinger) {
-            int aar = utbetaling.get(utbetalingsDato).getYear();
-            int maaned = utbetaling.get(utbetalingsDato).getMonthOfYear();
+            int aar = utbetaling.get(Hovedytelse.posteringsdato).getYear();
+            int maaned = utbetaling.get(Hovedytelse.posteringsdato).getMonthOfYear();
             leggTilNoklerForAarOgMaaned(aarsMap, aar, maaned);
             aarsMap.get(aar).get(maaned).add(utbetaling);
         }

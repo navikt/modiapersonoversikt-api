@@ -22,10 +22,10 @@ public class YtelseUtils {
     }
 
     public static final class UtbetalingComparator {
-        public static final Comparator<Record<Hovedytelse>> UTBETALING_DAG_YTELSE = new Comparator<Record<Hovedytelse>>() {
+        public static final Comparator<Record<Hovedytelse>> POSTERINGSDATO_COMPARATOR = new Comparator<Record<Hovedytelse>>() {
             @Override
             public int compare(Record<Hovedytelse> o1, Record<Hovedytelse> o2) {
-                int compareDato = -o1.get(Hovedytelse.utbetalingsDato).toLocalDate().compareTo(o2.get(Hovedytelse.utbetalingsDato).toLocalDate());
+                int compareDato = -o1.get(Hovedytelse.posteringsdato).toLocalDate().compareTo(o2.get(Hovedytelse.posteringsdato).toLocalDate());
                 if (compareDato == 0) {
                     return o1.get(Hovedytelse.ytelse).compareToIgnoreCase(o2.get(Hovedytelse.ytelse));
                 }

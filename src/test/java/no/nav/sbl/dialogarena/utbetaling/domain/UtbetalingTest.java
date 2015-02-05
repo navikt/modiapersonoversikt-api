@@ -10,7 +10,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.UTBETALING_DAG_YTELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.POSTERINGSDATO_COMPARATOR;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -33,7 +33,7 @@ public class UtbetalingTest {
 
         List<Record<Hovedytelse>> hovedytelser = asList(hovedytelse, hovedytelse2);
 
-        hovedytelser = on(hovedytelser).collect(UTBETALING_DAG_YTELSE);
+        hovedytelser = on(hovedytelser).collect(POSTERINGSDATO_COMPARATOR);
 
         assertThat(hovedytelser.get(0).get(Hovedytelse.ytelse), is("Foreldrepenger"));
         assertThat(hovedytelser.get(1).get(Hovedytelse.ytelse), is("Uføre"));
@@ -54,7 +54,7 @@ public class UtbetalingTest {
                 .with(Hovedytelse.utbetalingsDato, igaar);
 
         List<Record<Hovedytelse>> hovedytelser = asList(hovedytelse, hovedytelse2);
-        hovedytelser = on(hovedytelser).collect(UTBETALING_DAG_YTELSE);
+        hovedytelser = on(hovedytelser).collect(POSTERINGSDATO_COMPARATOR);
 
         assertThat(hovedytelser.get(0).get(Hovedytelse.ytelse), is("Uføre"));
         assertThat(hovedytelser.get(1).get(Hovedytelse.ytelse), is("Foreldrepenger"));
