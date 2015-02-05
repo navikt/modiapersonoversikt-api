@@ -8,6 +8,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
@@ -62,6 +63,8 @@ public class SvarPanel extends Panel {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private final GrunnInfo grunnInfo;
     private final Optional<String> oppgaveId;
@@ -268,7 +271,8 @@ public class SvarPanel extends Panel {
                     .withType(meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare))
                     .withFritekst(henvendelseVM.getFritekst())
                     .withKontorsperretEnhet(sporsmal.kontorsperretEnhet)
-                    .withEksternAktor(getSubjectHandler().getUid());
+                    .withEksternAktor(getSubjectHandler().getUid())
+                    .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
             henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
