@@ -11,6 +11,8 @@ import java.util.List;
 
 public class SakerVM implements Serializable {
 
+    public static final String TEMAGRUPPE_OVRG = "OVRG";
+
     public final IModel<Boolean> visFagsaker = Model.of(true);
     public final IModel<Boolean> visGenerelleSaker = Model.of(false);
 
@@ -22,13 +24,19 @@ public class SakerVM implements Serializable {
     public SakerVM(InnboksVM innboksVM, SakerService sakerService) {
         this.innboksVM = innboksVM;
         this.sakerService = sakerService;
+        visFagsaker.setObject(!valgtTraadsTemagruppeErOvrige(innboksVM));
+        visGenerelleSaker.setObject(valgtTraadsTemagruppeErOvrige(innboksVM));
         saker = new Saker();
     }
 
     public final void oppdater() {
         saker = sakerService.hentSaker(innboksVM.getFnr());
-        visFagsaker.setObject(true);
-        visGenerelleSaker.setObject(false);
+        visFagsaker.setObject(!valgtTraadsTemagruppeErOvrige(innboksVM));
+        visGenerelleSaker.setObject(valgtTraadsTemagruppeErOvrige(innboksVM));
+    }
+
+    private boolean valgtTraadsTemagruppeErOvrige(InnboksVM innboksVM) {
+        return innboksVM.getValgtTraad().getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_OVRG);
     }
 
     public AbstractReadOnlyModel<Boolean> sakerFinnes() {

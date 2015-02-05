@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMockSaker;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.TEMAGRUPPE_OVRG;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -64,7 +65,26 @@ public class SakerVMTest {
         sakerVM.getGenerelleSakerGruppertPaaTema();
         sakerVM.getFagsakerGruppertPaaTema();
 
-        verify(traadVM, times(2)).getEldsteMelding();
+        verify(traadVM, atLeast(6)).getEldsteMelding();
+    }
+
+    @Test
+    public void dersomValgtTraadsTemagruppeIkkeErOvrigeSkalKunFagsakerVaereAApen() {
+        sakerVM.oppdater();
+
+        assertThat(sakerVM.visFagsaker.getObject(), is(true));
+        assertThat(sakerVM.visGenerelleSaker.getObject(), is(false));
+    }
+
+    @Test
+    public void dersomValgtTraadsTemagruppeErOvrigeSkalKunGenerelleSakerVaereAApen() {
+        MeldingVM meldingVM = opprettMeldingVM(TEMAGRUPPE_OVRG);
+        when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
+
+        sakerVM.oppdater();
+
+        assertThat(sakerVM.visFagsaker.getObject(), is(false));
+        assertThat(sakerVM.visGenerelleSaker.getObject(), is(true));
     }
 
     private MeldingVM opprettMeldingVM(String temagruppe) {
