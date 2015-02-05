@@ -132,7 +132,7 @@ public class Transformers {
             skatt = 0.0;
         }
 
-        return netto + trekk + skatt;
+        return netto + (-trekk) + (-skatt);
     }
 
     protected static List<Double> createSkatteListe(List<WSSkatt> skattListe) {

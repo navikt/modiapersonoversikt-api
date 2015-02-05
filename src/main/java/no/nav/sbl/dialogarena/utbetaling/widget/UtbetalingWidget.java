@@ -38,7 +38,7 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
 
         this.fnr = fnr;
 
-        hentUTbetalingOgSettDefaultModel();
+        hentUtbetalingOgSettDefaultModel();
         setMaxNumberOfFeedItems(MAX_NUMBER_OF_UTBETALINGER+1);
     }
 
@@ -46,7 +46,7 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
         return on(utbetalinger).map(TIL_HOVEDYTELSEVM).collect(new UtbetalingVMComparator());
     }
 
-    protected void hentUTbetalingOgSettDefaultModel() {
+    protected void hentUtbetalingOgSettDefaultModel() {
         try {
             List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
             if (hovedytelser.isEmpty()) {
