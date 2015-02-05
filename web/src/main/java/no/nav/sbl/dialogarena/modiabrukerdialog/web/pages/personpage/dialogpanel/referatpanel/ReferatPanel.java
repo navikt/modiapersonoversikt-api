@@ -278,8 +278,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Melding referat = felles()
                 .withKanal(getModelObject().kanal.name())
                 .withTemagruppe(getModelObject().temagruppe.name())
-                .withType(referatType(getModelObject().kanal))
-                .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+                .withType(referatType(getModelObject().kanal));
         henvendelseUtsendingService.sendHenvendelse(referat);
     }
 
@@ -288,8 +287,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Melding sporsmal = felles()
                 .withKanal(Kanal.TEKST.name())
                 .withType(SPORSMAL_MODIA_UTGAAENDE)
-                .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode))
-                .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+                .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode));
 
         sporsmal = henvendelseUtsendingService.sendHenvendelse(sporsmal);
 
@@ -306,7 +304,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 .withFnr(grunnInfo.fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withFritekst(getModelObject().getFritekst())
-                .withEksternAktor(getSubjectHandler().getUid());
+                .withEksternAktor(getSubjectHandler().getUid())
+                .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
     }
 
     private Meldingstype referatType(Kanal kanal) {
