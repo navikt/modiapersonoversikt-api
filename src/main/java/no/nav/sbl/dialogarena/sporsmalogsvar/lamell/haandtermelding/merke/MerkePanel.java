@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -107,10 +108,10 @@ public class MerkePanel extends AnimertPanel {
         kontorsperrePanel.reset();
     }
 
-    private class MerkKnapp extends AjaxButton {
+    private class MerkKnapp extends IndicatingAjaxButtonWithImageUrl {
 
         public MerkKnapp(String id) {
-            super(id);
+            super(id, "../img/ajaxloader/svart/loader_svart_48.gif");
             add(visibleIf(either(new PropertyModel<Boolean>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
                     .or(new PropertyModel<Boolean>(merkVM, "erFeilsendt()"))));
             setOutputMarkupPlaceholderTag(true);

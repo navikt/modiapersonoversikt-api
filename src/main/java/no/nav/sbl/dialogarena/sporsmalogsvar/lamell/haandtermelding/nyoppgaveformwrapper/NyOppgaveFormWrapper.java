@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
@@ -11,7 +12,6 @@ import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
@@ -79,7 +79,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 underkategoriVelger,
                 new TextArea<String>("beskrivelse").setRequired(true),
                 feedbackPanelError);
-        form.add(new AjaxButton("opprettoppgave") {
+        form.add(new IndicatingAjaxButtonWithImageUrl("opprettoppgave", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 NyOppgave nyOppgave = form.getModelObject();

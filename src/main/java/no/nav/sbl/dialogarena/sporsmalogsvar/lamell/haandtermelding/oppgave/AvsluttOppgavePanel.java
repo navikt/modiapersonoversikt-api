@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService.OppgaveErFerdigstilt;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -44,7 +44,7 @@ public class AvsluttOppgavePanel extends Panel {
         beskrivelseFelt.setRequired(true);
         add(new Form("form")
                 .add(beskrivelseFelt)
-                .add(new AjaxButton("avsluttoppgave") {
+                .add(new IndicatingAjaxButtonWithImageUrl("avsluttoppgave", "../img/ajaxloader/svart/loader_svart_48.gif") {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                         try {
