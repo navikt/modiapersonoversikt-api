@@ -15,9 +15,11 @@ import org.apache.wicket.model.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.sort;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM.BELOP_DESC;
 
 public class DetaljPanel extends Panel {
 
@@ -28,9 +30,10 @@ public class DetaljPanel extends Panel {
 
         List<YtelseVM> ytelseVMer = new ArrayList<>();
         appendUnderytelser(utbetalingVM, ytelseVMer);
-        appendTrekk(utbetalingVM, ytelseVMer);
         appendSkatteTrekk(utbetalingVM, ytelseVMer);
+        appendTrekk(utbetalingVM, ytelseVMer);
 
+        sort(ytelseVMer, BELOP_DESC);
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
                 new Label("konto", utbetalingVM.getKontonr()),

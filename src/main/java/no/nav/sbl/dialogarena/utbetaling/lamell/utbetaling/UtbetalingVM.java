@@ -61,8 +61,8 @@ public class UtbetalingVM {
         return ytelse.get(Hovedytelse.skattListe);
     }
 
-    public String getKortUtbetalingsDato() {
-        return optional(ytelse.get(Hovedytelse.utbetalingsDato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
+    public String getKortPosteringsDato() {
+        return optional(ytelse.get(Hovedytelse.posteringsdato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
     }
 
     public String getPeriodeMedKortDato() {
