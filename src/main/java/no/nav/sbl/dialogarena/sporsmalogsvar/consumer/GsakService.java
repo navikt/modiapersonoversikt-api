@@ -18,14 +18,17 @@ import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.ukedagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
@@ -53,7 +56,7 @@ public class GsakService {
     @Inject
     private AnsattService ansattWS;
 
-    public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema, String type, Optional<GsakKodeTema.Underkategori> underkategori) {
+    public List<AnsattEnhet> hentForeslatteEnheter(String fnr, String tema, String type, Optional<GsakKodeTema.Underkategori> underkategori) {
         try {
             WSFinnAnsvarligEnhetForOppgavetypeRequest request = new WSFinnAnsvarligEnhetForOppgavetypeRequest()
                     .withAlleEnheter(true)
@@ -67,10 +70,16 @@ public class GsakService {
 
             WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(request);
 
-            WSEnhet wsEnhet = enhetForOppgaveResponse.getEnhetListe().get(0);
-            return optional(new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()));
+            List<WSEnhet> wsEnheter = enhetForOppgaveResponse.getEnhetListe();
+
+            return on(wsEnheter).map(new Transformer<WSEnhet, AnsattEnhet>() {
+                @Override
+                public AnsattEnhet transform(WSEnhet wsEnhet) {
+                    return new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn());
+                }
+            }).collect();
         } catch (Exception e) {
-            return none();
+            return emptyList();
         }
     }
 

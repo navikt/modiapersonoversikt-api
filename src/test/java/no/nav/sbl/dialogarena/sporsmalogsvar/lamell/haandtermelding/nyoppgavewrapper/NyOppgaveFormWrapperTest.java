@@ -85,7 +85,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void oppretterOppgave() {
-        when(gsakService.hentForeslattEnhet(anyString(), anyString(), anyString(), any(Optional.class))).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
+        when(gsakService.hentForeslatteEnheter(anyString(), anyString(), anyString(), any(Optional.class))).thenReturn(asList(new AnsattEnhet("1231", "Sinsen")));
 
         wicket.goToPageWith(new NyOppgaveFormWrapper("panel", innboksVM));
 

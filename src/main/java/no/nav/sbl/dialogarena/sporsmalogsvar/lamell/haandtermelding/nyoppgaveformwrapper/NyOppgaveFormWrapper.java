@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
@@ -42,7 +41,7 @@ public class NyOppgaveFormWrapper extends Panel {
     private EnhetService enhetService;
 
     private final InnboksVM innboksVM;
-    private final List<AnsattEnhet> enheter;
+    private final List<AnsattEnhet> enheter, foreslatteEnheter;
     private final IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer;
     private final Form<NyOppgave> form;
     private final MarkupContainer typeVelger, enhetVelger, prioritetVelger, underkategoriVelger;
@@ -55,6 +54,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
         this.innboksVM = innboksVM;
         this.enheter = on(enhetService.hentAlleEnheter()).filter(GYLDIG_ENHET).collect();
+        this.foreslatteEnheter = new ArrayList<>();
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
         this.typeVelger = lagOppgavetypeVelger();
@@ -150,7 +150,7 @@ public class NyOppgaveFormWrapper extends Panel {
         underkategoriDropdown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                hentForeslattEnhet();
+                hentForeslatteEnheter();
                 target.add(enhetVelger);
             }
         });
@@ -180,7 +180,7 @@ public class NyOppgaveFormWrapper extends Panel {
         DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
-                hentForeslattEnhet();
+                hentForeslatteEnheter();
                 target.add(enhetVelger);
             }
         };
@@ -199,7 +199,7 @@ public class NyOppgaveFormWrapper extends Panel {
     private MarkupContainer lagEnhetVelger() {
         final IModel<List<AnsattEnhet>> enhetModel = new PropertyModel<>(this, "enheter");
 
-        AnsattEnhetDropdown ansattEnhetDropdown = new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter);
+        AnsattEnhetDropdown ansattEnhetDropdown = new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
         ansattEnhetDropdown.setRequired(true);
 
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
@@ -250,15 +250,15 @@ public class NyOppgaveFormWrapper extends Panel {
         return prioritetContainer;
     }
 
-
-    private void hentForeslattEnhet() {
+    private void hentForeslatteEnheter() {
         NyOppgave nyOppgave = form.getModelObject();
         if (nyOppgave.tema == null || nyOppgave.type == null) {
             return;
         }
-        Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode, optional(nyOppgave.underkategori));
-        if (foreslattEnhet.isSome()) {
-            nyOppgave.enhet = foreslattEnhet.get();
+        foreslatteEnheter.clear();
+        foreslatteEnheter.addAll(gsakService.hentForeslatteEnheter(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode, optional(nyOppgave.underkategori)));
+        if (foreslatteEnheter.size() == 1) {
+            nyOppgave.enhet = foreslatteEnheter.get(0);
         }
     }
 
