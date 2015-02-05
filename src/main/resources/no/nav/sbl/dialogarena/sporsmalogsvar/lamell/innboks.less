@@ -153,7 +153,6 @@
           }
         }
       }
-
       &.inngaaende {
         .meldingData {
           float: right;
@@ -171,7 +170,7 @@
         .journalpost-element {
           float: right;
           background-color: #e6e6dd;
-          border: 1px solid @rammefarge;
+          border-top: 1px solid @rammefarge;
         }
       }
       &.utgaaende {
@@ -212,11 +211,9 @@
           background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
         }
         .pil {
-          display: inline-block;
-          margin-bottom: 1px;
-          text-align: right;
           float: right;
           width: 20%;
+          margin-top: 4px;
           .pil(8px, @grayDark); // definisjon i common.less
         }
       }
