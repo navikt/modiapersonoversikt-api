@@ -56,6 +56,7 @@
         <jodatime.version>2.2</jodatime.version>
         <org.apache.cxf.version>2.7.6</org.apache.cxf.version>
         <aspectj.version>1.7.2</aspectj.version>
+        <lucene.version>4.10.2</lucene.version>
 
         <!-- Modia-komponenter-->
         <personsok.version>1.0.82</personsok.version>
@@ -689,6 +690,23 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <!--Lucene-->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers-common</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-queryparser</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
 
             <!--Jetty-->
