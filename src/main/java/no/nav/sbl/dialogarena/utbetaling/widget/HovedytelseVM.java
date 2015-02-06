@@ -37,7 +37,7 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
     public HovedytelseVM(Record<Hovedytelse> hovedytelse) {
         this.beskrivelse = hovedytelse.get(Hovedytelse.ytelse);
         this.hovedytelseDato = hovedytelse.get(Hovedytelse.hovedytelsedato);
-        this.belop = formaterBelop(hovedytelse.get(Hovedytelse.ytelseNettoBeloep));
+        this.belop = formaterBelop(hovedytelse.get(Hovedytelse.nettoUtbetalt));
         this.status = hovedytelse.get(Hovedytelse.utbetalingsstatus);
         this.periode = hovedytelse.get(Hovedytelse.ytelsesperiode);
         this.utbetalingId = hovedytelse.get(Hovedytelse.id).toString();

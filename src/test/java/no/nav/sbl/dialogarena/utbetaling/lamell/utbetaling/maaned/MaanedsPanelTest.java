@@ -36,9 +36,9 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                 hovedytelse
                         .with(Hovedytelse.hovedytelsedato, now())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(5), now()))
-                        .with(Hovedytelse.aggregertBruttoBeloep, 0d)
-                        .with(Hovedytelse.aggregertTrekkBeloep, 0d)
-                        .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                        .with(Hovedytelse.bruttoUtbetalt, 0d)
+                        .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
+                        .with(Hovedytelse.nettoUtbetalt, 0d)
                         .with(Hovedytelse.sumTrekk, 0d)
                         .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))
                         .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "1112233"))
@@ -49,9 +49,9 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                                 .with(Underytelse.satsAntall, 1.0))),
                 hovedytelse
                         .with(Hovedytelse.hovedytelsedato, now().minusDays(4))
-                        .with(Hovedytelse.aggregertBruttoBeloep, 0d)
-                        .with(Hovedytelse.aggregertTrekkBeloep, 0d)
-                        .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                        .with(Hovedytelse.bruttoUtbetalt, 0d)
+                        .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
+                        .with(Hovedytelse.nettoUtbetalt, 0d)
                         .with(Hovedytelse.sumTrekk, 0d)
                         .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "1112233"))
                         .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))

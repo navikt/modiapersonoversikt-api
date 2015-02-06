@@ -35,7 +35,7 @@ public class HovedytelseVMTest {
         double belop = 67856565.6;
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.ytelseNettoBeloep, belop);
+                .with(Hovedytelse.nettoUtbetalt, belop);
         HovedytelseVM vm = new HovedytelseVM(ytelse);
 
         String belop1 = vm.getBelop();

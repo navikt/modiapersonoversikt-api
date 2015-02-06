@@ -39,9 +39,9 @@ public class OppsummeringVM implements Serializable {
     public OppsummeringVM(List<Record<Hovedytelse>> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         this.sluttDato = sluttDato;
         this.startDato = startDato;
-        this.utbetalt = getBelopString(on(hovedytelser).map(Hovedytelse.ytelseNettoBeloep).reduce(sumDouble));
-        this.trekk = getBelopString(on(hovedytelser).map(Hovedytelse.aggregertTrekkBeloep).reduce(sumDouble));
-        this.brutto = getBelopString(on(hovedytelser).map(Hovedytelse.aggregertBruttoBeloep).reduce(sumDouble));
+        this.utbetalt = getBelopString(on(hovedytelser).map(Hovedytelse.nettoUtbetalt).reduce(sumDouble));
+        this.trekk = getBelopString(on(hovedytelser).map(Hovedytelse.sammenlagtTrekkBeloep).reduce(sumDouble));
+        this.brutto = getBelopString(on(hovedytelser).map(Hovedytelse.bruttoUtbetalt).reduce(sumDouble));
         this.hovedytelser = lagHovetytelseVMer(hovedytelser);
     }
 
@@ -59,14 +59,14 @@ public class OppsummeringVM implements Serializable {
             List<Record<Underytelse>> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(TO_TOTAL_OF_UNDERYTELSER);
             sammenlagteUnderytelser = on(sammenlagteUnderytelser).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
 
-            Double brutto = on(sammenlagteUnderytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
-            Double trekk = on(sammen).map(Hovedytelse.aggregertTrekkBeloep).reduce(sumDouble);
-            Double utbetalt = brutto + trekk;
+            Double brutto = on(sammen).map(Hovedytelse.bruttoUtbetalt).reduce(sumDouble);
+            Double trekk = on(sammen).map(Hovedytelse.sammenlagtTrekkBeloep).reduce(sumDouble);
+            Double nettoUtbetalt = on(sammen).map(Hovedytelse.nettoUtbetalt).reduce(sumDouble);
 
             DateTime startPeriode = on(sammen).collect(compareWith(first(Hovedytelse.ytelsesperiode).then(START))).get(0).get(Hovedytelse.ytelsesperiode).getStart();
             DateTime sluttPeriode = on(sammen).collect(reverseOrder(compareWith(first(Hovedytelse.ytelsesperiode).then(END)))).get(0).get(Hovedytelse.ytelsesperiode).getEnd();
 
-            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).get(Hovedytelse.ytelse), sammenlagteUnderytelser, brutto, trekk, utbetalt, startPeriode, sluttPeriode));
+            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).get(Hovedytelse.ytelse), sammenlagteUnderytelser, brutto, trekk, nettoUtbetalt, startPeriode, sluttPeriode));
         }
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;

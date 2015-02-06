@@ -71,15 +71,15 @@ public class UtbetalingVM {
     }
 
     public String getBruttoBelop() {
-        return getBelopString(ytelse.get(Hovedytelse.aggregertBruttoBeloep));
+        return getBelopString(ytelse.get(Hovedytelse.bruttoUtbetalt));
     }
 
     public String getTrekk() {
-        return getBelopString(ytelse.get(Hovedytelse.aggregertTrekkBeloep));
+        return getBelopString(ytelse.get(Hovedytelse.sammenlagtTrekkBeloep));
     }
 
     public String getBelop() {
-        return getBelopString(ytelse.get(Hovedytelse.ytelseNettoBeloep));
+        return getBelopString(ytelse.get(Hovedytelse.nettoUtbetalt));
     }
 
     public DateTime getStartDato() {
