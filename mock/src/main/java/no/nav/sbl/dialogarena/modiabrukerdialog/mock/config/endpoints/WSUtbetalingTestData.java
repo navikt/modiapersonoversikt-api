@@ -24,7 +24,7 @@ public class WSUtbetalingTestData {
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
             public boolean evaluate(WSUtbetaling object) {
-                return periode.contains(object.getUtbetalingsdato());
+                return periode.contains(object.getPosteringsdato());
             }
         };
         return on(utbetalinger).filter(innenPeriode).collect();
@@ -43,14 +43,14 @@ public class WSUtbetalingTestData {
                                         .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(1)).withTom(now().minusYears(1)))
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentBeloep(5200.00),
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentbeloep(5200.00),
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentBeloep(1456.00))
-                                        .withSumYtelseskomponenter(6656.00)
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentbeloep(1456.00))
+                                        .withYtelseskomponentersum(6656.00)
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSumTrekk(-1500.00)
+                                        .withSkattsum(-1500.00)
                                         .withYtelseNettobeloep(5156.00)
                                         .withBilagsnummer("10201436985"),
                                 new WSYtelse()
@@ -59,15 +59,15 @@ public class WSUtbetalingTestData {
                                         .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1)).withTom(now().minusYears(1).plusMonths(1)))
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentBeloep(5200.00),
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentbeloep(5200.00),
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentBeloep(1456.00))
-                                        .withSumYtelseskomponenter(6656.00)
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentbeloep(1456.00))
+                                        .withYtelseskomponentersum(6656.00)
                                         .withTrekkListe(new ArrayList<WSTrekk>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSumSkatt(-1500.00)
+                                        .withSkattsum(-1500.00)
                                         .withYtelseNettobeloep(5156.00)
                                         .withBilagsnummer("10201436985"),
                                 new WSYtelse()
@@ -76,15 +76,15 @@ public class WSUtbetalingTestData {
                                         .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentBeloep(5200.00),
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentbeloep(5200.00),
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentBeloep(1456.00))
-                                        .withSumYtelseskomponenter(6656.00)
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentbeloep(1456.00))
+                                        .withYtelseskomponentersum(6656.00)
                                         .withTrekkListe(new ArrayList<WSTrekk>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSumSkatt(-1500.00)
+                                        .withSkattsum(-1500.00)
                                         .withYtelseNettobeloep(5156.00)
                                         .withBilagsnummer("10201436985"),
                                 new WSYtelse()
@@ -93,16 +93,16 @@ public class WSUtbetalingTestData {
                                         .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentBeloep(5200.00),
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentbeloep(5200.00),
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentBeloep(1456.00))
-                                        .withSumYtelseskomponenter(6656.00)
-                                        .withTrekkListe(new WSTrekk().withTrekkstype(new WSTrekktyper().withValue("Kreditorsjekk")).withTrekkbeloep(-900.00).withKreditor("00911111111"))
-                                        .withSumTrekk(-900.00)
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentbeloep(1456.00))
+                                        .withYtelseskomponentersum(6656.00)
+                                        .withTrekkListe(new WSTrekk().withTrekktype(new WSTrekktyper().withValue("Kreditorsjekk")).withTrekkbeloep(-900.00).withKreditor("00911111111"))
+                                        .withTrekksum(-900.00)
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSumSkatt(-1500.00)
+                                        .withSkattsum(-1500.00)
                                         .withYtelseNettobeloep(4256.00)
                                         .withBilagsnummer("10201436985"))
                         .withUtbetalingsdato(now().minusYears(1).plusMonths(2))
@@ -122,15 +122,15 @@ public class WSUtbetalingTestData {
                                         .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(3)).withTom(now().minusYears(1).minusMonths(2)))
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentBeloep(5200.00),
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponentbeloep(5200.00),
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentBeloep(1456.00))
-                                        .withSumYtelseskomponenter(6656.00)
+                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponentbeloep(1456.00))
+                                        .withYtelseskomponentersum(6656.00)
                                         .withTrekkListe(new ArrayList<WSTrekk>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
-                                        .withSumSkatt(-2267.00)
+                                        .withSkattsum(-2267.00)
                                         .withYtelseNettobeloep(4389.00)
                                         .withBilagsnummer("10201445961"))
                         .withForfallsdato(now().minusYears(1).minusMonths(2))
@@ -154,17 +154,17 @@ public class WSUtbetalingTestData {
                                 .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(2).minusDays(15)).withTom(now().minusMonths(1).minusDays(15)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
-                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Sykepenger, arbeidstakere"))
-                                                .withYtelseskomponentBeloep(15000.00))
-                                .withSumYtelseskomponenter(15000.00)
+                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Sykepenger, arbeidstakere"))
+                                                .withYtelseskomponentbeloep(15000.00))
+                                .withYtelseskomponentersum(15000.00)
                                 .withTrekkListe(
                                         new WSTrekk()
-                                                .withTrekkstype(new WSTrekktyper().withValue("Kreditortrekk"))
+                                                .withTrekktype(new WSTrekktyper().withValue("Kreditortrekk"))
                                                 .withTrekkbeloep(-900.00)
                                                 .withKreditor("00911111111"))
-                                .withSumTrekk(-900.00)
+                                .withTrekksum(-900.00)
                                 .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
-                                .withSumSkatt(-2267.00)
+                                .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(11833.00)
                                 .withBilagsnummer("10201498456"))
                 .withUtbetalingsdato(now().minusMonths(2))
@@ -192,15 +192,15 @@ public class WSUtbetalingTestData {
                                 .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
-                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Dagpenger"))
+                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Dagpenger"))
                                                 .withSatsbeloep(389.45)
                                                 .withSatstype(new WSSatstyper().withValue("DAG"))
                                                 .withSatsantall(55.0)
-                                                .withYtelseskomponentBeloep(21419.75))
-                                .withSumYtelseskomponenter(21419.75)
+                                                .withYtelseskomponentbeloep(21419.75))
+                                .withYtelseskomponentersum(21419.75)
                                 .withTrekkListe(new ArrayList<WSTrekk>())
                                 .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
-                                .withSumSkatt(-2267.00)
+                                .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(19152.75)
                                 .withBilagsnummer("30742-5731"))
                 .withForfallsdato(now().minusMonths(1).plusDays(14))

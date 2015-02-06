@@ -1,50 +1,66 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
+import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
-import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
-import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonResponse;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
+import org.apache.cxf.feature.LoggingFeature;
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import javax.xml.namespace.QName;
+import java.util.Arrays;
+import java.util.List;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey;
+import static java.lang.System.currentTimeMillis;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class UtbetalingEndpointConfig {
 
     public static final String UTBETALING_KEY = "start.utbetaling.withmock";
 
-    @Inject
-    @Qualifier("utbetalingPortTypeWrapperMock")
-    private Wrapper<UtbetalingV1> mockedPortTypeWrapper;
+    @Bean
+    public UtbetalingV1 utbetalingV1() {
+        final UtbetalingV1 prod = createUtbetalingPortType(new UserSAMLOutInterceptor());
+        final UtbetalingV1 mock = new UtbetalingPortTypeMock().utbetalingPortType();
+        return createSwitcher(prod, mock, UTBETALING_KEY, UtbetalingV1.class);
+    }
 
-    @Inject
-    @Qualifier("utbetalingPortTypeWrapper")
-    private Wrapper<UtbetalingV1> portTypeWrapper;
-
-    @Bean(name = "utbetalingPortType")
-    public UtbetalingV1 utbetalingPortType() {
-        return new UtbetalingV1() {
-
+    @Bean
+    public Pingable pingUtbetalingV1() {
+        return new Pingable() {
             @Override
-            public void ping() {
-
-            }
-
-            @Cacheable("utbetalingCache")
-            @Override
-            public WSHentUtbetalingsinformasjonResponse hentUtbetalingsinformasjon(WSHentUtbetalingsinformasjonRequest request) throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
-                if (mockErTillattOgSlaattPaaForKey(UTBETALING_KEY)) {
-                    return mockedPortTypeWrapper.wrappedObject.hentUtbetalingsinformasjon(request);
+            public List<PingResult> ping() {
+                long start = currentTimeMillis();
+                String name = "UTBETALING";
+                try {
+                    createUtbetalingPortType(new SystemSAMLOutInterceptor()).ping();
+                    return Arrays.asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
+                } catch (Exception e) {
+                    return Arrays.asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
                 }
-                return portTypeWrapper.wrappedObject.hentUtbetalingsinformasjon(request);
             }
         };
     }
 
+    private UtbetalingV1 createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
+        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+        proxyFactoryBean.setWsdlLocation("classpath:utbetaling/no/nav/tjeneste/virksomhet/utbetaling/v1/Binding.wsdl");
+        proxyFactoryBean.setAddress(System.getProperty("utbetalingendpoint.url"));
+        proxyFactoryBean.setServiceClass(UtbetalingV1.class);
+        proxyFactoryBean.getOutInterceptors().add(interceptor);
+        proxyFactoryBean.setServiceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"));
+        proxyFactoryBean.setEndpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"));
+        proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
+        proxyFactoryBean.getFeatures().add(new LoggingFeature());
+        return proxyFactoryBean.create(UtbetalingV1.class);
+    }
 }

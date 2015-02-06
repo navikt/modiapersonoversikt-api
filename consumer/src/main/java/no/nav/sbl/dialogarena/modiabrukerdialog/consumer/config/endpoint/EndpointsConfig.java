@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvend
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingWrapperConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting.GsakRutingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
@@ -25,7 +24,6 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import({
-        UtbetalingWrapperConfig.class,
         UtbetalingEndpointConfig.class,
         KodeverkV2EndpointConfig.class,
         SendUtHenvendelseEndpointConfig.class,
