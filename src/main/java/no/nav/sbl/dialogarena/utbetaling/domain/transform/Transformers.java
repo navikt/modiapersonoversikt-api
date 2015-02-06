@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class Transformers {
         @Override
         public Record<Trekk> transform(WSTrekk wsTrekk) {
             return new Record<Trekk>()
-                    .with(Trekk.trekksType, wsTrekk.getTrekkstype() != null ? wsTrekk.getTrekkstype().getValue() : "")
+                    .with(Trekk.trekksType, wsTrekk.getTrekktype() != null ? wsTrekk.getTrekktype().getValue() : "")
                     .with(Trekk.trekkBeloep, wsTrekk.getTrekkbeloep())
                     .with(kreditor, wsTrekk.getKreditor());
         }
@@ -49,11 +50,11 @@ public class Transformers {
         @Override
         public Record<Underytelse> transform(WSYtelseskomponent wsYtelseskomponent) {
             return new Record<Underytelse>()
-                    .with(Underytelse.ytelsesType, wsYtelseskomponent.getYtelseskomponentstype() != null ? wsYtelseskomponent.getYtelseskomponentstype().getValue() : "")
+                    .with(Underytelse.ytelsesType, wsYtelseskomponent.getYtelseskomponenttype() != null ? wsYtelseskomponent.getYtelseskomponenttype().getValue() : "")
                     .with(Underytelse.satsBeloep, wsYtelseskomponent.getSatsbeloep())
                     .with(Underytelse.satsType, wsYtelseskomponent.getSatstype() != null ? wsYtelseskomponent.getSatstype().getValue() : "")
                     .with(Underytelse.satsAntall, wsYtelseskomponent.getSatsantall())
-                    .with(Underytelse.ytelseBeloep, wsYtelseskomponent.getYtelseskomponentBeloep());
+                    .with(Underytelse.ytelseBeloep, wsYtelseskomponent.getYtelseskomponentbeloep());
         }
     };
 
@@ -66,10 +67,9 @@ public class Transformers {
             for(WSYtelse wsYtelse : wsUtbetaling.getYtelseListe()) {
                 Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
                     .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
-                    .with(posteringsdato, wsUtbetaling.getPosteringsdato())
+                    .with(hovedytelsedato, determineHovedytelseDato(wsUtbetaling))
                     .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
                     .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
-                    .with(utbetalingsDato, wsUtbetaling.getUtbetalingsdato())
                     .with(forfallsDato, wsUtbetaling.getForfallsdato())
                     .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
                     .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode() != null ? wsUtbetaling.getUtbetalingsmetode().getValue() : "")
@@ -78,11 +78,11 @@ public class Transformers {
                     .with(ytelse, wsYtelse.getYtelsestype() != null ? wsYtelse.getYtelsestype().getValue() : "")
                     .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
                     .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
-                    .with(sumUnderytelser, wsYtelse.getSumYtelseskomponenter())
+                    .with(sumUnderytelser, wsYtelse.getYtelseskomponentersum())
                     .with(trekkListe, createTrekkliste(wsYtelse.getTrekkListe()))
-                    .with(sumTrekk, wsYtelse.getSumTrekk())
+                    .with(sumTrekk, wsYtelse.getTrekksum())
                     .with(skattListe, createSkatteListe(wsYtelse.getSkattListe()))
-                    .with(sumSkatt, wsYtelse.getSumSkatt())
+                    .with(sumSkatt, wsYtelse.getSkattsum())
                     .with(ytelseNettoBeloep, wsYtelse.getYtelseNettobeloep())
                     .with(bilagsnummer, wsYtelse.getBilagsnummer())
                     .with(rettighetshaver, createAktoer(wsYtelse.getRettighetshaver()))
@@ -98,6 +98,19 @@ public class Transformers {
             return hovedytelser;
         }
     };
+
+    /**
+     * Hvis utbetalingsdato finnes, returneres denne
+     * Ellers returneres posteringsdato
+     * @param wsUtbetaling
+     * @return
+     */
+    private static DateTime determineHovedytelseDato(WSUtbetaling wsUtbetaling) {
+        if(wsUtbetaling.getUtbetalingsdato() != null) {
+            return wsUtbetaling.getUtbetalingsdato();
+        }
+        return wsUtbetaling.getPosteringsdato();
+    }
 
     protected static Double aggregateTrekkBeloep(Record<Hovedytelse> hovedytelse) {
         Double trekk = hovedytelse.get(Hovedytelse.sumTrekk);

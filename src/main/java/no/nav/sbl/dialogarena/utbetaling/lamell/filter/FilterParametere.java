@@ -116,7 +116,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
 
     @Override
     public boolean evaluate(Record<Hovedytelse> hovedytelse) {
-        boolean innenforDatoer = filtrerPaaDatoer(hovedytelse.get(Hovedytelse.posteringsdato).toLocalDate());
+        boolean innenforDatoer = filtrerPaaDatoer(hovedytelse.get(Hovedytelse.hovedytelsedato).toLocalDate());
         boolean mottakerSkalVises = viseMottaker(hovedytelse.get(Hovedytelse.mottakertype));
         boolean harYtelse = filtrerPaaYtelser(hovedytelse);
         return innenforDatoer

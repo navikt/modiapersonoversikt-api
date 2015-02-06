@@ -34,7 +34,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
 
         List<Record<Hovedytelse>> utbetalinger = asList(
                 hovedytelse
-                        .with(Hovedytelse.posteringsdato, now())
+                        .with(Hovedytelse.hovedytelsedato, now())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(5), now()))
                         .with(Hovedytelse.aggregertBruttoBeloep, 0d)
                         .with(Hovedytelse.aggregertTrekkBeloep, 0d)
@@ -48,7 +48,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                                 .with(Underytelse.ytelseBeloep, 200.0)
                                 .with(Underytelse.satsAntall, 1.0))),
                 hovedytelse
-                        .with(Hovedytelse.posteringsdato, now().minusDays(4))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(4))
                         .with(Hovedytelse.aggregertBruttoBeloep, 0d)
                         .with(Hovedytelse.aggregertTrekkBeloep, 0d)
                         .with(Hovedytelse.ytelseNettoBeloep, 0d)

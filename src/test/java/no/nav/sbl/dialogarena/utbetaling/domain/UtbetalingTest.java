@@ -10,7 +10,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.POSTERINGSDATO_COMPARATOR;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -24,16 +24,16 @@ public class UtbetalingTest {
         Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Uføre")
-                .with(Hovedytelse.posteringsdato, idag);
+                .with(Hovedytelse.hovedytelsedato, idag);
 
         Record<Hovedytelse> hovedytelse2 = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Foreldrepenger")
-                .with(Hovedytelse.posteringsdato, idag);
+                .with(Hovedytelse.hovedytelsedato, idag);
 
         List<Record<Hovedytelse>> hovedytelser = asList(hovedytelse, hovedytelse2);
 
-        hovedytelser = on(hovedytelser).collect(POSTERINGSDATO_COMPARATOR);
+        hovedytelser = on(hovedytelser).collect(HOVEDYTELSE_DATO_COMPARATOR);
 
         assertThat(hovedytelser.get(0).get(Hovedytelse.ytelse), is("Foreldrepenger"));
         assertThat(hovedytelser.get(1).get(Hovedytelse.ytelse), is("Uføre"));
@@ -46,15 +46,15 @@ public class UtbetalingTest {
         Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Uføre")
-                .with(Hovedytelse.posteringsdato, idag);
+                .with(Hovedytelse.hovedytelsedato, idag);
 
         Record<Hovedytelse> hovedytelse2 = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Foreldrepenger")
-                .with(Hovedytelse.posteringsdato, igaar);
+                .with(Hovedytelse.hovedytelsedato, igaar);
 
         List<Record<Hovedytelse>> hovedytelser = asList(hovedytelse, hovedytelse2);
-        hovedytelser = on(hovedytelser).collect(POSTERINGSDATO_COMPARATOR);
+        hovedytelser = on(hovedytelser).collect(HOVEDYTELSE_DATO_COMPARATOR);
 
         assertThat(hovedytelser.get(0).get(Hovedytelse.ytelse), is("Uføre"));
         assertThat(hovedytelser.get(1).get(Hovedytelse.ytelse), is("Foreldrepenger"));

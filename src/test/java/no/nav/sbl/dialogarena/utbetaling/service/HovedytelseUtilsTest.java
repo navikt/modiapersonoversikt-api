@@ -40,19 +40,19 @@ public class HovedytelseUtilsTest {
     public void settOppUtbetalingsliste() {
         hovedytelseListe = asList(
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.posteringsdato, JAN_2012_DATE)
+                        .with(Hovedytelse.hovedytelsedato, JAN_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, JAN_2012_NR1)
                         .with(Hovedytelse.ytelse, DAGPENGER),
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.posteringsdato, JAN_2012_DATE)
+                        .with(Hovedytelse.hovedytelsedato, JAN_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, JAN_2012_NR2)
                         .with(Hovedytelse.ytelse, SYKEPENGER),
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.posteringsdato, MAR_2012_DATE)
+                        .with(Hovedytelse.hovedytelsedato, MAR_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, MAR_2012_NR1)
                         .with(Hovedytelse.ytelse, SYKEPENGER),
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.posteringsdato, SEPT_2012_DATE)
+                        .with(Hovedytelse.hovedytelsedato, SEPT_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, SEP_2012_NR1)
                         .with(Hovedytelse.ytelse, BARNETRYGD)
         );
@@ -71,7 +71,7 @@ public class HovedytelseUtilsTest {
         List<Record<Hovedytelse>> ytelseListe = new ArrayList<>(hovedytelseListe);
 
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.posteringsdato, new DateTime(2014, 1, 1, 0, 0))
+                .with(Hovedytelse.hovedytelsedato, new DateTime(2014, 1, 1, 0, 0))
                 .with(Hovedytelse.utbetalingsmelding, "1. jan 2014 nr1");
 
         ytelseListe.add(ytelse);
@@ -120,7 +120,7 @@ public class HovedytelseUtilsTest {
         List<Record<Hovedytelse>> utbetalingsperiode = hentHovedytelserFraPeriode(hovedytelseListe, startDato.toLocalDate(), sluttDato.toLocalDate());
 
         for (Record<Hovedytelse> hovedytelse : utbetalingsperiode) {
-            assertTrue(intervall.contains(hovedytelse.get(Hovedytelse.utbetalingsDato)));
+            assertTrue(intervall.contains(hovedytelse.get(Hovedytelse.hovedytelsedato)));
         }
     }
 

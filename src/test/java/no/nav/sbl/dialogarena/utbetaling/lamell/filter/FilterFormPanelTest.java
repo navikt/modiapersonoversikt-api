@@ -55,7 +55,7 @@ public class FilterFormPanelTest extends AbstractWicketTest{
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, DAGPENGER)
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
-                .with(Hovedytelse.posteringsdato, now());
+                .with(Hovedytelse.hovedytelsedato, now());
 
         assertTrue(filterParametre.evaluate(ytelse));
 
