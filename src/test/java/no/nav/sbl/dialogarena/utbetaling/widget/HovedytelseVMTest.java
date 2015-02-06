@@ -94,7 +94,7 @@ public class HovedytelseVMTest {
         return new HovedytelseVM(
                 new Record<Hovedytelse>()
                     .with(Hovedytelse.id, ID)
-                    .with(Hovedytelse.utbetalingsDato, utbetalingsDato)
+                    .with(Hovedytelse.hovedytelsedato, utbetalingsDato)
                     .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "123"))
                     .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.aktoerId, "***REMOVED***"))
         );

@@ -31,7 +31,7 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
     }
 
     private Label createUtbetalingsDatoLabel(HovedytelseVM hovedytelseVM) {
-        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getUtbetalingsDato(), "utbetalingdato.mangler"));
+        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getHovedytelseDato(), "utbetalingdato.mangler"));
     }
 
     private Label createPeriodeLabel(HovedytelseVM hovedytelseVM) {

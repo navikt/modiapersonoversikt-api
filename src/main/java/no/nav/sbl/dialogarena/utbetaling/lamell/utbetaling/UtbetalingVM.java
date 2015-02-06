@@ -62,7 +62,7 @@ public class UtbetalingVM {
     }
 
     public String getKortPosteringsDato() {
-        return optional(ytelse.get(Hovedytelse.posteringsdato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
+        return optional(ytelse.get(Hovedytelse.hovedytelsedato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
     }
 
     public String getPeriodeMedKortDato() {

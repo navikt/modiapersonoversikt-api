@@ -32,8 +32,8 @@ public class TransformersTest {
     @Test
     public void underytelseTransformererKorrektFraWSObjekt() {
         WSYtelseskomponent wsYtelseskomponent = new WSYtelseskomponent()
-                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("KompType"))
-                .withYtelseskomponentBeloep(-10.0)
+                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("KompType"))
+                .withYtelseskomponentbeloep(-10.0)
                 .withSatsantall(2.0)
                 .withSatsbeloep(20.0)
                 .withSatstype(new WSSatstyper().withValue("SatsType"));
@@ -97,14 +97,14 @@ public class TransformersTest {
     public void createSorterteUnderytelserPaaBeloepFraWSObjekter() {
         List<WSYtelseskomponent> wsListe = asList(
                 new WSYtelseskomponent()
-                        .withYtelseskomponentBeloep(-200.0)
-                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("FirstEntry")),
+                        .withYtelseskomponentbeloep(-200.0)
+                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("FirstEntry")),
                 new WSYtelseskomponent()
-                        .withYtelseskomponentBeloep(100.0)
-                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("SecondEntry")),
+                        .withYtelseskomponentbeloep(100.0)
+                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("SecondEntry")),
                 new WSYtelseskomponent()
-                        .withYtelseskomponentBeloep(0.0)
-                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("ThirdEntry"))
+                        .withYtelseskomponentbeloep(0.0)
+                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("ThirdEntry"))
                 );
 
         List<Record<Underytelse>> underytelser = createUnderytelser(wsListe);
@@ -238,28 +238,28 @@ public class TransformersTest {
                         .withYtelsesperiode(new WSPeriode().withFom(new DateTime(2000, 1, 1, 1, 2)).withTom(new DateTime(2001, 1, 1, 1, 1)))
                         .withYtelseskomponentListe(
                                 new WSYtelseskomponent()
-                                        .withYtelseskomponentBeloep(200.0)
-                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnbeløp"))
+                                        .withYtelseskomponentbeloep(200.0)
+                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnbeløp"))
                                         .withSatsantall(2.0)
                                         .withSatstype(new WSSatstyper().withValue("SatsType"))
                                         .withSatsbeloep(10.0),
                                 new WSYtelseskomponent()
-                                        .withYtelseskomponentBeloep(2000.0)
-                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                        .withYtelseskomponentbeloep(2000.0)
+                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
                                         .withSatsantall(12.0)
                                         .withSatstype(new WSSatstyper().withValue("SatsSats"))
                                         .withSatsbeloep(20.0))
-                        .withSumYtelseskomponenter(2200.0)
+                        .withYtelseskomponentersum(2200.0)
                         .withTrekkListe(
-                                new WSTrekk().withKreditor("kreditor as").withTrekkbeloep(-2000.0).withTrekkstype(new WSTrekktyper().withValue("kreditortrekk")),
-                                new WSTrekk().withKreditor("kreditor ans").withTrekkbeloep(-3000.0).withTrekkstype(new WSTrekktyper().withValue("kreditortrekk")),
-                                new WSTrekk().withKreditor("kreditor enk").withTrekkbeloep(-4000.0).withTrekkstype(new WSTrekktyper().withValue("kreditortrekk")))
-                        .withSumTrekk(-9000.0)
+                                new WSTrekk().withKreditor("kreditor as").withTrekkbeloep(-2000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
+                                new WSTrekk().withKreditor("kreditor ans").withTrekkbeloep(-3000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
+                                new WSTrekk().withKreditor("kreditor enk").withTrekkbeloep(-4000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")))
+                        .withTrekksum(-9000.0)
                         .withSkattListe(
                                 new WSSkatt().withSkattebeloep(-1.0),
                                 new WSSkatt().withSkattebeloep(-2.0),
                                 new WSSkatt().withSkattebeloep(-3.0))
-                        .withSumSkatt(-6.0)
+                        .withSkattsum(-6.0)
                         .withYtelseNettobeloep(20000.0)
                         .withBilagsnummer("123456789")
                         .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***6").withNavn("Kari Normann"))
@@ -270,10 +270,9 @@ public class TransformersTest {
 
         Record<Hovedytelse> ytelse = hovedytelser.get(0);
         assertThat(ytelse.get(Hovedytelse.mottakertype), is(Mottakertype.BRUKER));
-        assertThat(ytelse.get(Hovedytelse.posteringsdato), is(new DateTime(2015, 1, 1, 13, 37)));
+        assertThat(ytelse.get(Hovedytelse.hovedytelsedato), is(new DateTime(2015, 1, 2, 3, 4)));
         assertThat(ytelse.get(Hovedytelse.utbetaltTil), is(new Record<Aktoer>().with(Aktoer.aktoerId, "123123123").with(Aktoer.navn, "Ola Normann")));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmelding), is("Dette er en melding"));
-        assertThat(ytelse.get(Hovedytelse.utbetalingsDato), is(new DateTime(2015, 1, 2, 3, 4)));
         assertThat(ytelse.get(Hovedytelse.forfallsDato), is(new DateTime(2000, 1, 1, 1, 1)));
         assertThat(ytelse.get(Hovedytelse.utbetaltTilKonto), is(new Record<Konto>().with(Konto.kontonummer, "***REMOVED***3").with(Konto.kontotype, "Bankkonto")));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmetode), is("Overføring via bank"));

@@ -26,7 +26,7 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
 
 
     private String beskrivelse;
-    private DateTime utbetalingsDato;
+    private DateTime hovedytelseDato;
     private String belop;
     private String status;
     private Interval periode;
@@ -36,7 +36,7 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
 
     public HovedytelseVM(Record<Hovedytelse> hovedytelse) {
         this.beskrivelse = hovedytelse.get(Hovedytelse.ytelse);
-        this.utbetalingsDato = hovedytelse.get(Hovedytelse.utbetalingsDato);
+        this.hovedytelseDato = hovedytelse.get(Hovedytelse.hovedytelsedato);
         this.belop = formaterBelop(hovedytelse.get(Hovedytelse.ytelseNettoBeloep));
         this.status = hovedytelse.get(Hovedytelse.utbetalingsstatus);
         this.periode = hovedytelse.get(Hovedytelse.ytelsesperiode);
@@ -44,8 +44,8 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
         this.mottakertype = hovedytelse.get(Hovedytelse.mottakertype);
     }
 
-    public DateTime getUtbetalingsDato() {
-        return utbetalingsDato;
+    public DateTime getHovedytelseDato() {
+        return hovedytelseDato;
     }
 
     public String getBeskrivelse() {
@@ -103,16 +103,16 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
     public static class UtbetalingVMComparator implements Comparator<HovedytelseVM> {
         @Override
         public int compare(HovedytelseVM hovedytelseVM1, HovedytelseVM hovedytelseVM2) {
-            if (hovedytelseVM1.getUtbetalingsDato() == null && hovedytelseVM2.getUtbetalingsDato() == null) {
+            if (hovedytelseVM1.getHovedytelseDato() == null && hovedytelseVM2.getHovedytelseDato() == null) {
                 return 0;
             }
-            if (hovedytelseVM1.getUtbetalingsDato() == null) {
+            if (hovedytelseVM1.getHovedytelseDato() == null) {
                 return -1;
             }
-            if (hovedytelseVM2.getUtbetalingsDato() == null) {
+            if (hovedytelseVM2.getHovedytelseDato() == null) {
                 return 1;
             }
-            return hovedytelseVM2.getUtbetalingsDato().compareTo(hovedytelseVM1.getUtbetalingsDato());
+            return hovedytelseVM2.getHovedytelseDato().compareTo(hovedytelseVM1.getHovedytelseDato());
         }
     }
 }
