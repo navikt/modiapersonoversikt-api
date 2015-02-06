@@ -34,7 +34,7 @@ public class FilterParametereTest {
     public void filtrererBortUtbetalingUtenforDatointervall() {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetalingsDato, now().minusYears(2))
+                .with(Hovedytelse.posteringsdato, now().minusYears(2))
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
                 .with(Hovedytelse.ytelse, DAGPENGER);
 
@@ -45,7 +45,7 @@ public class FilterParametereTest {
     public void filtrererBortUtbetalingForAnnenMottakertype() {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.posteringsdato, now())
                 .with(Hovedytelse.mottakertype, Mottakertype.ANNEN_MOTTAKER)
                 .with(Hovedytelse.ytelse, DAGPENGER);
 
@@ -58,7 +58,7 @@ public class FilterParametereTest {
     public void skalBeholdeYtelsenHvisUtbetalingenInneholderEnYtelseManVilHa() {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.posteringsdato, now())
                 .with(Hovedytelse.ytelse, BARNETRYGD)
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
 
@@ -71,7 +71,7 @@ public class FilterParametereTest {
     public void skalIkkeBeholdeYtelsenHvisAlleUtbetalingerErUonskede() {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.posteringsdato, now())
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
                 .with(Hovedytelse.ytelse, DAGPENGER);
 
@@ -86,7 +86,7 @@ public class FilterParametereTest {
 
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.posteringsdato, now())
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
                 .with(Hovedytelse.ytelse, DAGPENGER);
         filterparams.setYtelser(new HashSet<>(asList(ytelse.get(Hovedytelse.ytelse))));
@@ -127,7 +127,7 @@ public class FilterParametereTest {
     public void skalToggleAlleYtelserSomOnsket() {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.posteringsdato, now())
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
 
         filterparams.toggleAlleYtelser(true);
@@ -140,7 +140,7 @@ public class FilterParametereTest {
     public void skalToggleAlleYtelserSomUonsket() {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.posteringsdato, now())
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
 
         filterparams.toggleAlleYtelser(false);
