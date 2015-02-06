@@ -168,7 +168,7 @@ public class TransformersTest {
     @Test
     public void aggregereBruttoBeloepNaarAlleFelterFinnes() {
         Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.ytelseNettoBeloep, 1000.0)
+                .with(Hovedytelse.nettoUtbetalt, 1000.0)
                 .with(Hovedytelse.sumTrekk, -100.0)
                 .with(Hovedytelse.sumSkatt, -100.0);
 
@@ -179,7 +179,7 @@ public class TransformersTest {
     @Test
     public void aggregateBruttoBeloepNaarSkattOgTrekkMangler() {
         Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.ytelseNettoBeloep, 1000.0);
+                .with(Hovedytelse.nettoUtbetalt, 1000.0);
 
         Double bruttoBeloep = aggregateBruttoBeloep(hovedytelse);
         assertThat(bruttoBeloep, is(1000.0));
@@ -291,7 +291,6 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.ytelseBeloep), is(200.0));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.satsType), is("SatsType"));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.satsBeloep), is(10.0));
-        assertThat(ytelse.get(Hovedytelse.sumUnderytelser), is(2200.0));
         assertThat(ytelse.get(Hovedytelse.trekkListe).size(), is(3));
         assertThat(ytelse.get(Hovedytelse.trekkListe).get(0).get(Trekk.kreditor), is("kreditor as"));
         assertThat(ytelse.get(Hovedytelse.trekkListe).get(0).get(Trekk.trekkBeloep), is(-2000.0));
@@ -308,12 +307,12 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.skattListe).get(1), is(-2.0));
         assertThat(ytelse.get(Hovedytelse.skattListe).get(2), is(-3.0));
         assertThat(ytelse.get(Hovedytelse.sumSkatt), is(-6.0));
-        assertThat(ytelse.get(Hovedytelse.ytelseNettoBeloep), is(20000.0));
+        assertThat(ytelse.get(Hovedytelse.nettoUtbetalt), is(20000.0));
         assertThat(ytelse.get(Hovedytelse.bilagsnummer), is("123456789"));
         assertThat(ytelse.get(Hovedytelse.rettighetshaver), is(new Record<Aktoer>().with(Aktoer.navn, "Kari Normann").with(Aktoer.aktoerId, "112233445566")));
         assertThat(ytelse.get(Hovedytelse.refundertForOrg), is(new Record<Aktoer>().with(Aktoer.navn, "KariNormann AS").with(Aktoer.aktoerId, "***REMOVED***")));
 
-        assertThat(ytelse.get(Hovedytelse.aggregertTrekkBeloep), is(-9006.0));
-        assertThat(ytelse.get(Hovedytelse.aggregertBruttoBeloep), is(10994.0));
+        assertThat(ytelse.get(Hovedytelse.sammenlagtTrekkBeloep), is(-9006.0));
+        assertThat(ytelse.get(Hovedytelse.bruttoUtbetalt), is(10994.0));
     }
 }

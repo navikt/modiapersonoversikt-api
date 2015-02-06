@@ -33,7 +33,6 @@ public class WSUtbetalingTestData {
         return asList(new WSUtbetaling()
                         .withPosteringsdato(now().minusYears(1))
                         .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                        .withUtbetalingNettobeloep(19724.00)
                         .withUtbetalingsmelding("Alderspensjon med 3 mnd etterbetaling")
                         .withYtelseListe(
                                 new WSYtelse()
@@ -143,7 +142,6 @@ public class WSUtbetalingTestData {
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(19))
                 .withUtbetaltTil(new WSOrganisasjon().withAktoerId("00999999999").withNavn("Oslo kommune Utbetaling 4"))
-                .withUtbetalingNettobeloep(11833.00)
                 .withUtbetalingsmelding("Sykepenger")
                 .withYtelseListe(
                         new WSYtelse()
@@ -180,7 +178,6 @@ public class WSUtbetalingTestData {
                         .withUtbetaltTil(new WSPerson()
                                 .withAktoerId("22222222222")
                                 .withNavn("Ola Nordmann Utbetaling 2"))
-                        .withUtbetalingNettobeloep(19152.75)
                         .withUtbetalingsmelding("Utbetalt dagpenger")
                         .withYtelseListe(
                                 new WSYtelse()

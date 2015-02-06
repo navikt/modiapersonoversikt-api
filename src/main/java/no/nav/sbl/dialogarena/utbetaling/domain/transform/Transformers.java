@@ -78,18 +78,17 @@ public class Transformers {
                     .with(ytelse, wsYtelse.getYtelsestype() != null ? wsYtelse.getYtelsestype().getValue() : "")
                     .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
                     .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
-                    .with(sumUnderytelser, wsYtelse.getYtelseskomponentersum())
                     .with(trekkListe, createTrekkliste(wsYtelse.getTrekkListe()))
                     .with(sumTrekk, wsYtelse.getTrekksum())
                     .with(skattListe, createSkatteListe(wsYtelse.getSkattListe()))
                     .with(sumSkatt, wsYtelse.getSkattsum())
-                    .with(ytelseNettoBeloep, wsYtelse.getYtelseNettobeloep())
+                    .with(nettoUtbetalt, wsYtelse.getYtelseNettobeloep())
                     .with(bilagsnummer, wsYtelse.getBilagsnummer())
                     .with(rettighetshaver, createAktoer(wsYtelse.getRettighetshaver()))
                     .with(refundertForOrg, createAktoer(wsYtelse.getRefundertForOrg()));
 
-                    hovedytelse = hovedytelse.with(aggregertBruttoBeloep, aggregateBruttoBeloep(hovedytelse));
-                    hovedytelse = hovedytelse.with(aggregertTrekkBeloep, aggregateTrekkBeloep(hovedytelse));
+                    hovedytelse = hovedytelse.with(bruttoUtbetalt, wsYtelse.getYtelseskomponentersum());
+                    hovedytelse = hovedytelse.with(sammenlagtTrekkBeloep, aggregateTrekkBeloep(hovedytelse));
 
                     hovedytelser.add(hovedytelse);
                 }
@@ -128,7 +127,7 @@ public class Transformers {
     }
 
     protected static Double aggregateBruttoBeloep(Record<Hovedytelse> hovedytelse) {
-        Double netto = hovedytelse.get(Hovedytelse.ytelseNettoBeloep);
+        Double netto = hovedytelse.get(Hovedytelse.nettoUtbetalt);
         Double trekk = hovedytelse.get(Hovedytelse.sumTrekk);
         Double skatt = hovedytelse.get(Hovedytelse.sumSkatt);
 
