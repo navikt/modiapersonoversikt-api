@@ -21,6 +21,8 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,11 +128,13 @@ public class FilterFormPanel extends Panel {
     }
 
     private DateRangePicker createDateRangePicker() {
-        LocalDate minDato = now().minusYears(AAR_TILBAKE);
+        LocalDate minDato = now().minusYears(AAR_TILBAKE).withDayOfYear(1);
         LocalDate maksDato = now();
 
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yy");
+
         DatePickerConfigurator datePickerConfigurator = datePickerConfigurator()
-                .withMinDate("-" + AAR_TILBAKE + "y")
+                .withMinDate(formatter.print(minDato))
                 .withMaxDate("0d")
                 .withYearRange("-" + AAR_TILBAKE + "y:c")
                 .withParameter("showOn", "button")
