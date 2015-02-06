@@ -19,7 +19,7 @@ import static java.util.Collections.sort;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM.descBelop;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM.DESC_BELOP;
 
 public class DetaljPanel extends Panel {
 
@@ -33,7 +33,7 @@ public class DetaljPanel extends Panel {
         appendSkatteTrekk(utbetalingVM, ytelseVMer);
         appendTrekk(utbetalingVM, ytelseVMer);
 
-        sort(ytelseVMer, descBelop);
+        sort(ytelseVMer, DESC_BELOP);
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
                 new Label("konto", utbetalingVM.getKontonr()),
