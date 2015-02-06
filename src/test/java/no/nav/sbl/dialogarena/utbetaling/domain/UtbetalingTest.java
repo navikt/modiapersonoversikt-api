@@ -24,12 +24,12 @@ public class UtbetalingTest {
         Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Uføre")
-                .with(Hovedytelse.utbetalingsDato, idag);
+                .with(Hovedytelse.posteringsdato, idag);
 
         Record<Hovedytelse> hovedytelse2 = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Foreldrepenger")
-                .with(Hovedytelse.utbetalingsDato, idag);
+                .with(Hovedytelse.posteringsdato, idag);
 
         List<Record<Hovedytelse>> hovedytelser = asList(hovedytelse, hovedytelse2);
 
@@ -46,12 +46,12 @@ public class UtbetalingTest {
         Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Uføre")
-                .with(Hovedytelse.utbetalingsDato, idag);
+                .with(Hovedytelse.posteringsdato, idag);
 
         Record<Hovedytelse> hovedytelse2 = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Foreldrepenger")
-                .with(Hovedytelse.utbetalingsDato, igaar);
+                .with(Hovedytelse.posteringsdato, igaar);
 
         List<Record<Hovedytelse>> hovedytelser = asList(hovedytelse, hovedytelse2);
         hovedytelser = on(hovedytelser).collect(POSTERINGSDATO_COMPARATOR);
