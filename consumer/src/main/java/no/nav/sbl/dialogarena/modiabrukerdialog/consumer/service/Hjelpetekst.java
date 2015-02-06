@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.skrivestotte;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import java.util.List;
 

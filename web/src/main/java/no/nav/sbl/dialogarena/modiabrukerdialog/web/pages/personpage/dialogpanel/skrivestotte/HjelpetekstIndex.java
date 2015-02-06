@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.skrivestotte;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.Hjelpetekst;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;

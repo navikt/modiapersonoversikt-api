@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.skrivestotte;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.Hjelpetekst;
 import org.junit.Before;
 import org.junit.Test;
 
