@@ -39,7 +39,7 @@ public class YtelseVM implements Serializable {
         return belop != null ? getBelopString(belop) : "";
     }
 
-    public static Comparator<YtelseVM> descBelop = new Comparator<YtelseVM>() {
+    public static final Comparator<YtelseVM> DESC_BELOP = new Comparator<YtelseVM>() {
         @Override
         public int compare(YtelseVM o1, YtelseVM o2) {
             if(o1.belop == null) {

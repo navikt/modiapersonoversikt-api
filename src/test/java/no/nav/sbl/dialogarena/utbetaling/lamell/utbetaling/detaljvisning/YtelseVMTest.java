@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM.descBelop;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM.DESC_BELOP;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -22,7 +22,7 @@ public class YtelseVMTest {
             new YtelseVM("ytelse5", -2.0)
         );
 
-        Collections.sort(ytelser, descBelop);
+        Collections.sort(ytelser, DESC_BELOP);
         assertThat(ytelser.get(0).getYtelse(), is("ytelse3"));
         assertThat(ytelser.get(1).getYtelse(), is("ytelse4"));
         assertThat(ytelser.get(2).getYtelse(), is("ytelse1"));
@@ -35,7 +35,7 @@ public class YtelseVMTest {
         YtelseVM vm1 = new YtelseVM("ytelse 1", 1.0);
         YtelseVM vm2 = new YtelseVM("ytelse 1", 2.0);
 
-        assertThat(descBelop.compare(vm1, vm2), is(1));
+        assertThat(DESC_BELOP.compare(vm1, vm2), is(1));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class YtelseVMTest {
         YtelseVM vm1 = new YtelseVM("ytelse 1", 1.0);
         YtelseVM vm2 = new YtelseVM("ytelse 1", null);
 
-        assertThat(descBelop.compare(vm1, vm2), is(-1));
+        assertThat(DESC_BELOP.compare(vm1, vm2), is(-1));
     }
 
     @Test
@@ -51,6 +51,6 @@ public class YtelseVMTest {
         YtelseVM vm1 = new YtelseVM("ytelse 1", null);
         YtelseVM vm2 = new YtelseVM("ytelse 1", 2.0);
 
-        assertThat(descBelop.compare(vm1, vm2), is(1));
+        assertThat(DESC_BELOP.compare(vm1, vm2), is(1));
     }
 }
