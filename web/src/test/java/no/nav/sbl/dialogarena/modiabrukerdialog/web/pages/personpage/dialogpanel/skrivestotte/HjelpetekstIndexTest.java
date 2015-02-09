@@ -24,7 +24,7 @@ public class HjelpetekstIndexTest {
 
     @Test
     public void skalIndeksereHjelpetekster() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("Søknadsskjemaer Taushetsbe ");
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
