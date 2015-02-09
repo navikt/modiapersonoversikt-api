@@ -50,10 +50,6 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
                 .collect(new UtbetalingVMComparator());
     }
 
-    public static void main(String[] args) {
-        System.out.println("DateTime.now().toDateMidnight(): " + DateTime.now().toDateMidnight().now());
-    }
-
     protected void hentUtbetalingOgSettDefaultModel() {
         try {
             List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
