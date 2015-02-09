@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
 import org.apache.http.client.fluent.Async;
 import org.apache.http.client.fluent.Content;

@@ -7,6 +7,9 @@ import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
 import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.CmsSkrivestotte;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndex;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndexImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +25,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndexMock.createHjelpetekstIndexMock;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock.CMS_KEY;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -29,6 +33,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Configuration
 public class CmsEndpointConfig {
 
+    public static final String CMS_HJELPETEKST_KEY = "start.cms.hjelpetekst.withmock";
     public static final String DEFAULT_LOCALE = "nb";
     private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/tekster";
     private static final String ARTIKLER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/saksinformasjon";
@@ -70,6 +75,14 @@ public class CmsEndpointConfig {
                 }
             }
         };
+    }
+
+    @Bean
+    public HjelpetekstIndex hjelpetekstIndex() {
+        HjelpetekstIndex hjelpetekstIndex = new HjelpetekstIndexImpl();
+        hjelpetekstIndex.indekser(CmsSkrivestotte.hentHjelpetekster());
+
+        return createSwitcher(hjelpetekstIndex, createHjelpetekstIndexMock(), CMS_HJELPETEKST_KEY, HjelpetekstIndex.class);
     }
 
     private ValueRetriever siteContentRetriever() throws URISyntaxException {

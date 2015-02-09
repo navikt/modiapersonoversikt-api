@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
 import java.util.List;
 

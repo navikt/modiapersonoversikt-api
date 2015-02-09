@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.Hjelpetekst;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.skrivestotte.HjelpetekstIndex;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Hjelpetekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndex;
 import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;

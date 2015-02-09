@@ -20,6 +20,7 @@ import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor.AktorEndpointConfig.AKTOER_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig.CMS_HJELPETEKST_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
@@ -84,6 +85,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("AktoerId", AKTOER_KEY),
                 new MockSetupModel("HenvendelseSoknader", HENVENDELSESOKNADER_KEY),
                 new MockSetupModel("NORG", NORG_KEY),
+                new MockSetupModel("CMS Hjelpetekst", CMS_HJELPETEKST_KEY),
                 new MockSetupModel("CMS", CMS_KEY)
         );
     }
