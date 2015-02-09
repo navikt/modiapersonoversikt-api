@@ -2,18 +2,13 @@
 var React = require('react');
 
 var Filter = React.createClass({
-    getInitialState: function () {
-        return {
-            fritekst: ""
-        }
-    },
     setFritekst: function (event) {
         this.props.setFritekst(event.nativeEvent.target.value);
     },
     render: function () {
         return (
-            <div>
-                <input type="text" placeholder="Søk" onChange={this.setFritekst} />
+            <div className="filter-container">
+                <input type="text" placeholder="Søk" onChange={this.setFritekst} value={this.props.tekst}/>
             </div>
         );
     }

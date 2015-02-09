@@ -21,8 +21,8 @@ var TekstListe = React.createClass({
     },
     lagListeElement: function (tekst) {
         return (
-            <li onClick={this.setValgtTekst(tekst)}>
-                <h2>{tekst.tittel}</h2>
+            <li className={this.props.valgtTekst === tekst ? 'valgt' : ''} onClick={this.setValgtTekst(tekst)}>
+                <h4>{tekst.tittel}</h4>
                 <span>{tekst.innhold}</span>
             </li>
         );

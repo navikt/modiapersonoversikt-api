@@ -8,6 +8,7 @@ var Tekstforslag = require('./Tekstforslag.js');
     window.ModiaJS.React = React;
 
     window.ModiaJS.Components = {};
+    window.ModiaJS.InitializedComponents = {};
 
     window.ModiaJS.Components.Tekstforslag = Tekstforslag;
 })();

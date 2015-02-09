@@ -14,8 +14,10 @@ var Tekstforslag = React.createClass({
             this.setState({tekster: tekster});
         }.bind(this));
     },
+    toggle: function(){
+        this.setState({show: !this.state.show});
+    },
     setValgtTekst: function (tekst) {
-        console.log('Setter valgt tekst: ', tekst);
         this.setState({valgtTekst: tekst})
     },
     setFritekst: function (fritekst) {
@@ -31,9 +33,9 @@ var Tekstforslag = React.createClass({
     render: function () {
         return this.state.show ? (
             <div className="tekstforslag">
-                <Filter setFritekst={this.setFritekst} />
-                <div>
-                    <TekstListe tekster={this.state.tekster} setValgtTekst={this.setValgtTekst} />
+                <Filter setFritekst={this.setFritekst} tekst={this.state.fritekst} />
+                <div className="tekstvisning">
+                    <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
                     <TekstForhandsvisning tekst={this.state.valgtTekst} />
                 </div>
                 <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>

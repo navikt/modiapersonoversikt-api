@@ -29,6 +29,18 @@
             <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
         </dependency>
+        <!--Modig-->
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-frontend-wicket</artifactId>
+            <version>1.1.98</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!--Diverse-->
         <dependency>

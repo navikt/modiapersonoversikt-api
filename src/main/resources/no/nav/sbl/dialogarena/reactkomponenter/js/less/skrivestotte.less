@@ -1,0 +1,66 @@
+@skrivestotte-input-hoyde: 72px;
+@skrivestotte-padding: 15px;
+
+.tekstforslag {
+  position: absolute;
+  width: 900px;
+  height: 500px;
+  left: 50%;
+  margin-left: -450px;
+  top: 20%;
+  border: 1px solid #333333;
+  background-color: #fff;
+  text-align: left;
+
+  .filter-container {
+    padding: 1rem;
+    height: @skrivestotte-input-hoyde;
+    border-bottom: 1px solid #333;
+
+    input[type=text] {
+      width: 100%;
+      line-height: 2rem;
+      font-size: 1.25rem;
+    }
+  }
+  .tekstvisning {
+    height: 100%;
+    padding-bottom: @skrivestotte-input-hoyde;
+    margin-bottom: -@skrivestotte-input-hoyde;
+
+    .tekstListe {
+      margin: 0;
+      width: 35%;
+      float: left;
+      height: inherit;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      list-style: none;
+      padding: 0;
+      background-color: #f5f5f5;
+
+      li {
+        padding: @skrivestotte-padding;
+
+        h4 {
+          margin: 0 0 0.5rem;
+        }
+        &.valgt {
+          background-color: #226aa5;
+          color: #f5f5f5;
+
+          h4 {
+            color: white;
+          }
+        }
+      }
+
+    }
+
+    .tekstForhandsvisning {
+      width: 65%;
+      float: right;
+      padding: @skrivestotte-padding;
+    }
+  }
+}
