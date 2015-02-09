@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -103,7 +103,7 @@ public class LeggTilbakePanel extends Panel {
         feedbackPanelSuccess.add(lukkKnapp);
         add(feedbackPanelSuccess);
 
-        form.add(new AjaxButton("leggtilbake") {
+        form.add(new IndicatingAjaxButtonWithImageUrl("leggtilbake", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(

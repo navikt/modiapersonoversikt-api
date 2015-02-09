@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.journalforing;
 
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
@@ -11,7 +12,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 
 import javax.inject.Inject;
 
@@ -57,7 +60,7 @@ public class VelgSakPanel extends Panel {
     }
 
     private AjaxButton getSubmitLenke(final FeedbackPanel feedbackPanel) {
-        return new AjaxButton("velgSak") {
+        return new IndicatingAjaxButtonWithImageUrl("velgSak", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 lukkPanel(target);

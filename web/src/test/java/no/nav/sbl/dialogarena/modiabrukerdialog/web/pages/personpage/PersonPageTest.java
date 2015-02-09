@@ -171,6 +171,7 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void tilordnerOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
         Melding spsm = new Melding("id", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now());
+        spsm.temagruppe = "ARBD";
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
@@ -182,6 +183,7 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void tilordnerIkkeOppgaveDersomNAVBesvarerEgetSporsmal() throws FikkIkkeTilordnet {
         Melding spsm = new Melding("id", Meldingstype.SPORSMAL_MODIA_UTGAAENDE, DateTime.now());
+        spsm.temagruppe = "ARBD";
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
