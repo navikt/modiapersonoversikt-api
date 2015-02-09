@@ -28,6 +28,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
@@ -172,7 +173,8 @@ public class WicketApplication extends WebApplication {
                 )
                 .addCss(
                         BasePage.PERSONSOKRESULT,
-                        BasePage.PERSONSOKSEARCH
+                        BasePage.PERSONSOKSEARCH,
+                        ReactResources.SKRIVESTOTTE_CSS
                 )
                 .addScripts(SPIResources.getScripts())
                 .addScripts(
@@ -193,7 +195,8 @@ public class WicketApplication extends WebApplication {
                         PersonPage.SELECTMENU_JS,
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
-                        Innboks.MELDINGER_JS
+                        Innboks.MELDINGER_JS,
+                        ReactResources.SKRIVESTOTTE_JS
                 )
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);

@@ -172,6 +172,10 @@
             <artifactId>modig-wicket</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>reactkomponenter</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-frontend-wicket</artifactId>
         </dependency>

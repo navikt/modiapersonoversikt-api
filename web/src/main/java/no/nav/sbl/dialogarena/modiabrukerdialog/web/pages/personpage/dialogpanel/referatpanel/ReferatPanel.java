@@ -17,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -39,6 +40,7 @@ import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -119,6 +121,10 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Label tekstfeltLabel = new Label("tekstfelt-label", new StringResourceModel("${modus}.overskrift", getModel()));
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
         form.add(tekstfelt, tekstfeltLabel);
+
+        HashMap<String, Object> tekstforslagProps = new HashMap<>();
+        tekstforslagProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
+        form.add(new ReactComponentPanel("reacttest", "Tekstforslag", tekstforslagProps));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         modusKomponenter.add(feedbackPanel);
