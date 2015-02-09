@@ -4,7 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>no.nav.sbl.dialogarena</groupId>
+    <parent>
+        <groupId>no.nav.sbl.dialogarena</groupId>
+        <artifactId>dialogarena</artifactId>
+        <version>3</version>
+    </parent>
+
+    <name>Dialogarena - Reactkomponenter</name>
+    <description>Fellesbibliotek for React-komponenter</description>
     <artifactId>reactkomponenter</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -16,11 +23,18 @@
     </properties>
 
     <dependencies>
+        <!--Wicket-->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
-            <scope>provided</scope>
+        </dependency>
+
+        <!--Diverse-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
