@@ -10,7 +10,6 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +33,10 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
     @Inject
     private UtbetalingService utbetalingService;
 
-    private String fnr;
-
     public UtbetalingWidget(String id, String initial, String fnr) {
         super(id, initial, true, "widget.utbetalingWidget.flereUtbetalinger");
-        this.fnr = fnr;
-        hentUtbetalingOgSettDefaultModel();
+        this.setDefaultModel(lagModell(fnr));
+
         setMaxNumberOfFeedItems(MAX_NUMBER_OF_UTBETALINGER+1);
     }
 
@@ -50,18 +47,20 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
                 .collect(new UtbetalingVMComparator());
     }
 
-    protected void hentUtbetalingOgSettDefaultModel() {
+    protected ListModel<?> lagModell(final String fnr) {
+        List<?> listContent;
         try {
             List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
             if (hovedytelser.isEmpty()) {
-                setDefaultModel(new ListModel<>(asList(new GenericListing(getString("ingen.utbetalinger")))));
+                listContent = asList(new GenericListing(getString("ingen.utbetalinger")));
             } else {
-                setDefaultModel(new ListModel<>(transformUtbetalingToVM(hovedytelser)));
+                listContent = transformUtbetalingToVM(hovedytelser);
             }
         } catch (ApplicationException | SystemException e) {
             LOG.warn("Feilet ved henting av utbetalingsinformasjon for fnr {}", fnr, e);
-            setDefaultModel(new ListModel<>(asList(new ErrorListing(getString("utbetalinger.feilet")))));
+            listContent = asList(new ErrorListing(getString("utbetalinger.feilet")));
         }
+        return new ListModel<>(listContent);
     }
 
     @Override
