@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.skrivestotte;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.Hjelpetekst;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class HjelpetekstIndexTest {
 
     @Test
     public void skalIndeksereHjelpetekster() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("Søknadsskjemaer Taushetsbe ");
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));

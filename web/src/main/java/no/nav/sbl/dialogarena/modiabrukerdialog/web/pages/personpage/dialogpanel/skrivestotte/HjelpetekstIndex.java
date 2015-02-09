@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.skrivestotte;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.Hjelpetekst;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -35,6 +36,7 @@ public class HjelpetekstIndex {
 
     public HjelpetekstIndex() {
         queryParser.setDefaultOperator(AND);
+        queryParser.setAllowLeadingWildcard(true);
     }
 
     public void indekser(List<Hjelpetekst> hjelpetekster) {
@@ -53,7 +55,7 @@ public class HjelpetekstIndex {
         try {
             IndexSearcher searcher = new IndexSearcher(open(directory));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
-            searcher.search(queryParser.parse(trim(frisok) + "*"), collector);
+            searcher.search(queryParser.parse("*" + trim(frisok) + "*"), collector);
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
             return lagHjelpetekster(searcher, hits);
