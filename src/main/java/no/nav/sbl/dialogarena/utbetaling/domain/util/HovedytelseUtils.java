@@ -20,6 +20,7 @@ import static no.nav.modig.lang.collections.TransformerUtils.first;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelse;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR;
+import static org.joda.time.DateTime.now;
 
 /**
  * Hjelpefunksjoner for å jobbe med Hovedytelser.
@@ -120,6 +121,17 @@ public class HovedytelseUtils {
             @Override
             public boolean evaluate(DateTime dateTime) {
                 return intervall.contains(dateTime);
+            }
+        };
+    }
+
+    public static Predicate<Record<Hovedytelse>> betweenNowAndNumberOfMonthsBefore(final int numberOfMonthsToShow) {
+        return new Predicate<Record<Hovedytelse>>() {
+            @Override
+            public boolean evaluate(Record<Hovedytelse> hovedytelse) {
+                DateTime hovedytelseDato = hovedytelse.get(Hovedytelse.hovedytelsedato);
+                DateTime threshold = minusMonthsAndFixedAtMidnight(now(), numberOfMonthsToShow);
+                return hovedytelseDato.isAfter(threshold);
             }
         };
     }

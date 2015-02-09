@@ -5,11 +5,9 @@ import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.TO_LOCAL_DATE;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.isAfter;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -38,5 +36,18 @@ public class DateUtilsTest {
     public void toLocalDateTransformerTest() {
         DateTime dateTime = DateTime.now();
         assertThat(dateTime.toLocalDate(), equalTo(TO_LOCAL_DATE.transform(dateTime)));
+    }
+
+    @Test
+    public void minusMonthsToMidnight() {
+        DateTime dateTime = new DateTime(2015, 10, 10, 11, 11, 11);
+        DateTime newDateTime = minusMonthsAndFixedAtMidnight(dateTime, 3);
+
+        assertThat(newDateTime.getYear(), is(2015));
+        assertThat(newDateTime.getMonthOfYear(), is(7));
+        assertThat(newDateTime.getDayOfMonth(), is(10));
+        assertThat(newDateTime.getHourOfDay(), is(0));
+        assertThat(newDateTime.getMinuteOfHour(), is(0));
+        assertThat(newDateTime.getSecondOfMinute(), is(0));
     }
 }
