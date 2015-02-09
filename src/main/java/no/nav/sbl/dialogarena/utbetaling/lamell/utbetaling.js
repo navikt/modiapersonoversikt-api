@@ -64,7 +64,7 @@ var Utbetalinger = (function () {
         haandterDetaljPanelVisning: haandterDetaljPanelVisning,
         toggleDetaljPanel: toggleDetaljPanel,
         skrivUt: skrivUt
-    }
+    };
 })();
 
 $(document).ready(function() {
