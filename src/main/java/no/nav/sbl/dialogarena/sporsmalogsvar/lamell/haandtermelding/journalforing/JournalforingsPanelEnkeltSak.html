@@ -4,7 +4,9 @@
 <head></head>
 <body>
 <wicket:panel>
-    <h2><wicket:message key="journalforingEnkeltSak.overskrift"/></h2>
+    <h2>
+        <wicket:message key="journalforingEnkeltSak.overskrift"/>
+    </h2>
     <div class="robust-strek"></div>
     <div class="sakliste">
         <h2 wicket:id="sakstype" class="medium sakstype"></h2>
@@ -27,6 +29,10 @@
     </div>
     <hr class="linje"/>
     <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-stor">Journalfør</a>
+    <input type="submit"
+           class="send knapp-hoved-stor"
+           wicket:id="journalforTraad"
+           wicket:message="value:journalfor.knapp.send"/>
 </wicket:panel>
 </body>
 </html>
