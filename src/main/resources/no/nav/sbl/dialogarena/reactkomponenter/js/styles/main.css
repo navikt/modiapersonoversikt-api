@@ -1,0 +1,19 @@
+.tekstforslag {
+	position: absolute;
+	width: 900px;
+	left: 50%;
+	margin-left: -450px;
+	top: 35%;
+	border: 1px solid #333333;
+	background-color: #fff;
+}
+
+.tekstforslag .tekstListe {
+	width: 35%;
+	float: left;
+}
+
+.tekstforslag .tekstForhandsvisning {
+	width: 65%;
+	float: right;
+}
