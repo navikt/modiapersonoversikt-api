@@ -131,7 +131,7 @@ public class FilterFormPanel extends Panel {
         LocalDate minDato = now().minusYears(AAR_TILBAKE).withDayOfYear(1);
         LocalDate maksDato = now();
 
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yy");
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
 
         DatePickerConfigurator datePickerConfigurator = datePickerConfigurator()
                 .withMinDate(formatter.print(minDato))
