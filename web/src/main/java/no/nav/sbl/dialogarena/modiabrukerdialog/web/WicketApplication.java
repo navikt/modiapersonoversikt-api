@@ -173,8 +173,7 @@ public class WicketApplication extends WebApplication {
                 )
                 .addCss(
                         BasePage.PERSONSOKRESULT,
-                        BasePage.PERSONSOKSEARCH,
-                        ReactResources.SKRIVESTOTTE_CSS
+                        BasePage.PERSONSOKSEARCH
                 )
                 .addScripts(SPIResources.getScripts())
                 .addScripts(
@@ -195,9 +194,9 @@ public class WicketApplication extends WebApplication {
                         PersonPage.SELECTMENU_JS,
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
-                        Innboks.MELDINGER_JS,
-                        ReactResources.SKRIVESTOTTE_JS
+                        Innboks.MELDINGER_JS
                 )
+                .withModules(ReactResources.SKRIVESTOTTE)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }

@@ -124,7 +124,15 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
         HashMap<String, Object> tekstforslagProps = new HashMap<>();
         tekstforslagProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
-        form.add(new ReactComponentPanel("reacttest", "Tekstforslag", tekstforslagProps));
+        final ReactComponentPanel stottetekster = new ReactComponentPanel("reacttest", "Tekstforslag", tekstforslagProps);
+        form.add(stottetekster);
+
+        form.add(new AjaxLink("stotteteksterToggler") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                stottetekster.callFunction(target, "toggle");
+            }
+        });
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         modusKomponenter.add(feedbackPanel);
