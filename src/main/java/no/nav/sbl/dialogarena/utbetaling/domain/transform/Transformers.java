@@ -74,7 +74,7 @@ public class Transformers {
                     .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
                     .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode() != null ? wsUtbetaling.getUtbetalingsmetode().getValue() : "")
                     .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus() != null ? wsUtbetaling.getUtbetalingsstatus().getValue() : "")
-                    .with(id, String.valueOf(wsYtelse.hashCode()))
+                    .with(id, String.valueOf(createHovedytelseId(wsYtelse)))
                     .with(ytelse, wsYtelse.getYtelsestype() != null ? wsYtelse.getYtelsestype().getValue() : "")
                     .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
                     .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
@@ -192,5 +192,15 @@ public class Transformers {
         return new Record<Aktoer>()
                 .with(aktoerId, utbetaltTil.getAktoerId())
                 .with(navn, utbetaltTil.getNavn());
+    }
+
+    private static int createHovedytelseId(WSYtelse wsYtelse) {
+        return new StringBuilder()
+                .append(wsYtelse.getBilagsnummer())
+                .append(wsYtelse.getSkattsum())
+                .append(wsYtelse.getTrekksum())
+                .append(wsYtelse.getYtelseNettobeloep())
+                .toString()
+                .hashCode();
     }
 }
