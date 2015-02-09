@@ -244,12 +244,12 @@ public class TransformersTest {
                                         .withSatstype(new WSSatstyper().withValue("SatsType"))
                                         .withSatsbeloep(10.0),
                                 new WSYtelseskomponent()
-                                        .withYtelseskomponentbeloep(2000.0)
+                                        .withYtelseskomponentbeloep(20000.0)
                                         .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
                                         .withSatsantall(12.0)
                                         .withSatstype(new WSSatstyper().withValue("SatsSats"))
                                         .withSatsbeloep(20.0))
-                        .withYtelseskomponentersum(2200.0)
+                        .withYtelseskomponentersum(22000.0)
                         .withTrekkListe(
                                 new WSTrekk().withKreditor("kreditor as").withTrekkbeloep(-2000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
                                 new WSTrekk().withKreditor("kreditor ans").withTrekkbeloep(-3000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
@@ -260,7 +260,7 @@ public class TransformersTest {
                                 new WSSkatt().withSkattebeloep(-2.0),
                                 new WSSkatt().withSkattebeloep(-3.0))
                         .withSkattsum(-6.0)
-                        .withYtelseNettobeloep(20000.0)
+                        .withYtelseNettobeloep(12994.0)
                         .withBilagsnummer("123456789")
                         .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***6").withNavn("Kari Normann"))
                         .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("KariNormann AS")));
@@ -283,7 +283,7 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.underytelseListe).size(), is(2));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.ytelsesType), is("Særtillegg"));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.satsAntall), is(12.0));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.ytelseBeloep), is(2000.0));
+        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.ytelseBeloep), is(20000.0));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.satsType), is("SatsSats"));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.satsBeloep), is(20.0));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.ytelsesType), is("Grunnbeløp"));
@@ -307,12 +307,12 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.skattListe).get(1), is(-2.0));
         assertThat(ytelse.get(Hovedytelse.skattListe).get(2), is(-3.0));
         assertThat(ytelse.get(Hovedytelse.sumSkatt), is(-6.0));
-        assertThat(ytelse.get(Hovedytelse.nettoUtbetalt), is(20000.0));
+        assertThat(ytelse.get(Hovedytelse.nettoUtbetalt), is(12994.0));
         assertThat(ytelse.get(Hovedytelse.bilagsnummer), is("123456789"));
         assertThat(ytelse.get(Hovedytelse.rettighetshaver), is(new Record<Aktoer>().with(Aktoer.navn, "Kari Normann").with(Aktoer.aktoerId, "***REMOVED***6")));
         assertThat(ytelse.get(Hovedytelse.refundertForOrg), is(new Record<Aktoer>().with(Aktoer.navn, "KariNormann AS").with(Aktoer.aktoerId, "***REMOVED***")));
 
         assertThat(ytelse.get(Hovedytelse.sammenlagtTrekkBeloep), is(-9006.0));
-        assertThat(ytelse.get(Hovedytelse.bruttoUtbetalt), is(10994.0));
+        assertThat(ytelse.get(Hovedytelse.bruttoUtbetalt), is(22000.0));
     }
 }
