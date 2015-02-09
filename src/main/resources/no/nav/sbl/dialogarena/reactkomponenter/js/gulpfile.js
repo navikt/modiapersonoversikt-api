@@ -118,8 +118,7 @@ var browserifyTask = function (options) {
             }));
 
     }
-
-}
+};
 
 var cssTask = function (options) {
     if (options.development) {
@@ -142,14 +141,14 @@ var cssTask = function (options) {
             .pipe(cssmin())
             .pipe(gulp.dest(options.dest));
     }
-}
+};
 
 // Starts our development workflow
 gulp.task('default', function () {
 
     browserifyTask({
         development: true,
-        src: './app/main.js',
+        src: './skrivestotte/index.js',
         dest: './build'
     });
 
@@ -165,7 +164,7 @@ gulp.task('deploy', function () {
 
     browserifyTask({
         development: false,
-        src: './app/main.js',
+        src: './skrivestotte/index.js',
         dest: './dist'
     });
 

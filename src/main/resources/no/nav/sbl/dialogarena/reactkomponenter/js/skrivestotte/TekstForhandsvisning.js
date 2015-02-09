@@ -5,7 +5,8 @@ var TekstForhandsvisning = React.createClass({
     render: function () {
         return (
             <div className="tekstForhandsvisning">
-                <p>{this.props.tekst.tekst}</p>
+                <h1>{this.props.tekst.tittel}</h1>
+                <p>{this.props.tekst.innhold}</p>
             </div>
         );
     }
