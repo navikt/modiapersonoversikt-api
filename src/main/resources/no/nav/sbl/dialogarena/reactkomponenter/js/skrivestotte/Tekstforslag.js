@@ -8,18 +8,18 @@ var Filter = require('./Filter');
 
 var Tekstforslag = React.createClass({
     getInitialState: function () {
-        return {tekster: [], valgtTekst: {}, valgtLocale: '', fritekst: '', show: true};
+        return {tekster: [], valgtTekst: {locales: {}}, valgtLocale: 'nb', fritekst: '', show: true};
     },
     componentDidMount: function () {
         hentEnonicTekster('').done(function (tekster) {
             this.setState({tekster: tekster});
         }.bind(this));
     },
-    toggle: function(){
+    toggle: function () {
         this.setState({show: !this.state.show});
     },
     setValgtTekst: function (tekst) {
-        this.setState({valgtTekst: tekst, valgtLocale: ''})
+        this.setState({valgtTekst: tekst, valgtLocale: 'nb'})
     },
     setValgtLocale: function (locale) {
         this.setState({valgtLocale: locale})
@@ -31,7 +31,7 @@ var Tekstforslag = React.createClass({
         }.bind(this));
     },
     settInnTekst: function () {
-        $('#' + this.props.tekstfeltId).focus().val(this.state.valgtLocale?this.state.valgtTekst.locales[this.state.valgtLocale]: this.state.valgtTekst.innhold);
+        $('#' + this.props.tekstfeltId).focus().val(this.state.valgtTekst.locales[this.state.valgtLocale]);
         this.setState({show: false});
     },
     render: function () {

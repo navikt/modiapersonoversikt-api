@@ -3,13 +3,13 @@ var React = require('react');
 
 var TekstForhandsvisning = React.createClass({
     render: function () {
-        var tekst = this.props.valgtLocale ? this.props.tekst.locales[this.props.valgtLocale] : this.props.tekst.innhold;
+        var tekst = this.props.tekst.locales[this.props.valgtLocale];
         tekst = tekst ? tekst.split(/[\r\n]+/) : [];
 
         return (
             <div className="tekstForhandsvisning">
-            {tekst.map(function (t) {
-                return (<p>{t}</p>);
+            {tekst.map(function (avsnitt) {
+                return (<p>{avsnitt}</p>);
             })}
             </div>
         );
