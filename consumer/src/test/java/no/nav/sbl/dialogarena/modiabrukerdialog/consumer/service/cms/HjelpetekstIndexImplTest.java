@@ -12,16 +12,16 @@ import static org.hamcrest.Matchers.hasSize;
 
 public class HjelpetekstIndexImplTest {
 
-    private HjelpetekstIndex HjelpetekstIndex = new HjelpetekstIndexImpl();
+    private HjelpetekstIndex hjelpetekstIndex = new HjelpetekstIndexImpl();
 
     @Before
     public void setup() {
-        HjelpetekstIndex.indekser(lagMockHjelpetekster());
+        hjelpetekstIndex.indekser(lagMockHjelpetekster());
     }
 
     @Test
     public void skalIndeksereHjelpetekster() {
-        List<Hjelpetekst> resultat = HjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
