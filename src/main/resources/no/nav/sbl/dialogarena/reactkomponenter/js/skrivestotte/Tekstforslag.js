@@ -3,11 +3,12 @@ var React = require('react');
 
 var TekstListe = require('./TekstListe');
 var TekstForhandsvisning = require('./TekstForhandsvisning');
+var LocaleSelect = require('./LocaleSelect');
 var Filter = require('./Filter');
 
 var Tekstforslag = React.createClass({
     getInitialState: function () {
-        return {tekster: [], valgtTekst: {}, fritekst: '', show: true};
+        return {tekster: [], valgtTekst: {}, valgtLocale: '', fritekst: '', show: true};
     },
     componentDidMount: function () {
         hentEnonicTekster('').done(function (tekster) {
@@ -18,7 +19,10 @@ var Tekstforslag = React.createClass({
         this.setState({show: !this.state.show});
     },
     setValgtTekst: function (tekst) {
-        this.setState({valgtTekst: tekst})
+        this.setState({valgtTekst: tekst, valgtLocale: ''})
+    },
+    setValgtLocale: function (locale) {
+        this.setState({valgtLocale: locale})
     },
     setFritekst: function (fritekst) {
         this.setState({fritekst: fritekst});
@@ -27,16 +31,17 @@ var Tekstforslag = React.createClass({
         }.bind(this));
     },
     settInnTekst: function () {
-        $('#' + this.props.tekstfeltId).focus().val(this.state.valgtTekst.innhold);
+        $('#' + this.props.tekstfeltId).focus().val(this.state.valgtLocale?this.state.valgtTekst.locales[this.state.valgtLocale]: this.state.valgtTekst.innhold);
         this.setState({show: false});
     },
     render: function () {
         return this.state.show ? (
             <div className="tekstforslag">
                 <Filter setFritekst={this.setFritekst} tekst={this.state.fritekst} />
+                <LocaleSelect hjelpetekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} setValgtLocale={this.setValgtLocale}/>
                 <div className="tekstvisning">
                     <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
-                    <TekstForhandsvisning tekst={this.state.valgtTekst} />
+                    <TekstForhandsvisning tekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} />
                 </div>
                 <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>
             </div>
