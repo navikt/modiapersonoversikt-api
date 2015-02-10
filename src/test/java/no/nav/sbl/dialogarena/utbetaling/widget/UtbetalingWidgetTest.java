@@ -1,9 +1,13 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
+import no.nav.modig.core.exception.SystemException;
+import no.nav.modig.modia.widget.panels.ErrorListing;
+import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
+import org.apache.wicket.model.util.ListModel;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,6 +17,7 @@ import java.util.List;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_MONTHS_TO_SHOW;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -72,8 +77,10 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
         List<Record<Hovedytelse>> emptyList = new ArrayList<>();
         when(utbetalingService.hentUtbetalinger(FNR, defaultStartDato(), defaultSluttDato())).thenReturn(emptyList);
 
-        assertThat(utbetalingWidget.getModelObject().size(), is(1));
-        ;
+        ListModel<?> listModel = utbetalingWidget.lagModell(FNR);
+
+        assertThat(listModel.getObject().size(), is(1));
+        assertThat(listModel.getObject().get(0), is(instanceOf(GenericListing.class)));
     }
 
 
@@ -91,6 +98,21 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
         );
 
         when(utbetalingService.hentUtbetalinger(FNR, defaultStartDato(), defaultSluttDato())).thenReturn(list);
-//        assertThat(utbetalingWidget.getModelObject().size(), is(2));
+
+        ListModel<?> listModel = utbetalingWidget.lagModell(FNR);
+
+        assertThat(listModel.getObject().size(), is(2));
+        assertThat(listModel.getObject().get(0), is(instanceOf(HovedytelseVM.class)));
+    }
+    
+    @Test
+    public void utbetalingServiceKasterException() {
+        when(utbetalingService.hentUtbetalinger(FNR, defaultStartDato(), defaultSluttDato()))
+                .thenThrow(new SystemException("Feilfeilfeil", new Exception()));
+
+        ListModel<?> listModel = utbetalingWidget.lagModell(FNR);
+
+        assertThat(listModel.getObject().size(), is(1));
+        assertThat(listModel.getObject().get(0), is(instanceOf(ErrorListing.class)));
     }
 }
