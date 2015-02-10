@@ -37,74 +37,10 @@ public class WSUtbetalingTestData {
                         .withUtbetalingNettobeloep(19724.00)
                         .withUtbetalingsmelding("Alderspensjon med 3 mnd etterbetaling")
                         .withYtelseListe(
-                                new WSYtelse()
-                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
-                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(1)).withTom(now().minusYears(1)))
-                                        .withYtelseskomponentListe(
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentbeloep(5200.00),
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentbeloep(1456.00))
-                                        .withYtelseskomponentersum(6656.00)
-                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSkattsum(-1500.00)
-                                        .withYtelseNettobeloep(5156.00)
-                                        .withBilagsnummer("10201436985"),
-                                new WSYtelse()
-                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
-                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1)).withTom(now().minusYears(1).plusMonths(1)))
-                                        .withYtelseskomponentListe(
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentbeloep(5200.00),
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentbeloep(1456.00))
-                                        .withYtelseskomponentersum(6656.00)
-                                        .withTrekkListe(new ArrayList<WSTrekk>())
-                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSkattsum(-1500.00)
-                                        .withYtelseNettobeloep(5156.00)
-                                        .withBilagsnummer("10201436985"),
-                                new WSYtelse()
-                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
-                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
-                                        .withYtelseskomponentListe(
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentbeloep(5200.00),
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentbeloep(1456.00))
-                                        .withYtelseskomponentersum(6656.00)
-                                        .withTrekkListe(new ArrayList<WSTrekk>())
-                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSkattsum(-1500.00)
-                                        .withYtelseNettobeloep(5156.00)
-                                        .withBilagsnummer("10201436985"),
-                                new WSYtelse()
-                                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
-                                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
-                                        .withYtelseskomponentListe(
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
-                                                        .withYtelseskomponentbeloep(5200.00),
-                                                new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
-                                                        .withYtelseskomponentbeloep(1456.00))
-                                        .withYtelseskomponentersum(6656.00)
-                                        .withTrekkListe(new WSTrekk().withTrekktype(new WSTrekktyper().withValue("Kreditorsjekk")).withTrekkbeloep(-900.00).withKreditor("00911111111"))
-                                        .withTrekksum(-900.00)
-                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withSkattsum(-1500.00)
-                                        .withYtelseNettobeloep(4256.00)
-                                        .withBilagsnummer("10201436985"))
+                                kariNordmannYtelse1(),
+                                kariNordmannYtelse2(),
+                                kariNordmannYtelse3(),
+                                kariNordmannYtelse4())
                         .withUtbetalingsdato(now().minusYears(1).plusMonths(2))
                         .withForfallsdato(now().minusYears(1).plusMonths(2))
                         .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype(new WSBankkontotyper().withValue("Konto - Utland")))
@@ -138,6 +74,86 @@ public class WSUtbetalingTestData {
                         .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
                         .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Under saksbehandling"))
         );
+    }
+
+    private static WSYtelse kariNordmannYtelse4() {
+        return new WSYtelse()
+                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
+                .withYtelseskomponentListe(
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponentbeloep(5200.00),
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponentbeloep(1456.00))
+                .withYtelseskomponentersum(6656.00)
+                .withTrekkListe(new WSTrekk().withTrekktype(new WSTrekktyper().withValue("Kreditorsjekk")).withTrekkbeloep(-900.00).withKreditor("00911111111"))
+                .withTrekksum(-900.00)
+                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                .withSkattsum(-1500.00)
+                .withYtelseNettobeloep(4256.00)
+                .withBilagsnummer("10201436985");
+    }
+
+    private static WSYtelse kariNordmannYtelse3() {
+        return new WSYtelse()
+                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
+                .withYtelseskomponentListe(
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponentbeloep(5200.00),
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponentbeloep(1456.00))
+                .withYtelseskomponentersum(6656.00)
+                .withTrekkListe(new ArrayList<WSTrekk>())
+                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                .withSkattsum(-1500.00)
+                .withYtelseNettobeloep(5156.00)
+                .withBilagsnummer("10201436985");
+    }
+
+    private static WSYtelse kariNordmannYtelse2() {
+        return new WSYtelse()
+                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1)).withTom(now().minusYears(1).plusMonths(1)))
+                .withYtelseskomponentListe(
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponentbeloep(5200.00),
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponentbeloep(1456.00))
+                .withYtelseskomponentersum(6656.00)
+                .withTrekkListe(new ArrayList<WSTrekk>())
+                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                .withSkattsum(-1500.00)
+                .withYtelseNettobeloep(5156.00)
+                .withBilagsnummer("10201436985");
+    }
+
+    private static WSYtelse kariNordmannYtelse1() {
+        return new WSYtelse()
+                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(1)).withTom(now().minusYears(1)))
+                .withYtelseskomponentListe(
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponentbeloep(5200.00),
+                        new WSYtelseskomponent()
+                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponentbeloep(1456.00))
+                .withYtelseskomponentersum(6656.00)
+                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                .withSkattsum(-1500.00)
+                .withYtelseNettobeloep(5156.00)
+                .withBilagsnummer("10201436985");
     }
 
     private static WSUtbetaling createOsloKommuneUtbetaling() {
