@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -31,20 +32,27 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
     }
 
     private Label createUtbetalingsDatoLabel(HovedytelseVM hovedytelseVM) {
-        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getHovedytelseDato(), "utbetalingdato.mangler"));
+        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getHovedytelseDato(), false, "utbetalingdato.mangler"));
     }
 
     private Label createPeriodeLabel(HovedytelseVM hovedytelseVM) {
         IModel<String> periodeModel = getPeriodeModel(
-                getDatoModel(hovedytelseVM.getStartDato(), "startdato.mangler"),
-                getDatoModel(hovedytelseVM.getSluttDato(), "sluttdato.mangler"));
+                getDatoModel(hovedytelseVM.getStartDato(), true, "startdato.mangler"),
+                getDatoModel(hovedytelseVM.getSluttDato(), true, "sluttdato.mangler"));
         return new Label("periode", periodeModel);
     }
 
-    private IModel<String> getDatoModel(DateTime dato, String resourceKey) {
+    private IModel<String> getDatoModel(DateTime dato, boolean kortFormat, String resourceKey) {
         return dato != null ?
-                Model.of(kortUtenLiteral(dato)) :
+                Model.of(formatDate(dato, kortFormat)) :
                 new StringResourceModel(resourceKey, this, null);
+    }
+
+    private String formatDate(DateTime dato, boolean kortFormat) {
+        if(kortFormat) {
+            return kortUtenLiteral(dato);
+        }
+        return WidgetDateFormatter.date(dato);
     }
 
     private IModel<String> getPeriodeModel(final IModel startDatoModel, final IModel sluttDatoModel) {
