@@ -22,7 +22,7 @@ public class SkrivestotteController {
     private HjelpetekstIndex hjelpetekstIndex;
 
     @GET
-    public List<Hjelpetekst> hentHjelpetekster(@QueryParam("fritekst") String fritekst) {
-        return hjelpetekstIndex.sok(fritekst);
+    public List<Hjelpetekst> hentHjelpetekster(@QueryParam("fritekst") String fritekst, @QueryParam("tags") List<String> tags) {
+        return hjelpetekstIndex.sok(fritekst, tags);
     }
 }

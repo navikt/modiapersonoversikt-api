@@ -23,10 +23,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static org.apache.commons.lang3.StringUtils.join;
-import static org.apache.commons.lang3.StringUtils.trim;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class HjelpetekstIndexImpl implements HjelpetekstIndex {
     public static final String TITTEL = "tittel";
@@ -61,9 +59,6 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
 
     @Override
     public List<Hjelpetekst> sok(String frisok, List<String> tags) {
-        if (tags.isEmpty()) {
-            return emptyList();
-        }
         try {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directory));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
@@ -90,7 +85,7 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
                 return TAGS_FILTER + ":" + tag;
             }
         }).reduce(ReduceUtils.join(" AND "));
-        return frisokQuery + " AND " + tagsQuery;
+        return frisokQuery + (isBlank(tagsQuery) ? "" : (" AND " + tagsQuery));
     }
 
     private static Document lagDokument(Hjelpetekst hjelpetekst) {

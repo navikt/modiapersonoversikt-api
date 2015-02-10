@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -22,7 +21,7 @@ public class HjelpetekstIndexImplTest {
 
     @Test
     public void skalIndeksereHjelpetekster() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ", "generell", "sensitiv");
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
@@ -35,9 +34,9 @@ public class HjelpetekstIndexImplTest {
     }
 
     @Test
-    public void ingenTagsReturnererTomListe() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("generell");
-        assertThat(resultat, is(Collections.<Hjelpetekst>emptyList()));
+    public void returnererAlt() {
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("");
+        assertThat(resultat, hasSize(3));
     }
 
     @Test
