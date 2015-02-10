@@ -27,6 +27,12 @@ public class HjelpetekstIndexImplTest {
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
     }
 
+    @Test
+    public void kanIndeksereFlereGanger() {
+        hjelpetekstIndex.indekser(lagMockHjelpetekster());
+        hjelpetekstIndex.indekser(lagMockHjelpetekster());
+    }
+
     private static List<Hjelpetekst> lagMockHjelpetekster() {
         return asList(
                 new Hjelpetekst("Taushetsbelagt eller sensitiv informasjon",

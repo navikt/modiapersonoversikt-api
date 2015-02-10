@@ -32,7 +32,7 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
     public static final String[] FIELDS = new String[]{TITTEL, TAGS, INNHOLD};
 
     private StandardAnalyzer analyzer = new StandardAnalyzer();
-    private RAMDirectory directory = new RAMDirectory();
+    private RAMDirectory directory;
     private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, analyzer);
 
     public HjelpetekstIndexImpl() {
@@ -43,6 +43,7 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
     @Override
     public void indekser(List<Hjelpetekst> hjelpetekster) {
         try {
+            directory = new RAMDirectory();
             IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer));
             for (Hjelpetekst hjelpetekst : hjelpetekster) {
                 writer.addDocument(lagDokument(hjelpetekst));
