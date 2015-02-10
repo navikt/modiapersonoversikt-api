@@ -29,7 +29,7 @@ public class WSUtbetalingTestData {
         return on(utbetalinger).filter(innenPeriode).collect();
     }
 
-    private static List<WSUtbetaling> createKariNordmannUtbetaling() {
+    public static List<WSUtbetaling> createKariNordmannUtbetaling() {
         return asList(new WSUtbetaling()
                         .withPosteringsdato(now().minusYears(1))
                         .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
@@ -138,7 +138,7 @@ public class WSUtbetalingTestData {
         );
     }
 
-    private static WSUtbetaling createOsloKommuneUtbetaling() {
+    public static WSUtbetaling createOsloKommuneUtbetaling() {
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(19))
                 .withUtbetaltTil(new WSOrganisasjon().withAktoerId("00999999999").withNavn("Oslo kommune Utbetaling 4"))
@@ -172,7 +172,7 @@ public class WSUtbetalingTestData {
                 ;
     }
 
-    private static WSUtbetaling createOlaNordmannUtbetaling() {
+    public static WSUtbetaling createOlaNordmannUtbetaling() {
         return new WSUtbetaling()
                         .withPosteringsdato(now().minusMonths(1))
                         .withUtbetaltTil(new WSPerson()

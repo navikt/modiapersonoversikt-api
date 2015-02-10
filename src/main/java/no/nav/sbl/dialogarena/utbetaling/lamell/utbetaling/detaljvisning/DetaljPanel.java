@@ -81,22 +81,6 @@ public class DetaljPanel extends Panel {
         }
     }
 
-//    private ListView createUnderytelsesrader(List<Record<Underytelse>> underytelser) {
-//        return new ListView<Record<Underytelse>>("underytelser", underytelser) {
-//            @Override
-//            protected void populateItem(ListItem<Record<Underytelse>> item) {
-//                Double sats = item.getModelObject().get(Underytelse.satsAntall);
-//                Double antall = item.getModelObject().get(Underytelse.satsAntall);
-//                item.add(
-//                    new Label("underytelse", item.getModelObject().get(Underytelse.ytelsesType)),
-//                    new Label("sats", sats != null ? sats : ""),
-//                    new Label("antall", antall != null ? antall : ""),
-//                    new Label("belop", getBelopString(item.getModelObject().get(Underytelse.ytelseBeloep)))
-//                );
-//            }
-//        };
-//    }
-
     private ListView createYtelserader(List<YtelseVM> underytelser) {
         return new ListView<YtelseVM>("underytelser", underytelser) {
             @Override
