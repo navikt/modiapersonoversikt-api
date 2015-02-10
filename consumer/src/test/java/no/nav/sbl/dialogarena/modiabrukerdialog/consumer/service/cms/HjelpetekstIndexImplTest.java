@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndexImpl.SPAN_CLASS_HIGHLIGHTED_BEGIN;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndexImpl.SPAN_CLASS_HIGHLIGHTED_END;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -24,7 +26,15 @@ public class HjelpetekstIndexImplTest {
         List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
 
         assertThat(resultat, hasSize(1));
-        assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
+        assertThat(resultat.get(0).tittel, is(SPAN_CLASS_HIGHLIGHTED_BEGIN + "Taushetsbelagt" + SPAN_CLASS_HIGHLIGHTED_END + " eller sensitiv informasjon"));
+    }
+
+    @Test
+    public void skalHighlighteTrefford() {
+        String sokeord = "sensitiv";
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok(sokeord);
+
+        assertThat(resultat.get(0).tittel.contains(SPAN_CLASS_HIGHLIGHTED_BEGIN + sokeord + SPAN_CLASS_HIGHLIGHTED_END), is(true));
     }
 
     @Test
