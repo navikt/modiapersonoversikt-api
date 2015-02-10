@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
@@ -13,8 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.omg.CORBA.SystemException;
-import org.omg.CORBA.portable.ApplicationException;
 
 import java.util.List;
 
@@ -68,19 +67,6 @@ public class UtbetalingServiceTest {
         WSHentUtbetalingsinformasjonRequest request = new WSHentUtbetalingsinformasjonRequest();
         doReturn(request).when(spyService).createRequest(fnr, fom, tom);
         when(utbetalingV1.hentUtbetalingsinformasjon(request)).thenThrow(new HentUtbetalingsinformasjonPeriodeIkkeGyldig());
-
-        spyService.getWSUtbetalinger(fnr, fom, tom);
-    }
-
-    @Test(expected = SystemException.class)
-    public void haandtererGenerelleFeilFraTjenesten() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
-        UtbetalingService spyService = spy(utbetalingService);
-        String fnr = "11223312345";
-        LocalDate fom = new LocalDate(2015, 1, 1);
-        LocalDate tom = new LocalDate(2015, 1, 2);
-        WSHentUtbetalingsinformasjonRequest request = new WSHentUtbetalingsinformasjonRequest();
-        doReturn(request).when(spyService).createRequest(fnr, fom, tom);
-        when(utbetalingV1.hentUtbetalingsinformasjon(request)).thenThrow(new Exception());
 
         spyService.getWSUtbetalinger(fnr, fom, tom);
     }
