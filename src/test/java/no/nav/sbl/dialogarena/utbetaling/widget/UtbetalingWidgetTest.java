@@ -104,7 +104,7 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
         assertThat(listModel.getObject().size(), is(2));
         assertThat(listModel.getObject().get(0), is(instanceOf(HovedytelseVM.class)));
     }
-    
+
     @Test
     public void utbetalingServiceKasterException() {
         when(utbetalingService.hentUtbetalinger(FNR, defaultStartDato(), defaultSluttDato()))

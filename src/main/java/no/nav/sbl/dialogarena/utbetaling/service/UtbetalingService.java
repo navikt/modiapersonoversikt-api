@@ -58,8 +58,4 @@ public class UtbetalingService {
         .withTom(sluttDato.toDateTimeAtStartOfDay());
     }
 
-    protected void setUtbetalingV1(UtbetalingV1 utbetalingV1) {
-        this.utbetalingV1 = utbetalingV1;
-    }
-
 }
