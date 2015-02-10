@@ -19,7 +19,7 @@ public class WSUtbetalingTestData {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createOlaNordmannUtbetaling());
         utbetalinger.add(createOsloKommuneUtbetaling());
-        utbetalinger.addAll(createKariNordmannUtbetaling());
+        utbetalinger.addAll(kariNordmannUtbetaling());
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
@@ -30,7 +30,7 @@ public class WSUtbetalingTestData {
         return on(utbetalinger).filter(innenPeriode).collect();
     }
 
-    private static List<WSUtbetaling> createKariNordmannUtbetaling() {
+    private static List<WSUtbetaling> kariNordmannUtbetaling() {
         return asList(new WSUtbetaling()
                         .withPosteringsdato(now().minusYears(1))
                         .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
