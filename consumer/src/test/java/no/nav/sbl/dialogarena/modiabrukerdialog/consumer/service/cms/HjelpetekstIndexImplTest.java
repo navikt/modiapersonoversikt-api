@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -21,7 +22,7 @@ public class HjelpetekstIndexImplTest {
 
     @Test
     public void skalIndeksereHjelpetekster() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ", "generell", "sensitiv");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
@@ -31,6 +32,26 @@ public class HjelpetekstIndexImplTest {
     public void kanIndeksereFlereGanger() {
         hjelpetekstIndex.indekser(lagMockHjelpetekster());
         hjelpetekstIndex.indekser(lagMockHjelpetekster());
+    }
+
+    @Test
+    public void ingenTagsReturnererTomListe() {
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("generell");
+        assertThat(resultat, is(Collections.<Hjelpetekst>emptyList()));
+    }
+
+    @Test
+    public void kanSokeKunPaaTags() {
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "generell");
+        assertThat(resultat, hasSize(3));
+    }
+
+    @Test
+    public void sokerPaaFlereTags() {
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "generell", "feilsendt");
+
+        assertThat(resultat, hasSize(1));
+        assertThat(resultat.get(0).tittel, is("Krav om underskrift/skannet dokument"));
     }
 
     private static List<Hjelpetekst> lagMockHjelpetekster() {
@@ -45,7 +66,7 @@ public class HjelpetekstIndexImplTest {
                                 "Dersom du velger å sende inn henvendelsen per post, anbefaler vi at du henter ut en førsteside til saken din på www.nav.no. Alle dokumenter sendes til den adressen som er oppgitt på førstesiden.\n" +
                                 "\n" +
                                 "Søknadsskjemaer, selvbetjeningsløsninger, informasjon og «Dine utbetalinger» finner du på vår internettside www.nav.no. Her vil du også finne besøksadresse til ditt NAV-kontor.\n",
-                        "generell", "sensitiv", "feilsendt"),
+                        "generell", "sensitiv"),
                 new Hjelpetekst("Status i sak",
                         "Takk for din henvendelse til NAV. \n" +
                                 "\n" +

@@ -50,9 +50,15 @@ public class HjelpetekstIndexMock {
             }
 
             @Override
-            public List<Hjelpetekst> sok(String frisok) {
-                return hjelpetekstIndex.sok(frisok);
+            public List<Hjelpetekst> sok(String frisok, List<String> tags) {
+                return hjelpetekstIndex.sok(frisok, tags);
             }
+
+            @Override
+            public List<Hjelpetekst> sok(String frisok, String... tags) {
+                return hjelpetekstIndex.sok(frisok, tags);
+            }
+
         };
     }
 }
