@@ -8,11 +8,12 @@
         <wicket:message key="journalforingEnkeltSak.overskrift"/>
     </h2>
     <div class="robust-strek"></div>
-    <div class="sakliste">
-        <h2 wicket:id="sakstype" class="medium sakstype"></h2>
-        <hr class="linje"/>
-        <span wicket:id="temaNavn" class="temaoverskrift"></span>
-        <label>
+    <form wicket:id="journalforForm">
+        <div class="sakliste">
+            <h2 wicket:id="sakstype" class="medium sakstype"></h2>
+            <hr class="linje"/>
+            <span wicket:id="temaNavn" class="temaoverskrift"></span>
+            <label>
             <span>
                 <span class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></span>
                 <span wicket:id="saksId"/>
@@ -25,14 +26,14 @@
                 <span class="saksTekst"><wicket:message key="journalfor.sak.fagsystemTekst"/></span>
                 <span class="verdi"><div wicket:id="fagsystemNavn"/></span>
             </span>
-        </label>
-    </div>
-    <hr class="linje"/>
-    <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-stor">Journalfør</a>
-    <input type="submit"
-           class="send knapp-hoved-stor"
-           wicket:id="journalforTraad"
-           wicket:message="value:journalfor.knapp.send"/>
+            </label>
+        </div>
+        <hr class="linje"/>
+        <input type="submit"
+               class="send knapp-hoved-stor"
+               wicket:id="journalforTraad"
+               wicket:message="value:journalfor.knapp.send"/>
+    </form>
 </wicket:panel>
 </body>
 </html>

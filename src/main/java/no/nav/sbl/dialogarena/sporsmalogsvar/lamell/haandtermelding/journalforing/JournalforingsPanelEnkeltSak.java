@@ -6,7 +6,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -39,7 +38,8 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         journalfortSakVM = new JournalfortSakVM(innboksVM, sakerService);
         setDefaultModel(new CompoundPropertyModel<Object>(new PropertyModel<Sak>(journalfortSakVM, "sak")));
 
-        add(
+        Form form = new Form("journalforForm");
+        form.add(
                 new Label("sakstype"),
                 new Label("temaNavn"),
                 new Label("saksId"),
@@ -47,14 +47,15 @@ public class JournalforingsPanelEnkeltSak extends Panel {
                 new Label("opprettetDatoFormatert"),
                 getSubmitLenke(innboksVM)
         );
+
+        add(form);
     }
 
     private AjaxButton getSubmitLenke(final InnboksVM innboksVM) {
         return new IndicatingAjaxButtonWithImageUrl("journalforTraad", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                TraadVM valgtTraadVM = innboksVM.getValgtTraad();
-                Melding melding = valgtTraadVM.getEldsteMelding().melding;
+                Melding melding = innboksVM.getValgtTraad().getEldsteMelding().melding;
                 Sak sak = journalfortSakVM.getSak();
 
                 behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
