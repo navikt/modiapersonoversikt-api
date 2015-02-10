@@ -13,9 +13,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Hjelpetekst.LOCALE_ANDRE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Hjelpetekst.LOCALE_DEFAULT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndexMock.createHjelpetekstIndexMock;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 
@@ -25,9 +26,6 @@ public class CmsHjelpetekstConfig {
     public static final String CMS_HJELPETEKST_KEY = "start.cms.hjelpetekst.withmock";
 
     private static final int EN_TIME_MILLIS = 60 * 60 * 1000;
-
-    private static final String LOCALE_DEFAULT = "nb";
-    private static final List<String> LOCALES_ANDRE = asList("en");
 
     @Value("${appres.cms.url}")
     private String appresUrl;
@@ -43,14 +41,14 @@ public class CmsHjelpetekstConfig {
     public void reIndekserHjelpetekster() {
         List<Hjelpetekst> hjelpetekster = CmsSkrivestotte.hentHjelpetekster(appresUrl, LOCALE_DEFAULT);
 
-        final Map<String, List<Hjelpetekst>> hjelpetekstMap = on(hjelpetekster).reduce(indexBy(Hjelpetekst.KEY));
+        final Map<String, List<Hjelpetekst>> parentHjelpetekster = on(hjelpetekster).reduce(indexBy(Hjelpetekst.KEY));
 
-        for (final String locale : LOCALES_ANDRE) {
+        for (final String locale : LOCALE_ANDRE) {
             on(CmsSkrivestotte.hentHjelpetekster(appresUrl, locale)).forEach(new Closure<Hjelpetekst>() {
                 @Override
                 public void execute(Hjelpetekst hjelpetekst) {
-                    if (hjelpetekstMap.containsKey(hjelpetekst.key)) {
-                        hjelpetekstMap.get(hjelpetekst.key).get(0).locales.put(locale, hjelpetekst.innhold);
+                    if (parentHjelpetekster.containsKey(hjelpetekst.key)) {
+                        parentHjelpetekster.get(hjelpetekst.key).get(0).locales.put(locale, hjelpetekst.innhold);
                     }
                 }
             });
