@@ -17,9 +17,11 @@ import static org.apache.commons.lang3.StringUtils.split;
 
 public class CmsSkrivestotte {
 
-    public static List<Hjelpetekst> hentHjelpetekster() {
+    private static final String APPRES_URL = "%s/app/modiabrukerdialog/%s/skrivestotte";
+
+    public static List<Hjelpetekst> hentHjelpetekster(String appresUrl, String locale) {
         try {
-            Future<Content> resp = Async.newInstance().execute(Request.Get("https://appres-t1.adeo.no/app/modiabrukerdialog/nb/skrivestotte"));
+            Future<Content> resp = Async.newInstance().execute(Request.Get(String.format(APPRES_URL, appresUrl, locale)));
 
             Content content = resp.get(10000, TimeUnit.SECONDS);
 
@@ -31,6 +33,7 @@ public class CmsSkrivestotte {
             for (int i = 0; i < nodeset.getLength(); i++) {
                 Node node = nodeset.item(i);
                 hjelpetekster.add(new Hjelpetekst(
+                        getChildValueByName(node, "key"),
                         getChildValueByName(node, "overskrift"),
                         getChildValueByName(node, "fritekst"),
                         split(getChildValueByName(node, "tags"), " ")));

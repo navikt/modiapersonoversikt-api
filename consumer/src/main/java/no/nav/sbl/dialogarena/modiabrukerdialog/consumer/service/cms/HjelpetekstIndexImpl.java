@@ -6,11 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser.Operator;
 import org.apache.lucene.search.IndexSearcher;
@@ -21,17 +23,18 @@ import org.apache.lucene.util.Version;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class HjelpetekstIndexImpl implements HjelpetekstIndex {
+    public static final String KEY = "key";
     public static final String TITTEL = "tittel";
     public static final String TAGS = "tags";
     public static final String TAGS_FILTER = "tags-filter";
     public static final String INNHOLD = "innhold";
-
     public static final String[] FIELDS = new String[]{TITTEL, TAGS, INNHOLD};
 
     private StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -73,7 +76,7 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
     }
 
     @Override
-    public List<Hjelpetekst> sok(String frisok, String ... tags) {
+    public List<Hjelpetekst> sok(String frisok, String... tags) {
         return sok(frisok, asList(tags));
     }
 
@@ -90,9 +93,15 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
 
     private static Document lagDokument(Hjelpetekst hjelpetekst) {
         Document document = new Document();
+        document.add(new StoredField(KEY, hjelpetekst.key));
         document.add(new TextField(TITTEL, hjelpetekst.tittel, Store.YES));
         document.add(new TextField(INNHOLD, hjelpetekst.innhold, Store.YES));
         document.add(new TextField(TAGS, join(hjelpetekst.tags, " "), Store.YES));
+
+        for (Map.Entry<String, String> localeHjelpetekst : hjelpetekst.locales.entrySet()) {
+            document.add(new StoredField(INNHOLD + "_" + localeHjelpetekst.getKey(), localeHjelpetekst.getValue()));
+        }
+
         for (String tag : hjelpetekst.tags) {
             document.add(new StringField(TAGS_FILTER, tag, Store.NO));
         }
@@ -105,7 +114,13 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
             public Hjelpetekst transform(ScoreDoc hit) {
                 try {
                     Document doc = searcher.doc(hit.doc);
-                    return new Hjelpetekst(doc.get(TITTEL), doc.get(INNHOLD), StringUtils.split(doc.get(TAGS), " "));
+                    Hjelpetekst hjelpetekst = new Hjelpetekst(doc.get(KEY), doc.get(TITTEL), doc.get(INNHOLD), StringUtils.split(doc.get(TAGS), " "));
+                    for (IndexableField field : doc) {
+                        if (field.name().startsWith(INNHOLD + "_")) {
+                            hjelpetekst.locales.put(field.name().replace(INNHOLD + "_", ""), field.stringValue());
+                        }
+                    }
+                    return hjelpetekst;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
