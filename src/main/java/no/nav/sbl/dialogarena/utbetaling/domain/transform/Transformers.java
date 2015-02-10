@@ -70,7 +70,6 @@ public class Transformers {
                     .with(hovedytelsedato, determineHovedytelseDato(wsUtbetaling))
                     .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
                     .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
-                    .with(forfallsDato, wsUtbetaling.getForfallsdato())
                     .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
                     .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode() != null ? wsUtbetaling.getUtbetalingsmetode().getValue() : "")
                     .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus() != null ? wsUtbetaling.getUtbetalingsstatus().getValue() : "")
@@ -99,8 +98,11 @@ public class Transformers {
     };
 
     /**
-     * Hvis utbetalingsdato finnes, returneres denne
-     * Ellers returneres posteringsdato
+     * HovedytelseDato baserer seg på følgende prioritert rekkefølge:
+     * 1. Hvis utbetalingsdato finnes så brukes denne
+     * 2. Hvis forfallsdato finnes så brukes denne
+     * 3. Hvis ingen av de overnevnte finnes returneres posteringsdato.
+     *
      * @param wsUtbetaling
      * @return
      */
@@ -108,6 +110,11 @@ public class Transformers {
         if(wsUtbetaling.getUtbetalingsdato() != null) {
             return wsUtbetaling.getUtbetalingsdato();
         }
+
+        if(wsUtbetaling.getForfallsdato() != null) {
+            return wsUtbetaling.getForfallsdato();
+        }
+
         return wsUtbetaling.getPosteringsdato();
     }
 

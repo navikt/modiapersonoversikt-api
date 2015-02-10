@@ -15,7 +15,6 @@ public interface Hovedytelse {
     Key<Record<Aktoer>> utbetaltTil = new Key<>("UTBETALT_TIL");
     Key<Mottakertype> mottakertype = new Key<>("MOTTAKER_TYPE");
     Key<String> utbetalingsmelding = new Key<>("UTBETALING_MELDING");
-    Key<DateTime> forfallsDato = new Key<>("FORFALL_DATO");
     Key<Record<Konto>> utbetaltTilKonto = new Key<>("UTBETALT_TIL_KONTO");
     Key<String> utbetalingsmetode = new Key<>("UTBETALING_METODE");
     Key<String> utbetalingsstatus = new Key<>("UTBETALING_STATUS");
