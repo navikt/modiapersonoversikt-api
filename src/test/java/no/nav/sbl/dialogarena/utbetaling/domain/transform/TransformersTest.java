@@ -273,7 +273,6 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.hovedytelsedato), is(new DateTime(2015, 1, 2, 3, 4)));
         assertThat(ytelse.get(Hovedytelse.utbetaltTil), is(new Record<Aktoer>().with(Aktoer.aktoerId, "123123123").with(Aktoer.navn, "Ola Normann")));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmelding), is("Dette er en melding"));
-        assertThat(ytelse.get(Hovedytelse.forfallsDato), is(new DateTime(2000, 1, 1, 1, 1)));
         assertThat(ytelse.get(Hovedytelse.utbetaltTilKonto), is(new Record<Konto>().with(Konto.kontonummer, "112233112233").with(Konto.kontotype, "Bankkonto")));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmetode), is("Overføring via bank"));
         assertThat(ytelse.get(Hovedytelse.utbetalingsstatus), is("Utbetalt"));
