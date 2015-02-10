@@ -20,12 +20,11 @@ public class CmsHjelpetekstConfig {
     @Bean
     public HjelpetekstIndex hjelpetekstIndex() {
         HjelpetekstIndex hjelpetekstIndex = new HjelpetekstIndexImpl();
-        hjelpetekstIndex.indekser(CmsSkrivestotte.hentHjelpetekster());
 
         return createSwitcher(hjelpetekstIndex, createHjelpetekstIndexMock(), CMS_HJELPETEKST_KEY, HjelpetekstIndex.class);
     }
 
-    @Scheduled(fixedRate = EN_TIME_MILLIS, initialDelay = EN_TIME_MILLIS)
+    @Scheduled(fixedRate = EN_TIME_MILLIS, initialDelay = 5000)
     public void reIndekserHjelpetekster() {
         hjelpetekstIndex().indekser(CmsSkrivestotte.hentHjelpetekster());
     }
