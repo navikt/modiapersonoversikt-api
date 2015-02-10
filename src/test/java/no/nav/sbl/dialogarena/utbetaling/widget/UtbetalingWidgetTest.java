@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
-import no.nav.modig.core.exception.SystemException;
-import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
@@ -103,16 +101,5 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
 
         assertThat(listModel.getObject().size(), is(2));
         assertThat(listModel.getObject().get(0), is(instanceOf(HovedytelseVM.class)));
-    }
-
-    @Test
-    public void utbetalingServiceKasterException() {
-        when(utbetalingService.hentUtbetalinger(FNR, defaultStartDato(), defaultSluttDato()))
-                .thenThrow(new SystemException("Feilfeilfeil", new Exception()));
-
-        ListModel<?> listModel = utbetalingWidget.lagModell(FNR);
-
-        assertThat(listModel.getObject().size(), is(1));
-        assertThat(listModel.getObject().get(0), is(instanceOf(ErrorListing.class)));
     }
 }
