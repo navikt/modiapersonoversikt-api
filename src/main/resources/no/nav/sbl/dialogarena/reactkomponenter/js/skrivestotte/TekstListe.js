@@ -2,31 +2,51 @@
 var React = require('react');
 
 var TekstListe = React.createClass({
-    setValgtTekst: function (tekst) {
-        var that = this;
-        return function () {
-            that.props.setValgtTekst(tekst);
-            console.log('Oppdatering av valgte tekster: ', tekst);
-        };
+
+
+    componentDidUpdate: function () {
+        var $this = $(this.getDOMNode());
+        adjustScroll($this, $this.find('label.valgt').eq(0));
     },
     render: function () {
         var tekster = this.props.tekster;
         var listeElementer = tekster.map(this.lagListeElement);
 
         return (
-            <ul className="tekstListe">
+            <div className="tekstListe">
                 {listeElementer}
-            </ul>
+            </div>
         );
     },
+
     lagListeElement: function (tekst) {
+        var onClickCallback = function () {
+            this.props.setValgtTekst(tekst);
+        }.bind(this);
+
         return (
-            <li className={this.props.valgtTekst === tekst ? 'valgt' : ''} onClick={this.setValgtTekst(tekst)}>
+            <label className={this.props.valgtTekst === tekst ? 'tekstElement valgt' : 'tekstElement'} onClick={onClickCallback}>
+                <input name="tekstElementRadio" type="radio" />
                 <h4>{tekst.tittel}</h4>
-                <span>{tekst.innhold}</span>
-            </li>
+                <p>{tekst.innhold}</p>
+            </label>
         );
     }
 });
+
+function adjustScroll($parent, $element) {
+    if ($element.length === 0) {
+        return;
+    }
+
+    var elementTop = $element.position().top;
+    var elementBottom = elementTop + $element.outerHeight();
+
+    if (elementTop < 0) {
+        $parent.scrollTop($parent.scrollTop() + elementTop);
+    } else if (elementBottom > $parent.outerHeight()) {
+        $parent.scrollTop($parent.scrollTop() + (elementBottom - $parent.outerHeight()));
+    }
+}
 
 module.exports = TekstListe;

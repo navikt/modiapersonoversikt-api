@@ -46,7 +46,7 @@ var Tekstforslag = React.createClass({
 });
 
 function hentEnonicTekster(fritekst) {
-    return $.get('/modiabrukerdialog/rest/skrivestotte?fritekst=' + fritekst);
+    return $.get('/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst);
 }
 
 module.exports = Tekstforslag;
