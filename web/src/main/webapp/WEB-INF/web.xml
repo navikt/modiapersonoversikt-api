@@ -66,6 +66,21 @@
         <role-name>0000-GA-BD06_EndreKontonummer</role-name>
     </security-role>
 
+    <servlet>
+        <servlet-name>rest</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.RestConfig</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>staticResourcesCacheFilter</filter-name>
         <filter-class>no.nav.modig.frontend.filter.StaticResourcesCacheFilter</filter-class>

@@ -182,7 +182,7 @@ public class OppgaveBehandlingService {
                                 .withMaxAntallSvar(0)
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligEnhetId(ENHET.toString())
+                                .withAnsvarligEnhetId(enhetForPlukk(temagruppe))
                                 .withFagomradeKodeListe("KNA"))
                         .withSorteringKode(new WSFinnOppgaveListeSortering()
                                 .withSorteringKode("STIGENDE")

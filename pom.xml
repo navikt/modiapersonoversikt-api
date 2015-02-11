@@ -35,11 +35,11 @@
         <wicket.version>6.17.0</wicket.version>
         <spring.version>3.2.9.RELEASE</spring.version>
         <modig.frontend.version>1.1.98</modig.frontend.version>
-        <modig.security.version>1.0.23</modig.security.version>
+        <modig.security.version>1.0.24-NO_RESTEASY</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>2.0.42</modig.wicket.version>
+        <modig.wicket.version>2.0.45-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>2.0.2</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -56,13 +56,15 @@
         <jodatime.version>2.2</jodatime.version>
         <org.apache.cxf.version>2.7.6</org.apache.cxf.version>
         <aspectj.version>1.7.2</aspectj.version>
+        <lucene.version>4.10.2</lucene.version>
+        <jersey.version>2.15</jersey.version>
 
         <!-- Modia-komponenter-->
         <personsok.version>1.0.82</personsok.version>
-		<kjerneinfo.versjon>1.0.100</kjerneinfo.versjon>
+		<kjerneinfo.versjon>1.0.104</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.0.40</utbetaling.version>
-        <utbetaling.tjenestespesifikasjon.version>1.0.8</utbetaling.tjenestespesifikasjon.version>
+        <utbetaling.version>2.0.41</utbetaling.version>
+        <utbetaling.tjenestespesifikasjon.version>1.0.10</utbetaling.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
@@ -457,6 +459,11 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>reactkomponenter</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-lang</artifactId>
                 <version>${modig.lang.version}</version>
@@ -658,6 +665,40 @@
                 <version>${spring.version}</version>
             </dependency>
 
+            <!--Jersey -->
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-spring3</artifactId>
+                <version>${jersey.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-json-jackson</artifactId>
+                <version>${jersey.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.hk2.external</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>2.4.0-b06</version>
+            </dependency>
+
             <!--CXF-->
             <dependency>
                 <groupId>org.apache.cxf</groupId>
@@ -689,6 +730,28 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <!--Lucene-->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers-common</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-queryparser</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-highlighter</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
 
             <!--Jetty-->
@@ -814,6 +877,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>fluent-hc</artifactId>
+                <version>4.2.4</version>
             </dependency>
 
             <dependency>

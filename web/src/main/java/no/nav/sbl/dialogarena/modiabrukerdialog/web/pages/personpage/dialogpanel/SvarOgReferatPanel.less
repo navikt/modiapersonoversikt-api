@@ -149,11 +149,23 @@
     }
   }
   .kanaloverskrift {
+    position: relative;
     font-weight: 600;
     background-color: @modiasvart;
     color: @modiagraaskrift;
     padding: 7px 0;
     margin: 0 @sideMargin;
+
+    .tekstforslagToggle {
+      border: 0;
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      width: 25px;
+      height: 25px;
+      background: url(../img/dokument.svg) no-repeat;
+      background-size: 25px;
+    }
   }
   .tekstfelt {
     margin: 0 @sideMargin;

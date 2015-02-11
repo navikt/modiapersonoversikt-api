@@ -172,6 +172,10 @@
             <artifactId>modig-wicket</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>reactkomponenter</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-frontend-wicket</artifactId>
         </dependency>
@@ -284,6 +288,32 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!--Jersey-->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-spring3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>javax.inject</artifactId>
         </dependency>
 
         <!--Jetty-->

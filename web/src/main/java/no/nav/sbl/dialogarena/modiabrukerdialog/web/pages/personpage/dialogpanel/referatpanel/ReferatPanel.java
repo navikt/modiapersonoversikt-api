@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
@@ -16,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -38,6 +40,7 @@ import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -119,6 +122,18 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
         form.add(tekstfelt, tekstfeltLabel);
 
+        HashMap<String, Object> tekstforslagProps = new HashMap<>();
+        tekstforslagProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
+        final ReactComponentPanel stottetekster = new ReactComponentPanel("reacttest", "Tekstforslag", tekstforslagProps);
+        form.add(stottetekster);
+
+        form.add(new AjaxLink("stotteteksterToggler") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                stottetekster.callFunction(target, "toggle");
+            }
+        });
+
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         modusKomponenter.add(feedbackPanel);
         feedbackPanel.setOutputMarkupId(true);
@@ -153,7 +168,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private AjaxButton getSubmitKnapp(final PropertyModel<Modus> modusModel, final Form<HenvendelseVM> form, final FeedbackPanel feedbackPanel) {
-        AjaxButton submitKnapp = new AjaxButton("send") {
+        AjaxButton submitKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 if (modusModel.getObject().equals(Modus.SPORSMAL) && form.getModelObject().valgtSak == null) {
