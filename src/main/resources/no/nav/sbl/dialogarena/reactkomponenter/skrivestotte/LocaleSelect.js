@@ -7,7 +7,7 @@ var LocaleSelect = React.createClass({
     render: function () {
         return (
             <select onChange={this.onChange} value={this.props.valgtLocale}>
-            {Object.keys(this.props.hjelpetekst.locales).map(function (locale) {
+            {Object.keys(this.props.valgtTekst.innhold).map(function (locale) {
                 return <option value={locale}>{locale}</option>;
             }.bind(this))}
             </select>

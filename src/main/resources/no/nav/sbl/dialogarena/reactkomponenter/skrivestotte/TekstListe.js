@@ -26,7 +26,7 @@ var TekstListe = React.createClass({
             <label className={this.props.valgtTekst === tekst ? 'tekstElement valgt' : 'tekstElement'} onClick={onClickCallback}>
                 <input name="tekstElementRadio" type="radio" />
                 <h4>{tekst.tittel}</h4>
-                <p>{tekst.innhold}</p>
+                <p>{tekst.innhold["nb_NO"]}</p>
             </label>
         );
     }

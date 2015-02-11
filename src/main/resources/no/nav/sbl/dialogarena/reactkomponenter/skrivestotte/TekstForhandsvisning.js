@@ -3,7 +3,7 @@ var React = require('react');
 
 var TekstForhandsvisning = React.createClass({
     render: function () {
-        var tekst = this.props.tekst.locales[this.props.valgtLocale];
+        var tekst = this.props.valgtTekst.innhold[this.props.valgtLocale];
         tekst = tekst ? tekst.split(/[\r\n]+/) : [];
 
         return (
