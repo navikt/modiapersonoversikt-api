@@ -3,7 +3,6 @@ var React = require('react');
 
 var TekstListe = require('./TekstListe');
 var TekstForhandsvisning = require('./TekstForhandsvisning');
-var LocaleSelect = require('./LocaleSelect');
 var Filter = require('./Filter');
 
 var Tekstforslag = React.createClass({
@@ -22,7 +21,7 @@ var Tekstforslag = React.createClass({
         this.setState({show: !this.state.show});
     },
     setValgtTekst: function (tekst) {
-        this.setState({valgtTekst: tekst, valgtLocale: 'nb_NO'})
+        this.setState({valgtTekst: tekst})
     },
     setValgtLocale: function (locale) {
         this.setState({valgtLocale: locale})
@@ -43,10 +42,9 @@ var Tekstforslag = React.createClass({
         return this.state.show ? (
             <div className="tekstforslag">
                 <Filter setSokTekst={this.setSokTekst} />
-                <LocaleSelect valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} setValgtLocale={this.setValgtLocale}/>
                 <div className="tekstvisning">
                     <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
-                    <TekstForhandsvisning valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} />
+                    <TekstForhandsvisning valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} setValgtLocale={this.setValgtLocale} />
                 </div>
                 <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>
             </div>
