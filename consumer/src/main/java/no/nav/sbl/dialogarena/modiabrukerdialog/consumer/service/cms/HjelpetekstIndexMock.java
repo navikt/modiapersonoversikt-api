@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -18,7 +19,7 @@ public class HjelpetekstIndexMock {
             @Override
             public void indekser(List<Hjelpetekst> hjelpetekster) {
                 hjelpetekstIndex.indekser(asList(
-                        new Hjelpetekst("tausetsbelagt",
+                        hjelpetekst(
                                 "Taushetsbelagt eller sensitiv informasjon",
                                 "Takk for din henvendelse.\n" +
                                         "\n" +
@@ -30,7 +31,7 @@ public class HjelpetekstIndexMock {
                                         "\n" +
                                         "Søknadsskjemaer, selvbetjeningsløsninger, informasjon og «Dine utbetalinger» finner du på vår internettside www.nav.no. Her vil du også finne besøksadresse til ditt NAV-kontor.\n",
                                 "generell", "sensitiv", "feilsendt"),
-                        new Hjelpetekst("status",
+                        hjelpetekst(
                                 "Status i sak",
                                 "Takk for din henvendelse til NAV. \n" +
                                         "\n" +
@@ -38,7 +39,7 @@ public class HjelpetekstIndexMock {
                                         "\n" +
                                         "Du kan kontakte oss på telefon 55 55 33 33 dersom du har ytterligere spørsmål knyttet til din sak. Av hensyn til personvern og taushetsplikt kan vi ikke sende taushetsbelagt informasjon på e-post. \n",
                                 "generell"),
-                        new Hjelpetekst("underskrift",
+                        hjelpetekst(
                                 "Krav om underskrift/skannet dokument",
                                 "Takk for din henvendelse.\n" +
                                         "\n" +
@@ -63,5 +64,11 @@ public class HjelpetekstIndexMock {
             }
 
         };
+    }
+
+    private static Hjelpetekst hjelpetekst(String tittel, String norsk, String... tags) {
+        HashMap<String, String> innhold = new HashMap<>();
+        innhold.put(Hjelpetekst.LOCALE_DEFAULT, norsk);
+        return new Hjelpetekst(tittel, innhold, tags);
     }
 }

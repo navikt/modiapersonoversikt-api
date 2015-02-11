@@ -1,45 +1,36 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
-import org.apache.commons.collections15.Transformer;
+import no.nav.modig.lang.option.Optional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 
 public class Hjelpetekst {
 
-    public static final String LOCALE_DEFAULT = "nb";
-    public static final List<String> LOCALE_ANDRE = asList("en");
+    public static final String LOCALE_DEFAULT = "nb_NO";
 
-    public final String key, tittel, innhold;
+    public final String tittel;
     public List<String> tags;
-    private final Map<String, String> locales = new HashMap<>();
+    public Map<String, String> innhold;
 
-    public Hjelpetekst(String key, String tittel, String innhold, String... tags) {
-        this.key = key;
+    public Hjelpetekst(String tittel, Map<String, String> innhold, String... tags) {
+        this(tittel, innhold, asList(tags));
+    }
+
+    public Hjelpetekst(String tittel, Map<String, String> innhold, List<String> tags) {
         this.tittel = tittel;
         this.innhold = innhold;
-        this.tags = asList(tags);
-
-        leggTilLocale(LOCALE_DEFAULT, innhold);
+        this.tags = tags;
     }
 
-    public void leggTilLocale(String locale, String tekst) {
-        if (!locales.containsKey(locale)) {
-            locales.put(locale, tekst);
-        }
+    public Optional<String> getDefaultLocaleInnhold() {
+        return optional(innhold.get(LOCALE_DEFAULT));
     }
 
-    public Map<String, String> getLocales() {
-        return locales;
+    public Boolean isValid() {
+        return getDefaultLocaleInnhold().isSome();
     }
-
-    public static final Transformer<Hjelpetekst, String> KEY = new Transformer<Hjelpetekst, String>() {
-        @Override
-        public String transform(Hjelpetekst hjelpetekst) {
-            return hjelpetekst.key;
-        }
-    };
 }

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
 import no.nav.modig.lang.collections.ReduceUtils;
 import org.apache.commons.collections15.Transformer;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -25,6 +24,7 @@ import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,15 +33,14 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class HjelpetekstIndexImpl implements HjelpetekstIndex {
-    public static final String KEY = "key";
     public static final String ID = "id";
     public static final String INNHOLD = "innhold";
     public static final String TITTEL = "tittel";
     public static final String TAGS = "tags";
     public static final String TAGS_FILTER = "tags-filter";
 
-    public static final String SPAN_CLASS_HIGHLIGHTED_BEGIN = "<em>";
-    public static final String SPAN_CLASS_HIGHLIGHTED_END = "</em>";
+    public static final String HIGHLIGHTED_BEGIN = "<em>";
+    public static final String HIGHLIGHTED_END = "</em>";
 
     public static final String[] FIELDS = new String[]{TITTEL, TAGS, INNHOLD};
 
@@ -61,8 +60,10 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
             IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer));
             int i = 0;
             for (Hjelpetekst hjelpetekst : hjelpetekster) {
-                writer.addDocument(lagDokument(hjelpetekst, i));
-                i++;
+                if (hjelpetekst.isValid()) {
+                    writer.addDocument(lagDokument(hjelpetekst, i));
+                    i++;
+                }
             }
             writer.commit();
         } catch (IOException io) {
@@ -73,15 +74,13 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
     private static Document lagDokument(Hjelpetekst hjelpetekst, int id) {
         Document document = new Document();
         document.add(new StoredField(ID, id));
-        document.add(new StoredField(KEY, hjelpetekst.key));
         document.add(new TextField(TITTEL, hjelpetekst.tittel, Store.YES));
-        document.add(new TextField(INNHOLD, hjelpetekst.innhold, Store.YES));
+        document.add(new TextField(INNHOLD, hjelpetekst.getDefaultLocaleInnhold().get(), Store.NO));
         document.add(new TextField(TAGS, join(hjelpetekst.tags, " "), Store.YES));
 
-        for (Map.Entry<String, String> localeHjelpetekst : hjelpetekst.getLocales().entrySet()) {
+        for (Map.Entry<String, String> localeHjelpetekst : hjelpetekst.innhold.entrySet()) {
             document.add(new StoredField(INNHOLD + "_" + localeHjelpetekst.getKey(), localeHjelpetekst.getValue()));
         }
-
         for (String tag : hjelpetekst.tags) {
             document.add(new StringField(TAGS_FILTER, tag, Store.NO));
         }
@@ -98,7 +97,7 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
             searcher.search(query, collector);
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
-            SimpleHTMLFormatter formatter = new SimpleHTMLFormatter(SPAN_CLASS_HIGHLIGHTED_BEGIN, SPAN_CLASS_HIGHLIGHTED_END);
+            SimpleHTMLFormatter formatter = new SimpleHTMLFormatter(HIGHLIGHTED_BEGIN, HIGHLIGHTED_END);
             Highlighter highlighter = new Highlighter(formatter, new QueryScorer(query));
             highlighter.setTextFragmenter(new NullFragmenter());
 
@@ -136,14 +135,13 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
                 try {
                     Document doc = searcher.doc(hit.doc);
                     String tittel = getHighlightedTekst(TITTEL, doc, searcher, analyzer, highlighter);
-                    String innhold = getHighlightedTekst(INNHOLD, doc, searcher, analyzer, highlighter);
-                    Hjelpetekst hjelpetekst = new Hjelpetekst(doc.get(KEY), tittel, innhold, StringUtils.split(doc.get(TAGS), " "));
+                    HashMap<String, String> innhold = new HashMap<>();
                     for (IndexableField field : doc) {
                         if (field.name().startsWith(INNHOLD + "_")) {
-                            hjelpetekst.leggTilLocale(field.name().replace(INNHOLD + "_", ""), field.stringValue());
+                            innhold.put(field.name().replace(INNHOLD + "_", ""), field.stringValue());
                         }
                     }
-                    return hjelpetekst;
+                    return new Hjelpetekst(tittel, innhold, split(doc.get(TAGS), " "));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
