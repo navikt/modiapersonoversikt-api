@@ -1,39 +1,34 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.CmsSkrivestotte;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Hjelpetekst;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndex;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndexImpl;
-import org.springframework.beans.factory.annotation.Value;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndexMock.createHjelpetekstIndexMock;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class CmsHjelpetekstConfig {
 
-    public static final String CMS_HJELPETEKST_KEY = "start.cms.hjelpetekst.withmock";
+    public static final String CMS_SKRIVESTOTTE_KEY = "start.cms.skrivestotte.withmock";
 
     private static final int EN_TIME_MILLIS = 60 * 60 * 1000;
 
-    @Value("${appres.cms.url}")
-    private String appresUrl;
+    @Bean
+    public CmsSkrivestotte cmsSkrivestotte() {
+        return createSwitcher(new CmsSkrivestotteEnonic(), new CmsSkrivestotteMock(), CMS_SKRIVESTOTTE_KEY, CmsSkrivestotte.class);
+    }
 
     @Bean
     public HjelpetekstIndex hjelpetekstIndex() {
-        HjelpetekstIndex hjelpetekstIndex = new HjelpetekstIndexImpl();
-
-        return createSwitcher(hjelpetekstIndex, createHjelpetekstIndexMock(), CMS_HJELPETEKST_KEY, HjelpetekstIndex.class);
+        return new HjelpetekstIndex();
     }
 
     @Scheduled(fixedRate = EN_TIME_MILLIS, initialDelay = 5000)
     public void reIndekserHjelpetekster() {
-        List<Hjelpetekst> hjelpetekster = CmsSkrivestotte.hentHjelpetekster(appresUrl);
+        List<Hjelpetekst> hjelpetekster = cmsSkrivestotte().hentHjelpetekster();
         hjelpetekstIndex().indekser(hjelpetekster);
     }
 }
