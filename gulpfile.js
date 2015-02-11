@@ -47,9 +47,14 @@ var browserifyTask = function (options) {
 
 var lessTask = function (options) {
     var run = function () {
+        var start = Date.now();
+        console.log('Building LESS');
         gulp.src(options.src)
             .pipe(rename({dirname: ''}))
-            .pipe(gulp.dest(options.dest));
+            .pipe(gulp.dest(options.dest))
+            .pipe(notify(function () {
+                console.log('LESS movded in ' + (Date.now() - start) + 'ms');
+            }));
     };
 
     run();
