@@ -39,14 +39,24 @@ var Tekstforslag = React.createClass({
         this.setState({show: false});
     },
     render: function () {
+        var content = <h1 className="tomt">Fant ingen tekster</h1>;
+
+        if (this.state.tekster.length > 0) {
+            content = (
+                <div>
+                    <Filter setSokTekst={this.setSokTekst} />
+                    <div className="tekstvisning">
+                        <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
+                        <TekstForhandsvisning valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} setValgtLocale={this.setValgtLocale} />
+                    </div>
+                    <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>
+                </div>
+            );
+        }
+
         return this.state.show ? (
             <div className="tekstforslag">
-                <Filter setSokTekst={this.setSokTekst} />
-                <div className="tekstvisning">
-                    <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
-                    <TekstForhandsvisning valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} setValgtLocale={this.setValgtLocale} />
-                </div>
-                <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>
+                {content}
             </div>
         ) : null;
     }
