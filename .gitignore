@@ -11,4 +11,6 @@
 .settings
 target
 src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/js/styles/
-
+src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/js/build/
+src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/js/specs/
+node_modules

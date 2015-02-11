@@ -2,8 +2,6 @@
 var React = require('react');
 
 var TekstListe = React.createClass({
-
-
     componentDidUpdate: function () {
         var $this = $(this.getDOMNode());
         adjustScroll($this, $this.find('label.valgt').eq(0));
