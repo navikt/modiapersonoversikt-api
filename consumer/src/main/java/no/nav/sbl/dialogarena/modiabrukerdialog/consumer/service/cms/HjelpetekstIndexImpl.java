@@ -40,8 +40,8 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
     public static final String TAGS = "tags";
     public static final String TAGS_FILTER = "tags-filter";
 
-    public static final String SPAN_CLASS_HIGHLIGHTED_BEGIN = "<span class=\"highlighted\">";
-    public static final String SPAN_CLASS_HIGHLIGHTED_END = "</span>";
+    public static final String SPAN_CLASS_HIGHLIGHTED_BEGIN = "<em>";
+    public static final String SPAN_CLASS_HIGHLIGHTED_END = "</em>";
 
     public static final String[] FIELDS = new String[]{TITTEL, TAGS, INNHOLD};
 
@@ -78,7 +78,7 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
         document.add(new TextField(INNHOLD, hjelpetekst.innhold, Store.YES));
         document.add(new TextField(TAGS, join(hjelpetekst.tags, " "), Store.YES));
 
-        for (Map.Entry<String, String> localeHjelpetekst : hjelpetekst.locales.entrySet()) {
+        for (Map.Entry<String, String> localeHjelpetekst : hjelpetekst.getLocales().entrySet()) {
             document.add(new StoredField(INNHOLD + "_" + localeHjelpetekst.getKey(), localeHjelpetekst.getValue()));
         }
 
@@ -140,7 +140,7 @@ public class HjelpetekstIndexImpl implements HjelpetekstIndex {
                     Hjelpetekst hjelpetekst = new Hjelpetekst(doc.get(KEY), tittel, innhold, StringUtils.split(doc.get(TAGS), " "));
                     for (IndexableField field : doc) {
                         if (field.name().startsWith(INNHOLD + "_")) {
-                            hjelpetekst.locales.put(field.name().replace(INNHOLD + "_", ""), field.stringValue());
+                            hjelpetekst.leggTilLocale(field.name().replace(INNHOLD + "_", ""), field.stringValue());
                         }
                     }
                     return hjelpetekst;

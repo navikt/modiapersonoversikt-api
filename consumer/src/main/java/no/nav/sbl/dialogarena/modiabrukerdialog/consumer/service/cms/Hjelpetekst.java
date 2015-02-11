@@ -15,14 +15,25 @@ public class Hjelpetekst {
 
     public final String key, tittel, innhold;
     public List<String> tags;
-    public final Map<String, String> locales = new HashMap<>();
+    private final Map<String, String> locales = new HashMap<>();
 
     public Hjelpetekst(String key, String tittel, String innhold, String... tags) {
         this.key = key;
         this.tittel = tittel;
         this.innhold = innhold;
         this.tags = asList(tags);
-        this.locales.put(LOCALE_DEFAULT, innhold);
+
+        leggTilLocale(LOCALE_DEFAULT, innhold);
+    }
+
+    public void leggTilLocale(String locale, String tekst) {
+        if (!locales.containsKey(locale)) {
+            locales.put(locale, tekst);
+        }
+    }
+
+    public Map<String, String> getLocales() {
+        return locales;
     }
 
     public static final Transformer<Hjelpetekst, String> KEY = new Transformer<Hjelpetekst, String>() {

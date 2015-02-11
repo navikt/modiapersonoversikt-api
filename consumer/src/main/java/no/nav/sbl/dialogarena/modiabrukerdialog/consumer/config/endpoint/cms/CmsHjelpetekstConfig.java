@@ -48,7 +48,7 @@ public class CmsHjelpetekstConfig {
                 @Override
                 public void execute(Hjelpetekst hjelpetekst) {
                     if (parentHjelpetekster.containsKey(hjelpetekst.key)) {
-                        parentHjelpetekster.get(hjelpetekst.key).get(0).locales.put(locale, hjelpetekst.innhold);
+                        parentHjelpetekster.get(hjelpetekst.key).get(0).leggTilLocale(locale, hjelpetekst.innhold);
                     }
                 }
             });
