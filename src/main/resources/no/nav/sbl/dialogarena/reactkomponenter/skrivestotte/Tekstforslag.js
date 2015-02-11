@@ -8,11 +8,14 @@ var Filter = require('./Filter');
 
 var Tekstforslag = React.createClass({
     getInitialState: function () {
-        return {tekster: [], valgtTekst: {innhold : {}}, valgtLocale: 'nb_NO', fritekst: '', show: true};
+        return {tekster: [], valgtTekst: {innhold: {}}, valgtLocale: 'nb_NO', show: true};
     },
     componentDidMount: function () {
         hentEnonicTekster('').done(function (tekster) {
-            this.setState({tekster: tekster});
+            this.setState({
+                valgtTekst: tekster[0] || {innhold: {}},
+                tekster: tekster
+            });
         }.bind(this));
     },
     toggle: function () {
@@ -24,10 +27,12 @@ var Tekstforslag = React.createClass({
     setValgtLocale: function (locale) {
         this.setState({valgtLocale: locale})
     },
-    setFritekst: function (fritekst) {
-        this.setState({fritekst: fritekst});
-        hentEnonicTekster(fritekst).done(function (tekster) {
-            this.setState({tekster: tekster});
+    setSokTekst: function (sokTekst) {
+        hentEnonicTekster(sokTekst).done(function (tekster) {
+            this.setState({
+                valgtTekst: tekster[0] || {innhold: {}},
+                tekster: tekster
+            });
         }.bind(this));
     },
     settInnTekst: function () {
@@ -37,7 +42,7 @@ var Tekstforslag = React.createClass({
     render: function () {
         return this.state.show ? (
             <div className="tekstforslag">
-                <Filter setFritekst={this.setFritekst} tekst={this.state.fritekst} />
+                <Filter setSokTekst={this.setSokTekst} />
                 <LocaleSelect valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} setValgtLocale={this.setValgtLocale}/>
                 <div className="tekstvisning">
                     <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
