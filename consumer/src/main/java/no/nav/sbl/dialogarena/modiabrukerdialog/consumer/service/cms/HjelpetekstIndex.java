@@ -30,6 +30,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Hjelpetekst.LOCALE_DEFAULT;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class HjelpetekstIndex {
@@ -74,7 +75,7 @@ public class HjelpetekstIndex {
         Document document = new Document();
         document.add(new StoredField(ID, id));
         document.add(new TextField(TITTEL, hjelpetekst.tittel, Store.YES));
-        document.add(new TextField(INNHOLD, hjelpetekst.getDefaultLocaleInnhold().get(), Store.NO));
+        document.add(new TextField(INNHOLD, hjelpetekst.getDefaultLocaleInnhold().get(), Store.YES));
         document.add(new TextField(TAGS, join(hjelpetekst.tags, " "), Store.YES));
 
         for (Map.Entry<String, String> localeHjelpetekst : hjelpetekst.innhold.entrySet()) {
@@ -135,7 +136,11 @@ public class HjelpetekstIndex {
                     HashMap<String, String> innhold = new HashMap<>();
                     for (IndexableField field : doc) {
                         if (field.name().startsWith(INNHOLD + "_")) {
-                            innhold.put(field.name().replace(INNHOLD + "_", ""), field.stringValue());
+                            if (field.name().equals(INNHOLD + "_" + LOCALE_DEFAULT)) {
+                                innhold.put(LOCALE_DEFAULT, getHighlightedTekst(INNHOLD, doc, searcher, analyzer, highlighter));
+                            } else {
+                                innhold.put(field.name().replace(INNHOLD + "_", ""), field.stringValue());
+                            }
                         }
                     }
                     return new Hjelpetekst(tittel, innhold, split(doc.get(TAGS), " "));
