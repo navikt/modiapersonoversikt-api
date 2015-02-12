@@ -13,7 +13,7 @@ var TekstForhandsvisning = React.createClass({
                 <LocaleSelect valgtTekst={this.props.valgtTekst} valgtLocale={this.props.valgtLocale} setValgtLocale={this.props.setValgtLocale}/>
                 {tekst.map(function (avsnitt) {
                     return (
-                        <p>{avsnitt}</p>
+                        <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>
                     );
                 })}
             </div>
