@@ -41,6 +41,11 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
+    <cache:advice id="utbetalingService" key-generator="userkeygenerator">
+        <cache:caching cache="utbetalingCache">
+            <cache:cacheable method="hent*"/>
+        </cache:caching>
+    </cache:advice>
     <!--kodeverkCache-->
 
     <aop:config>
@@ -54,6 +59,7 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
         <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
         <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
+        <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
     </aop:config>
 
 </beans>
