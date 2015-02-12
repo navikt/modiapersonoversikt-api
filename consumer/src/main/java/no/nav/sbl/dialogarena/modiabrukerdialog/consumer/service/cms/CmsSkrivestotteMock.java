@@ -6,6 +6,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public class CmsSkrivestotteMock implements CmsSkrivestotte {
+
+    private static int key = 0;
+
     @Override
     public List<Hjelpetekst> hentHjelpetekster() {
         return asList(
@@ -46,6 +49,6 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
     private static Hjelpetekst hjelpetekst(String tittel, String norsk, String... tags) {
         HashMap<String, String> innhold = new HashMap<>();
         innhold.put(Hjelpetekst.LOCALE_DEFAULT, norsk);
-        return new Hjelpetekst(tittel, innhold, tags);
+        return new Hjelpetekst(String.valueOf(key++), tittel, innhold, tags);
     }
 }

@@ -143,7 +143,7 @@ public class HjelpetekstIndex {
                             }
                         }
                     }
-                    return new Hjelpetekst(tittel, innhold, split(doc.get(TAGS), " "));
+                    return new Hjelpetekst(doc.get(ID), tittel, innhold, split(doc.get(TAGS), " "));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

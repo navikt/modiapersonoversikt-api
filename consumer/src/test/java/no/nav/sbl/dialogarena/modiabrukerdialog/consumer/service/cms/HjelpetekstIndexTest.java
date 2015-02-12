@@ -78,7 +78,7 @@ public class HjelpetekstIndexTest {
     @Test
     public void ikkeSokbarHvisDefaultLocaleIkkeOppgitt() {
         HashMap<String, String> innhold = new HashMap<>();
-        hjelpetekstIndex.indekser(asList(new Hjelpetekst("tittel", innhold)));
+        hjelpetekstIndex.indekser(asList(new Hjelpetekst("", "tittel", innhold)));
 
         List<Hjelpetekst> resultat = hjelpetekstIndex.sok("");
         assertThat(resultat, hasSize(0));
@@ -123,13 +123,13 @@ public class HjelpetekstIndexTest {
     private static Hjelpetekst hjelpetekst(String tittel, String norsk, String... tags) {
         HashMap<String, String> innhold = new HashMap<>();
         innhold.put(Hjelpetekst.LOCALE_DEFAULT, norsk);
-        return new Hjelpetekst(tittel, innhold, tags);
+        return new Hjelpetekst("", tittel, innhold, tags);
     }
 
     private static Hjelpetekst hjelpetekst(String tittel, String norsk, String englesk, List<String> tags) {
         HashMap<String, String> innhold = new HashMap<>();
         innhold.put(Hjelpetekst.LOCALE_DEFAULT, norsk);
         innhold.put("en_US", englesk);
-        return new Hjelpetekst(tittel, innhold, tags);
+        return new Hjelpetekst("", tittel, innhold, tags);
     }
 }
