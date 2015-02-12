@@ -27,7 +27,7 @@ public class UtbetalingEndpointConfig {
 
     public static final String UTBETALING_KEY = "start.utbetaling.withmock";
 
-    @Bean
+    @Bean(name = "utbetalingV1")
     public UtbetalingV1 utbetalingV1() {
         final UtbetalingV1 prod = createUtbetalingPortType(new UserSAMLOutInterceptor());
         final UtbetalingV1 mock = new UtbetalingPortTypeMock().utbetalingPortType();
