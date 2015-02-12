@@ -104,27 +104,20 @@ public class GsakService {
         }
     }
 
-    public void ferdigstillGsakOppgave(Optional<String> oppgaveId, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
-        if (oppgaveId.isSome()) {
-            try {
-                WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId.get())).getOppgave();
-
-                if (oppgaveErFerdigstilt(oppgave)) {
-                    throw new OppgaveErFerdigstilt(new Throwable("Oppgaven er allerede ferdigstilt"));
-                }
-
-                String nyBeskrivelse = "Oppgaven er ferdigstilt i Modia med beskrivelse:\n" + beskrivelse;
-                String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-                int valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
-                oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
-
-                lagreGsakOppgave(oppgave, valgtEnhetId);
-
-                oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(valgtEnhetId));
-            } catch (HentOppgaveOppgaveIkkeFunnet | NumberFormatException e) {
-                throw new RuntimeException(e);
+    public void ferdigstillGsakOppgave(WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
+        String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        int valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
+        try {
+            String nyBeskrivelse = "Oppgaven er ferdigstilt i Modia med beskrivelse:\n" + beskrivelse;
+            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
+            lagreGsakOppgave(oppgave, valgtEnhetId);
+        } catch (LagreOppgaveOptimistiskLasing e) {
+            if (oppgaveErFerdigstilt(hentOppgave(oppgave.getOppgaveId()))) {
+                throw new OppgaveErFerdigstilt(new Throwable("Oppgaven er allerede ferdigstilt"));
             }
+            throw e;
         }
+        oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgave.getOppgaveId()).withFerdigstiltAvEnhetId(valgtEnhetId));
     }
 
     public void opprettGsakOppgave(NyOppgave nyOppgave) {

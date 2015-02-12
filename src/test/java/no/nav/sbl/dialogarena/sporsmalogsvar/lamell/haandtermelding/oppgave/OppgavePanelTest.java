@@ -48,6 +48,7 @@ public class OppgavePanelTest extends WicketPageTest {
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         when(innboksVM.getSessionHenvendelseId()).thenReturn(Optional.<String>none());
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
+        when(innboksVM.getSessionOppgaveId()).thenReturn(optional("1"));
     }
 
     @Test
@@ -73,7 +74,6 @@ public class OppgavePanelTest extends WicketPageTest {
     @Test
     public void viserAvsluttValgHvisValgtTraadErISession() {
         when(innboksVM.getSessionHenvendelseId()).thenReturn(optional("id"));
-        when(innboksVM.getSessionOppgaveId()).thenReturn(optional("1"));
 
         TraadVM traadVM = mock(TraadVM.class);
         MeldingVM meldingVM = new MeldingVM(melding, 1);

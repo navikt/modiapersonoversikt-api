@@ -4,7 +4,9 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService.OppgaveErFerdigstilt;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -33,6 +35,13 @@ public class AvsluttOppgavePanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
+        final Optional<WSOppgave> oppgave = oppgaveId.map(new Transformer<String, WSOppgave>() {
+            @Override
+            public WSOppgave transform(String id) {
+                return gsakService.hentOppgave(id);
+            }
+        });
+
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackAvsluttOppgave");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
         feedbackPanelSuccess.add(visibleIf(oppgaveAvsluttet));
@@ -48,7 +57,7 @@ public class AvsluttOppgavePanel extends Panel {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                         try {
-                            gsakService.ferdigstillGsakOppgave(oppgaveId, beskrivelseFelt.getModelObject());
+                            gsakService.ferdigstillGsakOppgave(oppgave.get(), beskrivelseFelt.getModelObject());
                             oppgaveAvsluttet.setObject(true);
                             etterSubmit(target);
                             target.add(form, feedbackPanelSuccess);
