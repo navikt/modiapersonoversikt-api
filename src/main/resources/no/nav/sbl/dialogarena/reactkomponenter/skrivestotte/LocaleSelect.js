@@ -14,7 +14,7 @@ var LocaleSelect = React.createClass({
         return Object.keys(this.props.valgtTekst.innhold).length > 1 ? (
             <select onChange={this.onChange} value={this.props.valgtLocale}>
             {Object.keys(this.props.valgtTekst.innhold).map(function (locale) {
-                return <option value={locale}>{spraak[locale]}</option>;
+                return <option value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>;
             }.bind(this))}
             </select>
         ) : null;
