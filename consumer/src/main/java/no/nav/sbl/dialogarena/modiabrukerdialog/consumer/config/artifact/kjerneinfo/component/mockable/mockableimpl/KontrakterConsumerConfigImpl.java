@@ -5,14 +5,14 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolg
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.YtelseskontraktPortType;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.YtelseskontraktV2;
 
 public class KontrakterConsumerConfigImpl {
 
-    public static DefaultYtelseskontraktService createYtelseskontraktService(YtelseskontraktPortType ytelseskontraktPortType, YtelseskontraktPortType selftestYtelseskontraktPortType) {
+    public static DefaultYtelseskontraktService createYtelseskontraktService(YtelseskontraktV2 ytelseskontraktV2, YtelseskontraktV2 selftestYtelseskontraktV2) {
         DefaultYtelseskontraktService ytelseskontraktService = new DefaultYtelseskontraktService();
-        ytelseskontraktService.setYtelseskontraktService(ytelseskontraktPortType);
-        ytelseskontraktService.setSelftestYtelseskontraktService(selftestYtelseskontraktPortType);
+        ytelseskontraktService.setYtelseskontraktService(ytelseskontraktV2);
+        ytelseskontraktService.setSelftestYtelseskontraktService(selftestYtelseskontraktV2);
         ytelseskontraktService.setMapper(new YtelseskontraktMapper());
         return ytelseskontraktService;
     }
