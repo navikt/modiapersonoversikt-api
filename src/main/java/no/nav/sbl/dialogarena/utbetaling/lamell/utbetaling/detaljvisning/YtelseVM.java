@@ -13,10 +13,10 @@ public class YtelseVM implements Serializable {
     private final Double belop;
 
     public YtelseVM(String ytelse, Double belop) {
-        this(ytelse, null, null, belop);
+        this(ytelse, belop, null, null);
     }
 
-    public YtelseVM(String ytelse, Double sats, Double antall, Double belop) {
+    public YtelseVM(String ytelse, Double belop, Double antall, Double sats) {
         this.ytelse = ytelse;
         this.sats = sats;
         this.antall = antall;
