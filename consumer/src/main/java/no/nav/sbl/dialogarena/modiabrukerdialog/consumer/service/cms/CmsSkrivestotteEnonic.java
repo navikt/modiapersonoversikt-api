@@ -42,6 +42,7 @@ public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
             for (int i = 0; i < nodeset.getLength(); i++) {
                 Node node = nodeset.item(i);
                 hjelpetekster.add(new Hjelpetekst(
+                        String.valueOf(i),
                         getChildValueByName(node, "overskrift"),
                         lagInnholdMap(getChildrenWithName(node, "innhold")),
                         split(getChildValueByName(node, "tags"), " ")));

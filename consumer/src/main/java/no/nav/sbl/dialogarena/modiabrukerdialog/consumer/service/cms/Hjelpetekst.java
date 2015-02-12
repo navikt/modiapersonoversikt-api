@@ -12,15 +12,16 @@ public class Hjelpetekst {
 
     public static final String LOCALE_DEFAULT = "nb_NO";
 
-    public final String tittel;
+    public final String key, tittel;
     public List<String> tags;
     public Map<String, String> innhold;
 
-    public Hjelpetekst(String tittel, Map<String, String> innhold, String... tags) {
-        this(tittel, innhold, asList(tags));
+    public Hjelpetekst(String key, String tittel, Map<String, String> innhold, String... tags) {
+        this(key, tittel, innhold, asList(tags));
     }
 
-    public Hjelpetekst(String tittel, Map<String, String> innhold, List<String> tags) {
+    public Hjelpetekst(String key, String tittel, Map<String, String> innhold, List<String> tags) {
+        this.key = key;
         this.tittel = tittel;
         this.innhold = innhold;
         this.tags = tags;
