@@ -7,7 +7,7 @@ var Filter = require('./Filter');
 
 var Tekstforslag = React.createClass({
     getInitialState: function () {
-        return {tekster: [], valgtTekst: {innhold: {nb_NO: ''}}, valgtLocale: 'nb_NO', show: true};
+        return {tekster: [], valgtTekst: {innhold: {nb_NO: ''}}, valgtLocale: 'nb_NO', show: false};
     },
     componentDidMount: function () {
         hentEnonicTekster('').done(function (tekster) {
