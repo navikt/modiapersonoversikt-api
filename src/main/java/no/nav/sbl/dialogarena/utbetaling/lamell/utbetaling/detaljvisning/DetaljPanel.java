@@ -28,12 +28,7 @@ public class DetaljPanel extends Panel {
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
         IModel<String> melding = Model.of(utbetalingVM.getMelding());
 
-        List<YtelseVM> ytelseVMer = new ArrayList<>();
-        appendUnderytelser(utbetalingVM, ytelseVMer);
-        appendSkatteTrekk(utbetalingVM, ytelseVMer);
-        appendTrekk(utbetalingVM, ytelseVMer);
-
-        sort(ytelseVMer, DESC_BELOP);
+        List<YtelseVM> ytelseVMer = createYtelseVMerList(utbetalingVM);
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
                 new Label("konto", utbetalingVM.getKontonr()),
@@ -43,7 +38,17 @@ public class DetaljPanel extends Panel {
         );
     }
 
-    private void appendSkatteTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
+    protected List<YtelseVM> createYtelseVMerList(UtbetalingVM utbetalingVM) {
+        List<YtelseVM> ytelseVMer = new ArrayList<>();
+        appendUnderytelser(utbetalingVM, ytelseVMer);
+        appendSkatteTrekk(utbetalingVM, ytelseVMer);
+        appendTrekk(utbetalingVM, ytelseVMer);
+
+        sort(ytelseVMer, DESC_BELOP);
+        return ytelseVMer;
+    }
+
+    protected void appendSkatteTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if(utbetalingVM.getSkatteTrekk() == null) {
             return;
         }
@@ -54,7 +59,7 @@ public class DetaljPanel extends Panel {
 
     }
 
-    private void appendTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
+    protected void appendTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if(utbetalingVM.getTrekkListe() == null) {
             return;
         }
@@ -67,7 +72,7 @@ public class DetaljPanel extends Panel {
 
     }
 
-    private void appendUnderytelser(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
+    protected void appendUnderytelser(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if(utbetalingVM.getUnderytelser() == null) {
             return;
         }
@@ -75,13 +80,13 @@ public class DetaljPanel extends Panel {
         for(Record<Underytelse> underytelse : utbetalingVM.getUnderytelser()) {
             ytelseVMer.add(new YtelseVM(
                     underytelse.get(Underytelse.ytelsesType),
-                    underytelse.get(Underytelse.satsBeloep),
+                    underytelse.get(Underytelse.ytelseBeloep),
                     underytelse.get(Underytelse.satsAntall),
-                    underytelse.get(Underytelse.ytelseBeloep)));
+                    underytelse.get(Underytelse.satsBeloep)));
         }
     }
 
-    private ListView createYtelserader(List<YtelseVM> underytelser) {
+    protected ListView createYtelserader(List<YtelseVM> underytelser) {
         return new ListView<YtelseVM>("underytelser", underytelser) {
             @Override
             protected void populateItem(ListItem<YtelseVM> item) {
