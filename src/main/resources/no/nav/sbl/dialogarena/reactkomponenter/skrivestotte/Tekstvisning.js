@@ -15,7 +15,7 @@ var Tekstvisning = React.createClass({
                     valgtTekst={this.props.valgtTekst} valgtLocale={this.props.valgtLocale}
                     setValgtLocale={this.props.setValgtLocale} settInnTekst={this.props.settInnTekst} />
             </div>) :
-            (<div className="tekstforslag">
+            (<div>
                 <h1 className="tomt">Fant ingen tekster</h1>
             </div>);
     }
