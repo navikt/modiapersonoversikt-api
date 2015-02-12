@@ -39,11 +39,13 @@ var Tekstforslag = React.createClass({
         this.setState({show: false});
     },
     render: function () {
-        var content = <h1 className="tomt">Fant ingen tekster</h1>;
+        if (!this.state.show) {
+            return null;
+        }
 
         if (this.state.tekster.length > 0) {
-            content = (
-                <div>
+            return (
+                <div className="tekstforslag">
                     <Filter setSokTekst={this.setSokTekst} />
                     <div className="tekstvisning">
                         <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
@@ -54,11 +56,10 @@ var Tekstforslag = React.createClass({
             );
         }
 
-        return this.state.show ? (
+        return (
             <div className="tekstforslag">
-                {content}
-            </div>
-        ) : null;
+                <h1 className="tomt">Fant ingen tekster</h1>
+            </div>);
     }
 
 });
