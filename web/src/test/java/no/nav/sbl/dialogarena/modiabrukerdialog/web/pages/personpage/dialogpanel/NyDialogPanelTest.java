@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.journalforing;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
