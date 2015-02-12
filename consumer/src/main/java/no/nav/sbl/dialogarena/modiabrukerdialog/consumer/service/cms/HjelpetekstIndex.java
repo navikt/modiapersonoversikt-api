@@ -43,7 +43,7 @@ public class HjelpetekstIndex {
     public static final String HIGHLIGHTED_BEGIN = "<em>";
     public static final String HIGHLIGHTED_END = "</em>";
 
-    public static final String[] FIELDS = new String[]{TITTEL, TAGS, INNHOLD};
+    private static final String[] FIELDS = new String[]{TITTEL, TAGS, INNHOLD};
 
     private StandardAnalyzer analyzer = new StandardAnalyzer();
     private RAMDirectory directory;
