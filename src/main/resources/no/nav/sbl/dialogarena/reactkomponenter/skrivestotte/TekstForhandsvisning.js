@@ -1,11 +1,13 @@
 /** @jsx React.DOM */
 var React = require('react');
+
+var Utils = require('./Utils');
+
 var LocaleSelect = require('./LocaleSelect');
 
 var TekstForhandsvisning = React.createClass({
     render: function () {
-        var innhold = this.props.valgtTekst.innhold;
-        var tekst = innhold[this.props.valgtLocale] ? innhold[this.props.valgtLocale] : innhold['nb_NO'];
+        var tekst = Utils.getInnhold(this.props.valgtTekst, this.props.valgtLocale);
         tekst = tekst.split(/[\r\n]+/);
 
         return (
@@ -16,6 +18,7 @@ var TekstForhandsvisning = React.createClass({
                         <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>
                     );
                 })}
+                <input type="button" value="Velg tekst" onClick={this.props.settInnTekst}/>
             </div>
         );
     }

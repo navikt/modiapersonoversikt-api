@@ -1,17 +1,19 @@
 /** @jsx React.DOM */
 var React = require('react');
 
+var Utils = require('./Utils');
+
 var Filter = require('./Filter');
 var Tekstvisning = require('./Tekstvisning');
 
 var Tekstforslag = React.createClass({
     getInitialState: function () {
-        return {tekster: [], valgtTekst: {innhold: {nb_NO: ''}}, valgtLocale: 'nb_NO', show: false};
+        return {tekster: [], valgtTekst: {innhold: {nb_NO: ''}}, valgtLocale: Utils.Constants.LOCALE_DEFAULT, show: false};
     },
     componentDidMount: function () {
         hentEnonicTekster('').done(function (tekster) {
             this.setState({
-                valgtTekst: tekster[0] || {innhold: {}},
+                valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
                 tekster: tekster
             });
         }.bind(this));
@@ -28,13 +30,13 @@ var Tekstforslag = React.createClass({
     setSokTekst: function (sokTekst) {
         hentEnonicTekster(sokTekst).done(function (tekster) {
             this.setState({
-                valgtTekst: tekster[0] || {innhold: {}},
+                valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
                 tekster: tekster
             });
         }.bind(this));
     },
     settInnTekst: function () {
-        $('#' + this.props.tekstfeltId).focus().val(this.state.valgtTekst.innhold[this.state.valgtLocale]);
+        $('#' + this.props.tekstfeltId).focus().val(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale));
         this.setState({show: false});
     },
     render: function () {
@@ -47,8 +49,7 @@ var Tekstforslag = React.createClass({
                 <Filter setSokTekst={this.setSokTekst} />
                 <Tekstvisning
                     tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
-                    setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} />
-                <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>
+                    setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
             </div>
         );
     }
