@@ -7,11 +7,16 @@ var reactify = require('reactify');
 var notify = require('gulp-notify');
 var gutil = require('gulp-util');
 
+var navReact = 'nav-react.js';
 var srcPath = './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/';
 var targetPath = './target/classes/no/nav/sbl/dialogarena/reactkomponenter/';
-var components = [
+var components = toAbsolutePath([
     'skrivestotte'
-];
+]);
+components.push({
+    path: srcPath + navReact,
+    name: navReact
+});
 
 var browserifyTask = function (options) {
     console.log('starting browserify with options: ', options);
@@ -22,6 +27,12 @@ var browserifyTask = function (options) {
         debug: options.development,
         cache: {}, packageCache: {}, fullPaths: options.development
     });
+
+    if (options.name !== navReact) {
+        appBundler.ignore('react')
+            .ignore('nav-react');
+    }
+
 
     // The rebundle process
     var rebundle = function () {
@@ -62,7 +73,7 @@ var lessTask = function (options) {
 };
 
 gulp.task('dev', function () {
-    toAbsolutePath(components).forEach(function (component) {
+    components.forEach(function (component) {
         browserifyTask({
             development: true,
             src: component.path,
@@ -79,7 +90,7 @@ gulp.task('dev', function () {
 });
 
 gulp.task('default', function () {
-    toAbsolutePath(components).forEach(function (component) {
+    components.forEach(function (component) {
         browserifyTask({
             development: false,
             src: component.path,
@@ -97,7 +108,7 @@ gulp.task('default', function () {
 
 function toAbsolutePath(componentNames) {
     return componentNames.map(function (componentName) {
-        console.log('Component name: ', componentName+'.js');
+        console.log('Component name: ', componentName + '.js');
         return {
             path: srcPath + componentName + '/index.js',
             name: componentName + '.js'

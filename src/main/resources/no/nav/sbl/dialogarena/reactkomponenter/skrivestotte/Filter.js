@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-var React = require('react');
+var React = ModiaJS.React;
 
 var Filter = React.createClass({
     setSokTekst: function (event) {
@@ -8,7 +8,7 @@ var Filter = React.createClass({
     render: function () {
         return (
             <div className="filter-container">
-                <input type="text" placeholder="Søk" onChange={this.setSokTekst} />
+                <input type="text" placeholder="Søk" onKeyUp={this.setSokTekst} />
             </div>
         );
     }

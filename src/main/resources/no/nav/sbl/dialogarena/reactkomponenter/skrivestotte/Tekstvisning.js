@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-var React = require('react');
+var React = ModiaJS.React;
 
 var TekstListe = require('./TekstListe');
 var TekstForhandsvisning = require('./TekstForhandsvisning');
