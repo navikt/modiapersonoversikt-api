@@ -157,7 +157,22 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void senderSporsmalDersomManVelgerBrukerKanSvare() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+    public void senderSporsmalDersomManVelgerBrukerKanSvareOgSkriftligKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+        wicket.goToPageWith(testSvarPanel)
+                .inForm(withId("svarform"))
+                .write("tekstfelt:text", FRITEKST)
+                .select("kanal", 0)
+                .check("brukerKanSvare", true)
+                .submitWithAjaxButton(withId("send"));
+
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.meldingstype, is(SPORSMAL_MODIA_UTGAAENDE));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void senderSvarDersomManVelgerBrukerKanSvareMenHarValgtReferatSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", FRITEKST)
@@ -167,7 +182,19 @@ public class SvarPanelTest extends WicketPageTest {
 
         verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
         Melding melding = meldingArgumentCaptor.getValue();
-        assertThat(melding.meldingstype, is(SPORSMAL_MODIA_UTGAAENDE));
+        assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void disablerBrukerKanSvareDersomManHarValgtReferatSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+        wicket.goToPageWith(testSvarPanel)
+                .inForm(withId("svarform"))
+                .write("tekstfelt:text", FRITEKST)
+                .select("kanal", 2)
+                .andReturn()
+                .onComponent(withId("kanal")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
+                .should().containComponent(thatIsDisabled().and(withId("brukerKanSvare")));
     }
 
     @Test

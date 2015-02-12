@@ -31,6 +31,15 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
         };
     }
 
+    public AbstractReadOnlyModel<Boolean> brukerKanSvareSkalEnables() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return kanal.equals(Kanal.TEKST);
+            }
+        };
+    }
+
     public String getValgtSaksDatoFormatert() {
         return valgtSak.opprettetDato == null ? "" : WidgetDateFormatter.date(valgtSak.opprettetDato);
     }
