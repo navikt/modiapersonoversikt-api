@@ -1,8 +1,6 @@
 /** @jsx React.DOM */
 var React = ModiaJS.React;
 
-var Utils = require('./Utils');
-
 var TekstListe = React.createClass({
     componentDidUpdate: function () {
         var $this = $(this.getDOMNode());
@@ -17,7 +15,6 @@ var TekstListe = React.createClass({
             <label className={this.props.valgtTekst === tekst ? 'tekstElement valgt' : 'tekstElement'} onClick={onClickCallback}>
                 <input name="tekstElementRadio" type="radio" />
                 <h4 dangerouslySetInnerHTML={{__html: tekst.tittel}}></h4>
-                <p dangerouslySetInnerHTML={{__html: Utils.getInnhold(tekst, this.props.valgtLocale)}}></p>
             </label>
         );
     },

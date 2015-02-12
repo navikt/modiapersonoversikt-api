@@ -12,13 +12,17 @@ var TekstForhandsvisning = React.createClass({
 
         return (
             <div className="tekstForhandsvisning">
-                <LocaleSelect valgtTekst={this.props.valgtTekst} valgtLocale={this.props.valgtLocale} setValgtLocale={this.props.setValgtLocale}/>
+                <div className="tekstPanel">
                 {tekst.map(function (avsnitt) {
                     return (
                         <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>
                     );
                 })}
-                <input type="button" value="Velg tekst" onClick={this.props.settInnTekst}/>
+                </div>
+                <div className="velgPanel">
+                    <LocaleSelect valgtTekst={this.props.valgtTekst} valgtLocale={this.props.valgtLocale} setValgtLocale={this.props.setValgtLocale}/>
+                    <input type="button" value="Velg tekst" className="knapp-hoved-liten" onClick={this.props.settInnTekst}/>
+                </div>
             </div>
         );
     }

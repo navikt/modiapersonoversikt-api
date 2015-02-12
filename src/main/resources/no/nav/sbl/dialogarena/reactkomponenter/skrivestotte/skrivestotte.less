@@ -17,8 +17,8 @@
   em {
     font-style: normal;
     background-color: #eed28c;
-    border-radius: 5px;
-    padding: 0 3px;
+    border-radius: 10px;
+    padding: 0 5px;
   }
   h1.tomt {
     text-align: center;
@@ -52,7 +52,7 @@
       background-color: #f5f5f5;
 
       label.tekstElement {
-        padding: @skrivestotte-padding;
+        padding: 10px @skrivestotte-padding;
         border-bottom: 1px solid @border-color;
         background: none;
         width: 100%;
@@ -60,16 +60,8 @@
         text-transform: none;
 
         h4 {
-          margin: 0 0 0.5rem;
-          font-size: 14px;
-        }
-        p {
-          font-size: 14px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
           margin: 0;
-          color: #333;
+          font-size: 14px;
         }
         &.valgt {
           background-color: #226aa5;
@@ -91,11 +83,23 @@
     .tekstForhandsvisning {
       width: 65%;
       height: 100%;
-      overflow: auto;
       float: right;
-      padding: @skrivestotte-padding;
       word-wrap: break-word;
 
+      .tekstPanel {
+        padding: @skrivestotte-padding;
+        height: 85%;
+        overflow: auto;
+      }
+      .velgPanel {
+        padding: @skrivestotte-padding;
+        height: 15%;
+        text-align: center;
+        border-top: 1px solid @border-color;
+        select {
+          margin-right: 15px;
+        }
+      }
       > p:first-child {
         margin-top: 0;
       }
