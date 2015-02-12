@@ -2,7 +2,7 @@
 var React = require('react');
 var LocaleSelect = React.createClass({
     onChange: function (event) {
-        this.props.setValgtLocale(event.nativeEvent.target.value)
+        this.props.setValgtLocale(event.nativeEvent.target.value);
     },
     render: function () {
         return Object.keys(this.props.valgtTekst.innhold).length > 1 ? (

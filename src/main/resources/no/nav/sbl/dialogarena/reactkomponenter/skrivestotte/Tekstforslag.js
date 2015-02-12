@@ -1,9 +1,8 @@
 /** @jsx React.DOM */
 var React = require('react');
 
-var TekstListe = require('./TekstListe');
-var TekstForhandsvisning = require('./TekstForhandsvisning');
 var Filter = require('./Filter');
+var Tekstvisning = require('./Tekstvisning');
 
 var Tekstforslag = React.createClass({
     getInitialState: function () {
@@ -43,23 +42,15 @@ var Tekstforslag = React.createClass({
             return null;
         }
 
-        if (this.state.tekster.length > 0) {
-            return (
-                <div className="tekstforslag">
-                    <Filter setSokTekst={this.setSokTekst} />
-                    <div className="tekstvisning">
-                        <TekstListe tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} setValgtTekst={this.setValgtTekst} />
-                        <TekstForhandsvisning valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale} setValgtLocale={this.setValgtLocale} />
-                    </div>
-                    <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>
-                </div>
-            );
-        }
-
         return (
             <div className="tekstforslag">
-                <h1 className="tomt">Fant ingen tekster</h1>
-            </div>);
+                <Filter setSokTekst={this.setSokTekst} />
+                <Tekstvisning
+                    tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
+                    setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} />
+                <input type="button" value="Velg tekst" onClick={this.settInnTekst}/>
+            </div>
+        );
     }
 
 });
