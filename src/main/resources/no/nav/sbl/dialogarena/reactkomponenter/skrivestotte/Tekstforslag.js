@@ -8,7 +8,12 @@ var Tekstvisning = require('./Tekstvisning');
 
 var Tekstforslag = React.createClass({
     getInitialState: function () {
-        return {tekster: [], valgtTekst: {innhold: {nb_NO: ''}}, valgtLocale: Utils.Constants.LOCALE_DEFAULT, show: false};
+        return {
+            tekster: [],
+            valgtTekst: {innhold: {nb_NO: ''}},
+            valgtLocale: Utils.Constants.LOCALE_DEFAULT,
+            show: false
+        };
     },
     componentDidMount: function () {
         hentEnonicTekster('').done(function (tekster) {
@@ -27,14 +32,14 @@ var Tekstforslag = React.createClass({
     setValgtLocale: function (locale) {
         this.setState({valgtLocale: locale})
     },
-    setSokTekst: function (sokTekst) {
+    sok: Utils.debounce(function (sokTekst) {
         hentEnonicTekster(sokTekst).done(function (tekster) {
             this.setState({
                 valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
                 tekster: tekster
             });
         }.bind(this));
-    },
+    }, 150),
     settInnTekst: function () {
         $('#' + this.props.tekstfeltId).focus().val(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale));
         this.setState({show: false});
@@ -46,7 +51,7 @@ var Tekstforslag = React.createClass({
 
         return (
             <div className="tekstforslag">
-                <Filter setSokTekst={this.setSokTekst} />
+                <Filter sok={this.sok} />
                 <Tekstvisning
                     tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
                     setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
