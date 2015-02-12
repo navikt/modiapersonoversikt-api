@@ -3,7 +3,7 @@
 <body>
 <wicket:panel>
     <section class="dialogpanel">
-        <form wicket:id="referatform">
+        <form wicket:id="nydialogform">
             <div wicket:id="velgModus" class="modusVelger"></div>
 
             <h2 wicket:id="overskrift" class="typeoverskrift"></h2>
@@ -36,7 +36,7 @@
             </section>
             <div class="temagruppevelger-wrapper">
                 <label class="hidden" wicket:for="temagruppe">
-                    <wicket:message key="referatform.temagruppe.null"></wicket:message>
+                    <wicket:message key="nydialogform.temagruppe.null"></wicket:message>
                 </label>
                 <select wicket:id="temagruppe" class="temagruppevelger"></select>
             </div>
@@ -44,7 +44,7 @@
             <input type="submit" wicket:id="send" class="send knapp-hoved lang-tekst"/>
             <div>
                 <a wicket:id="avbryt" role="button">
-                    <wicket:message key="referatform.knapp.avbryt"/>
+                    <wicket:message key="nydialogform.knapp.avbryt"/>
                 </a>
             </div>
         </form>

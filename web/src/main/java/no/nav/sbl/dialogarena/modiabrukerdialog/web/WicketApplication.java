@@ -169,7 +169,7 @@ public class WicketApplication extends WebApplication {
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
-                        PersonPage.SVAR_OG_REFERATPANEL_LESS
+                        PersonPage.DIALOGPANEL_LESS
                 )
                 .addCss(
                         BasePage.PERSONSOKRESULT,

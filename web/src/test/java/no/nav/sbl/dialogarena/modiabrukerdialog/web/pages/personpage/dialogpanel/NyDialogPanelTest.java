@@ -10,7 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.ReferatPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.journalforing.VelgSakPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.*;
@@ -57,7 +57,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {
         ConsumerServicesMockContext.class,
         EndpointMockContext.class})
-public class ReferatPanelTest extends WicketPageTest {
+public class NyDialogPanelTest extends WicketPageTest {
 
     public static final String VALGT_ENHET = "valgtEnhet";
     public static final String FNR = "fnr";
@@ -85,7 +85,7 @@ public class ReferatPanelTest extends WicketPageTest {
     private CmsContentRetriever cmsContentRetriever;
 
     @InjectMocks
-    private ReferatPanel testReferatPanel;
+    private NyDialogPanel testNyDialogPanel;
 
     private Saker saker;
     private GrunnInfo grunnInfo;
@@ -99,11 +99,11 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderReferatspesifikkeKomponenter() {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
-        wicket.goToPageWith(testReferatPanel)
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
+        wicket.goToPageWith(testNyDialogPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
-                .should().containComponent(withId("referatform").and(ofType(Form.class)))
+                .should().containComponent(withId("nydialogform").and(ofType(Form.class)))
                 .should().containComponent(withId("tekstfelt").and(ofType(EnhancedTextArea.class)))
                 .should().containComponent(withId("send").and(ofType(AjaxButton.class)))
                 .should().containComponent(withId("feedback").and(ofType(FeedbackPanel.class)))
@@ -112,24 +112,24 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
-        wicket.goToPageWith(testReferatPanel)
-                .inForm(withId("referatform"))
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
+        wicket.goToPageWith(testNyDialogPanel)
+                .inForm(withId("nydialogform"))
                 .submitWithAjaxButton(withId("send"));
 
         List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, hasItem(testReferatPanel.getString("referatform.temagruppe.Required")));
-        assertThat(errorMessages, hasItem(testReferatPanel.getString("referatform.kanal.Required")));
+        assertThat(errorMessages, hasItem(testNyDialogPanel.getString("nydialogform.temagruppe.Required")));
+        assertThat(errorMessages, hasItem(testNyDialogPanel.getString("nydialogform.kanal.Required")));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferattypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
-        wicket.goToPageWith(testReferatPanel)
-                .inForm(withId("referatform"))
+        wicket.goToPageWith(testNyDialogPanel)
+                .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("temagruppe", 0)
                 .select("kanal", 0)
@@ -153,15 +153,15 @@ public class ReferatPanelTest extends WicketPageTest {
     public void senderSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(henvendelseUtsendingService.sendHenvendelse(any(Melding.class))).then(RETURNER_SAMME_MELDING);
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
 
-        testReferatPanel.getModelObject().valgtSak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
+        testNyDialogPanel.getModelObject().valgtSak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
 
-        wicket.goToPageWith(testReferatPanel)
-                .inForm(withId("referatform"))
+        wicket.goToPageWith(testNyDialogPanel)
+                .inForm(withId("nydialogform"))
                 .select("velgModus", 1)
                 .write("tekstfelt:text", FRITEKST)
                 .submitWithAjaxButton(withId("send"));
@@ -181,18 +181,18 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void girFeilmeldingDersomManSenderSporsmalUtenValgtJournalforingssak() {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
 
-        wicket.goToPageWith(testReferatPanel)
-                .inForm(withId("referatform"))
+        wicket.goToPageWith(testNyDialogPanel)
+                .inForm(withId("nydialogform"))
                 .select("velgModus", 1)
                 .write("tekstfelt:text", FRITEKST)
                 .select("temagruppe", 0)
                 .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsVisible().withId("referatform"))
+                .should().containComponent(thatIsVisible().withId("nydialogform"))
                 .should().containComponent(thatIsInvisible().ofType(KvitteringsPanel.class));
 
         verify(henvendelseUtsendingService, never()).sendHenvendelse(any(Melding.class));
@@ -200,12 +200,12 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void viserVelgSakPanelForSporsmalDersomManKlikkerValgtSakLenke() {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
 
-        wicket.goToPageWith(testReferatPanel)
+        wicket.goToPageWith(testNyDialogPanel)
                 .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)))
                 .click().link(withId("valgtSakLenke"))
                 .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
@@ -214,12 +214,12 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerAvbryt() {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
 
-        wicket.goToPageWith(testReferatPanel)
+        wicket.goToPageWith(testNyDialogPanel)
                 .click().link(withId("valgtSakLenke"))
                 .click().link(withId("avbrytJournalforing"))
                 .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
@@ -228,12 +228,12 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerVelgerSak() {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
 
-        wicket.goToPageWith(testReferatPanel)
+        wicket.goToPageWith(testNyDialogPanel)
                 .click().link(withId("valgtSakLenke"))
                 .inForm(withId("plukkSakForm"))
                 .select("valgtSak", 0)
@@ -243,18 +243,18 @@ public class ReferatPanelTest extends WicketPageTest {
     }
 
     private void settISporsmalsModus() {
-        testReferatPanel.getModelObject().modus = HenvendelseVM.Modus.SPORSMAL;
+        testNyDialogPanel.getModelObject().modus = HenvendelseVM.Modus.SPORSMAL;
     }
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
-        wicket.goToPageWith(lagReferatPanelMedKanalSatt())
-                .inForm(withId("referatform"))
+        wicket.goToPageWith(lagNyDialogPanelMedKanalSatt())
+                .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 0)
                 .select("temagruppe", 1)
                 .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsInvisible().withId("referatform"))
+                .should().containComponent(thatIsInvisible().withId("nydialogform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
     }
 
@@ -262,9 +262,9 @@ public class ReferatPanelTest extends WicketPageTest {
     public void telefonSomDefaultKanalHvisSaksbehandlerErTilknyttetKontaktsenter() {
         when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(true);
 
-        wicket.goToPageWith(new ReferatPanel("id", grunnInfo));
+        wicket.goToPageWith(new NyDialogPanel("id", grunnInfo));
 
-        HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
+        HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("nydialogform").and(ofType(Form.class))).getDefaultModelObject();
         assertThat(modelObject.kanal, is((equalTo(TELEFON))));
     }
 
@@ -272,9 +272,9 @@ public class ReferatPanelTest extends WicketPageTest {
     public void ingenDefaultKanalHvisSaksbehandlerIkkeErTilknyttetKontaktsenter() {
         when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(false);
 
-        wicket.goToPageWith(new ReferatPanel("id", grunnInfo));
+        wicket.goToPageWith(new NyDialogPanel("id", grunnInfo));
 
-        HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
+        HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("nydialogform").and(ofType(Form.class))).getDefaultModelObject();
         assertThat(modelObject.kanal, is(equalTo(null)));
     }
 
@@ -282,17 +282,17 @@ public class ReferatPanelTest extends WicketPageTest {
     public void skalViseFornavnISubmitKnapp() {
         when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
-        wicket.goToPageWith(new ReferatPanel("id", grunnInfo))
+        wicket.goToPageWith(new NyDialogPanel("id", grunnInfo))
                 .should().containPatterns(FORNAVN);
     }
 
-    protected ReferatPanel lagReferatPanelMedKanalSatt() {
-        testReferatPanel = new ReferatPanel("id", grunnInfo);
-        Object referatformModel = testReferatPanel.get("referatform").getDefaultModelObject();
-        HenvendelseVM henvendelseVM = (HenvendelseVM) referatformModel;
+    protected NyDialogPanel lagNyDialogPanelMedKanalSatt() {
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
+        Object nydialogformModel = testNyDialogPanel.get("nydialogform").getDefaultModelObject();
+        HenvendelseVM henvendelseVM = (HenvendelseVM) nydialogformModel;
         henvendelseVM.kanal = TELEFON;
         henvendelseVM.temagruppe = ARBD;
-        return testReferatPanel;
+        return testNyDialogPanel;
     }
 
 }

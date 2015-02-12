@@ -55,7 +55,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
-public class ReferatPanel extends GenericPanel<HenvendelseVM> {
+public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -70,7 +70,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     private final KvitteringsPanel kvittering;
     private final List<Component> modusKomponenter = new ArrayList<>();
 
-    public ReferatPanel(String id, GrunnInfo grunnInfo) {
+    public NyDialogPanel(String id, GrunnInfo grunnInfo) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
         setOutputMarkupPlaceholderTag(true);
@@ -79,7 +79,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
         final PropertyModel<Modus> modusModel = new PropertyModel<>(getModel(), "modus");
 
-        final Form<HenvendelseVM> form = new Form<>("referatform", getModel());
+        final Form<HenvendelseVM> form = new Form<>("nydialogform", getModel());
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(lagModusVelger(modusModel));
@@ -116,7 +116,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("referatform.tekstfelt.placeholder")
+                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
         );
         Label tekstfeltLabel = new Label("tekstfelt-label", new StringResourceModel("${modus}.overskrift", getModel()));
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
@@ -188,7 +188,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         submitKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
             @Override
             public Object getObject() {
-                return format(getString("referatform.knapp.send"), grunnInfo.fornavn);
+                return format(getString("nydialogform.knapp.send"), grunnInfo.fornavn);
             }
         }));
         return submitKnapp;
@@ -199,7 +199,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 settOppModellMedDefaultVerdier();
-                target.add(ReferatPanel.this);
+                target.add(NyDialogPanel.this);
             }
         };
     }
@@ -279,11 +279,11 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         switch (getModelObject().modus) {
             case REFERAT:
                 sendReferat();
-                kvittering.visKvittering(target, getString(getModelObject().kanal.getKvitteringKey("referatpanel")), form);
+                kvittering.visKvittering(target, getString(getModelObject().kanal.getKvitteringKey("nydialogpanel")), form);
                 break;
             case SPORSMAL:
                 sendSporsmal();
-                kvittering.visKvittering(target, getString("referatpanel.sporsmal.kvittering.bekreftelse"), form);
+                kvittering.visKvittering(target, getString("nydialogpanel.sporsmal.kvittering.bekreftelse"), form);
                 break;
         }
         send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));

@@ -49,7 +49,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {
         ConsumerServicesMockContext.class,
         EndpointMockContext.class})
-public class SvarPanelTest extends WicketPageTest {
+public class FortsettDialogPanelTest extends WicketPageTest {
 
     public static final String FNR = "fnr";
     public static final String FORNAVN = "fornavn";
@@ -67,27 +67,27 @@ public class SvarPanelTest extends WicketPageTest {
     private CmsContentRetriever cmsContentRetriever;
 
     @InjectMocks
-    private SvarPanel testSvarPanel;
+    private FortsettDialogPanel testFortsettDialogPanel;
 
     private GrunnInfo grunnInfo;
 
     @Before
     public void setUp() {
         grunnInfo = new GrunnInfo(FNR, FORNAVN);
-        testSvarPanel = new SvarPanel("id", grunnInfo, asList(lagSporsmal()), Optional.<String>none());
+        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmal()), Optional.<String>none());
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
-        wicket.goToPageWith(testSvarPanel)
+        wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
                 .should().containComponent(withId("sporsmal").and(ofType(TidligereMeldingPanel.class)))
                 .should().containComponent(withId("svarliste").and(ofType(ListView.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
                 .should().containComponent(withId("kanalbeskrivelse").and(ofType(Label.class)))
-                .should().containComponent(withId("svarform"))
+                .should().containComponent(withId("fortsettdialogform"))
                 .should().containComponent(withId("leggtilbakepanel").and(ofType(LeggTilbakePanel.class)))
                 .should().containComponent(withId("leggtilbake").and(ofType(AjaxLink.class)));
     }
@@ -95,8 +95,8 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderHenvendelseMedRiktigeFelterTilHenvendelseUtsendingService() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
@@ -115,8 +115,8 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderSvarDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
@@ -129,8 +129,8 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferatDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 1)
                 .submitWithAjaxButton(withId("send"));
@@ -143,8 +143,8 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferatDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 2)
                 .submitWithAjaxButton(withId("send"));
@@ -158,8 +158,8 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderSporsmalDersomManVelgerBrukerKanSvareOgSkriftligKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 0)
                 .check("brukerKanSvare", true)
@@ -173,8 +173,8 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderSvarDersomManVelgerBrukerKanSvareMenHarValgtReferatSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 2)
                 .check("brukerKanSvare", true)
@@ -188,8 +188,8 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void disablerBrukerKanSvareDersomManHarValgtReferatSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 2)
                 .andReturn()
@@ -199,8 +199,8 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .submitWithAjaxButton(withId("send"));
 
         List<String> errorMessages = wicket.get().errorMessages();
@@ -209,41 +209,41 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void tekstligSvarErValgtSomDefault() {
-        wicket.goToPageWith(testSvarPanel)
+        wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(withId("kanal").and(withModelObject(is(TEKST))));
     }
 
     @Test
     public void viserTemagruppenFraSporsmalet() {
-        wicket.goToPageWith(testSvarPanel)
-                .should().containComponent(withId("temagruppe").and(withTextSaying(testSvarPanel.getString(TEMAGRUPPE))));
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .should().containComponent(withId("temagruppe").and(withTextSaying(testFortsettDialogPanel.getString(TEMAGRUPPE))));
     }
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
-        wicket.goToPageWith(testSvarPanel)
-                .inForm(withId("svarform"))
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
                 .write("tekstfelt:text", FRITEKST)
                 .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsInvisible().withId("svarform"))
+                .should().containComponent(thatIsInvisible().withId("fortsettdialogform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
     }
 
     @Test
     public void viserTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new SvarPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmal(), lagSvar()), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmal(), lagSvar()), Optional.<String>none()))
                 .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
     }
 
     @Test
     public void viserIkkeTraadToggleLenkeHvisIngenSvarFinnes() {
-        wicket.goToPageWith(testSvarPanel)
+        wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(thatIsInvisible().and(withId("vistraadcontainer")));
     }
 
     @Test
     public void togglerVisningAvTraad() {
-        wicket.goToPageWith(new SvarPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmal(), lagSvar()), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmal(), lagSvar()), Optional.<String>none()))
                 .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
                 .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
@@ -251,7 +251,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void viserLeggTilbakePanel() {
-        wicket.goToPageWith(testSvarPanel)
+        wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsVisible().and(withId("leggtilbakepanel")));
@@ -259,22 +259,22 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void leggTilbakeLenkeHarTekstenLeggTilbake() {
-        wicket.goToPageWith(testSvarPanel);
+        wicket.goToPageWith(testFortsettDialogPanel);
 
         Label leggtilbaketekst = wicket.get().component(withId("leggtilbaketekst").and(ofType(Label.class)));
         String labeltekst = (String) leggtilbaketekst.getDefaultModelObject();
-        String leggTilbakePropertyTekst = leggtilbaketekst.getString("svarpanel.avbryt.leggtilbake");
+        String leggTilbakePropertyTekst = leggtilbaketekst.getString("fortsettdialogpanel.avbryt.leggtilbake");
 
         assertThat(labeltekst, is(equalTo(leggTilbakePropertyTekst)));
     }
 
     @Test
     public void leggTilbakeLenkeHarTekstenAvbryt() {
-        wicket.goToPageWith(testSvarPanel);
+        wicket.goToPageWith(testFortsettDialogPanel);
 
         Label leggtilbaketekst = wicket.get().component(withId("leggtilbaketekst").and(ofType(Label.class)));
         String labeltekst = (String) leggtilbaketekst.getDefaultModelObject();
-        String leggTilbakePropertyTekst = leggtilbaketekst.getString("svarpanel.avbryt.avbryt");
+        String leggTilbakePropertyTekst = leggtilbaketekst.getString("fortsettdialogpanel.avbryt.avbryt");
 
         assertThat(labeltekst, is(equalTo(leggTilbakePropertyTekst)));
     }
@@ -283,7 +283,7 @@ public class SvarPanelTest extends WicketPageTest {
     public void skalViseFornavnISubmitKnapp() {
         when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
-        wicket.goToPageWith(new SvarPanel("id", grunnInfo, asList(lagSporsmal()), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmal()), Optional.<String>none()))
                 .should().containPatterns(FORNAVN);
     }
 

@@ -55,7 +55,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.Henvende
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
-public class SvarPanel extends Panel {
+public class FortsettDialogPanel extends Panel {
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -74,7 +74,7 @@ public class SvarPanel extends Panel {
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
 
-    public SvarPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
+    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
         super(id);
         this.grunnInfo = grunnInfo;
         this.oppgaveId = oppgaveId;
@@ -122,7 +122,7 @@ public class SvarPanel extends Panel {
                     animertVisningToggle(target, svarContainer);
                     animertVisningToggle(target, leggTilbakePanel);
                     leggTilbakePanel.add(AttributeModifier.replace("aria-expanded", "true"));
-                    target.add(SvarPanel.this);
+                    target.add(FortsettDialogPanel.this);
                     target.focusComponent(leggTilbakePanel.hentForsteFokusKomponent());
                 } else {
                     send(getPage(), BREADTH, SVAR_AVBRUTT);
@@ -130,14 +130,14 @@ public class SvarPanel extends Panel {
             }
         };
         if (svar.isEmpty()) {
-            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt.leggtilbake")));
+            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("fortsettdialogpanel.avbryt.leggtilbake")));
             leggTilbakeKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakePanel.getMarkupId()));
         } else {
-            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt.avbryt")));
+            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("fortsettdialogpanel.avbryt.avbryt")));
         }
 
         svarContainer.setOutputMarkupId(true);
-        svarContainer.add(new SvarForm("svarform", lagModelObjectMedKanalOgTemagruppe()), leggTilbakeKnapp);
+        svarContainer.add(new FortsettDialogForm("fortsettdialogform", lagModelObjectMedKanalOgTemagruppe()), leggTilbakeKnapp);
 
         leggTilbakePanel.setVisibilityAllowed(false);
 
@@ -159,12 +159,12 @@ public class SvarPanel extends Panel {
         target.focusComponent(leggTilbakeKnapp);
     }
 
-    private class SvarForm extends Form<HenvendelseVM> {
+    private class FortsettDialogForm extends Form<HenvendelseVM> {
 
         private final FeedbackPanel feedbackPanel;
         private final AjaxButton sendKnapp;
 
-        public SvarForm(String id, HenvendelseVM henvendelseVM) {
+        public FortsettDialogForm(String id, HenvendelseVM henvendelseVM) {
             super(id, new CompoundPropertyModel<>(henvendelseVM));
 
             final RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
@@ -233,7 +233,7 @@ public class SvarPanel extends Panel {
                     new EnhancedTextAreaConfigurator()
                             .withMaxCharCount(5000)
                             .withMinTextAreaHeight(150)
-                            .withPlaceholderTextKey("svarform.tekstfelt.placeholder")
+                            .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder")
             ));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
@@ -243,7 +243,7 @@ public class SvarPanel extends Panel {
             sendKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                    sendOgVisKvittering(SvarForm.this.getModelObject(), target);
+                    sendOgVisKvittering(FortsettDialogForm.this.getModelObject(), target);
                 }
 
                 @Override
@@ -254,7 +254,7 @@ public class SvarPanel extends Panel {
             sendKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
                 @Override
                 public Object getObject() {
-                    return format(getString("svarform.knapp.send"), grunnInfo.fornavn);
+                    return format(getString("fortsettdialogform.knapp.send"), grunnInfo.fornavn);
                 }
             }));
             add(sendKnapp);
@@ -264,10 +264,10 @@ public class SvarPanel extends Panel {
             try {
                 sendHenvendelse(henvendelseVM);
                 send(getPage(), BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-                kvittering.visKvittering(target, getString(henvendelseVM.kanal.getKvitteringKey("svarpanel")),
+                kvittering.visKvittering(target, getString(henvendelseVM.kanal.getKvitteringKey("fortsettdialogpanel")),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
-                error(getString("svarform.feilmelding.oppgaveferdigstilt"));
+                error(getString("fortsettdialogform.feilmelding.oppgaveferdigstilt"));
                 sendKnapp.setVisibilityAllowed(false);
                 leggTilbakeKnapp.setVisibilityAllowed(false);
                 target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
