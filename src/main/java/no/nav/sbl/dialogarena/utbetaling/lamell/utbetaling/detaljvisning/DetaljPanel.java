@@ -45,7 +45,6 @@ public class DetaljPanel extends Panel {
         appendSkatteTrekk(utbetalingVM, ytelseVMer);
         appendTrekk(utbetalingVM, ytelseVMer);
 
-        sort(ytelseVMer, DESC_BELOP);
         return ytelseVMer;
     }
 
@@ -54,10 +53,12 @@ public class DetaljPanel extends Panel {
             return;
         }
 
+        List<YtelseVM> tempList = new ArrayList<>();
         for (Double skatt : utbetalingVM.getSkatteTrekk()) {
-            ytelseVMer.add(new YtelseVM(new StringResourceModel("ytelse.skatt.beskrivelse.tekst", DetaljPanel.this, null).getString(), skatt));
+            tempList.add(new YtelseVM(new StringResourceModel("ytelse.skatt.beskrivelse.tekst", DetaljPanel.this, null).getString(), skatt));
         }
-
+        sort(tempList, DESC_BELOP);
+        ytelseVMer.addAll(tempList);
     }
 
     protected void appendTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
@@ -65,12 +66,14 @@ public class DetaljPanel extends Panel {
             return;
         }
 
+        List<YtelseVM> tempList = new ArrayList<>();
         for (Record<Trekk> trekk : utbetalingVM.getTrekkListe()) {
-            ytelseVMer.add(new YtelseVM(
+            tempList.add(new YtelseVM(
                     trekk.get(Trekk.trekksType),
                     trekk.get(Trekk.trekkBeloep)));
         }
-
+        sort(tempList, DESC_BELOP);
+        ytelseVMer.addAll(tempList);
     }
 
     protected void appendUnderytelser(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
@@ -78,13 +81,16 @@ public class DetaljPanel extends Panel {
             return;
         }
 
+        List<YtelseVM> tempList = new ArrayList<>();
         for(Record<Underytelse> underytelse : utbetalingVM.getUnderytelser()) {
-            ytelseVMer.add(new YtelseVM(
+            tempList.add(new YtelseVM(
                     underytelse.get(Underytelse.ytelsesType),
                     underytelse.get(Underytelse.ytelseBeloep),
                     underytelse.get(Underytelse.satsAntall),
                     underytelse.get(Underytelse.satsBeloep)));
         }
+        sort(tempList, DESC_BELOP);
+        ytelseVMer.addAll(tempList);
     }
 
     protected ListView createYtelserader(List<YtelseVM> underytelser) {
