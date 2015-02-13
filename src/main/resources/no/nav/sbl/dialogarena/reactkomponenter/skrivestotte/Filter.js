@@ -2,16 +2,16 @@
 var React = ModiaJS.React;
 
 var Filter = React.createClass({
+    componentDidMount: function () {
+        this.refs.sok.getDOMNode().focus();
+    },
     sok: function (event) {
-        if (event.target.value === this.props.sokTekst) {
-            return;
-        }
-        this.props.sok(event.nativeEvent.target.value);
+        this.props.sok(event.target.value);
     },
     render: function () {
         return (
             <div className="filter-container">
-                <input type="text" id="sok" placeholder="Søk" onKeyUp={this.sok} onKeyDown={this.props.sokNavigasjon} />
+                <input type="text" placeholder="Søk" ref="sok" value={this.props.sokTekst} onChange={this.sok} onKeyDown={this.props.sokNavigasjon} />
             </div>
         );
     }

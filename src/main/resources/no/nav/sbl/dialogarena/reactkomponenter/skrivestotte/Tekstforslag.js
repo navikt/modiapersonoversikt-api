@@ -33,15 +33,10 @@ var Tekstforslag = React.createClass({
     setValgtLocale: function (locale) {
         this.setState({valgtLocale: locale})
     },
-    sok: Utils.debounce(function (sokTekst) {
-        hentEnonicTekster(sokTekst).done(function (tekster) {
-            this.setState({
-                sokTekst: sokTekst,
-                valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
-                tekster: tekster
-            });
-        }.bind(this));
-    }, 150),
+    sok: function (sokTekst) {
+        this.setState({sokTekst: sokTekst});
+        sok.bind(this)(sokTekst);
+    },
     sokNavigasjon: function (event) {
         switch (event.keyCode) {
             case 38:
@@ -71,7 +66,7 @@ var Tekstforslag = React.createClass({
 
         return (
             <div className="tekstforslag">
-                <Filter sok={this.sok} sokTekst={this.state.sokTekst} sokNavigasjon={this.sokNavigasjon} />
+                <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} />
                 <Tekstvisning
                     tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
                     setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
@@ -83,6 +78,15 @@ var Tekstforslag = React.createClass({
 function hentEnonicTekster(fritekst) {
     return $.get('/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst);
 }
+
+var sok = Utils.debounce(function (sokTekst) {
+    hentEnonicTekster(sokTekst).done(function (tekster) {
+        this.setState({
+            valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
+            tekster: tekster
+        });
+    }.bind(this))
+}, 150);
 
 function stripEmTags(tekst) {
     return tekst.replace(/<em>(.*?)<\/em>/g, '$1')
