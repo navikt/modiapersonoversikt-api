@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,13 +53,13 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
         try {
             List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
             if (hovedytelser.isEmpty()) {
-                listContent = asList(new GenericListing(getString("ingen.utbetalinger")));
+                listContent = asList(new GenericListing(new StringResourceModel("ingen.utbetalinger", UtbetalingWidget.this, null).getString()));
             } else {
                 listContent = transformUtbetalingToVM(hovedytelser);
             }
         } catch (ApplicationException | SystemException e) {
             LOG.warn("Feilet ved henting av utbetalingsinformasjon for fnr {}", fnr, e);
-            listContent = asList(new ErrorListing(getString("utbetalinger.feilet")));
+            listContent = asList(new ErrorListing(new StringResourceModel("utbetalinger.feilet", UtbetalingWidget.this, null).getString()));
         }
         return new ListModel<>(listContent);
     }
