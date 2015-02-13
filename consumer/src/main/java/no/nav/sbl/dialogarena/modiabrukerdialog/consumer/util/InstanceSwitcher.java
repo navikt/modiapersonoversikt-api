@@ -35,8 +35,7 @@ public final class InstanceSwitcher implements InvocationHandler {
     }
 
     @Override
-    @SuppressWarnings("checkstyle")
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         method.setAccessible(true);
         try {
             if (getProperty(key, "false").equalsIgnoreCase("true")) {
@@ -46,7 +45,7 @@ public final class InstanceSwitcher implements InvocationHandler {
         } catch (IllegalAccessException exception) {
             throw new ApplicationException("Problemer med invokering av metode", exception);
         } catch (Exception e) {
-            throw e.getCause();
+            throw (Exception)e.getCause();
         }
     }
 
