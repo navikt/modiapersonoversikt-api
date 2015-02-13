@@ -28,6 +28,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
@@ -168,7 +169,7 @@ public class WicketApplication extends WebApplication {
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
-                        PersonPage.SVAR_OG_REFERATPANEL_LESS
+                        PersonPage.DIALOGPANEL_LESS
                 )
                 .addCss(
                         BasePage.PERSONSOKRESULT,
@@ -195,6 +196,7 @@ public class WicketApplication extends WebApplication {
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS
                 )
+                .withModules(ReactResources.SKRIVESTOTTE)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }

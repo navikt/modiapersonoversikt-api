@@ -18,8 +18,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.ReferatPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.SvarPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -52,7 +52,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.Lamell
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
@@ -128,9 +128,9 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void gittIngenUrlParamVisesReferatPanelOgOversiktLamell() {
+    public void gittIngenUrlParamVisesNyDialogPanelOgOversiktLamell() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .should().containComponent(ofType(ReferatPanel.class))
+                .should().containComponent(ofType(NyDialogPanel.class))
                 .should().containComponent(ofType(OversiktLerret.class));
     }
 
@@ -141,21 +141,21 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void medHenvendelseOgOppgaveUrlParamVisesSvarPanelOgMeldingLamell() {
+    public void medHenvendelseOgOppgaveUrlParamVisesFortsettDialogPanelOgMeldingLamell() {
         String henvendelsesId = "id 1";
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(HENVENDELSEID, henvendelsesId).param(OPPGAVEID, "oppg1"))
-                .should().containComponent(ofType(SvarPanel.class))
+                .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().containComponent(withId(LAMELL_MELDINGER));
 
         verify(henvendelseUtsendingService).hentTraad(anyString(), eq(henvendelsesId));
     }
 
     @Test
-    public void erstatterReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
+    public void erstatterNyDialogPanelMedFortsettDialogPanelVedEventetSVAR_PAA_MELDING() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
-                .should().inAjaxResponse().haveComponents(ofType(SvarPanel.class));
+                .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
     }
 
     @Test
@@ -193,16 +193,16 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void erstatterSvarOgReferatPanelMedReferatPanelVedRiktigeEvents() {
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(KVITTERING_VIST);
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_FERDIG);
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(Events.SporsmalOgSvar.SVAR_AVBRUTT);
+    public void erstatterDialogPanelMedNyDialogPanelVedRiktigeEvents() {
+        assertErstatterDialogPanelMedNyDialogPanelVedEvent(KVITTERING_VIST);
+        assertErstatterDialogPanelMedNyDialogPanelVedEvent(LEGG_TILBAKE_FERDIG);
+        assertErstatterDialogPanelMedNyDialogPanelVedEvent(Events.SporsmalOgSvar.SVAR_AVBRUTT);
     }
 
-    private void assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(String event) {
+    private void assertErstatterDialogPanelMedNyDialogPanelVedEvent(String event) {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(event))
-                .should().inAjaxResponse().haveComponents(ofType(ReferatPanel.class));
+                .should().inAjaxResponse().haveComponents(ofType(NyDialogPanel.class));
     }
 
     @Test

@@ -8,8 +8,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.ReferatPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.SvarPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,7 +28,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLPara
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.FALLBACK_FORNAVN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class DialogPanel extends Panel {
@@ -50,7 +50,7 @@ public class DialogPanel extends Panel {
         super(id);
 
         grunnInfo = new GrunnInfo(fnr, getFornavn(fnr).getOrElse(FALLBACK_FORNAVN));
-        aktivtPanel = new ReferatPanel(AKTIVT_PANEL_ID, grunnInfo);
+        aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
 
         add(aktivtPanel, oppgavetilordningFeiletModal);
@@ -74,13 +74,13 @@ public class DialogPanel extends Panel {
         if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
             List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.fnr, henvendelseId);
             if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
-                erstattReferatPanelMedSvarPanel(traad, optional(oppgaveId));
+                erstattNyDialogPanelMedFortsettDialogPanel(traad, optional(oppgaveId));
             }
         }
     }
 
-    private void erstattReferatPanelMedSvarPanel(List<Melding> traad, Optional<String> oppgaveId) {
-        aktivtPanel = aktivtPanel.replaceWith(new SvarPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId));
+    private void erstattNyDialogPanelMedFortsettDialogPanel(List<Melding> traad, Optional<String> oppgaveId) {
+        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId));
     }
 
     private static boolean erEnkeltstaaendeSamtalereferat(List<Melding> traad) {
@@ -93,7 +93,7 @@ public class DialogPanel extends Panel {
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
-    public void visSvarPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
+    public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.fnr, traadId);
         Optional<String> oppgaveId = none();
         if (erEnkeltstaaendeSporsmalFraBruker(traad)) {
@@ -105,13 +105,13 @@ public class DialogPanel extends Panel {
                 oppgavetilordningFeiletModal.vis(target);
             }
         }
-        erstattReferatPanelMedSvarPanel(traad, oppgaveId);
+        erstattNyDialogPanelMedFortsettDialogPanel(traad, oppgaveId);
         target.add(aktivtPanel);
     }
 
     @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT})
-    public void visReferatPanel(AjaxRequestTarget target) {
-        aktivtPanel = aktivtPanel.replaceWith(new ReferatPanel(AKTIVT_PANEL_ID, grunnInfo));
+    public void visNyDialogPanel(AjaxRequestTarget target) {
+        aktivtPanel = aktivtPanel.replaceWith(new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo));
         target.add(aktivtPanel);
     }
 }

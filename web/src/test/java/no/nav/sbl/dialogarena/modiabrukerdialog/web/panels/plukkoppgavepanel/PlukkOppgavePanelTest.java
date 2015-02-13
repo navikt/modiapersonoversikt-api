@@ -8,8 +8,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PlukkOppgavePanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.ReferatPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.SvarPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,8 +72,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .select("temagruppe", 0)
                 .submitWithAjaxButton(withId("plukkOppgave"))
                 .should().beOn(PersonPage.class)
-                .should().containComponent(ofType(SvarPanel.class))
-                .should().notContainComponent(ofType(ReferatPanel.class));
+                .should().containComponent(ofType(FortsettDialogPanel.class))
+                .should().notContainComponent(ofType(NyDialogPanel.class));
 
         Serializable temagruppeAttribute = wicket.tester.getSession().getAttribute(TEMAGRUPPE_ATTR);
         Serializable fnrAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR);
@@ -107,8 +107,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .select("temagruppe", 0)
                 .submitWithAjaxButton(withId("plukkOppgave"))
                 .should().beOn(PersonPage.class)
-                .should().containComponent(ofType(SvarPanel.class))
-                .should().notContainComponent(ofType(ReferatPanel.class));
+                .should().containComponent(ofType(FortsettDialogPanel.class))
+                .should().notContainComponent(ofType(NyDialogPanel.class));
 
         verify(plukkOppgaveService, never()).plukkOppgave(any(Temagruppe.class));
     }
@@ -141,8 +141,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .select("temagruppe", 0)
                 .submitWithAjaxButton(withId("plukkOppgave"))
                 .should().beOn(PersonPage.class)
-                .should().containComponent(ofType(SvarPanel.class))
-                .should().notContainComponent(ofType(ReferatPanel.class));
+                .should().containComponent(ofType(FortsettDialogPanel.class))
+                .should().notContainComponent(ofType(NyDialogPanel.class));
 
         verify(plukkOppgaveService, times(1)).plukkOppgave(any(Temagruppe.class));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR), is((Serializable) "oppgave2"));

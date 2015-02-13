@@ -4,20 +4,17 @@ import no.nav.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.informasjon.FimBruker;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.informasjon.FimDagpengekontrakt;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.informasjon.FimPeriode;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.informasjon.FimRettighetsgruppe;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.informasjon.FimVedtak;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.informasjon.FimYtelseskontrakt;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.meldinger.FimHentYtelseskontraktListeResponse;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.informasjon.ytelseskontrakt.FimBruker;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.informasjon.ytelseskontrakt.FimDagpengekontrakt;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.informasjon.ytelseskontrakt.FimPeriode;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.informasjon.ytelseskontrakt.FimRettighetsgruppe;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.informasjon.ytelseskontrakt.FimVedtak;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.informasjon.ytelseskontrakt.FimYtelseskontrakt;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.meldinger.FimHentYtelseskontraktListeResponse;
 
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
-import static java.lang.Math.round;
-import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateToXmlGregorianCalendar;
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.getDate;
@@ -45,34 +42,34 @@ public class YtelseskontraktServiceBiMock {
     private static List<FimYtelseskontrakt> createYtelsesKontrakter() {
         FimVedtak vedtak7 = new FimVedtak()
                 .withPeriodetypeForYtelse("Lang periode")
-                .withUttaksgrad(new BigInteger("100"))
-                .withVedtakBruttoBeloep(new BigInteger("10000"))
-                .withVedtakNettoBeloep(new BigInteger("5000"));
+                .withUttaksgrad(100)
+                .withVedtakBruttoBeloep(10000)
+                .withVedtakNettoBeloep(5000);
         FimVedtak vedtak = populateVedtak(vedtak7, "Innvilget", "Annuler sanksjon", getDate(2012, 12, 12), createPeriode(getDate(2012, 1, 1), getDate(2012, 3, 1)));
 
         FimVedtak vedtak6 = new FimVedtak()
                 .withPeriodetypeForYtelse("Kort periode")
-                .withUttaksgrad(new BigInteger("75"))
-                .withVedtakBruttoBeloep(new BigInteger("2000"))
-                .withVedtakNettoBeloep(new BigInteger("1000"));
+                .withUttaksgrad(75)
+                .withVedtakBruttoBeloep(2000)
+                .withVedtakNettoBeloep(1000);
         FimVedtak vedtak2 = populateVedtak(vedtak6, "Avslått", "Forlenget ventetid", getDate(2012, 12, 12), createPeriode(getDate(2012, 2, 1), getDate(2012, 2, 15)));
 
         FimVedtak vedtak5 = new FimVedtak()
                 .withPeriodetypeForYtelse("Kort periode")
-                .withUttaksgrad(new BigInteger("75"))
-                .withVedtakBruttoBeloep(new BigInteger("2000"))
-                .withVedtakNettoBeloep(new BigInteger("1000"));
+                .withUttaksgrad(75)
+                .withVedtakBruttoBeloep(2000)
+                .withVedtakNettoBeloep(1000);
         FimVedtak vedtak3 = populateVedtak(vedtak5, "Avslått", "Tidsbegrenset bortfall", getDate(2012, 12, 12), createPeriode(getDate(2012, 2, 15), getDate(2012, 2, 25)));
 
         FimVedtak vedtak1 = new FimVedtak()
                 .withPeriodetypeForYtelse("Laaang periode")
-                .withUttaksgrad(new BigInteger("25"))
-                .withVedtakBruttoBeloep(new BigInteger("3000"))
-                .withVedtakNettoBeloep(new BigInteger("1500"));
+                .withUttaksgrad(25)
+                .withVedtakBruttoBeloep(3000)
+                .withVedtakNettoBeloep(1500);
         FimVedtak vedtak4 = populateVedtak(vedtak1, "Avbrutt", "Stans", getDate(2012, 12, 12), createPeriode(getDate(2012, 2, 20), getDate(2012, 2, 22)));
 
         return asList(
-                createDagpengekontrakt(getDate(2012, 12, 10), getDate(2012, 12, 14), getDate(2013, 2, 10), "Aktiv", "Dagpenger", new BigInteger("34"), vedtak, vedtak2, vedtak3, vedtak4),
+                createDagpengekontrakt(getDate(2012, 12, 10), getDate(2012, 12, 14), getDate(2013, 2, 10), "Aktiv", "Dagpenger", 34, vedtak, vedtak2, vedtak3, vedtak4),
                 createYtelsesKontrakt(getDate(2012, 12, 14), getDate(2012, 12, 19), getDate(2013, 1, 10), "Lukket", "Arbeidsavklaringspenger", "Avslått", "Endring"),
                 createYtelsesKontrakt(getDate(2012, 12, 18), getDate(2012, 12, 31), getDate(2013, 5, 11), "Inaktiv", "Individstønad", "Avbrutt", "Kontroll"));
     }
@@ -105,12 +102,12 @@ public class YtelseskontraktServiceBiMock {
         return populateVedtak(new FimVedtak(), status, type, getRandomDate(), createPeriode(datePair[0], datePair[1]));
     }
 
-    private static FimDagpengekontrakt createDagpengekontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, BigInteger antallDagerIgjen, FimVedtak... vedtak) {
+    private static FimDagpengekontrakt createDagpengekontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, int antallDagerIgjen, FimVedtak... vedtak) {
         FimDagpengekontrakt kontrakt = new FimDagpengekontrakt();
         populateYtelsesKontrakt(kontrakt, datoKravMottat, fom, tom, status, ytelsestype);
         return kontrakt
                 .withAntallDagerIgjen(antallDagerIgjen)
-                .withAntallUkerIgjen(valueOf(round((antallDagerIgjen.floatValue() / 7))))
+                .withAntallUkerIgjen(antallDagerIgjen / 7)
                 .withIhtVedtak(vedtak);
     }
 
