@@ -113,7 +113,7 @@ public class GsakService {
             lagreGsakOppgave(oppgave, valgtEnhetId);
         } catch (LagreOppgaveOptimistiskLasing e) {
             if (oppgaveErFerdigstilt(hentOppgave(oppgave.getOppgaveId()))) {
-                throw new OppgaveErFerdigstilt(new Throwable("Oppgaven er allerede ferdigstilt"));
+                throw new OppgaveErFerdigstilt(e);
             }
             throw e;
         }
@@ -207,7 +207,7 @@ public class GsakService {
 
     public static class OppgaveErFerdigstilt extends Exception {
         public OppgaveErFerdigstilt(Throwable cause) {
-            super(cause);
+            super("Oppgaven er allerede ferdigstilt", cause);
         }
     }
 }
