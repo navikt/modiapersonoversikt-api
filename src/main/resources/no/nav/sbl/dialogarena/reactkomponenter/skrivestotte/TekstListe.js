@@ -13,7 +13,7 @@ var TekstListe = React.createClass({
 
         return (
             <div className="tekstElement" onClick={onClickCallback}>
-                <input id={"tekstElementRadio" + tekst.key} name="tekstListeRadio" type="radio" />
+                <input id={"tekstElementRadio" + tekst.key} name="tekstListeRadio" type="radio" checked={this.props.valgtTekst === tekst} />
                 <label htmlFor={"tekstElementRadio" + tekst.key}>
                     <h4 dangerouslySetInnerHTML={{__html: tekst.tittel}}></h4>
                 </label>
