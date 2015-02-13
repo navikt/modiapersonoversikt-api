@@ -35,6 +35,7 @@ public final class InstanceSwitcher implements InvocationHandler {
     }
 
     @Override
+    @SuppressWarnings("PMD")
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         method.setAccessible(true);
         try {
