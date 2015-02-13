@@ -10,9 +10,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.VelgSakPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.journalforing.VelgSakPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -44,7 +43,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dial
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -60,15 +58,16 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         EndpointMockContext.class})
 public class NyDialogPanelTest extends WicketPageTest {
 
-    public static final String VALGT_ENHET = "valgtEnhet";
-    public static final String FNR = "fnr";
-    public static final String FORNAVN = "fornavn";
-    public static final String FRITEKST = "fritekst";
+    private static final String VALGT_ENHET = "valgtEnhet";
+    private static final String FNR = "fnr";
+    private static final String FORNAVN = "fornavn";
+    private static final String FRITEKST = "fritekst";
+    private static final String TRAAD_ID = "traadId";
     private static final Answer<Melding> RETURNER_SAMME_MELDING = new Answer<Melding>() {
         @Override
         public Melding answer(InvocationOnMock invocation) throws Throwable {
             Melding melding = ((Melding) invocation.getArguments()[0]);
-            melding.traadId = "traadId";
+            melding.traadId = TRAAD_ID;
             return melding;
         }
     };
@@ -93,14 +92,17 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        saker = createMockSaker();
         grunnInfo = new GrunnInfo(FNR, FORNAVN);
+        saker = createMockSaker();
         when(sakerService.hentSaker(anyString())).thenReturn(saker);
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
+
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void inneholderReferatspesifikkeKomponenter() {
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         wicket.goToPageWith(testNyDialogPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
@@ -113,7 +115,6 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
         wicket.goToPageWith(testNyDialogPanel)
                 .inForm(withId("nydialogform"))
                 .submitWithAjaxButton(withId("send"));
@@ -126,9 +127,6 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferattypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
-        MockitoAnnotations.initMocks(this);
-
         wicket.goToPageWith(testNyDialogPanel)
                 .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", FRITEKST)
@@ -146,16 +144,13 @@ public class NyDialogPanelTest extends WicketPageTest {
         assertThat(melding.temagruppe, is(ARBD.name()));
         assertThat(melding.fritekst, is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
-        assertThat(melding.tilknyttetEnhet, is(nullValue()));
+        assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void senderSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
+    public void senderOgJournalforerSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         when(henvendelseUtsendingService.sendHenvendelse(any(Melding.class))).then(RETURNER_SAMME_MELDING);
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
-        MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
 
@@ -182,9 +177,6 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void girFeilmeldingDersomManSenderSporsmalUtenValgtJournalforingssak() {
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
-        MockitoAnnotations.initMocks(this);
-
         settISporsmalsModus();
 
         wicket.goToPageWith(testNyDialogPanel)
@@ -201,9 +193,6 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserVelgSakPanelForSporsmalDersomManKlikkerValgtSakLenke() {
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
-        MockitoAnnotations.initMocks(this);
-
         settISporsmalsModus();
 
         wicket.goToPageWith(testNyDialogPanel)
@@ -215,9 +204,6 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerAvbryt() {
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
-        MockitoAnnotations.initMocks(this);
-
         settISporsmalsModus();
 
         wicket.goToPageWith(testNyDialogPanel)
@@ -229,9 +215,6 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerVelgerSak() {
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
-        MockitoAnnotations.initMocks(this);
-
         settISporsmalsModus();
 
         wicket.goToPageWith(testNyDialogPanel)
@@ -273,7 +256,7 @@ public class NyDialogPanelTest extends WicketPageTest {
     public void ingenDefaultKanalHvisSaksbehandlerIkkeErTilknyttetKontaktsenter() {
         when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(false);
 
-        wicket.goToPageWith(new NyDialogPanel("id", grunnInfo));
+        wicket.goToPageWith(testNyDialogPanel);
 
         HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("nydialogform").and(ofType(Form.class))).getDefaultModelObject();
         assertThat(modelObject.kanal, is(equalTo(null)));
@@ -283,7 +266,7 @@ public class NyDialogPanelTest extends WicketPageTest {
     public void skalViseFornavnISubmitKnapp() {
         when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
-        wicket.goToPageWith(new NyDialogPanel("id", grunnInfo))
+        wicket.goToPageWith(testNyDialogPanel)
                 .should().containPatterns(FORNAVN);
     }
 
