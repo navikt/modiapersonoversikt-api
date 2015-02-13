@@ -58,7 +58,10 @@ var Tekstforslag = React.createClass({
         }
     },
     settInnTekst: function () {
-        $('#' + this.props.tekstfeltId).focus().val(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale));
+        $('#' + this.props.tekstfeltId)
+            .focus()
+            .val(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)))
+            .trigger('input');
         this.setState({show: false});
     },
     render: function () {
@@ -75,11 +78,14 @@ var Tekstforslag = React.createClass({
             </div>
         );
     }
-
 });
 
 function hentEnonicTekster(fritekst) {
     return $.get('/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst);
+}
+
+function stripEmTags(tekst) {
+    return tekst.replace(/<em>(.*?)<\/em>/g, '$1')
 }
 
 function hentTekst(hentTekst, tekster, valgtTekst) {
