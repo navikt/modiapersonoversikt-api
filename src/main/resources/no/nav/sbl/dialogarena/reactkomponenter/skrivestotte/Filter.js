@@ -11,7 +11,7 @@ var Filter = React.createClass({
     render: function () {
         return (
             <div className="filter-container">
-                <input type="text" id="sok" placeholder="Søk" onKeyUp={this.sok} onKeyDown={this.props.pilNavigasjon} />
+                <input type="text" id="sok" placeholder="Søk" onKeyUp={this.sok} onKeyDown={this.props.sokNavigasjon} />
             </div>
         );
     }

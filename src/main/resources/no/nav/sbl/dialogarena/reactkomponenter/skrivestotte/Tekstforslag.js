@@ -42,11 +42,7 @@ var Tekstforslag = React.createClass({
             });
         }.bind(this));
     }, 150),
-    settInnTekst: function () {
-        $('#' + this.props.tekstfeltId).focus().val(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale));
-        this.setState({show: false});
-    },
-    pilNavigasjon: function (event) {
+    sokNavigasjon: function (event) {
         switch (event.keyCode) {
             case 38:
                 event.preventDefault();
@@ -56,7 +52,14 @@ var Tekstforslag = React.createClass({
                 event.preventDefault();
                 this.setValgtTekst(hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst));
                 break;
+            case 13:
+                this.settInnTekst();
+                break;
         }
+    },
+    settInnTekst: function () {
+        $('#' + this.props.tekstfeltId).focus().val(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale));
+        this.setState({show: false});
     },
     render: function () {
         if (!this.state.show) {
@@ -65,7 +68,7 @@ var Tekstforslag = React.createClass({
 
         return (
             <div className="tekstforslag">
-                <Filter sok={this.sok} sokTekst={this.state.sokTekst} pilNavigasjon={this.pilNavigasjon} />
+                <Filter sok={this.sok} sokTekst={this.state.sokTekst} sokNavigasjon={this.sokNavigasjon} />
                 <Tekstvisning
                     tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
                     setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
