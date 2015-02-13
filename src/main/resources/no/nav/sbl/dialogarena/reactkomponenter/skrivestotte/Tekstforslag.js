@@ -12,6 +12,7 @@ var Tekstforslag = React.createClass({
             tekster: [],
             valgtTekst: {innhold: {nb_NO: ''}},
             valgtLocale: Utils.Constants.LOCALE_DEFAULT,
+            sokTekst: '',
             show: false
         };
     },
@@ -35,6 +36,7 @@ var Tekstforslag = React.createClass({
     sok: Utils.debounce(function (sokTekst) {
         hentEnonicTekster(sokTekst).done(function (tekster) {
             this.setState({
+                sokTekst: sokTekst,
                 valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
                 tekster: tekster
             });
@@ -44,6 +46,18 @@ var Tekstforslag = React.createClass({
         $('#' + this.props.tekstfeltId).focus().val(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale));
         this.setState({show: false});
     },
+    pilNavigasjon: function (event) {
+        switch (event.keyCode) {
+            case 38:
+                event.preventDefault();
+                this.setValgtTekst(hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst));
+                break;
+            case 40:
+                event.preventDefault();
+                this.setValgtTekst(hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst));
+                break;
+        }
+    },
     render: function () {
         if (!this.state.show) {
             return null;
@@ -51,7 +65,7 @@ var Tekstforslag = React.createClass({
 
         return (
             <div className="tekstforslag">
-                <Filter sok={this.sok} />
+                <Filter sok={this.sok} sokTekst={this.state.sokTekst} pilNavigasjon={this.pilNavigasjon} />
                 <Tekstvisning
                     tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
                     setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
@@ -63,6 +77,20 @@ var Tekstforslag = React.createClass({
 
 function hentEnonicTekster(fritekst) {
     return $.get('/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst);
+}
+
+function hentTekst(hentTekst, tekster, valgtTekst) {
+    for (var i = 0; i < tekster.length; i++) {
+        if (tekster[i].key === valgtTekst.key) {
+            return hentTekst(tekster, i);
+        }
+    }
+}
+function forrigeTekst(tekster, index) {
+    return index === 0 ? tekster[0] : tekster[index - 1];
+}
+function nesteTekst(tekster, index) {
+    return index === tekster.length - 1 ? tekster[tekster.length - 1] : tekster[index + 1];
 }
 
 module.exports = Tekstforslag;
