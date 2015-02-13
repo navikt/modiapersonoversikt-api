@@ -51,19 +51,23 @@
       list-style: none;
       background-color: #f5f5f5;
 
-      label.tekstElement {
-        padding: 10px @skrivestotte-padding;
+      div.tekstElement {
         border-bottom: 1px solid @border-color;
-        background: none;
-        width: 100%;
-        margin: 0;
         text-transform: none;
 
         h4 {
           margin: 0;
           font-size: 14px;
         }
-        &.valgt {
+
+        input[type=radio] + label {
+          width: 100%;
+          margin: 0;
+          padding: 10px @skrivestotte-padding;
+          background: none;
+        }
+
+        input[type=radio]:checked + label {
           background-color: #226aa5;
           color: #f5f5f5;
 
@@ -72,9 +76,6 @@
           }
           h4 {
             color: white;
-          }
-          p {
-            color: #f5f5f5;
           }
         }
       }

@@ -12,15 +12,16 @@ var TekstListe = React.createClass({
         }.bind(this);
 
         return (
-            <label className={this.props.valgtTekst === tekst ? 'tekstElement valgt' : 'tekstElement'} onClick={onClickCallback}>
-                <input name="tekstElementRadio" type="radio" />
-                <h4 dangerouslySetInnerHTML={{__html: tekst.tittel}}></h4>
-            </label>
+            <div className="tekstElement" onClick={onClickCallback}>
+                <input id={"tekstElementRadio" + tekst.key} name="tekstListeRadio" type="radio" />
+                <label htmlFor={"tekstElementRadio" + tekst.key}>
+                    <h4 dangerouslySetInnerHTML={{__html: tekst.tittel}}></h4>
+                </label>
+            </div>
         );
     },
     render: function () {
-        var tekster = this.props.tekster;
-        var listeElementer = tekster.map(this.lagListeElement);
+        var listeElementer = this.props.tekster.map(this.lagListeElement);
 
         return (
             <div className="tekstListe">
