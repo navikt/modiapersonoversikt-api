@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class DetaljPanel extends Panel {
         }
 
         for (Double skatt : utbetalingVM.getSkatteTrekk()) {
-            ytelseVMer.add(new YtelseVM(getString("ytelse.skatt.beskrivelse.tekst"), skatt));
+            ytelseVMer.add(new YtelseVM(new StringResourceModel("ytelse.skatt.beskrivelse.tekst", DetaljPanel.this, null).getString(), skatt));
         }
 
     }
