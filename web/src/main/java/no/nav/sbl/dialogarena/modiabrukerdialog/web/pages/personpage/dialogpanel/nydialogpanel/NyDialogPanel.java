@@ -125,7 +125,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         form.add(new AjaxLink("stotteteksterToggler") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                stottetekster.callFunction(target, "toggle");
+                stottetekster.callFunction(target, "vis");
             }
         });
 
