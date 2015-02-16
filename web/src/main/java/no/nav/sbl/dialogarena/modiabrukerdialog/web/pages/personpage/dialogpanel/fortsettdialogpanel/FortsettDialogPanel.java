@@ -210,7 +210,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     .withFnr(grunnInfo.fnr)
                     .withNavIdent(getSubjectHandler().getUid())
                     .withTraadId(sporsmal.id)
-                    .withTemagruppe(henvendelseVM.temagruppe.name())
+                    .withTemagruppe(sporsmal.temagruppe)
                     .withKanal(henvendelseVM.kanal.name())
                     .withType(meldingstype)
                     .withFritekst(henvendelseVM.getFritekst())
