@@ -84,7 +84,7 @@ var Tekstforslag = React.createClass({
     settInnTekst: function () {
         $('#' + this.props.tekstfeltId)
             .focus()
-            .val(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)))
+            .val(autofullfor.bind(this)(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale))))
             .trigger('input');
         this.skjul();
     },
@@ -119,6 +119,21 @@ var sok = Utils.debounce(function (sokTekst) {
 
 function stripEmTags(tekst) {
     return tekst.replace(/<em>(.*?)<\/em>/g, '$1')
+}
+
+function autofullfor(tekst) {
+    var nokler = {
+        'bruker.fnr': this.props.autofullfor.bruker.fnr,
+        'bruker.fornavn': this.props.autofullfor.bruker.fornavn,
+        'bruker.etternavn': this.props.autofullfor.bruker.etternavn,
+        'saksbehandler.ident': this.props.autofullfor.saksbehandler.ident,
+        'saksbehandler.enhet': this.props.autofullfor.saksbehandler.enhet,
+        'saksbehandler.navn': this.props.autofullfor.saksbehandler.navn
+    };
+
+    return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
+        return nokler[resultat] || '[ukjent nøkkel]';
+    });
 }
 
 function hentTekst(hentTekst, tekster, valgtTekst) {
