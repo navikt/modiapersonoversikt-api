@@ -4,13 +4,34 @@ import java.io.Serializable;
 
 public class GrunnInfo implements Serializable {
 
-    public static final String FALLBACK_FORNAVN = "bruker";
+    public Bruker bruker;
+    public Saksbehandler saksbehandler;
 
-    public String fnr;
-    public String fornavn;
-
-    public GrunnInfo(String fnr, String fornavn) {
-        this.fnr = fnr;
-        this.fornavn = fornavn;
+    public GrunnInfo(Bruker bruker, Saksbehandler saksbehandler) {
+        this.bruker = bruker;
+        this.saksbehandler = saksbehandler;
     }
+
+    public static class Bruker {
+        public static final String FALLBACK_FORNAVN = "bruker";
+
+        public String fnr, fornavn, etternavn;
+
+        public Bruker(String fnr, String fornavn, String etternavn) {
+            this.fnr = fnr;
+            this.fornavn = fornavn;
+            this.etternavn = etternavn;
+        }
+    }
+
+    public static class Saksbehandler {
+        public String ident, enhet, navn;
+
+        public Saksbehandler(String ident, String enhet, String navn) {
+            this.ident = ident;
+            this.enhet = enhet;
+            this.navn = navn;
+        }
+    }
+
 }

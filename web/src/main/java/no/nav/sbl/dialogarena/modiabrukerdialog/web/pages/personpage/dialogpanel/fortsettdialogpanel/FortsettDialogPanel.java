@@ -4,12 +4,16 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -36,10 +40,7 @@ import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -159,7 +160,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             final HenvendelseVM henvendelseVM = henvendelseVMModel.getObject();
 
             add(new Label("navIdent", getSubjectHandler().getUid()));
-            add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo.fnr, getModel()));
+            add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo.bruker.fnr, getModel()));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
             feedbackPanel.setOutputMarkupId(true);
@@ -184,7 +185,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             sendKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
                 @Override
                 public Object getObject() {
-                    return format(getString("fortsettdialogform.knapp.send"), grunnInfo.fornavn);
+                    return format(getString("fortsettdialogform.knapp.send"), grunnInfo.bruker.fornavn);
                 }
             }));
             add(sendKnapp);
@@ -207,7 +208,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         private void sendHenvendelse(HenvendelseVM henvendelseVM) throws OppgaveErFerdigstilt {
             Meldingstype meldingstype = meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare);
             Melding melding = new Melding()
-                    .withFnr(grunnInfo.fnr)
+                    .withFnr(grunnInfo.bruker.fnr)
                     .withNavIdent(getSubjectHandler().getUid())
                     .withTraadId(sporsmal.id)
                     .withTemagruppe(sporsmal.temagruppe)
