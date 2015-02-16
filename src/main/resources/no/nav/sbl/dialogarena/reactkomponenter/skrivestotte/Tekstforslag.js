@@ -7,73 +7,103 @@ var Filter = require('./Filter');
 var Tekstvisning = require('./Tekstvisning');
 
 var Tekstforslag = React.createClass({
-    getInitialState: function () {
-        return {
-            tekster: [],
-            valgtTekst: {innhold: {nb_NO: ''}},
-            valgtLocale: Utils.Constants.LOCALE_DEFAULT,
-            sokTekst: '',
-            show: false
-        };
-    },
-    componentDidMount: function () {
-        hentEnonicTekster('').done(function (tekster) {
-            this.setState({
-                valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
-                tekster: tekster
-            });
-        }.bind(this));
-    },
-    toggle: function () {
-        this.setState({show: !this.state.show});
-    },
-    setValgtTekst: function (tekst) {
-        this.setState({valgtTekst: tekst})
-    },
-    setValgtLocale: function (locale) {
-        this.setState({valgtLocale: locale})
-    },
-    sok: function (sokTekst) {
-        this.setState({sokTekst: sokTekst});
-        sok.bind(this)(sokTekst);
-    },
-    sokNavigasjon: function (event) {
-        switch (event.keyCode) {
-            case 38:
-                event.preventDefault();
-                this.setValgtTekst(hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst));
-                break;
-            case 40:
-                event.preventDefault();
-                this.setValgtTekst(hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst));
-                break;
-            case 13:
-                this.settInnTekst();
-                break;
-        }
-    },
-    settInnTekst: function () {
-        $('#' + this.props.tekstfeltId)
-            .focus()
-            .val(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)))
-            .trigger('input');
-        this.setState({show: false});
-    },
-    render: function () {
-        if (!this.state.show) {
-            return null;
-        }
+        getInitialState: function () {
+            return {
+                tekster: [],
+                valgtTekst: {innhold: {nb_NO: ''}},
+                valgtLocale: Utils.Constants.LOCALE_DEFAULT,
+                sokTekst: '',
+                fokusertElement: {},
+                vis: false
+            };
+        },
+        componentDidMount: function () {
+            hentEnonicTekster('').done(function (tekster) {
+                this.setState({
+                    valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
+                    tekster: tekster
+                });
+            }.bind(this));
+        },
+        vis: function () {
+            this.setState({fokusertElement: $(':focus')});
+            this.setState({vis: true});
+        },
+        skjul: function () {
+            this.state.fokusertElement.blur().focus();
+            this.setState({vis: false});
+        },
+        setValgtTekst: function (tekst) {
+            this.setState({valgtTekst: tekst})
+        },
+        setValgtLocale: function (locale) {
+            this.setState({valgtLocale: locale})
+        },
+        sok: function (sokTekst) {
+            this.setState({sokTekst: sokTekst});
+            sok.bind(this)(sokTekst);
+        },
+        sokNavigasjon: function (event) {
+            switch (event.keyCode) {
+                case 38: /* pil opp */
+                    event.preventDefault();
+                    this.setValgtTekst(hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst));
+                    break;
+                case 40: /* pil ned */
+                    event.preventDefault();
+                    this.setValgtTekst(hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst));
+                    break;
+                case 13: /* enter */
+                    event.preventDefault();
+                    this.settInnTekst();
+                    break;
+            }
+        },
+        generellNavigasjon: function (event) {
+            switch (event.keyCode) {
+                case 27: /* esc */
+                    event.stopPropagation();
+                    this.skjul();
+                    break;
+                case 9: /* tab */
+                    var domNode = $(this.getDOMNode());
+                    var focusable = domNode.find(':focusable');
+                    var index = focusable.index(domNode.find(':focus'));
 
-        return (
-            <div className="tekstforslag">
-                <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} />
-                <Tekstvisning
-                    tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
-                    setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
-            </div>
-        );
-    }
-});
+                    if (event.shiftKey && index === 0) {
+                        event.preventDefault();
+                        focusable.eq(focusable.length - 1).focus();
+                    } else if (!event.shiftKey && focusable.length - 1 === index) {
+                        event.preventDefault();
+                        focusable.eq(0).focus();
+                    }
+
+                    break;
+            }
+        },
+        settInnTekst: function () {
+            $('#' + this.props.tekstfeltId)
+                .focus()
+                .val(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)))
+                .trigger('input');
+            this.skjul();
+        },
+        render: function () {
+            if (!this.state.vis) {
+                return null;
+            }
+
+            return (
+                <div className="tekstforslag" tabIndex="-1" onKeyDown={this.generellNavigasjon}>
+                    <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} />
+                    <Tekstvisning
+                        tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
+                        setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
+                </div>
+            );
+        }
+    })
+    ;
 
 function hentEnonicTekster(fritekst) {
     return $.get('/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst);
