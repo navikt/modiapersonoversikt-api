@@ -23,7 +23,6 @@ import org.apache.wicket.model.IModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
@@ -75,12 +74,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new AbstractReadOnlyModel<String>() {
             @Override
             public String getObject() {
-                String beskrivelse = "%s.beskrivelse";
-                if (brukerKanSvare.getModelObject()) {
-                    return getString(format(beskrivelse, "SPORSMAL"));
-                } else {
-                    return getString(format(beskrivelse, kanalRadioGroup.getModelObject()));
-                }
+                return getString(model.getObject().getOverskriftTekstKey(kanalRadioGroup.getModelObject()));
             }
         });
         kanalbeskrivelse.setOutputMarkupId(true);

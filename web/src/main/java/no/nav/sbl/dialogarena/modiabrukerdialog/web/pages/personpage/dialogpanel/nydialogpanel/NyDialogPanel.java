@@ -274,13 +274,12 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         switch (getModelObject().modus) {
             case REFERAT:
                 sendReferat();
-                kvittering.visKvittering(target, getString(getModelObject().kanal.getKvitteringKey("nydialogpanel")), form);
                 break;
             case SPORSMAL:
                 sendSporsmal();
-                kvittering.visKvittering(target, getString("nydialogpanel.sporsmal.kvittering.bekreftelse"), form);
                 break;
         }
+        kvittering.visKvittering(target, getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel")), form);
         send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
     }
 

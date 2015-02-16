@@ -194,7 +194,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             try {
                 sendHenvendelse(henvendelseVM);
                 send(getPage(), BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-                kvittering.visKvittering(target, getString(henvendelseVM.kanal.getKvitteringKey("fortsettdialogpanel")),
+                kvittering.visKvittering(target, getString(henvendelseVM.getKvitteringsTekstKeyBasertPaaBrukerKanSvare("fortsettdialogpanel")),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error(getString("fortsettdialogform.feilmelding.oppgaveferdigstilt"));
