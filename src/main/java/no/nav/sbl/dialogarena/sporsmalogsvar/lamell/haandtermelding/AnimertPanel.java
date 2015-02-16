@@ -12,6 +12,8 @@ import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public abstract class AnimertPanel extends Panel {
 
+    public static final String DEFAULT_SLIDE_DURATION = "400";
+
     public AnimertPanel(String id) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
@@ -19,11 +21,15 @@ public abstract class AnimertPanel extends Panel {
     }
 
     public void togglePanel(AjaxRequestTarget target) {
+        togglePanel(target, DEFAULT_SLIDE_DURATION);
+    }
+
+    public void togglePanel(AjaxRequestTarget target, String duration) {
         if (isVisibilityAllowed()) {
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(lukket)", this.getMarkupId()));
+            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + duration + ", lukket)", this.getMarkupId()));
             this.setVisibilityAllowed(false);
         } else {
-            target.appendJavaScript(format("$('#%s').slideDown()", this.getMarkupId()));
+            target.appendJavaScript(format("$('#%s').slideDown(" + duration + ")", this.getMarkupId()));
             this.setVisibilityAllowed(true);
         }
         target.add(this);
@@ -37,13 +43,13 @@ public abstract class AnimertPanel extends Panel {
             lukkPanel(target);
         }
     }
-    
+
     @RunOnEvents(VALGT_MELDING_EVENT)
     public void lukkPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
             send(getParent(), BREADTH, PANEL_LUKKET);
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(lukket)", this.getMarkupId()));
+            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
             target.add(this);
         }
     }

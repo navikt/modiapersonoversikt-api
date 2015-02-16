@@ -13,6 +13,8 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class Journalpost extends Panel {
 
+    private static final String SLIDE_DURATION = "100";
+
     public Journalpost(String id, IModel<MeldingVM> meldingVM) {
         super(id);
 
@@ -24,7 +26,6 @@ public class Journalpost extends Panel {
         add(ingenJournalpostInformasjon);
 
         final JournalpostInformasjon journalpostInformasjon = new JournalpostInformasjon("journalpostInformasjon", meldingVM);
-        add(journalpostInformasjon);
         IModel<Boolean> journalpostInformasjonErSynlig = new Model<Boolean>() {
             @Override
             public Boolean getObject() {
@@ -35,10 +36,11 @@ public class Journalpost extends Panel {
         AjaxLink<String> journalpostLenke = new AjaxLink<String>("aapneJournalpostInformasjon") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                journalpostInformasjon.togglePanel(target);
+                journalpostInformasjon.togglePanel(target, SLIDE_DURATION);
                 target.add(this);
             }
         };
+        journalpostLenke.add(journalpostInformasjon);
         journalpostLenke.setOutputMarkupPlaceholderTag(true);
         journalpostLenke.add(visibleIf(meldingErJournalfort));
         journalpostLenke.add(
