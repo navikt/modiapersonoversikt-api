@@ -100,6 +100,27 @@ public class FilterTest {
         assertThat(filtrerteSaker.get(0).getBehandlingskjede().get(0).getSisteBehandlingstype().getValue(), equalTo(lovligType));
     }
 
+
+    @Test
+    public void temaMedKunUlovligeBehandlingstyper2_slipperIkkeGjennomFilter() throws Exception {
+        when(cmsContentRetriever.hentTekst("filter.ulovligesakstema")).thenReturn("FEI,SAK,SAP,OPP,YRA,GEN,AAR,KLA,HEL");
+        when(cmsContentRetriever.hentTekst("filter.lovligebehandlingstyper")).thenReturn("ae0047,ae0034,ae0014,ae0020,ae0019,ae0011,ae0045");
+
+        List<WSSak> saker = asList(
+                createWSSak().withSakstema(new WSSakstemaer().withValue("SYK")).withBehandlingskjede(
+                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0019")).withSisteBehandlingREF("171000QAR"),
+                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0019")).withSisteBehandlingREF("171000QAQ"),
+                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0074")).withSisteBehandlingREF("161002io9")
+                ),
+                createWSSak().withSakstema(new WSSakstemaer().withValue("KNA")).withBehandlingskjede(
+                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0063")).withSisteBehandlingREF("10000WVR1")
+                )
+        );
+
+        List<WSSak> filtrerteSaker = filter.filtrerSaker(saker);
+        assertThat(filtrerteSaker.size(), is(0));
+    }
+
     @Test
     public void temaMedKvittering_slipperGjennomFilter() throws Exception {
         List<WSSak> saker = asList(
