@@ -42,6 +42,7 @@ public class SaksoversiktService {
     /**
      * Henter alle tema for en gitt person
      */
+    @SuppressWarnings("null")
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
         List<WSSak> saker = on(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr))).collect();
