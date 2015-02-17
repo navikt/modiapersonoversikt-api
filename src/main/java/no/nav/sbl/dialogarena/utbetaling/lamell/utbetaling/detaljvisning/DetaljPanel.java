@@ -28,10 +28,10 @@ public class DetaljPanel extends Panel {
         List<YtelseVM> ytelseVMer = createYtelseVMerList(utbetalingVM);
 
         add(new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
-            new Label("konto", utbetalingVM.getKontonr()),
-            new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
-            createYtelserader(ytelseVMer),
-            new MultiLineLabel("bilagsmelding", melding).add(visibleIf(not(isEmptyString(melding)))));
+                new Label("konto", utbetalingVM.getKontonr()),
+                new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
+                createYtelserader(ytelseVMer),
+                new MultiLineLabel("bilagsmelding", melding).add(visibleIf(not(isEmptyString(melding)))));
     }
 
     protected List<YtelseVM> createYtelseVMerList(UtbetalingVM utbetalingVM) {
@@ -43,7 +43,7 @@ public class DetaljPanel extends Panel {
     }
 
     protected void appendSkatteTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
-        if(utbetalingVM.getSkatteTrekk() != null) {
+        if (utbetalingVM.getSkatteTrekk() != null) {
             ytelseVMer.addAll(on(utbetalingVM.getSkatteTrekk())
                     .map(skattTilYtelseVM(DetaljPanel.this))
                     .collect(DESC_BELOP));
@@ -51,7 +51,7 @@ public class DetaljPanel extends Panel {
     }
 
     protected void appendTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
-        if(utbetalingVM.getTrekkListe() != null) {
+        if (utbetalingVM.getTrekkListe() != null) {
             ytelseVMer.addAll(on(utbetalingVM.getTrekkListe())
                     .map(TREKK_TIL_YTELSE_VM)
                     .collect(DESC_BELOP));
@@ -59,7 +59,7 @@ public class DetaljPanel extends Panel {
     }
 
     protected void appendUnderytelser(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
-        if(utbetalingVM.getUnderytelser() != null) {
+        if (utbetalingVM.getUnderytelser() != null) {
             ytelseVMer.addAll(on(utbetalingVM.getUnderytelser())
                     .map(UNDERYTELSE_TIL_YTELSE_VM)
                     .collect(DESC_BELOP));

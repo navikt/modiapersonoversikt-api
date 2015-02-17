@@ -43,15 +43,15 @@ public class HovedYtelseVM implements Serializable {
         return underYtelsesBeskrivelser;
     }
 
-    public String getBruttoUnderytelser(){
+    public String getBruttoUnderytelser() {
         return getBelopString(brutto);
     }
 
-    public String getTrekkUnderytelser(){
+    public String getTrekkUnderytelser() {
         return getBelopString(trekk);
     }
 
-    public String getNettoUnderytelser(){
+    public String getNettoUnderytelser() {
         return getBelopString(utbetalt);
     }
 
@@ -64,7 +64,7 @@ public class HovedYtelseVM implements Serializable {
     }
 
     public String getHovedYtelsePeriode() {
-       return kortUtenLiteral(startPeriode) + " - " + kortUtenLiteral(sluttPeriode);
+        return kortUtenLiteral(startPeriode) + " - " + kortUtenLiteral(sluttPeriode);
     }
 
     public static class HovedYtelseComparator {

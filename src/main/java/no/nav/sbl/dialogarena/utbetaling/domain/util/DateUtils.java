@@ -8,7 +8,8 @@ import org.joda.time.LocalDate;
 
 public final class DateUtils {
 
-    private DateUtils() {}
+    private DateUtils() {
+    }
 
     public static final Transformer<Interval, DateTime> START = new Transformer<Interval, DateTime>() {
         @Override
