@@ -38,8 +38,7 @@ public class HovedytelseUtils {
 
     public static List<List<Record<Hovedytelse>>> splittUtbetalingerPerMaaned(List<Record<Hovedytelse>> hovedytelser) {
         List<Record<Hovedytelse>> hovedytelserSortert = on(hovedytelser).collect(HOVEDYTELSE_DATO_COMPARATOR);
-        Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap = new LinkedHashMap<>();
-        leggTilUtbetalingerIAarsMap(hovedytelserSortert, aarsMap);
+        Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap = toAarsMap(hovedytelserSortert);
         return trekkUtUtbetalingerPerMaaned(aarsMap);
     }
 
@@ -88,13 +87,17 @@ public class HovedytelseUtils {
         };
     }
 
-    private static void leggTilUtbetalingerIAarsMap(List<Record<Hovedytelse>> sorterteUtbetalinger, Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap) {
+    private static Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> toAarsMap(List<Record<Hovedytelse>> sorterteUtbetalinger) {
+        Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap = new LinkedHashMap<>();
+
         for (Record<Hovedytelse> utbetaling : sorterteUtbetalinger) {
             int aar = utbetaling.get(Hovedytelse.hovedytelsedato).getYear();
             int maaned = utbetaling.get(Hovedytelse.hovedytelsedato).getMonthOfYear();
             leggTilNoklerForAarOgMaaned(aarsMap, aar, maaned);
             aarsMap.get(aar).get(maaned).add(utbetaling);
         }
+
+        return aarsMap;
     }
 
     private static void leggTilNoklerForAarOgMaaned(Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap, int aar, int maaned) {

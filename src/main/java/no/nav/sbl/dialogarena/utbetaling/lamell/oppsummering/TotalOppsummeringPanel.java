@@ -37,10 +37,13 @@ public class TotalOppsummeringPanel extends Panel {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
                 ekspandert.setObject(!ekspandert.getObject());
-                target.appendJavaScript(
-                        "$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);" +
-                                "$('#" + getMarkupId() + "').toggleClass('ekspandert');");
+                target.appendJavaScript(createJavascript());
                 target.add();
+            }
+
+            private String createJavascript() {
+                return "$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);" +
+                        "$('#" + getMarkupId() + "').toggleClass('ekspandert');";
             }
         };
     }
@@ -48,15 +51,15 @@ public class TotalOppsummeringPanel extends Panel {
     private MarkupContainer createTopplinje() {
         MarkupContainer container = new WebMarkupContainer("oppsummeringsLinje");
         container.add(new Label("oppsummertPeriode"),
-            new Label("utbetalt"),
-            new Label("trekk"),
-            new Label("brutto"),
-            createSkrivUtLink());
+                new Label("utbetalt"),
+                new Label("trekk"),
+                new Label("brutto"),
+                createSkrivUtLink());
         return container;
     }
 
     private Component createSkrivUtLink() {
-        return  new AjaxLink<Void>("skriv-ut") {
+        return new AjaxLink<Void>("skriv-ut") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 String markupId = TotalOppsummeringPanel.this.getMarkupId();
@@ -72,11 +75,11 @@ public class TotalOppsummeringPanel extends Panel {
                 HovedYtelseVM hovedYtelseVM = item.getModelObject();
 
                 item.add(new Label("hovedYtelsesBeskrivelse", hovedYtelseVM.getHovedYtelsesBeskrivelse()),
-                    getHovedYtelsesPeriodeLabel(hovedYtelseVM),
-                    new Label("bruttoUnderytelser", hovedYtelseVM.getBruttoUnderytelser()),
-                    new Label("trekkUnderytelser", hovedYtelseVM.getTrekkUnderytelser()),
-                    new Label("nettoUnderytelser", hovedYtelseVM.getNettoUnderytelser()),
-                    lagUnderBeskrivelseListView(item));
+                        getHovedYtelsesPeriodeLabel(hovedYtelseVM),
+                        new Label("bruttoUnderytelser", hovedYtelseVM.getBruttoUnderytelser()),
+                        new Label("trekkUnderytelser", hovedYtelseVM.getTrekkUnderytelser()),
+                        new Label("nettoUnderytelser", hovedYtelseVM.getNettoUnderytelser()),
+                        lagUnderBeskrivelseListView(item));
             }
 
             private ListView<UnderYtelseVM> lagUnderBeskrivelseListView(final ListItem<HovedYtelseVM> item) {
@@ -84,8 +87,8 @@ public class TotalOppsummeringPanel extends Panel {
                     @Override
                     protected void populateItem(ListItem<UnderYtelseVM> item) {
                         item.add(new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
-                            new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
-                            new Label("trekkBelop", item.getModelObject().getTrekkBelop()));
+                                new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
+                                new Label("trekkBelop", item.getModelObject().getTrekkBelop()));
                     }
                 };
             }

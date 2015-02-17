@@ -66,14 +66,12 @@ public final class UtbetalingLerret extends Lerret {
         super(id);
         instansierFelter(fnr);
 
-        add(
-                createArenaLenke(fnr),
+        add(createArenaLenke(fnr),
                 createFilterFormPanel(),
                 totalOppsummeringPanel,
                 utbetalingslisteContainer,
                 ingenutbetalinger,
-                feilmelding
-        );
+                feilmelding);
     }
 
     private ExternalLink createArenaLenke(String fnr) {
@@ -91,7 +89,7 @@ public final class UtbetalingLerret extends Lerret {
         ingenutbetalinger = createIngenUtbetalingerPanel();
         ingenutbetalinger.setOutputMarkupPlaceholderTag(true);
 
-        feilmelding =  createFeilmeldingPanel();
+        feilmelding = createFeilmeldingPanel();
         feilmelding.setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
         List<Record<Hovedytelse>> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
@@ -213,6 +211,6 @@ public final class UtbetalingLerret extends Lerret {
         addOrReplace(createFilterFormPanel());
         oppdaterUtbetalingsliste(target);
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
-        target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
+        target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('" + detaljPanelID + "');");
     }
 }
