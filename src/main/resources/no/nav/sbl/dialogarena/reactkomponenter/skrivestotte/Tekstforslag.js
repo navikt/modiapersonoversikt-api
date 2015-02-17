@@ -100,7 +100,7 @@ var Tekstforslag = React.createClass({
             <div className="tekstforslagModal" tabIndex="-1" onKeyDown={this.generellNavigasjon} >
                 <div className="backdrop" onClick={this.skjul}></div>
                 <div className="tekstforslag">
-                    <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} />
+                    <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} sokTekst={this.state.sokTekst}/>
                     <Tekstvisning
                         tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
                         setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
