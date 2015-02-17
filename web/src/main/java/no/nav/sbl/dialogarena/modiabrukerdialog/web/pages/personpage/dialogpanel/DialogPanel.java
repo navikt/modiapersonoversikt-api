@@ -36,8 +36,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dial
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.commons.lang3.text.WordUtils.capitalize;
 
 public class DialogPanel extends Panel {
 
@@ -77,14 +75,10 @@ public class DialogPanel extends Panel {
             Personnavn personnavn = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr))
                     .getPerson().getPersonfakta().getPersonnavn();
 
-            return optional(new Bruker(fnr, namifyString(personnavn.getFornavn()), namifyString(personnavn.getEtternavn())));
+            return optional(new Bruker(fnr, personnavn.getFornavn(), personnavn.getEtternavn()));
         } catch (Exception e) {
             return none();
         }
-    }
-
-    private static String namifyString(String navn) {
-        return capitalize(lowerCase(navn));
     }
 
     private Saksbehandler hentSaksbehandlerInfo() {

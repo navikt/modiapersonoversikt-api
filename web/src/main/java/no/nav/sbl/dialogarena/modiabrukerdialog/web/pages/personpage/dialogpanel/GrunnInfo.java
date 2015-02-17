@@ -2,6 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import java.io.Serializable;
 
+import static org.apache.commons.lang3.StringUtils.lowerCase;
+import static org.apache.commons.lang3.text.WordUtils.capitalize;
+
 public class GrunnInfo implements Serializable {
 
     public Bruker bruker;
@@ -19,8 +22,8 @@ public class GrunnInfo implements Serializable {
 
         public Bruker(String fnr, String fornavn, String etternavn) {
             this.fnr = fnr;
-            this.fornavn = fornavn;
-            this.etternavn = etternavn;
+            this.fornavn = namifyString(fornavn);
+            this.etternavn = namifyString(etternavn);
         }
     }
 
@@ -30,8 +33,12 @@ public class GrunnInfo implements Serializable {
         public Saksbehandler(String ident, String enhet, String navn) {
             this.ident = ident;
             this.enhet = enhet;
-            this.navn = navn;
+            this.navn = namifyString(navn);
         }
+    }
+
+    private static String namifyString(String navn) {
+        return capitalize(lowerCase(navn));
     }
 
 }
