@@ -36,7 +36,7 @@ public class SakerVM implements Serializable {
     }
 
     private boolean valgtTraadsTemagruppeErOvrige(InnboksVM innboksVM) {
-        return innboksVM.getValgtTraad().getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_OVRG);
+         return innboksVM.getTraader().size() > 0 && innboksVM.getValgtTraad().getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_OVRG);
     }
 
     public AbstractReadOnlyModel<Boolean> sakerFinnes() {
