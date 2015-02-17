@@ -36,28 +36,27 @@ public class UtbetalingService {
     }
 
     protected List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-            logger.info("---- Spør etter utebetalinger. Fnr: {}. ----", fnr);
+        logger.info("---- Spør etter utebetalinger. Fnr: {}. ----", fnr);
         try {
             return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingsinformasjonPeriodeIkkeGyldig ex) {
             throw new ApplicationException("Utbetalingsperioden er ikke gyldig. ",ex);
         } catch(Exception e) {
             throw new SystemException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
-
         }
     }
 
     protected WSHentUtbetalingsinformasjonRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
         return new WSHentUtbetalingsinformasjonRequest()
-                .withId(new WSIdent().withIdent(fnr))
-                .withPeriode(createPeriode(startDato, sluttDato));
+            .withId(new WSIdent().withIdent(fnr))
+            .withPeriode(createPeriode(startDato, sluttDato));
     }
 
 
     protected WSForespurtPeriode createPeriode(LocalDate startDato, LocalDate sluttDato) {
         return new WSForespurtPeriode()
-                .withFom(startDato.toDateTimeAtStartOfDay())
-        .withTom(sluttDato.toDateTimeAtStartOfDay());
+            .withFom(startDato.toDateTimeAtStartOfDay())
+            .withTom(sluttDato.toDateTimeAtStartOfDay());
     }
 
 }

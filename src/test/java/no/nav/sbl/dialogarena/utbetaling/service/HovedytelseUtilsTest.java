@@ -60,7 +60,7 @@ public class HovedytelseUtilsTest {
 
     @Test
     public void hentYtelser_inneholderNoyaktigAlleHovedYtelser() {
-        Set<String> ytelser = ytelseBeskrivelser(hovedytelseListe);
+        Set<String> ytelser = hovedytelseToYtelsebeskrivelse(hovedytelseListe);
 
         assertThat(ytelser.size(), is(3));
         assertThat(ytelser, containsInAnyOrder(DAGPENGER, SYKEPENGER, BARNETRYGD));
