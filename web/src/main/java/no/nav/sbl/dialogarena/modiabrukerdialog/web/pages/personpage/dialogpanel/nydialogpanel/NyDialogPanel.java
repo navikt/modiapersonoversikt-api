@@ -124,10 +124,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         HashMap<String, Object> tekstforslagProps = new HashMap<>();
         tekstforslagProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
         tekstforslagProps.put("autofullfor", grunnInfo);
-        final ReactComponentPanel stottetekster = new ReactComponentPanel("reacttest", "Tekstforslag", tekstforslagProps);
+        final ReactComponentPanel stottetekster = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", tekstforslagProps);
         form.add(stottetekster);
 
-        form.add(new AjaxLink("stotteteksterToggler") {
+        form.add(new AjaxLink("skrivestotteToggler") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 stottetekster.callFunction(target, "vis");
