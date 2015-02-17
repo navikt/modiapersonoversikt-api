@@ -17,21 +17,14 @@ import static no.nav.modig.lang.option.Optional.optional;
 
 public class LDAPServiceImpl implements LDAPService {
 
-    private LdapContext ctx;
+    private static Hashtable<String, String> env = new Hashtable<>();
 
-    public LDAPServiceImpl() {
-        try {
-            Hashtable<String, String> env = new Hashtable<>();
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-            env.put(Context.PROVIDER_URL, getProperty("ldap.url"));
-            env.put(Context.SECURITY_AUTHENTICATION, "simple");
-            env.put(Context.SECURITY_PRINCIPAL, getProperty("ldap.username"));
-            env.put(Context.SECURITY_CREDENTIALS, getProperty("ldap.password"));
-
-            this.ctx = new InitialLdapContext(env, null);
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
+    static {
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, getProperty("ldap.url"));
+        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_PRINCIPAL, getProperty("ldap.username"));
+        env.put(Context.SECURITY_CREDENTIALS, getProperty("ldap.password"));
     }
 
     @Override
@@ -41,13 +34,17 @@ public class LDAPServiceImpl implements LDAPService {
             SearchControls searchCtrl = new SearchControls();
             searchCtrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            NamingEnumeration<SearchResult> result = ctx.search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
+            NamingEnumeration<SearchResult> result = ldapContext().search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
 
             return optional(result.next().getAttributes());
 
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static LdapContext ldapContext() throws NamingException {
+        return new InitialLdapContext(env, null);
     }
 
 }
