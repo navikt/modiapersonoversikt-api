@@ -97,8 +97,8 @@ var Tekstforslag = React.createClass({
         }
 
         return (
-            <div className="tekstforslagModal" tabIndex="-1" onKeyDown={this.generellNavigasjon} onClick={this.skjul}>
-                <div className="backdrop"></div>
+            <div className="tekstforslagModal" tabIndex="-1" onKeyDown={this.generellNavigasjon} >
+                <div className="backdrop" onClick={this.skjul}></div>
                 <div className="tekstforslag">
                     <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} />
                     <Tekstvisning
