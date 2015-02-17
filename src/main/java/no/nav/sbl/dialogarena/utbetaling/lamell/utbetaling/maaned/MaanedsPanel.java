@@ -20,9 +20,8 @@ public class MaanedsPanel extends Panel {
 
     public MaanedsPanel(String id, List<Record<Hovedytelse>> utbetalingsliste) {
         super(id);
-        add(
-                createOppsummeringsPanel(utbetalingsliste),
-                createUtbetalingListView(utbetalingsliste));
+        add(createOppsummeringsPanel(utbetalingsliste),
+            createUtbetalingListView(utbetalingsliste));
     }
 
     private MaanedOppsummeringPanel createOppsummeringsPanel(List<Record<Hovedytelse>> utbetalingsliste) {
