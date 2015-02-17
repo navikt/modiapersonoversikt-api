@@ -17,7 +17,7 @@ var Tekstforslag = React.createClass({
             vis: false
         };
     },
-    componentWillMount: function(){
+    componentWillMount: function () {
         Utils.moveNodeToParent(this.props.reactContainer, document.body);
     },
     componentDidMount: function () {
@@ -134,7 +134,8 @@ function autofullfor(tekst) {
         'bruker.etternavn': this.props.autofullfor.bruker.etternavn,
         'saksbehandler.ident': this.props.autofullfor.saksbehandler.ident,
         'saksbehandler.enhet': this.props.autofullfor.saksbehandler.enhet,
-        'saksbehandler.navn': this.props.autofullfor.saksbehandler.navn
+        'saksbehandler.fornavn': this.props.autofullfor.saksbehandler.fornavn,
+        'saksbehandler.etternavn': this.props.autofullfor.saksbehandler.etternavn
     };
 
     return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
