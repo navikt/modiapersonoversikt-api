@@ -12,7 +12,7 @@ public class GrunnInfo implements Serializable {
         this.saksbehandler = saksbehandler;
     }
 
-    public static class Bruker {
+    public static class Bruker implements Serializable {
         public static final String FALLBACK_FORNAVN = "bruker";
 
         public String fnr, fornavn, etternavn;
@@ -24,7 +24,7 @@ public class GrunnInfo implements Serializable {
         }
     }
 
-    public static class Saksbehandler {
+    public static class Saksbehandler implements Serializable {
         public String ident, enhet, navn;
 
         public Saksbehandler(String ident, String enhet, String navn) {
