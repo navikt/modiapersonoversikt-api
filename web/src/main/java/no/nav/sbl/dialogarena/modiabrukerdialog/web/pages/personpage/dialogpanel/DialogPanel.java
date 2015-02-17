@@ -7,10 +7,10 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
@@ -21,6 +21,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -32,7 +34,6 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker.FALLBACK_FORNAVN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -48,9 +49,9 @@ public class DialogPanel extends Panel {
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     @Inject
-    private AnsattService ansattService;
-    @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private LDAPService ldapService;
 
     private Component aktivtPanel;
     private OppgavetilordningFeilet oppgavetilordningFeiletModal;
@@ -60,7 +61,7 @@ public class DialogPanel extends Panel {
         super(id);
 
         grunnInfo = new GrunnInfo(
-                hentBrukerInfo(fnr).getOrElse(new Bruker(fnr, FALLBACK_FORNAVN, "")),
+                hentBrukerInfo(fnr),
                 hentSaksbehandlerInfo());
         aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
@@ -70,22 +71,33 @@ public class DialogPanel extends Panel {
         settOppRiktigMeldingPanel();
     }
 
-    private Optional<Bruker> hentBrukerInfo(String fnr) {
+    private Bruker hentBrukerInfo(String fnr) {
         try {
             Personnavn personnavn = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr))
                     .getPerson().getPersonfakta().getPersonnavn();
 
-            return optional(new Bruker(fnr, personnavn.getFornavn(), personnavn.getEtternavn()));
+            return new Bruker(fnr, personnavn.getFornavn(), personnavn.getEtternavn());
         } catch (Exception e) {
-            return none();
+            return new Bruker(fnr, "", "");
         }
     }
 
     private Saksbehandler hentSaksbehandlerInfo() {
-        return new Saksbehandler(
-                getSubjectHandler().getUid(),
-                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(),
-                ansattService.hentAnsattNavn(getSubjectHandler().getUid()));
+        Optional<Attributes> attributes = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
+
+        if (!attributes.isSome()) {
+            return new Saksbehandler(getSubjectHandler().getUid(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(), "", "");
+        }
+
+        try {
+            return new Saksbehandler(
+                    getSubjectHandler().getUid(),
+                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(),
+                    optional((String) attributes.get().get("givenname").get()).getOrElse(""),
+                    optional((String) attributes.get().get("sn").get()).getOrElse(""));
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void settOppRiktigMeldingPanel() {

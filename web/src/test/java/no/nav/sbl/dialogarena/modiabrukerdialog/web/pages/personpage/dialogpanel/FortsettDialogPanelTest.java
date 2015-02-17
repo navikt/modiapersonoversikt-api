@@ -63,7 +63,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class FortsettDialogPanelTest extends WicketPageTest {
 
     private static final String FNR = "fnr";
-    private static final String FORNAVN = "fornavn";
+    private static final String FORNAVN = "Fornavn";
     private static final String SPORSMAL_ID = "id";
     private static final String FRITEKST = "fritekst";
     private static final String TEMAGRUPPE = Temagruppe.FMLI.name();
@@ -97,7 +97,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, ""), new Saksbehandler("", "", ""));
+        grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, ""), new Saksbehandler("", "", "", ""));
         saker = createMockSaker();
         when(sakerService.hentSaker(anyString())).thenReturn(saker);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);

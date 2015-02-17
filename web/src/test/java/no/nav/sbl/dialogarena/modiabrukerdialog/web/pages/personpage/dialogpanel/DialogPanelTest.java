@@ -17,7 +17,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker.FALLBACK_FORNAVN;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
@@ -48,7 +47,7 @@ public class DialogPanelTest extends WicketPageTest {
 
         GrunnInfo grunnInfo = (GrunnInfo) Whitebox.getInternalState(dialogPanel, "grunnInfo");
 
-        assertThat(grunnInfo.bruker.fornavn.equals(FALLBACK_FORNAVN), is(true));
+        assertThat(grunnInfo.bruker.fornavn.equals(""), is(true));
     }
 
     @Test

@@ -16,8 +16,6 @@ public class GrunnInfo implements Serializable {
     }
 
     public static class Bruker implements Serializable {
-        public static final String FALLBACK_FORNAVN = "bruker";
-
         public String fnr, fornavn, etternavn;
 
         public Bruker(String fnr, String fornavn, String etternavn) {
@@ -28,12 +26,13 @@ public class GrunnInfo implements Serializable {
     }
 
     public static class Saksbehandler implements Serializable {
-        public String ident, enhet, navn;
+        public String ident, enhet, fornavn, etternavn;
 
-        public Saksbehandler(String ident, String enhet, String navn) {
+        public Saksbehandler(String ident, String enhet, String fornavn, String etternavn) {
             this.ident = ident;
             this.enhet = enhet;
-            this.navn = namifyString(navn);
+            this.fornavn = namifyString(fornavn);
+            this.etternavn = namifyString(etternavn);
         }
     }
 

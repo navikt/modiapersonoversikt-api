@@ -58,7 +58,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     private static final String VALGT_ENHET = "valgtEnhet";
     private static final String FNR = "fnr";
-    private static final String FORNAVN = "fornavn";
+    private static final String FORNAVN = "Fornavn";
     private static final String FRITEKST = "fritekst";
     private static final String TRAAD_ID = "traadId";
     private static final Answer<Melding> RETURNER_SAMME_MELDING = new Answer<Melding>() {
@@ -90,7 +90,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, ""), new GrunnInfo.Saksbehandler("", "", ""));
+        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, ""), new GrunnInfo.Saksbehandler("", "", "", ""));
         saker = createMockSaker();
         when(sakerService.hentSaker(anyString())).thenReturn(saker);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
