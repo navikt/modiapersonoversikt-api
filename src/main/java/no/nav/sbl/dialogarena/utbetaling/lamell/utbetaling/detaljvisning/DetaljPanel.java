@@ -53,7 +53,7 @@ public class DetaljPanel extends Panel {
     protected void appendTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if(utbetalingVM.getTrekkListe() != null) {
             ytelseVMer.addAll(on(utbetalingVM.getTrekkListe())
-                    .map(trekkTilYtelseVM)
+                    .map(TREKK_TIL_YTELSE_VM)
                     .collect(DESC_BELOP));
         }
     }
@@ -61,7 +61,7 @@ public class DetaljPanel extends Panel {
     protected void appendUnderytelser(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if(utbetalingVM.getUnderytelser() != null) {
             ytelseVMer.addAll(on(utbetalingVM.getUnderytelser())
-                    .map(underytelseTilYtelseVM)
+                    .map(UNDERYTELSE_TIL_YTELSE_VM)
                     .collect(DESC_BELOP));
         }
 
