@@ -24,9 +24,11 @@ public class SakerVM implements Serializable {
     public SakerVM(InnboksVM innboksVM, SakerService sakerService) {
         this.innboksVM = innboksVM;
         this.sakerService = sakerService;
-        visFagsaker.setObject(!valgtTraadsTemagruppeErOvrige(innboksVM));
-        visGenerelleSaker.setObject(valgtTraadsTemagruppeErOvrige(innboksVM));
-        saker = new Saker();
+        if(innboksVM.harTraader()) {
+            visFagsaker.setObject(!valgtTraadsTemagruppeErOvrige(innboksVM));
+            visGenerelleSaker.setObject(valgtTraadsTemagruppeErOvrige(innboksVM));
+            saker = new Saker();
+        }
     }
 
     public final void oppdater() {
@@ -36,7 +38,7 @@ public class SakerVM implements Serializable {
     }
 
     private boolean valgtTraadsTemagruppeErOvrige(InnboksVM innboksVM) {
-         return innboksVM.getTraader().size() > 0 && innboksVM.getValgtTraad().getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_OVRG);
+         return innboksVM.harTraader() && innboksVM.getValgtTraad().getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_OVRG);
     }
 
     public AbstractReadOnlyModel<Boolean> sakerFinnes() {

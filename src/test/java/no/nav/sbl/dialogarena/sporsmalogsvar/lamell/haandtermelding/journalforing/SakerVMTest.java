@@ -16,7 +16,10 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SakerVMTest {
 
@@ -30,6 +33,7 @@ public class SakerVMTest {
     public void setUp() {
         MeldingVM meldingVM = opprettMeldingVM("temagruppe");
 
+        when(innboksVM.harTraader()).thenReturn(true);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
         when(sakerService.hentSaker(anyString())).thenReturn(createMockSaker());
