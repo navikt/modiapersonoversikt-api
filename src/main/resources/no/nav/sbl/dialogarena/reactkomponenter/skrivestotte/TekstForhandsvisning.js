@@ -11,7 +11,7 @@ var TekstForhandsvisning = React.createClass({
         tekst = tekst.split(/[\r\n]+/);
 
         return (
-            <div className="tekstForhandsvisning">
+            <div className="tekstForhandsvisning" role="tabpanel" id="tekstForhandsvisningPanel" aria-atomic="true" aria-live="polite">
                 <div className="tekstPanel">
                 {tekst.map(function (avsnitt) {
                     return (

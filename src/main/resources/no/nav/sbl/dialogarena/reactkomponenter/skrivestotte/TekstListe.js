@@ -11,9 +11,13 @@ var TekstListe = React.createClass({
             this.props.setValgtTekst(tekst);
         }.bind(this);
 
+        var erValgt = this.props.valgtTekst === tekst;
+
         return (
-            <div className="tekstElement" onClick={onClickCallback}>
-                <input id={"tekstElementRadio" + tekst.key} name="tekstListeRadio" type="radio" readOnly checked={this.props.valgtTekst === tekst} />
+            <div className="tekstElement" onClick={onClickCallback} key={tekst.key} id="tekstListePanel"
+                role="tab" aria-selected={erValgt} aria-controls="tekstForhandsvisningPanel" aria-live="assertive" aria-aria-atomic="true"
+                aria-label={tekst.tittel}>
+                <input id={"tekstElementRadio" + tekst.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={"tekstElementRadio" + tekst.key}>
                     <h4 dangerouslySetInnerHTML={{__html: tekst.tittel}}></h4>
                 </label>
@@ -24,7 +28,7 @@ var TekstListe = React.createClass({
         var listeElementer = this.props.tekster.map(this.lagListeElement);
 
         return (
-            <div className="tekstListe">
+            <div className="tekstListe" role="tablist">
                 {listeElementer}
             </div>
         );
