@@ -1,1 +1,1 @@
-window.ModiaJS.Components.Tekstforslag = require('./Tekstforslag.js');
+window.ModiaJS.Components.Skrivestotte = require('./Tekstforslag.js');
