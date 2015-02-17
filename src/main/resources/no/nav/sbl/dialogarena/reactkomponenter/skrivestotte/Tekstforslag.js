@@ -17,6 +17,9 @@ var Tekstforslag = React.createClass({
             vis: false
         };
     },
+    componentWillMount: function(){
+        Utils.moveNodeToParent(this.props.reactContainer, document.body);
+    },
     componentDidMount: function () {
         hentEnonicTekster('').done(function (tekster) {
             this.setState({
@@ -94,11 +97,14 @@ var Tekstforslag = React.createClass({
         }
 
         return (
-            <div className="tekstforslag" tabIndex="-1" onKeyDown={this.generellNavigasjon}>
-                <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} />
-                <Tekstvisning
-                    tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
-                    setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
+            <div className="tekstforslagModal" tabIndex="-1" onKeyDown={this.generellNavigasjon} onClick={this.skjul}>
+                <div className="backdrop"></div>
+                <div className="tekstforslag">
+                    <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} />
+                    <Tekstvisning
+                        tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
+                        setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
+                </div>
             </div>
         );
     }

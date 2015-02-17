@@ -30,11 +30,16 @@ public class ReactComponentPanel extends Panel {
     public ReactComponentPanel(String id, String componentName, Map<String, Object> props) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
+        this.reactContainer = new WebMarkupContainer("reactContainer");
         this.componentName = componentName;
-        this.props = props;
+        this.props = withPanelReference(props);
 
-        reactContainer = new WebMarkupContainer("reactContainer");
         add(reactContainer);
+    }
+
+    private Map<String, Object> withPanelReference(Map<String, Object> props) {
+        props.put("reactContainer", reactContainer.getMarkupId());
+        return props;
     }
 
     @Override
@@ -43,7 +48,7 @@ public class ReactComponentPanel extends Panel {
     }
 
     public void updateState(AjaxRequestTarget target, Map<String, Object> props) {
-        this.props = props;
+        this.props = withPanelReference(props);
         callFunction(target, "setState", props);
     }
 

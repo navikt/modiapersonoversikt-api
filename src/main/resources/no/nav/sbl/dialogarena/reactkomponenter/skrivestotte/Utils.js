@@ -22,6 +22,11 @@ var Utils = {
                 func.apply(context, args);
             }
         };
+    },
+    moveNodeToParent: function(nodeId, parent) {
+        var node = document.getElementById(nodeId);
+        node.parentNode.removeChild(node);
+        parent.appendChild(node);
     }
 };
 
