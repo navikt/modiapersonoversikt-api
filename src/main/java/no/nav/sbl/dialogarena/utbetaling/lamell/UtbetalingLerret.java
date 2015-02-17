@@ -7,7 +7,6 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
@@ -89,29 +88,26 @@ public final class UtbetalingLerret extends Lerret {
 
     private void instansierFelter(String fnr) {
         this.fnr = fnr;
-        ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne")
-                .setOutputMarkupPlaceholderTag(true);
+        ingenutbetalinger = createIngenUtbetalingerPanel();
+        ingenutbetalinger.setOutputMarkupPlaceholderTag(true);
 
-        feilmelding = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
-                .setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
+        feilmelding =  createFeilmeldingPanel();
+        feilmelding.setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
-        List<Record<Hovedytelse>> ytelser = hentHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
-        filterParametere = new FilterParametere(HovedytelseUtils.ytelseBeskrivelser(ytelser));
+        List<Record<Hovedytelse>> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
+        filterParametere = new FilterParametere(hovedytelseToYtelsebeskrivelse(ytelser));
 
         List<Record<Hovedytelse>> synligeUtbetalinger = on(ytelser).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
-        utbetalingslisteContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingslisteContainer")
-                .add(createMaanedsPanelListe())
-                .setOutputMarkupPlaceholderTag(true);
+
+        utbetalingslisteContainer = createUtbetalinglisteContainer();
+        utbetalingslisteContainer.add(createMaanedsPanelListe());
+        utbetalingslisteContainer.setOutputMarkupPlaceholderTag(true);
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
-    private List<Record<Hovedytelse>> hentHovedytelseListe() {
-        return hentHovedytelseListe(fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
-    }
-
-    private List<Record<Hovedytelse>> hentHovedytelseListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    private List<Record<Hovedytelse>> getHovedytelseListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             return service.hentUtbetalinger(fnr, startDato, sluttDato);
         } catch (ApplicationException | SystemException e) {
@@ -153,37 +149,8 @@ public final class UtbetalingLerret extends Lerret {
         target.appendJavaScript("Utbetalinger.addKeyNavigation();");
     }
 
-    @SuppressWarnings("unused")
-    @RunOnEvents(FILTER_ENDRET)
-    private void oppdaterUtbetalingsliste(AjaxRequestTarget target) {
-        feilmelding.setVisibilityAllowed(false);
-        DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
-
-
-        List<Record<Hovedytelse>> hovedytelser = hentHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
-        oppdaterYtelser(hovedytelser);
-
-        List<Record<Hovedytelse>> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
-        oppdaterUtbetalingsvisning(synligeUtbetalinger);
-        endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
-
-        target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
-        target.appendJavaScript("Utbetalinger.addKeyNavigation();");
-    }
-
-    @SuppressWarnings("unused")
-    @RunOnEvents(FEED_ITEM_CLICKED)
-    private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
-        filterParametere = new FilterParametere(ytelseBeskrivelser(hentHovedytelseListe()));
-        addOrReplace(createFilterFormPanel());
-        oppdaterUtbetalingsliste(target);
-        String detaljPanelID = "detaljpanel-" + payload.getItemId();
-        target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
-    }
-
     protected void oppdaterYtelser(List<Record<Hovedytelse>> hovedytelser) {
-        filterParametere.setYtelser(ytelseBeskrivelser(hentHovedytelserFraPeriode(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
+        filterParametere.setYtelser(hovedytelseToYtelsebeskrivelse(hentHovedytelserFraPeriode(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
@@ -202,5 +169,50 @@ public final class UtbetalingLerret extends Lerret {
             utbetalingslisteContainer.setVisibilityAllowed(synligeUtbetalinger);
             ingenutbetalinger.setVisibilityAllowed(!synligeUtbetalinger);
         }
+    }
+
+    private WebMarkupContainer createUtbetalinglisteContainer() {
+        return new WebMarkupContainer("utbetalingslisteContainer");
+    }
+
+    private UtbetalingerMessagePanel createFeilmeldingPanel() {
+        return new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil");
+    }
+
+    private UtbetalingerMessagePanel createIngenUtbetalingerPanel() {
+        return new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne");
+    }
+
+    private List<Record<Hovedytelse>> hentHovedytelseListe() {
+        return getHovedytelseListe(fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+    }
+
+    @SuppressWarnings("unused")
+    @RunOnEvents(FILTER_ENDRET)
+    private void oppdaterUtbetalingsliste(AjaxRequestTarget target) {
+        feilmelding.setVisibilityAllowed(false);
+        DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
+        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
+
+
+        List<Record<Hovedytelse>> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        oppdaterYtelser(hovedytelser);
+
+        List<Record<Hovedytelse>> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
+        oppdaterUtbetalingsvisning(synligeUtbetalinger);
+        endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
+
+        target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
+        target.appendJavaScript("Utbetalinger.addKeyNavigation();");
+    }
+
+    @SuppressWarnings("unused")
+    @RunOnEvents(FEED_ITEM_CLICKED)
+    private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
+        filterParametere = new FilterParametere(hovedytelseToYtelsebeskrivelse(hentHovedytelseListe()));
+        addOrReplace(createFilterFormPanel());
+        oppdaterUtbetalingsliste(target);
+        String detaljPanelID = "detaljpanel-" + payload.getItemId();
+        target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
     }
 }

@@ -43,10 +43,18 @@ public class MaanedsPanel extends Panel {
             return new OppsummeringVM(new ArrayList<Record<Hovedytelse>>(), now(), now());
         }
 
-        LocalDate startDato = liste.get(liste.size() - 1).get(Hovedytelse.hovedytelsedato).dayOfMonth().withMinimumValue().toLocalDate();
-        LocalDate sluttDato = liste.get(0).get(Hovedytelse.hovedytelsedato).dayOfMonth().withMaximumValue().toLocalDate();
+        LocalDate startDato = getStartDato(liste);
+        LocalDate sluttDato = getSluttDato(liste);
 
         return new OppsummeringVM(liste, startDato, sluttDato);
+    }
+
+    protected LocalDate getSluttDato(List<Record<Hovedytelse>> liste) {
+        return liste.get(0).get(Hovedytelse.hovedytelsedato).dayOfMonth().withMaximumValue().toLocalDate();
+    }
+
+    protected LocalDate getStartDato(List<Record<Hovedytelse>> liste) {
+        return liste.get(liste.size() - 1).get(Hovedytelse.hovedytelsedato).dayOfMonth().withMinimumValue().toLocalDate();
     }
 
 }

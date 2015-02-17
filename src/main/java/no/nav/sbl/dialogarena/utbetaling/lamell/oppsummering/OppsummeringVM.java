@@ -50,49 +50,47 @@ public class OppsummeringVM implements Serializable {
      */
     private static List<HovedYtelseVM> lagHovetytelseVMer(List<Record<Hovedytelse>> ytelser) {
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
-        for (List<Record<Hovedytelse>> sammen : grupperPaaHovedytelseOgPeriode(ytelser)) {
 
-            Map<String, List<Record<?>>> indekserteUnderytelser = on(sammen).flatmap(Hovedytelse.underytelseListe).reduce(indexBy(Underytelse.ytelsesType));
+        for (List<Record<Hovedytelse>> grupperteHovedytelser : grupperPaaHovedytelseOgPeriode(ytelser)) {
+            Map<String, List<Record<?>>> indekserteUnderytelser = groupUnderytelseByType(grupperteHovedytelser);
 
+            List<Record<Underytelse>> sammenlagteUnderytelser = combineUnderytelser(indekserteUnderytelser);
 
+            Double brutto = on(grupperteHovedytelser).map(Hovedytelse.bruttoUtbetalt).reduce(sumDouble);
+            Double trekk = on(grupperteHovedytelser).map(Hovedytelse.sammenlagtTrekkBeloep).reduce(sumDouble);
+            Double nettoUtbetalt = on(grupperteHovedytelser).map(Hovedytelse.nettoUtbetalt).reduce(sumDouble);
 
-            List<Record<Underytelse>> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(TO_TOTAL_OF_UNDERYTELSER);
-            sammenlagteUnderytelser = on(sammenlagteUnderytelser).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
+            DateTime startPeriode = getStartPeriode(grupperteHovedytelser);
+            DateTime sluttPeriode = getSluttPeriode(grupperteHovedytelser);
 
-            Double brutto = on(sammen).map(Hovedytelse.bruttoUtbetalt).reduce(sumDouble);
-            Double trekk = on(sammen).map(Hovedytelse.sammenlagtTrekkBeloep).reduce(sumDouble);
-            Double nettoUtbetalt = on(sammen).map(Hovedytelse.nettoUtbetalt).reduce(sumDouble);
-
-            DateTime startPeriode = on(sammen).collect(compareWith(first(Hovedytelse.ytelsesperiode).then(START))).get(0).get(Hovedytelse.ytelsesperiode).getStart();
-            DateTime sluttPeriode = on(sammen).collect(reverseOrder(compareWith(first(Hovedytelse.ytelsesperiode).then(END)))).get(0).get(Hovedytelse.ytelsesperiode).getEnd();
-
-            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).get(Hovedytelse.ytelse), sammenlagteUnderytelser, brutto, trekk, nettoUtbetalt, startPeriode, sluttPeriode));
+            hovedYtelseVMs.add(new HovedYtelseVM(grupperteHovedytelser.get(0).get(Hovedytelse.ytelse),
+                    sammenlagteUnderytelser,
+                    brutto,
+                    trekk,
+                    nettoUtbetalt,
+                    startPeriode,
+                    sluttPeriode));
         }
+
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;
     }
 
     public String getOppsummertPeriode() {
-        if (startDato.getMonthOfYear() == sluttDato.getMonthOfYear()
-                && startDato.getYear() == sluttDato.getYear()) {
+        if (isPeriodeWithinSameMonthAndYear()) {
             return startDato.toString("MMMM yyyy", Locale.getDefault());
         }
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
                 Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
     }
 
-
     public static final ReduceFunction<List<Record<?>>, List<Record<Underytelse>>> TO_TOTAL_OF_UNDERYTELSER = new ReduceFunction<List<Record<?>>, List<Record<Underytelse>>>() {
         @Override
         public List<Record<Underytelse>> reduce(List<Record<Underytelse>> accumulator, List<Record<?>> ytelser) {
-            if (ytelser.isEmpty()) {
-                return accumulator;
+            if (!ytelser.isEmpty()) {
+                Double sum = on(ytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
+                accumulator.add((Record<Underytelse>) ytelser.get(0).with(Underytelse.ytelseBeloep, sum));
             }
-            Double sum = on(ytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
-            Record<Underytelse> summertUnderytelse = (Record<Underytelse>) ytelser.get(0)
-                    .with(Underytelse.ytelseBeloep, sum);
-
-            accumulator.add(summertUnderytelse);
             return accumulator;
         }
 
@@ -101,4 +99,27 @@ public class OppsummeringVM implements Serializable {
             return new ArrayList<>();
         }
     };
+
+    protected boolean isPeriodeWithinSameMonthAndYear() {
+        return startDato.getMonthOfYear() == sluttDato.getMonthOfYear()
+                && startDato.getYear() == sluttDato.getYear();
+    }
+
+    protected static DateTime getSluttPeriode(List<Record<Hovedytelse>> grupperteHovedytelser) {
+        return on(grupperteHovedytelser).collect(reverseOrder(compareWith(first(Hovedytelse.ytelsesperiode).then(END)))).get(0).get(Hovedytelse.ytelsesperiode).getEnd();
+    }
+
+    protected static DateTime getStartPeriode(List<Record<Hovedytelse>> grupperteHovedytelser) {
+        return on(grupperteHovedytelser).collect(compareWith(first(Hovedytelse.ytelsesperiode).then(START))).get(0).get(Hovedytelse.ytelsesperiode).getStart();
+    }
+
+    protected static List<Record<Underytelse>> combineUnderytelser(Map<String, List<Record<?>>> indekserteUnderytelser) {
+        List<Record<Underytelse>> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(TO_TOTAL_OF_UNDERYTELSER);
+        sammenlagteUnderytelser = on(sammenlagteUnderytelser).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
+        return sammenlagteUnderytelser;
+    }
+
+    protected static Map<String, List<Record<?>>> groupUnderytelseByType(List<Record<Hovedytelse>> sammen) {
+        return on(sammen).flatmap(Hovedytelse.underytelseListe).reduce(indexBy(Underytelse.ytelsesType));
+    }
 }

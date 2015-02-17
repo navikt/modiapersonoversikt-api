@@ -27,7 +27,7 @@ import static org.joda.time.DateTime.now;
  */
 public class HovedytelseUtils {
 
-    public static Set<String> ytelseBeskrivelser(List<Record<Hovedytelse>> hovedytelser) {
+    public static Set<String> hovedytelseToYtelsebeskrivelse(List<Record<Hovedytelse>> hovedytelser) {
         return on(hovedytelser).map(ytelse).collectIn(new HashSet<String>());
     }
 

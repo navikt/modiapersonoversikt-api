@@ -46,21 +46,21 @@ public class TotalOppsummeringPanel extends Panel {
     }
 
     private MarkupContainer createTopplinje() {
-        return new WebMarkupContainer("oppsummeringsLinje")
-                .add(
-                        new Label("oppsummertPeriode"),
-                        new Label("utbetalt"),
-                        new Label("trekk"),
-                        new Label("brutto"),
-                        createSkrivUtLink()
-                );
+        MarkupContainer container = new WebMarkupContainer("oppsummeringsLinje");
+        container.add(new Label("oppsummertPeriode"),
+            new Label("utbetalt"),
+            new Label("trekk"),
+            new Label("brutto"),
+            createSkrivUtLink());
+        return container;
     }
 
     private Component createSkrivUtLink() {
         return  new AjaxLink<Void>("skriv-ut") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                target.appendJavaScript("Utbetalinger.skrivUt($('#" + TotalOppsummeringPanel.this.getMarkupId() + "'));");
+                String markupId = TotalOppsummeringPanel.this.getMarkupId();
+                target.appendJavaScript("Utbetalinger.skrivUt($('#" + markupId + "'));");
             }
         };
     }
@@ -69,27 +69,23 @@ public class TotalOppsummeringPanel extends Panel {
         ListView<HovedYtelseVM> listView = new ListView<HovedYtelseVM>("hovedytelser") {
             @Override
             protected void populateItem(final ListItem<HovedYtelseVM> item) {
-
                 HovedYtelseVM hovedYtelseVM = item.getModelObject();
-                item.add(
-                        new Label("hovedYtelsesBeskrivelse", hovedYtelseVM.getHovedYtelsesBeskrivelse()),
-                        getHovedYtelsesPeriodeLabel(hovedYtelseVM),
-                        new Label("bruttoUnderytelser", hovedYtelseVM.getBruttoUnderytelser()),
-                        new Label("trekkUnderytelser", hovedYtelseVM.getTrekkUnderytelser()),
-                        new Label("nettoUnderytelser", hovedYtelseVM.getNettoUnderytelser()),
-                        lagUnderBeskrivelseListView(item)
-                );
+
+                item.add(new Label("hovedYtelsesBeskrivelse", hovedYtelseVM.getHovedYtelsesBeskrivelse()),
+                    getHovedYtelsesPeriodeLabel(hovedYtelseVM),
+                    new Label("bruttoUnderytelser", hovedYtelseVM.getBruttoUnderytelser()),
+                    new Label("trekkUnderytelser", hovedYtelseVM.getTrekkUnderytelser()),
+                    new Label("nettoUnderytelser", hovedYtelseVM.getNettoUnderytelser()),
+                    lagUnderBeskrivelseListView(item));
             }
 
             private ListView<UnderYtelseVM> lagUnderBeskrivelseListView(final ListItem<HovedYtelseVM> item) {
                 return new ListView<UnderYtelseVM>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
                     @Override
                     protected void populateItem(ListItem<UnderYtelseVM> item) {
-                        item.add(
-                                new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
-                                new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
-                                new Label("trekkBelop", item.getModelObject().getTrekkBelop())
-                        );
+                        item.add(new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
+                            new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
+                            new Label("trekkBelop", item.getModelObject().getTrekkBelop()));
                     }
                 };
             }
