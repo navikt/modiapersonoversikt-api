@@ -32,24 +32,24 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
     }
 
     private Label createUtbetalingsDatoLabel(HovedytelseVM hovedytelseVM) {
-        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getHovedytelseDato(), false, "utbetalingdato.mangler"));
+        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getHovedytelseDato(), Datoformat.Date, "utbetalingdato.mangler"));
     }
 
     private Label createPeriodeLabel(HovedytelseVM hovedytelseVM) {
         IModel<String> periodeModel = getPeriodeModel(
-                getDatoModel(hovedytelseVM.getStartDato(), true, "startdato.mangler"),
-                getDatoModel(hovedytelseVM.getSluttDato(), true, "sluttdato.mangler"));
+                getDatoModel(hovedytelseVM.getStartDato(), Datoformat.KortDatoUtenLiteral, "startdato.mangler"),
+                getDatoModel(hovedytelseVM.getSluttDato(), Datoformat.KortDatoUtenLiteral, "sluttdato.mangler"));
         return new Label("periode", periodeModel);
     }
 
-    private IModel<String> getDatoModel(DateTime dato, boolean kortFormat, String resourceKey) {
+    private IModel<String> getDatoModel(DateTime dato, Datoformat datoformat, String resourceKey) {
         return dato != null ?
-                Model.of(formatDate(dato, kortFormat)) :
+                Model.of(formatDate(dato, datoformat)) :
                 new StringResourceModel(resourceKey, this, null);
     }
 
-    private String formatDate(DateTime dato, boolean kortFormat) {
-        if(kortFormat) {
+    private String formatDate(DateTime dato, Datoformat datoformat) {
+        if(datoformat == Datoformat.KortDatoUtenLiteral) {
             return kortUtenLiteral(dato);
         }
         return WidgetDateFormatter.date(dato);
@@ -62,6 +62,10 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
                 return startDatoModel.getObject()  + " - " + sluttDatoModel.getObject();
             }
         };
+    }
+
+    private enum Datoformat{
+        KortDatoUtenLiteral, Date
     }
 
 }
