@@ -47,7 +47,7 @@ var Tekstforslag = React.createClass({
     },
     sok: function (sokTekst, knagger) {
         this.setState({sokTekst: sokTekst, knagger: knagger});
-        sok.bind(this)(sokTekst, knagger);
+        sok.bind(this)(sokTekst.replace(/#/g, ""), knagger);
     },
     sokNavigasjon: function (event) {
         switch (event.keyCode) {
@@ -114,9 +114,9 @@ var Tekstforslag = React.createClass({
 });
 
 function hentEnonicTekster(fritekst, knagger) {
-    var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst;
+    var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
     if (knagger.length !== 0) {
-        url += '&tags=' + knagger;
+        url += '&tags=' + encodeURIComponent(knagger);
     }
     return $.get(url);
 }

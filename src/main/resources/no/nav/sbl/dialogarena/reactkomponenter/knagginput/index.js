@@ -17,16 +17,13 @@ var KnaggInput = React.createClass({
         var selectionStart = this.state.selectionStart;
         var selectionEnd = this.state.selectionEnd;
 
-        if (event.keyCode === 8 && selectionStart === 0 && selectionStart === selectionEnd) {//backspace
+        if (event.keyCode === 8 /* backspace */ && selectionStart === 0 && selectionStart === selectionEnd) {
             if (this.props.knagger.length === 0) {
                 return;
             }
-            var nyeKnagger = this.props.knagger;
+            var nyeKnagger = this.props.knagger.slice(0);
             nyeKnagger.pop();
-
             this.props.onChange(this.props.fritekst, nyeKnagger);
-            event.preventDefault();
-            event.stopPropagation();
         }
     },
     onKeyDownProxy: function (event) {
@@ -103,12 +100,10 @@ function ariaLabel(props) {
 }
 
 function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
-    while (fritekst.match(/^#(\S+)\s/)) {
-        fritekst = fritekst.replace(/^#(\S+)\s/, function (fullmatch, capturegroup) {
-            eksistendeKnagger.push(capturegroup);
-            return "";
-        });
-    }
+    fritekst = fritekst.replace(/\B#(\S+)\s/g, function (fullmatch, capturegroup) {
+        eksistendeKnagger.push(capturegroup);
+        return "";
+    });
 
     return {
         knagger: eksistendeKnagger,
