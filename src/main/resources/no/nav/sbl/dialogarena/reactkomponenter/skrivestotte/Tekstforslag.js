@@ -12,6 +12,7 @@ var Tekstforslag = React.createClass({
             tekster: [],
             valgtTekst: {innhold: {nb_NO: ''}},
             valgtLocale: Utils.Constants.LOCALE_DEFAULT,
+            knagger: [],
             sokTekst: '',
             fokusertElement: {},
             vis: false
@@ -21,7 +22,7 @@ var Tekstforslag = React.createClass({
         Utils.moveNodeToParent(this.props.reactContainer, document.body);
     },
     componentDidMount: function () {
-        hentEnonicTekster('').done(function (tekster) {
+        hentEnonicTekster('', []).done(function (tekster) {
             this.setState({
                 valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
                 tekster: tekster
@@ -42,9 +43,9 @@ var Tekstforslag = React.createClass({
     setValgtLocale: function (locale) {
         this.setState({valgtLocale: locale})
     },
-    sok: function (sokTekst) {
-        this.setState({sokTekst: sokTekst});
-        sok.bind(this)(sokTekst);
+    sok: function (sokTekst, knagger) {
+        this.setState({sokTekst: sokTekst, knagger: knagger});
+        sok.bind(this)(sokTekst, knagger);
     },
     sokNavigasjon: function (event) {
         switch (event.keyCode) {
@@ -100,7 +101,7 @@ var Tekstforslag = React.createClass({
             <div className="tekstforslagModal" tabIndex="-1" onKeyDown={this.generellNavigasjon} >
                 <div className="backdrop" onClick={this.skjul}></div>
                 <div className="tekstforslag">
-                    <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} sokTekst={this.state.sokTekst}/>
+                    <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} sokTekst={this.state.sokTekst} knagger={this.state.knagger} />
                     <Tekstvisning
                         tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
                         setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
@@ -110,12 +111,16 @@ var Tekstforslag = React.createClass({
     }
 });
 
-function hentEnonicTekster(fritekst) {
-    return $.get('/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst);
+function hentEnonicTekster(fritekst, knagger) {
+    var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + fritekst;
+    if (knagger.length !== 0) {
+        url += '&tags=' + knagger;
+    }
+    return $.get(url);
 }
 
-var sok = Utils.debounce(function (sokTekst) {
-    hentEnonicTekster(sokTekst).done(function (tekster) {
+var sok = Utils.debounce(function (sokTekst, knagger) {
+    hentEnonicTekster(sokTekst, knagger).done(function (tekster) {
         this.setState({
             valgtTekst: tekster[0] || {innhold: {nb_NO: ''}},
             tekster: tekster

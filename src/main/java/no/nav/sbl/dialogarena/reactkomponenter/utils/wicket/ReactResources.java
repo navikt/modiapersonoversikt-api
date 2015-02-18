@@ -9,8 +9,20 @@ public class ReactResources {
     public static final FrontendModule SKRIVESTOTTE = new FrontendModule.With()
             .scripts(
                     new JavaScriptResourceReference(ResourceReference.class, "build/nav-react.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/skrivestotte.js")
+                    new JavaScriptResourceReference(ResourceReference.class, "build/skrivestotte.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/knagginput.js")
             )
-            .less(new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"))
+            .less(
+                    new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/knagginput.less")
+            )
+            .done();
+
+    public static final FrontendModule TAGINPUT = new FrontendModule.With()
+            .scripts(
+                    new JavaScriptResourceReference(ResourceReference.class, "build/nav-react.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/knagginput.js")
+            )
+            .less(new PackageResourceReference(ResourceReference.class, "build/knagginput.less"))
             .done();
 }

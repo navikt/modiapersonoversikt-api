@@ -1,18 +1,22 @@
 /** @jsx React.DOM */
 var React = ModiaJS.React;
+var KnaggInput = require('./../knagginput');
 
 var Filter = React.createClass({
-    componentDidMount: function () {
-        this.refs.sok.getDOMNode().focus();
-    },
-    sok: function (event) {
-        this.props.sok(event.target.value);
-    },
     render: function () {
+        var props = $.extend({}, this.props, {
+            'fritekst': this.props.sokTekst,
+            'knagger': this.props.knagger,
+            'placeholder': 'Søk',
+            'onChange': this.props.sok,
+            'onKeyDown': this.props.sokNavigasjon,
+            'aria-label': 'Søk etter hjelpetekster',
+            'aria-controls': 'tekstListePanel',
+            'auto-focus': true
+        });
         return (
             <div className="filter-container">
-                <input type="text" placeholder="Søk" ref="sok" value={this.props.sokTekst} onChange={this.sok} onKeyDown={this.props.sokNavigasjon}
-                aria-label="Søk etter hjelpetekster" aria-controls="tekstListePanel"/>
+                <KnaggInput {...props} />
             </div>
         );
     }

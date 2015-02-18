@@ -11,7 +11,8 @@ var navReact = 'nav-react.js';
 var srcPath = './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/';
 var targetPath = './target/classes/no/nav/sbl/dialogarena/reactkomponenter/';
 var components = toAbsolutePath([
-    'skrivestotte'
+    'skrivestotte',
+    'knagginput'
 ]);
 components.push({
     path: srcPath + navReact,
