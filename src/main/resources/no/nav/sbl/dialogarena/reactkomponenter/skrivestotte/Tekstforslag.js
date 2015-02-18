@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 var React = ModiaJS.React;
+var Modal = ModiaJS.Components.Modal;
 
 var Utils = require('./Utils');
 
@@ -14,12 +15,8 @@ var Tekstforslag = React.createClass({
             valgtLocale: Utils.Constants.LOCALE_DEFAULT,
             knagger: [],
             sokTekst: '',
-            fokusertElement: {},
             vis: false
         };
-    },
-    componentWillMount: function () {
-        Utils.moveNodeToParent(this.props.reactContainer, document.body);
     },
     componentDidMount: function () {
         hentEnonicTekster('', []).done(function (tekster) {
@@ -28,16 +25,6 @@ var Tekstforslag = React.createClass({
                 tekster: tekster
             });
         }.bind(this));
-    },
-    vis: function () {
-        this.setState({fokusertElement: $(':focus')});
-        this.setState({vis: true});
-        $(document.body).addClass('modal-open');
-    },
-    skjul: function () {
-        this.state.fokusertElement.blur().focus();
-        this.setState({vis: false});
-        $(document.body).removeClass('modal-open');
     },
     setValgtTekst: function (tekst) {
         this.setState({valgtTekst: tekst})
@@ -53,7 +40,7 @@ var Tekstforslag = React.createClass({
         switch (event.keyCode) {
             case 38: /* pil opp */
                 event.preventDefault();
-                this.setValgtTekst(hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst));
+                    this.setValgtTekst(hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst));
                 break;
             case 40: /* pil ned */
                 event.preventDefault();
@@ -65,28 +52,6 @@ var Tekstforslag = React.createClass({
                 break;
         }
     },
-    generellNavigasjon: function (event) {
-        switch (event.keyCode) {
-            case 27: /* esc */
-                event.stopPropagation();
-                this.skjul();
-                break;
-            case 9: /* tab */
-                var domNode = $(this.getDOMNode());
-                var focusable = domNode.find(':focusable');
-                var index = focusable.index(domNode.find(':focus'));
-
-                if (event.shiftKey && index === 0) {
-                    event.preventDefault();
-                    focusable.eq(focusable.length - 1).focus();
-                } else if (!event.shiftKey && focusable.length - 1 === index) {
-                    event.preventDefault();
-                    focusable.eq(0).focus();
-                }
-
-                break;
-        }
-    },
     settInnTekst: function () {
         $('#' + this.props.tekstfeltId)
             .focus()
@@ -94,21 +59,22 @@ var Tekstforslag = React.createClass({
             .trigger('input');
         this.skjul();
     },
+    vis: function() {
+        this.setState({vis: true});
+    },
+    skjul: function(){
+        this.setState({vis: false});
+    },
     render: function () {
-        if (!this.state.vis) {
-            return null;
-        }
-
         return (
-            <div className="tekstforslagModal" tabIndex="-1" onKeyDown={this.generellNavigasjon} >
-                <div className="backdrop" onClick={this.skjul}></div>
+            <Modal isOpen={this.state.vis}>
                 <div className="tekstforslag">
                     <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} sokTekst={this.state.sokTekst} knagger={this.state.knagger} />
                     <Tekstvisning
                         tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
                         setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
                 </div>
-            </div>
+            </Modal>
         );
     }
 });
