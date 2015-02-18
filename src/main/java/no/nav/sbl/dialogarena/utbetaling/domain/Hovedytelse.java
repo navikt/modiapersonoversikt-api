@@ -12,6 +12,7 @@ public interface Hovedytelse {
     Key<String> id = new Key<>("ID");
 
     Key<DateTime> hovedytelsedato = new Key<>("POSTERINGS_DATO");
+    Key<DateTime> forfallsdato = new Key<>("FORFALLS_DATO");
     Key<Record<Aktoer>> utbetaltTil = new Key<>("UTBETALT_TIL");
     Key<Mottakertype> mottakertype = new Key<>("MOTTAKER_TYPE");
     Key<String> utbetalingsmelding = new Key<>("UTBETALING_MELDING");
