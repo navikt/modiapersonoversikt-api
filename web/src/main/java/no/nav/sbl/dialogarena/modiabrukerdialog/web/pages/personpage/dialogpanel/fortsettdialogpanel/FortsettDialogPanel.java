@@ -1,36 +1,33 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
@@ -38,27 +35,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
-import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
-public class FortsettDialogPanel extends Panel {
+public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
+    @Inject
+    protected BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
@@ -75,11 +67,12 @@ public class FortsettDialogPanel extends Panel {
     private final AjaxLink<Void> leggTilbakeKnapp;
 
     public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
-        super(id);
+        super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
         this.oppgaveId = oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
+        settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
 
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");
@@ -137,18 +130,16 @@ public class FortsettDialogPanel extends Panel {
         }
 
         svarContainer.setOutputMarkupId(true);
-        svarContainer.add(new FortsettDialogForm("fortsettdialogform", lagModelObjectMedKanalOgTemagruppe()), leggTilbakeKnapp);
+        svarContainer.add(new FortsettDialogForm("fortsettdialogform", grunnInfo, getModel()), leggTilbakeKnapp);
 
         leggTilbakePanel.setVisibilityAllowed(false);
 
         add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
     }
 
-    private HenvendelseVM lagModelObjectMedKanalOgTemagruppe() {
-        HenvendelseVM henvendelseVM = new HenvendelseVM();
+    private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {
         henvendelseVM.kanal = TEKST;
         henvendelseVM.temagruppe = Temagruppe.valueOf(sporsmal.temagruppe);
-        return henvendelseVM;
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)
@@ -164,77 +155,12 @@ public class FortsettDialogPanel extends Panel {
         private final FeedbackPanel feedbackPanel;
         private final AjaxButton sendKnapp;
 
-        public FortsettDialogForm(String id, HenvendelseVM henvendelseVM) {
-            super(id, new CompoundPropertyModel<>(henvendelseVM));
-
-            final RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
-            radioGroup.setRequired(true);
-            radioGroup.add(new ListView<Kanal>("kanalvalg", asList(Kanal.values())) {
-                @Override
-                protected void populateItem(ListItem<Kanal> item) {
-                    String kanalType = item.getModelObject().name();
-
-                    item.add(titleAttribute(getString(kanalType)));
-
-                    Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
-                    kanalKnapp.add(new AttributeAppender("aria-label", getString(kanalType)));
-
-                    Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
-
-                    WebMarkupContainer kanalknallLabel = new WebMarkupContainer("kanalknapp-label");
-                    kanalknallLabel.add(new AttributeAppender("for", kanalKnapp.getMarkupId()));
-
-                    Label kanalknallLabelTekst = new Label("kanalknapp-label-tekst", getString(kanalType));
-
-                    kanalknallLabel.add(kanalknallLabelTekst, kanalIkon);
-                    item.add(kanalKnapp, kanalknallLabel);
-                }
-            });
-            add(radioGroup);
-
-            final CheckBox brukerKanSvare = new CheckBox("brukerKanSvare");
-            brukerKanSvare.setOutputMarkupId(true).add(enabledIf(getModelObject().brukerKanSvareSkalEnables()));
-            add(brukerKanSvare);
-
-            final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new AbstractReadOnlyModel<String>() {
-                @Override
-                public String getObject() {
-                    String beskrivelse = "%s.beskrivelse";
-                    if (brukerKanSvare.getModelObject()) {
-                        return getString(format(beskrivelse, "SPORSMAL"));
-                    } else {
-                        return getString(format(beskrivelse, radioGroup.getModelObject()));
-                    }
-                }
-            });
-            kanalbeskrivelse.setOutputMarkupId(true);
-            add(kanalbeskrivelse);
-
-            brukerKanSvare.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-                @Override
-                protected void onUpdate(AjaxRequestTarget target) {
-                    target.add(kanalbeskrivelse);
-                }
-            });
-            radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
-                @Override
-                protected void onUpdate(AjaxRequestTarget target) {
-                    if (!getModelObject().brukerKanSvareSkalEnables().getObject()) {
-                        brukerKanSvare.getModel().setObject(false);
-                    }
-                    target.add(kanalbeskrivelse);
-                    target.add(brukerKanSvare);
-                }
-            });
+        public FortsettDialogForm(String id, final GrunnInfo grunnInfo, final IModel<HenvendelseVM> henvendelseVMModel) {
+            super(id, henvendelseVMModel);
+            final HenvendelseVM henvendelseVM = henvendelseVMModel.getObject();
 
             add(new Label("navIdent", getSubjectHandler().getUid()));
-
-            add(new EnhancedTextArea("tekstfelt", getModel(),
-                    new EnhancedTextAreaConfigurator()
-                            .withMaxCharCount(5000)
-                            .withMinTextAreaHeight(150)
-                            .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder")
-            ));
+            add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo.bruker.fnr, getModel()));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
             feedbackPanel.setOutputMarkupId(true);
@@ -242,8 +168,13 @@ public class FortsettDialogPanel extends Panel {
 
             sendKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
                 @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                    sendOgVisKvittering(FortsettDialogForm.this.getModelObject(), target);
+                protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                    if (henvendelseVM.brukerKanSvareSkalEnables().getObject() && henvendelseVM.brukerKanSvare && henvendelseVM.valgtSak == null) {
+                        error(getString("valgtSak.Required"));
+                        onError(target, form);
+                    } else {
+                        sendOgVisKvittering(henvendelseVM, target);
+                    }
                 }
 
                 @Override
@@ -254,7 +185,7 @@ public class FortsettDialogPanel extends Panel {
             sendKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
                 @Override
                 public Object getObject() {
-                    return format(getString("fortsettdialogform.knapp.send"), grunnInfo.fornavn);
+                    return format(getString("fortsettdialogform.knapp.send"), grunnInfo.bruker.fornavn);
                 }
             }));
             add(sendKnapp);
@@ -264,7 +195,7 @@ public class FortsettDialogPanel extends Panel {
             try {
                 sendHenvendelse(henvendelseVM);
                 send(getPage(), BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-                kvittering.visKvittering(target, getString(henvendelseVM.kanal.getKvitteringKey("fortsettdialogpanel")),
+                kvittering.visKvittering(target, getString(henvendelseVM.getKvitteringsTekstKeyBasertPaaBrukerKanSvare("fortsettdialogpanel")),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error(getString("fortsettdialogform.feilmelding.oppgaveferdigstilt"));
@@ -275,19 +206,28 @@ public class FortsettDialogPanel extends Panel {
         }
 
         private void sendHenvendelse(HenvendelseVM henvendelseVM) throws OppgaveErFerdigstilt {
+            Meldingstype meldingstype = meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare);
             Melding melding = new Melding()
-                    .withFnr(grunnInfo.fnr)
+                    .withFnr(grunnInfo.bruker.fnr)
                     .withNavIdent(getSubjectHandler().getUid())
                     .withTraadId(sporsmal.id)
-                    .withTemagruppe(henvendelseVM.temagruppe.name())
+                    .withTemagruppe(sporsmal.temagruppe)
                     .withKanal(henvendelseVM.kanal.name())
-                    .withType(meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare))
+                    .withType(meldingstype)
                     .withFritekst(henvendelseVM.getFritekst())
                     .withKontorsperretEnhet(sporsmal.kontorsperretEnhet)
                     .withEksternAktor(getSubjectHandler().getUid())
                     .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
-            henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
+            melding = henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
+            if (meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE)) {
+                behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
+                        melding.traadId,
+                        henvendelseVM.valgtSak.saksId,
+                        henvendelseVM.valgtSak.temaKode,
+                        saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()
+                );
+            }
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
 
@@ -309,11 +249,6 @@ public class FortsettDialogPanel extends Panel {
             throw new RuntimeException("Fant ikke passende meldingstype");
         }
 
-        @Override
-        public void renderHead(IHeaderResponse response) {
-            super.renderHead(response);
-            response.render(OnDomReadyHeaderItem.forScript("$('#" + get("tekstfelt:text").getMarkupId() + "').focus();"));
-        }
     }
 
 }

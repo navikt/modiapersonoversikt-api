@@ -16,7 +16,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.AttributeModifier;
@@ -74,7 +74,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
         setOutputMarkupPlaceholderTag(true);
-
         settOppModellMedDefaultVerdier();
 
         final PropertyModel<Modus> modusModel = new PropertyModel<>(getModel(), "modus");
@@ -84,7 +83,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         form.add(lagModusVelger(modusModel));
 
-        Component epostVarsel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.fnr);
+        Component epostVarsel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.bruker.fnr);
         epostVarsel.setOutputMarkupPlaceholderTag(true);
         modusKomponenter.add(epostVarsel);
         form.add(epostVarsel);
@@ -93,7 +92,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         overskrift.setOutputMarkupId(true);
         modusKomponenter.add(overskrift);
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.fnr, getModel());
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel());
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
         modusKomponenter.add(journalforingsPanel);
         form.add(journalforingsPanel);
@@ -124,13 +123,14 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         HashMap<String, Object> tekstforslagProps = new HashMap<>();
         tekstforslagProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
-        final ReactComponentPanel stottetekster = new ReactComponentPanel("reacttest", "Tekstforslag", tekstforslagProps);
+        tekstforslagProps.put("autofullfor", grunnInfo);
+        final ReactComponentPanel stottetekster = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", tekstforslagProps);
         form.add(stottetekster);
 
-        form.add(new AjaxLink("stotteteksterToggler") {
+        form.add(new AjaxLink("skrivestotteToggler") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                stottetekster.callFunction(target, "toggle");
+                stottetekster.callFunction(target, "vis");
             }
         });
 
@@ -188,7 +188,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         submitKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
             @Override
             public Object getObject() {
-                return format(getString("nydialogform.knapp.send"), grunnInfo.fornavn);
+                return format(getString("nydialogform.knapp.send"), grunnInfo.bruker.fornavn);
             }
         }));
         return submitKnapp;
@@ -279,13 +279,12 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         switch (getModelObject().modus) {
             case REFERAT:
                 sendReferat();
-                kvittering.visKvittering(target, getString(getModelObject().kanal.getKvitteringKey("nydialogpanel")), form);
                 break;
             case SPORSMAL:
                 sendSporsmal();
-                kvittering.visKvittering(target, getString("nydialogpanel.sporsmal.kvittering.bekreftelse"), form);
                 break;
         }
+        kvittering.visKvittering(target, getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel")), form);
         send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
     }
 
@@ -316,7 +315,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private Melding felles() {
         return new Melding()
-                .withFnr(grunnInfo.fnr)
+                .withFnr(grunnInfo.bruker.fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withFritekst(getModelObject().getFritekst())
                 .withEksternAktor(getSubjectHandler().getUid())

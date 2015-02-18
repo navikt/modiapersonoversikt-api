@@ -21,30 +21,29 @@
         </section>
         <section wicket:id="svarcontainer">
             <form wicket:id="fortsettdialogform">
-                <h2 class="typeoverskrift fortsettdialogpaneloverskrift">
-                    <wicket:message key="fortsettdialogpanel.overskrift.svar"/>
-                </h2>
                 <p class="navident" wicket:id="navIdent">NavIdent her</p>
-
-                <h2 class="medium kanaloverskrift" wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</h2>
-                <section wicket:id="tekstfelt" class="tekstfelt"></section>
-                <div class="kanalvelger clearfix">
-                    <div wicket:id="kanal">
-                        <div wicket:id="kanalvalg" class="kanalvalg">
-                            <input wicket:id="kanalknapp" type="radio"/>
-                            <label wicket:id="kanalknapp-label">
-                                <span wicket:id="kanalikon"></span>
-                                <span wicket:id="kanalknapp-label-tekst" class="hidden"></span>
-                            </label>
+                <wicket:container wicket:id="fortsettdialogformelementer">
+                    <div wicket:id="journalforing" class="journalforingSporsmal"></div>
+                    <h2 class="medium kanaloverskrift" wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</h2>
+                    <section wicket:id="tekstfelt" class="tekstfelt"></section>
+                    <div class="kanalvelger clearfix">
+                        <div wicket:id="kanal">
+                            <div wicket:id="kanalvalg" class="kanalvalg">
+                                <input wicket:id="kanalknapp" type="radio"/>
+                                <label wicket:id="kanalknapp-label">
+                                    <span wicket:id="kanalikon"></span>
+                                    <span wicket:id="kanalknapp-label-tekst" class="hidden"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <input type="checkbox" wicket:id="brukerKanSvare"/>
-                    <label wicket:for="brukerKanSvare">
-                        <wicket:message key="fortsettdialogform.brukerKanSvare"/>
-                    </label>
-                </div>
+                    <div>
+                        <input type="checkbox" wicket:id="brukerKanSvare"/>
+                        <label wicket:for="brukerKanSvare">
+                            <wicket:message key="fortsettdialogform.brukerKanSvare"/>
+                        </label>
+                    </div>
+                </wicket:container>
                 <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
                 <input type="submit" wicket:id="send" class="send knapp-hoved lang-tekst"/>
             </form>

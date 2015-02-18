@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.journalforing;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -73,8 +73,8 @@ public class JournalforingsPanelTest extends WicketPageTest {
     public void viserValgtSakOgSkjulerVelgSakPaneletDersomManVelgerSak() {
         wicket.click().link(withId("valgtSakLenke"))
                 .inForm(withId("plukkSakForm"))
-                    .select("valgtSak", 0)
-                    .submitWithAjaxButton(withId("velgSak"))
+                .select("valgtSak", 0)
+                .submitWithAjaxButton(withId("velgSak"))
                 .should().containComponent(thatIsInvisible().and(withId("ingenSakValgt")))
                 .should().containComponent(thatIsVisible().and(withId("sakValgt")))
                 .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)));

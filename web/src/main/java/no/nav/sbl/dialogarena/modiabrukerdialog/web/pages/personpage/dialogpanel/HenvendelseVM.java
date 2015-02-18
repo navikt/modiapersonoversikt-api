@@ -7,7 +7,12 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
+import static java.lang.String.format;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus.SPORSMAL;
+
 public class HenvendelseVM extends EnhancedTextAreaModel {
+    public static final String SPORSMAL_KVITTERING_BEKREFTELSE = ".SPORSMAL.kvittering.bekreftelse";
+
     public Kanal kanal;
     public Temagruppe temagruppe;
     public Modus modus;
@@ -43,4 +48,30 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
     public String getValgtSaksDatoFormatert() {
         return valgtSak.opprettetDato == null ? "" : WidgetDateFormatter.date(valgtSak.opprettetDato);
     }
+
+    public String getOverskriftTekstKey(Kanal kanal) {
+        String beskrivelse = "%s.beskrivelse";
+        if (brukerKanSvare) {
+            return format(beskrivelse, "SPORSMAL");
+        } else {
+            return format(beskrivelse, kanal);
+        }
+    }
+
+    public String getKvitteringsTekstKeyBasertPaaBrukerKanSvare(String prefix) {
+        if (brukerKanSvare) {
+            return prefix + SPORSMAL_KVITTERING_BEKREFTELSE;
+        } else {
+            return kanal.getKvitteringKey(prefix);
+        }
+    }
+
+    public String getKvitteringsTekstKeyBasertPaaModus(String prefix) {
+        if (modus.equals(SPORSMAL)) {
+            return prefix + SPORSMAL_KVITTERING_BEKREFTELSE;
+        } else {
+            return kanal.getKvitteringKey(prefix);
+        }
+    }
+
 }
