@@ -70,10 +70,9 @@ var KnaggInput = React.createClass({
             );
         }.bind(this));
 
-        var classList = "knagger clearfloat" + (this.state.focus ? " focus" : "");
         return (
             <div className="knagg-input">
-                <div className={classList}>
+                <div className={"knagger clearfloat" + (this.state.focus ? " focus" : "")}>
                     {knagger}
                     <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst}
                         onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
