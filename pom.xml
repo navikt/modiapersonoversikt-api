@@ -11,7 +11,7 @@
     <name>Dialogarena - Reactkomponenter</name>
     <description>Fellesbibliotek for React-komponenter</description>
     <artifactId>reactkomponenter</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -181,6 +181,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/reactkomponenter.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/sbl/repos/reactkomponenter/</url>
-        <tag>reactkomponenter-0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
