@@ -17,6 +17,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 
 public class LDAPServiceImpl implements LDAPService {
 
+    @SuppressWarnings("PMD")
     private static Hashtable<String, String> env = new Hashtable<>();
 
     static {
