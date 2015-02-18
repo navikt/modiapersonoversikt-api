@@ -30,6 +30,26 @@ public class TransformersTest {
     }
 
     @Test
+
+    public void hovedytelsesDatoErUtbetalingsdatoNaarUtbetalingsdatoEksisterer() {
+        WSUtbetaling wsUtbetaling = new WSUtbetaling()
+                .withUtbetalingsdato(new DateTime(2010, 1, 1, 1, 1))
+                .withPosteringsdato(new DateTime(2013, 2, 2, 2, 2));
+
+        DateTime hovedytelseDato = determineHovedytelseDato(wsUtbetaling);
+        assertThat(hovedytelseDato, is(new DateTime(2010, 1, 1, 1, 1)));
+    }
+    
+    @Test
+    public void hovedytelsesDatoErPosteringsdatoNaarUtbetalingsdatoIkkeEksisterer() {
+        WSUtbetaling wsUtbetaling = new WSUtbetaling()
+                .withPosteringsdato(new DateTime(2013, 2, 2, 2, 2));
+
+        DateTime hovedytelseDato = determineHovedytelseDato(wsUtbetaling);
+        assertThat(hovedytelseDato, is(new DateTime(2013, 2, 2, 2, 2)));
+    }
+
+    @Test
     public void underytelseTransformererKorrektFraWSObjekt() {
         WSYtelseskomponent wsYtelseskomponent = new WSYtelseskomponent()
                 .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("KompType"))
@@ -276,6 +296,7 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.utbetaltTilKonto), is(new Record<Konto>().with(Konto.kontonummer, "112233112233").with(Konto.kontotype, "Bankkonto")));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmetode), is("Overføring via bank"));
         assertThat(ytelse.get(Hovedytelse.utbetalingsstatus), is("Utbetalt"));
+        assertThat(ytelse.get(Hovedytelse.forfallsdato), is(new DateTime(2000, 1, 1, 1, 1)));
         assertThat(ytelse.get(Hovedytelse.id), is(notNullValue()));
         assertThat(ytelse.get(Hovedytelse.ytelse), is("Dagpenger"));
         assertThat(ytelse.get(Hovedytelse.ytelsesperiode), is(new Interval(new DateTime(2000, 1, 1, 1, 2), new DateTime(2001, 1, 1, 1, 1))));

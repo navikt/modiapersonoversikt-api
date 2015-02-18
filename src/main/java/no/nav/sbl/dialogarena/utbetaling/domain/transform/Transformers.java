@@ -68,6 +68,7 @@ public class Transformers {
                 Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
                         .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(hovedytelsedato, determineHovedytelseDato(wsUtbetaling))
+                        .with(forfallsdato, wsUtbetaling.getForfallsdato())
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
                         .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
@@ -100,19 +101,14 @@ public class Transformers {
     /**
      * HovedytelseDato baserer seg på følgende prioritert rekkefølge:
      * 1. Hvis utbetalingsdato finnes så brukes denne
-     * 2. Hvis forfallsdato finnes så brukes denne
-     * 3. Hvis ingen av de overnevnte finnes returneres posteringsdato.
+     * 2. Hvis ikke brukes posteringsdatoen (som vises sammen med forfallsdato for å indikere når utbetalingen vil skje)
      *
      * @param wsUtbetaling
      * @return
      */
-    private static DateTime determineHovedytelseDato(WSUtbetaling wsUtbetaling) {
+    protected static DateTime determineHovedytelseDato(WSUtbetaling wsUtbetaling) {
         if (wsUtbetaling.getUtbetalingsdato() != null) {
             return wsUtbetaling.getUtbetalingsdato();
-        }
-
-        if (wsUtbetaling.getForfallsdato() != null) {
-            return wsUtbetaling.getForfallsdato();
         }
 
         return wsUtbetaling.getPosteringsdato();
