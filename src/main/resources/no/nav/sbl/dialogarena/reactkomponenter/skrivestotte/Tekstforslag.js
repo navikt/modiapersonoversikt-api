@@ -32,10 +32,12 @@ var Tekstforslag = React.createClass({
     vis: function () {
         this.setState({fokusertElement: $(':focus')});
         this.setState({vis: true});
+        $(document.body).addClass('modal-open');
     },
     skjul: function () {
         this.state.fokusertElement.blur().focus();
         this.setState({vis: false});
+        $(document.body).removeClass('modal-open');
     },
     setValgtTekst: function (tekst) {
         this.setState({valgtTekst: tekst})
