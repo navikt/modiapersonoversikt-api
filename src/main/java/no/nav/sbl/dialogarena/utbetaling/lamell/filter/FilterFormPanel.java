@@ -117,6 +117,36 @@ public class FilterFormPanel extends Panel {
                 .setOutputMarkupId(true);
     }
 
+    private AjaxCheckBox createMottakerButton(final String id, final Mottakertype mottaker) {
+        return new AjaxCheckBox(id, new Model<>(filterParametere.viseMottaker(mottaker))) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                filterParametere.toggleMottaker(mottaker);
+                sendFilterEndretEvent();
+            }
+        };
+    }
+
+    private DateRangePicker createDateRangePicker() {
+        LocalDate minDato = now().minusYears(AAR_TILBAKE).withDayOfYear(1);
+        LocalDate maksDato = now();
+
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
+
+        DatePickerConfigurator datePickerConfigurator = datePickerConfigurator()
+                .withMinDate(formatter.print(minDato))
+                .withMaxDate("0d")
+                .withYearRange("-" + AAR_TILBAKE + "y:c")
+                .withParameter("showOn", "button")
+                .build();
+
+        DateRangeModel dateRangeModel = new DateRangeModel(
+                new PropertyModel<LocalDate>(filterParametere, "startDato"),
+                new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
+
+        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
+    }
+
     private AjaxButton createSokKnapp() {
         AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.sok", this, null)) {
             @Override
@@ -144,42 +174,5 @@ public class FilterFormPanel extends Panel {
     @RunOnEvents(HOVEDYTELSER_ENDRET)
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
         target.add(ytelsesContainer);
-    }
-
-    protected DateRangePicker createDateRangePicker() {
-        LocalDate minDato = now().minusYears(AAR_TILBAKE).withDayOfYear(1);
-        LocalDate maksDato = now();
-
-        DatePickerConfigurator datePickerConfigurator = createDatePickerConfigurator(minDato);
-        DateRangeModel dateRangeModel = createDateRangeModel();
-
-        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
-    }
-
-    private DateRangeModel createDateRangeModel() {
-        return new DateRangeModel(
-                new PropertyModel<LocalDate>(filterParametere, "startDato"),
-                new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
-    }
-
-    private AjaxCheckBox createMottakerButton(final String id, final Mottakertype mottaker) {
-        return new AjaxCheckBox(id, new Model<>(filterParametere.viseMottaker(mottaker))) {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                filterParametere.toggleMottaker(mottaker);
-                sendFilterEndretEvent();
-            }
-        };
-    }
-
-    protected DatePickerConfigurator createDatePickerConfigurator(LocalDate minDato) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
-
-        return datePickerConfigurator()
-                .withMinDate(formatter.print(minDato))
-                .withMaxDate("0d")
-                .withYearRange("-" + AAR_TILBAKE + "y:c")
-                .withParameter("showOn", "button")
-                .build();
     }
 }
