@@ -4,7 +4,8 @@ var KnaggInput = React.createClass({
     getInitialState: function () {
         return {
             selectionStart: -1,
-            selectionEnd: -1
+            selectionEnd: -1,
+            focus: false
         }
     },
     componentDidMount: function () {
@@ -39,23 +40,69 @@ var KnaggInput = React.createClass({
         var data = finnKnaggerOgFritekst(event.target.value, this.props.knagger);
         this.props.onChange(data.fritekst, data.knagger);
     },
+    fjernKnagg: function (index) {
+        var nyeKnagger = this.props.knagger.slice(0);
+        nyeKnagger.splice(index, 1);
+
+        this.props.onChange(this.props.fritekst, nyeKnagger);
+        this.refs.search.getDOMNode().focus();
+    },
+    focusHighlighting: function (event) {
+        if (event.type === 'focus') {
+            this.setState({focus: true});
+        } else {
+            this.setState({focus: false});
+        }
+    },
     render: function () {
-        var knagger = this.props.knagger.map(lagHTMLKnagger);
+        var knagger = this.props.knagger.map(function (knagg, index) {
+            var fjernKnagg = function (callback) {
+                return function () {
+                    callback(index);
+                }
+            };
 
-        var arialabel = this.props.value || this.props['aria-label'];
+            return (
+                <span className="knagg">
+                    {knagg}
+                    <button aria-label={'Fjern knagg: ' + knagg} onClick={fjernKnagg(this.fjernKnagg)}>X</button>
+                </span>
+            );
+        }.bind(this));
 
+        var classList = "knagger clearfloat" + (this.state.focus ? " focus" : "");
         return (
             <div className="knagg-input">
-                <div className="knagger clearfloat">
+                <div className={classList}>
                     {knagger}
                     <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst}
                         onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
-                        aria-label={arialabel} aria-controls={this.props['aria-controls']} />
+                        onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
+                        aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']} />
                 </div>
             </div>
         );
     }
 });
+
+function ariaLabel(props) {
+    var knagger = props.knagger;
+    var fritekst = props.fritekst;
+
+    if (knagger.length === 0 && fritekst.length === 0) {
+        return props['aria-label'];
+    }
+
+    var label = [];
+    if (knagger.length > 0) {
+        label.push("Knagger: " + knagger.join(" "));
+    }
+    if (fritekst.length > 0) {
+        label.push("Fritekst: " + fritekst);
+    }
+    return label.join(" ");
+}
+
 function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
     while (fritekst.match(/^#(\S+)\s/)) {
         fritekst = fritekst.replace(/^#(\S+)\s/, function (fullmatch, capturegroup) {
@@ -69,16 +116,6 @@ function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
         fritekst: fritekst
     }
 }
-
-function lagHTMLKnagger(knagg) {
-    return (
-        <span className="knagg">
-            {knagg}
-            <button>X</button>
-        </span>
-    );
-}
-
 
 //Trenger begge. Første for å starte komponenten fra ReactComponetPanel.java, og andre for å bruke require
 window.ModiaJS.Components.KnaggInput = KnaggInput;

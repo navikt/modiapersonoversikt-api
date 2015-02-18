@@ -10,8 +10,28 @@
     white-space: nowrap;
     overflow: hidden;
 
+    &.focus {
+      border: 1px solid rgba(82, 168, 236, 0.8);
+    }
+
+    >span {
+      margin-left: 0.3rem;
+      padding: 0.3rem;
+      padding-left: 0.5rem;
+      background-color: #226aa5;
+      color: #f5f5f5;
+      border-radius: 0.5rem;
+    }
     span {
       display: inline-block;
+      font-weight: bold;
+    }
+    button {
+      background: none;
+      border: none;
+      color: #f5f5f5;
+      position: relative;
+      left: 5px;
     }
   }
 }
