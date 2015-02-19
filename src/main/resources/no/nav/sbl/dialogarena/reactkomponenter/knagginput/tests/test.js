@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
-window.ModiaJS = {};
-window.ModiaJS.Components = {};
+require('./../../testConfig.js');
 var expect = require('chai').expect;
 var React = window.ModiaJS.React = require('react/addons');
 

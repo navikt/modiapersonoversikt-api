@@ -23,7 +23,12 @@
     "karma-mocha": "^0.1.10",
     "react-tools": "^0.12.2",
     "chai": "^2.0.0",
-    "karma-chrome-launcher": "^0.1.7"
+    "karma-chrome-launcher": "^0.1.7",
+    "gulp-karma": "0.0.4",
+    "karma-coverage": "^0.2.7",
+    "karma-junit-reporter": "^0.2.2",
+    "karma-phantomjs-launcher": "git+http://stash.devillo.no/scm/npmm/karma-phantomjs-launcher.git#fe9bd9c2d7ce16622e6bf373318ad0fa5894c63c",
+    "karma-remote-reporter": "^0.2.0"
   },
   "dependencies": {
     "react": "^0.12.0"

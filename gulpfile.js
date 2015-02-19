@@ -4,6 +4,7 @@ var source = require('vinyl-source-stream'); // Used to stream bundle for furthe
 var browserify = require('browserify');
 var watchify = require('watchify');
 var reactify = require('reactify');
+var karma = require('gulp-karma');
 var notify = require('gulp-notify');
 var gutil = require('gulp-util');
 
@@ -74,6 +75,26 @@ var lessTask = function (options) {
     }
 };
 
+function test() {
+    var files = components
+        .filter(function(component){
+            return typeof component.componentName !== 'undefined';
+        })
+        .map(function(component){
+       return srcPath + component.componentName + '/tests/**/*.js'
+    });
+    console.log('files', files);
+    return gulp
+        .src(files)
+        .pipe(karma({
+            configFile: './karma.conf.js',
+            action: 'start'
+        }))
+        .on('error', function(err){
+            throw err;
+        });
+}
+
 gulp.task('dev', function () {
     components.forEach(function (component) {
         browserifyTask({
@@ -106,14 +127,20 @@ gulp.task('default', function () {
         src: srcPath + '**/*.less',
         dest: targetPath + 'build'
     });
+
+    test();
+});
+
+gulp.task('test', function() {
+    test();
 });
 
 function toAbsolutePath(componentNames) {
     return componentNames.map(function (componentName) {
-        console.log('Component name: ', componentName + '.js');
         return {
             path: srcPath + componentName + '/index.js',
-            name: componentName + '.js'
+            name: componentName + '.js',
+            componentName: componentName
         };
     });
 }

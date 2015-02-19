@@ -1,33 +1,56 @@
-module.exports = function(config){
+module.exports = function (config) {
     config.set({
-        basePath: './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter',
-
         frameworks: ['mocha', 'browserify'],
 
         files: [
-            '**/tests/*.js'
+            './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/tests/*.js'
         ],
 
         exclude: [],
 
         preprocessors: {
-            '**/tests/*.js': ['browserify']
+            '**/tests/*.js': ['browserify', 'coverage']
         },
+
+        reporters: ['progress', 'junit', 'remote', 'coverage'],
+
+        colors: true,
+
+        logLevel: config.LOG_INFO,
+
+        browsers: ['PhantomJS'],
+
+        singleRun: true,
+        captureTimeout: 60000,
+
+        plugins: [
+            'karma-phantomjs-launcher',
+            'karma-chrome-launcher',
+            'karma-junit-reporter',
+            'karma-remote-reporter',
+            'karma-bro',
+            'karma-coverage',
+            'karma-mocha'
+        ],
 
         browserify: {
             debug: true,
             transform: ['reactify']
         },
 
-        reporters: ['progress'],
+        coverageReporter: {
+            type: 'cobertura',
+            dir: './target/karma-coverage'
+        },
+        remoteReporter: {
+            host: 'localhost',
+            port: '9876'
 
-        colors: true,
-
-        logLevel: config.LOG_INFO,
-
-        browsers: ['Chrome'],
-
-        singleRun: true
+        },
+        junitReporter: {
+            outputFile: './target/surefire-reports/TEST-karma.xml',
+            suite: ''
+        }
     });
 
 };
