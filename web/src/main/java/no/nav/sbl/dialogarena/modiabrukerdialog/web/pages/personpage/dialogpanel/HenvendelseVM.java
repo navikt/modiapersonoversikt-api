@@ -6,18 +6,20 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.joda.time.DateTime;
 
 import static java.lang.String.format;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus.SPORSMAL;
 
 public class HenvendelseVM extends EnhancedTextAreaModel {
+
     public static final String SPORSMAL_KVITTERING_BEKREFTELSE = ".SPORSMAL.kvittering.bekreftelse";
 
     public Kanal kanal;
     public Temagruppe temagruppe;
     public Modus modus;
     public Sak valgtSak;
-    public boolean brukerKanSvare = false;
+    public boolean brukerKanSvare = false, traadJournalfort = false;
 
     public String getFritekst() {
         return text;
@@ -72,6 +74,19 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
         } else {
             return kanal.getKvitteringKey(prefix);
         }
+    }
+
+    public void setTraadJournalfort(DateTime journalfortDato) {
+        traadJournalfort = journalfortDato != null;
+    }
+
+    public AbstractReadOnlyModel<Boolean> traadJournalfort() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return traadJournalfort;
+            }
+        };
     }
 
 }

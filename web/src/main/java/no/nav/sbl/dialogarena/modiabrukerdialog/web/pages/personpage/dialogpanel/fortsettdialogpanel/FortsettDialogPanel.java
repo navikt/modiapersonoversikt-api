@@ -140,6 +140,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {
         henvendelseVM.kanal = TEKST;
         henvendelseVM.temagruppe = Temagruppe.valueOf(sporsmal.temagruppe);
+        henvendelseVM.setTraadJournalfort(sporsmal.journalfortDato);
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)
@@ -155,12 +156,13 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         private final FeedbackPanel feedbackPanel;
         private final AjaxButton sendKnapp;
 
-        public FortsettDialogForm(String id, final GrunnInfo grunnInfo, final IModel<HenvendelseVM> henvendelseVMModel) {
-            super(id, henvendelseVMModel);
-            final HenvendelseVM henvendelseVM = henvendelseVMModel.getObject();
+        public FortsettDialogForm(String id, final GrunnInfo grunnInfo, final IModel<HenvendelseVM> model) {
+            super(id, model);
 
+            final IModel<HenvendelseVM> henvendelseVM = getModel();
+            
             add(new Label("navIdent", getSubjectHandler().getUid()));
-            add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo.bruker.fnr, getModel()));
+            add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo.bruker.fnr, henvendelseVM));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
             feedbackPanel.setOutputMarkupId(true);
@@ -169,11 +171,14 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             sendKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    if (henvendelseVM.brukerKanSvareSkalEnables().getObject() && henvendelseVM.brukerKanSvare && henvendelseVM.valgtSak == null) {
+                    if (henvendelseVM.getObject().brukerKanSvareSkalEnables().getObject()
+                            && henvendelseVM.getObject().brukerKanSvare
+                            && henvendelseVM.getObject().valgtSak == null
+                            && !henvendelseVM.getObject().traadJournalfort) {
                         error(getString("valgtSak.Required"));
                         onError(target, form);
                     } else {
-                        sendOgVisKvittering(henvendelseVM, target);
+                        sendOgVisKvittering(henvendelseVM.getObject(), target);
                     }
                 }
 
@@ -220,7 +225,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
             melding = henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
-            if (meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE)) {
+            if (meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
                 behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
                         melding.traadId,
                         henvendelseVM.valgtSak.saksId,

@@ -14,7 +14,9 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.Radio;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -24,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
+import static no.nav.modig.wicket.model.ModelUtils.both;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
 public class FortsettDialogFormElementer extends WebMarkupContainer {
@@ -68,7 +70,9 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         add(kanalRadioGroup);
 
         final CheckBox brukerKanSvare = new CheckBox("brukerKanSvare");
-        brukerKanSvare.setOutputMarkupId(true).add(enabledIf(model.getObject().brukerKanSvareSkalEnables()));
+        brukerKanSvare
+                .setOutputMarkupId(true)
+                .add(enabledIf(model.getObject().brukerKanSvareSkalEnables()));
         add(brukerKanSvare);
 
         final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new AbstractReadOnlyModel<String>() {
@@ -81,7 +85,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         add(kanalbeskrivelse);
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", fnr, model);
-        journalforingsPanel.add(visibleIf(brukerKanSvare.getModel()));
+        journalforingsPanel.add(visibleIf(both(brukerKanSvare.getModel()).and(not(model.getObject().traadJournalfort()))));
         add(journalforingsPanel);
 
         avhengerAvKanlOgDelMedBrukerValg.add(kanalRadioGroup);
