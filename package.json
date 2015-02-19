@@ -1,9 +1,12 @@
 {
-  "name": "react-app-boilerplate",
-  "version": "2.2.2",
-  "description": "React application boilerplate",
-  "author": "Christian Alfoni",
-  "license": "ISC",
+  "name": "react-komponenter",
+  "version": "0.0.1",
+  "description": "React komponenter",
+  "author": "NAV",
+  "license": "MIT",
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start karma.conf.js"
+  },
   "devDependencies": {
     "browserify": "^6.2.0",
     "gulp": "^3.8.9",
@@ -13,7 +16,14 @@
     "vinyl-source-stream": "^0.1.1",
     "watchify": "^2.1.1",
     "gulp-rename": "^1.2.0",
-    "glob": "^4.3.5"
+    "glob": "^4.3.5",
+    "karma": "^0.12.31",
+    "karma-bro": "^0.11.1",
+    "mocha": "^2.1.0",
+    "karma-mocha": "^0.1.10",
+    "react-tools": "^0.12.2",
+    "chai": "^2.0.0",
+    "karma-chrome-launcher": "^0.1.7"
   },
   "dependencies": {
     "react": "^0.12.0"

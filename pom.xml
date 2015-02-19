@@ -121,26 +121,6 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.0-alpha-2</version>
-
-                <executions>
-                    <execution>
-                        <id>Les nodepath</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>read-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <files>
-                                <file>nodepath.properties</file>
-                            </files>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.3.2</version>
 
@@ -152,7 +132,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <executable>${npmpath}</executable>
+                            <executable>npm</executable>
                             <arguments>
                                 <argument>
                                     install
@@ -167,7 +147,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <executable>${nodepath}</executable>
+                            <executable>node</executable>
                             <arguments>
                                 <argument>./node_modules/gulp/bin/gulp</argument>
                             </arguments>
