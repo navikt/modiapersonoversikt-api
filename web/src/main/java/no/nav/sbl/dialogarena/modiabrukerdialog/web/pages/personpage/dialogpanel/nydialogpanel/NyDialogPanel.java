@@ -88,17 +88,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         modusKomponenter.add(epostVarsel);
         form.add(epostVarsel);
 
-        Label overskrift = new Label("overskrift", new StringResourceModel("${modus}.overskrift", getModel()));
-        overskrift.setOutputMarkupId(true);
-        modusKomponenter.add(overskrift);
-
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel());
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
         modusKomponenter.add(journalforingsPanel);
         form.add(journalforingsPanel);
-
-        form.add(overskrift);
-        form.add(new Label("navIdent", getSubjectHandler().getUid()));
 
         Label tekstfeltOverskrift = new Label("tekstfeltOverskrift", new StringResourceModel("${modus}.tekstfelt", getModel()));
         tekstfeltOverskrift.setOutputMarkupId(true);
