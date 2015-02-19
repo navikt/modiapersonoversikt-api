@@ -82,6 +82,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(lagModusVelger(modusModel));
+        form.add(new Label("navIdent", getSubjectHandler().getUid()));
 
         Component epostVarsel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.bruker.fnr);
         epostVarsel.setOutputMarkupPlaceholderTag(true);

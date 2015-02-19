@@ -158,7 +158,8 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         public FortsettDialogForm(String id, final GrunnInfo grunnInfo, final IModel<HenvendelseVM> henvendelseVMModel) {
             super(id, henvendelseVMModel);
             final HenvendelseVM henvendelseVM = henvendelseVMModel.getObject();
-            
+
+            add(new Label("navIdent", getSubjectHandler().getUid()));
             add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo.bruker.fnr, getModel()));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
