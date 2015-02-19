@@ -15,7 +15,7 @@ var Modal = React.createClass({
                 tag: 'h1'
             },
             description: {
-                text: 'Description',
+                text: '',
                 show: 'false',
                 tag: 'div'
             }
