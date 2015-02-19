@@ -12,10 +12,10 @@ var Filter = React.createClass({
             'onKeyDown': this.props.sokNavigasjon,
             'aria-label': 'Søk etter hjelpetekster',
             'aria-controls': 'tekstListePanel',
-            'auto-focus': true
+            'auto-focus': false //Blir brukt innenfor modal, så la modalen fikse det. :)
         });
         return (
-            <div className="filter-container">
+            <div tabIndex="-1" className="filter-container">
                 <KnaggInput {...props} />
             </div>
         );

@@ -1,9 +1,6 @@
 /** @jsx React.DOM */
 var React = ModiaJS.React;
-var Modal = ModiaJS.Components.Modal;
-
 var Utils = require('./Utils');
-
 var Filter = require('./Filter');
 var Tekstvisning = require('./Tekstvisning');
 
@@ -14,8 +11,7 @@ var Tekstforslag = React.createClass({
             valgtTekst: {innhold: {nb_NO: ''}},
             valgtLocale: Utils.Constants.LOCALE_DEFAULT,
             knagger: [],
-            sokTekst: '',
-            vis: false
+            sokTekst: ''
         };
     },
     componentDidMount: function () {
@@ -40,7 +36,7 @@ var Tekstforslag = React.createClass({
         switch (event.keyCode) {
             case 38: /* pil opp */
                 event.preventDefault();
-                    this.setValgtTekst(hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst));
+                this.setValgtTekst(hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst));
                 break;
             case 40: /* pil ned */
                 event.preventDefault();
@@ -57,24 +53,16 @@ var Tekstforslag = React.createClass({
             .focus()
             .val(autofullfor.bind(this)(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale))))
             .trigger('input');
-        this.skjul();
-    },
-    vis: function() {
-        this.setState({vis: true});
-    },
-    skjul: function(){
-        this.setState({vis: false});
+        this.props.modal.close();
     },
     render: function () {
         return (
-            <Modal isOpen={this.state.vis}>
-                <div className="tekstforslag">
-                    <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} sokTekst={this.state.sokTekst} knagger={this.state.knagger} />
-                    <Tekstvisning
-                        tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
-                        setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
-                </div>
-            </Modal>
+            <div className="tekstforslag">
+                <Filter sok={this.sok} sokNavigasjon={this.sokNavigasjon} sokTekst={this.state.sokTekst} knagger={this.state.knagger} />
+                <Tekstvisning
+                    tekster={this.state.tekster} valgtTekst={this.state.valgtTekst} valgtLocale={this.state.valgtLocale}
+                    setValgtTekst={this.setValgtTekst} setValgtLocale={this.setValgtLocale} settInnTekst={this.settInnTekst} />
+            </div>
         );
     }
 });
