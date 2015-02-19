@@ -28,7 +28,7 @@ var TekstListe = React.createClass({
         var listeElementer = this.props.tekster.map(this.lagListeElement);
 
         return (
-            <div className="tekstListe" role="tablist">
+            <div tabIndex="-1" className="tekstListe" role="tablist">
                 {listeElementer}
             </div>
         );
