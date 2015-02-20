@@ -35,7 +35,7 @@ import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
 
-    private static final int AAR_TILBAKE = 3;
+    private static final int TRE_AAR_TILBAKE = 3;
 
     private FilterParametere filterParametere;
 
@@ -128,7 +128,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private DateRangePicker createDateRangePicker() {
-        LocalDate minDato = now().minusYears(AAR_TILBAKE).withDayOfYear(1);
+        LocalDate minDato = now().minusYears(TRE_AAR_TILBAKE).withDayOfYear(1);
         LocalDate maksDato = now();
 
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
@@ -136,7 +136,7 @@ public class FilterFormPanel extends Panel {
         DatePickerConfigurator datePickerConfigurator = datePickerConfigurator()
                 .withMinDate(formatter.print(minDato))
                 .withMaxDate("0d")
-                .withYearRange("-" + AAR_TILBAKE + "y:c")
+                .withYearRange("-" + TRE_AAR_TILBAKE + "y:c")
                 .withParameter("showOn", "button")
                 .build();
 
