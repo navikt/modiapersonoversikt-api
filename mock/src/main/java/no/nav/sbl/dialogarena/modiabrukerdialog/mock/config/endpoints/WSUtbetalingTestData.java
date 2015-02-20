@@ -19,6 +19,10 @@ public class WSUtbetalingTestData {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createOlaNordmannUtbetaling());
         utbetalinger.add(createOsloKommuneUtbetaling());
+        utbetalinger.add(createOsloKommuneUtbetaling());
+        utbetalinger.add(createOsloKommuneUtbetaling());
+        utbetalinger.add(createOsloKommuneUtbetaling());
+        utbetalinger.add(createOsloKommuneUtbetaling());
         utbetalinger.addAll(kariNordmannUtbetaling());
 
         final Interval periode = new Interval(startDato, sluttDato);
