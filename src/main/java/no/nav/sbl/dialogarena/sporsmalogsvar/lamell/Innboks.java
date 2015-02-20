@@ -13,18 +13,20 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.modia.events.InternalEvents.*;
+import static java.lang.Boolean.TRUE;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -77,13 +79,13 @@ public class Innboks extends Lerret {
                 innboksVM.setValgtMelding(meldingITraad.get());
             }
         }
-
         String oppgaveIdParameter = (String) getSession().getAttribute(OPPGAVEID);
         if (isNotBlank(oppgaveIdParameter) && gsakService.oppgaveKanManuelltAvsluttes(oppgaveIdParameter)) {
             innboksVM.setSessionOppgaveId(oppgaveIdParameter);
         }
 
-        if (isNotBlank(oppgaveIdParameter) && isNotBlank(traadIdParameter)) {
+        String fortsettDialogModus = (String) getSession().getAttribute(FORTSETTDIALOGMODUS);
+        if (isNotBlank(oppgaveIdParameter) && isNotBlank(traadIdParameter) && fortsettDialogModus != null && fortsettDialogModus.equals(TRUE.toString())) {
             innboksVM.traadBesvares = traadIdParameter;
         }
     }
