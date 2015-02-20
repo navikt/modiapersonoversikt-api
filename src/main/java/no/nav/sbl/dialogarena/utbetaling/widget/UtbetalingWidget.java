@@ -28,7 +28,7 @@ import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.UtbetalingV
 public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
 
     private static final Logger LOG = LoggerFactory.getLogger(UtbetalingWidget.class);
-    private static final int MAX_NUMBER_OF_UTBETALINGER = 4;
+    private static final int MAX_NUMBER_OF_UTBETALINGER = 5;
     public static final int NUMBER_OF_MONTHS_TO_SHOW = 3;
 
     @Inject
@@ -38,7 +38,7 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
         super(id, initial, true, "widget.utbetalingWidget.flereUtbetalinger");
         this.setDefaultModel(lagModell(fnr));
 
-        setMaxNumberOfFeedItems(MAX_NUMBER_OF_UTBETALINGER+1);
+        setMaxNumberOfFeedItems(MAX_NUMBER_OF_UTBETALINGER);
     }
 
     protected static List<HovedytelseVM> transformUtbetalingToVM(List<Record<Hovedytelse>> utbetalinger) {
