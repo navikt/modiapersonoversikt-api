@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.context;
 
 import no.nav.sbl.dialogarena.utbetaling.config.ApplicationTestConfig;
-import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingPortTypeStubConfig;
+import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingPortTypeTestConfig;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(classes = {
         ApplicationTestConfig.class,
         UtbetalingLamellContext.class,
-        UtbetalingPortTypeStubConfig.class})
+        UtbetalingPortTypeTestConfig.class})
 public class UtbetalingLamellContextTest {
 
     @Inject
