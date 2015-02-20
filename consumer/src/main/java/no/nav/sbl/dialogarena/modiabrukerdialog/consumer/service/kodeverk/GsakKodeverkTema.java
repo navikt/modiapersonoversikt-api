@@ -64,7 +64,7 @@ public class GsakKodeverkTema implements Serializable {
                 return new Predicate<GsakKodeTema.OppgaveType>() {
                     @Override
                     public boolean evaluate(GsakKodeTema.OppgaveType oppgaveType) {
-                        return GODKJENTE_OPPGAVETYPER.contains(oppgaveType.kode.replace("_" + fagomrade, ""));
+                        return GODKJENTE_OPPGAVETYPER.contains(oppgaveType.kode.replaceAll("_" + fagomrade + "$", ""));
                     }
                 };
             }
