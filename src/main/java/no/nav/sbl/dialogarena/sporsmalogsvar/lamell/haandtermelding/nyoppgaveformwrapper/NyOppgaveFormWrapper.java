@@ -260,6 +260,7 @@ public class NyOppgaveFormWrapper extends Panel {
         if (foreslatteEnheter.size() == 1) {
             nyOppgave.enhet = foreslatteEnheter.get(0);
         }
+        foreslatteEnheter.add(AnsattEnhetDropdown.SKILLE_ENHET);
     }
 
     private abstract static class OppdaterbarListeModel<T> extends AbstractReadOnlyModel<List<T>> {
