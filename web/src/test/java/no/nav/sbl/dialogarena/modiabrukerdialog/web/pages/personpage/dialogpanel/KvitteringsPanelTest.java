@@ -39,7 +39,7 @@ public class KvitteringsPanelTest extends WicketPageTest {
                 new Form("id"));
 
         wicket.should().containComponent(ofType(KvitteringsPanel.class).thatIsVisible())
-                .click().link(withId("skjulKvittering"))
+                .click().link(withId("startNyDialogLenke"))
                 .should().containComponent(ofType(KvitteringsPanel.class).thatIsInvisible())
                 .should().inAjaxResponse().haveComponents(ofType(KvitteringsPanel.class));
     }

@@ -7,9 +7,7 @@ import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -18,8 +16,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.velgdialogpanel.VelgDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -40,7 +39,10 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
+import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -51,10 +53,13 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveB
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -141,18 +146,16 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void medHenvendelseOgOppgaveUrlParamVisesFortsettDialogPanelOgMeldingLamell() {
+    public void medHenvendelseOgOppgaveUrlParamVisesVelgDialogPanelOgMeldingLamell() {
         String henvendelsesId = "id 1";
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(HENVENDELSEID, henvendelsesId).param(OPPGAVEID, "oppg1"))
-                .should().containComponent(ofType(FortsettDialogPanel.class))
+                .should().containComponent(ofType(VelgDialogPanel.class))
                 .should().containComponent(withId(LAMELL_MELDINGER));
-
-        verify(henvendelseUtsendingService).hentTraad(anyString(), eq(henvendelsesId));
     }
 
     @Test
-    public void erstatterNyDialogPanelMedFortsettDialogPanelVedEventetSVAR_PAA_MELDING() {
+    public void erstatterDialogPanelMedFortsettDialogPanelVedEventetSVAR_PAA_MELDING() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
@@ -193,16 +196,16 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void erstatterDialogPanelMedNyDialogPanelVedRiktigeEvents() {
-        assertErstatterDialogPanelMedNyDialogPanelVedEvent(KVITTERING_VIST);
-        assertErstatterDialogPanelMedNyDialogPanelVedEvent(LEGG_TILBAKE_FERDIG);
-        assertErstatterDialogPanelMedNyDialogPanelVedEvent(Events.SporsmalOgSvar.SVAR_AVBRUTT);
+    public void erstatterDialogPanelMedRiktigPanelVedGitteEvents() {
+        assertErstatterDialogPanelMedNyDialogPanelVedEvent(NY_DIALOG_LENKE_VALGT, NyDialogPanel.class);
+        assertErstatterDialogPanelMedNyDialogPanelVedEvent(LEGG_TILBAKE_FERDIG, VelgDialogPanel.class);
+        assertErstatterDialogPanelMedNyDialogPanelVedEvent(Events.SporsmalOgSvar.SVAR_AVBRUTT, VelgDialogPanel.class);
     }
 
-    private void assertErstatterDialogPanelMedNyDialogPanelVedEvent(String event) {
+    private void assertErstatterDialogPanelMedNyDialogPanelVedEvent(String event, Class panelSomSKalVises) {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(event))
-                .should().inAjaxResponse().haveComponents(ofType(NyDialogPanel.class));
+                .should().inAjaxResponse().haveComponents(ofType(panelSomSKalVises));
     }
 
     @Test
