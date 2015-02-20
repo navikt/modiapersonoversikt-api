@@ -88,7 +88,6 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         journalforingsPanel.add(visibleIf(both(brukerKanSvare.getModel()).and(not(model.getObject().traadJournalfort()))));
         add(journalforingsPanel);
 
-        avhengerAvKanlOgDelMedBrukerValg.add(kanalRadioGroup);
         avhengerAvKanlOgDelMedBrukerValg.add(kanalbeskrivelse);
         avhengerAvKanlOgDelMedBrukerValg.add(brukerKanSvare);
         avhengerAvKanlOgDelMedBrukerValg.add(journalforingsPanel);
