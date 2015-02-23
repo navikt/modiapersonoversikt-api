@@ -64,7 +64,7 @@ public class HenvendelseUtsendingService {
                 .withFodselsnummer(melding.fnrBruker)
                 .withAny(xmlHenvendelse));
 
-        melding.traadId = wsSendUtHenvendelseResponse.getBehandlingsId();
+        melding.id = wsSendUtHenvendelseResponse.getBehandlingsId();
 
         return melding;
     }
