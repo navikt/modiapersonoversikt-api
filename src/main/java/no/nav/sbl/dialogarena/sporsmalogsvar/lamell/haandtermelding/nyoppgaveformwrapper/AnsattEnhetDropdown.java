@@ -74,7 +74,7 @@ public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
         }
     }
 
-    static abstract class DisableableTextChoiceProvider<T> extends ChoiceProvider<T> {
+    abstract static class DisableableTextChoiceProvider<T> extends ChoiceProvider<T> {
         protected abstract String getDisplayText(T choice);
 
         protected abstract Object getId(T choice);
