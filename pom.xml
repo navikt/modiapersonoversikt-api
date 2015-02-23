@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +11,7 @@
     <name>Dialogarena - Reactkomponenter</name>
     <description>Fellesbibliotek for React-komponenter</description>
     <artifactId>reactkomponenter</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -162,6 +161,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/reactkomponenter.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/sbl/repos/reactkomponenter/</url>
-        <tag>HEAD</tag>
+        <tag>reactkomponenter-0.2</tag>
     </scm>
 </project>
