@@ -171,10 +171,15 @@
       position: absolute;
       left: 5px;
       top: 5px;
-      width: 25px;
-      height: 25px;
+      width: 24px;
+      height: 24px;
       background: url(../img/dokument.svg) no-repeat;
-      background-size: 25px;
+      background-size: 24px;
+
+      &:focus, &:hover {
+        outline: none;
+        background-image: url(../img/dokument_hover_light.svg);
+      }
     }
   }
   .tekstfelt {
