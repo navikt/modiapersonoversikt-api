@@ -44,7 +44,7 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
             super(id);
             setOutputMarkupPlaceholderTag(true);
 
-            add(visibleIf(new PropertyModel<Boolean>(getModel(), "valgtTraad.bleInitiertAvEtSporsmal()")));
+            add(visibleIf(new PropertyModel<Boolean>(getModel(), "valgtTraad.traadKanBesvares()")));
 
             add(new AjaxLink<InnboksVM>("besvar", TraaddetaljerPanel.this.getModel()) {
                 @Override

@@ -11,6 +11,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingsty
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.DATE_4;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.ID_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.TEMAGRUPPE_1;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.TRAAD_LENGDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMeldingVMer;
 import static org.hamcrest.CoreMatchers.is;
@@ -69,27 +70,27 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittMeldingstypeIkkeSporsmalIEldsteMeldingReturnererBleInitiertAvBrukerFalse() {
-        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4), 4);
-        traadVM.getMeldinger().add(eldsteMeldingVM);
-
-        assertThat(traadVM.bleInitiertAvEtSporsmal(), is(false));
-    }
-
-    @Test
-    public void gittMeldingstypeSporsmalSkriftligIEldsteMeldingReturnererBleInitiertAvEtSporsmal() {
-        MeldingVM eldsteMeldingVMSporsmalSkriftlig = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
-        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalSkriftlig);
-
-        assertThat(traadVM.bleInitiertAvEtSporsmal(), is(true));
-    }
-
-    @Test
-    public void gittMeldingstypeSporsmalModiaUtgaaendeIEldsteMeldingReturnererBleInitiertAvEtSporsmal() {
-        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4), 4);
+    public void dersomEldsteMeldingITraadErEtSporsmalOgIkkeKassertSkalBrukerKunneBesvare() {
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(TEMAGRUPPE_1), 4);
         traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
 
-        assertThat(traadVM.bleInitiertAvEtSporsmal(), is(true));
+        assertThat(traadVM.traadKanBesvares(), is(true));
+    }
+
+    @Test
+    public void dersomEldsteMeldingITraadIkkeErEtSporsmalOgIkkeKassertSkalBrukerIkkeKunneBesvare() {
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4).withTemagruppe(TEMAGRUPPE_1), 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
+
+        assertThat(traadVM.traadKanBesvares(), is(false));
+    }
+
+    @Test
+    public void dersomEldsteMeldingITraadErEtSporsmalMenKassertSkalBrukerIkkeKunneBesvare() {
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(null), 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
+
+        assertThat(traadVM.traadKanBesvares(), is(false));
     }
 
     @Test
