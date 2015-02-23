@@ -12,7 +12,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 
 import javax.inject.Inject;
 
@@ -20,6 +22,7 @@ import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel.SAK_VALGT;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public class VelgSakPanel extends Panel {
@@ -28,6 +31,7 @@ public class VelgSakPanel extends Panel {
     private SakerService sakerService;
 
     private SakerVM sakerVM;
+    private String fokusEtterLukking;
 
     public VelgSakPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM) {
         super(id);
@@ -77,6 +81,9 @@ public class VelgSakPanel extends Panel {
             this.setVisibilityAllowed(false);
             target.prependJavaScript(format("lukket|$('#%s').slideUp(lukket)", this.getMarkupId()));
             target.add(this);
+            if (!isBlank(this.fokusEtterLukking)) {
+                target.appendJavaScript(format("$('#%s').focus();", this.fokusEtterLukking));
+            }
         }
     }
 
@@ -92,4 +99,7 @@ public class VelgSakPanel extends Panel {
         target.add(this);
     }
 
+    public void settFokusEtterLukking(String markupId) {
+        this.fokusEtterLukking = markupId;
+    }
 }

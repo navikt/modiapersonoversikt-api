@@ -40,6 +40,7 @@ public class JournalforingsPanel extends Panel {
                 target.add(this);
             }
         };
+        velgSakPanel.settFokusEtterLukking(valgtSakLenke.getMarkupId());
         valgtSakLenke.add(append("aria-controls", velgSakPanel.getMarkupId()));
         IModel<Boolean> velgSakPanelOpen = new Model<Boolean>() {
             @Override
