@@ -12,6 +12,7 @@ import org.apache.wicket.model.Model;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static org.apache.wicket.AttributeModifier.append;
 
 public class JournalforingsPanel extends Panel {
 
@@ -39,6 +40,7 @@ public class JournalforingsPanel extends Panel {
                 target.add(this);
             }
         };
+        valgtSakLenke.add(append("aria-controls", velgSakPanel.getMarkupId()));
         IModel<Boolean> velgSakPanelOpen = new Model<Boolean>() {
             @Override
             public Boolean getObject() {

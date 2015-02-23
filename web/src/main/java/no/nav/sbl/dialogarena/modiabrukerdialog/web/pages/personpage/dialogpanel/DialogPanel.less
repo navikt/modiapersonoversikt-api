@@ -17,17 +17,22 @@
   }
   .modusVelger {
     width: 100%;
-    border-bottom: 1px solid #cbcbcb;
     margin-bottom: 20px;
+    margin-top: 30px;
+    text-align: left;
 
-    input + label {
+    input[type=radio] + label {
       display: block;
       margin: 0 auto;
       color: #3e3832;
-      width: 12em;
-      &:first-of-type {
-        margin-top: 10px;
-      }
+      padding: 5px 5px 5px 37px;
+      line-height: 22px;
+      min-height: 22px;
+      background-position: 5px;
+      border: 1px dashed transparent;
+    }
+    input[type=radio]:focus + label {
+      border-color: #0067c5;
     }
   }
   .warn {
