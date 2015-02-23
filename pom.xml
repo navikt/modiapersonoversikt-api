@@ -9,6 +9,7 @@
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
+    <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
     <version>4.8-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -965,52 +966,6 @@
                             <!--<goal>failon-unwanted-dependencies</goal>-->
                             <!--<goal>report-unapproved-dependencies</goal>-->
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>jacoco-prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                        <configuration>
-                            <propertyName>jacoco.agent.argLine</propertyName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>pre-test</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>post-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <failOnWarning>true</failOnWarning>
-                            <ignoreNonCompile>true</ignoreNonCompile>
-                            <!--<usedDependencies>-->
-                                <!--<usedDependency>org.mockito:mockito-core</usedDependency>-->
-                            <!--</usedDependencies>-->
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
