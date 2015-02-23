@@ -52,13 +52,6 @@
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>de.is24.util</groupId>
-            <artifactId>junit-karma-testrunner</artifactId>
-            <version>1.6</version>
-        </dependency>
     </dependencies>
 
     <build>
