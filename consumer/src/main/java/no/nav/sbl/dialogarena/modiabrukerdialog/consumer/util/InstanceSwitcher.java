@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 import no.nav.modig.core.exception.ApplicationException;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static java.lang.System.getProperty;
@@ -44,8 +45,8 @@ public final class InstanceSwitcher implements InvocationHandler {
             return method.invoke(defaultInstance, args);
         } catch (IllegalAccessException exception) {
             throw new ApplicationException("Problemer med invokering av metode", exception);
-        } catch (Exception e) {
-            throw (Exception)e.getCause();
+        } catch (InvocationTargetException e) {
+            throw (Exception) e.getCause();
         }
     }
 
