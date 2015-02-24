@@ -7,9 +7,9 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfo
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -94,6 +94,10 @@ public class HenvendelseBehandlingService {
         if (!behandlingsIdListe.isEmpty()) {
             behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
         }
+    }
+
+    public void merkSomBidrag(TraadVM valgtTraad) {
+        behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(valgtTraad.getEldsteMelding().melding.traadId, "BID");
     }
 
     private String getEnhet(String fnr) {

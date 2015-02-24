@@ -25,8 +25,7 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.either;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPGAVE_OPPRETTET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPRETT_OPPGAVE_TOGGLET;
 
@@ -59,6 +58,7 @@ public class MerkePanel extends AnimertPanel {
 
         merkRadioGroup.setRequired(true);
         merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
+        merkRadioGroup.add(new Radio<>("bidragRadio", Model.of(BIDRAG)));
         merkRadioGroup.add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM);
@@ -112,18 +112,38 @@ public class MerkePanel extends AnimertPanel {
 
         public MerkKnapp(String id) {
             super(id, "../img/ajaxloader/svart/loader_svart_48.gif");
-            add(visibleIf(either(new PropertyModel<Boolean>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
-                    .or(new PropertyModel<Boolean>(merkVM, "erFeilsendt()"))));
+            add(visibleIf(
+                    either(new PropertyModel<Boolean>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
+                            .or(new PropertyModel<Boolean>(merkVM, "erFeilsendt()"))
+                            .or(new PropertyModel<Boolean>(merkVM, "erMerketBidrag()"))));
             setOutputMarkupPlaceholderTag(true);
         }
 
         @Override
         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-            if (merkVM.getObject().getMerkType() == KONTORSPERRET) {
-                haandterKontorsperring(target, form);
-            } else {
-                haandterFeilsendt(target);
+            switch (merkVM.getObject().getMerkType()) {
+                case FEILSENDT:
+                    haandterFeilsendt(target);
+                    break;
+                case BIDRAG:
+                    haandterBidrag(target);
+                    break;
+                case KONTORSPERRET:
+                    haandterKontorsperring(target, form);
+                    break;
             }
+        }
+
+        private void haandterFeilsendt(AjaxRequestTarget target) {
+            henvendelseService.merkSomFeilsendt(innboksVM.getValgtTraad());
+            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            lukkPanel(target);
+        }
+
+        private void haandterBidrag(AjaxRequestTarget target) {
+            henvendelseService.merkSomBidrag(innboksVM.getValgtTraad());
+            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            lukkPanel(target);
         }
 
         private void haandterKontorsperring(AjaxRequestTarget target, Form<?> form) {
@@ -134,12 +154,6 @@ public class MerkePanel extends AnimertPanel {
             } else {
                 onError(target, form);
             }
-        }
-
-        private void haandterFeilsendt(AjaxRequestTarget target) {
-            henvendelseService.merkSomFeilsendt(innboksVM.getValgtTraad());
-            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
-            lukkPanel(target);
         }
 
         @Override

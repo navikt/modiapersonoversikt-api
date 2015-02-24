@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 import java.io.Serializable;
 
 public class MerkVM implements Serializable {
-    public enum MerkType {KONTORSPERRET, FEILSENDT}
+    public enum MerkType {KONTORSPERRET, BIDRAG, FEILSENDT}
 
     private MerkType merkType;
 
@@ -21,5 +21,9 @@ public class MerkVM implements Serializable {
 
     public boolean erFeilsendt() {
         return MerkType.FEILSENDT == merkType;
+    }
+
+    public boolean erMerketBidrag() {
+        return MerkType.BIDRAG == merkType;
     }
 }

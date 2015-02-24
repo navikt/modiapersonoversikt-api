@@ -58,7 +58,7 @@ public class MerkePanelTest extends WicketPageTest {
     public void skalViseOpprettOppgavePanelHvisKontorsperreErValgt() {
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
-                .select(MERK_TYPE_RADIOGROUP_ID, 1)
+                .select(MERK_TYPE_RADIOGROUP_ID, 2)
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
                 .should().containComponent(thatIsVisible().withId("kontorsperrePanel"));
@@ -68,7 +68,7 @@ public class MerkePanelTest extends WicketPageTest {
     public void skalMerkeTraadSomKontorsperret() {
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
-                .select(MERK_TYPE_RADIOGROUP_ID, 1)
+                .select(MERK_TYPE_RADIOGROUP_ID, 2)
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class));
 
