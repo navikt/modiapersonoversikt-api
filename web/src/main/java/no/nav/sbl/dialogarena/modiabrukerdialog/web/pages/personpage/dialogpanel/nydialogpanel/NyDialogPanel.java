@@ -12,8 +12,10 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -49,6 +51,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.Brukerprofil.BRUKERPROFIL_OPPDATERT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_AVBRUTT;
@@ -69,6 +72,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final GrunnInfo grunnInfo;
     private final KvitteringsPanel kvittering;
     private final List<Component> modusKomponenter = new ArrayList<>();
+    private final EpostVarselPanel epostVarselPanel;
 
     public NyDialogPanel(String id, GrunnInfo grunnInfo) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
@@ -84,10 +88,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         form.add(lagModusVelger(modusModel));
         form.add(new Label("navIdent", getSubjectHandler().getUid()));
 
-        Component epostVarsel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.bruker.fnr);
-        epostVarsel.setOutputMarkupPlaceholderTag(true);
-        modusKomponenter.add(epostVarsel);
-        form.add(epostVarsel);
+        epostVarselPanel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.bruker.fnr);
+        epostVarselPanel.setOutputMarkupPlaceholderTag(true);
+        modusKomponenter.add(epostVarselPanel);
+        form.add(epostVarselPanel);
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel());
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
@@ -208,6 +212,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     public void oppdaterReferatVM(AjaxRequestTarget target) {
         settOppModellMedDefaultVerdier();
         target.add(this);
+    }
+
+    @RunOnEvents(BRUKERPROFIL_OPPDATERT)
+    public void oppdaterEpostVarsel(AjaxRequestTarget target) {
+        target.add(epostVarselPanel);
     }
 
     private void settOppModellMedDefaultVerdier() {
