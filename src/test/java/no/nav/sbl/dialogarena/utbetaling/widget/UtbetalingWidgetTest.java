@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
@@ -47,22 +48,27 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
             new Record<Hovedytelse>()
                 .with(Hovedytelse.id, "1")
                 .with(Hovedytelse.nettoUtbetalt, 0D)
+                .with(Hovedytelse.utbetaltTil, dummyAktoer())
                 .with(Hovedytelse.hovedytelsedato, now()),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "2")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW-1)),
+                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
+                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW - 1)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "3")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
+                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
                     .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "4")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
+                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
                     .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW).toDateMidnight().toDateTime().minusMillis(1)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "5")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
+                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
                     .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW + 1))
         );
 
@@ -92,9 +98,11 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.hovedytelsedato, now())
                         .with(Hovedytelse.nettoUtbetalt, 0D)
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.id, "1"),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.hovedytelsedato, now())
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.id, "2")
         );
@@ -107,6 +115,11 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
         assertThat(listModel.getObject().get(0), is(instanceOf(HovedytelseVM.class)));
     }
 
+    private Record<Aktoer> dummyAktoer() {
+        return new Record<Aktoer>()
+                .with(Aktoer.navn, "Ola Nordmann");
+    }
+
     @Test
     public void viserFireUtbetalingerSisteTreMaanedeneMedFireAktuelle() {
         List<Record<Hovedytelse>> list = Arrays.asList(
@@ -114,21 +127,25 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                         .with(Hovedytelse.id, "1")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "2")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "3")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "4")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now()))
         );
 
@@ -148,26 +165,31 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                         .with(Hovedytelse.id, "1")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "2")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "3")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "4")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "5")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now()))
         );
 
@@ -187,34 +209,41 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                         .with(Hovedytelse.id, "1")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "2")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "3")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "4")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())), new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "5")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())), new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "6")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "7")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
                         .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now()))
         );
 
