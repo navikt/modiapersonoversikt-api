@@ -1,8 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
@@ -13,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
 
@@ -35,12 +43,55 @@ public class SakerServiceImpl implements SakerService {
         return hentGenerelleOgIkkeGenerelleSaker(sakerForBruker, lokaltKodeverk);
     }
 
+    @Override
     public List<Sak> hentListeAvSaker(String fnr) {
+        List<Sak> saker = hentSakerFraGsak(fnr);
+        leggTilFraArena(fnr, saker);
+        leggTilManglendeGenerelleSaker(saker);
+        return saker;
+    }
+
+    private List<Sak> hentSakerFraGsak(String fnr) {
         WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
         return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<Sak>());
     }
 
-    public static final Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {
+    private void leggTilFraArena(String fnr, List<Sak> saker) {
+        if (!on(saker).exists(IS_ARENA_OPPFOLGING)) {
+            Optional<Sak> oppfolging = hentOppfolgingssakFraArena(fnr);
+            if (oppfolging.isSome()) {
+                saker.add(oppfolging.get());
+            } else {
+                saker.add(lagGenerellSak(TEMAKODE_OPPFOLGING));
+            }
+        }
+    }
+
+    private void leggTilManglendeGenerelleSaker(List<Sak> saker) {
+        List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
+        for (String temakode : GODKJENTE_TEMA_FOR_GENERELLE) {
+            if (!on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode)))) {
+                saker.add(lagGenerellSak(temakode));
+            }
+        }
+    }
+
+    private static Sak lagGenerellSak(String temakode) {
+        Sak sak = new Sak();
+        sak.temaKode = temakode;
+        sak.finnesIGsak = false;
+        sak.fagsystemKode = GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+        sak.sakstype = SAKSTYPE_GENERELL;
+        sak.saksId = "";
+        return sak;
+    }
+
+    private Optional<Sak> hentOppfolgingssakFraArena(String fnr) {
+        // TODO: Hent sak fra Arena
+        return none();
+    }
+
+    static final Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {
         @Override
         public Sak transform(WSGenerellSak wsGenerellSak) {
             Sak sak = new Sak();
@@ -49,7 +100,9 @@ public class SakerServiceImpl implements SakerService {
             sak.temaKode = wsGenerellSak.getFagomradeKode();
             sak.sakstype = wsGenerellSak.getSakstypeKode();
             sak.fagsystemKode = wsGenerellSak.getFagsystemKode();
+            sak.finnesIGsak = true;
             return sak;
         }
     };
+
 }

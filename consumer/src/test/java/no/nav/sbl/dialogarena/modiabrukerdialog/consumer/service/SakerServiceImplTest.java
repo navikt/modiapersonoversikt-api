@@ -59,7 +59,7 @@ public class SakerServiceImplTest {
 
         verify(sakWS, times(1)).finnGenerellSakListe(fnrCaptor.capture());
         assertThat(fnrCaptor.getValue().getBrukerId(), is("fnr"));
-        assertThat(saker.getSakerListeGenerelle().size(), is(2));
+        assertThat(saker.getSakerListeGenerelle().size(), is(11));
         assertThat(saker.getSakerListeFagsak().size(), is(1));
     }
 
@@ -79,6 +79,7 @@ public class SakerServiceImplTest {
         assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
         assertThat(sak.fagsystemKode, is(GODKJENT_FAGSYSTEM_FOR_GENERELLE));
         assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
+        assertThat(sak.finnesIGsak, is(true));
     }
 
     private ArrayList<WSGenerellSak> createSakslisteBasertPaTemaMap() {
