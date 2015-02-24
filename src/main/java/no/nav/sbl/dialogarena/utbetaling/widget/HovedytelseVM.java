@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.apache.commons.collections15.Transformer;
@@ -32,6 +33,7 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
     private Interval periode;
     private String utbetalingId;
     private Mottakertype mottakertype;
+    private String mottaker;
 
 
     public HovedytelseVM(Record<Hovedytelse> hovedytelse) {
@@ -42,6 +44,7 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
         this.periode = hovedytelse.get(Hovedytelse.ytelsesperiode);
         this.utbetalingId = hovedytelse.get(Hovedytelse.id).toString();
         this.mottakertype = hovedytelse.get(Hovedytelse.mottakertype);
+        this.mottaker = hovedytelse.get(Hovedytelse.utbetaltTil).get(Aktoer.navn);
     }
 
     public DateTime getHovedytelseDato() {
@@ -58,6 +61,10 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getMottaker() {
+        return mottaker;
     }
 
     public DateTime getStartDato() {

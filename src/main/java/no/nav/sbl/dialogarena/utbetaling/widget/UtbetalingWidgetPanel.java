@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -22,12 +20,11 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
 
         add(
                 createUtbetalingsDatoLabel(hovedytelseVM),
-                new Label("beskrivelse", hovedytelseVM.getBeskrivelse()),
+                new Label("ytelse", hovedytelseVM.getBeskrivelse()),
                 createPeriodeLabel(hovedytelseVM),
                 new Label("belop", hovedytelseVM.getBelop()),
-                new WebMarkupContainer("mottakerIndikator")
-                        .add(new AttributeAppender("class", hovedytelseVM.getMottakertype()).setSeparator(" ")),
-                new Label("statusTekst", hovedytelseVM.getStatus())
+                new Label("statusTekst", hovedytelseVM.getStatus()),
+                new Label("utbetaltTil", hovedytelseVM.getMottaker())
         );
     }
 

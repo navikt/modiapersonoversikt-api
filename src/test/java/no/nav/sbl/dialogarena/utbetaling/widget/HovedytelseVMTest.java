@@ -35,6 +35,7 @@ public class HovedytelseVMTest {
         double belop = 67856565.6;
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetaltTil, dummyAktoer())
                 .with(Hovedytelse.nettoUtbetalt, belop);
         HovedytelseVM vm = new HovedytelseVM(ytelse);
 
@@ -49,6 +50,7 @@ public class HovedytelseVMTest {
     public void transformerWorksCorrectly(){
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetaltTil, dummyAktoer())
                 .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(7), now()));
 
         HovedytelseVM hovedytelseVM = HovedytelseVM.TIL_HOVEDYTELSEVM.transform(ytelse);
@@ -95,8 +97,15 @@ public class HovedytelseVMTest {
                 new Record<Hovedytelse>()
                     .with(Hovedytelse.id, ID)
                     .with(Hovedytelse.hovedytelsedato, utbetalingsDato)
+                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
                     .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "123"))
                     .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.aktoerId, "12345678910"))
         );
     }
+
+    private Record<Aktoer> dummyAktoer() {
+        return new Record<Aktoer>()
+                .with(Aktoer.navn, "Ola Nordmann");
+    }
+
 }

@@ -2,17 +2,16 @@
 <wicket:panel>
     <div class="utbetaling-metadata">
         <span wicket:id="utbetalingsDato"></span>
-        <h2 class="medium cap-1st" wicket:id="beskrivelse"></h2>
-        <footer>
-            <span class="periode" wicket:id="periode"></span> |
-            <span class="belop-med-valuta">
-                <wicket:container wicket:id="belop"/>
-                <wicket:message key="utbetaling.valuta" /></span>
-        </footer>
+        <span wicket:id="statusTekst" class="utbetaling-status"></span>
     </div>
-    <div class="utbetalingstatus">
-        <div wicket:id="mottakerIndikator" class="mottaker-indikator"></div>
-        <div wicket:id="statusTekst" class="utbetalingstatus-tekst cap-1st"></div>
+    <div class="utbetaling">
+        <span class="ytelse" wicket:id="ytelse"></span>
+        <span wicket:id="belop" class="belop"></span>
+        <span wicket:id="periode" class="periode"></span>
+        <div class="utbetaling-til">
+            <wicket:message key="utbetaling.utbetalt.til" />
+            <span wicket:id="utbetaltTil"></span>
+        </div>
     </div>
 </wicket:panel>
 </html>
