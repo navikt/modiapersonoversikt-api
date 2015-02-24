@@ -43,7 +43,7 @@ public class DialogPanel extends Panel {
     public static final String NY_DIALOG_LENKE_VALGT = "dialogpanel.ny.dialog.lenke.valgt";
     public static final String NY_DIALOG_AVBRUTT = "dialogpanel.ny.dialog.avbrutt";
     private static final String AKTIVT_PANEL_ID = "aktivtPanel";
-    private static Predicate<String> ER_SATT = new Predicate<String>() {
+    private static final Predicate<String> ER_SATT = new Predicate<String>() {
         @Override
         public boolean evaluate(String s) {
             return !isBlank(s);
