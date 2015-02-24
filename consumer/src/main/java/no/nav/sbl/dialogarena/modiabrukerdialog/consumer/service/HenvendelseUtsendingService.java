@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.core.exception.ModigException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
@@ -91,6 +93,10 @@ public class HenvendelseUtsendingService {
                         .map(TIL_MELDING)
                         .map(journalfortTemaTilgang)
                         .collect(ELDSTE_FORST);
+
+        if (meldinger.isEmpty()) {
+            throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
+        }
 
         Melding sporsmal = meldinger.get(0);
         if (sporsmal.kontorsperretEnhet != null) {

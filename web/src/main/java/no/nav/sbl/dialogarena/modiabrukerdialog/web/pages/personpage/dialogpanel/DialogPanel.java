@@ -17,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.velgdialogpanel.VelgDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
+import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -26,26 +27,28 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import java.util.List;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DialogPanel extends Panel {
 
     public static final String NY_DIALOG_LENKE_VALGT = "dialogpanel.ny.dialog.lenke.valgt";
     public static final String NY_DIALOG_AVBRUTT = "dialogpanel.ny.dialog.avbrutt";
     private static final String AKTIVT_PANEL_ID = "aktivtPanel";
+    private static Predicate<String> ER_SATT = new Predicate<String>() {
+        @Override
+        public boolean evaluate(String s) {
+            return !isBlank(s);
+        }
+    };
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -80,16 +83,11 @@ public class DialogPanel extends Panel {
     }
 
     private void settOppVerdierFraParameterePaaSession() {
-        String henvendelsesId = (String) getSession().getAttribute(HENVENDELSEID);
-        if (henvendelsesId != null && !henvendelsesId.isEmpty()) {
-            henvendelsesIdFraParametere = optional(henvendelsesId);
-        }
-        String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
-        if (oppgaveId != null && !oppgaveId.isEmpty()) {
-            oppgaveIdFraParametere = optional(oppgaveId);
-        }
+        henvendelsesIdFraParametere = optional(ER_SATT, (String) getSession().getAttribute(HENVENDELSEID));
+        oppgaveIdFraParametere = optional(ER_SATT, (String) getSession().getAttribute(OPPGAVEID));
+
         String fortsettDialogModus = (String) getSession().getAttribute(FORTSETTDIALOGMODUS);
-        if (fortsettDialogModus != null && fortsettDialogModus.equals(TRUE.toString())) {
+        if (!isBlank(fortsettDialogModus) && Boolean.valueOf(fortsettDialogModus)) {
             fortsettDialogModusFraParametere = true;
         }
     }
