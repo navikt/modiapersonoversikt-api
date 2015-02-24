@@ -65,6 +65,9 @@ public class HenvendelseUtsendingService {
                 .withAny(xmlHenvendelse));
 
         melding.id = wsSendUtHenvendelseResponse.getBehandlingsId();
+        if (melding.traadId == null) {
+            melding.traadId = melding.id;
+        }
 
         return melding;
     }
