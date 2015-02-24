@@ -205,7 +205,7 @@ public class WSUtbetalingTestData {
                 .withUtbetalingsmelding("Utbetalt dagpenger")
                 .withYtelseListe(
                         new WSYtelse()
-                                .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
+                                .withYtelsestype(new WSYtelsestyper().withValue("Pleie-, omsorgs- og opplæringspenger"))
                                 .withRettighetshaver(new WSPerson()
                                         .withAktoerId("22222222222")
                                         .withNavn("Ola Nordmann Utbetaling 2"))
