@@ -15,7 +15,9 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     public String saksId, temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
     public DateTime opprettetDato;
+    public Boolean finnesIGsak;
 
+    public static final String TEMAKODE_OPPFOLGING = "OPP";
     public static final String SAKSTYPE_GENERELL = "GEN";
     public static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = unmodifiableList(asList("AGR", "FUL", "GEN", "KTR", "STO", "SER", "SIK", "SYM", "TRK", "TRY", "VEN"));
     public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList("AO01", "IT01", "OEBS", "V2", "AO11"));
@@ -57,6 +59,15 @@ public class Sak implements Serializable, Comparable<Sak> {
         @Override
         public boolean evaluate(Sak sak) {
             return GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
+        }
+    };
+
+    public static final Predicate<Sak> IS_ARENA_OPPFOLGING = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return TEMAKODE_OPPFOLGING.equals(sak.temaKode)
+                    && "AO01".equals(sak.fagsystemKode)
+                    && "MFS".equals(sak.sakstype);
         }
     };
 
