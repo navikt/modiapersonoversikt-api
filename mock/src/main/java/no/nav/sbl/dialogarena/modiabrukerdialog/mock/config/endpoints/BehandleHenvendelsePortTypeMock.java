@@ -46,6 +46,11 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
+            public void knyttBehandlingskjedeTilTema(String s, String s1) {
+                
+            }
+
+            @Override
             public void oppdaterHenvendelsesarkivInformasjon(String behandlingId, String arkivpostId) {
             }
 
