@@ -130,6 +130,7 @@ public class HenvendelseBehandlingService {
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
                 melding.fritekst = "";
+                melding.ingenTilgangJournalfort = true;
             }
 
             return melding;

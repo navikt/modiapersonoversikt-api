@@ -67,6 +67,7 @@ public class MeldingUtils {
                 melding.fritekst = null;
                 melding.kanal = null;
                 melding.navIdent = null;
+                melding.kassert = true;
                 return melding;
             }
 
