@@ -7,5 +7,14 @@ public class Events {
 
         public static final String SVAR_AVBRUTT = PREFIX + "svar.avbrutt";
         public static final String LEGG_TILBAKE_UTFORT = PREFIX + "leggtilbake.utfort";
+
+
+    }
+
+    public static class Brukerprofil {
+        private static final String PREFIX = "brukerprofil";
+
+        //Sendes fra no.nav.brukerprofil.BrukerprofilPanel
+        public static final String BRUKERPROFIL_OPPDATERT = PREFIX + "Oppdatert";
     }
 }
