@@ -13,6 +13,7 @@ public class Melding implements Serializable {
     public DateTime lestDato, opprettetDato, journalfortDato;
     public Meldingstype meldingstype;
     public Status status;
+    public boolean kassert, ingenTilgangJournalfort;
 
     public Melding() {
     }
@@ -83,7 +84,7 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public Melding withJournalfortTema(String journalfortTema){
+    public Melding withJournalfortTema(String journalfortTema) {
         this.journalfortTema = journalfortTema;
         return this;
     }
