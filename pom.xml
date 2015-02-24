@@ -334,6 +334,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>dial-nav-tjeneste-behandlesak</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
                 <version>1.0.14</version>
             </dependency>

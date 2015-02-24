@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvend
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.behandlesak.GsakOpprettSakEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting.GsakRutingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
@@ -33,6 +34,7 @@ import org.springframework.context.annotation.Import;
         GsakOppgaveV3EndpointConfig.class,
         GsakOppgavebehandlingV3EndpointConfig.class,
         GsakHentSakslisteEndpointConfig.class,
+        GsakOpprettSakEndpointConfig.class,
         GsakRutingEndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
         AktorEndpointConfig.class,
