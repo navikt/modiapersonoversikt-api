@@ -10,9 +10,11 @@
     <span wicket:id="journalfortDatoFormatert">|</span>
     <span class="skillestrek">|</span>
     <span wicket:id="melding.journalfortTemanavn"></span>
-    <span class="skillestrek">|</span>
-    <wicket:message key="journalpost.jornalfort.saksid"/>
-    <span wicket:id="melding.journalfortSaksId"></span>
+    <wicket:container wicket:id="saksIdContainer">
+        <span class="skillestrek">|</span>
+        <wicket:message key="journalpost.jornalfort.saksid"/>
+        <span wicket:id="melding.journalfortSaksId"></span>
+    </wicket:container>
 </wicket:panel>
 </body>
 </html>
