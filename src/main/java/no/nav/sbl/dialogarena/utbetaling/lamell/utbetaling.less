@@ -8,6 +8,10 @@
 @sidePadding: 2rem;
 @toppBunnPadding: 1.5rem;
 
+.lamell.utbetalinger .lerret {
+  padding-top: 10px;
+}
+
 .utbetalinger {
   // felles
   .cap-1st {
@@ -101,22 +105,30 @@
     font-family: @headingsFontFamily;
   }
 
+  .topp {
+    border-bottom: 1px solid @borderColor;
+    padding-bottom: 35px;
+    margin-bottom: 30px;
+    div.lenke {
+      label {
+        display: block;
+      }
+      a {
+        font-family: @headingsFontFamily;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: @blueDark;
+      }
+    }
+  }
+
   .kolonne-venstre {
     float: left;
     padding-right: @sidePadding;
     width: @kolonneVenstreWidth;
 
-    .arena-lenke {
-      font-family: @headingsFontFamily;
-      font-size: 1.3rem;
-      font-weight: bold;
-      display: block;
-      color: @blueDark;
-    }
-
     .filter-form {
       .filter-block {
-        margin-top: 3rem;
         border: 1px solid @borderColor;
         h3 {
           margin: 0px;
