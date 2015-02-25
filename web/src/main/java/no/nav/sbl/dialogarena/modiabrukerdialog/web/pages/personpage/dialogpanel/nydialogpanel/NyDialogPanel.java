@@ -9,6 +9,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -18,7 +19,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -63,11 +63,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    protected BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private LokaltKodeverk lokaltKodeverk;
+    @Inject
+    private SakerService sakerService;
 
     private final GrunnInfo grunnInfo;
     private final KvitteringsPanel kvittering;
@@ -308,12 +308,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         sporsmal = henvendelseUtsendingService.sendHenvendelse(sporsmal);
 
-        behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                sporsmal.traadId,
-                henvendelseVM.valgtSak.saksId,
-                henvendelseVM.valgtSak.temaKode,
-                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()
-        );
+        sakerService.knyttBehandlingskjedeTilSak(grunnInfo.bruker.fnr, sporsmal.traadId, henvendelseVM.valgtSak);
     }
 
     private Melding felles() {

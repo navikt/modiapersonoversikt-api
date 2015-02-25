@@ -4,13 +4,17 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -46,11 +50,11 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    protected BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private SakerService sakerService;
 
     private final GrunnInfo grunnInfo;
     private final Optional<String> oppgaveId;
@@ -226,12 +230,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
             melding = henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
             if (meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
-                behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                        melding.traadId,
-                        henvendelseVM.valgtSak.saksId,
-                        henvendelseVM.valgtSak.temaKode,
-                        saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()
-                );
+                sakerService.knyttBehandlingskjedeTilSak(grunnInfo.bruker.fnr, melding.traadId, henvendelseVM.valgtSak);
             }
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }

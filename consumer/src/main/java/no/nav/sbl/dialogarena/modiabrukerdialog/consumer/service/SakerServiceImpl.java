@@ -3,10 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
@@ -41,6 +39,10 @@ public class SakerServiceImpl implements SakerService {
     private StandardKodeverk standardKodeverk;
     @Inject
     private LokaltKodeverk lokaltKodeverk;
+    @Inject
+    private BehandleHenvendelsePortType behandleHenvendelsePortType;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
 
     @Override
@@ -59,7 +61,20 @@ public class SakerServiceImpl implements SakerService {
     }
 
     @Override
-    public void opprettSak(String fnr, Sak sak) {
+    public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) {
+
+        if (!sak.finnesIGsak) {
+            sak.saksId = opprettSak(fnr, sak);
+        }
+
+        behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
+                behandlingskjede,
+                sak.saksId,
+                sak.temaKode,
+                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+    }
+
+    private String opprettSak(String fnr, Sak sak) {
         try {
             WSOpprettSakRequest request = new WSOpprettSakRequest().withSak(
                     new WSSak()
@@ -69,7 +84,7 @@ public class SakerServiceImpl implements SakerService {
                             .withFagsystemSakId(sak.saksId)
                             .withSakstype(new WSSakstyper().withValue(sak.sakstype)));
 
-            behandleSakWS.opprettSak(request);
+            return behandleSakWS.opprettSak(request).getSakId();
         } catch (OpprettSakUgyldigInput | OpprettSakSakEksistererAllerede e) {
             throw new RuntimeException(e);
         }
