@@ -5,17 +5,12 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.*;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
+import no.nav.virksomhet.tjenester.sak.meldinger.v1.*;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
@@ -28,6 +23,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
+import static org.joda.time.DateTime.now;
 
 public class SakerServiceImpl implements SakerService {
 
@@ -61,12 +57,12 @@ public class SakerServiceImpl implements SakerService {
         List<Sak> saker = hentSakerFraGsak(fnr);
         leggTilFraArena(fnr, saker);
         leggTilManglendeGenerelleSaker(saker);
+        behandleOppfolgingsSaker(saker);
         return saker;
     }
 
     @Override
     public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) {
-
         if (!sak.finnesIGsak) {
             sak.saksId = opprettSak(fnr, sak);
         }
@@ -104,8 +100,6 @@ public class SakerServiceImpl implements SakerService {
             Optional<Sak> oppfolging = hentOppfolgingssakFraArena(fnr);
             if (oppfolging.isSome()) {
                 saker.add(oppfolging.get());
-            } else {
-                saker.add(lagGenerellSak(TEMAKODE_OPPFOLGING));
             }
         }
     }
@@ -113,8 +107,30 @@ public class SakerServiceImpl implements SakerService {
     private void leggTilManglendeGenerelleSaker(List<Sak> saker) {
         List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
         for (String temakode : GODKJENTE_TEMA_FOR_GENERELLE) {
-            if (!on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode)))) {
+            if (!on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode))) && !temakode.equals(TEMAKODE_OPPFOLGING)) {
                 saker.add(lagGenerellSak(temakode));
+            }
+        }
+    }
+
+    private void behandleOppfolgingsSaker(List<Sak> saker) {
+        List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
+        List<Sak> fagsaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(false))).collect();
+
+        boolean oppfolgingssakFinnesIFagsaker = on(fagsaker).exists(where(TEMAKODE, equalTo(TEMAKODE_OPPFOLGING)));
+        boolean oppfolgingssakFinnesIGenerelleSaker = on(generelleSaker).exists(where(TEMAKODE, equalTo(TEMAKODE_OPPFOLGING)));
+
+        if (oppfolgingssakFinnesIFagsaker && oppfolgingssakFinnesIGenerelleSaker) {
+            fjernGenerellOppfolgingssak(saker, generelleSaker);
+        } else if (!oppfolgingssakFinnesIFagsaker && !oppfolgingssakFinnesIGenerelleSaker) {
+            saker.add(lagGenerellSak(TEMAKODE_OPPFOLGING));
+        }
+    }
+
+    private void fjernGenerellOppfolgingssak(List<Sak> saker, List<Sak> generelleSaker) {
+        for (Sak sak : generelleSaker) {
+            if (sak.temaKode.equals(TEMAKODE_OPPFOLGING)) {
+                saker.remove(sak);
             }
         }
     }
@@ -126,6 +142,7 @@ public class SakerServiceImpl implements SakerService {
         sak.fagsystemKode = GODKJENT_FAGSYSTEM_FOR_GENERELLE;
         sak.sakstype = SAKSTYPE_GENERELL;
         sak.saksId = "";
+        sak.opprettetDato = now();
         return sak;
     }
 
