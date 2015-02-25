@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -34,7 +35,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
-    private BehandleHenvendelsePortType behandleHenvendelsePortType;
+    private SakerService sakerService;
 
     private InnboksVM innboksVM;
 
@@ -60,7 +61,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
                 .goToPageWith(journalforingsPanel)
                 .click().ajaxButton(withId("journalforTraad"));
 
-        verify(behandleHenvendelsePortType).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString(), anyString());
+        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), any(Sak.class));
     }
 
 }

@@ -4,10 +4,8 @@ import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -28,11 +26,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 public class JournalforingsPanelVelgSak extends Panel {
 
     @Inject
-    private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
     private SakerService sakerService;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private SakerVM sakerVM;
 
@@ -62,12 +56,8 @@ public class JournalforingsPanelVelgSak extends Panel {
                 Melding melding = valgtTraadVM.getEldsteMelding().melding;
                 Sak sak = valgtTraadVM.journalfortSak;
 
-                behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                        melding.traadId,
-                        sak.saksId,
-                        sak.temaKode,
-                        saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()
-                );
+                sakerService.knyttBehandlingskjedeTilSak(innboksVM.getFnr(), melding.traadId, sak);
+
                 send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
             }
 
