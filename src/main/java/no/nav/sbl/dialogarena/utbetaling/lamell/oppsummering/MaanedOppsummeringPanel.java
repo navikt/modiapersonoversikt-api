@@ -8,10 +8,7 @@ public class MaanedOppsummeringPanel extends Panel {
 
     public MaanedOppsummeringPanel(String id, OppsummeringVM oppsummeringVM) {
         super(id, new CompoundPropertyModel<>(oppsummeringVM));
-
         add(new Label("oppsummertPeriode"));
-        add(new Label("brutto"));
-        add(new Label("trekk"));
         add(new Label("utbetalt"));
     }
 }
