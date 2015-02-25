@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface SakerService {
     public Saker hentSaker(String fnr);
+
     public List<Sak> hentListeAvSaker(String fnr);
+
+    void opprettSak(String fnr, Sak sak);
 }
