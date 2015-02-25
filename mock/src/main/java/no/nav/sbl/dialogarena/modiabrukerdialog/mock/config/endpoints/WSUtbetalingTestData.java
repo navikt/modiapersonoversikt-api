@@ -226,7 +226,7 @@ public class WSUtbetalingTestData {
                 .withForfallsdato(now().minusMonths(1).plusDays(14))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Utbetalingskort - Norge")))
                 .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Utbetalingskort"))
-                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Sendt kontofører, avventer forfallsdato"));
+                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Returnert for saksbehandling"));
     }
 
 }
