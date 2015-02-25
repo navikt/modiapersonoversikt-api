@@ -7,6 +7,11 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.*;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
@@ -27,7 +32,9 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.
 public class SakerServiceImpl implements SakerService {
 
     @Inject
-    private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
+    private no.nav.virksomhet.tjenester.sak.v1.Sak sakWS;
+    @Inject
+    private BehandleSakV1 behandleSakWS;
     @Inject
     private GsakKodeverk gsakKodeverk;
     @Inject
@@ -51,8 +58,25 @@ public class SakerServiceImpl implements SakerService {
         return saker;
     }
 
+    @Override
+    public void opprettSak(String fnr, Sak sak) {
+        try {
+            WSOpprettSakRequest request = new WSOpprettSakRequest().withSak(
+                    new WSSak()
+                            .withGjelderBrukerListe(new WSPerson().withIdent(fnr))
+                            .withFagomraade(new WSFagomraader().withValue(sak.temaKode))
+                            .withFagsystem(new WSFagsystemer().withValue(sak.fagsystemKode))
+                            .withFagsystemSakId(sak.saksId)
+                            .withSakstype(new WSSakstyper().withValue(sak.sakstype)));
+
+            behandleSakWS.opprettSak(request);
+        } catch (OpprettSakUgyldigInput | OpprettSakSakEksistererAllerede e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private List<Sak> hentSakerFraGsak(String fnr) {
-        WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
+        WSFinnGenerellSakListeResponse response = sakWS.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
         return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<Sak>());
     }
 
