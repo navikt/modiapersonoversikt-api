@@ -16,11 +16,10 @@ public class UtbetalingPanel extends Panel {
 
         add(new DetaljPanel("detaljpanel", utbetalingVM),
                 createStatusPanel("statuspanel", utbetalingVM),
-                new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
+                new Label("ytelse", utbetalingVM.getYtelse()),
+                new Label("utbetaltTil", utbetalingVM.getMottakerNavn()),
                 getHovedYtelsesPeriodeLabel(utbetalingVM),
-                new Label("bruttoBelopMedValuta", utbetalingVM.getBruttoBelop()),
-                new Label("trekkMedValuta", utbetalingVM.getTrekk()),
-                new Label("belopMedValuta", utbetalingVM.getBelop()));
+                new Label("belopMedValuta", utbetalingVM.getUtbetalt()));
     }
 
     private Label getHovedYtelsesPeriodeLabel(UtbetalingVM utbetalingVM) {

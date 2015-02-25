@@ -13,26 +13,15 @@
             <div class="skriv-ut ikke-print"></div>
         </div>
 
-        <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.utbetaling.tabelloppsummering">
-            <thead>
-            <tr>
-                <th><h3 class="medium cap-1st" wicket:id="beskrivelse">[]</h3></th>
-                <th></th>
-                <th><wicket:message key="utbetaling.lamell.utbetaling.brutto"/></th>
-                <th><wicket:message key="utbetaling.lamell.utbetaling.trekk"/></th>
-                <th><wicket:message key="utbetaling.lamell.utbetaling.utbetalt"/></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="uthevet">
-                <td wicket:id="periodeMedKortDato"></td>
-                <td></td>
-                <td wicket:id="bruttoBelopMedValuta"></td>
-                <td wicket:id="trekkMedValuta"></td>
-                <td wicket:id="belopMedValuta"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="utbetaling-metadata">
+            <span class="ytelse" wicket:id="ytelse"></span>
+            <span class="periode" wicket:id="periodeMedKortDato"></span>
+            <span class="belop" wicket:id="belopMedValuta"></span>
+            <div class="utbetaling-til">
+                <wicket:message key="utbetaling.lamell.utbetalt.til" />
+                <span wicket:id="utbetaltTil"></span>
+            </div>
+        </div>
     </div>
 
     <div wicket:id="detaljpanel" class="detaljpanel"></div>
