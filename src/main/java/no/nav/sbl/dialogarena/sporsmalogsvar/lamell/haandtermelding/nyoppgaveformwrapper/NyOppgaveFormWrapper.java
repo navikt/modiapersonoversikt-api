@@ -130,6 +130,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 form.getModelObject().type = null;
                 form.getModelObject().enhet = null;
                 form.getModelObject().prioritet = null;
+                form.getModelObject().underkategori = null;
 
                 target.add(typeVelger, enhetVelger, prioritetVelger, underkategoriVelger);
             }
