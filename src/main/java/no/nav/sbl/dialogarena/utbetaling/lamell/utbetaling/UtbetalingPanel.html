@@ -2,10 +2,11 @@
 <wicket:panel>
 
     <div class="main">
-        <div class="statusindikator">
-            <div class="mottaker-indikator ikke-print" wicket:id="mottakerIndikator"></div>
-            <div class="dato" wicket:id="kortPosteringDato"></div>
-            <div class="statustekst" wicket:id="status"></div>
+        <div class="statuspanel" wicket:id="statuspanel">
+            <span wicket:id="utbetalingDato"></span>
+            <span wicket:id="status"></span>
+            <span wicket:id="forfallDatoLabel" class="dato-label"></span>
+            <span wicket:id="forfallDato"></span>
         </div>
         <div class="skriv-ut-container">
             <div class="ekspander-pil ikke-print"></div>
