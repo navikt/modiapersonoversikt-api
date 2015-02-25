@@ -362,6 +362,11 @@
                 <artifactId>modiabrukerdialog-api</artifactId>
                 <version>${modiabrukerdialog-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>arena-arbeid-og-aktivitet</artifactId>
+                <version>1.0.6-alpha002</version>
+            </dependency>
 
             <!--Dialogarena-->
             <dependency>

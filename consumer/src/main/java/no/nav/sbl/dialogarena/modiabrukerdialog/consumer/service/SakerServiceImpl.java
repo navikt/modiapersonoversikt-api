@@ -11,8 +11,11 @@ import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
+import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
+import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
+import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
@@ -22,7 +25,6 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
@@ -43,6 +45,8 @@ public class SakerServiceImpl implements SakerService {
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private ArbeidOgAktivitet arbeidOgAktivitet;
 
 
     @Override
@@ -126,8 +130,25 @@ public class SakerServiceImpl implements SakerService {
     }
 
     private Optional<Sak> hentOppfolgingssakFraArena(String fnr) {
-        // TODO: Hent sak fra Arena
-        return none();
+        WSHentSakListeRequest request = new WSHentSakListeRequest()
+                .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker(fnr))
+                .withFagomradeKode("OPP");
+
+        return on(arbeidOgAktivitet.hentSakListe(request).getSakListe())
+                .head()
+                .map(new Transformer<no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak, Sak>() {
+                    @Override
+                    public Sak transform(no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak arenaSak) {
+                        Sak sak = new Sak();
+                        sak.saksId = arenaSak.getSaksId();
+                        sak.fagsystemKode = "AO01";
+                        sak.sakstype = arenaSak.getSakstypeKode().getKode();
+                        sak.temaKode = arenaSak.getFagomradeKode().getKode();
+                        sak.opprettetDato = arenaSak.getEndringsInfo().getOpprettetDato().toDateTimeAtStartOfDay();
+                        sak.finnesIGsak = false;
+                        return sak;
+                    }
+                });
     }
 
     static final Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {

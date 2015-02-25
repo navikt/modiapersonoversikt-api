@@ -31,6 +31,7 @@
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
         <webservice alias="virksomhet:Saksliste_v1" mapToProperty="gsak.saksliste.v1"/>
         <webservice alias="virksomhet:BehandleSak_v1" mapToProperty="gsak.behandlesak.v1"/>
+        <webservice alias="virksomhet:ArbeidOgAktivitet_v1 " mapToProperty="arena.arbeidogaktivitet.v1"/>
         <webservice alias="virksomhet:Ruting_v1" mapToProperty="gsak.ruting.v1"/>
         <webservice alias="virksomhet:Person_v2" mapToProperty="kjerneinfoendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
@@ -46,7 +47,7 @@
         <webservice alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
         <webservice alias="domene.Brukerdialog:HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
-        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws" />
+        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>

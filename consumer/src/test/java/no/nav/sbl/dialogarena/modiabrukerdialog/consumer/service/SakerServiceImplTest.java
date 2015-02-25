@@ -8,8 +8,11 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSEndringsinfo;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
+import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
+import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
+import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +44,8 @@ public class SakerServiceImplTest {
     private StandardKodeverk standardKodeverk;
     @Mock
     private LokaltKodeverk lokaltKodeverk;
+    @Mock
+    private ArbeidOgAktivitet arbeidOgAktivitet;
 
     @InjectMocks
     private SakerServiceImpl sakerService;
@@ -49,6 +54,8 @@ public class SakerServiceImplTest {
     public void setUp() {
         when(sakWS.finnGenerellSakListe(any(WSFinnGenerellSakListeRequest.class))).thenReturn(
                 new WSFinnGenerellSakListeResponse().withSakListe(createSakslisteBasertPaTemaMap()));
+
+        when(arbeidOgAktivitet.hentSakListe(any(WSHentSakListeRequest.class))).thenReturn(new WSHentSakListeResponse());
     }
 
     @Test
