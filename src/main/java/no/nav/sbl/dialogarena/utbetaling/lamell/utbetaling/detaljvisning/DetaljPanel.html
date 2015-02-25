@@ -1,26 +1,25 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <div class="skillestrek-topp">
-        <div class="element">
-            <label>
-                <wicket:message key="mottatt.label"/>
-            </label>
-            <span wicket:id="mottakernavn">[]</span>
-        </div>
-        <div class="element">
-            <label>
-                <wicket:message key="konto.label"/>
-            </label>
-            <span wicket:id="konto">[]</span>
-        </div>
-        <div class="element">
-            <label>
-                <wicket:message key="ytelsesinfo.label"/>
-            </label>
-            <span class="ib cap-1st" wicket:id="ytelsesinfo">[]</span>
-        </div>
-    </div>
+    <!-- Header informasjon -->
+    <table class="skillestrek-topp utbetaling-tabell" wicket:message="summary:utbetaling.hovedinfo.tabelloppsummering">
+        <thead>
+        <tr>
+            <th><wicket:message key="konto.label" /></th>
+            <th></th>
+            <th><wicket:message key="brutto.label" /></th>
+            <th><wicket:message key="trekk.label" /></th>
+            <th><wicket:message key="utbetalt.label" /></th>
+        </tr>
+        </thead>
+        <tbody>
+            <td wicket:id="konto"></td>
+            <td></td>
+            <td class="uthevet" wicket:id="brutto"></td>
+            <td class="uthevet" wicket:id="trekk"></td>
+            <td class="uthevet" wicket:id="utbetalt"></td>
+        </tbody>
+    </table>
 
     <!-- Detaljpanel -->
     <table class="skillestrek-topp utbetaling-tabell" wicket:message="summary:utbetaling.detaljer.tabelloppsummering">
@@ -44,8 +43,16 @@
         </tbody>
     </table>
 
+    <!-- Om ytelsen - Er det samme som ytelsen! -->
+    <div class="element skillestrek-topp" style="margin-bottom: 20px;">
+        <label>
+            <wicket:message key="omytelse.header"/>
+        </label>
+        <div wicket:id="omytelsen">[]</div>
+    </div>
+
     <!-- bilagsmelding -->
-    <div class="element skillestrek-topp">
+    <div class="element">
         <label>
             <wicket:message key="bilagsmelding.header"/>
         </label>

@@ -27,7 +27,7 @@ public class UtbetalingVM {
         return ytelse.get(Hovedytelse.utbetalingsstatus);
     }
 
-    public String getBeskrivelse() {
+    public String getYtelse() {
         return ytelse.get(Hovedytelse.ytelse);
     }
 
@@ -97,11 +97,12 @@ public class UtbetalingVM {
         return getBelopString(ytelse.get(Hovedytelse.bruttoUtbetalt));
     }
 
+
     public String getTrekk() {
         return getBelopString(ytelse.get(Hovedytelse.sammenlagtTrekkBeloep));
     }
 
-    public String getBelop() {
+    public String getUtbetalt() {
         return getBelopString(ytelse.get(Hovedytelse.nettoUtbetalt));
     }
 

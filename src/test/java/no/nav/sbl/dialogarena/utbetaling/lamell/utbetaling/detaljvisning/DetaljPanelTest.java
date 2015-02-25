@@ -15,6 +15,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withTextSaying;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 public class DetaljPanelTest extends AbstractWicketTest {
@@ -113,9 +114,8 @@ public class DetaljPanelTest extends AbstractWicketTest {
     @Test
     public void viserRiktigMetadataForUtbetalingen() {
         wicketTester.goToPageWith(detaljPanel)
-                .should().containComponent(withId("mottakernavn").and(withTextSaying("Ola Nordmann")))
                 .should().containComponent(withId("konto").and(withTextSaying("***REMOVED***")))
-                .should().containComponent(withId("ytelsesinfo").and(withTextSaying("Dagpenger")))
+                .should().containComponent(withId("omytelsen").and(withTextSaying("Dagpenger")))
                 .should().containComponent(withId("bilagsmelding").and(withTextSaying("Dette er en testmelding")));
     }
 
@@ -134,10 +134,13 @@ public class DetaljPanelTest extends AbstractWicketTest {
                 .with(Hovedytelse.ytelse, "Dagpenger")
                 .with(Hovedytelse.utbetalingsmelding, "Dette er en testmelding")
                 .with(Hovedytelse.underytelseListe, createUnderytelser())
+                .with(Hovedytelse.utbetalingsDato, now())
                 .with(Hovedytelse.nettoUtbetalt, 1300D)
                 .with(Hovedytelse.skattListe, createSkattListe())
                 .with(Hovedytelse.sumSkatt, 12D)
                 .with(Hovedytelse.trekkListe, createTrekkListe())
+                .with(Hovedytelse.bruttoUtbetalt, 2000D)
+                .with(Hovedytelse.sammenlagtTrekkBeloep, -200D)
                 .with(Hovedytelse.sumTrekk, 14D);
     }
 

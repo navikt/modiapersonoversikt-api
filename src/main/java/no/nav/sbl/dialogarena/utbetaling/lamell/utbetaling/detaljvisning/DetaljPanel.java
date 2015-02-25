@@ -27,9 +27,12 @@ public class DetaljPanel extends Panel {
         IModel<String> melding = Model.of(utbetalingVM.getMelding());
         List<YtelseVM> ytelseVMer = createYtelseVMerList(utbetalingVM);
 
-        add(new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
+        add(
                 new Label("konto", utbetalingVM.getKontonr()),
-                new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
+                new Label("brutto", utbetalingVM.getBruttoBelop()),
+                new Label("trekk", utbetalingVM.getTrekk()),
+                new Label("omytelsen", utbetalingVM.getYtelse()),
+                new Label("utbetalt", utbetalingVM.getUtbetalt()),
                 createYtelserader(ytelseVMer),
                 new MultiLineLabel("bilagsmelding", melding).add(visibleIf(not(isEmptyString(melding)))));
     }
