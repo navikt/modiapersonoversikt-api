@@ -15,6 +15,8 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
     Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
     Modig.shortcutListener.on({alt: true, keyCode: 71}, openGosys);  // Alt+g
+    Modig.shortcutListener.on({alt: true, keyCode: 80}, openArenaPersonmappe);  // Alt+p
+    Modig.shortcutListener.on({alt: true, keyCode: 89}, openArenaUtbetalinger);  // Alt+y
 
     addPrintEventListener();
 
@@ -76,6 +78,14 @@ function closeLamellHead() {
 
 function openGosys() {
     $('.hiddenGosysLenkePanel').click();
+}
+
+function openArenaPersonmappe() {
+    $('.hiddenArenaPersonmappeLenkePanel').click();
+}
+
+function openArenaUtbetalinger() {
+    $('.hiddenArenaUtbetalingLenkePanel').click();
 }
 
 function closeResetPerson() {
