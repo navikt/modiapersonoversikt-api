@@ -1,22 +1,10 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div>
-    <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.maaned.oppsummering.tabellbeskrivelse">
-        <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th><wicket:message key="utbetaling.lamell.maaned.oppsummering.brutto"/></th>
-            <th><wicket:message key="utbetaling.lamell.maaned.oppsummering.trekk"/></th>
-            <th><wicket:message key="utbetaling.lamell.maaned.oppsummering.utbetalt"/></th>
-        </tr>
-        </thead>
+    <table class="utbetaling-tabell utforte-betalinger" wicket:message="summary:utbetaling.lamell.maaned.oppsummering.tabellbeskrivelse">
         <tbody>
-        <tr class="uthevet">
-            <td><span class="medium oppsummert-periode" wicket:id="oppsummertPeriode"></span></td>
-            <td></td>
-            <td><span wicket:id="brutto"></span></td>
-            <td><span wicket:id="trekk"></span></td>
+        <tr>
+            <td><span wicket:id="oppsummertPeriode"></span></td>
             <td><span wicket:id="utbetalt"></span></td>
         </tr>
         </tbody>
