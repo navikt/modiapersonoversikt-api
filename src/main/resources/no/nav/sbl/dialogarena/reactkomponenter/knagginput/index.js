@@ -1,4 +1,4 @@
-var React = ModiaJS.React;
+var React = require('react');
 
 var KnaggInput = React.createClass({
     getInitialState: function () {
@@ -111,6 +111,4 @@ function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
     }
 }
 
-//Trenger begge. Første for å starte komponenten fra ReactComponetPanel.java, og andre for å bruke require
-window.ModiaJS.Components.KnaggInput = KnaggInput;
 module.exports = KnaggInput;

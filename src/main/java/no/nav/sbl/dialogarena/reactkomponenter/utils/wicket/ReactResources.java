@@ -8,10 +8,10 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 public class ReactResources {
     public static final FrontendModule SKRIVESTOTTE = new FrontendModule.With()
             .scripts(
-                    new JavaScriptResourceReference(ResourceReference.class, "build/nav-react.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/modal.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/knagginput.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/skrivestotte.js")
+                    new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/Modal.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/Knagginput.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/Skrivestotte.js")
             )
             .less(
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
@@ -22,8 +22,8 @@ public class ReactResources {
 
     public static final FrontendModule TAGINPUT = new FrontendModule.With()
             .scripts(
-                    new JavaScriptResourceReference(ResourceReference.class, "build/nav-react.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/knagginput.js")
+                    new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/Knagginput.js")
             )
             .less(new PackageResourceReference(ResourceReference.class, "build/knagginput.less"))
             .done();

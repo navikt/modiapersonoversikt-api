@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-var React = ModiaJS.React;
+var React = require('react');
 var Utils = require('./Utils');
 var Filter = require('./Filter');
 var Tekstvisning = require('./Tekstvisning');

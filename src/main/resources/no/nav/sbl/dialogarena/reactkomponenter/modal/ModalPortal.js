@@ -1,4 +1,4 @@
-var React = ModiaJS.React;
+var React = require('react');
 
 var ModalPortal = React.createClass({
     focusAfterClose: undefined,

@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
-var React = ModiaJS.React;
-var KnaggInput = ModiaJS.Components.KnaggInput;
+var React = require('react');
+var KnaggInput = require('knagginput');
 
 var Filter = React.createClass({
     render: function () {

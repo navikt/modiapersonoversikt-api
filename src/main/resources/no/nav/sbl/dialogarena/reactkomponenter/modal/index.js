@@ -1,4 +1,4 @@
-var React = ModiaJS.React;
+var React = require('react');
 var Portal = require('./ModalPortal.js');
 
 var Modal = React.createClass({
@@ -58,5 +58,4 @@ var Modal = React.createClass({
     }
 });
 
-window.ModiaJS.Components.Modal = Modal;
 module.exports = Modal;

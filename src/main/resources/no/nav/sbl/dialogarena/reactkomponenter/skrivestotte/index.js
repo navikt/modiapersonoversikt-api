@@ -1,8 +1,8 @@
-var React = ModiaJS.React;
-var Modal = ModiaJS.Components.Modal;
+var React = require('react');
+var Modal = require('modal');
 var Tekstforslag = require('./Tekstforslag.js');
 
-window.ModiaJS.Components.Skrivestotte = React.createClass({
+module.exports = React.createClass({
     vis: function () {
         this.refs.modal.open();
     },

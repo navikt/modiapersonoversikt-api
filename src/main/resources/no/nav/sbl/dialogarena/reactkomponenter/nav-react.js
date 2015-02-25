@@ -1,4 +1,6 @@
-var React = require('react');
+window.ModiaJS = window.ModiaJS || {};
+window.ModiaJS.Components = window.ModiaJS.Components || {};
+window.ModiaJS.InitializedComponents = window.ModiaJS.InitializedComponents || {};
 
 //Vår egen polyfill for console
 (function(con){
@@ -23,7 +25,5 @@ var React = require('react');
     window.console = con;
 })(window.console);
 
-window.ModiaJS = window.ModiaJS || {};
-window.ModiaJS.React = React;
-window.ModiaJS.Components = window.ModiaJS.Components || {};
-window.ModiaJS.InitializedComponents = window.ModiaJS.InitializedComponents || {};
+
+module.exports = require('react');

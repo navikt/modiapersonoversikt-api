@@ -1,0 +1,14 @@
+{
+  "namespace": {
+    "base": "ModiaJS",
+    "components": "Components"
+  },
+  "srcPath": "./src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/",
+  "targetPath": "./target/classes/no/nav/sbl/dialogarena/reactkomponenter/build/",
+  "navReact": "React",
+  "components": [
+    "skrivestotte",
+    "knagginput",
+    "modal"
+  ]
+}

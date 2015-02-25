@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-var React = ModiaJS.React;
+var React = require('react');
 
 var TekstListe = React.createClass({
     componentDidUpdate: function () {
