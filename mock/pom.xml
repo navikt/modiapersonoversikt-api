@@ -99,6 +99,10 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dial-nav-tjeneste-behandlesak</artifactId>
+        </dependency>
 
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>

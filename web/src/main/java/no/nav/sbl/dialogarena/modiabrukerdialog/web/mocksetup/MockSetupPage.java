@@ -98,7 +98,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY),
                 new MockSetupModel("Henvendelse", HENVENDELSE_KEY),
                 new MockSetupModel("Gsak", GSAK_V3_KEY),
-                new MockSetupModel("Gsak saksliste", GSAK_SAKSLISTE_KEY),
+                new MockSetupModel("Gsak sak", GSAK_SAKSLISTE_KEY),
                 new MockSetupModel("Gsak ruting", GSAK_RUTING_KEY),
                 new MockSetupModel("SakOgBehandling", SAKOGBEHANDLING_KEY),
                 new MockSetupModel("AktoerId", AKTOER_KEY),
