@@ -13,7 +13,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig.GSAK_SAKSLISTE_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig.GSAK_SAK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOpprettSakEndpointMock.createGsakOpprettSakPortTypeMock;
 
@@ -21,7 +21,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gsa
 public class GsakOpprettSakEndpointConfig {
     @Bean
     public BehandleSakV1 behandleSakV1() {
-        return createSwitcher(createGsakOpprettSakPortType(), createGsakOpprettSakPortTypeMock(), GSAK_SAKSLISTE_KEY, BehandleSakV1.class);
+        return createSwitcher(createGsakOpprettSakPortType(), createGsakOpprettSakPortTypeMock(), GSAK_SAK_KEY, BehandleSakV1.class);
     }
 
     @Bean

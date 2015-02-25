@@ -4,8 +4,7 @@ import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
-import no.nav.virksomhet.tjenester.sak.v1.Sak;
+import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,27 +19,27 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gsa
 @Configuration
 public class GsakHentSakslisteEndpointConfig {
 
-    public static final String GSAK_SAKSLISTE_KEY = "start.gsak.saksliste.withmock";
+    public static final String GSAK_SAK_KEY = "start.gsak.sak.withmock";
 
     @Bean
-    public Sak sakEndpoint() {
+    public SakV1 sakEndpoint() {
         return createSwitcher(
                 createEndpoint(),
                 createGsakHentSakslisteMock(),
-                GSAK_SAKSLISTE_KEY,
-                Sak.class
+                GSAK_SAK_KEY,
+                SakV1.class
         );
     }
 
     @Bean
-    public Pingable gsakSakslistePing(final Sak ws) {
+    public Pingable gsakSakslistePing(final SakV1 ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
-                String name = "GSAK_SAKSLISTE_V1";
+                String name = "GSAK_SAK_V1";
                 try {
-                    ws.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId("10108000398"));
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
@@ -49,10 +48,9 @@ public class GsakHentSakslisteEndpointConfig {
         };
     }
 
-    private static Sak createEndpoint() {
-        return new CXFClient<>(Sak.class)
-                .address(System.getProperty("gsak.saksliste.v1.url"))
-                .wsdl("classpath:no/nav/virksomhet/tjenester/sak/sak.wsdl")
+    private static SakV1 createEndpoint() {
+        return new CXFClient<>(SakV1.class)
+                .address(System.getProperty("gsak.sak.v1.url"))
                 .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .build();
     }

@@ -29,7 +29,7 @@
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
-        <webservice alias="virksomhet:Saksliste_v1" mapToProperty="gsak.saksliste.v1"/>
+        <webservice alias="virksomhet:Sak_v1" mapToProperty="gsak.sak.v1"/>
         <webservice alias="virksomhet:BehandleSak_v1" mapToProperty="gsak.behandlesak.v1"/>
         <webservice alias="virksomhet:ArbeidOgAktivitet_v1 " mapToProperty="arena.arbeidogaktivitet.v1"/>
         <webservice alias="virksomhet:Ruting_v1" mapToProperty="gsak.ruting.v1"/>

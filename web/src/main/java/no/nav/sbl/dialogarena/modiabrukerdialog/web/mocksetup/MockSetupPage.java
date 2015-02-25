@@ -31,7 +31,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet.ArbeidOgAktivitetEndpointConfig.ARENA_ARBEIDOGATKIVITET_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig.GSAK_SAKSLISTE_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig.GSAK_SAK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting.GsakRutingEndpointConfig.GSAK_RUTING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.NORG_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
@@ -99,7 +99,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY),
                 new MockSetupModel("Henvendelse", HENVENDELSE_KEY),
                 new MockSetupModel("Gsak", GSAK_V3_KEY),
-                new MockSetupModel("Gsak sak", GSAK_SAKSLISTE_KEY),
+                new MockSetupModel("Gsak sak", GSAK_SAK_KEY),
                 new MockSetupModel("Gsak ruting", GSAK_RUTING_KEY),
                 new MockSetupModel("Arena Arbeid og Aktivitet", ARENA_ARBEIDOGATKIVITET_KEY),
                 new MockSetupModel("SakOgBehandling", SAKOGBEHANDLING_KEY),
