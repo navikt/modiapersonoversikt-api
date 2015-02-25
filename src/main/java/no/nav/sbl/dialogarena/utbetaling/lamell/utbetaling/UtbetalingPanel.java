@@ -15,10 +15,7 @@ public class UtbetalingPanel extends Panel {
         super(id);
 
         add(new DetaljPanel("detaljpanel", utbetalingVM),
-                new WebMarkupContainer("mottakerIndikator")
-                        .add(new AttributeAppender("class", utbetalingVM.getMottakertype()).setSeparator(" ")),
-                new Label("kortPosteringDato", utbetalingVM.getKortPosteringsDato()),
-                new Label("status", utbetalingVM.getStatus()),
+                createStatusPanel("statuspanel", utbetalingVM),
                 new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
                 getHovedYtelsesPeriodeLabel(utbetalingVM),
                 new Label("bruttoBelopMedValuta", utbetalingVM.getBruttoBelop()),
@@ -33,6 +30,49 @@ public class UtbetalingPanel extends Panel {
         return (Label) new Label("periodeMedKortDato",
                 new StringResourceModel("utbetaling.lamell.utbetaling.udefinertperiode", UtbetalingPanel.this, null).getString())
                 .add(new AttributeAppender("class", "kursiv").setSeparator(" "));
+    }
+
+    protected WebMarkupContainer createStatusPanel(String id, UtbetalingVM utbetalingVM) {
+        WebMarkupContainer container = new WebMarkupContainer(id);
+
+        String statusText = utbetalingVM.getStatus();
+        if(skalViseForfallsdato(utbetalingVM)) {
+            statusText += ", ";
+        }
+
+        container.add(
+                new Label("utbetalingDato", utbetalingVM.getVisningsdatoFormatted()),
+                new Label("status", statusText),
+                new Label("forfallDatoLabel", new StringResourceModel("utbetaling.lamell.utbetaling.forfallsdato.label", this, null))
+                    .setVisible(skalViseForfallsdato(utbetalingVM)),
+                new Label("forfallDato", utbetalingVM.getForfallsDatoFormatted())
+                    .setVisible(skalViseForfallsdato(utbetalingVM))
+        );
+
+        return container;
+    }
+
+    /**
+     * Viser forfallsdato hvis:
+     * a. Ikke utbetalt
+     * b. Har forfallsdato
+     *
+     * @param utbetalingVM
+     * @return
+     */
+    protected boolean skalViseForfallsdato(UtbetalingVM utbetalingVM) {
+        if(!isUtbetalt(utbetalingVM) && hasForfallsdato(utbetalingVM)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isUtbetalt(UtbetalingVM utbetalingVM) {
+        return utbetalingVM.getUtbetalingDato() != null;
+    }
+
+    protected boolean hasForfallsdato(UtbetalingVM utbetalingVM) {
+        return utbetalingVM.getForfallsDato() != null;
     }
 
 }

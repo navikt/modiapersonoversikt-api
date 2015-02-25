@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import org.joda.time.DateTime;
@@ -61,8 +62,30 @@ public class UtbetalingVM {
         return ytelse.get(Hovedytelse.skattListe);
     }
 
-    public String getKortPosteringsDato() {
-        return optional(ytelse.get(Hovedytelse.hovedytelsedato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
+    public DateTime getUtbetalingDato() {
+        return ytelse.get(Hovedytelse.utbetalingsDato);
+    }
+
+    public String getVisningsdatoFormatted() {
+        DateTime ytelseDato = ytelse.get(Hovedytelse.hovedytelsedato);
+        if(ytelseDato == null) {
+            return "Ingen utbetalingsdato";
+        }
+
+        return WidgetDateFormatter.date(ytelseDato);
+    }
+
+    public DateTime getForfallsDato() {
+        return ytelse.get(Hovedytelse.forfallsdato);
+    }
+
+    public String getForfallsDatoFormatted() {
+        DateTime ytelseDato = ytelse.get(Hovedytelse.forfallsdato);
+        if(ytelseDato == null) {
+            return "Ingen forfallsdato";
+        }
+
+        return WidgetDateFormatter.date(ytelseDato);
     }
 
     public String getPeriodeMedKortDato() {

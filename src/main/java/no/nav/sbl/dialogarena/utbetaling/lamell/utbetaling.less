@@ -339,16 +339,19 @@
     }
     .main {
       position: relative;
-      .statusindikator {
+      .statuspanel {
         margin-bottom: 10px;
-        font-weight: bold;
         display: inline-block;
-        * {
+        span {
           margin-right: 0.5em;
           display: inline-block;
           vertical-align: middle;
           &:last-child {
             margin: 0;
+          }
+
+          &.dato-label {
+            margin-right: 0;
           }
         }
         .dot {
@@ -358,9 +361,6 @@
           &.utbetalt {
             background-color: #0fba47;
           }
-        }
-        .statustekst {
-          text-transform: uppercase;
         }
       }
     }
