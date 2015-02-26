@@ -29,7 +29,8 @@
     "karma-junit-reporter": "^0.2.2",
     "karma-phantomjs-launcher": "git+http://stash.devillo.no/scm/npmm/karma-phantomjs-launcher.git#fe9bd9c2d7ce16622e6bf373318ad0fa5894c63c",
     "karma-remote-reporter": "^0.2.0",
-    "browserify-global-shim": "^1.0.0"
+    "browserify-global-shim": "^1.0.0",
+    "jquery": "^2.1.3"
   },
   "dependencies": {
     "react": "^0.12.0"

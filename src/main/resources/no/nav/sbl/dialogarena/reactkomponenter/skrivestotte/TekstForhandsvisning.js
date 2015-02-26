@@ -7,11 +7,13 @@ var LocaleSelect = require('./LocaleSelect');
 
 var TekstForhandsvisning = React.createClass({
     render: function () {
-        var tekst = Utils.getInnhold(this.props.valgtTekst, this.props.valgtLocale);
+        var element = this.props.element.hasOwnProperty('innhold') ? this.props.element : {innhold: {nb_NO: ''}};
+
+        var tekst = Utils.getInnhold(element, this.props.locale);
         tekst = tekst.split(/[\r\n]+/);
 
         return (
-            <div tabIndex="-1" className="tekstForhandsvisning" role="tabpanel" id="tekstForhandsvisningPanel" aria-atomic="true" aria-live="polite">
+            <div>
                 <div className="tekstPanel">
                 {tekst.map(function (avsnitt) {
                     return (
@@ -20,8 +22,8 @@ var TekstForhandsvisning = React.createClass({
                 })}
                 </div>
                 <div className="velgPanel">
-                    <LocaleSelect valgtTekst={this.props.valgtTekst} valgtLocale={this.props.valgtLocale} setValgtLocale={this.props.setValgtLocale}/>
-                    <input type="button" value="Velg tekst" className="knapp-hoved-liten" onClick={this.props.settInnTekst}/>
+                    <LocaleSelect valgtTekst={element} valgtLocale={this.props.locale} setValgtLocale={this.props.settLocale}/>
+                    <input type="button" value="Velg tekst" className="knapp-hoved-liten" onClick={this.props.submit}/>
                 </div>
             </div>
         );

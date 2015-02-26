@@ -9,6 +9,7 @@
   "components": [
     "skrivestotte",
     "knagginput",
-    "modal"
+    "modal",
+    "sokLayout"
   ]
 }

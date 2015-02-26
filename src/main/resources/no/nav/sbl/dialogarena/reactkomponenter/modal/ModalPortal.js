@@ -38,14 +38,12 @@ var ModalPortal = React.createClass({
     handleTab: function (isShiftkey) {
         var $content = $(this.refs.content.getDOMNode());
         var focusable = $content.find(':not(div):focusable').not('div');
-        console.log('focusable', focusable);
         var lastValidIndex = isShiftkey ? 0 : focusable.length - 1;
 
         var currentFocusElement = $content.find(':focus')
 
         if (focusable.eq(lastValidIndex).is(currentFocusElement)) {
             var newFocusIndex = isShiftkey ? focusable.length - 1 : 0;
-            console.log('newFocus', focusable.eq(newFocusIndex));
             focusable.eq(newFocusIndex).focus();
             return true;
         }
