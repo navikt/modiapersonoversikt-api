@@ -6,6 +6,20 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class ReactResources {
+    public static final FrontendModule HENVENDELSE_SOK = new FrontendModule.With()
+            .scripts(
+                    new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/Modal.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/SokLayout.js"),
+                    new JavaScriptResourceReference(ResourceReference.class, "build/HenvendelseSok.js")
+            )
+            .less(
+                    new PackageResourceReference(ResourceReference.class, "build/modal.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/henvendelseSok.less")
+            )
+            .done();
+
     public static final FrontendModule SKRIVESTOTTE = new FrontendModule.With()
             .scripts(
                     new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
