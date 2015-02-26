@@ -308,7 +308,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         sporsmal = henvendelseUtsendingService.sendHenvendelse(sporsmal);
 
-        sakerService.knyttBehandlingskjedeTilSak(grunnInfo.bruker.fnr, sporsmal.traadId, henvendelseVM.valgtSak);
+        try {
+            sakerService.knyttBehandlingskjedeTilSak(grunnInfo.bruker.fnr, sporsmal.traadId, henvendelseVM.valgtSak);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Melding felles() {

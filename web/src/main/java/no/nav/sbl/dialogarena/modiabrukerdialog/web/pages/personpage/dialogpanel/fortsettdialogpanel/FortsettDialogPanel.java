@@ -230,7 +230,11 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
             melding = henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
             if (meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
-                sakerService.knyttBehandlingskjedeTilSak(grunnInfo.bruker.fnr, melding.traadId, henvendelseVM.valgtSak);
+                try {
+                    sakerService.knyttBehandlingskjedeTilSak(grunnInfo.bruker.fnr, melding.traadId, henvendelseVM.valgtSak);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
