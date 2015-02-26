@@ -14,10 +14,10 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslistePortTypeMock.createGsakHentSakslisteMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakSakV1PortTypeMock.createGsakSakV1Mock;
 
 @Configuration
-public class GsakHentSakslisteEndpointConfig {
+public class GsakSakV1EndpointConfig {
 
     public static final String GSAK_SAK_KEY = "start.gsak.sak.withmock";
 
@@ -25,7 +25,7 @@ public class GsakHentSakslisteEndpointConfig {
     public SakV1 sakEndpoint() {
         return createSwitcher(
                 createEndpoint(),
-                createGsakHentSakslisteMock(),
+                createGsakSakV1Mock(),
                 GSAK_SAK_KEY,
                 SakV1.class
         );

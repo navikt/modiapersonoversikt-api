@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Configuration
-public class GsakHentSakslistePortTypeMock {
+public class GsakSakV1PortTypeMock {
 
     public static final String SAKSID_1 = "15818532";
     public static final String SAKSID_2 = "85154832";
@@ -60,18 +60,18 @@ public class GsakHentSakslistePortTypeMock {
                     "12345678901", saksliste3);
 
     @Bean
-    public SakV1 sakMock() {
-        return createGsakHentSakslisteMock();
+    public SakV1 sakV1Mock() {
+        return createGsakSakV1Mock();
     }
 
-    public static SakV1 createGsakHentSakslisteMock() {
+    public static SakV1 createGsakSakV1Mock() {
         try {
             SakV1 sakV1 = mock(SakV1.class);
             when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenAnswer(new Answer<WSFinnSakResponse>() {
                 @Override
-                public WSFinnSakResponse answer(InvocationOnMock invocation) throws Throwable {
+                public WSFinnSakResponse answer(InvocationOnMock invocation) {
                     String bruker = ((WSFinnSakRequest) invocation.getArguments()[0]).getBruker().getIdent();
-                    return new WSFinnSakResponse().withSakListe(sakslisteForBruker(bruker));
+                    return new WSFinnSakResponse().withSakListe(sakerForBruker(bruker));
                 }
             });
             return sakV1;
@@ -80,7 +80,7 @@ public class GsakHentSakslistePortTypeMock {
         }
     }
 
-    private static List<WSSak> sakslisteForBruker(String fnr) {
+    private static List<WSSak> sakerForBruker(String fnr) {
         if (sakslisteMap.containsKey(fnr)) {
             return sakslisteMap.get(fnr);
         } else {
