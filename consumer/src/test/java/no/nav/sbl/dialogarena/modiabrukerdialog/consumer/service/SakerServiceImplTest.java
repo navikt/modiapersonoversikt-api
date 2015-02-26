@@ -4,6 +4,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerListe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
@@ -16,10 +17,18 @@ import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
+import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo;
+import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode;
+import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse;
+import org.apache.commons.collections15.Predicate;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -123,10 +135,7 @@ public class SakerServiceImplTest {
 
         Saker saker = sakerService.hentSaker(FNR);
 
-        assertThat(saker.getSakerListeGenerelle().size(), is(11));
-        for (SakerForTema sakerForTema : saker.getSakerListeGenerelle()) {
-            assertThat(sakerForTema.temaKode.equals(TEMAKODE_OPPFOLGING), is(false));
-        }
+        assertThat(saker.getSakerListeGenerelle(), not(containsTema(TEMAKODE_OPPFOLGING)));
     }
 
     @Test
@@ -138,12 +147,8 @@ public class SakerServiceImplTest {
 
         Saker saker = sakerService.hentSaker(FNR);
 
-        assertThat(saker.getSakerListeGenerelle().size(), is(12));
-        for (SakerForTema sakerForTema : saker.getSakerListeGenerelle()) {
-            if (sakerForTema.temaKode.equals(TEMAKODE_OPPFOLGING)) {
-                assertThat(sakerForTema.saksliste.get(0).saksId, is(oppfolgingssakId));
-            }
-        }
+        assertThat(saker.getSakerListeGenerelle(), containsTema(TEMAKODE_OPPFOLGING));
+        assertThat(hentSakerForTema(saker.getSakerListeGenerelle(), TEMAKODE_OPPFOLGING).saksliste.get(0).saksId, is(oppfolgingssakId));
     }
 
     @Test
@@ -157,10 +162,70 @@ public class SakerServiceImplTest {
 
         Saker saker = sakerService.hentSaker(FNR);
 
-        assertThat(saker.getSakerListeGenerelle().size(), is(11));
-        for (SakerForTema sakerForTema : saker.getSakerListeGenerelle()) {
-            assertThat(sakerForTema.temaKode.equals(TEMAKODE_OPPFOLGING), is(false));
-        }
+        assertThat(saker.getSakerListeGenerelle(), not(containsTema(TEMAKODE_OPPFOLGING)));
+        assertThat(saker.getSakerListeFagsak(), containsTema(TEMAKODE_OPPFOLGING));
+    }
+
+    @Test
+    public void leggerTilOppfolgingssakFraArenaDersomDenneIkkeFinnesIGsak() {
+        String saksId = "123456";
+        String sakstype = "sak-1234";
+        LocalDate dato = LocalDate.now().minusDays(1);
+
+        when(arbeidOgAktivitet.hentSakListe(any(WSHentSakListeRequest.class))).thenReturn(new WSHentSakListeResponse().withSakListe(
+                new no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak()
+                        .withFagomradeKode(new Fagomradekode().withKode(TEMAKODE_OPPFOLGING))
+                        .withSaksId(saksId)
+                        .withEndringsInfo(new EndringsInfo().withOpprettetDato(dato))
+                        .withSakstypeKode(new Sakstypekode().withKode(sakstype))
+
+
+        ));
+
+        Saker saker = sakerService.hentSaker(FNR);
+
+        assertThat(saker.getSakerListeGenerelle(), not(containsTema(TEMAKODE_OPPFOLGING)));
+        assertThat(saker.getSakerListeFagsak(), containsTema(TEMAKODE_OPPFOLGING));
+
+        SakerForTema oppfolging = hentSakerForTema(saker.getSakerListeFagsak(), TEMAKODE_OPPFOLGING);
+        assertThat(oppfolging.saksliste, hasSize(1));
+        assertThat(oppfolging.saksliste.get(0).saksId, is(saksId));
+        assertThat(oppfolging.saksliste.get(0).sakstype, is(sakstype));
+        assertThat(oppfolging.saksliste.get(0).opprettetDato, is(dato.toDateTimeAtStartOfDay()));
+        assertThat(oppfolging.saksliste.get(0).fagsystemKode, is("AO01"));
+        assertThat(oppfolging.saksliste.get(0).finnesIGsak, is(false));
+    }
+
+    private static SakerForTema hentSakerForTema(SakerListe sakerListe, final String temakode) {
+        return on(sakerListe).filter(new Predicate<SakerForTema>() {
+            @Override
+            public boolean evaluate(SakerForTema sakerForTema) {
+                return temakode.equals(sakerForTema.temaKode);
+            }
+        }).head().get();
+    }
+
+
+    private Matcher<SakerListe> containsTema(final String temakode) {
+        return new BaseMatcher<SakerListe>() {
+            @Override
+            public boolean matches(Object o) {
+                if (o instanceof SakerListe) {
+                    SakerListe saker = (SakerListe) o;
+                    for (SakerForTema sak : saker) {
+                        if (temakode.equals(sak.temaKode)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Saker inneholder ikke sak med tema " + temakode);
+            }
+        };
     }
 
     private ArrayList<WSSak> createSaksliste() {

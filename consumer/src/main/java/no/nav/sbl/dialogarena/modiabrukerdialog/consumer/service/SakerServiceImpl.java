@@ -118,7 +118,7 @@ public class SakerServiceImpl implements SakerService {
     private void leggTilManglendeGenerelleSaker(List<Sak> saker) {
         List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
         for (String temakode : GODKJENTE_TEMA_FOR_GENERELLE) {
-            if (!on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode))) && !temakode.equals(TEMAKODE_OPPFOLGING)) {
+            if (!on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode))) && !TEMAKODE_OPPFOLGING.equals(temakode)) {
                 saker.add(lagGenerellSak(temakode));
             }
         }
@@ -128,8 +128,8 @@ public class SakerServiceImpl implements SakerService {
         List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
         List<Sak> fagsaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(false))).collect();
 
-        boolean oppfolgingssakFinnesIFagsaker = on(fagsaker).exists(where(TEMAKODE, equalTo(TEMAKODE_OPPFOLGING)));
-        boolean oppfolgingssakFinnesIGenerelleSaker = on(generelleSaker).exists(where(TEMAKODE, equalTo(TEMAKODE_OPPFOLGING)));
+        boolean oppfolgingssakFinnesIFagsaker = inneholderOppfolgingssak(fagsaker);
+        boolean oppfolgingssakFinnesIGenerelleSaker = inneholderOppfolgingssak(generelleSaker);
 
         if (oppfolgingssakFinnesIFagsaker && oppfolgingssakFinnesIGenerelleSaker) {
             fjernGenerellOppfolgingssak(saker, generelleSaker);
@@ -138,9 +138,13 @@ public class SakerServiceImpl implements SakerService {
         }
     }
 
+    private static boolean inneholderOppfolgingssak(List<Sak> saker) {
+        return on(saker).exists(where(TEMAKODE, equalTo(TEMAKODE_OPPFOLGING)));
+    }
+
     private void fjernGenerellOppfolgingssak(List<Sak> saker, List<Sak> generelleSaker) {
         for (Sak sak : generelleSaker) {
-            if (sak.temaKode.equals(TEMAKODE_OPPFOLGING)) {
+            if (TEMAKODE_OPPFOLGING.equals(sak.temaKode)) {
                 saker.remove(sak);
             }
         }
