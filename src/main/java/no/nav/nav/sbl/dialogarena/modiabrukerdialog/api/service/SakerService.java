@@ -10,5 +10,5 @@ public interface SakerService {
 
     public List<Sak> hentListeAvSaker(String fnr);
 
-    void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak);
+    void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws Exception;
 }
