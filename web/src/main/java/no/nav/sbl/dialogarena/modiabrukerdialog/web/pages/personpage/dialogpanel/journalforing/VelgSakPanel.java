@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel.SAK_VALGT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -56,8 +57,11 @@ public class VelgSakPanel extends Panel {
                         send(getPage(), BREADTH, new NamedEventPayload(SAK_VALGT));
                     }
                 },
-                new Label("ingenSaker",
-                        new ResourceModel("journalfor.ingensaker")).add(visibleIf(not(sakerVM.sakerFinnes())))
+                new Label("ingenSaker", new ResourceModel("journalfor.ingensaker"))
+                        .add(visibleIf(
+                                both(not(sakerVM.sakerFinnes()))
+                                        .and(not(sakerVM.tekniskFeil)))),
+                new Label("tekniskFeil", new ResourceModel("journalfor.feilmelding.tekniskFeil")).add(visibleIf(sakerVM.tekniskFeil))
         );
     }
 
