@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,6 +30,15 @@ public class AlleMeldingerPanel extends Panel {
         setOutputMarkupId(true);
 
         this.innboksVM = innboksVM;
+        final ReactComponentPanel henvendelseSok = new ReactComponentPanel("henvendelseSokContainer", "HenvendelseSok");
+        add(henvendelseSok);
+
+        add(new AjaxLink("henvendelseSokToggle") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                henvendelseSok.callFunction(target, "vis");
+            }
+        });
 
         add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
             @Override

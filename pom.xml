@@ -228,6 +228,12 @@
             <version>${modig.security.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>reactkomponenter</artifactId>
+            <version>0.3-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!--Wicket-->
         <dependency>
