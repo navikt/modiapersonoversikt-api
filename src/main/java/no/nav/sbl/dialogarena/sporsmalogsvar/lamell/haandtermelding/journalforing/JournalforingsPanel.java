@@ -5,9 +5,13 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class JournalforingsPanel extends AnimertPanel {
@@ -16,6 +20,7 @@ public class JournalforingsPanel extends AnimertPanel {
 
     private final JournalforingsPanelEnkeltSak journalforingsPanelEnkeltSak;
     private final JournalforingsPanelVelgSak journalforingsPanelVelgSak;
+    private final IModel<Boolean> tekniskFeil = Model.of(false);
 
     public JournalforingsPanel(String id, final InnboksVM innboksVM) {
         super(id);
@@ -24,15 +29,19 @@ public class JournalforingsPanel extends AnimertPanel {
         journalforingsPanelVelgSak = new JournalforingsPanelVelgSak("journalforingsPanelVelgSak", innboksVM);
 
         AbstractReadOnlyModel<Boolean> valgtTraadErJournalfortTidligere = lagValgtTraadErJournalfortTidligereModel(innboksVM);
-        journalforingsPanelEnkeltSak.add(visibleIf(valgtTraadErJournalfortTidligere));
-        journalforingsPanelVelgSak.add(visibleIf(not(valgtTraadErJournalfortTidligere)));
+        journalforingsPanelEnkeltSak.add(visibleIf(both(valgtTraadErJournalfortTidligere).and(not(tekniskFeil))));
+        journalforingsPanelVelgSak.add(visibleIf(both(not(valgtTraadErJournalfortTidligere)).and(not(tekniskFeil))));
 
-        add(journalforingsPanelVelgSak, journalforingsPanelEnkeltSak, new AjaxLink<InnboksVM>("avbrytJournalforing") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                lukkPanel(target);
-            }
-        });
+        add(
+                journalforingsPanelVelgSak,
+                journalforingsPanelEnkeltSak,
+                new WebMarkupContainer("tekniskFeilContainer").add(visibleIf(tekniskFeil)),
+                new AjaxLink<InnboksVM>("avbrytJournalforing") {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        lukkPanel(target);
+                    }
+                });
     }
 
     private AbstractReadOnlyModel<Boolean> lagValgtTraadErJournalfortTidligereModel(final InnboksVM innboksVM) {
@@ -46,7 +55,14 @@ public class JournalforingsPanel extends AnimertPanel {
 
     @Override
     public void togglePanel(AjaxRequestTarget target) {
-        oppdatereJournalforingssaker();
+        if (!isVisibilityAllowed()) {
+            try {
+                oppdatereJournalforingssaker();
+                tekniskFeil.setObject(false);
+            } catch (Exception e) {
+                tekniskFeil.setObject(true);
+            }
+        }
         super.togglePanel(target);
     }
 
