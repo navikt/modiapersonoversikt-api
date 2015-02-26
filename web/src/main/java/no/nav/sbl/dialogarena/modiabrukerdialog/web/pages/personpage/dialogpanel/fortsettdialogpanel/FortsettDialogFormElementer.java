@@ -3,12 +3,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -23,6 +26,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -32,17 +36,31 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
 public class FortsettDialogFormElementer extends WebMarkupContainer {
-    public FortsettDialogFormElementer(String id, String fnr, final IModel<HenvendelseVM> model) {
+    public FortsettDialogFormElementer(String id, GrunnInfo grunnInfo, final IModel<HenvendelseVM> model) {
         super(id, model);
 
         final List<Component> avhengerAvKanlOgDelMedBrukerValg = new ArrayList<>();
 
-        add(new EnhancedTextArea("tekstfelt", model,
+        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", model,
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(150)
                         .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder")
-        ));
+        );
+        add(tekstfelt);
+
+        HashMap<String, Object> tekstforslagProps = new HashMap<>();
+        tekstforslagProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
+        tekstforslagProps.put("autofullfor", grunnInfo);
+        final ReactComponentPanel stottetekster = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", tekstforslagProps);
+        add(stottetekster);
+
+        add(new AjaxLink("skrivestotteToggler") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                stottetekster.callFunction(target, "vis");
+            }
+        });
 
         final RadioGroup<Kanal> kanalRadioGroup = new RadioGroup<>("kanal");
         kanalRadioGroup.setRequired(true);
@@ -84,7 +102,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         kanalbeskrivelse.setOutputMarkupId(true);
         add(kanalbeskrivelse);
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", fnr, model);
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model);
         journalforingsPanel.add(visibleIf(both(brukerKanSvare.getModel()).and(not(model.getObject().traadJournalfort()))));
         add(journalforingsPanel);
 
