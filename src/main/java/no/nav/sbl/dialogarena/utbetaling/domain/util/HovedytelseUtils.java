@@ -5,11 +5,15 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.joda.time.YearMonth;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
+import java.util.Map.Entry;
 
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
@@ -17,9 +21,9 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelse;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.hovedytelsedato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelsesperiode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR;
 import static org.joda.time.DateTime.now;
 
 /**
@@ -27,19 +31,18 @@ import static org.joda.time.DateTime.now;
  */
 public class HovedytelseUtils {
 
-    public static Set<String> hovedytelseToYtelsebeskrivelse(List<Record<Hovedytelse>> hovedytelser) {
-        return on(hovedytelser).map(ytelse).collectIn(new HashSet<String>());
-    }
-
     public static List<Record<Hovedytelse>> hentHovedytelserFraPeriode(List<Record<Hovedytelse>> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
-        final Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
-        return on(hovedytelser).filter(where(Hovedytelse.hovedytelsedato, isWithinRange(intervall))).collect();
+        final Interval intervall = intervalFromStartEndDate(startDato, sluttDato);
+        return on(hovedytelser)
+                .filter(where(hovedytelsedato, isWithinRange(intervall))).collect();
     }
 
-    public static List<List<Record<Hovedytelse>>> splittUtbetalingerPerMaaned(List<Record<Hovedytelse>> hovedytelser) {
-        List<Record<Hovedytelse>> hovedytelserSortert = on(hovedytelser).collect(HOVEDYTELSE_DATO_COMPARATOR);
-        Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap = toAarsMap(hovedytelserSortert);
-        return trekkUtUtbetalingerPerMaaned(aarsMap);
+    private static Interval intervalFromStartEndDate(LocalDate startDato, LocalDate sluttDato) {
+        return new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
+    }
+
+    public static Map<YearMonth, List<Record<Hovedytelse>>> ytelserGroupedByYearMonth(List<Record<Hovedytelse>> hovedytelser) {
+        return on(hovedytelser).map(TO_YEARMONTH_ENTRY).reduce(BY_YEARMONTH);
     }
 
     public static List<List<Record<Hovedytelse>>> grupperPaaHovedytelseOgPeriode(Iterable<Record<Hovedytelse>> utbetalinger) {
@@ -47,7 +50,7 @@ public class HovedytelseUtils {
 
         Collection<List<Record<?>>> gruppertEtterHovedytelse = on(utbetalinger).reduce(indexBy(Hovedytelse.ytelse)).values();
         for (List<Record<?>> sammeHovedytelse : gruppertEtterHovedytelse) {
-            sort(sammeHovedytelse, compareWith(first(Hovedytelse.ytelsesperiode).then(START)));
+            sort(sammeHovedytelse, compareWith(first(ytelsesperiode).then(START)));
             resultat.addAll(on(sammeHovedytelse).reduce(SPLITT_PAA_PERIODE));
         }
 
@@ -79,44 +82,12 @@ public class HovedytelseUtils {
         return new Predicate<Collection<Record<Hovedytelse>>>() {
             @Override
             public boolean evaluate(Collection<Record<Hovedytelse>> utbetalinger) {
-                LocalDate start = hovedytelse.get(Hovedytelse.ytelsesperiode).getStart().toLocalDate().minusDays(1);
+                LocalDate start = hovedytelse.get(ytelsesperiode).getStart().toLocalDate().minusDays(1);
                 return !on(utbetalinger)
-                        .filter(where(first(Hovedytelse.ytelsesperiode).then(END).then(TO_LOCAL_DATE),
+                        .filter(where(first(ytelsesperiode).then(END).then(TO_LOCAL_DATE),
                                 either(equalTo(start)).or(isAfter(start)))).isEmpty();
             }
         };
-    }
-
-    private static Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> toAarsMap(List<Record<Hovedytelse>> sorterteUtbetalinger) {
-        Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap = new LinkedHashMap<>();
-
-        for (Record<Hovedytelse> utbetaling : sorterteUtbetalinger) {
-            int aar = utbetaling.get(Hovedytelse.hovedytelsedato).getYear();
-            int maaned = utbetaling.get(Hovedytelse.hovedytelsedato).getMonthOfYear();
-            leggTilNoklerForAarOgMaaned(aarsMap, aar, maaned);
-            aarsMap.get(aar).get(maaned).add(utbetaling);
-        }
-
-        return aarsMap;
-    }
-
-    private static void leggTilNoklerForAarOgMaaned(Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap, int aar, int maaned) {
-        if (!aarsMap.containsKey(aar)) {
-            aarsMap.put(aar, new LinkedHashMap<Integer, List<Record<Hovedytelse>>>());
-        }
-        if (!aarsMap.get(aar).containsKey(maaned)) {
-            aarsMap.get(aar).put(maaned, new ArrayList<Record<Hovedytelse>>());
-        }
-    }
-
-    private static List<List<Record<Hovedytelse>>> trekkUtUtbetalingerPerMaaned(Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap) {
-        List<List<Record<Hovedytelse>>> utbetalingerSplittetPaaMaaned = new ArrayList<>();
-        for (Map<Integer, List<Record<Hovedytelse>>> maanedsMap : aarsMap.values()) {
-            for (List<Record<Hovedytelse>> utbetalingerIMaaned : maanedsMap.values()) {
-                utbetalingerSplittetPaaMaaned.add(utbetalingerIMaaned);
-            }
-        }
-        return utbetalingerSplittetPaaMaaned;
     }
 
     private static Predicate<DateTime> isWithinRange(final Interval intervall) {
@@ -128,14 +99,40 @@ public class HovedytelseUtils {
         };
     }
 
-    public static Predicate<Record<Hovedytelse>> betweenNowAndNumberOfMonthsBefore(final int numberOfMonthsToShow) {
+    public static Predicate<Record<Hovedytelse>> betweenNowAndMonthsBefore(final int numberOfMonthsToShow) {
         return new Predicate<Record<Hovedytelse>>() {
             @Override
             public boolean evaluate(Record<Hovedytelse> hovedytelse) {
-                DateTime hovedytelseDato = hovedytelse.get(Hovedytelse.hovedytelsedato);
+                DateTime hovedytelseDato = hovedytelse.get(hovedytelsedato);
                 DateTime threshold = minusMonthsAndFixedAtMidnight(now(), numberOfMonthsToShow);
                 return hovedytelseDato.isAfter(threshold);
             }
         };
     }
+
+    protected static ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> BY_YEARMONTH = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
+        @Override
+        public Map<YearMonth, List<Record<Hovedytelse>>> reduce(Map<YearMonth, List<Record<Hovedytelse>>> accumulator, Entry<YearMonth, Record<Hovedytelse>> entry) {
+            if(!accumulator.containsKey(entry.getKey())) {
+                accumulator.put(entry.getKey(), new ArrayList<Record<Hovedytelse>>());
+            }
+            accumulator.get(entry.getKey()).add(entry.getValue());
+            return accumulator;
+        }
+
+        @Override
+        public Map<YearMonth, List<Record<Hovedytelse>>> identity() {
+            return new HashMap<>();
+        }
+    };
+
+    protected static Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> TO_YEARMONTH_ENTRY = new Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>>() {
+        @Override
+        public Entry<YearMonth, Record<Hovedytelse>> transform(Record<Hovedytelse> ytelse) {
+            int year = ytelse.get(hovedytelsedato).getYear();
+            int monthOfYear = ytelse.get(hovedytelsedato).getMonthOfYear();
+            YearMonth yearMonth = new YearMonth(year, monthOfYear);
+            return new SimpleEntry<>(yearMonth, ytelse);
+        }
+    };
 }

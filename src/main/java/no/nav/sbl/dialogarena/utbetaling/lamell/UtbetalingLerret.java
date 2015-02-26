@@ -26,17 +26,18 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.YearMonth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.hentHovedytelserFraPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.ytelserGroupedByYearMonth;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
@@ -93,7 +94,7 @@ public final class UtbetalingLerret extends Lerret {
         feilmelding.setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
         List<Record<Hovedytelse>> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
-        filterParametere = new FilterParametere(hovedytelseToYtelsebeskrivelse(ytelser));
+        filterParametere = new FilterParametere(ytelserAsText(ytelser));
 
         List<Record<Hovedytelse>> synligeUtbetalinger = on(ytelser).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
@@ -131,8 +132,9 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private ListView<List<Record<Hovedytelse>>> createMaanedsPanelListe() {
-        List<List<Record<Hovedytelse>>> maanedsListe = splittUtbetalingerPerMaaned(on(hentHovedytelseListe()).filter(filterParametere).collectIn(new ArrayList<Record<Hovedytelse>>()));
-        return new ListView<List<Record<Hovedytelse>>>("maanedsPaneler", maanedsListe) {
+        Map<YearMonth, List<Record<Hovedytelse>>> yearMonthListMap = ytelserGroupedByYearMonth(on(hentHovedytelseListe()).filter(filterParametere).collect());
+
+        return new ListView<List<Record<Hovedytelse>>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
             protected void populateItem(ListItem<List<Record<Hovedytelse>>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
@@ -148,7 +150,7 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     protected void oppdaterYtelser(List<Record<Hovedytelse>> hovedytelser) {
-        filterParametere.setYtelser(hovedytelseToYtelsebeskrivelse(hentHovedytelserFraPeriode(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
+        filterParametere.setYtelser(ytelserAsText(hentHovedytelserFraPeriode(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
@@ -207,10 +209,14 @@ public final class UtbetalingLerret extends Lerret {
     @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
-        filterParametere = new FilterParametere(hovedytelseToYtelsebeskrivelse(hentHovedytelseListe()));
+        filterParametere = new FilterParametere(ytelserAsText(hentHovedytelseListe()));
         addOrReplace(createFilterFormPanel());
         oppdaterUtbetalingsliste(target);
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('" + detaljPanelID + "');");
+    }
+
+    private static Set<String> ytelserAsText(List<Record<Hovedytelse>> ytelser) {
+        return on(ytelser).map(Hovedytelse.ytelse).collectIn(new HashSet<String>());
     }
 }

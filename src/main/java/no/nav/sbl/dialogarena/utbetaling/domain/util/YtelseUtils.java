@@ -9,6 +9,8 @@ import org.joda.time.LocalDate;
 
 import java.util.Comparator;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.hovedytelsedato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelse;
 import static org.joda.time.LocalDate.now;
 
 public class YtelseUtils {
@@ -25,9 +27,9 @@ public class YtelseUtils {
         public static final Comparator<Record<Hovedytelse>> HOVEDYTELSE_DATO_COMPARATOR = new Comparator<Record<Hovedytelse>>() {
             @Override
             public int compare(Record<Hovedytelse> o1, Record<Hovedytelse> o2) {
-                int compareDato = -o1.get(Hovedytelse.hovedytelsedato).toLocalDate().compareTo(o2.get(Hovedytelse.hovedytelsedato).toLocalDate());
+                int compareDato = -o1.get(hovedytelsedato).toLocalDate().compareTo(o2.get(hovedytelsedato).toLocalDate());
                 if (compareDato == 0) {
-                    return o1.get(Hovedytelse.ytelse).compareToIgnoreCase(o2.get(Hovedytelse.ytelse));
+                    return o1.get(ytelse).compareToIgnoreCase(o2.get(ytelse));
                 }
                 return compareDato;
             }

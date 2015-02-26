@@ -4,16 +4,16 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.YearMonth;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -32,7 +32,6 @@ public class HovedytelseUtilsTest {
     private static final DateTime JAN_2012_DATE = new DateTime(2012, 1, 1, 0, 0);
     private static final DateTime MAR_2012_DATE = new DateTime(2012, 3, 1, 0, 0);
     private static final DateTime SEPT_2012_DATE = new DateTime(2012, 9, 1, 0, 0);
-    private static final String ID = "id";
 
     private List<Record<Hovedytelse>> hovedytelseListe;
 
@@ -54,13 +53,12 @@ public class HovedytelseUtilsTest {
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.hovedytelsedato, SEPT_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, SEP_2012_NR1)
-                        .with(Hovedytelse.ytelse, BARNETRYGD)
-        );
+                        .with(Hovedytelse.ytelse, BARNETRYGD));
     }
 
     @Test
     public void hentYtelser_inneholderNoyaktigAlleHovedYtelser() {
-        Set<String> ytelser = hovedytelseToYtelsebeskrivelse(hovedytelseListe);
+        Set<String> ytelser = on(hovedytelseListe).map(Hovedytelse.ytelse).collectIn(new HashSet<String>());
 
         assertThat(ytelser.size(), is(3));
         assertThat(ytelser, containsInAnyOrder(DAGPENGER, SYKEPENGER, BARNETRYGD));
@@ -76,32 +74,32 @@ public class HovedytelseUtilsTest {
 
         ytelseListe.add(ytelse);
 
-        assertThat(splittUtbetalingerPerMaaned(ytelseListe).size(), is(4));
+        assertThat(ytelserGroupedByYearMonth(ytelseListe).size(), is(4));
     }
 
     @Test
     public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaaneder() {
-        List<List<Record<Hovedytelse>>> maanedsMap = splittUtbetalingerPerMaaned(hovedytelseListe);
+        Map<YearMonth, List<Record<Hovedytelse>>> maanedsMap = ytelserGroupedByYearMonth(hovedytelseListe);
 
         assertThat(maanedsMap.size(), is(3));
     }
 
     @Test
     public void splittUtbetalingerPerMaaned_hverMaanedHarRiktigAntallUtbetalinger() {
-        List<List<Record<Hovedytelse>>> maanedsMap = splittUtbetalingerPerMaaned(hovedytelseListe);
+        Map<YearMonth, List<Record<Hovedytelse>>> maanedsMap = ytelserGroupedByYearMonth(hovedytelseListe);
 
-        assertThat(maanedsMap.get(0).size(), is(1));
-        assertThat(maanedsMap.get(1).size(), is(1));
-        assertThat(maanedsMap.get(2).size(), is(2));
+        assertThat(maanedsMap.get(new YearMonth(2012, 9)).size(), is(1));
+        assertThat(maanedsMap.get(new YearMonth(2012, 3)).size(), is(1));
+        assertThat(maanedsMap.get(new YearMonth(2012, 1)).size(), is(2));
     }
 
     @Test
     public void splittUtbetalingerPerMaaned_inneholderRiktigUtbetalingPerMaaned() {
-        List<List<Record<Hovedytelse>>> maanedsMap  = splittUtbetalingerPerMaaned(hovedytelseListe);
+        Map<YearMonth, List<Record<Hovedytelse>>> maanedsMap = ytelserGroupedByYearMonth(hovedytelseListe);
 
-        assertThat(maanedsMap.get(0).get(0).get(Hovedytelse.utbetalingsmelding), is(SEP_2012_NR1));
-        assertThat(maanedsMap.get(1).get(0).get(Hovedytelse.utbetalingsmelding), is(MAR_2012_NR1));
-        assertThat(maanedsMap.get(2).get(0).get(Hovedytelse.utbetalingsmelding), is(JAN_2012_NR1));
+        assertThat(maanedsMap.get(new YearMonth(2012, 9)).get(0).get(Hovedytelse.utbetalingsmelding), is(SEP_2012_NR1));
+        assertThat(maanedsMap.get(new YearMonth(2012, 3)).get(0).get(Hovedytelse.utbetalingsmelding), is(MAR_2012_NR1));
+        assertThat(maanedsMap.get(new YearMonth(2012, 1)).get(0).get(Hovedytelse.utbetalingsmelding), is(JAN_2012_NR1));
     }
 
     @Test
