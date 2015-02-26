@@ -27,6 +27,7 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
@@ -69,7 +70,7 @@ public class SakerServiceImpl implements SakerService {
     }
 
     @Override
-    public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) {
+    public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws Exception {
         if (!sak.finnesIGsak) {
             sak.saksId = opprettSak(fnr, sak);
         }
@@ -166,21 +167,26 @@ public class SakerServiceImpl implements SakerService {
                 .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker(fnr))
                 .withFagomradeKode("OPP");
 
-        return on(arbeidOgAktivitet.hentSakListe(request).getSakListe())
-                .head()
-                .map(new Transformer<no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak, Sak>() {
-                    @Override
-                    public Sak transform(no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak arenaSak) {
-                        Sak sak = new Sak();
-                        sak.saksId = arenaSak.getSaksId();
-                        sak.fagsystemKode = "AO01";
-                        sak.sakstype = arenaSak.getSakstypeKode().getKode();
-                        sak.temaKode = arenaSak.getFagomradeKode().getKode();
-                        sak.opprettetDato = arenaSak.getEndringsInfo().getOpprettetDato().toDateTimeAtStartOfDay();
-                        sak.finnesIGsak = false;
-                        return sak;
-                    }
-                });
+        try {
+            return on(arbeidOgAktivitet.hentSakListe(request).getSakListe())
+                    .head()
+                    .map(new Transformer<no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak, Sak>() {
+                        @Override
+                        public Sak transform(no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak arenaSak) {
+                            Sak sak = new Sak();
+                            sak.saksId = arenaSak.getSaksId();
+                            sak.fagsystemKode = "AO01";
+                            sak.sakstype = arenaSak.getSakstypeKode().getKode();
+                            sak.temaKode = arenaSak.getFagomradeKode().getKode();
+                            sak.opprettetDato = arenaSak.getEndringsInfo().getOpprettetDato().toDateTimeAtStartOfDay();
+                            sak.finnesIGsak = false;
+                            return sak;
+                        }
+                    });
+        } catch (Exception e) {
+            return none();
+        }
+
     }
 
     static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = new Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak>() {
