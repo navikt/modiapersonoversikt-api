@@ -54,7 +54,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     }
 
     @Test
-    public void skalJournalforeVedSubmit() {
+    public void skalJournalforeVedSubmit() throws Exception {
         JournalforingsPanelEnkeltSak journalforingsPanel = new JournalforingsPanelEnkeltSak("panel", innboksVM);
         journalforingsPanel.oppdater();
         wicket

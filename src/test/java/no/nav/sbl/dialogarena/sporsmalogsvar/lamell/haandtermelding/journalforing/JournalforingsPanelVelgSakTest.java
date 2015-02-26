@@ -48,7 +48,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     }
 
     @Test
-    public void skalJournalforeVedSubmit() {
+    public void skalJournalforeVedSubmit() throws Exception {
         JournalforingsPanelVelgSak panel = new JournalforingsPanelVelgSak("panel", innboksVM);
         panel.oppdater();
         wicket

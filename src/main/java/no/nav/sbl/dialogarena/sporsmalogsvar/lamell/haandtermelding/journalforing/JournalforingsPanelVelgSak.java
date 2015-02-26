@@ -56,7 +56,12 @@ public class JournalforingsPanelVelgSak extends Panel {
                 Melding melding = valgtTraadVM.getEldsteMelding().melding;
                 Sak sak = valgtTraadVM.journalfortSak;
 
-                sakerService.knyttBehandlingskjedeTilSak(innboksVM.getFnr(), melding.traadId, sak);
+                try {
+                    sakerService.knyttBehandlingskjedeTilSak(innboksVM.getFnr(), melding.traadId, sak);
+                } catch (Exception e) {
+                    error(getString("journalfor.feilmelding.baksystem"));
+                    onError(target, form);
+                }
 
                 send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
             }
