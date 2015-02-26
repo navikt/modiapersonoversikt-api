@@ -19,7 +19,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.betweenNowAndNumberOfMonthsBefore;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.betweenNowAndMonthsBefore;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.TIL_HOVEDYTELSEVM;
@@ -43,7 +43,7 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
 
     protected static List<HovedytelseVM> transformUtbetalingToVM(List<Record<Hovedytelse>> utbetalinger) {
         return on(utbetalinger)
-                .filter(betweenNowAndNumberOfMonthsBefore(NUMBER_OF_MONTHS_TO_SHOW))
+                .filter(betweenNowAndMonthsBefore(NUMBER_OF_MONTHS_TO_SHOW))
                 .map(TIL_HOVEDYTELSEVM)
                 .collect(new UtbetalingVMComparator());
     }
