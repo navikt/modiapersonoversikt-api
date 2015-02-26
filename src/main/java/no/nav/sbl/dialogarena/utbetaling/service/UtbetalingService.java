@@ -6,9 +6,7 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
-import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSForespurtPeriode;
-import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSIdent;
-import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -48,7 +46,10 @@ public class UtbetalingService {
 
     protected WSHentUtbetalingsinformasjonRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
         return new WSHentUtbetalingsinformasjonRequest()
-            .withId(new WSIdent().withIdent(fnr))
+            .withId(new WSIdent()
+                    .withIdent(fnr)
+                    .withIdentType(new WSIdenttyper().withValue("FNR"))
+                    .withRolle(new WSIdentroller().withValue("RETTIGHETSHAVER")))
             .withPeriode(createPeriode(startDato, sluttDato));
     }
 
