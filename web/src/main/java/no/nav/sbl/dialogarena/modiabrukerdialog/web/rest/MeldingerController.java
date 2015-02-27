@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
@@ -24,18 +24,27 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultS
 public class MeldingerController {
 
     @Inject
-    private HenvendelseBehandlingService henvendelse;
+    private MeldingerSok searcher;
 
     @GET
     @Path("/traader")
     public List<Traad> hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         String valgtEnhet = hentValgtEnhet(request);
-        return henvendelse.hentTraader(fnr, valgtEnhet);
+        searcher.indekser(fnr, valgtEnhet);
+        return searcher.sok(fnr, "");
+    }
+
+    @GET
+    @Path("/sok/{fritekst: .*}")
+    public List<Traad> sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
+        return searcher.sok(fnr, fritekst);
     }
 
     @GET
     @Path("/indekser")
-    public Response indekser(@PathParam("fnr") String fnr) {
+    public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
+        String valgtEnhet = hentValgtEnhet(request);
+        searcher.indekser(fnr, valgtEnhet);
         return Response.status(Response.Status.OK).build();
     }
 
