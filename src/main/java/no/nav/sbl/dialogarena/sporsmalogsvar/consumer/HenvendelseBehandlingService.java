@@ -8,7 +8,6 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -22,7 +21,6 @@ import org.joda.time.DateTime;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -30,11 +28,8 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.TRAAD_ID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad.NYESTE_FORST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
@@ -57,21 +52,11 @@ public class HenvendelseBehandlingService {
     @Inject
     private StandardKodeverk standardKodeverk;
 
-    public List<Traad> hentTraader(String fnr, String valgtEnhet) {
-        Map<String, List<Melding>> traader = on(hentMeldinger(fnr, valgtEnhet)).reduce(indexBy(TRAAD_ID));
-        return on(traader.entrySet()).map(new Transformer<Map.Entry<String, List<Melding>>, Traad>() {
-            @Override
-            public Traad transform(Map.Entry<String, List<Melding>> entry) {
-                return new Traad(entry.getKey(), entry.getValue());
-            }
-        }).collect(NYESTE_FORST);
-    }
-
     public List<Melding> hentMeldinger(String fnr) {
         return hentMeldinger(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
     }
 
-    private List<Melding> hentMeldinger(String fnr, String valgtEnhet) {
+    public List<Melding> hentMeldinger(String fnr, String valgtEnhet) {
         List<String> typer = asList(
                 SPORSMAL_SKRIFTLIG.name(),
                 SVAR_SKRIFTLIG.name(),
