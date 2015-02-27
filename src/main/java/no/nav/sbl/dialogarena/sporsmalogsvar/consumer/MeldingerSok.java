@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -45,9 +44,6 @@ import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.lucene.document.Field.Store.YES;
 
 public class MeldingerSok {
-
-    @Inject
-    private HenvendelseBehandlingService henvendelse;
 
     private static final Logger logger = LoggerFactory.getLogger(MeldingerSok.class);
     public static final Integer TIME_TO_LIVE_MINUTES = 10;
@@ -72,8 +68,7 @@ public class MeldingerSok {
         queryParser.setAllowLeadingWildcard(true);
     }
 
-    public void indekser(String fnr, String valgEnhet) {
-        List<Melding> meldinger = henvendelse.hentMeldinger(fnr, valgEnhet);
+    public void indekser(String fnr, List<Melding> meldinger) {
         String navIdent = getSubjectHandler().getUid();
 
         String key = key(fnr, navIdent);
