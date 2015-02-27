@@ -18,6 +18,10 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -41,6 +45,9 @@ public class MeldingerSok {
     @Inject
     private HenvendelseBehandlingService henvendelse;
 
+    private static final Logger logger = LoggerFactory.getLogger(MeldingerSok.class);
+    public static final Integer TIME_TO_LIVE_MINUTES = 10;
+
     private static final String ID = "id";
     private static final String FRITEKST = "fritekst";
     private static final String TEMAGRUPPE = "temagruppe";
@@ -53,6 +60,7 @@ public class MeldingerSok {
 
     private Map<String, List<Melding>> meldingerCache = new ConcurrentHashMap<>();
     private Map<String, RAMDirectory> directories = new ConcurrentHashMap<>();
+    private Map<String, DateTime> indexingTimestamps = new ConcurrentHashMap<>();
 
     public MeldingerSok() {
         queryParser.setDefaultOperator(QueryParser.Operator.AND);
@@ -66,12 +74,17 @@ public class MeldingerSok {
         String key = key(fnr, navIdent);
         meldingerCache.put(key, meldinger);
         directories.put(key, indekser(meldinger));
+        indexingTimestamps.put(key, DateTime.now());
     }
 
     public List<Traad> sok(String fnr, String tekst) {
         try {
             String navIdent = getSubjectHandler().getUid();
             String key = key(fnr, navIdent);
+
+            if (!directories.containsKey(key)) {
+                throw new RuntimeException(String.format("Man må kalle %s.indekser før man kan søke", MeldingerSok.class.getName()));
+            }
 
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directories.get(key)));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
@@ -95,6 +108,22 @@ public class MeldingerSok {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Scheduled(cron = "1 * * * * *") // hvert minutt
+    public void ryddOppCache() {
+        logger.info("Starter opprydning av cache. Har {} directories", directories.size());
+        int count = 0;
+        for (Map.Entry<String, DateTime> entry : indexingTimestamps.entrySet()) {
+            if (DateTime.now().minusMinutes(TIME_TO_LIVE_MINUTES).isAfter(entry.getValue())) {
+                count++;
+                String key = entry.getKey();
+                indexingTimestamps.remove(key);
+                directories.remove(key);
+                meldingerCache.remove(key);
+            }
+        }
+        logger.info("Fjernet {} directories", count);
     }
 
     private static String key(String fnr, String navIdent) {
