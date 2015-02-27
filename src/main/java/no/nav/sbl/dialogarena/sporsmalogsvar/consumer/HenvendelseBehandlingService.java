@@ -8,6 +8,7 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -21,6 +22,7 @@ import org.joda.time.DateTime;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -28,8 +30,11 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.TRAAD_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad.NYESTE_FORST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
@@ -52,7 +57,21 @@ public class HenvendelseBehandlingService {
     @Inject
     private StandardKodeverk standardKodeverk;
 
-    public List<Melding> hentMeldinger(final String fnr) {
+    public List<Traad> hentTraader(String fnr, String valgtEnhet) {
+        Map<String, List<Melding>> traader = on(hentMeldinger(fnr, valgtEnhet)).reduce(indexBy(TRAAD_ID));
+        return on(traader.entrySet()).map(new Transformer<Map.Entry<String, List<Melding>>, Traad>() {
+            @Override
+            public Traad transform(Map.Entry<String, List<Melding>> entry) {
+                return new Traad(entry.getKey(), entry.getValue());
+            }
+        }).collect(NYESTE_FORST);
+    }
+
+    public List<Melding> hentMeldinger(String fnr) {
+        return hentMeldinger(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+    }
+
+    private List<Melding> hentMeldinger(String fnr, String valgtEnhet) {
         List<String> typer = asList(
                 SPORSMAL_SKRIFTLIG.name(),
                 SVAR_SKRIFTLIG.name(),
@@ -66,8 +85,8 @@ public class HenvendelseBehandlingService {
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)
                 .map(journalfortTemaTilTemanavn)
-                .filter(kontorsperreTilgang)
-                .map(journalfortTemaTilgang)
+                .filter(kontorsperreTilgang(valgtEnhet))
+                .map(journalfortTemaTilgang(valgtEnhet))
                 .collect();
     }
 
@@ -107,35 +126,40 @@ public class HenvendelseBehandlingService {
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
-    private final Predicate<Melding> kontorsperreTilgang = new Predicate<Melding>() {
-        @Override
-        public boolean evaluate(Melding melding) {
-            PolicyRequest kontorsperrePolicyRequest = forRequest(
-                    actionId("kontorsperre"),
-                    resourceId(""),
-                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
+    private Predicate<Melding> kontorsperreTilgang(final String valgtEnhet){
+        return new Predicate<Melding>() {
+            @Override
+            public boolean evaluate(Melding melding) {
+                PolicyRequest kontorsperrePolicyRequest = forRequest(
+                        actionId("kontorsperre"),
+                        resourceId(""),
+                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
 
-            return isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest);
-        }
-    };
-
-    private final Transformer<Melding, Melding> journalfortTemaTilgang = new Transformer<Melding, Melding>() {
-        @Override
-        public Melding transform(Melding melding) {
-            PolicyRequest temagruppePolicyRequest = forRequest(
-                    actionId("temagruppe"),
-                    resourceId(""),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
-
-            if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.fritekst = "";
-                melding.ingenTilgangJournalfort = true;
+                return isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest);
             }
+        };
+    }
 
-            return melding;
-        }
-    };
+    private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
+        return new Transformer<Melding, Melding>() {
+            @Override
+            public Melding transform(Melding melding) {
+                PolicyRequest temagruppePolicyRequest = forRequest(
+                        actionId("temagruppe"),
+                        resourceId(""),
+                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
+
+                if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                    melding.fritekst = "";
+                    melding.ingenTilgangJournalfort = true;
+                }
+
+                return melding;
+            }
+        };
+    }
 
     private final Transformer<Melding, Melding> journalfortTemaTilTemanavn = new Transformer<Melding, Melding>() {
         @Override
