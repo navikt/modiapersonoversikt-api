@@ -130,7 +130,7 @@ public class GsakService {
             valgtEnhetId = DEFAULT_OPPRETTET_AV_ENHET_ID;
         }
 
-        String beskrivelse = "Oppgave opprettet fra Modia med beskrivelse:\n" + nyOppgave.beskrivelse;
+        String beskrivelse = "Fra Modia:\n" + nyOppgave.beskrivelse;
 
         GsakKodeTema.Underkategori underkategori = optional(nyOppgave.underkategori).getOrElse(new GsakKodeTema.Underkategori(null, null));
 
