@@ -42,6 +42,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.TR
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad.NYESTE_FORST;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.lucene.document.Field.Store.YES;
+import static org.joda.time.DateTime.now;
 
 public class MeldingerSok {
 
@@ -55,9 +56,9 @@ public class MeldingerSok {
     private static final String ARKIVTEMA = "arkivtema";
 
     private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA};
+    private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
 
-    private StandardAnalyzer analyzer = new StandardAnalyzer();
-    private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, analyzer);
+    private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, ANALYZER);
 
     private Map<String, List<Melding>> meldingerCache = new ConcurrentHashMap<>();
     private Map<String, RAMDirectory> directories = new ConcurrentHashMap<>();
@@ -74,7 +75,7 @@ public class MeldingerSok {
         String key = key(fnr, navIdent);
         meldingerCache.put(key, meldinger);
         directories.put(key, indekser(meldinger));
-        indexingTimestamps.put(key, DateTime.now());
+        indexingTimestamps.put(key, now());
     }
 
     public List<Traad> sok(String fnr, String tekst) {
@@ -97,7 +98,7 @@ public class MeldingerSok {
             Highlighter highlighter = new Highlighter(formatter, new QueryScorer(query));
             highlighter.setTextFragmenter(new NullFragmenter());
 
-            Map<String, MeldingSokResultat> resultat = hentResultat(searcher, analyzer, highlighter, hits);
+            Map<String, MeldingSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, hits);
             final List<String> ider = on(resultat).map(TransformerUtils.<String>key()).collect();
 
             Map<String, List<Melding>> traader = on(meldingerCache.get(key))
@@ -117,12 +118,12 @@ public class MeldingerSok {
         }
     }
 
-    @Scheduled(cron = "1 * * * * *") // hvert minutt
+    @Scheduled(cron = "1 * * * * *") // Hvert minutt
     public void ryddOppCache() {
         logger.info("Starter opprydning av cache. Har {} directories", directories.size());
         int count = 0;
         for (Map.Entry<String, DateTime> entry : indexingTimestamps.entrySet()) {
-            if (DateTime.now().minusMinutes(TIME_TO_LIVE_MINUTES).isAfter(entry.getValue())) {
+            if (now().minusMinutes(TIME_TO_LIVE_MINUTES).isAfter(entry.getValue())) {
                 count++;
                 String key = entry.getKey();
                 indexingTimestamps.remove(key);
@@ -137,10 +138,10 @@ public class MeldingerSok {
         return fnr + "-" + navIdent;
     }
 
-    private RAMDirectory indekser(List<Melding> meldinger) {
+    private static RAMDirectory indekser(List<Melding> meldinger) {
         try {
             RAMDirectory directory = new RAMDirectory();
-            IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer));
+            IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, ANALYZER));
             int i = 0;
             for (Melding melding : meldinger) {
                 writer.addDocument(lagDokument(melding, i));
