@@ -1,14 +1,20 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
+import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateTime;
+
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.reverseOrder;
+import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.NYESTE_FORST;
 
 public class Traad {
     public final String traadId, temagruppe, journalfortTema;
     public final List<Melding> meldinger;
+    public final DateTime dato;
 
     public Traad(String traadId, Melding... meldinger) {
         this(traadId, asList(meldinger));
@@ -16,10 +22,21 @@ public class Traad {
 
     public Traad(String traadId, List<Melding> meldinger) {
         this.traadId = traadId;
-        this.meldinger = on(meldinger).collect(NYESTE_FORST);
+        this.meldinger = on(meldinger).collect(Melding.NYESTE_FORST);
         Melding forsteMelding = this.meldinger.get(this.meldinger.size() - 1);
+        Melding sisteMelding = this.meldinger.get(0);
         this.temagruppe = forsteMelding.temagruppe;
         this.journalfortTema = forsteMelding.journalfortTema;
+        this.dato = sisteMelding.opprettetDato;
     }
+
+    public static final Transformer<Traad, DateTime> DATO = new Transformer<Traad, DateTime>() {
+        @Override
+        public DateTime transform(Traad traad) {
+            return traad.dato;
+        }
+    };
+
+    public static final Comparator<Traad> NYESTE_FORST = reverseOrder(compareWith(DATO));
 
 }
