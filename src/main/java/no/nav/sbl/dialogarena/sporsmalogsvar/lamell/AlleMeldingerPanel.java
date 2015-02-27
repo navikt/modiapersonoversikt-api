@@ -13,6 +13,9 @@ import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
@@ -30,7 +33,9 @@ public class AlleMeldingerPanel extends Panel {
         setOutputMarkupId(true);
 
         this.innboksVM = innboksVM;
-        final ReactComponentPanel henvendelseSok = new ReactComponentPanel("henvendelseSokContainer", "HenvendelseSok");
+        Map<String, Object> props = new HashMap<>();
+        props.put("fnr", innboksVM.getFnr());
+        final ReactComponentPanel henvendelseSok = new ReactComponentPanel("henvendelseSokContainer", "HenvendelseSok", props);
         add(henvendelseSok);
 
         add(new AjaxLink("henvendelseSokToggle") {
