@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import org.springframework.stereotype.Controller;
 
@@ -24,13 +26,14 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultS
 public class MeldingerController {
 
     @Inject
+    private HenvendelseBehandlingService henvendelse;
+    @Inject
     private MeldingerSok searcher;
 
     @GET
     @Path("/traader")
     public List<Traad> hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
-        String valgtEnhet = hentValgtEnhet(request);
-        searcher.indekser(fnr, valgtEnhet);
+        indekser(fnr, request);
         return searcher.sok(fnr, "");
     }
 
@@ -44,7 +47,8 @@ public class MeldingerController {
     @Path("/indekser")
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         String valgtEnhet = hentValgtEnhet(request);
-        searcher.indekser(fnr, valgtEnhet);
+        List<Melding> meldinger = henvendelse.hentMeldinger(fnr, valgtEnhet);
+        searcher.indekser(fnr, meldinger);
         return Response.status(Response.Status.OK).build();
     }
 
