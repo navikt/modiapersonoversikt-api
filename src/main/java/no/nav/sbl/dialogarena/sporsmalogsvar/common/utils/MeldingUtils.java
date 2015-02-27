@@ -2,14 +2,17 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -17,9 +20,9 @@ import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.TRAAD_ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.IKKE_BESVART;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.IKKE_LEST_AV_BRUKER;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.LEST_AV_BRUKER;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_BRUKER;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 
 public class MeldingUtils {
 
@@ -157,10 +160,6 @@ public class MeldingUtils {
             put(XMLHenvendelseType.SVAR_SBL_INNGAAENDE, SVAR_SBL_INNGAAENDE);
         }
     };
-
-    public static final List<Meldingstype> FRA_BRUKER = asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE);
-    public static final List<Meldingstype> FRA_NAV = asList(SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, SAMTALEREFERAT_OPPMOTE, SAMTALEREFERAT_TELEFON, SPORSMAL_MODIA_UTGAAENDE);
-    public static final List<Meldingstype> SPORSMAL = asList(SPORSMAL_SKRIFTLIG, SPORSMAL_MODIA_UTGAAENDE);
 
     private static Map<String, List<Melding>> lagMap(List<Map.Entry<String, List<Melding>>> entries) {
         HashMap<String, List<Melding>> map = new HashMap<>();
