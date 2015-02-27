@@ -6,8 +6,6 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFa
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,9 +18,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,16 +27,8 @@ public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
     @Mock
     private GOSYSNAVansatt ansattService;
 
-    @Mock
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
     @InjectMocks
     private DefaultJournalfortTemaAttributeLocatorDelegate delegate;
-
-    @Before
-    public void setUp() {
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("0000");
-    }
 
     @Test
     public void henterTemaerBasertPaaSaksbehandlersEnhetsValg() throws HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg, HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
@@ -55,8 +43,7 @@ public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
 
         when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenReturn(fagomradeListe);
 
-        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(""), contains("ARBD", "FAML"));
-        verify(saksbehandlerInnstillingerService, only()).getSaksbehandlerValgtEnhet();
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet("", ""), contains("ARBD", "FAML"));
         verify(ansattService, only()).hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class));
     }
 
@@ -64,13 +51,13 @@ public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
     public void emptySetHvisNorgIkkeFinnerEnhet() throws HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg, HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenThrow(new HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg());
 
-        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(""), is(empty()));
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet("", ""), is(empty()));
     }
 
     @Test
     public void emptySetHvisNorgFeiler() throws HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg, HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenThrow(new HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg());
 
-        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(""), is(empty()));
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet("", ""), is(empty()));
     }
 }

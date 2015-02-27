@@ -23,7 +23,7 @@ public class JournalfortTemaPipConfig {
 
     @Bean
     public JournalfortTemaAttributeLocatorDelegate enhetAttributeLocatorDelegate() {
-        return new DefaultJournalfortTemaAttributeLocatorDelegate(gosysNAVAnsatt, saksbehandlerInnstillingerService());
+        return new DefaultJournalfortTemaAttributeLocatorDelegate(gosysNAVAnsatt);
     }
 
     @Bean
