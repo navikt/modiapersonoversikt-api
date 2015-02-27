@@ -7,6 +7,9 @@ var ListevisningKomponent = require('./ListevisningKomponent');
 var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
 
 module.exports = React.createClass({
+    componentDidMount: function(){
+        $.get('/modiabrukerdialog/rest/meldinger/'+this.props.fnr+'/indekser');
+    },
     vis: function () {
         this.refs.modal.open();
     },
@@ -19,7 +22,7 @@ module.exports = React.createClass({
     render: function(){
         return (
             <Modal ref="modal">
-                <Soklayout {...this.props} sok={sok} submit={this.submit}
+                <Soklayout {...this.props} sok={sok.bind(this, this.props.fnr)} submit={this.submit}
                     containerClassName="henvendelse-sok"
                     sokKomponent={SokKomponent}
                     listeelementKomponent={ListevisningKomponent}
@@ -31,8 +34,8 @@ module.exports = React.createClass({
     }
 });
 
-function sok(query) {
-    return hentFraRestAPI(query)
+function sok(fnr, query) {
+    return hentFraRestAPI(fnr, query)
         .done(function(traader){
             traader.forEach(function(traad){
                 traad.key = traad.traadId;
@@ -42,45 +45,10 @@ function sok(query) {
             });
         });
 }
-function hentFraRestAPI(query) {
-    var d = $.Deferred();
-
-    setTimeout(function(){
-        var lst = [
-            lagTraad(1, "ARBD"),
-            lagTraad(2, "FMLI"),
-            lagTraad(3, "OVGR"),
-            lagTraad(4, "FMLI"),
-            lagTraad(5, "ARBD")
-        ];
-        d.resolve(lst);
-    }, 50);
-
-    return d.promise();
-}
-function lagTraad(traadId, tema) {
-    return {
-        'traadId': 'traadId' + traadId,
-        'temagruppe': tema,
-        'journalfortTema': undefined,
-        'meldinger': [
-            lagMelding(traadId+0.1, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.2, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.3, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.4, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.5, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim")
-        ]
+function hentFraRestAPI(fnr, query) {
+    if (typeof query !== "string") {
+        query = "";
     }
-}
-
-function lagMelding(traadId, nav, bruker, tema, kanal, tekst) {
-    return {
-        traadId: 'traadId' + traadId,
-        fnrBruker: bruker,
-        navIdent: nav,
-        temagruppe: tema,
-        kanal: kanal,
-        fritekst: tekst,
-        opprettetDato: new Date(new Date().toDateString() - traadId * 3600000)
-    }
+    var url = '/modiabrukerdialog/rest/meldinger/'+fnr+'/sok/' + encodeURIComponent(query);
+    return $.get(url);
 }

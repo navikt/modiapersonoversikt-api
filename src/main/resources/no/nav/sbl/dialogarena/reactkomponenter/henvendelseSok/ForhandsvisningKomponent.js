@@ -3,7 +3,6 @@ var Melding = require('./Melding');
 
 module.exports = React.createClass({
     render: function(){
-        console.log('render visning');
         if (!this.props.element.hasOwnProperty('meldinger')){
             return null;
         }
