@@ -64,6 +64,7 @@ public class MeldingUtils {
 
             if (innholdErKassert(xmlHenvendelse)) {
                 melding.temagruppe = null;
+                melding.temagruppeNavn = null;
                 melding.fritekst = null;
                 melding.kanal = null;
                 melding.navIdent = null;
@@ -83,9 +84,32 @@ public class MeldingUtils {
                 melding.kanal = meldingTilBruker.getKanal();
                 melding.navIdent = meldingTilBruker.getNavident();
             }
+            melding.temagruppeNavn = temagruppeNavn(melding.temagruppe);
+
             return melding;
         }
     };
+
+    private static String temagruppeNavn(String temagruppe) {
+        switch (temagruppe) {
+            case "ARBD":
+                return "Arbeid";
+            case "FMLI":
+                return "Familie";
+            case "HJLPM":
+                return "Hjelpemidler";
+            case "BIL":
+                return "Hjelpemidler Bil";
+            case "ORT_HJE":
+                return "Ortopediske hjelpemidler";
+            case "OVRG":
+                return "Øvrig";
+            case "PENS":
+                return "Pensjon";
+            default:
+                return temagruppe;
+        }
+    }
 
     private static boolean innholdErKassert(XMLHenvendelse xmlHenvendelse) {
         return xmlHenvendelse.getMetadataListe() == null;

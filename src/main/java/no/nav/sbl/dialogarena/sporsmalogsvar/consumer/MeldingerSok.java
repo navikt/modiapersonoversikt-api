@@ -148,7 +148,7 @@ public class MeldingerSok {
         Document document = new Document();
         document.add(new StoredField(ID, melding.id));
         document.add(new TextField(FRITEKST, optional(melding.fritekst).getOrElse(""), NO));
-        document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppe).getOrElse(""), NO));
+        document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppeNavn).getOrElse(""), NO));
         document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), NO));
         return document;
     }
