@@ -15,7 +15,7 @@ public class ReactResources {
             )
             .less(
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/sokLayout.less"),
                     new PackageResourceReference(ResourceReference.class, "build/henvendelseSok.less")
             )
             .done();
@@ -30,6 +30,7 @@ public class ReactResources {
             )
             .less(
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/sokLayout.less"),
                     new PackageResourceReference(ResourceReference.class, "build/knagginput.less"),
                     new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less")
             )

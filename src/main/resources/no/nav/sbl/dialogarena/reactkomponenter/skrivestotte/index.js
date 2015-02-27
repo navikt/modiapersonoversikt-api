@@ -13,6 +13,20 @@ module.exports = React.createClass({
     skjul: function () {
         this.refs.modal.close();
     },
+    sok: function(query){
+        query = query || {};
+        var fritekst = query.fritekst || '';
+        var knagger = query.knagger || [];
+
+        fritekst = fritekst.replace(/^#*(.*)$/, '$1');
+
+        var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
+        if (knagger.length !== 0) {
+            url += '&tags=' + encodeURIComponent(knagger);
+        }
+
+        return $.get(url);
+    },
     submit: function (valgtTekst, valgtLocale) {
         $('#' + this.props.tekstfeltId)
             .focus()
@@ -23,8 +37,9 @@ module.exports = React.createClass({
     },
     render: function () {
         return (
-            <Modal ref="modal">
-                <Soklayout {...this.props} sok={sok} submit={this.submit}
+            <Modal ref="modal" skipFocus={['div', '.knagg > button']}>
+                <Soklayout {...this.props} sok={this.sok} submit={this.submit}
+                    containerClassName="tekstforslag"
                     sokKomponent={SokKomponent}
                     listeelementKomponent={ListeElementKomponent}
                     visningsKomponent={TekstForhandsvisningKomponent}
@@ -34,19 +49,6 @@ module.exports = React.createClass({
         );
     }
 });
-function sok(query) {
-    query = query || {};
-    var fritekst = query.fritekst || '';
-    var knagger = query.knagger || [];
-
-    fritekst = fritekst.replace(/^#*(.*)$/, '$1');
-
-    var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
-    if (knagger.length !== 0) {
-        url += '&tags=' + encodeURIComponent(knagger);
-    }
-    return $.get(url);
-}
 function stripEmTags(tekst) {
     return tekst.replace(/<em>(.*?)<\/em>/g, '$1')
 }

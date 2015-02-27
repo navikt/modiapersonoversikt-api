@@ -1,95 +1,36 @@
 @skrivestotte-padding: 15px;
 @border-color: #ccc;
 @shadow-color: #000;
-body.modal-open {
-  height: 100% !important;
-  overflow: hidden !important;
-}
 
 .tekstforslag {
-  height: 500px;
-  border: 1px solid @border-color;
-
   em {
     font-style: normal;
     background-color: #eed28c;
     border-radius: 10px;
     padding: 0 5px;
   }
-  h1.tomt {
-    text-align: center;
-    padding-top: 40px;
-    color: #777;
-  }
 
-  .filter-container {
-    height: 15%;
-    padding: 1rem;
-    border-bottom: 1px solid @border-color;
-
-    input[type=text] {
-      width: 100%;
-      line-height: 2rem;
-      font-size: 1.25rem;
-    }
-  }
-  .tekstvisning {
-    position: relative;
-    height: 85%;
-
-    .tekstListe {
-      margin: 0;
-      width: 35%;
-      height: 100%;
-      float: left;
-      overflow-x: hidden;
-      overflow-y: scroll;
-      list-style: none;
-      background-color: #f5f5f5;
-      border-right: 1px solid @border-color;
-
-      div.tekstElement {
-        border-bottom: 1px solid @border-color;
+  .sok-visning {
+    .sok-liste {
+      div.sok-element {
         text-transform: none;
 
         h4 {
           margin: 0;
           font-size: 14px;
         }
-        input[type=radio] {
-          position: absolute;
-          opacity: 0;
-        }
         input[type=radio] + label {
-          width: 100%;
-          margin: 0;
-          padding: 10px @skrivestotte-padding;
-          background: none;
           text-transform: none;
         }
 
         input[type=radio]:checked + label {
-          background-color: #226aa5;
-          color: #f5f5f5;
-
           em {
             background-color: #87897d;
-          }
-          h4 {
-            color: white;
           }
         }
       }
     }
-
-    .tekstForhandsvisning {
-      width: 65%;
-      height: 100%;
-      float: right;
-      word-wrap: break-word;
-      >div {
-        height: 100%;
-      }
+    .sok-forhandsvisning {
       .tekstPanel {
         padding: @skrivestotte-padding;
         height: 85%;

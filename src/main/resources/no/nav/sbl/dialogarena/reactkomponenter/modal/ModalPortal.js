@@ -2,6 +2,11 @@ var React = require('react');
 
 var ModalPortal = React.createClass({
     focusAfterClose: undefined,
+    getDefaultProps: function(){
+        return {
+            skipFocus: ['div']
+        };
+    },
     componentDidMount: function () {
         if (this.props.isOpen === true) {
             this.focusFirst();
@@ -40,7 +45,8 @@ var ModalPortal = React.createClass({
         var focusable = $content.find(':not(div):focusable').not('div');
         var lastValidIndex = isShiftkey ? 0 : focusable.length - 1;
 
-        var currentFocusElement = $content.find(':focus')
+
+        var currentFocusElement = $content.find(':focus');
 
         if (focusable.eq(lastValidIndex).is(currentFocusElement)) {
             var newFocusIndex = isShiftkey ? focusable.length - 1 : 0;
@@ -51,7 +57,10 @@ var ModalPortal = React.createClass({
     },
     focusFirst: function () {
         this.focusAfterClose = document.activeElement;
-        var tabbables = $(this.refs.content.getDOMNode()).find(':focusable').not('div');
+        var tabbables = $(this.refs.content.getDOMNode()).find(':focusable');
+        this.props.skipFocus.forEach(function(skipFocusTag){
+            tabbables = tabbables.not(skipFocusTag);
+        });
         if (tabbables.length > 0) {
             tabbables.eq(0).focus();
         }
@@ -63,10 +72,6 @@ var ModalPortal = React.createClass({
         }
     },
     render: function () {
-        if (!this.props.isOpen) {
-            return null;
-        }
-
         var children = this.props.children;
         if (!children.hasOwnProperty('length')) {
             children = [children];
@@ -80,15 +85,16 @@ var ModalPortal = React.createClass({
         var title = createAriaOptional('title', this.props.title);
         var description = createAriaOptional('description', this.props.description);
 
+        var cls = this.props.isOpen ? '' : 'hidden';
         return (
-            <div tabIndex="-1" onKeyDown={this.keyHandler} role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
+            <div tabIndex="-1" className={cls} aria-hidden={!this.props.isOpen} onKeyDown={this.keyHandler} role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
                 <div className="backdrop" onClick={this.props.modal.close}></div>
                     {title.hidden}
                     {description.hidden}
                 <div className="centering">
                         {title.visible}
                         {description.visible}
-                    <div className="content" ref="content" role="dialog">
+                    <div className="content" ref="content">
                         {children}
                     </div>
                 </div>
@@ -98,7 +104,7 @@ var ModalPortal = React.createClass({
 });
 
 function createAriaOptional(name, data) {
-    var id = createId('react-modalx-'+name + '-');
+    var id = createId('react-modalx-' + name + '-');
 
     var tagComponent = data.tag.split(".");
     var tagType = tagComponent[0];

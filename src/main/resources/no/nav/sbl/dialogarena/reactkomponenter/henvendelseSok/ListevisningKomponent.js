@@ -3,9 +3,12 @@ var moment = require('moment');
 require('moment/locale/nb');
 moment.locale('nb');
 
-window.moment = moment;
-
 module.exports = React.createClass({
+    statics: {
+        lagAriaLabel: function(element){
+            return element.temagruppe;
+        }
+    },
     render: function () {
         var cls = this.props.erValgt ? "melding valgt" : "melding";
         var dato = this.props.element.dato || new Date();
@@ -13,14 +16,15 @@ module.exports = React.createClass({
 
         return (
             <div {...this.props}>
-                <article className={cls}>
+                <input id={"melding" + this.props.element.key} name="tekstListeRadio" type="radio" readOnly checked={this.props.erValgt} />
+                <label htmlFor={"melding" + this.props.element.key} className={cls}>
                     <header>
                         <p className={'meldingstatus ' + this.props.element.type}>{this.props.element.typeBeskrivelse}</p>
                         <p className="opprettet">{dato}</p>
                         <h1>{this.props.element.temagruppe}</h1>
                     </header>
                     <p>{this.props.element.innhold}</p>
-                </article>
+                </label>
             </div>
         );
     }

@@ -23,7 +23,7 @@ var TekstForhandsvisning = React.createClass({
                 </div>
                 <div className="velgPanel">
                     <LocaleSelect valgtTekst={element} valgtLocale={this.props.locale} setValgtLocale={this.props.settLocale}/>
-                    <input type="button" value="Velg tekst" className="knapp-hoved-liten" onClick={this.props.submit}/>
+                    <input type="submit" value="Velg tekst" className="knapp-hoved-liten" />
                 </div>
             </div>
         );

@@ -9,7 +9,7 @@ var KnaggInput = React.createClass({
     },
     getInitialState: function () {
         return {
-            knagger: this.props.knagger || [],
+            knagger: this.props.knagger.slice(0) || [],
             fritekst: this.props.fritekst || '',
             selectionStart: -1,
             selectionEnd: -1,
@@ -20,6 +20,7 @@ var KnaggInput = React.createClass({
         if (this.props['auto-focus']) {
             this.refs.search.getDOMNode().focus();
         }
+        this.props.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
     },
     handleKeyUp: function (event) {
         var selectionStart = this.state.selectionStart;

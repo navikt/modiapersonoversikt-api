@@ -17,12 +17,10 @@ module.exports = React.createClass({
     },
     render: function () {
         return (
-            <div tabIndex="-1" className="filter-container">
                 <input type="text" placeholder="Søk"
-                    aria-label="Søk etter henvendelser" aria-controls="tekstListePanel"
-                    onChange={this.onChangeProxy}
+                    aria-label="Søk etter henvendelser" aria-controls={this.props.ariaControls}
+                    onChange={this.onChangeProxy} onKeyDown={this.props.onKeyDown}
                 />
-            </div>
         );
     }
 });

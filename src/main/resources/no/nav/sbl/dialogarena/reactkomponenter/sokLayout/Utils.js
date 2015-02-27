@@ -33,6 +33,9 @@ var Utils = {
         } else if (elementBottom > $parent.outerHeight()) {
             $parent.scrollTop($parent.scrollTop() + (elementBottom - $parent.outerHeight()));
         }
+    },
+    generateId: function (prefix) {
+        return prefix + (new Date().getTime()) + '-' + Math.random();
     }
 };
 

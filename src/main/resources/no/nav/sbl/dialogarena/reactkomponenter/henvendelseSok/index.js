@@ -20,6 +20,7 @@ module.exports = React.createClass({
         return (
             <Modal ref="modal">
                 <Soklayout {...this.props} sok={sok} submit={this.submit}
+                    containerClassName="henvendelse-sok"
                     sokKomponent={SokKomponent}
                     listeelementKomponent={ListevisningKomponent}
                     visningsKomponent={ForhandsvisningKomponent}
@@ -63,11 +64,11 @@ function lagTraad(traadId, tema) {
         'temagruppe': tema,
         'journalfortTema': undefined,
         'meldinger': [
-            lagMelding(traadId+0.1, "u143410", "10108000398", "ARBD", "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.2, "u143410", "10108000398", "ARBD", "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.3, "u143410", "10108000398", "ARBD", "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.4, "u143410", "10108000398", "ARBD", "TELEFON", "lorem ipsim"),
-            lagMelding(traadId+0.5, "u143410", "10108000398", "ARBD", "TELEFON", "lorem ipsim")
+            lagMelding(traadId+0.1, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
+            lagMelding(traadId+0.2, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
+            lagMelding(traadId+0.3, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
+            lagMelding(traadId+0.4, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim"),
+            lagMelding(traadId+0.5, "u143410", "10108000398", tema, "TELEFON", "lorem ipsim")
         ]
     }
 }

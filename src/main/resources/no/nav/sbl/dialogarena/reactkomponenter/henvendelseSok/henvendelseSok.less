@@ -1,0 +1,51 @@
+.henvendelse-sok {
+  .sok-element article {
+    padding: 1rem 30px 1.2em 30px;
+    border: 1px solid #d1d1d1;
+    overflow: hidden;
+
+    &:not(.valgt) {
+      cursor: pointer;
+    }
+    header {
+      .opprettet {
+        font-family: arial, helvetica, clean, sans-serif;
+        font-size: 0.85rem;
+        margin: 0.2em 0;
+      }
+      h1 {
+        font-weight: bold;
+        margin: 0;
+        font-size: 1.2em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+    >p {
+      width: 100%;
+      margin: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  .sok-forhandsvisning {
+    .traadPanel {
+      padding: 22px 30px 0 30px;
+      overflow: auto;
+      height: 85%;
+    }
+    .velgPanel {
+      height: 15%;
+      text-align: end;
+      border-top: 1px solid #ccc;
+      padding: 15px;
+    }
+
+    .melding {
+      margin-bottom: 30px;
+    }
+  }
+}
