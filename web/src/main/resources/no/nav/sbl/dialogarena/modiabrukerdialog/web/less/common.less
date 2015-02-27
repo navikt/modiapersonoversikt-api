@@ -637,10 +637,16 @@ UL.feedbackPanel {
 		padding-right: @sidebarYtrePadding;
 		border-top: 1px solid #000;
 		.tab-row {
-			float: left;
+		    .flexbox;
+		    .flex1;
+		    .col;
+ 		    min-height: inherit;
+		    max-width: 110px;
             ul {
-              display: inline;
-              padding: 0px;
+			  	display: inline;
+              	padding: 0px;
+			  	margin: 0px;
+			  	background-color: #2d2b2a;
             }
 			li {
 				color: #fff;
@@ -649,41 +655,44 @@ UL.feedbackPanel {
                 border-right: 1px solid #000;
                 border-bottom: 1px solid #000;
                 &.selected {
-                  border-right: none;
+				  	border-right: none;
+				 	background-color: @modiasvart;
                 }
 			  	&:not(.selected) {
-				  background-color: #2d2b2a;
+				  	background-color: #2d2b2a;
 				}
-			  a {
-				display: block;
-				min-height: 102px;
-				min-width: 111px;
-				padding-left: 26px;
-				padding-top: 18px;
-				text-decoration: none;
-				div {
-				  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-				  font-size: 0.7rem;
-				  text-transform: lowercase;
-				  letter-spacing: 1px;
-				  padding-left: 5px;
-				  padding-top: 5px;
-				  color: @white;
-				}
-			  }
+			  	a {
+					display: block;
+					min-height: 102px;
+					min-width: 111px;
+					padding-left: 26px;
+					padding-top: 18px;
+					text-decoration: none;
+					div {
+				  		font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+				  		font-size: 0.7rem;
+				  		text-transform: lowercase;
+				  		letter-spacing: 1px;
+				  		padding-left: 5px;
+				  		padding-top: 5px;
+				  		color: @white;
+					}
+			  	}
 			}
-		  .tomDiv {
-			border-right: 1px solid #000000;
-			background-color: #2d2b2a;
-		  }
+		   	.tomDiv {
+				.flex1;
+				.flexbox;
+				border-right: 1px solid #000000;
+				background-color: #2d2b2a;
+			}
 		}
 		.tab-info {
-          padding: 30px 0 0 140px;
-          .gosyspersonoversiktLinkIkon {
-            a {
-              color: @blue;
-              }
-          }
+          	padding: 30px 0 0 30px;
+          	.gosyspersonoversiktLinkIkon {
+				a {
+	            	color: @blue;
+				}
+          	}
 			.info {
 				.barn {
 					display: table;
