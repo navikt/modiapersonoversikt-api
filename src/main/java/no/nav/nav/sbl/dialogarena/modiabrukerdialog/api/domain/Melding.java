@@ -8,7 +8,7 @@ import java.util.Comparator;
 
 public class Melding implements Serializable {
 
-    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, kanal, fritekst, kontorsperretEnhet, journalfortTema,
+    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, fritekst, kontorsperretEnhet, journalfortTema,
             journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, markertSomFeilsendtAv;
     public DateTime lestDato, opprettetDato, journalfortDato;
     public Meldingstype meldingstype;
