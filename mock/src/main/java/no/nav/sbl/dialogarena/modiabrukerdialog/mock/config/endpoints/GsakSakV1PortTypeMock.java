@@ -1,12 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper;
+import no.nav.tjeneste.virksomhet.sak.v1.*;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import org.joda.time.DateTime;
@@ -15,9 +10,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
@@ -91,6 +84,7 @@ public class GsakSakV1PortTypeMock {
     private static WSSak createSak(String tema, DateTime opprettet) {
         return new WSSak()
                 .withSakId("" + idGenerator.nextInt(100000000))
+                .withFagsystemSakId("" + idGenerator.nextInt(100000000))
                 .withFagomraade(new WSFagomraader().withValue(tema))
                 .withOpprettelsetidspunkt(opprettet)
                 .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))

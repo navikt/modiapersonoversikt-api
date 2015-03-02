@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
@@ -136,9 +137,9 @@ public class HenvendelseUtsendingServiceTest {
     @Test
     public void skalJournalforeHenvendelseDersomSakErSatt() throws Exception {
         Sak sak = new Sak();
-        sak.saksId = "sakid";
+        sak.saksId = optional("sakid");
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.optional(sak));
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), optional(sak));
 
         verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture());
 
@@ -150,7 +151,7 @@ public class HenvendelseUtsendingServiceTest {
     public void skalFerdigstilleOppgaveDersomDenneErSatt() throws Exception {
         String oppgaveId = "oppgaveId";
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.optional(oppgaveId), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, optional(oppgaveId), Optional.<Sak>none());
 
         verify(oppgaveBehandlingService).ferdigstillOppgaveIGsak(stringArgumentCaptor.capture());
 

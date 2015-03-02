@@ -2,39 +2,24 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerListe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.tjeneste.virksomhet.sak.v1.*;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
-import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo;
-import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode;
-import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode;
+import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.*;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse;
 import org.apache.commons.collections15.Predicate;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
+import org.hamcrest.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -48,7 +33,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SakerServiceImplTest {
@@ -85,14 +73,15 @@ public class SakerServiceImplTest {
     public void transformererResponseTilSaksliste() {
         List<Sak> saksliste = sakerService.hentListeAvSaker(FNR);
 
-        assertThat(saksliste.get(0).saksId, is("1"));
+        assertThat(saksliste.get(0).saksId.get(), is("1"));
     }
 
     @Test
     public void transformasjonenGenerererRelevanteFelter() {
         Sak sak = SakerServiceImpl.TIL_SAK.transform(sakerListe.get(0));
 
-        assertThat(sak.saksId, is("1"));
+        assertThat(sak.saksId.get(), is("1"));
+        assertThat(sak.fagsystemSaksId.get(), is("11"));
         assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
         assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
         assertThat(sak.fagsystemKode, is(GODKJENT_FAGSYSTEM_FOR_GENERELLE));
@@ -128,8 +117,7 @@ public class SakerServiceImplTest {
 
     @Test
     public void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        String oppfolgingssakId = "4";
-        sakerListe.add(createWSGenerellSak(oppfolgingssakId, TEMAKODE_OPPFOLGING, now(), "Fag", "AO01"));
+        sakerListe.add(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", "AO01"));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
 
@@ -141,22 +129,22 @@ public class SakerServiceImplTest {
     @Test
     public void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         String oppfolgingssakId = "4";
-        sakerListe.add(createWSGenerellSak(oppfolgingssakId, TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+        sakerListe.add(createWSGenerellSak(oppfolgingssakId, "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
 
         Saker saker = sakerService.hentSaker(FNR);
 
         assertThat(saker.getSakerListeGenerelle(), containsTema(TEMAKODE_OPPFOLGING));
-        assertThat(hentSakerForTema(saker.getSakerListeGenerelle(), TEMAKODE_OPPFOLGING).saksliste.get(0).saksId, is(oppfolgingssakId));
+        assertThat(hentSakerForTema(saker.getSakerListeGenerelle(), TEMAKODE_OPPFOLGING).saksliste.get(0).saksId.get(), is(oppfolgingssakId));
     }
 
     @Test
     public void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         String oppfolgingssakGenerellId = "4";
         String oppfolgingssakFagsakId = "5";
-        sakerListe.add(createWSGenerellSak(oppfolgingssakGenerellId, TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
-        sakerListe.add(createWSGenerellSak(oppfolgingssakFagsakId, TEMAKODE_OPPFOLGING, now(), "Fag", "AO01"));
+        sakerListe.add(createWSGenerellSak(oppfolgingssakGenerellId, "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+        sakerListe.add(createWSGenerellSak(oppfolgingssakFagsakId, "55", TEMAKODE_OPPFOLGING, now(), "Fag", "AO01"));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
 
@@ -178,8 +166,6 @@ public class SakerServiceImplTest {
                         .withSaksId(saksId)
                         .withEndringsInfo(new EndringsInfo().withOpprettetDato(dato))
                         .withSakstypeKode(new Sakstypekode().withKode(sakstype))
-
-
         ));
 
         Saker saker = sakerService.hentSaker(FNR);
@@ -189,7 +175,8 @@ public class SakerServiceImplTest {
 
         SakerForTema oppfolging = hentSakerForTema(saker.getSakerListeFagsak(), TEMAKODE_OPPFOLGING);
         assertThat(oppfolging.saksliste, hasSize(1));
-        assertThat(oppfolging.saksliste.get(0).saksId, is(saksId));
+        assertThat(oppfolging.saksliste.get(0).saksId.get(), is(saksId));
+        assertThat(oppfolging.saksliste.get(0).fagsystemSaksId.get(), is(saksId));
         assertThat(oppfolging.saksliste.get(0).sakstype, is(sakstype));
         assertThat(oppfolging.saksliste.get(0).opprettetDato, is(dato.toDateTimeAtStartOfDay()));
         assertThat(oppfolging.saksliste.get(0).fagsystemKode, is("AO01"));
@@ -230,15 +217,16 @@ public class SakerServiceImplTest {
 
     private ArrayList<WSSak> createSaksliste() {
         return new ArrayList<>(asList(
-                createWSGenerellSak("1", GODKJENTE_TEMA_FOR_GENERELLE.get(0), FIRE_DAGER_SIDEN, SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("2", GODKJENTE_TEMA_FOR_GENERELLE.get(1), now().minusDays(3), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("3", "AAP", now().minusDays(5), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))
+                createWSGenerellSak("1", "11", GODKJENTE_TEMA_FOR_GENERELLE.get(0), FIRE_DAGER_SIDEN, SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
+                createWSGenerellSak("2", "22", GODKJENTE_TEMA_FOR_GENERELLE.get(1), now().minusDays(3), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
+                createWSGenerellSak("3", "33", "AAP", now().minusDays(5), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))
         ));
     }
 
-    private static WSSak createWSGenerellSak(String id, String tema, DateTime opprettet, String sakstype, String fagsystem) {
+    private static WSSak createWSGenerellSak(String id, String fagsystemSaksId, String tema, DateTime opprettet, String sakstype, String fagsystem) {
         return new WSSak()
                 .withSakId(id)
+                .withFagsystemSakId(fagsystemSaksId)
                 .withFagomraade(new WSFagomraader().withValue(tema))
                 .withOpprettelsetidspunkt(opprettet)
                 .withSakstype(new WSSakstyper().withValue(sakstype))
