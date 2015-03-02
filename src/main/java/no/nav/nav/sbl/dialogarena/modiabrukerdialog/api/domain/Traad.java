@@ -1,6 +1,5 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -11,9 +10,10 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.reverseOrder;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagStatusIkonKlasse;
 
 public class Traad {
-    public final String traadId, temagruppe, journalfortTema, statusKlasse, meldingStatus;
+    public final String traadId, temagruppe, journalfortTema, statusKlasse, statusTekst;
     public final List<Melding> meldinger;
     public final DateTime dato;
 
@@ -26,11 +26,11 @@ public class Traad {
         this.meldinger = on(meldinger).collect(Melding.NYESTE_FORST);
         Melding forsteMelding = this.meldinger.get(this.meldinger.size() - 1);
         Melding sisteMelding = this.meldinger.get(0);
-        this.temagruppe = forsteMelding.temagruppe;
-        this.journalfortTema = forsteMelding.journalfortTema;
+        this.temagruppe = forsteMelding.temagruppeNavn;
+        this.journalfortTema = forsteMelding.journalfortTemanavn;
         this.dato = sisteMelding.opprettetDato;
-        this.statusKlasse = VisningUtils.lagStatusIkonKlasse(meldinger.get(0));
-        this.meldingStatus = VisningUtils.lagMeldingStatusTekstKey(meldinger.get(0));
+        this.statusKlasse = lagStatusIkonKlasse(sisteMelding);
+        this.statusTekst = sisteMelding.statusTekst;
     }
 
     public static final Transformer<Traad, DateTime> DATO = new Transformer<Traad, DateTime>() {
