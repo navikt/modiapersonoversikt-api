@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -31,10 +32,7 @@ public class MeldingerSokTest {
 
     @Before
     public void setup() {
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(NAV_IDENT, IdentType.EksternBruker).withAuthLevel(4).getSubject());
-
+        innloggetBrukerEr(NAV_IDENT);
         meldingerSok.indekser(FNR, lagMeldinger());
     }
 
@@ -98,6 +96,25 @@ public class MeldingerSokTest {
         assertThat(traader.get(0).dato, is(now));
         assertThat(traader.get(1).dato, is(now.minusDays(1)));
         assertThat(traader.get(2).dato, is(now.minusDays(3)));
+    }
+
+    @Test
+    public void forskjelligeSaksbehandlereFaarIkkeSammeResultat() {
+        innloggetBrukerEr("Z132456");
+        meldingerSok.indekser(FNR, Collections.<Melding>emptyList());
+
+        assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
+        assertThat(meldingerSok.meldingerCache.entrySet(), hasSize(2));
+        assertThat(meldingerSok.directories.entrySet(), hasSize(2));
+        assertThat(meldingerSok.indexingTimestamps.entrySet(), hasSize(2));
+
+        assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
+    }
+
+    private void innloggetBrukerEr(String ident) {
+        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
     private void assertSok(String frisok, String id) {
