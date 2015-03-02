@@ -5,7 +5,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import java.util.List;
 
 public interface EnhetService {
+    List<AnsattEnhet> hentAlleEnheter();
 
-    public List<AnsattEnhet> hentAlleEnheter();
-
+    AnsattEnhet hentEnhet(String enhetId);
 }
