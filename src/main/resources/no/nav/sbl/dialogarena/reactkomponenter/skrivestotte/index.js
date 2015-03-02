@@ -29,9 +29,12 @@ module.exports = React.createClass({
     },
     submit: function (valgtTekst, valgtLocale) {
         var $tekstfelt = $('#' + this.props.tekstfeltId);
+        var eksisterendeTekst = $tekstfelt.focus().val();
+        eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
+
         $tekstfelt
             .focus()
-            .val($tekstfelt.val() + '\n' + autofullfor.bind(this)(stripEmTags(Utils.getInnhold(valgtTekst, valgtLocale))))
+            .val(eksisterendeTekst + autofullfor.bind(this)(stripEmTags(Utils.getInnhold(valgtTekst, valgtLocale))))
             .trigger('input');
 
         this.skjul();
