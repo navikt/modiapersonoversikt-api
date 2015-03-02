@@ -89,7 +89,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, ""), new Saksbehandler("", "", "", ""));
+        grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", ""), new Saksbehandler("", "", ""));
         saker = createMockSaker();
         when(sakerService.hentSaker(anyString())).thenReturn(saker);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);

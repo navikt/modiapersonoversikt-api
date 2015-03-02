@@ -2,11 +2,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
@@ -60,6 +63,8 @@ public class DialogPanel extends Panel {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private LDAPService ldapService;
+    @Inject
+    private EnhetService enhetService;
 
     private Component aktivtPanel;
     private OppgavetilordningFeilet oppgavetilordningFeiletModal;
@@ -94,26 +99,26 @@ public class DialogPanel extends Panel {
 
     private Bruker hentBrukerInfo(String fnr) {
         try {
-            Personnavn personnavn = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr))
-                    .getPerson().getPersonfakta().getPersonnavn();
-
-            return new Bruker(fnr, personnavn.getFornavn(), personnavn.getEtternavn());
+            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr)).getPerson().getPersonfakta();
+            Personnavn personnavn = personfakta.getPersonnavn();
+            AnsattEnhet enhet = enhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
+            return new Bruker(fnr, personnavn.getFornavn(), personnavn.getEtternavn(), enhet.enhetNavn);
         } catch (Exception e) {
-            return new Bruker(fnr, "", "");
+            return new Bruker(fnr, "", "", "");
         }
     }
 
     private Saksbehandler hentSaksbehandlerInfo() {
         Optional<Attributes> attributes = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
+        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
         if (!attributes.isSome()) {
-            return new Saksbehandler(getSubjectHandler().getUid(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(), "", "");
+            return new Saksbehandler(enhetService.hentEnhet(valgtEnhet).enhetNavn, "", "");
         }
 
         try {
             return new Saksbehandler(
-                    getSubjectHandler().getUid(),
-                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(),
+                    enhetService.hentEnhet(valgtEnhet).enhetNavn,
                     optional((String) attributes.get().get("givenname").get()).getOrElse(""),
                     optional((String) attributes.get().get("sn").get()).getOrElse(""));
         } catch (NamingException e) {
