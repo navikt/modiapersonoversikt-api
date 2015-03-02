@@ -7,7 +7,6 @@ import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
