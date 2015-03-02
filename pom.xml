@@ -407,7 +407,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
-                <version>0.0.20</version>
+                <version>0.0.23</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
