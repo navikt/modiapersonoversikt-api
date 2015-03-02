@@ -14,7 +14,7 @@
     <loadBalancer>
         <contextRoot>modiabrukerdialog</contextRoot>
         <lbHealthMonitor type="HTTPS" isAliveUrl="internal/isAlive" interval="5" timeout="16"/>
-        <lbPool slowRampTime="30" loadBalancingMethod="LEAST_CONNECTIONS" connectionLimit="900"/>
+        <lbPool slowRampTime="30" loadBalancingMethod="LEAST_CONNECTIONS" connectionLimit="500"/>
     </loadBalancer>
     <resources>
         <!-- Felles -->
