@@ -3,11 +3,15 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
+import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -15,8 +19,10 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.File;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -29,7 +35,7 @@ import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resour
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -50,6 +56,15 @@ public class HenvendelseBehandlingService {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private StandardKodeverk standardKodeverk;
+    @Inject
+    private CmsContentRetriever cmsContentRetriever;
+
+    private PropertyResolver propertyResolver;
+
+    @PostConstruct
+    private void lagPropertyResolver() {
+        propertyResolver = new PropertyResolver(cmsContentRetriever, new File(Innboks.class.getResource("Innboks.properties").getFile()));
+    }
 
     public List<Melding> hentMeldinger(String fnr) {
         return hentMeldinger(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
@@ -67,7 +82,7 @@ public class HenvendelseBehandlingService {
                 SVAR_SBL_INNGAAENDE.name());
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
-                .map(TIL_MELDING)
+                .map(tilMelding(propertyResolver))
                 .map(journalfortTemaTilTemanavn)
                 .filter(kontorsperreTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))

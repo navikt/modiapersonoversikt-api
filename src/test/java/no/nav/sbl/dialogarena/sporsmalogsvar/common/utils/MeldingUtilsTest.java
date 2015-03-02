@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,7 +19,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.IKK
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.IKKE_LEST_AV_BRUKER;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.STATUS;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.JOURNALFORT_DATO;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.JOURNALFORT_SAKSID;
@@ -28,6 +30,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MeldingUtilsTest {
 
@@ -40,6 +45,13 @@ public class MeldingUtilsTest {
     public static final String KANAL = "kanal";
     public static final DateTime OPPRETTET_DATO = DateTime.now().minusDays(2);
     public static final DateTime LEST_DATO = DateTime.now();
+
+    private PropertyResolver propertyResolver = mock(PropertyResolver.class);
+
+    @Before
+    public void init() {
+        when(propertyResolver.getProperty(anyString(), anyString())).thenReturn("value");
+    }
 
     @Test
     public void testSkillUtTraader() {
@@ -99,7 +111,7 @@ public class MeldingUtilsTest {
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
+        Melding melding = tilMelding(propertyResolver).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -114,7 +126,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSporsmalMedKassertInnhold() {
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, null));
+        Melding melding = tilMelding(propertyResolver).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -131,7 +143,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medSvar() {
         XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, new XMLMetadataListe().withMetadata(meldingTilBruker)));
+        Melding melding = tilMelding(propertyResolver).transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, new XMLMetadataListe().withMetadata(meldingTilBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -151,7 +163,7 @@ public class MeldingUtilsTest {
     @Test
     public void testTilMeldingTransformer_medSvarMedKassertInnhold() {
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, null));
+        Melding melding = tilMelding(propertyResolver).transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -172,7 +184,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medReferat() {
         XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, new XMLMetadataListe().withMetadata(xmlMeldingTilBruker)));
+        Melding melding = tilMelding(propertyResolver).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, new XMLMetadataListe().withMetadata(xmlMeldingTilBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -191,7 +203,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medReferatMedKassertInnhold() {
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, null));
+        Melding melding = tilMelding(propertyResolver).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -218,7 +230,7 @@ public class MeldingUtilsTest {
 
     @Test(expected = ClassCastException.class)
     public void tilMeldingTransformer_girClassCastExceptionVedFeilType() {
-        TIL_MELDING.transform(new XMLMeldingFraBruker());
+        tilMelding(propertyResolver).transform(new XMLMeldingFraBruker());
     }
 
 }

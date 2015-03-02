@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -48,70 +50,56 @@ public class MeldingUtils {
         }
     };
 
-    public static final Transformer<Object, Melding> TIL_MELDING = new Transformer<Object, Melding>() {
-        @Override
-        public Melding transform(Object o) {
-            XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) o;
+    public static Transformer<Object, Melding> tilMelding(final PropertyResolver propertyResolver) {
+        return new Transformer<Object, Melding>() {
+            @Override
+            public Melding transform(Object o) {
+                XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) o;
 
-            Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(xmlHenvendelse.getHenvendelseType()));
+                Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(xmlHenvendelse.getHenvendelseType()));
 
-            Melding melding = new Melding(xmlHenvendelse.getBehandlingsId(), meldingstype, xmlHenvendelse.getOpprettetDato());
-            melding.lestDato = xmlHenvendelse.getLestDato();
-            melding.fnrBruker = xmlHenvendelse.getFnr();
-            melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
-            melding.status = STATUS.transform(xmlHenvendelse);
-            melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
-            melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
-            melding.eksternAktor = xmlHenvendelse.getEksternAktor();
-            fyllInnJournalforingsInformasjon(xmlHenvendelse, melding);
+                Melding melding = new Melding(xmlHenvendelse.getBehandlingsId(), meldingstype, xmlHenvendelse.getOpprettetDato());
+                melding.lestDato = xmlHenvendelse.getLestDato();
+                melding.fnrBruker = xmlHenvendelse.getFnr();
+                melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
+                melding.status = STATUS.transform(xmlHenvendelse);
+                melding.statusTekst = hentProperty(propertyResolver, VisningUtils.lagMeldingStatusTekstKey(melding));
+                melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
+                melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
+                melding.eksternAktor = xmlHenvendelse.getEksternAktor();
+                fyllInnJournalforingsInformasjon(xmlHenvendelse, melding);
 
-            if (innholdErKassert(xmlHenvendelse)) {
-                melding.temagruppe = null;
-                melding.temagruppeNavn = null;
-                melding.fritekst = null;
-                melding.kanal = null;
-                melding.navIdent = null;
-                melding.kassert = true;
+                if (innholdErKassert(xmlHenvendelse)) {
+                    melding.temagruppe = null;
+                    melding.temagruppeNavn = null;
+                    melding.fritekst = null;
+                    melding.kanal = null;
+                    melding.navIdent = null;
+                    melding.kassert = true;
+                    return melding;
+                }
+
+                XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
+                if (xmlMetadata instanceof XMLMeldingFraBruker) {
+                    XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
+                    melding.temagruppe = meldingFraBruker.getTemagruppe();
+                    melding.fritekst = meldingFraBruker.getFritekst();
+                } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
+                    XMLMeldingTilBruker meldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
+                    melding.temagruppe = meldingTilBruker.getTemagruppe();
+                    melding.fritekst = meldingTilBruker.getFritekst();
+                    melding.kanal = meldingTilBruker.getKanal();
+                    melding.navIdent = meldingTilBruker.getNavident();
+                }
+                melding.temagruppeNavn = hentProperty(propertyResolver, melding.temagruppe);
+
                 return melding;
             }
+        };
+    }
 
-            XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
-            if (xmlMetadata instanceof XMLMeldingFraBruker) {
-                XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
-                melding.temagruppe = meldingFraBruker.getTemagruppe();
-                melding.fritekst = meldingFraBruker.getFritekst();
-            } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
-                XMLMeldingTilBruker meldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
-                melding.temagruppe = meldingTilBruker.getTemagruppe();
-                melding.fritekst = meldingTilBruker.getFritekst();
-                melding.kanal = meldingTilBruker.getKanal();
-                melding.navIdent = meldingTilBruker.getNavident();
-            }
-            melding.temagruppeNavn = temagruppeNavn(melding.temagruppe);
-
-            return melding;
-        }
-    };
-
-    private static String temagruppeNavn(String temagruppe) {
-        switch (temagruppe) {
-            case "ARBD":
-                return "Arbeid";
-            case "FMLI":
-                return "Familie";
-            case "HJLPM":
-                return "Hjelpemidler";
-            case "BIL":
-                return "Hjelpemidler Bil";
-            case "ORT_HJE":
-                return "Ortopediske hjelpemidler";
-            case "OVRG":
-                return "Øvrig";
-            case "PENS":
-                return "Pensjon";
-            default:
-                return temagruppe;
-        }
+    private static String hentProperty(PropertyResolver propertyResolver, String key) {
+        return propertyResolver.getProperty(key, "nb");
     }
 
     private static boolean innholdErKassert(XMLHenvendelse xmlHenvendelse) {
