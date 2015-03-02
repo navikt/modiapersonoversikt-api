@@ -51,15 +51,12 @@ public class AlleMeldingerPanel extends Panel {
                 final MeldingVM meldingVM = item.getModelObject();
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
-                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel()))
-                        .add(cssClass(meldingVM.getStatusIkonKlasse())));
+                item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst"))
+                        .add(cssClass(meldingVM.melding.statusKlasse)));
                 item.add(new Label("avsenderTekst"));
-                item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
-                item.add(new Label("fritekst",
-                        meldingVM.melding.fritekst != null ?
-                                new PropertyModel(meldingVM, "melding.fritekst") :
-                                new ResourceModel("innhold.kassert")
-                ));
+                item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
+                item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
+
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(attributeIf("aria-selected", "true", innboksVM.erValgtMelding(meldingVM), true));

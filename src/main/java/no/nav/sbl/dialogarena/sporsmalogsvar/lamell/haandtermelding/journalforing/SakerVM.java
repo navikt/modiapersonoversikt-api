@@ -4,7 +4,9 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -38,7 +40,7 @@ public class SakerVM implements Serializable {
     }
 
     private boolean valgtTraadsTemagruppeErOvrige(InnboksVM innboksVM) {
-         return innboksVM.harTraader() && innboksVM.getValgtTraad().getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_OVRG);
+         return innboksVM.harTraader() && TEMAGRUPPE_OVRG.equals(innboksVM.getValgtTraad().getEldsteMelding().melding.temagruppe);
     }
 
     public AbstractReadOnlyModel<Boolean> sakerFinnes() {

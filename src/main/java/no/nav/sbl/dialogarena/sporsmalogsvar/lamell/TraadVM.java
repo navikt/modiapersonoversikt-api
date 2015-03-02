@@ -14,7 +14,6 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TEMAGRUPPE_KASSERT;
 
 public class TraadVM implements Serializable {
 
@@ -70,9 +69,10 @@ public class TraadVM implements Serializable {
     }
 
     public boolean traadKanBesvares() {
-        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype)
-                && !getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_KASSERT)
+        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype) && 
+                !getEldsteMelding().melding.kassert
                 && !getEldsteMelding().erKontorsperret();
+        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype) && !getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_KASSERT);
     }
 
 }

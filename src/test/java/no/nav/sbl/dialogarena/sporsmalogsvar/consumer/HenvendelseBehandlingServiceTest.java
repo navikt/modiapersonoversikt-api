@@ -8,6 +8,8 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
@@ -23,7 +25,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
+import org.mockito.internal.util.reflection.Whitebox;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,12 +73,22 @@ public class HenvendelseBehandlingServiceTest {
     private PersonKjerneinfoServiceBi kjerneinfo;
     @Mock
     private StandardKodeverk standardKodeverk;
+    @Mock
+    private PropertyResolver propertyResolver;
 
     @InjectMocks
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     @Before
     public void setUp() {
+        when(propertyResolver.getProperty(anyString())).thenAnswer(new Answer<String>(){
+
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                return ((String) invocation.getArguments()[0]);
+            }
+        });
+        Whitebox.setInternalState(henvendelseBehandlingService, "propertyResolver", propertyResolver);
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")
                 .withTemagruppe(TEMAGRUPPE);
@@ -178,7 +193,7 @@ public class HenvendelseBehandlingServiceTest {
 
         assertThat(meldinger.size(), is(2));
         assertThat(meldinger.get(0).fritekst, is(equalTo("fritekst")));
-        assertThat(meldinger.get(1).fritekst, isEmptyString());
+        assertThat(meldinger.get(1).fritekst, is("tilgang.journalfort"));
     }
 
     @Test

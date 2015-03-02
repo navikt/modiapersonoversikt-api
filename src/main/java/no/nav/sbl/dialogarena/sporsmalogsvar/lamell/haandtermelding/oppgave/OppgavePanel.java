@@ -40,7 +40,7 @@ public class OppgavePanel extends AnimertPanel {
     public OppgavePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
-        add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", this, new PropertyModel<MeldingVM>(innboksVM, "valgtTraad.eldsteMelding"))));
+        add(new Label("temagruppe", new PropertyModel<String>(innboksVM, "valgtTraad.eldsteMelding.melding.temagruppeNavn")));
 
         okKnapp = new LukkLink("okKnapp");
         okKnapp.add(visibleIf(oppgaveBehandlet));

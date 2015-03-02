@@ -87,7 +87,10 @@ public class TraadVMTest {
 
     @Test
     public void dersomEldsteMeldingITraadErEtSporsmalMenKassertSkalBrukerIkkeKunneBesvare() {
-        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(null), 4);
+        Melding melding = new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(null);
+        melding.kassert = true;
+
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(melding, 4);
         traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
 
         assertThat(traadVM.traadKanBesvares(), is(false));

@@ -37,20 +37,12 @@ public class MeldingVM implements Serializable {
         return lagMeldingStatusTekstKey(melding);
     }
 
-    public String getStatusIkonKlasse() {
-        return lagStatusIkonKlasse(melding);
-    }
-
     public String getJournalfortDatoFormatert() {
         return melding.journalfortDato == null ? "" : WidgetDateFormatter.date(melding.journalfortDato);
     }
 
     public boolean isJournalfort() {
         return melding.journalfortDato != null;
-    }
-
-    public String getTemagruppeKey() {
-        return melding.temagruppe != null ? melding.temagruppe : TEMAGRUPPE_KASSERT;
     }
 
     public Boolean erFeilsendt() {

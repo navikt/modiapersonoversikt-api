@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
@@ -24,24 +25,13 @@ public class TraadPanel extends Panel {
 
                 item.add(new FeilsendtInfoPanel("feilsendtInfo", item.getModel()));
                 item.add(new AvsenderBilde("avsenderBilde", item.getModel()).add(cssClass(meldingTypeKlasse)));
-                item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
-                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel())));
+                item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
+                item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
                 item.add(new Label("avsenderTekst"));
-                item.add(new URLParsingMultiLineLabel("fritekst", fritekstModel(item.getModel())));
+                item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
                 item.add(new Journalpost("journalpost", item.getModel()));
             }
         });
-    }
-
-    private static IModel<String> fritekstModel(IModel<MeldingVM> model) {
-        Melding melding = model.getObject().melding;
-        if (melding.kassert) {
-            return new ResourceModel("innhold.kassert");
-        } else if (melding.ingenTilgangJournalfort) {
-            return new ResourceModel("tilgang.journalfort");
-        } else {
-            return new PropertyModel<>(model, "melding.fritekst");
-        }
     }
 
     private String meldingKlasse(final MeldingVM meldingVM) {

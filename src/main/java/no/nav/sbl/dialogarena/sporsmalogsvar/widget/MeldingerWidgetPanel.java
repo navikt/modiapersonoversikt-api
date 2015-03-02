@@ -4,6 +4,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
@@ -15,10 +16,10 @@ public class MeldingerWidgetPanel extends GenericPanel<MeldingVM> {
         setOutputMarkupId(true);
 
         add(
-                new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", getModel()))
-                        .add(cssClass(getModelObject().getStatusIkonKlasse())),
+                new Label("meldingstatus", new PropertyModel<String>(getModel(), "melding.statusTekst"))
+                        .add(cssClass(getModelObject().melding.statusKlasse)),
                 new Label("opprettetDato"),
-                new Label("temagruppe", new StringResourceModel("${temagruppeKey}", getModel()))
+                new Label("temagruppe", new PropertyModel<String>(getModel(), "melding.temagruppeNavn"))
         );
     }
 }

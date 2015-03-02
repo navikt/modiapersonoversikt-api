@@ -49,11 +49,6 @@ public class MeldingVMTest extends WicketPageTest {
     }
 
     @Test
-    public void lagerStatusIkonKlasse() {
-        assertThat(meldingVM.getStatusIkonKlasse(), is(lagStatusIkonKlasse(meldingVM.melding)));
-    }
-
-    @Test
     public void formattererJournalfortDato() {
         String formatert = meldingVM.getJournalfortDatoFormatert();
 
@@ -72,15 +67,6 @@ public class MeldingVMTest extends WicketPageTest {
         meldingVM.melding.journalfortDato = DateTime.now();
 
         assertThat(meldingVM.isJournalfort(), is(true));
-    }
-
-    @Test
-    public void henterTemagruppeKey() {
-        assertThat(meldingVM.getTemagruppeKey(), is(meldingVM.melding.temagruppe));
-
-        meldingVM.melding.temagruppe = null;
-
-        assertThat(meldingVM.getTemagruppeKey(), is(TEMAGRUPPE_KASSERT));
     }
 
     @Test

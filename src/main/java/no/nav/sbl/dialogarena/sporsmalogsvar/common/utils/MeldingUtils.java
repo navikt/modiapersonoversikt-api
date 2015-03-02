@@ -63,7 +63,8 @@ public class MeldingUtils {
                 melding.fnrBruker = xmlHenvendelse.getFnr();
                 melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
                 melding.status = STATUS.transform(xmlHenvendelse);
-                melding.statusTekst = hentProperty(propertyResolver, VisningUtils.lagMeldingStatusTekstKey(melding));
+                melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
+                melding.statusKlasse = VisningUtils.lagStatusIkonKlasse(melding);
                 melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
                 melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
                 melding.eksternAktor = xmlHenvendelse.getEksternAktor();
@@ -72,12 +73,13 @@ public class MeldingUtils {
                 if (innholdErKassert(xmlHenvendelse)) {
                     melding.temagruppe = null;
                     melding.temagruppeNavn = null;
-                    melding.fritekst = null;
+                    melding.fritekst = propertyResolver.getProperty("innhold.kassert");
                     melding.kanal = null;
                     melding.navIdent = null;
                     melding.kassert = true;
                     return melding;
                 }
+
 
                 XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
                 if (xmlMetadata instanceof XMLMeldingFraBruker) {
@@ -91,15 +93,11 @@ public class MeldingUtils {
                     melding.kanal = meldingTilBruker.getKanal();
                     melding.navIdent = meldingTilBruker.getNavident();
                 }
-                melding.temagruppeNavn = hentProperty(propertyResolver, melding.temagruppe);
+                melding.temagruppeNavn = propertyResolver.getProperty(melding.temagruppe);
 
                 return melding;
             }
         };
-    }
-
-    private static String hentProperty(PropertyResolver propertyResolver, String key) {
-        return propertyResolver.getProperty(key, "nb");
     }
 
     private static boolean innholdErKassert(XMLHenvendelse xmlHenvendelse) {

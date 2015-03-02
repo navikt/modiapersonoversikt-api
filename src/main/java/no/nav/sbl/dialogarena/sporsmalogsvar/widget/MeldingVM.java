@@ -36,10 +36,6 @@ public class MeldingVM implements FeedItemVM, Serializable {
         return lagStatusIkonKlasse(melding);
     }
 
-    public String getTemagruppeKey() {
-        return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";
-    }
-
     public String getOpprettetDato() {
         return WidgetDateFormatter.dateTime(melding.opprettetDato);
     }

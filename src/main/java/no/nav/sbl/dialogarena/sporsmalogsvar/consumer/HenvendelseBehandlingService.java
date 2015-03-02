@@ -62,7 +62,7 @@ public class HenvendelseBehandlingService {
     private PropertyResolver propertyResolver;
 
     @PostConstruct
-    private void lagPropertyResolver() {
+    protected void lagPropertyResolver() {
         propertyResolver = new PropertyResolver(cmsContentRetriever, new File(Innboks.class.getResource("Innboks.properties").getFile()));
     }
 
@@ -140,7 +140,7 @@ public class HenvendelseBehandlingService {
                         resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
                 if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                    melding.fritekst = "";
+                    melding.fritekst = propertyResolver.getProperty("tilgang.journalfort");
                     melding.ingenTilgangJournalfort = true;
                 }
 
