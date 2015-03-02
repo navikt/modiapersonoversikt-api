@@ -59,10 +59,12 @@ function autofullfor(tekst) {
         'bruker.fnr': this.props.autofullfor.bruker.fnr,
         'bruker.fornavn': this.props.autofullfor.bruker.fornavn,
         'bruker.etternavn': this.props.autofullfor.bruker.etternavn,
-        'saksbehandler.ident': this.props.autofullfor.saksbehandler.ident,
-        'saksbehandler.enhet': this.props.autofullfor.saksbehandler.enhet,
+        'bruker.navn': this.props.autofullfor.bruker.navn,
+        'bruker.navkontor': this.props.autofullfor.bruker.navkontor,
         'saksbehandler.fornavn': this.props.autofullfor.saksbehandler.fornavn,
-        'saksbehandler.etternavn': this.props.autofullfor.saksbehandler.etternavn
+        'saksbehandler.etternavn': this.props.autofullfor.saksbehandler.etternavn,
+        'saksbehandler.navn': this.props.autofullfor.saksbehandler.navn,
+        'saksbehandler.enhet': this.props.autofullfor.saksbehandler.enhet
     };
 
     return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
