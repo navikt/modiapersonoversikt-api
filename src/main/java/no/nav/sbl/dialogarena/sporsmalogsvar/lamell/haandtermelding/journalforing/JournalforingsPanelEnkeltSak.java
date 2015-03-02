@@ -42,7 +42,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         form.add(
                 new Label("sakstype"),
                 new Label("temaNavn"),
-                new Label("saksId"),
+                new Label("saksIdVisning"),
                 new Label("fagsystemNavn"),
                 new Label("opprettetDatoFormatert"),
                 feedbackPanel,

@@ -11,9 +11,7 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.*;
 
 import java.util.List;
 
@@ -56,7 +54,7 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                     @Override
                     protected void populateItem(ListItem<Sak> item) {
                         item.add(new Radio<>("sak", item.getModel()));
-                        item.add(new Label("saksId"));
+                        item.add(new Label("saksIdVisning"));
                         item.add(new Label("opprettetDatoFormatert"));
                         item.add(new Label("fagsystemNavn"));
                     }

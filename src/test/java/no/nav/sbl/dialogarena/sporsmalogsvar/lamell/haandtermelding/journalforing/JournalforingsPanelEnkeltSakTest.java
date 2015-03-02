@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import java.util.List;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -30,7 +31,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     private final static String FODSELSNR = "52765236723";
-    private final static String JOURNALFORT_SAKSID = "123123123";
+    private final static String JOURNALFORT_SAKSID = "journalfort saksid";
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
@@ -44,7 +45,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
         innboksVM = new InnboksVM(FODSELSNR, henvendelseBehandlingService);
         List<Sak> sakerForBruker = TestUtils.createMockSaksliste();
         sakerForBruker.get(0).opprettetDato = DateTime.now();
-        sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;
+        sakerForBruker.get(0).saksId = optional(JOURNALFORT_SAKSID);
         innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId = JOURNALFORT_SAKSID;
     }
 

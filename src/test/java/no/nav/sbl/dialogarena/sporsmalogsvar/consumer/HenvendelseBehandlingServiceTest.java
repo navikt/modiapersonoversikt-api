@@ -11,10 +11,8 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -32,7 +30,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
@@ -51,11 +48,6 @@ public class HenvendelseBehandlingServiceTest {
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String BEHANDLINGS_ID = "id1";
-    private static final String SAKS_ID = "111111111";
-    private static final String SAKSTEMA = "tema";
-    private static final String SAKSTYPE = "Fagsystem1";
-    private static final String JOURNALPOST_ID = "journalpostId";
-    private static final String NAVIDENT = "navident";
     private static final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer());
     private static final List<String> IDER_I_VALGT_TRAAD = asList(ID_1, ID_2, ID_3);
     private static final String NAVBRUKERS_ENHET = "Navbrukers enhet";
@@ -63,8 +55,6 @@ public class HenvendelseBehandlingServiceTest {
 
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
-    @Captor
-    private ArgumentCaptor<XMLJournalfortInformasjon> xmlJournalfortInformasjonArgumentCaptor;
 
     @Mock
     private HenvendelsePortType henvendelsePortType;
@@ -82,9 +72,6 @@ public class HenvendelseBehandlingServiceTest {
     @InjectMocks
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
-    private Sak sak;
-    private Melding melding;
-
     @Before
     public void setUp() {
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
@@ -101,9 +88,6 @@ public class HenvendelseBehandlingServiceTest {
 
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("1231");
         when(standardKodeverk.getArkivtemaNavn(anyString())).thenReturn(ARKIVTEMANAVN);
-
-        sak = createSak(SAKS_ID, SAKSTEMA, SAKSTYPE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
-        melding = createMelding(BEHANDLINGS_ID, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMAGRUPPE, BEHANDLINGS_ID);
     }
 
     @Test
@@ -128,20 +112,6 @@ public class HenvendelseBehandlingServiceTest {
 
         assertThat(meldinger.size(), is(1));
         assertThat(meldinger.get(0).id, is(BEHANDLINGS_ID));
-    }
-
-    @Test
-    public void skalSendeJournalfortInformasjonTilBehandleHenvendelse() {
-        innloggetBrukerEr(NAVIDENT);
-        henvendelseBehandlingService.oppdaterJournalfortInformasjonIHenvendelse(sak, JOURNALPOST_ID, melding);
-
-        verify(behandleHenvendelsePortType).oppdaterJournalfortInformasjon(anyString(), xmlJournalfortInformasjonArgumentCaptor.capture());
-        XMLJournalfortInformasjon journalfortInformasjon = xmlJournalfortInformasjonArgumentCaptor.getValue();
-
-        assertThat(journalfortInformasjon.getJournalfortTema(), is(SAKSTEMA));
-        assertThat(journalfortInformasjon.getJournalpostId(), is(JOURNALPOST_ID));
-        assertThat(journalfortInformasjon.getJournalfortSaksId(), is(SAKS_ID));
-        assertThat(journalfortInformasjon.getJournalforerNavIdent(), is(NAVIDENT));
     }
 
     @Test

@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
@@ -57,7 +58,8 @@ public class TestUtils {
 
     public static Sak createSak(String saksId, String temaKode, String fagsystemKode, String sakstype, DateTime opprettet) {
         Sak sak = new Sak();
-        sak.saksId = saksId;
+        sak.saksId = optional(saksId);
+        sak.fagsystemSaksId = optional(saksId);
         sak.temaKode = temaKode;
         sak.fagsystemKode = fagsystemKode;
         if (sakstype.equals(SAKSTYPE_GENERELL)) {

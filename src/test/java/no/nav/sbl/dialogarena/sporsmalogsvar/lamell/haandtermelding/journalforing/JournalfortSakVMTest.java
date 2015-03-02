@@ -3,14 +3,13 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.SAKS_ID_3;
 import static org.hamcrest.core.Is.is;
@@ -32,7 +31,7 @@ public class JournalfortSakVMTest {
         when(traadVM.getEldsteMelding()).thenReturn(eldsteMeldingVM);
 
         Sak sak = new Sak();
-        sak.saksId = SAKS_ID_3;
+        sak.saksId = optional(SAKS_ID_3);
 
         when(sakerService.hentListeAvSaker(anyString())).thenReturn(asList(sak));
     }
@@ -42,7 +41,7 @@ public class JournalfortSakVMTest {
         JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, sakerService);
         journalfortSakVM.oppdater();
 
-        assertThat(journalfortSakVM.getSak().saksId, is(SAKS_ID_3));
+        assertThat(journalfortSakVM.getSak().saksId.get(), is(SAKS_ID_3));
     }
 
     private MeldingVM opprettMeldingVMogSetJournalfortSaksId(String journalfortSaksId) {

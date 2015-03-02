@@ -27,7 +27,7 @@ public class JournalfortSakVM implements Serializable {
 
     private Sak finnJournalfortSakHvisDenEksisterer(List<Sak> sakerForBruker, String journalfortSaksId) {
         for (Sak sakForBruker : sakerForBruker) {
-            if (sakForBruker.saksId.equals(journalfortSaksId)) {
+            if (sakForBruker.saksId.isSome() && sakForBruker.saksId.get().equals(journalfortSaksId)) {
                 return sakForBruker;
             }
         }

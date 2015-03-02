@@ -3,11 +3,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -16,7 +14,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,11 +21,13 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
@@ -75,17 +74,6 @@ public class HenvendelseBehandlingService {
                 .collect();
     }
 
-    public void oppdaterJournalfortInformasjonIHenvendelse(Sak sak, String journalpostId, Melding melding) {
-        behandleHenvendelsePortType.oppdaterJournalfortInformasjon(melding.id,
-                new XMLJournalfortInformasjon()
-                        .withJournalfortTema(sak.temaKode)
-                        .withJournalfortDato(DateTime.now())
-                        .withJournalpostId(journalpostId)
-                        .withJournalfortSaksId(sak.saksId)
-                        .withJournalforerNavIdent(getSubjectHandler().getUid())
-        );
-    }
-
     public void merkSomKontorsperret(String fnr, TraadVM valgtTraad) {
         String enhet = getEnhet(fnr);
         List<String> ider = on(valgtTraad.getMeldinger()).map(ID).collect();
@@ -111,7 +99,7 @@ public class HenvendelseBehandlingService {
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
-    private Predicate<Melding> kontorsperreTilgang(final String valgtEnhet){
+    private Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
         return new Predicate<Melding>() {
             @Override
             public boolean evaluate(Melding melding) {
