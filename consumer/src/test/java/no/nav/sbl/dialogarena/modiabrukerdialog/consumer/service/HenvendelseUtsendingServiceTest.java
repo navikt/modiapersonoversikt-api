@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
@@ -74,6 +75,8 @@ public class HenvendelseUtsendingServiceTest {
     public AnsattService ansattWS;
     @Mock
     public Ruting ruting;
+    @Mock
+    public PropertyResolver propertyResolver;
 
     @Inject
     @Named("pep")
