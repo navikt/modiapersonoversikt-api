@@ -63,7 +63,7 @@ public class HenvendelseBehandlingService {
 
     @PostConstruct
     protected void lagPropertyResolver() {
-        propertyResolver = new PropertyResolver(cmsContentRetriever, new File(Innboks.class.getResource("Innboks.properties").getFile()));
+        propertyResolver = new PropertyResolver(cmsContentRetriever, Innboks.class.getResourceAsStream("Innboks.properties"));
     }
 
     public List<Melding> hentMeldinger(String fnr) {
