@@ -1,5 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
@@ -10,10 +11,13 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
+import static no.nav.modig.lang.option.Optional.none;
 
 public class Sak implements Serializable, Comparable<Sak> {
 
-    public String saksId, temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
+    public Optional<String> saksId = none();
+    public Optional<String> fagsystemSaksId = none();
+    public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
     public DateTime opprettetDato;
     public Boolean finnesIGsak;
 
@@ -71,7 +75,19 @@ public class Sak implements Serializable, Comparable<Sak> {
         }
     };
 
-    public String getOpprettetDatoFormatert() { return Datoformat.langUtenLiteral(opprettetDato); }
+    public String getOpprettetDatoFormatert() {
+        return Datoformat.langUtenLiteral(opprettetDato);
+    }
+
+    public String getSaksIdVisning() {
+        if (fagsystemSaksId.isSome()) {
+            return fagsystemSaksId.get();
+        } else if (saksId.isSome()) {
+            return saksId.get();
+        } else {
+            return "";
+        }
+    }
 
     @Override
     public int compareTo(Sak other) {
@@ -79,22 +95,38 @@ public class Sak implements Serializable, Comparable<Sak> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
 
-        Sak sak = (Sak) o;
-
-        return !(saksId != null ? !saksId.equals(sak.saksId) : sak.saksId != null);
+        Sak sak = (Sak) obj;
+        if (saksId.isSome() && sak.saksId.isSome() && saksId.get().equals(sak.saksId.get())) {
+            return true;
+        } else {
+            return temaKode != null && sak.temaKode != null
+                    && fagsystemKode != null && sak.fagsystemKode != null
+                    && sakstype != null && sak.sakstype != null
+                    && temaKode.equals(sak.temaKode)
+                    && fagsystemKode.equals(sak.fagsystemKode)
+                    && sakstype.equals(sak.sakstype);
+        }
     }
 
     @Override
     public int hashCode() {
-        return saksId != null ? saksId.hashCode() : 0;
+        if (saksId.isSome()) {
+            return saksId.get().hashCode();
+        } else if (temaKode != null
+                && fagsystemKode != null
+                && sakstype != null) {
+            return temaKode.hashCode() * fagsystemKode.hashCode() * sakstype.hashCode();
+        } else {
+            return 0;
+        }
     }
 
 }
