@@ -4,7 +4,14 @@ var React = require('react');
 var spraak = {
     'nb_NO': 'Norsk (Bokmål)',
     'nn_NO': 'Norsk (Nynorsk)',
-    'en_US': 'Engelsk'
+    'en_US': 'Engelsk',
+    'se_NO': 'Samisk',
+    'de_DE': 'Tysk',
+    'fr_FR': 'Fransk',
+    'es_ES': 'Spansk',
+    'pl_PL': 'Polsk',
+    'ru_RU': 'Russisk',
+    'ur': 'Urdu'
 };
 var LocaleSelect = React.createClass({
     onChange: function (event) {
