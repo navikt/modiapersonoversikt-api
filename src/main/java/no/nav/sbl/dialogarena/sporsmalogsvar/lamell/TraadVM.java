@@ -70,7 +70,9 @@ public class TraadVM implements Serializable {
     }
 
     public boolean traadKanBesvares() {
-        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype) && !getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_KASSERT);
+        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype)
+                && !getEldsteMelding().getTemagruppeKey().equals(TEMAGRUPPE_KASSERT)
+                && !getEldsteMelding().erKontorsperret();
     }
 
 }

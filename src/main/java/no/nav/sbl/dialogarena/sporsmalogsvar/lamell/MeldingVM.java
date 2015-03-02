@@ -59,6 +59,10 @@ public class MeldingVM implements Serializable {
         return getMarkertSomFeilsendtAv().isSome();
     }
 
+    public boolean erKontorsperret() {
+        return melding.kontorsperretEnhet != null;
+    }
+
     public Optional<String> getMarkertSomFeilsendtAv() {
         return optional(melding.markertSomFeilsendtAv);
     }
@@ -117,5 +121,4 @@ public class MeldingVM implements Serializable {
         result = 31 * result + traadlengde;
         return result;
     }
-
 }
