@@ -79,8 +79,7 @@ public class MeldingUtils {
                 }
 
                 if (innholdErKassert(xmlHenvendelse)) {
-                    melding.temagruppe = null;
-                    melding.temagruppeNavn = propertyResolver.getProperty("temagruppe.kassert");
+                    settTemagruppe(melding, null, propertyResolver);
                     melding.fritekst = propertyResolver.getProperty("innhold.kassert");
                     melding.kanal = null;
                     melding.navIdent = null;
@@ -91,11 +90,11 @@ public class MeldingUtils {
                 XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
                 if (xmlMetadata instanceof XMLMeldingFraBruker) {
                     XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
-                    melding.temagruppe = meldingFraBruker.getTemagruppe();
+                    settTemagruppe(melding, meldingFraBruker.getTemagruppe(), propertyResolver);
                     melding.fritekst = meldingFraBruker.getFritekst();
                 } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
                     XMLMeldingTilBruker meldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
-                    melding.temagruppe = meldingTilBruker.getTemagruppe();
+                    settTemagruppe(melding, meldingTilBruker.getTemagruppe(), propertyResolver);
                     melding.fritekst = meldingTilBruker.getFritekst();
                     melding.kanal = meldingTilBruker.getKanal();
                     melding.navIdent = meldingTilBruker.getNavident();
@@ -106,6 +105,15 @@ public class MeldingUtils {
                 return melding;
             }
         };
+    }
+
+    private static void settTemagruppe(Melding melding, String temagruppe, PropertyResolver propertyResolver) {
+        melding.temagruppe = temagruppe;
+        if (temagruppe == null) {
+            melding.temagruppeNavn = propertyResolver.getProperty("temagruppe.kassert");
+        } else {
+            melding.temagruppeNavn = propertyResolver.getProperty(temagruppe);
+        }
     }
 
     public static final boolean innholdErKassert(XMLHenvendelse xmlHenvendelse) {
