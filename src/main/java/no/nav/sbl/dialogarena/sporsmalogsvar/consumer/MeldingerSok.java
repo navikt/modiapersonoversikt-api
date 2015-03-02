@@ -60,9 +60,9 @@ public class MeldingerSok {
 
     private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, ANALYZER);
 
-    private Map<String, List<Melding>> meldingerCache = new ConcurrentHashMap<>();
-    private Map<String, RAMDirectory> directories = new ConcurrentHashMap<>();
-    private Map<String, DateTime> indexingTimestamps = new ConcurrentHashMap<>();
+    protected Map<String, List<Melding>> meldingerCache = new ConcurrentHashMap<>();
+    protected Map<String, RAMDirectory> directories = new ConcurrentHashMap<>();
+    protected Map<String, DateTime> indexingTimestamps = new ConcurrentHashMap<>();
 
     public MeldingerSok() {
         queryParser.setDefaultOperator(QueryParser.Operator.AND);
