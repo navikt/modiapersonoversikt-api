@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.domain.person.*;
+import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
@@ -32,9 +32,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_AVBRUTT;
@@ -44,9 +42,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -186,41 +182,6 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .sendEvent(createEvent(event))
                 .should().inAjaxResponse().haveComponents(ofType(panelSomSKalVises));
-    }
-
-    @Test
-    public void viserFallbackFornavnDersomFornavnIkkeKanHentes() {
-        GrunnInfo grunnInfo = (GrunnInfo) Whitebox.getInternalState(new DialogPanel(ID, FNR), "grunnInfo");
-
-        assertThat(grunnInfo.bruker.fornavn.equals(""), is(true));
-    }
-
-    @Test
-    public void viserFornavnDersomFornavnKanHentes() {
-        String fornavn = "Fornavn";
-        HentKjerneinformasjonResponse response = createHentKjerneinformasjonResponse(fornavn);
-        when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(response);
-        DialogPanel dialogPanel = new DialogPanel(ID, FNR);
-
-        GrunnInfo grunnInfo = (GrunnInfo) Whitebox.getInternalState(dialogPanel, "grunnInfo");
-
-        assertThat(grunnInfo.bruker.fornavn.equals(fornavn), is(true));
-    }
-
-    private HentKjerneinformasjonResponse createHentKjerneinformasjonResponse(String fornavn) {
-        Personnavn personnavn = new Personnavn();
-        personnavn.setFornavn(fornavn);
-
-        Personfakta personfakta = new Personfakta();
-        personfakta.setPersonnavn(personnavn);
-
-        Person person = new Person();
-        person.setPersonfakta(personfakta);
-
-        HentKjerneinformasjonResponse response = new HentKjerneinformasjonResponse();
-        response.setPerson(person);
-
-        return response;
     }
 
     private void settSessionVerdier(String oppgaveIdVerdi, String henvendelseIdVerdi, Boolean fortsettDialogModusVerdi) {
