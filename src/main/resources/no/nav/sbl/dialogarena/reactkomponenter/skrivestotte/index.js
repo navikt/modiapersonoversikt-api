@@ -13,7 +13,7 @@ module.exports = React.createClass({
     skjul: function () {
         this.refs.modal.close();
     },
-    sok: function(query){
+    sok: function (query) {
         query = query || {};
         var fritekst = query.fritekst || '';
         var knagger = query.knagger || [];
@@ -28,9 +28,10 @@ module.exports = React.createClass({
         return $.get(url);
     },
     submit: function (valgtTekst, valgtLocale) {
-        $('#' + this.props.tekstfeltId)
+        var $tekstfelt = $('#' + this.props.tekstfeltId);
+        $tekstfelt
             .focus()
-            .val(autofullfor.bind(this)(stripEmTags(Utils.getInnhold(valgtTekst, valgtLocale))))
+            .val($tekstfelt.val() + '\n' + autofullfor.bind(this)(stripEmTags(Utils.getInnhold(valgtTekst, valgtLocale))))
             .trigger('input');
 
         this.skjul();
