@@ -6,24 +6,22 @@ moment.locale('nb');
 module.exports = React.createClass({
     render: function(){
         var melding = this.props.melding;
-        var clsExt = erUtgaaende(melding) ? 'utgaaende' : 'ingaaende';
+        var clsExt = melding.erInngaaende ? 'ingaaende' : 'utgaaende';
         var cls = 'melding clearfix ' + clsExt;
+        var src = '/modiabrukerdialog/img/' + (melding.erInngaaende ? 'personligoppmote.svg' : 'nav-logo.svg');
+        var altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
 
         var dato = moment(melding.dato || new Date()).format('LLL');
         return (
             <div className={cls}>
-                <img className={'avsenderBilde '+clsExt} src="/modiabrukerdialog/img/nav-logo.svg" alt="Melding fra NAV" />
+                <img className={'avsenderBilde '+clsExt} src={src} alt={altTekst} />
                 <div className="meldingData">
-                    <h2>{melding.temagruppe}</h2>
-                    <h3>melding.meldingstype</h3>
-                    <h3>{dato}</h3>
-                    <div className="fritekst">{melding.fritekst}</div>
+                    <h2 dangerouslySetInnerHTML={{__html: melding.temagruppeNavn}}></h2>
+                    <h3>{melding.statusTekst}</h3>
+                    <h3>{dato} - {melding.fraBruker}</h3>
+                    <div className="fritekst" dangerouslySetInnerHTML={{__html: melding.fritekst}}></div>
                 </div>
             </div>
         );
     }
 });
-
-function erUtgaaende(melding) {
-    return Math.random() > 0.5;
-}

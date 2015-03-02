@@ -7,7 +7,7 @@ var ListevisningKomponent = require('./ListevisningKomponent');
 var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
 
 module.exports = React.createClass({
-    componentDidMount: function(){
+    componentWillMount: function(){
         $.get('/modiabrukerdialog/rest/meldinger/'+this.props.fnr+'/indekser');
     },
     vis: function () {
@@ -39,9 +39,12 @@ function sok(fnr, query) {
         .done(function(traader){
             traader.forEach(function(traad){
                 traad.key = traad.traadId;
-                traad.type = "sporsmal-ikke-lest-av-bruker";
-                traad.typeBeskrivelse = "Spørsmål fra NAV, sendt";
+                traad.datoInMillis = traad.dato.millis;
                 traad.innhold = traad.meldinger[0].fritekst;
+                traad.meldinger.forEach(function(melding){
+                    melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
+                    melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.eksternAktor;
+                });
             });
         });
 }
