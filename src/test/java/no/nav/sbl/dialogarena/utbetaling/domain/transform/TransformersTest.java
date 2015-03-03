@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.AktoerType;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -30,7 +31,6 @@ public class TransformersTest {
     }
 
     @Test
-
     public void hovedytelsesDatoErUtbetalingsdatoNaarUtbetalingsdatoEksisterer() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()
                 .withUtbetalingsdato(new DateTime(2010, 1, 1, 1, 1))
@@ -69,14 +69,14 @@ public class TransformersTest {
     @Test
     public void createAktoerFraWSObjekt() {
         WSPerson wsAktoer = new WSPerson().withAktoerId("12121266666").withNavn("Ola Normann");
-        Record<Aktoer> aktoer = createAktoer(wsAktoer);
+        Record<? extends Aktoer> aktoer = createAktoer(wsAktoer);
         assertThat(aktoer.get(Aktoer.aktoerId), is("12121266666"));
         assertThat(aktoer.get(Aktoer.navn), is("Ola Normann"));
     }
 
     @Test
     public void createAktoerNaarAktoerErNull() {
-        Record<Aktoer> aktoer = createAktoer(null);
+        Record<? extends Aktoer> aktoer = createAktoer(null);
         assertNull(aktoer);
     }
 
@@ -244,7 +244,7 @@ public class TransformersTest {
     @Test
     public void hovedytelseTransformererKorrektFraWSObjekt() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()
-                .withUtbetaltTil(new WSPerson().withNavn("Ola Normann").withAktoerId("123123123"))
+                .withUtbetaltTil(new WSPerson().withNavn("Ola Normann").withAktoerId("123123123").withDiskresjonskode(new WSDiskresjonskodetyper().withValue("5")))
                 .withPosteringsdato(new DateTime(2015, 1, 1, 13, 37))
                 .withUtbetalingsmelding("Dette er en melding")
                 .withUtbetalingsdato(new DateTime(2015, 1, 2, 3, 4))
@@ -255,35 +255,35 @@ public class TransformersTest {
                 .withYtelseListe(
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
-                        .withYtelsesperiode(new WSPeriode().withFom(new DateTime(2000, 1, 1, 1, 2)).withTom(new DateTime(2001, 1, 1, 1, 1)))
-                        .withYtelseskomponentListe(
-                                new WSYtelseskomponent()
-                                        .withYtelseskomponentbeloep(200.0)
-                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnbeløp"))
-                                        .withSatsantall(2.0)
-                                        .withSatstype(new WSSatstyper().withValue("SatsType"))
-                                        .withSatsbeloep(10.0),
-                                new WSYtelseskomponent()
-                                        .withYtelseskomponentbeloep(20000.0)
-                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
-                                        .withSatsantall(12.0)
-                                        .withSatstype(new WSSatstyper().withValue("SatsSats"))
-                                        .withSatsbeloep(20.0))
-                        .withYtelseskomponentersum(22000.0)
-                        .withTrekkListe(
-                                new WSTrekk().withKreditor("kreditor as").withTrekkbeloep(-2000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
-                                new WSTrekk().withKreditor("kreditor ans").withTrekkbeloep(-3000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
-                                new WSTrekk().withKreditor("kreditor enk").withTrekkbeloep(-4000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")))
-                        .withTrekksum(-9000.0)
-                        .withSkattListe(
-                                new WSSkatt().withSkattebeloep(-1.0),
-                                new WSSkatt().withSkattebeloep(-2.0),
-                                new WSSkatt().withSkattebeloep(-3.0))
-                        .withSkattsum(-6.0)
-                        .withYtelseNettobeloep(12994.0)
-                        .withBilagsnummer("123456789")
-                        .withRettighetshaver(new WSPerson().withAktoerId("112233445566").withNavn("Kari Normann"))
-                        .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("KariNormann AS")));
+                                .withYtelsesperiode(new WSPeriode().withFom(new DateTime(2000, 1, 1, 1, 2)).withTom(new DateTime(2001, 1, 1, 1, 1)))
+                                .withYtelseskomponentListe(
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentbeloep(200.0)
+                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnbeløp"))
+                                                .withSatsantall(2.0)
+                                                .withSatstype(new WSSatstyper().withValue("SatsType"))
+                                                .withSatsbeloep(10.0),
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentbeloep(20000.0)
+                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                .withSatsantall(12.0)
+                                                .withSatstype(new WSSatstyper().withValue("SatsSats"))
+                                                .withSatsbeloep(20.0))
+                                .withYtelseskomponentersum(22000.0)
+                                .withTrekkListe(
+                                        new WSTrekk().withKreditor("kreditor as").withTrekkbeloep(-2000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
+                                        new WSTrekk().withKreditor("kreditor ans").withTrekkbeloep(-3000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
+                                        new WSTrekk().withKreditor("kreditor enk").withTrekkbeloep(-4000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")))
+                                .withTrekksum(-9000.0)
+                                .withSkattListe(
+                                        new WSSkatt().withSkattebeloep(-1.0),
+                                        new WSSkatt().withSkattebeloep(-2.0),
+                                        new WSSkatt().withSkattebeloep(-3.0))
+                                .withSkattsum(-6.0)
+                                .withYtelseNettobeloep(12994.0)
+                                .withBilagsnummer("123456789")
+                                .withRettighetshaver(new WSPerson().withAktoerId("112233445566").withNavn("Kari Normann").withDiskresjonskode(new WSDiskresjonskodetyper().withValue("3")))
+                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("KariNormann AS")));
 
         List<Record<Hovedytelse>> hovedytelser = TO_HOVEDYTELSE.transform(wsUtbetaling);
         assertThat(hovedytelser.size(), is(1));
@@ -291,7 +291,7 @@ public class TransformersTest {
         Record<Hovedytelse> ytelse = hovedytelser.get(0);
         assertThat(ytelse.get(Hovedytelse.mottakertype), is(Mottakertype.BRUKER));
         assertThat(ytelse.get(Hovedytelse.hovedytelsedato), is(new DateTime(2015, 1, 2, 3, 4)));
-        assertThat(ytelse.get(Hovedytelse.utbetaltTil), is(new Record<Aktoer>().with(Aktoer.aktoerId, "123123123").with(Aktoer.navn, "Ola Normann")));
+        assertThat(ytelse.get(Hovedytelse.utbetaltTil), is(new Record<Aktoer>().with(Aktoer.aktoerId, "123123123").with(Aktoer.navn, "Ola Normann").with(Aktoer.diskresjonskode, "5").with(Aktoer.aktoerType, AktoerType.PERSON)));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmelding), is("Dette er en melding"));
         assertThat(ytelse.get(Hovedytelse.utbetaltTilKonto), is(new Record<Konto>().with(Konto.kontonummer, "112233112233").with(Konto.kontotype, "Bankkonto")));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmetode), is("Overføring via bank"));
@@ -329,8 +329,8 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.sumSkatt), is(-6.0));
         assertThat(ytelse.get(Hovedytelse.nettoUtbetalt), is(12994.0));
         assertThat(ytelse.get(Hovedytelse.bilagsnummer), is("123456789"));
-        assertThat(ytelse.get(Hovedytelse.rettighetshaver), is(new Record<Aktoer>().with(Aktoer.navn, "Kari Normann").with(Aktoer.aktoerId, "112233445566")));
-        assertThat(ytelse.get(Hovedytelse.refundertForOrg), is(new Record<Aktoer>().with(Aktoer.navn, "KariNormann AS").with(Aktoer.aktoerId, "***REMOVED***")));
+        assertThat(ytelse.get(Hovedytelse.rettighetshaver), is(new Record<Aktoer>().with(Aktoer.navn, "Kari Normann").with(Aktoer.aktoerId, "112233445566").with(Aktoer.diskresjonskode, "3").with(Aktoer.aktoerType, AktoerType.PERSON)));
+        assertThat(ytelse.get(Hovedytelse.refundertForOrg), is(new Record<Aktoer>().with(Aktoer.navn, "KariNormann AS").with(Aktoer.aktoerId, "***REMOVED***").with(Aktoer.aktoerType, AktoerType.ORGANISASJON)));
 
         assertThat(ytelse.get(Hovedytelse.sammenlagtTrekkBeloep), is(-9006.0));
         assertThat(ytelse.get(Hovedytelse.bruttoUtbetalt), is(22000.0));

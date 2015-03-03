@@ -4,7 +4,9 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
@@ -38,8 +40,12 @@ public class UtbetalingService {
         try {
             return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingsinformasjonPeriodeIkkeGyldig ex) {
-            throw new ApplicationException("Utbetalingsperioden er ikke gyldig. ",ex);
-        } catch(Exception e) {
+            throw new ApplicationException("Utbetalingsperioden er ikke gyldig. ", ex);
+        } catch (HentUtbetalingsinformasjonPersonIkkeFunnet ex) {
+            throw new ApplicationException("Person ikke funnet. ", ex);
+        } catch (HentUtbetalingsinformasjonIkkeTilgang ex) {
+            throw new ApplicationException("Ikke tilgang. ", ex);
+        } catch (Exception e) {
             throw new SystemException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
         }
     }

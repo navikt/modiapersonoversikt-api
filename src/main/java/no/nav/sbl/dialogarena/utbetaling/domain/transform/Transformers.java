@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.AktoerType;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -15,7 +16,9 @@ import java.util.List;
 import static java.util.Collections.reverseOrder;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.aktoerId;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.aktoerType;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.navn;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Konto.kontonummer;
@@ -69,7 +72,7 @@ public class Transformers {
                         .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(hovedytelsedato, determineHovedytelseDato(wsUtbetaling))
                         .with(forfallsdato, wsUtbetaling.getForfallsdato())
-                        .with(utbetalingsDato, wsUtbetaling.getUtbetalingsdato())
+                        .with(utbetalingsDato, optional(wsUtbetaling.getUtbetalingsdato()))
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
                         .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
@@ -193,12 +196,33 @@ public class Transformers {
         if (utbetaltTil == null) {
             return null;
         }
-        return new Record<Aktoer>()
+
+        Record<Aktoer> aktoer = new Record<Aktoer>()
                 .with(aktoerId, utbetaltTil.getAktoerId())
-                .with(navn, utbetaltTil.getNavn());
+                .with(navn, utbetaltTil.getNavn())
+                .with(aktoerType, getAktoerType(utbetaltTil));
+
+        if(aktoer.get(Aktoer.aktoerType).equals(AktoerType.PERSON)) {
+            WSPerson wsPerson = (WSPerson) utbetaltTil;
+            aktoer = aktoer.with(Aktoer.diskresjonskode, wsPerson.getDiskresjonskode() != null ? wsPerson.getDiskresjonskode().getValue() : "");
+        }
+
+        return aktoer;
     }
 
-    private static int createHovedytelseId(WSYtelse wsYtelse) {
+    protected static AktoerType getAktoerType(WSAktoer utbetaltTil) {
+        if(utbetaltTil instanceof WSPerson) {
+            return AktoerType.PERSON;
+        } else if(utbetaltTil instanceof WSSamhandler) {
+            return AktoerType.SAMHANDLER;
+        } else if(utbetaltTil instanceof WSOrganisasjon) {
+            return AktoerType.ORGANISASJON;
+        } else {
+            return AktoerType.PERSON;
+        }
+    }
+
+    protected static int createHovedytelseId(WSYtelse wsYtelse) {
         return new StringBuilder()
                 .append(wsYtelse.getBilagsnummer())
                 .append(wsYtelse.getSkattsum())

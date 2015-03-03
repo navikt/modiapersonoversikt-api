@@ -3,7 +3,9 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSForespurtPeriode;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
@@ -59,7 +61,7 @@ public class UtbetalingServiceTest {
     }
 
     @Test(expected = ApplicationException.class)
-    public void haandtererIkkeGyldigPeriodeFeilFraTjenesten() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
+    public void haandtererIkkeGyldigPeriodeFeilFraTjenesten() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig, HentUtbetalingsinformasjonPersonIkkeFunnet, HentUtbetalingsinformasjonIkkeTilgang {
         UtbetalingService spyService = spy(utbetalingService);
         String fnr = "11223312345";
         LocalDate fom = new LocalDate(2015, 1, 1);
