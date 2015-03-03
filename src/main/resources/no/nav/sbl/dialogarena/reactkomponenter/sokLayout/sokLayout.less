@@ -59,7 +59,10 @@
             font-weight: 400;
           }
         }
-
+        input[type=radio]:focus + label {
+          outline-style: dotted;
+          outline-offset: -1px;
+        }
       }
     }
     .sok-forhandsvisning {
@@ -68,7 +71,7 @@
       float: right;
       word-wrap: break-word;
 
-      >div {
+      > div {
         height: 100%;
       }
     }
