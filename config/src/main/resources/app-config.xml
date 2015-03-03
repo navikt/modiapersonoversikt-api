@@ -49,6 +49,7 @@
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
+        <emailAddress alias="modiabrukerdialog.standardtekster.epost" mapToProperty="modiabrukerdialog.standardtekster.epost"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
 
