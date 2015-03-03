@@ -37,10 +37,6 @@ public class HovedytelseUtils {
                 .filter(where(hovedytelsedato, isWithinRange(intervall))).collect();
     }
 
-    private static Interval intervalFromStartEndDate(LocalDate startDato, LocalDate sluttDato) {
-        return new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
-    }
-
     public static Map<YearMonth, List<Record<Hovedytelse>>> ytelserGroupedByYearMonth(List<Record<Hovedytelse>> hovedytelser) {
         return on(hovedytelser).map(TO_YEAR_MONTH_ENTRY).reduce(BY_YEAR_MONTH);
     }
@@ -57,48 +53,6 @@ public class HovedytelseUtils {
         return resultat;
     }
 
-    private static ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>> splittPaaPeriode = new ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>>() {
-        @Override
-        public List<List<Record<Hovedytelse>>> reduce(List<List<Record<Hovedytelse>>> accumulator, Record<?> newValue) {
-            Optional<List<Record<Hovedytelse>>> optionalMedSammePeriode = on(accumulator).filter(erISammePeriode((Record<Hovedytelse>) newValue)).head();
-            List<Record<Hovedytelse>> liste;
-            if (optionalMedSammePeriode.isSome()) {
-                liste = optionalMedSammePeriode.get();
-            } else {
-                liste = new ArrayList<>();
-                accumulator.add(liste);
-            }
-            liste.add((Record<Hovedytelse>) newValue);
-            return accumulator;
-        }
-
-        @Override
-        public List<List<Record<Hovedytelse>>> identity() {
-            return new ArrayList<>();
-        }
-    };
-
-    private static Predicate<Collection<Record<Hovedytelse>>> erISammePeriode(final Record<Hovedytelse> hovedytelse) {
-        return new Predicate<Collection<Record<Hovedytelse>>>() {
-            @Override
-            public boolean evaluate(Collection<Record<Hovedytelse>> utbetalinger) {
-                LocalDate start = hovedytelse.get(ytelsesperiode).getStart().toLocalDate().minusDays(1);
-                return !on(utbetalinger)
-                        .filter(where(first(ytelsesperiode).then(END).then(TO_LOCAL_DATE),
-                                either(equalTo(start)).or(isAfter(start)))).isEmpty();
-            }
-        };
-    }
-
-    private static Predicate<DateTime> isWithinRange(final Interval intervall) {
-        return new Predicate<DateTime>() {
-            @Override
-            public boolean evaluate(DateTime dateTime) {
-                return intervall.contains(dateTime);
-            }
-        };
-    }
-
     public static Predicate<Record<Hovedytelse>> betweenNowAndMonthsBefore(final int numberOfMonthsToShow) {
         return new Predicate<Record<Hovedytelse>>() {
             @Override
@@ -108,6 +62,10 @@ public class HovedytelseUtils {
                 return hovedytelseDato.isAfter(threshold);
             }
         };
+    }
+
+    protected static Interval intervalFromStartEndDate(LocalDate startDato, LocalDate sluttDato) {
+        return new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
     }
 
     protected static final ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> BY_YEAR_MONTH = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
@@ -135,4 +93,46 @@ public class HovedytelseUtils {
             return new SimpleEntry<>(yearMonth, ytelse);
         }
     };
+
+    private static ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>> splittPaaPeriode = new ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>>() {
+        @Override
+        public List<List<Record<Hovedytelse>>> reduce(List<List<Record<Hovedytelse>>> accumulator, Record<?> newValue) {
+            Optional<List<Record<Hovedytelse>>> optionalMedSammePeriode = on(accumulator).filter(erISammePeriode((Record<Hovedytelse>) newValue)).head();
+            List<Record<Hovedytelse>> liste;
+            if (optionalMedSammePeriode.isSome()) {
+                liste = optionalMedSammePeriode.get();
+            } else {
+                liste = new ArrayList<>();
+                accumulator.add(liste);
+            }
+            liste.add((Record<Hovedytelse>) newValue);
+            return accumulator;
+        }
+
+        @Override
+        public List<List<Record<Hovedytelse>>> identity() {
+            return new ArrayList<>();
+        }
+    };
+
+    protected static Predicate<Collection<Record<Hovedytelse>>> erISammePeriode(final Record<Hovedytelse> hovedytelse) {
+        return new Predicate<Collection<Record<Hovedytelse>>>() {
+            @Override
+            public boolean evaluate(Collection<Record<Hovedytelse>> utbetalinger) {
+                LocalDate start = hovedytelse.get(ytelsesperiode).getStart().toLocalDate().minusDays(1);
+                return !on(utbetalinger)
+                        .filter(where(first(ytelsesperiode).then(END).then(TO_LOCAL_DATE),
+                                either(equalTo(start)).or(isAfter(start)))).isEmpty();
+            }
+        };
+    }
+
+    protected static Predicate<DateTime> isWithinRange(final Interval intervall) {
+        return new Predicate<DateTime>() {
+            @Override
+            public boolean evaluate(DateTime dateTime) {
+                return intervall.contains(dateTime);
+            }
+        };
+    }
 }
