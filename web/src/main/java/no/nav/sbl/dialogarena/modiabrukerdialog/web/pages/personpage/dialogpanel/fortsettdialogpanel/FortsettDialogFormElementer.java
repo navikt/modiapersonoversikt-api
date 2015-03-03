@@ -49,16 +49,16 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         );
         add(tekstfelt);
 
-        HashMap<String, Object> tekstforslagProps = new HashMap<>();
-        tekstforslagProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
-        tekstforslagProps.put("autofullfor", grunnInfo);
-        final ReactComponentPanel stottetekster = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", tekstforslagProps);
-        add(stottetekster);
+        HashMap<String, Object> skrivestotteProps = new HashMap<>();
+        skrivestotteProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
+        skrivestotteProps.put("autofullfor", grunnInfo);
+        final ReactComponentPanel skrivestotte = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", skrivestotteProps);
+        add(skrivestotte);
 
         add(new AjaxLink("skrivestotteToggler") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                stottetekster.callFunction(target, "vis");
+                skrivestotte.callFunction(target, "vis");
             }
         });
 
