@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
+import no.nav.sbl.dialogarena.utbetaling.lamell.components.PrintEkspanderContainer;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.DetaljPanel;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -15,6 +16,7 @@ public class UtbetalingPanel extends Panel {
         super(id);
 
         add(new DetaljPanel("detaljpanel", utbetalingVM),
+                new PrintEkspanderContainer("printEkspander", UtbetalingPanel.this.getMarkupId()),
                 createStatusPanel("statuspanel", utbetalingVM),
                 new Label("ytelse", utbetalingVM.getYtelse()),
                 new Label("utbetaltTil", utbetalingVM.getMottakerNavn()),

@@ -26,7 +26,7 @@ public final class StartJettyUtbetalinger {
 
     private static void setupProperties() {
         setProperty("wicket.configuration", "development");
-        setProperty("utbetal.endpoint.mock", REAL_DATA);
+        setProperty("utbetal.endpoint.mock", MOCK_DATA);
         setProperty("server.arena.url", "arenaserver");
         setProperty("utbetalingendpoint.url", "https://e34wasl00319.devillo.no:9443/nav-utbetaldata-ws/virksomhet/Utbetaling_v1");
     }

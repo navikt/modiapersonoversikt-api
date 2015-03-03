@@ -341,7 +341,6 @@
     .main {
       position: relative;
       .statuspanel {
-        margin-bottom: 10px;
         display: inline-block;
         span {
           margin-right: 0.5em;
@@ -397,12 +396,18 @@
     .skriv-ut-container {
       display: inline-block;
       float: right;
+      margin-bottom: 10px;
+
+      span {
+        display: none;
+      }
     }
     .skriv-ut {
       float: right;
       background: transparent url('../img/print.svg') no-repeat;
       width: 16px;
       height: 12px;
+      border: 0;
       &:hover {
         background-image: url('../img/print_hover.svg');
       }
@@ -410,6 +415,7 @@
 
     .ekspander-pil {
       float: right;
+      border: 0;
       background: transparent url('../img/pil.svg') no-repeat;
       width: 17px;
       height: 12px;

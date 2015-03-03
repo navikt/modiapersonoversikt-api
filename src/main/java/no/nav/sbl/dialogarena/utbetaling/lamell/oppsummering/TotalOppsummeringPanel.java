@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
-import org.apache.wicket.Component;
+import no.nav.sbl.dialogarena.utbetaling.lamell.components.PrintEkspanderContainer;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -43,7 +42,8 @@ public class TotalOppsummeringPanel extends Panel {
 
             private String createJavascript() {
                 return "$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);" +
-                        "$('#" + getMarkupId() + "').toggleClass('ekspandert');";
+                        "$('#" + getMarkupId() + "').toggleClass('ekspandert');" +
+                        "Utbetalinger.toggleEkspandertHjelpetekst($('#" + getMarkupId() + "'));";
             }
         };
     }
@@ -53,19 +53,9 @@ public class TotalOppsummeringPanel extends Panel {
         container.add(new Label("oppsummertPeriode"),
                 new Label("utbetalt"),
                 new Label("trekk"),
-                new Label("brutto"),
-                createSkrivUtLink());
+                new Label("brutto"));
+        container.add(new PrintEkspanderContainer("printEkspander", TotalOppsummeringPanel.this.getMarkupId()));
         return container;
-    }
-
-    private Component createSkrivUtLink() {
-        return new AjaxLink<Void>("skriv-ut") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                String markupId = TotalOppsummeringPanel.this.getMarkupId();
-                target.appendJavaScript("Utbetalinger.skrivUt($('#" + markupId + "'));");
-            }
-        };
     }
 
     private MarkupContainer createYtelsesOppsummering() {
