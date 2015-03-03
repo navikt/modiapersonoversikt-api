@@ -7,8 +7,14 @@ var ListevisningKomponent = require('./ListevisningKomponent');
 var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
 
 module.exports = React.createClass({
-    componentWillMount: function(){
-        $.get('/modiabrukerdialog/rest/meldinger/'+this.props.fnr+'/indekser');
+    componentWillMount: function () {
+        $.get('/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser');
+    },
+    getInitialState: function () {
+        return {traadRef: {}}
+    },
+    oppdaterTraadRef: function (traadRef) {
+        this.setState({traadRef: traadRef});
     },
     vis: function () {
         this.refs.modal.open();
@@ -16,10 +22,11 @@ module.exports = React.createClass({
     skjul: function () {
         this.refs.modal.close();
     },
-    submit: function(){
-
+    submit: function (valgtTraad) {
+        $('#' + this.state.traadRef[valgtTraad.traadId]).click();
+        this.skjul();
     },
-    render: function(){
+    render: function () {
         return (
             <Modal ref="modal">
                 <Soklayout {...this.props} sok={sok.bind(this, this.props.fnr)} submit={this.submit}
@@ -36,12 +43,12 @@ module.exports = React.createClass({
 
 function sok(fnr, query) {
     return hentFraRestAPI(fnr, query)
-        .done(function(traader){
-            traader.forEach(function(traad){
+        .done(function (traader) {
+            traader.forEach(function (traad) {
                 traad.key = traad.traadId;
                 traad.datoInMillis = traad.dato.millis;
                 traad.innhold = traad.meldinger[0].fritekst;
-                traad.meldinger.forEach(function(melding){
+                traad.meldinger.forEach(function (melding) {
                     melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
                     melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.eksternAktor;
                 });
@@ -52,6 +59,6 @@ function hentFraRestAPI(fnr, query) {
     if (typeof query !== "string") {
         query = "";
     }
-    var url = '/modiabrukerdialog/rest/meldinger/'+fnr+'/sok/' + encodeURIComponent(query);
+    var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
     return $.get(url);
 }
