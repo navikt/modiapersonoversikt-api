@@ -10,8 +10,12 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.*;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
@@ -24,9 +28,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.FMLI;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ORT_HJE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.*;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
@@ -172,7 +174,6 @@ public class OppgaveBehandlingService {
         return on(oppgaveWS.finnOppgaveListe(
                 new WSFinnOppgaveListeRequest()
                         .withFilter(new WSFinnOppgaveListeFilter()
-                                .withOpprettetEnhetId(enhetForPlukk(temagruppe))
                                 .withOppgavetypeKodeListe("SPM_OG_SVR")
                                 .withUnderkategoriKode(underkategoriKode(temagruppe))
                                 .withMaxAntallSvar(0)
