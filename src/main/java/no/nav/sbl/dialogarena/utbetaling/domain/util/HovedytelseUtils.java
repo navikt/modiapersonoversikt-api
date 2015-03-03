@@ -42,7 +42,7 @@ public class HovedytelseUtils {
     }
 
     public static Map<YearMonth, List<Record<Hovedytelse>>> ytelserGroupedByYearMonth(List<Record<Hovedytelse>> hovedytelser) {
-        return on(hovedytelser).map(toYearMonthEntry).reduce(byYearMonth);
+        return on(hovedytelser).map(TO_YEAR_MONTH_ENTRY).reduce(BY_YEAR_MONTH);
     }
 
     public static List<List<Record<Hovedytelse>>> grupperPaaHovedytelseOgPeriode(Iterable<Record<Hovedytelse>> utbetalinger) {
@@ -110,7 +110,7 @@ public class HovedytelseUtils {
         };
     }
 
-    protected static ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> byYearMonth = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
+    protected static final ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> BY_YEAR_MONTH = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
         @Override
         public Map<YearMonth, List<Record<Hovedytelse>>> reduce(Map<YearMonth, List<Record<Hovedytelse>>> accumulator, Entry<YearMonth, Record<Hovedytelse>> entry) {
             if(!accumulator.containsKey(entry.getKey())) {
@@ -126,7 +126,7 @@ public class HovedytelseUtils {
         }
     };
 
-    protected static Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> toYearMonthEntry = new Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>>() {
+    protected static final Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> TO_YEAR_MONTH_ENTRY = new Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>>() {
         @Override
         public Entry<YearMonth, Record<Hovedytelse>> transform(Record<Hovedytelse> ytelse) {
             int year = ytelse.get(hovedytelsedato).getYear();
