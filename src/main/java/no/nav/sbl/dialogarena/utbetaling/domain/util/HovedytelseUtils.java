@@ -42,7 +42,7 @@ public class HovedytelseUtils {
     }
 
     public static Map<YearMonth, List<Record<Hovedytelse>>> ytelserGroupedByYearMonth(List<Record<Hovedytelse>> hovedytelser) {
-        return on(hovedytelser).map(TO_YEARMONTH_ENTRY).reduce(BY_YEARMONTH);
+        return on(hovedytelser).map(toYearMonthEntry).reduce(byYearMonth);
     }
 
     public static List<List<Record<Hovedytelse>>> grupperPaaHovedytelseOgPeriode(Iterable<Record<Hovedytelse>> utbetalinger) {
@@ -51,13 +51,13 @@ public class HovedytelseUtils {
         Collection<List<Record<?>>> gruppertEtterHovedytelse = on(utbetalinger).reduce(indexBy(Hovedytelse.ytelse)).values();
         for (List<Record<?>> sammeHovedytelse : gruppertEtterHovedytelse) {
             sort(sammeHovedytelse, compareWith(first(ytelsesperiode).then(START)));
-            resultat.addAll(on(sammeHovedytelse).reduce(SPLITT_PAA_PERIODE));
+            resultat.addAll(on(sammeHovedytelse).reduce(splittPaaPeriode));
         }
 
         return resultat;
     }
 
-    private static final ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>> SPLITT_PAA_PERIODE = new ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>>() {
+    private static ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>> splittPaaPeriode = new ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>>() {
         @Override
         public List<List<Record<Hovedytelse>>> reduce(List<List<Record<Hovedytelse>>> accumulator, Record<?> newValue) {
             Optional<List<Record<Hovedytelse>>> optionalMedSammePeriode = on(accumulator).filter(erISammePeriode((Record<Hovedytelse>) newValue)).head();
@@ -110,7 +110,7 @@ public class HovedytelseUtils {
         };
     }
 
-    protected static ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> BY_YEARMONTH = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
+    protected static ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> byYearMonth = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
         @Override
         public Map<YearMonth, List<Record<Hovedytelse>>> reduce(Map<YearMonth, List<Record<Hovedytelse>>> accumulator, Entry<YearMonth, Record<Hovedytelse>> entry) {
             if(!accumulator.containsKey(entry.getKey())) {
@@ -126,7 +126,7 @@ public class HovedytelseUtils {
         }
     };
 
-    protected static Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> TO_YEARMONTH_ENTRY = new Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>>() {
+    protected static Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> toYearMonthEntry = new Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>>() {
         @Override
         public Entry<YearMonth, Record<Hovedytelse>> transform(Record<Hovedytelse> ytelse) {
             int year = ytelse.get(hovedytelsedato).getYear();
