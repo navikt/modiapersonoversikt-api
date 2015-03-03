@@ -11,7 +11,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke
 public class AlleMeldingerPanel extends Panel {
 
     private InnboksVM innboksVM;
+    private final Map<String, String> traadRef = new HashMap<>();
 
     public AlleMeldingerPanel(String id, final InnboksVM innboksVM, final String traadDetaljerMarkupId) {
         super(id, new CompoundPropertyModel<>(innboksVM));
@@ -41,6 +44,7 @@ public class AlleMeldingerPanel extends Panel {
         add(new AjaxLink("henvendelseSokToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                henvendelseSok.callFunction(target, "oppdaterTraadRef", traadRef);
                 henvendelseSok.callFunction(target, "vis");
             }
         });
@@ -49,6 +53,9 @@ public class AlleMeldingerPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
+
+                traadRef.put(meldingVM.melding.traadId, item.getMarkupId());
+
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst"))
@@ -56,7 +63,6 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("avsenderTekst"));
                 item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
-
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(attributeIf("aria-selected", "true", innboksVM.erValgtMelding(meldingVM), true));
