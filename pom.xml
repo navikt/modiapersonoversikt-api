@@ -10,7 +10,6 @@
     </parent>
 
     <name>Dialogarena - Reactkomponenter</name>
-    <groupId>no.nav.sbl.dialogarena</groupId>
     <description>Fellesbibliotek for React-komponenter</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>reactkomponenter</artifactId>
