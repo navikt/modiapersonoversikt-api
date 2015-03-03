@@ -35,4 +35,5 @@ public interface Hovedytelse {
     Key<DateTime> hovedytelsedato = new Key<>("POSTERINGS_DATO");
     Key<Double> bruttoUtbetalt = new Key<>("AGGREGERT_BRUTTO_BELOEP");
     Key<Double> sammenlagtTrekkBeloep = new Key<>("AGGREGERT_TREKK_BELOEP");
+
 }
