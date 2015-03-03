@@ -1,11 +1,14 @@
 var Utbetalinger = (function () {
+    var aapneUtbetalingText = 'Ekspand';
+    var lukkUtbetalingText = 'Collapse';
+
     var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
 
-    var init = function() {
+    var init = function () {
         addKeyNavigation();
 
         // Event listeners
-        $(document).on('keypress', '.utbetaling-ramme-innhold .utbetalingslinje', function(event){
+        $(document).on('keypress', '.utbetaling-ramme-innhold .utbetalingslinje', function (event) {
             if (event.which === 13) {
                 Utbetalinger.toggleDetaljPanel($(this));
             }
@@ -15,16 +18,10 @@ var Utbetalinger = (function () {
             Utbetalinger.toggleDetaljPanel($(this));
         });
 
-        $(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function (event) {
-            var $utbetalingslinje = $(this).closest(utbetalingslinjeSelector);
-            Utbetalinger.skrivUt($utbetalingslinje);
-            event.stopPropagation();
-        });
-
     };
 
-    var addKeyNavigation = function() {
-        $('.utbetaling-ramme').addKeyNavigation({itemsSelector:'.utbetalingslinje'});
+    var addKeyNavigation = function () {
+        $('.utbetaling-ramme').addKeyNavigation({itemsSelector: '.utbetalingslinje'});
     };
 
     var haandterDetaljPanelVisning = function (detaljPanelID) {
@@ -33,12 +30,23 @@ var Utbetalinger = (function () {
         $detaljPanel.parent().toggleClass('ekspandert');
         $('html,body').animate({scrollTop: $($detaljPanel).parent().offset().top - 76}, 'slow');
         $detaljPanel.parent().focus();
+        toggleEkspandertHjelpetekst($detaljPanel.parent());
     };
 
     var toggleDetaljPanel = function ($element) {
         $element.children('.detaljpanel').animate({height: 'toggle'}, 200);
         $element.toggleClass('ekspandert');
+
+        toggleEkspandertHjelpetekst($element);
     };
+
+    var toggleEkspandertHjelpetekst = function ($element) {
+        if ($element.hasClass('ekspandert')) {
+            $element.find('.ekspander-pil span').text(lukkUtbetalingText);
+        } else {
+            $element.find('.ekspander-pil span').text(aapneUtbetalingText);
+        }
+    }
 
     var skrivUt = function ($element) {
         var $printCopy = $element.clone();
@@ -63,10 +71,11 @@ var Utbetalinger = (function () {
         addKeyNavigation: addKeyNavigation,
         haandterDetaljPanelVisning: haandterDetaljPanelVisning,
         toggleDetaljPanel: toggleDetaljPanel,
+        toggleEkspandertHjelpetekst: toggleEkspandertHjelpetekst,
         skrivUt: skrivUt
     };
 })();
 
-$(document).ready(function() {
+$(document).ready(function () {
     Utbetalinger.init();
 });
