@@ -1,6 +1,6 @@
 var Utbetalinger = (function () {
-    var aapneUtbetalingText = 'Ekspand';
-    var lukkUtbetalingText = 'Collapse';
+    var aapneUtbetalingText = 'Utvid';
+    var lukkUtbetalingText = 'Minimer';
 
     var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
 
