@@ -7,7 +7,8 @@ var LocaleSelect = require('./LocaleSelect');
 
 var TekstForhandsvisning = React.createClass({
     render: function () {
-        var element = this.props.element.hasOwnProperty('innhold') ? this.props.element : {innhold: {nb_NO: ''}};
+        var element = this.props.element.hasOwnProperty('innhold') ?
+            this.props.element : {innhold: {nb_NO: ''}, tags: []};
 
         var tekst = Utils.getInnhold(element, this.props.locale);
         tekst = tekst.split(/[\r\n]+/);
@@ -18,6 +19,11 @@ var TekstForhandsvisning = React.createClass({
                 {tekst.map(function (avsnitt) {
                     return (
                         <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>
+                    );
+                })}
+                {element.tags.map(function (tag) {
+                    return (
+                        <span className="knagg">{'#' + tag}</span>
                     );
                 })}
                 </div>

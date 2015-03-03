@@ -47,7 +47,7 @@ module.exports = React.createClass({
                     sokKomponent={SokKomponent}
                     listeelementKomponent={ListeElementKomponent}
                     visningsKomponent={TekstForhandsvisningKomponent}
-                    valgtElement={{innhold: {nb_NO: ''}}}
+                    valgtElement={{innhold: {nb_NO: ''}, tags: []}}
                 />
             </Modal>
         );

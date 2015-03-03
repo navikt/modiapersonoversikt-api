@@ -46,7 +46,7 @@ var KnaggInput = React.createClass({
     },
     onChangeProxy: function (event) {
         var data = finnKnaggerOgFritekst(event.target.value, this.state.knagger);
-        this.setState(data)
+        this.setState(data);
         this.props.onChange(data);
     },
     fjernKnagg: function (index) {
