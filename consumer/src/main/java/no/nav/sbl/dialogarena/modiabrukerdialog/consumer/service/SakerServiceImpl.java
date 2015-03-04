@@ -87,7 +87,7 @@ public class SakerServiceImpl implements SakerService {
                             .withGjelderBrukerListe(new WSPerson().withIdent(fnr))
                             .withFagomraade(new WSFagomraader().withValue(sak.temaKode))
                             .withFagsystem(new WSFagsystemer().withValue(sak.fagsystemKode))
-                            .withFagsystemSakId(sak.saksId.get())
+                            .withFagsystemSakId(sak.saksId.getOrElse(null))
                             .withSakstype(new WSSakstyper().withValue(sak.sakstype)));
 
             return behandleSakWS.opprettSak(request).getSakId();
