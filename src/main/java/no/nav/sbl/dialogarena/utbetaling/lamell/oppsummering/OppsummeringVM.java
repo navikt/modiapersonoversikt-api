@@ -24,7 +24,7 @@ import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.grupperPaaHovedytelseOgPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.groupByHovedytelseAndPeriod;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.HOVEDYTELSE_NAVN;
 
@@ -51,7 +51,7 @@ public class OppsummeringVM implements Serializable {
     private static List<HovedYtelseVM> lagHovetytelseVMer(List<Record<Hovedytelse>> ytelser) {
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
 
-        for (List<Record<Hovedytelse>> grupperteHovedytelser : grupperPaaHovedytelseOgPeriode(ytelser)) {
+        for (List<Record<Hovedytelse>> grupperteHovedytelser : groupByHovedytelseAndPeriod(ytelser)) {
             Map<String, List<Record<?>>> indekserteUnderytelser = groupUnderytelseByType(grupperteHovedytelser);
 
             List<Record<Underytelse>> sammenlagteUnderytelser = combineUnderytelser(indekserteUnderytelser);

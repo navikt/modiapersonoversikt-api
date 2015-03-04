@@ -104,7 +104,7 @@ public class HovedytelseUtilsTest {
 
     @Test
     public void hentUtbetalingerFraPeriode_inneholderRiktigAntallUtbetalinger() {
-        List<Record<Hovedytelse>> utbetalingsperiode = hentHovedytelserFraPeriode(hovedytelseListe, JAN_2012_DATE.toLocalDate(), MAR_2012_DATE.toLocalDate());
+        List<Record<Hovedytelse>> utbetalingsperiode = hovedytelserFromPeriod(hovedytelseListe, JAN_2012_DATE.toLocalDate(), MAR_2012_DATE.toLocalDate());
 
         assertThat(utbetalingsperiode.size(), is(3));
     }
@@ -115,7 +115,7 @@ public class HovedytelseUtilsTest {
         DateTime sluttDato = now();
         Interval intervall = new Interval(startDato, sluttDato.plusDays(1));
 
-        List<Record<Hovedytelse>> utbetalingsperiode = hentHovedytelserFraPeriode(hovedytelseListe, startDato.toLocalDate(), sluttDato.toLocalDate());
+        List<Record<Hovedytelse>> utbetalingsperiode = hovedytelserFromPeriod(hovedytelseListe, startDato.toLocalDate(), sluttDato.toLocalDate());
 
         for (Record<Hovedytelse> hovedytelse : utbetalingsperiode) {
             assertTrue(intervall.contains(hovedytelse.get(Hovedytelse.hovedytelsedato)));
@@ -125,7 +125,7 @@ public class HovedytelseUtilsTest {
     @Test
     public void skalSkillePaaUtbetalingerMedForskjelligHovedytelse() {
         List<Record<Hovedytelse>> ytelser = asList(lagHovedytelse("ytelse1"), lagHovedytelse("ytelse2"));
-        List<List<Record<Hovedytelse>>> resultat = grupperPaaHovedytelseOgPeriode(ytelser);
+        List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
         assertEquals(2, resultat.size());
     }
 
@@ -136,7 +136,7 @@ public class HovedytelseUtilsTest {
                 lagHovedytelse(ytelse, "01.01.2012", "01.02.2012"),
                 lagHovedytelse(ytelse, "01.03.2012", "01.04.2012"),
                 lagHovedytelse(ytelse, "15.01.2012", "15.03.2012"));
-        List<List<Record<Hovedytelse>>> resultat = grupperPaaHovedytelseOgPeriode(ytelser);
+        List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
         assertEquals(1, resultat.size());
     }
 
@@ -146,7 +146,7 @@ public class HovedytelseUtilsTest {
         List<Record<Hovedytelse>> ytelser = asList(
                 lagHovedytelse(ytelse, "01.01.2012", "01.02.2012"),
                 lagHovedytelse(ytelse, "01.01.2013", "01.02.2013"));
-        List<List<Record<Hovedytelse>>> resultat = grupperPaaHovedytelseOgPeriode(ytelser);
+        List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
         assertEquals(2, resultat.size());
     }
 
@@ -156,7 +156,7 @@ public class HovedytelseUtilsTest {
         List<Record<Hovedytelse>> ytelser = asList(
                 lagHovedytelse(ytelse, "01.01.2012", "31.01.2012"),
                 lagHovedytelse(ytelse, "01.02.2012", "28.02.2012"));
-        List<List<Record<Hovedytelse>>> resultat = grupperPaaHovedytelseOgPeriode(ytelser);
+        List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
         assertEquals(1, resultat.size());
     }
 
@@ -166,7 +166,7 @@ public class HovedytelseUtilsTest {
         List<Record<Hovedytelse>> ytelser = asList(
                 lagHovedytelse(ytelse, "01.01.2012", "14.01.2012"),
                 lagHovedytelse(ytelse, "16.01.2012", "31.01.2012"));
-        List<List<Record<Hovedytelse>>> resultat = grupperPaaHovedytelseOgPeriode(ytelser);
+        List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
         assertEquals(2, resultat.size());
     }
 

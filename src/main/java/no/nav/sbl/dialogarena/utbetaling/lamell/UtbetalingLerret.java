@@ -36,7 +36,7 @@ import java.util.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.hentHovedytelserFraPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.hovedytelserFromPeriod;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.ytelserGroupedByYearMonth;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
@@ -150,7 +150,7 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     protected void oppdaterYtelser(List<Record<Hovedytelse>> hovedytelser) {
-        filterParametere.setYtelser(ytelserAsText(hentHovedytelserFraPeriode(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
+        filterParametere.setYtelser(ytelserAsText(hovedytelserFromPeriod(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
