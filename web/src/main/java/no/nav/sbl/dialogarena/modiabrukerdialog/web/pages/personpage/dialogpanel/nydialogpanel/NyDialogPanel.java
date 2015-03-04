@@ -44,6 +44,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -77,6 +78,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final EpostVarselPanel epostVarselPanel;
     private final FeedbackPanel feedbackPanel;
     private final AjaxButton sendKnapp;
+    private final EnhancedTextArea tekstfelt;
+    private final ReactComponentPanel skrivestotte;
 
     public NyDialogPanel(String id, GrunnInfo grunnInfo) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
@@ -113,7 +116,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         kanalbeskrivelse.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
         form.add(kanalbeskrivelse);
 
-        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
+        tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
@@ -123,10 +126,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
         form.add(tekstfelt, tekstfeltLabel);
 
-        HashMap<String, Object> skrivestotteProps = new HashMap<>();
-        skrivestotteProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
-        skrivestotteProps.put("autofullfor", grunnInfo);
-        final ReactComponentPanel skrivestotte = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", skrivestotteProps);
+        skrivestotte = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", skrivestotteProps());
         form.add(skrivestotte);
 
         form.add(new AjaxLink("skrivestotteToggler") {
@@ -216,6 +216,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
     public void oppdaterReferatVM(AjaxRequestTarget target) {
         settOppModellMedDefaultVerdier();
+        skrivestotte.updateState(target, skrivestotteProps());
         target.add(this);
     }
 
@@ -231,6 +232,16 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
             getModelObject().kanal = TELEFON;
         }
+    }
+
+    private Map<String, Object> skrivestotteProps() {
+        HashMap<String, Object> skrivestotteProps = new HashMap<>();
+        skrivestotteProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
+        skrivestotteProps.put("autofullfor", grunnInfo);
+        if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
+            skrivestotteProps.put("knagger", asList("ks"));
+        }
+        return skrivestotteProps;
     }
 
     private RadioGroup<Kanal> lagKanalVelger(IModel<Modus> modusModel) {
