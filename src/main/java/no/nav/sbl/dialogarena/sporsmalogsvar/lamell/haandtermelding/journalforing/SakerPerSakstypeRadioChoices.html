@@ -16,18 +16,18 @@
                 <wicket:container wicket:id="saksliste">
                     <input wicket:id="sak" type="radio">
                     <label wicket:for="sak">
-                        <span>
-                            <span class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></span>
-                            <span wicket:id="saksIdVisning"></span>
-                        </span>
-                        <span>
-                            <span class="saksTekst"><wicket:message key="journalfor.sak.opprettetDatoTekst"/></span>
-                            <span wicket:id="opprettetDatoFormatert"></span>
-                        </span>
-                        <span>
-                            <span class="saksTekst"><wicket:message key="journalfor.sak.fagsystemTekst"/></span>
-                            <span wicket:id="fagsystemNavn"></span>
-                        </span>
+                        <table>
+                            <tr>
+                                <td class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></td>
+                                <td class="saksTekst"><wicket:message key="journalfor.sak.opprettetDatoTekst"/></td>
+                                <td class="saksTekst"><wicket:message key="journalfor.sak.fagsystemTekst"/></td>
+                            </tr>
+                            <tr>
+                                <td wicket:id="saksIdVisning"></td>
+                                <td wicket:id="opprettetDatoFormatert"></td>
+                                <td wicket:id="fagsystemNavn"></td>
+                            </tr>
+                        </table>
                     </label>
                 </wicket:container>
             </div>
