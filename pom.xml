@@ -73,7 +73,7 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>1.7-SNAPSHOT</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>1.7</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>2.7-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>2.0</saksoversikt.version>
     </properties>
@@ -474,7 +474,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>reactkomponenter</artifactId>
-                <version>0.3-SNAPSHOT</version>
+                <version>0.3</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
