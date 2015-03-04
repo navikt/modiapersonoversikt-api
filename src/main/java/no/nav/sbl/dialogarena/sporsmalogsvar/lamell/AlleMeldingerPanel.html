@@ -6,16 +6,22 @@
 <wicket:panel>
     <button wicket:id="henvendelseSokToggle">SØK</button>
     <wicket:container wicket:id="henvendelseSokContainer"></wicket:container>
-    <article wicket:id="nyesteMeldingerITraad" class="melding" tabindex="0" aria-selected="false" role="tab" aria-controls="">
+    <article wicket:id="nyesteMeldingerITraad" class="melding" tabindex="0" aria-selected="false" role="tab"
+             aria-controls="">
         <header>
             <div wicket:id="traadlengde" class="traadlengde"></div>
             <div wicket:id="besvarIndikator" class="besvarIndikator"></div>
-            <p wicket:id="meldingstatus" class="meldingstatus"></p>
-            <p wicket:id="avsenderTekst" class="opprettet"></p>
+            <p wicket:id="avsenderTekst"></p>
 
-            <h1 wicket:id="temagruppe"></h1>
+            <img wicket:id="statusIkon" class="statusIkon"/>
+
+            <p class="meldingstatus">
+                <span wicket:id="meldingstatus"></span>,
+                <br/>
+                <span wicket:id="temagruppe"></span>
+            </p>
         </header>
-        <p wicket:id="fritekst"></p>
+        <p wicket:id="fritekst" class="fritekst"></p>
     </article>
 </wicket:panel>
 </body>

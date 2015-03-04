@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -58,9 +59,10 @@ public class AlleMeldingerPanel extends Panel {
 
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
+                item.add(new Label("avsenderTekst"));
+                item.add(new StatusIkon("statusIkon", item.getModel()));
                 item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst"))
                         .add(cssClass(meldingVM.melding.statusKlasse)));
-                item.add(new Label("avsenderTekst"));
                 item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
 

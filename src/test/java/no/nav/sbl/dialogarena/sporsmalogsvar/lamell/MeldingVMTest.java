@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -35,7 +36,7 @@ public class MeldingVMTest extends WicketPageTest {
     public void henterAvsenderTekstBasertPaaDatoOgNavident() {
         String avsenderTekst = meldingVM.getAvsenderTekst();
 
-        assertThat(avsenderTekst, is(WidgetDateFormatter.dateTime(OPPRETTET_DATO)));
+        assertThat(avsenderTekst, is(DateUtils.dateTime(OPPRETTET_DATO)));
 
         meldingVM.melding.navIdent = NAV_IDENT;
         avsenderTekst = meldingVM.getAvsenderTekst();

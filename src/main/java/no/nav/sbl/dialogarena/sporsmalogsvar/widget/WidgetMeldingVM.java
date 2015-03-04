@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -11,19 +12,16 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagStatusIkonKlasse;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.NYESTE_FORST;
 
-public class MeldingVM implements FeedItemVM, Serializable {
+public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializable {
 
-    public final Melding melding;
-
-    public MeldingVM(List<Melding> traad) {
-        this.melding = on(traad).collect(NYESTE_FORST).get(0);
+    public WidgetMeldingVM(List<Melding> traad) {
+        super(on(traad).collect(Melding.NYESTE_FORST).get(0), traad.size());
     }
 
-    public static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
+    public static final Comparator<WidgetMeldingVM> NYESTE_OVERST = new Comparator<WidgetMeldingVM>() {
         @Override
-        public int compare(MeldingVM o1, MeldingVM o2) {
+        public int compare(WidgetMeldingVM o1, WidgetMeldingVM o2) {
             return o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
         }
     };

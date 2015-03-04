@@ -22,26 +22,23 @@
     background-color: @graabakgrunn;
     border-right: 1px solid @rammefarge;
     .melding {
-      padding: 1em @sidemargin 1.2em @sidemargin;
+      position: relative;
+      padding: 16px @sidemargin 16px @sidemargin;
       border-bottom: solid 1px @rammefarge;
       overflow: hidden;
-      header {
-        .opprettet {
-          font-family: arial, sans-serif;
-          font-size: 0.85rem;
-          margin: 0.2em 0;
-        }
-        h1 {
-          font-weight: bold;
-          margin: 0;
-          font-size: 1.2em;
-          text-overflow: ellipsis;
-          -o-text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-        }
+      p {
+        margin: 0;
       }
-      > p {
+      &.valgt {
+        background-color: #fff;
+      }
+      &:not(.valgt) {
+        cursor: pointer;
+      }
+      .meldingstatus {
+        font-weight: 600;
+      }
+      .fritekst {
         width: 100%;
         margin: 0;
         text-overflow: ellipsis;
@@ -52,17 +49,29 @@
           display: none;
         }
       }
-      &.valgt {
-        background-color: #fff;
+      .meldingstatus, .fritekst {
+        margin-top: 16px;
       }
-      &:not(.valgt) {
-        cursor: pointer;
+      .statusIkon {
+        position: absolute;
+        height: 12px;
+        left: 5px;
+        top: 50px;
       }
       .besvarIndikator {
         background: url(../img/loading_dots_liten_rod.gif) no-repeat;
         float: right;
         width: 34px;
         height: 20px;
+      }
+      .traadlengde {
+        position: absolute;
+        right: 7px;
+        padding-right: 10px;
+        line-height: 20px;
+        font-weight: bold;
+        background: url(../img/melding_flere%20innlegg.svg) no-repeat right;
+        background-size: 7px;
       }
     }
   }
@@ -239,15 +248,6 @@
     }
   }
 
-  .traadlengde {
-    float: right;
-    padding-right: 2em;
-    margin-left: 6px;
-    line-height: 21px;
-    font-weight: bold;
-    background: url(../img/melding_flere.svg) no-repeat right;
-  }
-
   .haandter-meldinger {
     position: absolute;
     top: -30px;
@@ -400,35 +400,6 @@
     margin-top: 150px;
     text-align: center;
     color: #b7b1a9;
-  }
-}
-
-.meldingstatus {
-  margin: 0 0 1em;
-  padding-left: 2.5em;
-  font-weight: normal;
-  line-height: 22px;
-  background-repeat: no-repeat;
-  &.sporsmal {
-    background-image: url(../img/melding_sporsmaal_hoyre.svg);
-  }
-  &.svar {
-    background-image: url(../img/melding_svar_lest.svg);
-  }
-  &.sporsmal-ikke-lest-av-bruker {
-    background-image: url(../img/melding_sporsmaal_hoyre.svg);
-  }
-  &.svar-ikke-lest-av-bruker {
-    background-image: url(../img/melding_svar_sendt.svg)
-  }
-  &.svar-lest-av-bruker {
-    background-image: url(../img/melding_svar_lest.svg)
-  }
-  &.samtalereferat-ikke-lest-av-bruker {
-    background-image: url(../img/melding_referat_sendt.svg)
-  }
-  &.samtalereferat-lest-av-bruker {
-    background-image: url(../img/melding_referat_lest.svg)
   }
 }
 

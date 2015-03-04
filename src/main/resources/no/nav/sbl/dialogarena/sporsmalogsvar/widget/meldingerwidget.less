@@ -1,19 +1,32 @@
 @skilleMargin: 0 0 3px;
 
 .widget-navigasjon.widget-meldinger {
-  .meldingstatus {
-    display: block;
-    margin: @skilleMargin;
-  }
+  position: relative;
   .opprettet {
-    margin: @skilleMargin;
     display: block;
-    font-size: 0.85rem;
+  }
+  .traadlengde {
+    position: absolute;
+    right: 7px;
+    padding-right: 10px;
+    line-height: 16px;
+    font-weight: bold;
+    background: url(../img/melding_flere%20innlegg.svg) no-repeat right;
+    background-size: 7px;
+  }
+  .statusIkon {
+    position: absolute;
+    height: 12px;
+    left: 5px;
+    top: 54px;
+  }
+  .meldingstatus {
+    margin-top: 16px;
+    display: block;
+    font-weight: 600;
   }
   .temagruppe {
     display: block;
-    font-weight: bold;
-    font-size: 1.2rem;
-    font-family: Modus, arial, sans-serif
+    font-weight: 600;
   }
 }

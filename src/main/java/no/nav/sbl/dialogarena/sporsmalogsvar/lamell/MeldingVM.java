@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.protocol.http.WebApplication;
 
@@ -10,12 +12,17 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
 public class MeldingVM implements Serializable {
 
     public static final String NAV_LOGO_SVG = "nav-logo.svg";
     public static final String BRUKER_LOGO_SVG = "personligoppmote.svg";
+    public static final String MELDING_BESVART_SVG = "melding_besvart.svg";
+    public static final String MELDING_BESVART_ALT_KEY = "innboks.melding.besvart";
+    public static final String MELDING_UBESVART_SVG = "melding_ny.svg";
+    public static final String MELDING_UBESVART_ALT_KEY = "innboks.melding.ubesvart";
     public static final String NAV_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.nav";
     public static final String BRUKER_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.bruker";
     public final Melding melding;
@@ -28,7 +35,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getAvsenderTekst() {
-        return WidgetDateFormatter.dateTime(melding.opprettetDato)
+        return DateUtils.dateTime(melding.opprettetDato)
                 + (melding.navIdent != null ? " - " + melding.navIdent : "");
     }
 
@@ -69,6 +76,21 @@ public class MeldingVM implements Serializable {
             return NAV_AVSENDER_BILDE_ALT_KEY;
         }
         return BRUKER_AVSENDER_BILDE_ALT_KEY;
+    }
+
+    public String getStatusIkonUrl() {
+        String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
+        if (melding.status == Status.IKKE_BESVART) {
+            return imgUrl + MELDING_UBESVART_SVG;
+        }
+        return imgUrl + MELDING_BESVART_SVG;
+    }
+
+    public String getStatusIkonAltKey() {
+        if (melding.status == Status.IKKE_BESVART) {
+            return MELDING_UBESVART_ALT_KEY;
+        }
+        return MELDING_BESVART_ALT_KEY;
     }
 
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
