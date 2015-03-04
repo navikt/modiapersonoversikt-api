@@ -36,7 +36,7 @@
         <wicket.version>6.17.0</wicket.version>
         <spring.version>3.2.9.RELEASE</spring.version>
         <modig.frontend.version>1.1.100</modig.frontend.version>
-        <modig.security.version>1.0.24-NO_RESTEASY</modig.security.version>
+        <modig.security.version> 1.0.24_NO_RESTEASY_2</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
