@@ -13,6 +13,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -66,7 +67,7 @@ public class NyOppgaveFormWrapper extends Panel {
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
         feedbackPanelSuccess.add(visibleIf(oppgaveOpprettet));
 
-        final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedback");
+        final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanelError.setOutputMarkupId(true);
 
         form.setOutputMarkupId(true);

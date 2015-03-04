@@ -8,6 +8,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -46,7 +47,7 @@ public class AvsluttOppgavePanel extends Panel {
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
         feedbackPanelSuccess.add(visibleIf(oppgaveAvsluttet));
 
-        final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedbackError");
+        final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedbackError", new ContainerFeedbackMessageFilter(this));
         feedbackPanelError.setOutputMarkupId(true);
 
         beskrivelseFelt = new TextArea<>("beskrivelse", new Model<String>());
