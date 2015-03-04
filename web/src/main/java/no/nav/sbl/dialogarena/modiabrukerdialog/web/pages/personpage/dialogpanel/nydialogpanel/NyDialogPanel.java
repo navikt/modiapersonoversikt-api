@@ -29,6 +29,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -136,7 +137,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             }
         });
 
-        feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         modusKomponenter.add(feedbackPanel);
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
