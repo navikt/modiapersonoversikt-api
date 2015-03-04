@@ -7,7 +7,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.LEST_AV_BRUKER;
 
 public class VisningUtils {
     public static final List<Meldingstype> FRA_BRUKER = asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE);
@@ -24,11 +23,7 @@ public class VisningUtils {
     }
 
     public static String lagMeldingStatusTekstKey(Melding melding) {
-        String key = String.format("melding.status.%s", melding.meldingstype.name());
-        if (FRA_NAV.contains(melding.meldingstype)) {
-            key += String.format(".%s", melding.status == LEST_AV_BRUKER ? "lest" : "ulest");
-        }
-        return key;
+        return String.format("melding.status.%s", melding.meldingstype.name());
     }
 
 }
