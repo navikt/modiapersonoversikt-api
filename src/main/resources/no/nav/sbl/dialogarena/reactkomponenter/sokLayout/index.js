@@ -35,7 +35,7 @@ var Soklayout = React.createClass({
         };
     },
     componentDidMount: function () {
-        this.sok({});
+        this.sok(this.props.sokKomponentProps || {});
     },
     settValgtElement: function (element) {
         this.setState({valgtElement: element});

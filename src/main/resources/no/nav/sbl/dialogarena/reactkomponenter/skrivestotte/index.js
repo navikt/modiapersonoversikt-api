@@ -45,6 +45,7 @@ module.exports = React.createClass({
                 <Soklayout {...this.props} sok={this.sok} submit={this.submit}
                     containerClassName="tekstforslag"
                     sokKomponent={SokKomponent}
+                    sokKomponentProps={{knagger: this.props.knagger}}
                     listeelementKomponent={ListeElementKomponent}
                     visningsKomponent={TekstForhandsvisningKomponent}
                     valgtElement={{innhold: {nb_NO: ''}, tags: []}}
