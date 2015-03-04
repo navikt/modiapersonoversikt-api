@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.StringResourceModel;
 
-import static no.nav.sbl.dialogarena.utbetaling.util.VMUtils.erDefinertPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.util.VMUtils.erGyldigStartSluttVerdier;
 
 public class UtbetalingPanel extends Panel {
 
@@ -25,7 +25,7 @@ public class UtbetalingPanel extends Panel {
     }
 
     private Label getHovedYtelsesPeriodeLabel(UtbetalingVM utbetalingVM) {
-        if (erDefinertPeriode(utbetalingVM.getStartDato(), utbetalingVM.getSluttDato())) {
+        if (erGyldigStartSluttVerdier(utbetalingVM.getStartDato(), utbetalingVM.getSluttDato())) {
             return new Label("periodeMedKortDato", utbetalingVM.getPeriodeMedKortDato());
         }
         return (Label) new Label("periodeMedKortDato",

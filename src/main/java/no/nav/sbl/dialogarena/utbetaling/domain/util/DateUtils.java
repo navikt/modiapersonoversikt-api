@@ -45,4 +45,23 @@ public final class DateUtils {
         return prevDate.minusMonths(minusMonths).toDateMidnight().toDateTime();
     }
 
+
+    /**
+     * Opprett Intervall basert på startDato og sluttDato
+     * @param startDato
+     * @param sluttDato
+     * @return
+     */
+    public static Interval intervalFromStartEndDate(LocalDate startDato, LocalDate sluttDato) {
+        return new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
+    }
+
+    protected static Predicate<DateTime> isWithinRange(final Interval intervall) {
+        return new Predicate<DateTime>() {
+            @Override
+            public boolean evaluate(DateTime dateTime) {
+                return intervall.contains(dateTime);
+            }
+        };
+    }
 }

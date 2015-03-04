@@ -19,7 +19,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.betweenNowAndMonthsBefore;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.betweenNowAndMonthsBefore;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.TIL_HOVEDYTELSEVM;

@@ -14,13 +14,13 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 
-public class HovedytelseUtilsTest {
+public class YtelseUtilsTest {
 
     private static final String DAGPENGER = "Dagpenger";
     private static final String SYKEPENGER = "Sykepenger";

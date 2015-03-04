@@ -16,7 +16,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.utbetaling.util.VMUtils.erDefinertPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.util.VMUtils.erGyldigStartSluttVerdier;
 
 public class TotalOppsummeringPanel extends Panel {
 
@@ -87,7 +87,7 @@ public class TotalOppsummeringPanel extends Panel {
     }
 
     private Label getHovedYtelsesPeriodeLabel(HovedYtelseVM hovedYtelseVM) {
-        if (erDefinertPeriode(hovedYtelseVM.getStartPeriode(), hovedYtelseVM.getSluttPeriode())) {
+        if (erGyldigStartSluttVerdier(hovedYtelseVM.getStartPeriode(), hovedYtelseVM.getSluttPeriode())) {
             return new Label("hovedYtelsesPeriode", hovedYtelseVM.getHovedYtelsePeriode());
         }
         return (Label) new Label("hovedYtelsesPeriode",
