@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://appconfig.aura.nav.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://appconfig.aura.nav.no http://maven.adeo.no/xsd/appconfig.xsd">
+
     <name>modiabrukerdialog</name>
+
     <selftestPagePath>/modiabrukerdialog/internal/selftest</selftestPagePath>
+
     <artifacts>
         <ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee"/>
     </artifacts>
+
     <security serviceUserResourceAlias="srvModiabrukerdialog">
         <logins>
             <spnego/>
         </logins>
     </security>
+
     <loadBalancer>
         <contextRoot>modiabrukerdialog</contextRoot>
         <lbHealthMonitor type="HTTPS" isAliveUrl="internal/isAlive" interval="5" timeout="16"/>
         <lbPool slowRampTime="30" loadBalancingMethod="LEAST_CONNECTIONS" connectionLimit="500"/>
     </loadBalancer>
+
     <resources>
         <!-- Felles -->
         <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint"/>
@@ -55,4 +61,5 @@
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
     </resources>
+
 </application>
