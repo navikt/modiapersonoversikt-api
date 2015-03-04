@@ -13,6 +13,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
@@ -45,6 +46,7 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
             setOutputMarkupPlaceholderTag(true);
 
             add(visibleIf(new PropertyModel<Boolean>(getModel(), "valgtTraad.traadKanBesvares()")));
+            add(hasCssClassIf("besvares", traadBesvares()));
 
             add(new AjaxLink<InnboksVM>("besvar", TraaddetaljerPanel.this.getModel()) {
                 @Override
