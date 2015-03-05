@@ -55,7 +55,12 @@ public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
             if (hovedytelser.isEmpty()) {
                 listContent = asList(new GenericListing(new StringResourceModel("ingen.utbetalinger", UtbetalingWidget.this, null).getString()));
             } else {
-                listContent = transformUtbetalingToVM(hovedytelser);
+                List<HovedytelseVM> hovedytelseVMList = transformUtbetalingToVM(hovedytelser);
+                if(hovedytelseVMList.isEmpty()) {
+                    listContent = asList(new GenericListing(new StringResourceModel("ingen.utbetalinger", UtbetalingWidget.this, null).getString()));
+                } else {
+                    listContent = hovedytelseVMList;
+                }
             }
         } catch (ApplicationException | SystemException e) {
             LOG.warn("Feilet ved henting av utbetalingsinformasjon for fnr {}", fnr, e);
