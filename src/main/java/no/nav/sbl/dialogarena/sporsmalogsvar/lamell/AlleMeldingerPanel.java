@@ -60,7 +60,7 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("avsenderTekst"));
-                item.add(new StatusIkon("statusIkon", item.getModel()));
+                item.add(new StatusIkon("statusIkon", meldingVM));
                 item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst"))
                         .add(cssClass(meldingVM.melding.statusKlasse)));
                 item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));

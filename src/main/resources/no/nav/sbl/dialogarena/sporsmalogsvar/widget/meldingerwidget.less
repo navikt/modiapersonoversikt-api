@@ -14,11 +14,25 @@
     background: url(../img/melding_flere_innlegg.svg) no-repeat right;
     background-size: 7px;
   }
+  li a:focus {
+    .statusIkon {
+      &.ubesvart {
+        background: url(../img/melding_ny_hvit.svg) no-repeat;
+      }
+    }
+  }
   .statusIkon {
     position: absolute;
-    height: 12px;
+    height: 14px;
+    width: 20px;
     left: 7px;
     top: 54px;
+    &.besvart {
+      background: url(../img/melding_besvart.svg) no-repeat;
+    }
+    &.ubesvart {
+      background: url(../img/melding_ny.svg) no-repeat;
+    }
   }
   .meldingstatus {
     margin-top: 16px;

@@ -1,18 +1,20 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.components;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 
-public class StatusIkon extends Image {
+import static no.nav.modig.wicket.conditional.ConditionalUtils.attributeIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
-    public StatusIkon(String id, IModel<? extends MeldingVM> meldingVM) {
+public class StatusIkon extends WebMarkupContainer {
+
+    public StatusIkon(String id, MeldingVM meldingVM) {
         super(id);
 
-        add(new AttributeModifier("src", new PropertyModel<String>(meldingVM, "statusIkonUrl")));
-        add(new AttributeModifier("alt", new StringResourceModel("${statusIkonAltKey}", meldingVM)));
+        add(hasCssClassIf("ubesvart", not(meldingVM.erBesvart())));
+        add(hasCssClassIf("besvart", meldingVM.erBesvart()));
+        add(attributeIf("aria-label", getString("innboks.melding.ubesvart"), not(meldingVM.erBesvart())));
+        add(attributeIf("aria-label", getString("innboks.melding.besvart"), meldingVM.erBesvart()));
     }
 }
