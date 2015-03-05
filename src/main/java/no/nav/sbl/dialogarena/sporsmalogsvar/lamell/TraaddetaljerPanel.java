@@ -29,12 +29,14 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
 
         add(new HaandterMeldingPanel("haandterMelding", innboksVM));
         add(new KontorsperreInfoPanel("kontorsperretInfo", innboksVM));
-        add(new Label("valgtTraad.eldsteMelding.melding.journalfortTemanavn").add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return innboksVM.getValgtTraad().getEldsteMelding().isJournalfort();
-            }
-        })));
+        add(new WebMarkupContainer("journalfortTemaContainer")
+                .add(new Label("valgtTraad.eldsteMelding.melding.journalfortTemanavn"))
+                .add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
+                    @Override
+                    public Boolean getObject() {
+                        return innboksVM.getValgtTraad().getEldsteMelding().isJournalfort();
+                    }
+                })));
         add(new NyMeldingContainer("nyMelding"));
         add(new TraadPanel("traad", innboksVM));
     }

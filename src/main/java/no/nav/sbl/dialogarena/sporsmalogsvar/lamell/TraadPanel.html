@@ -10,13 +10,13 @@
         <img wicket:id="avsenderBilde" class="avsenderBilde"/>
 
         <div class="meldingData">
-            <h2 wicket:id="temagruppe"></h2>
+            <p wicket:id="avsenderTekst"></p>
 
-            <h3 wicket:id="meldingstatus"></h3>
-
-            <h3 wicket:id="avsenderTekst"></h3>
-
-            <div wicket:id="fritekst" class="fritekst"></div>
+            <p class="meldingstatus">
+                <span wicket:id="meldingstatus"></span>,
+                <span wicket:id="temagruppe"></span>
+            </p>
+            <article wicket:id="fritekst" class="fritekst"></article>
         </div>
         <wicket:container wicket:id="journalpost"/>
     </article>

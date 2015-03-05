@@ -95,6 +95,9 @@
 
   .traadDetaljer {
     padding: 22px @sidemargin 0 @sidemargin;
+    h2 {
+      margin: 0;
+    }
     .nyMelding {
       text-align: right;
       margin-bottom: 30px;
@@ -138,20 +141,11 @@
         }
       }
       .meldingData {
-        width: 85%;
+        width: 86%;
         position: relative;
-        padding: 15px 25px;
-        h2 {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin: 0;
-        }
-        h3 {
-          font-size: 1rem;
-          font-weight: normal;
-          font-family: Arial, Helvetica, sans-serif;
-          text-transform: none;
-          margin: 0;
+        padding: 0 25px 30px;
+        p {
+          margin: 30px 0 0 0;
         }
         &:before, &:after {
           position: absolute;
@@ -169,7 +163,16 @@
           border-width: 14px;
           margin-top: -14px;
         }
+        .meldingstatus {
+          margin-top: 30px;
+          font-weight: 600;
+          font-size: 1.2rem;
+          span {
+            display: inline-block;
+          }
+        }
         .fritekst {
+          margin-top: 30px;
           word-wrap: break-word;
           a {
             -ms-word-break: break-all;
@@ -222,8 +225,8 @@
       }
       .journalpost-element {
         clear: both;
-        width: 85%;
-        padding: 6px 25px;
+        width: 86%;
+        padding: 16px 25px;
         color: @grayDark;
         text-decoration: none;
         span {
@@ -241,7 +244,6 @@
           .pil(8px, @grayDark); // definisjon i common.less
         }
       }
-
       .journalpostinformasjon {
         display: none;
         margin: 12px 0 5px 0;
