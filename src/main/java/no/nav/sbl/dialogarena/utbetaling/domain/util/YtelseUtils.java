@@ -207,4 +207,11 @@ public class YtelseUtils {
             }
         };
     }
+
+    public static Comparator<Record<Hovedytelse>> sortByHovedytelsedato = new Comparator<Record<Hovedytelse>>() {
+        @Override
+        public int compare(Record<Hovedytelse> o1, Record<Hovedytelse> o2) {
+           return o1.get(Hovedytelse.hovedytelsedato).compareTo(o2.get(Hovedytelse.hovedytelsedato));
+        }
+    };
 }
