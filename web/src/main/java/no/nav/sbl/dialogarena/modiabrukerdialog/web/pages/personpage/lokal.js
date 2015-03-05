@@ -15,12 +15,21 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
     Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
     Modig.shortcutListener.on({alt: true, keyCode: 71}, openGosys);  // Alt+g
+    Modig.shortcutListener.on({alt: true, keyCode: 87}, openSkrivestotte);  // Alt+w
+    Modig.shortcutListener.on({alt: true, keyCode: 81}, openInnboksSok);  // Alt+q
 
     addPrintEventListener();
 
     $('body').on('click', '.lamell .lamellhode > a', function () {
         if ($('.main > .personsok').is(':visible')) {
             toggleAvansertSok();
+        }
+    });
+
+    // Åpner for bruk av hotkey mens man skriver
+    $('.dialogpanel').on('keydown', '.expandingtextarea', function (event) {
+        if (event.altKey && event.keyCode === 87 /* alt + w */) {
+            openSkrivestotte();
         }
     });
 
@@ -76,6 +85,14 @@ function closeLamellHead() {
 
 function openGosys() {
     $('.hiddenGosysLenkePanel').click();
+}
+
+function openSkrivestotte() {
+    $('.skrivestotteToggle').click();
+}
+
+function openInnboksSok() {
+    $('.innboksSokToggle').click();
 }
 
 function closeResetPerson() {
