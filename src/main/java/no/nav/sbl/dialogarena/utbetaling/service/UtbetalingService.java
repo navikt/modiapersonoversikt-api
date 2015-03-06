@@ -18,7 +18,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.TO_HOVEDYTELSE;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.sortByHovedytelsedato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.sortByHovedytelsedatoDESC;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UtbetalingService {
@@ -29,7 +29,7 @@ public class UtbetalingService {
     private UtbetalingV1 utbetalingV1;
 
     public List<Record<Hovedytelse>> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        return on(getWSUtbetalinger(fnr, startDato, sluttDato)).flatmap(TO_HOVEDYTELSE).collect(sortByHovedytelsedato);
+        return on(getWSUtbetalinger(fnr, startDato, sluttDato)).flatmap(TO_HOVEDYTELSE).collect(sortByHovedytelsedatoDESC);
     }
 
     public void ping() {
