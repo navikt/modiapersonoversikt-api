@@ -55,8 +55,8 @@ public class UtbetalingService {
         return new WSHentUtbetalingsinformasjonRequest()
             .withId(new WSIdent()
                     .withIdent(fnr)
-                    .withIdentType(new WSIdenttyper().withValue("FNR"))
-                    .withRolle(new WSIdentroller().withValue("RETTIGHETSHAVER")))
+                    .withIdentType(new WSIdenttyper().withValue("Personnr"))
+                    .withRolle(new WSIdentroller().withValue("Rettighetshaver")))
             .withPeriode(createPeriode(startDato, sluttDato));
     }
 
