@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.YearMonth;
@@ -14,6 +15,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.hovedytelsedato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -39,19 +41,19 @@ public class YtelseUtilsTest {
     public void settOppUtbetalingsliste() {
         hovedytelseListe = asList(
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.hovedytelsedato, JAN_2012_DATE)
+                        .with(hovedytelsedato, JAN_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, JAN_2012_NR1)
                         .with(Hovedytelse.ytelse, DAGPENGER),
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.hovedytelsedato, JAN_2012_DATE)
+                        .with(hovedytelsedato, JAN_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, JAN_2012_NR2)
                         .with(Hovedytelse.ytelse, SYKEPENGER),
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.hovedytelsedato, MAR_2012_DATE)
+                        .with(hovedytelsedato, MAR_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, MAR_2012_NR1)
                         .with(Hovedytelse.ytelse, SYKEPENGER),
                 new Record<Hovedytelse>()
-                        .with(Hovedytelse.hovedytelsedato, SEPT_2012_DATE)
+                        .with(hovedytelsedato, SEPT_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, SEP_2012_NR1)
                         .with(Hovedytelse.ytelse, BARNETRYGD));
     }
@@ -69,7 +71,7 @@ public class YtelseUtilsTest {
         List<Record<Hovedytelse>> ytelseListe = new ArrayList<>(hovedytelseListe);
 
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.hovedytelsedato, new DateTime(2014, 1, 1, 0, 0))
+                .with(hovedytelsedato, new DateTime(2014, 1, 1, 0, 0))
                 .with(Hovedytelse.utbetalingsmelding, "1. jan 2014 nr1");
 
         ytelseListe.add(ytelse);
@@ -118,7 +120,7 @@ public class YtelseUtilsTest {
         List<Record<Hovedytelse>> utbetalingsperiode = hovedytelserFromPeriod(hovedytelseListe, startDato.toLocalDate(), sluttDato.toLocalDate());
 
         for (Record<Hovedytelse> hovedytelse : utbetalingsperiode) {
-            assertTrue(intervall.contains(hovedytelse.get(Hovedytelse.hovedytelsedato)));
+            assertTrue(intervall.contains(hovedytelse.get(hovedytelsedato)));
         }
     }
 
@@ -168,6 +170,20 @@ public class YtelseUtilsTest {
                 lagHovedytelse(ytelse, "16.01.2012", "31.01.2012"));
         List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
         assertEquals(2, resultat.size());
+    }
+
+    @Test
+    public void sortByHovedytelsedato() {
+        Record<Hovedytelse> hovedytelseA = new Record<Hovedytelse>().with(hovedytelsedato, new DateTime(2015, 01, 02, 1, 1));
+        Record<Hovedytelse> hovedytelseB = new Record<Hovedytelse>().with(hovedytelsedato, new DateTime(2015, 01, 01, 1, 1));
+        Record<Hovedytelse> hovedytelseC = new Record<Hovedytelse>().with(hovedytelsedato, new DateTime(2015, 01, 03, 1, 1));
+
+        List<Record<Hovedytelse>> unsortedList = asList(hovedytelseA, hovedytelseB, hovedytelseC);
+
+        List<Record<Hovedytelse>> sortedList = on(unsortedList).collect(YtelseUtils.sortByHovedytelsedatoDESC);
+        assertThat(sortedList.get(0).get(hovedytelsedato), is(new DateTime(2015, 01, 03, 1, 1)));
+        assertThat(sortedList.get(1).get(hovedytelsedato), is(new DateTime(2015, 01, 02, 1, 1)));
+        assertThat(sortedList.get(2).get(hovedytelsedato), is(new DateTime(2015, 01, 01, 1, 1)));
     }
 
     private Record<Hovedytelse> lagHovedytelse(String ytelseBeskrivelse) {
