@@ -180,7 +180,7 @@ public class YtelseUtilsTest {
 
         List<Record<Hovedytelse>> unsortedList = asList(hovedytelseA, hovedytelseB, hovedytelseC);
 
-        List<Record<Hovedytelse>> sortedList = on(unsortedList).collect(YtelseUtils.sortByHovedytelsedatoDESC);
+        List<Record<Hovedytelse>> sortedList = on(unsortedList).collect(YtelseUtils.SORT_BY_HOVEDYTELSEDATO_DESC);
         assertThat(sortedList.get(0).get(hovedytelsedato), is(new DateTime(2015, 01, 03, 1, 1)));
         assertThat(sortedList.get(1).get(hovedytelsedato), is(new DateTime(2015, 01, 02, 1, 1)));
         assertThat(sortedList.get(2).get(hovedytelsedato), is(new DateTime(2015, 01, 01, 1, 1)));
