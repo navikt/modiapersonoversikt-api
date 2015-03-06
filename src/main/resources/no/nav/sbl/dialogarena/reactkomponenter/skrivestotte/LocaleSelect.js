@@ -15,18 +15,23 @@ var spraak = {
 };
 var LocaleSelect = React.createClass({
     onChange: function (event) {
-        this.props.setValgtLocale(event.target.value);
+        this.props.store.setLocale(event.target.value);
     },
     render: function () {
-        return Object.keys(this.props.valgtTekst.innhold).length > 1 ? (
-            <select onChange={this.onChange} value={this.props.valgtLocale}>
-            {Object.keys(this.props.valgtTekst.innhold).map(function (locale) {
+        var uniqueLocales = Object.keys(this.props.tekst.innhold);
+        if (uniqueLocales.length <= 1) {
+            return null;
+        } else {
+            var options =  uniqueLocales.map(function (locale) {
                 return <option value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>;
-            }.bind(this))}
-            </select>
-        ) : null;
+            });
+            return (
+                <select onChange={this.onChange} value={this.props.locale}>
+                    {options}
+                </select>
+            );
+        }
     }
 });
 
 module.exports = LocaleSelect;
-

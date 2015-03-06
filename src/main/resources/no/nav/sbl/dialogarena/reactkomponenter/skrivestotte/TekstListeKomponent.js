@@ -1,18 +1,28 @@
 /** @jsx React.DOM */
 var React = require('react');
-var Utils = require('./Utils');
 
 var TekstListeKomponent = React.createClass({
     render: function(){
         return (
-            <div {...this.props}>
-                <input id={"tekstElementRadio" + this.props.element.key} name="tekstListeRadio" type="radio" readOnly checked={this.props.erValgt} />
-                <label htmlFor={"tekstElementRadio" + this.props.element.key}>
-                    <h4 dangerouslySetInnerHTML={{__html: this.props.element.tittel}}></h4>
+            <div className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.tekst)}>
+                <input id={"tekstElementRadio" + this.props.tekst.key} name="tekstListeRadio" type="radio"
+                    readOnly checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)} />
+                <label htmlFor={"tekstElementRadio" + this.props.tekst.key}>
+                    <h4 dangerouslySetInnerHTML={{__html: this.props.tekst.tittel}}></h4>
                 </label>
             </div>
         );
     }
 });
+
+function tekstChangedProxy(store, tekst){
+    return function(){
+        store.tekstChanged(tekst);
+    };
+}
+
+function erValgtTekst(tekst, valgtTekst){
+    return tekst === valgtTekst;
+}
 
 module.exports = TekstListeKomponent;

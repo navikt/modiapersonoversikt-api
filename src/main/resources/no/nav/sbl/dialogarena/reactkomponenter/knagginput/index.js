@@ -9,8 +9,6 @@ var KnaggInput = React.createClass({
     },
     getInitialState: function () {
         return {
-            knagger: this.props.knagger.slice(0) || [],
-            fritekst: this.props.fritekst || '',
             selectionStart: -1,
             selectionEnd: -1,
             focus: false
@@ -20,21 +18,17 @@ var KnaggInput = React.createClass({
         if (this.props['auto-focus']) {
             this.refs.search.getDOMNode().focus();
         }
-        this.props.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
     },
     handleKeyUp: function (event) {
         var selectionStart = this.state.selectionStart;
         var selectionEnd = this.state.selectionEnd;
 
         if (event.keyCode === 8 /* backspace */ && selectionStart === 0 && selectionStart === selectionEnd) {
-            if (this.state.knagger.length === 0) {
+            if (this.props.knagger.length === 0) {
                 return;
             }
-            var nyeKnagger = this.state.knagger.slice(0);
-            nyeKnagger.pop();
-            var nyState = {fritekst: this.state.fritekst, knagger: nyeKnagger};
-            this.setState(nyState);
-            this.props.onChange(nyState);
+            var nyeKnagger = this.props.knagger.slice(0);
+            this.props.store.slettKnagg(nyeKnagger.pop());
         }
     },
     onKeyDownProxy: function (event) {
@@ -42,18 +36,14 @@ var KnaggInput = React.createClass({
             selectionStart: this.refs.search.getDOMNode().selectionStart,
             selectionEnd: this.refs.search.getDOMNode().selectionEnd
         });
-        this.props.onKeyDown(event);
+        this.props.store.onKeyDown(event);
     },
     onChangeProxy: function (event) {
-        var data = finnKnaggerOgFritekst(event.target.value, this.state.knagger);
-        this.setState(data);
-        this.props.onChange(data);
+        var data = finnKnaggerOgFritekst(event.target.value, this.props.knagger);
+        this.props.store.onChange(data);
     },
-    fjernKnagg: function (index) {
-        var nyeKnagger = this.props.knagger.slice(0);
-        nyeKnagger.splice(index, 1);
-
-        this.props.onChange(this.props.fritekst, nyeKnagger);
+    fjernKnagg: function (knagg) {
+        this.props.store.slettKnagg(knagg);
         this.refs.search.getDOMNode().focus();
     },
     focusHighlighting: function (event) {
@@ -64,17 +54,11 @@ var KnaggInput = React.createClass({
         }
     },
     render: function () {
-        var knagger = this.state.knagger.map(function (knagg, index) {
-            var fjernKnagg = function (callback) {
-                return function () {
-                    callback(index);
-                }
-            };
-
+        var knagger = this.props.knagger.map(function (knagg) {
             return (
                 <span className="knagg">
                     {knagg}
-                    <button aria-label={'Fjern knagg: ' + knagg} onClick={fjernKnagg(this.fjernKnagg)}>X</button>
+                    <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}>X</button>
                 </span>
             );
         }.bind(this));
@@ -83,7 +67,7 @@ var KnaggInput = React.createClass({
             <div className="knagg-input">
                 <div className={"knagger clearfloat" + (this.state.focus ? " focus" : "")}>
                     {knagger}
-                    <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.state.fritekst}
+                    <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst}
                         onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
                         onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
                         aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']} />

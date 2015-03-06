@@ -1,77 +1,70 @@
+/** @jsx React.DOM */
 var React = require('react');
 var Modal = require('modal');
-var Soklayout = require('sokLayout');
-var SokKomponent = require('./Filter');
-var ListeElementKomponent = require('./TekstListeKomponent');
-var TekstForhandsvisningKomponent = require('./TekstForhandsvisning');
-var Utils = require('./Utils');
+var Utils = require('./utils');
+var TekstForhandsvisning = require('./tekstforhandsvisning');
+var TekstListeKomponent = require('./tekstlistekomponent');
+var KnaggInput = require('knagginput');
+var Store = require('./store');
 
-module.exports = React.createClass({
+var Skrivestotte = React.createClass({
     vis: function () {
         this.refs.modal.open();
     },
     skjul: function () {
         this.refs.modal.close();
     },
-    sok: function (query) {
-        query = query || {};
-        var fritekst = query.fritekst || '';
-        var knagger = query.knagger || [];
-
-        fritekst = fritekst.replace(/^#*(.*)$/, '$1');
-
-        var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
-        if (knagger.length !== 0) {
-            url += '&tags=' + encodeURIComponent(knagger);
-        }
-
-        return $.get(url);
+    getInitialState : function () {
+        this.store = new Store($.extend({},{
+            knagger : [],
+            fritekst: "",
+            tekster: [],
+            valgtTekst: {},
+            valgtLocale: Utils.Constants.LOCALE_DEFAULT
+        }, this.props));
+        return this.store.getState();
     },
-    submit: function (valgtTekst, valgtLocale) {
-        var $tekstfelt = $('#' + this.props.tekstfeltId);
-        var eksisterendeTekst = $tekstfelt.focus().val();
-        eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
-
-        $tekstfelt
-            .focus()
-            .val(eksisterendeTekst + autofullfor.bind(this)(stripEmTags(Utils.getInnhold(valgtTekst, valgtLocale))))
-            .trigger('input');
-
-        this.skjul();
+    componentDidMount : function() {
+        this.store.addListener(this.storeChanged);
+        this.store.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
+    },
+    componentDidUnmount : function() {
+        this.store.removeListener(this.storeChanged);
+    },
+    keyDownHandler: function(event){
+        if (event.keyCode === 13) {
+            this.store.submit(this.skjul, event);
+        }
     },
     render: function () {
+        var listePanelId = Utils.generateId('sok-layout-');
+        var forhandsvisningsPanelId = Utils.generateId('sok-layout-');
+        var tekstlistekomponenter = this.state.tekster.map(function(tekst) {
+            return <TekstListeKomponent tekst={tekst} valgtTekst={this.state.valgtTekst} store={this.store}/>
+        }.bind(this));
+
         return (
             <Modal ref="modal" skipFocus={['div', '.knagg > button']}>
-                <Soklayout {...this.props} sok={this.sok} submit={this.submit}
-                    containerClassName="tekstforslag"
-                    sokKomponent={SokKomponent}
-                    sokKomponentProps={{knagger: this.props.knagger}}
-                    listeelementKomponent={ListeElementKomponent}
-                    visningsKomponent={TekstForhandsvisningKomponent}
-                    valgtElement={{innhold: {nb_NO: ''}, tags: []}}
-                />
+                <form className={"sok-layout tekstforslag"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
+                    <div tabIndex="-1" className="sok-container">
+                        <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} />
+                    </div>
+                    <div className="sok-visning">
+                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={listePanelId} aria-live="assertive" aria-atomic="true">
+                        {tekstlistekomponenter}
+                        </div>
+                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
+                            <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
+                        </div>
+                    </div>
+                    <input type="submit" value="submit" className="hidden" />
+                </form>
             </Modal>
         );
+    },
+    storeChanged: function () {
+        this.setState(this.store.getState());
     }
 });
-function stripEmTags(tekst) {
-    return tekst.replace(/<em>(.*?)<\/em>/g, '$1')
-}
 
-function autofullfor(tekst) {
-    var nokler = {
-        'bruker.fnr': this.props.autofullfor.bruker.fnr,
-        'bruker.fornavn': this.props.autofullfor.bruker.fornavn,
-        'bruker.etternavn': this.props.autofullfor.bruker.etternavn,
-        'bruker.navn': this.props.autofullfor.bruker.navn,
-        'bruker.navkontor': this.props.autofullfor.bruker.navkontor,
-        'saksbehandler.fornavn': this.props.autofullfor.saksbehandler.fornavn,
-        'saksbehandler.etternavn': this.props.autofullfor.saksbehandler.etternavn,
-        'saksbehandler.navn': this.props.autofullfor.saksbehandler.navn,
-        'saksbehandler.enhet': this.props.autofullfor.saksbehandler.enhet
-    };
-
-    return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
-        return nokler[resultat] || '[ukjent nøkkel]';
-    });
-}
+module.exports = Skrivestotte;

@@ -7,33 +7,40 @@ var LocaleSelect = require('./LocaleSelect');
 
 var TekstForhandsvisning = React.createClass({
     render: function () {
-        var element = this.props.element.hasOwnProperty('innhold') ?
-            this.props.element : {innhold: {nb_NO: ''}, tags: []};
+        var tekst = this.props.tekst.hasOwnProperty('innhold') ? this.props.tekst : {innhold: {nb_NO: ''}, tags: []};
 
-        var tekst = Utils.getInnhold(element, this.props.locale);
-        tekst = tekst.split(/[\r\n]+/);
+        var innhold = Utils.getInnhold(tekst, this.props.locale);
+        innhold = innhold.split(/[\r\n]+/);
+
+        var paragrafer = innhold.map(function (avsnitt) {
+            return (
+                <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>
+            );
+        });
+        var knagger = tekst.tags.map(function (tag) {
+            return (
+                <button className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>{'#' + tag}</button>
+            );
+        }.bind(this));
 
         return (
             <div>
                 <div className="tekstPanel">
-                {tekst.map(function (avsnitt) {
-                    return (
-                        <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>
-                    );
-                })}
-                {element.tags.map(function (tag) {
-                    return (
-                        <span className="knagg">{'#' + tag}</span>
-                    );
-                })}
+                {paragrafer}
+                {knagger}
                 </div>
                 <div className="velgPanel">
-                    <LocaleSelect valgtTekst={element} valgtLocale={this.props.locale} setValgtLocale={this.props.settLocale}/>
+                    <LocaleSelect tekst={tekst} locale={this.props.locale} store={this.props.store}/>
                     <input type="submit" value="Velg tekst" className="knapp-hoved-liten" />
                 </div>
             </div>
         );
     }
 });
+
+function onClickProxy(tag, event){
+    event.preventDefault();
+    this.leggTilKnagg(tag);
+}
 
 module.exports = TekstForhandsvisning;

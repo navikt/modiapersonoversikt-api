@@ -110,12 +110,12 @@ function createStandaloneName(component) {
 }
 
 gulp.task('dev', function () {
-    browserifyTask(false, {
-        file: config.
-            srcPath + 'nav-react.js',
+    browserifyTask(true, {
+        file: config.srcPath + 'nav-react.js',
         name: 'React',
         namespace: config.namespace.base
     });
+
     config.components
         .map(toIndexFile)
         .forEach(browserifyTask.bind(this, true));
