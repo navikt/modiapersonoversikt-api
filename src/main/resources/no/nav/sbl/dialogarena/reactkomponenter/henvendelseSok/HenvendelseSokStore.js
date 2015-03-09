@@ -3,8 +3,8 @@ var Store = require('./../store');
 
 var HenvendelseSokStore = function () {
     Store.apply(this, arguments);
-    if(this.state.henvendelser.length > 0){
-        this.state.valgtHenvendelse = this.state.henvendelser[0];
+    if (this.state.traader.length > 0) {
+        this.state.valgtTraad = this.state.traader[0];
     }
 };
 HenvendelseSokStore.prototype = $.extend({}, Store.prototype, HenvendelseSokStore.prototype);
@@ -17,8 +17,8 @@ HenvendelseSokStore.prototype.onChange = function (event) {
     this.fireUpdate(this.listeners);
 };
 
-HenvendelseSokStore.prototype.henvendelseChanged = function (henvendelse) {
-    this.state.valgtHenvendelse = henvendelse;
+HenvendelseSokStore.prototype.traadChanged = function (traad) {
+    this.state.valgtTraad = traad;
     this.fireUpdate(this.listeners);
 }
 
@@ -26,12 +26,12 @@ HenvendelseSokStore.prototype.onKeyDown = function (event) {
     switch (event.keyCode) {
         case 38: /* pil opp */
             event.preventDefault();
-            this.state.valgtHenvendelse = hentHenvendelse(forrigeHenvendelse, this.state.henvendelser, this.state.valgtHenvendelse);
+            this.state.valgtTraad = hentHenvendelse(forrigeHenvendelse, this.state.traader, this.state.valgtTraad);
             this.fireUpdate(this.listeners);
             break;
         case 40: /* pil ned */
             event.preventDefault();
-            this.state.valgtHenvendelse = hentHenvendelse(nesteHenvendelse, this.state.henvendelser, this.state.valgtHenvendelse);
+            this.state.valgtTraad = hentHenvendelse(nesteHenvendelse, this.state.traader, this.state.valgtTraad);
             this.fireUpdate(this.listeners);
             break;
     }
@@ -41,11 +41,13 @@ HenvendelseSokStore.prototype.oppdaterTraadRefs = function (traadMarkupIds) {
     this.state.traadMarkupIds = traadMarkupIds;
 };
 
-HenvendelseSokStore.prototype.submit = function (onSubmit, event) {
+HenvendelseSokStore.prototype.submit = function (afterSubmit, event) {
+    console.log('submit', this, afterSubmit, event);
+    console.log('valgt', this.state.valgtTraad);
+    console.log('ref', this.state.traadMarkupId);
     event.preventDefault();
-
     $('#' + this.state.traadMarkupId[this.state.valgtTraad.traadId]).click();
-    onSubmit();
+    afterSubmit();
 };
 
 var hentSokeresultater =
@@ -60,8 +62,9 @@ var hentSokeresultater =
                     melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.eksternAktor;
                 });
             });
-            this.state.henvendelser = traader;
-            this.state.valgtHenvendelse = traader[0] || {};
+            console.log('traader', traader);
+            this.state.traader = traader;
+            this.state.valgtTraad = traader[0] || {};
             this.fireUpdate(this.listeners);
         }.bind(this))
     }, 150);

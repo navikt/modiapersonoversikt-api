@@ -5,16 +5,16 @@ moment.locale('nb');
 
 module.exports = React.createClass({
     statics: {
-        lagAriaLabel: function (henvendelse) {
-            return henvendelse.temagruppe;
+        lagAriaLabel: function (traad) {
+            return traad.temagruppe;
         }
     },
     render: function () {
-        var erValgt = erValgtTekst(this.props.henvendelse, this.props.valgtHenvendelse);
+        var erValgt = erValgtTekst(this.props.traad, this.props.valgtTraad);
         var cls = erValgt ? "meldingsforhandsvisning valgt" : "meldingsforhandsvisning";
-        var henvendelse = this.props.henvendelse;
-        var melding = henvendelse.meldinger[0];
-        var dato = henvendelse.datoInMillis || new Date();
+        var traad = this.props.traad;
+        var melding = traad.meldinger[0];
+        var dato = traad.datoInMillis || new Date();
         dato = moment(dato).format('LLL');
 
         var datoString = dato;
@@ -23,27 +23,27 @@ module.exports = React.createClass({
         }
 
         return (
-            <div className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.henvendelse)}>
-                <input id={"melding" + this.props.henvendelse.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
-                <label htmlFor={"melding" + this.props.henvendelse.key} className={cls}>
+            <div className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.traad)}>
+                <input id={"melding" + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
+                <label htmlFor={"melding" + this.props.traad.key} className={cls}>
                     <header>
                         <p>{datoString}</p>
-                        <div className={this.props.henvendelse.statusKlasse}></div>
-                        <p className={'meldingstatus'}>{this.props.henvendelse.statusTekst}, {this.props.henvendelse.temagruppe}</p>
+                        <div className={this.props.traad.statusKlasse}></div>
+                        <p className={'meldingstatus'}>{this.props.traad.statusTekst}, {this.props.traad.temagruppe}</p>
                     </header>
-                    <p className="fritekst" dangerouslySetInnerHTML={{__html: this.props.henvendelse.innhold}}></p>
+                    <p className="fritekst" dangerouslySetInnerHTML={{__html: this.props.traad.innhold}}></p>
                 </label>
             </div>
         );
     }
 });
 
-function tekstChangedProxy(store, henvendelse) {
+function tekstChangedProxy(store, traad) {
     return function () {
-        store.henvendelseChanged(henvendelse);
+        store.traadChanged(traad);
     };
 }
 
-function erValgtTekst(henvendelse, valgtHenvendelse) {
-    return henvendelse === valgtHenvendelse;
+function erValgtTekst(traad, valgtTraad) {
+    return traad === valgtTraad;
 }

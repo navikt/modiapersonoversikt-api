@@ -19,8 +19,8 @@ module.exports = React.createClass({
     getInitialState: function () {
         this.store = new HenvendelseSokStore($.extend({}, {
             fritekst: "",
-            henvendelser: [],
-            valgtHenvendelse: {},
+            traader: [],
+            valgtTraad: {},
             traadMarkupIds: {}
         }, this.props));
         return this.store.getState();
@@ -43,10 +43,10 @@ module.exports = React.createClass({
     render: function () {
         var listePanelId = Utils.generateId('sok-liste-');
         var forhandsvisningsPanelId = Utils.generateId('sok-forhandsvisningsPanelId-');
-        var tekstlistekomponenter = this.state.henvendelser.map(function (henvendelse) {
+        var tekstlistekomponenter = this.state.traader.map(function (traad) {
             return <ListevisningKomponent
-                henvendelse={henvendelse}
-                valgtHenvendelse={this.state.valgtHenvendelse}
+                traad={traad}
+                valgtTraad={this.state.valgtTraad}
                 store={this.store}
             />
         }.bind(this));
@@ -69,7 +69,7 @@ module.exports = React.createClass({
                         {tekstlistekomponenter}
                         </div>
                         <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
-                            <ForhandsvisningKomponent henvendelse={this.state.valgtHenvendelse} />
+                            <ForhandsvisningKomponent traad={this.state.valgtTraad} />
                         </div>
                     </div>
                     <input type="submit" value="submit" className="hidden" />
