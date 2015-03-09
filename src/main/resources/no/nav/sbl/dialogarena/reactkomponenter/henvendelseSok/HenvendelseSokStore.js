@@ -22,17 +22,22 @@ HenvendelseSokStore.prototype.traadChanged = function (traad) {
     this.fireUpdate(this.listeners);
 }
 
-HenvendelseSokStore.prototype.onKeyDown = function (event) {
+HenvendelseSokStore.prototype.onKeyDown = function (tabliste, event) {
     switch (event.keyCode) {
         case 38: /* pil opp */
             event.preventDefault();
             this.state.valgtTraad = hentHenvendelse(forrigeHenvendelse, this.state.traader, this.state.valgtTraad);
+
+            updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+
             this.fireUpdate(this.listeners);
             break;
         case 40: /* pil ned */
             event.preventDefault();
             this.state.valgtTraad = hentHenvendelse(nesteHenvendelse, this.state.traader, this.state.valgtTraad);
-            console.log('event', event);
+
+            updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+
             this.fireUpdate(this.listeners);
             break;
     }
@@ -47,6 +52,12 @@ HenvendelseSokStore.prototype.submit = function (afterSubmit, event) {
     $('#' + this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
     afterSubmit();
 };
+
+function updateScroll(tabliste, valgtIndex) {
+    var $parent = $(tabliste.getDOMNode());
+    var $valgt = $parent.find('.sok-element').eq(valgtIndex);
+    Utils.adjustScroll($parent, $valgt);
+}
 
 var hentSokeresultater =
     Utils.debounce(function (fritekst) {

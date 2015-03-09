@@ -65,7 +65,7 @@ module.exports = React.createClass({
                             placeholder="Søk"
                             value={this.state.fritekst}
                             onChange={this.store.onChange.bind(this.store)}
-                            onKeyDown={this.store.onKeyDown.bind(this.store)}
+                            onKeyDown={this.store.onKeyDown.bind(this.store, this.refs.tablist)}
                             aria-controls={listePanelId}
                         />
                     </div>

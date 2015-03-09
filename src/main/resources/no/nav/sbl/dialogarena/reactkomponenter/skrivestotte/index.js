@@ -47,7 +47,7 @@ var Skrivestotte = React.createClass({
             <Modal ref="modal" skipFocus={['div', '.knagg > button']}>
                 <form className={"sok-layout tekstforslag"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
                     <div tabIndex="-1" className="sok-container">
-                        <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} />
+                        <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tabliste={this.refs.tablist} />
                     </div>
                     <div className="sok-visning">
                         <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={listePanelId} aria-live="assertive" aria-atomic="true">

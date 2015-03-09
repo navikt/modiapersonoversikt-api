@@ -36,7 +36,7 @@ var KnaggInput = React.createClass({
             selectionStart: this.refs.search.getDOMNode().selectionStart,
             selectionEnd: this.refs.search.getDOMNode().selectionEnd
         });
-        this.props.store.onKeyDown(event);
+        this.props.store.onKeyDown(this.props.tabliste, event);
     },
     onChangeProxy: function (event) {
         var data = finnKnaggerOgFritekst(event.target.value, this.props.knagger);

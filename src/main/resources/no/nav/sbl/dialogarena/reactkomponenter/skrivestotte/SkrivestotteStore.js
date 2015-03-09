@@ -47,16 +47,22 @@ SkrivestotteStore.prototype.onChange = function (data) {
     this.fireUpdate(this.listeners);
 };
 
-SkrivestotteStore.prototype.onKeyDown = function (event) {
+SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
     switch (event.keyCode) {
         case 38: /* pil opp */
             event.preventDefault();
             this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
+
+            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+
             this.fireUpdate(this.listeners);
             break;
         case 40: /* pil ned */
             event.preventDefault();
             this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
+
+            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+
             this.fireUpdate(this.listeners);
             break;
     }
@@ -75,6 +81,12 @@ SkrivestotteStore.prototype.submit = function(onSubmit, event){
 
     onSubmit();
 };
+
+function updateScroll(tabliste, valgtIndex) {
+    var $parent = $(tabliste.getDOMNode());
+    var $valgt = $parent.find('.sok-element').eq(valgtIndex);
+    Utils.adjustScroll($parent, $valgt);
+}
 
 function hentTekst(hentElement, elementer, valgtElement) {
     for (var i = 0; i < elementer.length; i++) {
