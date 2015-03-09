@@ -32,6 +32,7 @@ HenvendelseSokStore.prototype.onKeyDown = function (event) {
         case 40: /* pil ned */
             event.preventDefault();
             this.state.valgtTraad = hentHenvendelse(nesteHenvendelse, this.state.traader, this.state.valgtTraad);
+            console.log('event', event);
             this.fireUpdate(this.listeners);
             break;
     }
@@ -42,11 +43,8 @@ HenvendelseSokStore.prototype.oppdaterTraadRefs = function (traadMarkupIds) {
 };
 
 HenvendelseSokStore.prototype.submit = function (afterSubmit, event) {
-    console.log('submit', this, afterSubmit, event);
-    console.log('valgt', this.state.valgtTraad);
-    console.log('ref', this.state.traadMarkupId);
     event.preventDefault();
-    $('#' + this.state.traadMarkupId[this.state.valgtTraad.traadId]).click();
+    $('#' + this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
     afterSubmit();
 };
 

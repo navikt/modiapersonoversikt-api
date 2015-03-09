@@ -22,6 +22,8 @@ module.exports = React.createClass({
             datoString += " - " + melding.fraBruker;
         }
 
+        var meldingsStatus = this.props.traad.statusTekst + ", " + this.props.traad.temagruppe;
+
         return (
             <div className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.traad)}>
                 <input id={"melding" + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
@@ -29,7 +31,7 @@ module.exports = React.createClass({
                     <header>
                         <p>{datoString}</p>
                         <div className={this.props.traad.statusKlasse}></div>
-                        <p className={'meldingstatus'}>{this.props.traad.statusTekst}, {this.props.traad.temagruppe}</p>
+                        <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
                     </header>
                     <p className="fritekst" dangerouslySetInnerHTML={{__html: this.props.traad.innhold}}></p>
                 </label>

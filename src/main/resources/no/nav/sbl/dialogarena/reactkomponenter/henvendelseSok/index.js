@@ -38,7 +38,12 @@ module.exports = React.createClass({
         }
     },
     componentWillMount: function () {
-        $.get('/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser');
+        //For å passe på at indeksering er gjort før komponenten blir mountet blir dette kallet gjort i sync.
+        console.log('indekser', '/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser');
+        $.ajax({
+            async: false,
+            url: '/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser'
+        });
     },
     render: function () {
         var listePanelId = Utils.generateId('sok-liste-');
@@ -77,7 +82,7 @@ module.exports = React.createClass({
             </Modal>
         );
     },
-    storeChanged: function(){
+    storeChanged: function () {
         this.setState(this.store.getState());
     }
 });
