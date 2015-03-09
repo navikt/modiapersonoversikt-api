@@ -32,6 +32,7 @@ public class YtelseUtilsTest {
     private static final String MAR_2012_NR1 = "1. mar 2012 nr1";
     private static final String SEP_2012_NR1 = "1. sep 2012 nr1";
     private static final DateTime JAN_2012_DATE = new DateTime(2012, 1, 1, 0, 0);
+    private static final DateTime JAN_2012_DATE_2 = new DateTime(2012, 1, 2, 0, 0);
     private static final DateTime MAR_2012_DATE = new DateTime(2012, 3, 1, 0, 0);
     private static final DateTime SEPT_2012_DATE = new DateTime(2012, 9, 1, 0, 0);
 
@@ -41,7 +42,7 @@ public class YtelseUtilsTest {
     public void settOppUtbetalingsliste() {
         hovedytelseListe = asList(
                 new Record<Hovedytelse>()
-                        .with(hovedytelsedato, JAN_2012_DATE)
+                        .with(hovedytelsedato, JAN_2012_DATE_2)
                         .with(Hovedytelse.utbetalingsmelding, JAN_2012_NR1)
                         .with(Hovedytelse.ytelse, DAGPENGER),
                 new Record<Hovedytelse>()
@@ -67,6 +68,21 @@ public class YtelseUtilsTest {
     }
 
     @Test
+    public void ytelserGroupedByYearMonth_sortertSynkende() {
+        List<Record<Hovedytelse>> ytelseListe = new ArrayList<>(Arrays.asList(
+                new Record<Hovedytelse>().with(Hovedytelse.hovedytelsedato, new DateTime(2015, 01, 1, 1, 1)),
+                new Record<Hovedytelse>().with(Hovedytelse.hovedytelsedato, new DateTime(2015, 03, 1, 1, 1)),
+                new Record<Hovedytelse>().with(Hovedytelse.hovedytelsedato, new DateTime(2015, 02, 1, 1, 1))
+        ));
+
+        Map<YearMonth, List<Record<Hovedytelse>>> yearMonthListMap = YtelseUtils.ytelserGroupedByYearMonth(ytelseListe);
+        Iterator<Map.Entry<YearMonth, List<Record<Hovedytelse>>>> iterator = yearMonthListMap.entrySet().iterator();
+        assertThat(iterator.next().getKey(), is(new YearMonth(2015, 03)));
+        assertThat(iterator.next().getKey(), is(new YearMonth(2015, 02)));
+        assertThat(iterator.next().getKey(), is(new YearMonth(2015, 01)));
+    }
+
+    @Test
     public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaanederOverToAar() {
         List<Record<Hovedytelse>> ytelseListe = new ArrayList<>(hovedytelseListe);
 
@@ -82,7 +98,6 @@ public class YtelseUtilsTest {
     @Test
     public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaaneder() {
         Map<YearMonth, List<Record<Hovedytelse>>> maanedsMap = ytelserGroupedByYearMonth(hovedytelseListe);
-
         assertThat(maanedsMap.size(), is(3));
     }
 
