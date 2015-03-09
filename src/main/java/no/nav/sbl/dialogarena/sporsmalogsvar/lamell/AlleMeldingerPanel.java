@@ -54,6 +54,7 @@ public class AlleMeldingerPanel extends Panel {
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
 
+                item.setMarkupId("allemeldingertraad-"+meldingVM.melding.traadId);
                 traadRefs.put(meldingVM.melding.traadId, item.getMarkupId());
 
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
@@ -74,6 +75,7 @@ public class AlleMeldingerPanel extends Panel {
                         send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                         settFokusPaaValgtMelding(target);
                         target.add(AlleMeldingerPanel.this);
+                        target.focusComponent(item);
                     }
                 });
             }
