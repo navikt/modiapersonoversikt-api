@@ -16,6 +16,9 @@ npm config set strict-ssl false
 
 * Kjør `maven clean install` for å laste ned alle JS-avhengigheter og bygge JS-modulene (hvis du starter maven i en terminal, må den ha støtte for GIT).
 
+* Alternativt, kan du kjøre `npm install && gulp`
+
 ## Utvikling
 
-* Under utvikling kjøres `gulp dev` fra terminalen. Forandringer i koden vil da automatisk bli bygd inn og lagt i `target` mappen.
+* Under utvikling kjøres `gulp dev`. Forandringer i koden vil da automatisk bli bygd inn og lagt i `target` mappen.
+
