@@ -15,6 +15,8 @@ import org.joda.time.LocalDate;
 import org.joda.time.YearMonth;
 
 import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
 
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
@@ -74,7 +76,7 @@ public class YtelseUtils {
     }
 
     /**
-     * Grupperer hovedytelser basert på år og måned
+     * Grupperer hovedytelser basert på år og måned, sortert synkende
      * @param hovedytelser
      * @return
      */
@@ -137,9 +139,9 @@ public class YtelseUtils {
      * Slå sammen Hovedytelser som er i samme år og måned. Returner et map hvor key = YearMonth og verdien er en liste
      * over hovedytelsen innen for den gitte perioden
      */
-    protected static final ReduceFunction<Map.Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> BY_YEAR_MONTH = new ReduceFunction<Map.Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
+    protected static final ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> BY_YEAR_MONTH = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
         @Override
-        public Map<YearMonth, List<Record<Hovedytelse>>> reduce(Map<YearMonth, List<Record<Hovedytelse>>> accumulator, Map.Entry<YearMonth, Record<Hovedytelse>> entry) {
+        public Map<YearMonth, List<Record<Hovedytelse>>> reduce(Map<YearMonth, List<Record<Hovedytelse>>> accumulator, Entry<YearMonth, Record<Hovedytelse>> entry) {
             if(!accumulator.containsKey(entry.getKey())) {
                 accumulator.put(entry.getKey(), new ArrayList<Record<Hovedytelse>>());
             }
@@ -149,20 +151,21 @@ public class YtelseUtils {
 
         @Override
         public Map<YearMonth, List<Record<Hovedytelse>>> identity() {
-            return new HashMap<>();
+            return new TreeMap<>(SORT_BY_YEARMONTH_DESC);
         }
     };
+
 
     /**
      * Transformer en Hovedytelse til en Entry hvor key = YearMonth basert på <em>hovedytelsedato</em>, og verdi er Hovedytelsen.
      */
-    protected static final Transformer<Record<Hovedytelse>, Map.Entry<YearMonth, Record<Hovedytelse>>> TO_YEAR_MONTH_ENTRY = new Transformer<Record<Hovedytelse>, Map.Entry<YearMonth, Record<Hovedytelse>>>() {
+    protected static final Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> TO_YEAR_MONTH_ENTRY = new Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>>() {
         @Override
-        public Map.Entry<YearMonth, Record<Hovedytelse>> transform(Record<Hovedytelse> ytelse) {
+        public Entry<YearMonth, Record<Hovedytelse>> transform(Record<Hovedytelse> ytelse) {
             int year = ytelse.get(hovedytelsedato).getYear();
             int monthOfYear = ytelse.get(hovedytelsedato).getMonthOfYear();
             YearMonth yearMonth = new YearMonth(year, monthOfYear);
-            return new AbstractMap.SimpleEntry<>(yearMonth, ytelse);
+            return new SimpleEntry<>(yearMonth, ytelse);
         }
     };
 
@@ -212,6 +215,13 @@ public class YtelseUtils {
         @Override
         public int compare(Record<Hovedytelse> o1, Record<Hovedytelse> o2) {
            return o2.get(Hovedytelse.hovedytelsedato).compareTo(o1.get(Hovedytelse.hovedytelsedato));
+        }
+    };
+
+    public static final Comparator<YearMonth> SORT_BY_YEARMONTH_DESC = new Comparator<YearMonth>() {
+        @Override
+        public int compare(YearMonth o1, YearMonth o2) {
+            return o2.compareTo(o1);
         }
     };
 }
