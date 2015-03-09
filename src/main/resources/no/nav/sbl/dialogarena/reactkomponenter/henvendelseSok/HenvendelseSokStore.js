@@ -71,7 +71,6 @@ var hentSokeresultater =
                     melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.eksternAktor;
                 });
             });
-            console.log('traader', traader);
             this.state.traader = traader;
             this.state.valgtTraad = traader[0] || {};
             this.fireUpdate(this.listeners);

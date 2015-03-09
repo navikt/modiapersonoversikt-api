@@ -1,3 +1,5 @@
+var React = require('react');
+
 var Utils = {
     Constants: {
         LOCALE_DEFAULT: 'nb_NO'
@@ -42,6 +44,13 @@ var Utils = {
     },
     generateId: function (prefix) {
         return prefix + (new Date().getTime()) + '-' + Math.random();
+    },
+    leggTilLenkerTags: function(innhold){
+        var uriRegex = /(([\w-]+:\/\/?|www[.])[^\s()<>]+)/g;
+        return innhold.replace(uriRegex, '<a target="_blank" href="$1">$1</a>');
+    },
+    tilParagraf: function(avsnitt){
+        return <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>;
     }
 };
 module.exports = Utils;

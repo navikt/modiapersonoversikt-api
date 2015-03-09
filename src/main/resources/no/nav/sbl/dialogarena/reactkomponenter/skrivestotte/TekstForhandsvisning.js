@@ -5,18 +5,16 @@ var Utils = require('utils');
 
 var LocaleSelect = require('./LocaleSelect');
 
+
 var TekstForhandsvisning = React.createClass({
     render: function () {
         var tekst = this.props.tekst.hasOwnProperty('innhold') ? this.props.tekst : {innhold: {nb_NO: ''}, tags: []};
 
-        var innhold = Utils.getInnhold(tekst, this.props.locale);
-        innhold = innhold.split(/[\r\n]+/);
+        var paragrafer = Utils.getInnhold(tekst, this.props.locale)
+            .split(/[\r\n]+/)
+            .map(Utils.leggTilLenkerTags)
+            .map(Utils.tilParagraf);
 
-        var paragrafer = innhold.map(function (avsnitt) {
-            return (
-                <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>
-            );
-        });
         var knagger = tekst.tags.map(function (tag) {
             return (
                 <button className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>{'#' + tag}</button>
@@ -38,7 +36,7 @@ var TekstForhandsvisning = React.createClass({
     }
 });
 
-function onClickProxy(tag, event){
+function onClickProxy(tag, event) {
     event.preventDefault();
     this.leggTilKnagg(tag);
 }

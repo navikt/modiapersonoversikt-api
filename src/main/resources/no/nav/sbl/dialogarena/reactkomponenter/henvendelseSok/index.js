@@ -39,7 +39,6 @@ module.exports = React.createClass({
     },
     componentWillMount: function () {
         //For å passe på at indeksering er gjort før komponenten blir mountet blir dette kallet gjort i sync.
-        console.log('indekser', '/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser');
         $.ajax({
             async: false,
             url: '/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser'
