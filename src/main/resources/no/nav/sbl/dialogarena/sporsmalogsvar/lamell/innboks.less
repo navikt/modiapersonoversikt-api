@@ -21,82 +21,11 @@
   .meldingsliste {
     background-color: @graabakgrunn;
     border-right: 1px solid @rammefarge;
-    .melding {
-      position: relative;
-      padding: 16px @sidemargin 16px @sidemargin;
-      border-bottom: solid 1px @rammefarge;
-      overflow: hidden;
-      p {
-        margin: 0;
-      }
-      &.valgt {
-        color: #f5f5f5;
-        background-color: #226aa4;
-        .statusIkon {
-          &.ubesvart {
-            background: url(../img/melding_ny_hvit.svg) no-repeat;
-          }
-        }
-        .traadlengde {
-          background: url(../img/melding_flere_innlegg_hvit.svg) no-repeat right;
-          background-size: 7px;
-        }
-        .besvarIndikator {
-          background: url(../img/loading_dots_liten_hvit.gif) no-repeat;
-        }
-      }
-      &:not(.valgt) {
-        cursor: pointer;
-      }
-      .meldingstatus {
-        font-weight: 600;
-        span {
-          display: inline-block;
-        }
-      }
-      .fritekst {
-        width: 100%;
-        margin: 0;
-        text-overflow: ellipsis;
-        -o-text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        &.tom {
-          display: none;
-        }
-      }
-      .meldingstatus, .fritekst {
-        margin-top: 16px;
-      }
-      .statusIkon {
-        position: absolute;
-        height: 14px;
-        width: 20px;
-        left: 7px;
-        top: 50px;
-        &.besvart {
-          background: url(../img/melding_besvart.svg) no-repeat;
-        }
-        &.ubesvart {
-          background: url(../img/melding_ny.svg) no-repeat;
-        }
-      }
-      .besvarIndikator {
-        background: url(../img/loading_dots_liten_rod.gif) no-repeat;
-        float: right;
-        width: 34px;
-        height: 20px;
-        margin-right: 10px;
-      }
-      .traadlengde {
-        position: absolute;
-        right: 10px;
-        padding-right: 10px;
-        line-height: 20px;
-        font-weight: bold;
-        background: url(../img/melding_flere_innlegg.svg) no-repeat right;
-        background-size: 7px;
-      }
+
+    .innboksSokToggle {
+      width: 100%;
+      height: 3rem;
+      font-weight: 600;
     }
   }
 
@@ -426,6 +355,84 @@
     margin-top: 150px;
     text-align: center;
     color: #b7b1a9;
+  }
+}
+
+.meldingsforhandsvisning {
+  position: relative;
+  padding: 16px @sidemargin 16px @sidemargin;
+  border-bottom: solid 1px @rammefarge;
+  overflow: hidden;
+  p {
+    margin: 0;
+  }
+  &.valgt {
+    color: #f5f5f5;
+    background-color: #226aa4;
+    .statusIkon {
+      &.ubesvart {
+        background: url(../img/melding_ny_hvit.svg) no-repeat;
+      }
+    }
+    .traadlengde {
+      background: url(../img/melding_flere_innlegg_hvit.svg) no-repeat right;
+      background-size: 7px;
+    }
+    .besvarIndikator {
+      background: url(../img/loading_dots_liten_hvit.gif) no-repeat;
+    }
+  }
+  &:not(.valgt) {
+    cursor: pointer;
+  }
+  .meldingstatus {
+    font-weight: 600;
+    span {
+      display: inline-block;
+    }
+  }
+  .fritekst {
+    width: 100%;
+    margin: 0;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    &.tom {
+      display: none;
+    }
+  }
+  .meldingstatus, .fritekst {
+    margin-top: 16px;
+  }
+  .statusIkon {
+    position: absolute;
+    height: 14px;
+    width: 20px;
+    left: 7px;
+    top: 50px;
+    &.besvart {
+      background: url(../img/melding_besvart.svg) no-repeat;
+    }
+    &.ubesvart {
+      background: url(../img/melding_ny.svg) no-repeat;
+    }
+  }
+  .besvarIndikator {
+    background: url(../img/loading_dots_liten_rod.gif) no-repeat;
+    float: right;
+    width: 34px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  .traadlengde {
+    position: absolute;
+    right: 10px;
+    padding-right: 10px;
+    line-height: 20px;
+    font-weight: bold;
+    background: url(../img/melding_flere_innlegg.svg) no-repeat right;
+    background-size: 7px;
   }
 }
 

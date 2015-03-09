@@ -21,7 +21,6 @@ import java.util.Map;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
-import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel.TRAAD_JOURNALFORT;
@@ -30,7 +29,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke
 public class AlleMeldingerPanel extends Panel {
 
     private InnboksVM innboksVM;
-    private final Map<String, String> traadRef = new HashMap<>();
+    private final Map<String, String> traadRefs = new HashMap<>();
 
     public AlleMeldingerPanel(String id, final InnboksVM innboksVM, final String traadDetaljerMarkupId) {
         super(id, new CompoundPropertyModel<>(innboksVM));
@@ -45,7 +44,7 @@ public class AlleMeldingerPanel extends Panel {
         add(new AjaxLink("henvendelseSokToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                henvendelseSok.callFunction(target, "oppdaterTraadRef", traadRef);
+                henvendelseSok.callFunction(target, "oppdaterTraadRefs", traadRefs);
                 henvendelseSok.callFunction(target, "vis");
             }
         });
@@ -55,14 +54,13 @@ public class AlleMeldingerPanel extends Panel {
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
 
-                traadRef.put(meldingVM.melding.traadId, item.getMarkupId());
+                traadRefs.put(meldingVM.melding.traadId, item.getMarkupId());
 
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("avsenderTekst"));
                 item.add(new StatusIkon("statusIkon", meldingVM));
-                item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst"))
-                        .add(cssClass(meldingVM.melding.statusKlasse)));
+                item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
                 item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
 
