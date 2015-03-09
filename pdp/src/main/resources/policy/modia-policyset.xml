@@ -15,4 +15,5 @@
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:kontorsperre</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policyid:tema</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:diskresjon-familiemedlem</PolicyIdReference>
+    <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:aareg-tilgang</PolicyIdReference>
 </PolicySet>
