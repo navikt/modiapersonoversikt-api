@@ -11,7 +11,6 @@ public class ReactResources {
                     new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
                     new JavaScriptResourceReference(ResourceReference.class, "build/Utils.js"),
                     new JavaScriptResourceReference(ResourceReference.class, "build/Modal.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/SokLayout.js"),
                     new JavaScriptResourceReference(ResourceReference.class, "build/HenvendelseSok.js")
             )
             .less(

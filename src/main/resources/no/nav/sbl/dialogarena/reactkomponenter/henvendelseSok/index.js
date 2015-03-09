@@ -3,7 +3,7 @@ var Modal = require('modal');
 var ListevisningKomponent = require('./ListevisningKomponent');
 var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
 var Utils = require('utils');
-var Store = require('./Store');
+var HenvendelseSokStore = require('./HenvendelseSokStore');
 
 module.exports = React.createClass({
     vis: function () {
@@ -17,7 +17,7 @@ module.exports = React.createClass({
     },
 
     getInitialState: function () {
-        this.store = new Store($.extend({}, {
+        this.store = new HenvendelseSokStore($.extend({}, {
             fritekst: "",
             henvendelser: [],
             valgtHenvendelse: {},

@@ -1,60 +1,47 @@
 var Utils = require('utils');
+var Store = require('./../store');
 
-var Store = function (state) {
-    this.listeners = [];
-    this.state = state;
-    if (this.state.henvendelser.length > 0) {
+var HenvendelseSokStore = function () {
+    Store.apply(this, arguments);
+    if(this.state.henvendelser.length > 0){
         this.state.valgtHenvendelse = this.state.henvendelser[0];
     }
 };
+HenvendelseSokStore.prototype = $.extend({}, Store.prototype, HenvendelseSokStore.prototype);
 
-Store.prototype.addListener = function (listener) {
-    this.listeners.push(listener);
-};
-
-Store.prototype.removeListener = function (listener) {
-    var nyeListeners = this.listeners.slice(0);
-    var index = nyeListeners.indexOf(listener);
-    this.listeners.splice(index, 1);
-};
-
-Store.prototype.getState = function () {
-    return this.state;
-};
-
-Store.prototype.onChange = function (event) {
+HenvendelseSokStore.prototype.onChange = function (event) {
     this.state.fritekst = event.target.value;
 
     hentSokeresultater.bind(this)(this.state.fritekst);
 
-    fireUpdate(this.listeners);
+    this.fireUpdate(this.listeners);
 };
 
-Store.prototype.henvendelseChanged = function(henvendelse) {
+HenvendelseSokStore.prototype.henvendelseChanged = function (henvendelse) {
     this.state.valgtHenvendelse = henvendelse;
-    fireUpdate(this.listeners);
+    this.fireUpdate(this.listeners);
 }
 
-Store.prototype.onKeyDown = function(event) {
+HenvendelseSokStore.prototype.onKeyDown = function (event) {
     switch (event.keyCode) {
         case 38: /* pil opp */
             event.preventDefault();
             this.state.valgtHenvendelse = hentHenvendelse(forrigeHenvendelse, this.state.henvendelser, this.state.valgtHenvendelse);
-            fireUpdate(this.listeners);
+            this.fireUpdate(this.listeners);
             break;
         case 40: /* pil ned */
             event.preventDefault();
             this.state.valgtHenvendelse = hentHenvendelse(nesteHenvendelse, this.state.henvendelser, this.state.valgtHenvendelse);
-            fireUpdate(this.listeners);
+            this.fireUpdate(this.listeners);
             break;
     }
 }
 
-Store.prototype.oppdaterTraadRefs = function(traadMarkupIds){
+HenvendelseSokStore.prototype.oppdaterTraadRefs = function (traadMarkupIds) {
     this.state.traadMarkupIds = traadMarkupIds;
 };
 
-Store.prototype.submit = function(onSubmit, event){
+HenvendelseSokStore.prototype.submit = function (onSubmit, event) {
     event.preventDefault();
 
     $('#' + this.state.traadMarkupId[this.state.valgtTraad.traadId]).click();
@@ -75,7 +62,7 @@ var hentSokeresultater =
             });
             this.state.henvendelser = traader;
             this.state.valgtHenvendelse = traader[0] || {};
-            fireUpdate(this.listeners);
+            this.fireUpdate(this.listeners);
         }.bind(this))
     }, 150);
 
@@ -84,14 +71,6 @@ var sok = function (fnr, query) {
     var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
     return $.get(url);
 };
-
-
-function fireUpdate(listeners) {
-    listeners.forEach(function (listener) {
-        listener();
-    });
-}
-
 
 function hentHenvendelse(hentElement, elementer, valgtElement) {
     for (var i = 0; i < elementer.length; i++) {
@@ -108,5 +87,4 @@ function forrigeHenvendelse(elementer, index) {
 function nesteHenvendelse(elementer, index) {
     return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
 }
-
-module.exports = Store;
+module.exports = HenvendelseSokStore;
