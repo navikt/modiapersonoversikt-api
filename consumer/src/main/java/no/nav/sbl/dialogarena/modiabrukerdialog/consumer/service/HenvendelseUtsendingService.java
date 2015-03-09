@@ -2,11 +2,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
@@ -27,7 +30,10 @@ import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -40,20 +46,16 @@ public class HenvendelseUtsendingService {
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
+    private SakerService sakerService;
+    @Inject
     @Named("pep")
     private EnforcementPoint pep;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private PropertyResolver propertyResolver;
 
-    public Melding sendHenvendelse(Melding melding) {
-        try {
-            return sendHenvendelse(melding, Optional.<String>none());
-        } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
-            throw new RuntimeException(oppgaveErFerdigstilt);
-        }
-    }
-
-    public Melding sendHenvendelse(Melding melding, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
+    public void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception {
         if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
@@ -69,8 +71,12 @@ public class HenvendelseUtsendingService {
         if (melding.traadId == null) {
             melding.traadId = melding.id;
         }
-
-        return melding;
+        if (sak.isSome()) {
+            sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get());
+        }
+        if (oppgaveId.isSome()) {
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId.get());
+        }
     }
 
     public List<Melding> hentTraad(String fnr, String traadId) {
@@ -89,7 +95,7 @@ public class HenvendelseUtsendingService {
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
                         .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
-                        .map(TIL_MELDING)
+                        .map(tilMelding(propertyResolver))
                         .map(journalfortTemaTilgang)
                         .collect(ELDSTE_FORST);
 

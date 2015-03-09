@@ -23,6 +23,7 @@ public class JournalfortTemaAttributeLocator extends AttributeLocator {
     public static final URI STRING_TYPE = URI.create("http://www.w3.org/2001/XMLSchema#string");
     public static final URI SUBJECT_CATEGORY = URI.create(AttributeDesignator.SUBJECT_CATEGORY_DEFAULT);
     public static final URI SUBJECT_ID = URI.create(XACMLConstants.ATTRIBUTEID_SUBJECT_ID);
+    public static final URI VALGTENHET_ID = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet");
 
     private JournalfortTemaAttributeLocatorDelegate delegate;
 
@@ -44,7 +45,7 @@ public class JournalfortTemaAttributeLocator extends AttributeLocator {
         }
 
         return new EvaluationResult(
-                new BagAttribute(attributeType, convertSet(delegate.getTemagrupperForAnsattesValgteEnhet(getSubjectId(context)))));
+                new BagAttribute(attributeType, convertSet(delegate.getTemagrupperForAnsattesValgteEnhet(getSubjectId(context), getValgtEnhet(context)))));
     }
 
     private Set<AttributeValue> convertSet(Set<String> inputSet) {
@@ -57,5 +58,8 @@ public class JournalfortTemaAttributeLocator extends AttributeLocator {
 
     private String getSubjectId(EvaluationCtx context) {
         return (String) context.getSubjectAttribute(STRING_TYPE, SUBJECT_ID, SUBJECT_CATEGORY).getAttributeValue().getValue();
+    }
+    private String getValgtEnhet(EvaluationCtx context) {
+        return (String) context.getSubjectAttribute(STRING_TYPE, VALGTENHET_ID, SUBJECT_CATEGORY).getAttributeValue().getValue();
     }
 }

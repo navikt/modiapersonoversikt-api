@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>4.8-SNAPSHOT</version>
+        <version>4.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -143,6 +143,10 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>behandle-henvendelse</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>arena-arbeid-og-aktivitet</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

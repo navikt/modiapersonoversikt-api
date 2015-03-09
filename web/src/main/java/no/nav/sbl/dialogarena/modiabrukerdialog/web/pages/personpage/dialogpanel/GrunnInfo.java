@@ -16,23 +16,25 @@ public class GrunnInfo implements Serializable {
     }
 
     public static class Bruker implements Serializable {
-        public String fnr, fornavn, etternavn;
+        public String fnr, fornavn, etternavn, navn, navkontor;
 
-        public Bruker(String fnr, String fornavn, String etternavn) {
+        public Bruker(String fnr, String fornavn, String etternavn, String navkontor) {
             this.fnr = fnr;
             this.fornavn = namifyString(fornavn);
             this.etternavn = namifyString(etternavn);
+            this.navn = String.format("%s %s", this.fornavn, this.etternavn);
+            this.navkontor = navkontor;
         }
     }
 
     public static class Saksbehandler implements Serializable {
-        public String ident, enhet, fornavn, etternavn;
+        public String enhet, fornavn, etternavn, navn;
 
-        public Saksbehandler(String ident, String enhet, String fornavn, String etternavn) {
-            this.ident = ident;
+        public Saksbehandler(String enhet, String fornavn, String etternavn) {
             this.enhet = enhet;
             this.fornavn = namifyString(fornavn);
             this.etternavn = namifyString(etternavn);
+            this.navn = String.format("%s %s", this.fornavn, this.etternavn);
         }
     }
 

@@ -7,14 +7,14 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -36,6 +36,8 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
@@ -50,11 +52,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
-    @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private SakerService sakerService;
 
     private final GrunnInfo grunnInfo;
     private final Optional<String> oppgaveId;
@@ -166,7 +164,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             final IModel<HenvendelseVM> henvendelseVM = getModel();
 
             add(new Label("navIdent", getSubjectHandler().getUid()));
-            add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo.bruker.fnr, henvendelseVM));
+            add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo, henvendelseVM));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
             feedbackPanel.setOutputMarkupId(true);
@@ -208,31 +206,36 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error(getString("fortsettdialogform.feilmelding.oppgaveferdigstilt"));
-                sendKnapp.setVisibilityAllowed(false);
-                leggTilbakeKnapp.setVisibilityAllowed(false);
-                target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
+                visErrorFeedback(target);
+            } catch (Exception e) {
+                error(getString("dialogpanel.feilmelding.journalforing"));
+                visErrorFeedback(target);
             }
         }
 
-        private void sendHenvendelse(HenvendelseVM henvendelseVM) throws OppgaveErFerdigstilt {
-            Meldingstype meldingstype = meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare);
-            Melding melding = new Melding()
-                    .withFnr(grunnInfo.bruker.fnr)
-                    .withNavIdent(getSubjectHandler().getUid())
-                    .withTraadId(sporsmal.id)
-                    .withTemagruppe(sporsmal.temagruppe)
-                    .withKanal(henvendelseVM.kanal.name())
-                    .withType(meldingstype)
-                    .withFritekst(henvendelseVM.getFritekst())
-                    .withKontorsperretEnhet(sporsmal.kontorsperretEnhet)
-                    .withEksternAktor(getSubjectHandler().getUid())
-                    .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        private void visErrorFeedback(AjaxRequestTarget target) {
+            sendKnapp.setVisibilityAllowed(false);
+            leggTilbakeKnapp.setVisibilityAllowed(false);
+            target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
+        }
 
-            melding = henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
-            if (meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
-                sakerService.knyttBehandlingskjedeTilSak(grunnInfo.bruker.fnr, melding.traadId, henvendelseVM.valgtSak);
+        private void sendHenvendelse(HenvendelseVM henvendelseVM) throws Exception {
+            Meldingstype meldingstype = meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare);
+            Melding melding = new MeldingBuilder()
+                    .withHenvendelseVM(henvendelseVM)
+                    .withEldsteMeldingITraad(optional(sporsmal))
+                    .withMeldingstype(meldingstype)
+                    .withFnr(grunnInfo.bruker.fnr)
+                    .withNavident(getSubjectHandler().getUid())
+                    .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+                    .build();
+
+            Optional<Sak> sak = none();
+            if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
+                sak = optional(henvendelseVM.valgtSak);
             }
-            oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
+
+            henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId, sak);
         }
 
         private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {

@@ -4,7 +4,9 @@
 <head></head>
 <body>
 <wicket:panel>
-    <h2><wicket:message key="journalforingVelgSak.overskrift"/></h2>
+    <h2>
+        <wicket:message key="journalforingVelgSak.overskrift"/>
+    </h2>
     <div class="robust-strek"></div>
     <form wicket:id="plukkSakForm" class="wicket-form-replacement">
         <wicket:container wicket:id="valgtSak">
@@ -19,6 +21,7 @@
                wicket:message="value:journalfor.knapp.velg"/>
     </form>
     <div wicket:id="ingenSaker"></div>
+    <div wicket:id="tekniskFeil"></div>
     <a href="#" wicket:id="avbrytJournalforing" class="avbryt-knapp">Avbryt</a>
 </wicket:panel>
 </body>

@@ -433,7 +433,6 @@
 	  cursor: pointer;
 	  color: white;
 	  display: block;
-
 	  &:hover, &:focus {
 		outline: none;
 		text-decoration: underline;
@@ -442,11 +441,18 @@
 	.pil {
 	  display: inline-block;
 	  margin-bottom: 1px;
-	  .pil(8px, @blue); // definisjon i komponenter.less
+	  .pil(8px, @blue);
 	}
 	.saklisteelement > label > span {
 	  display: inline-block;
 	  margin: 0;
+	}
+	.saklisteelement > label {
+	  table {
+		font-size: 0.85rem !important;
+		border-collapse: separate;
+		border-spacing: 1.6rem 0;
+	  }
 	}
 	&.last {
 	  .sakswrapper {
@@ -478,10 +484,10 @@
   form, div.wicket-form-replacement {
 	text-align: center;
 	input[type="radio"] + label {
-	  background: url(../img/radio_svart_bg.svg) 0 0 no-repeat;
+	  background: url(../img/radio_svart_bg.svg) 0 center no-repeat;
 	}
 	input[type="radio"]:checked + label {
-	  background: url(../img/radio_svart_valgt.svg) 0 0 no-repeat;
+	  background: url(../img/radio_svart_valgt.svg) 0 center no-repeat;
 	  font-weight: normal;
 	  color: #ffffff;
 	}

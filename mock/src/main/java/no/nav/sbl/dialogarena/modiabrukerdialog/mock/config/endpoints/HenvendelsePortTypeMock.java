@@ -28,7 +28,7 @@ public class HenvendelsePortTypeMock {
     private static final String FNR = "11111111111";
     private static final String NAVIDENT = "Z999999";
 
-    private static final String JOURNALFORT_SAKSID_HJELPEMIDLER = GsakHentSakslistePortTypeMock.SAKSID_2;
+    private static final String JOURNALFORT_SAKSID_HJELPEMIDLER = GsakSakV1PortTypeMock.SAKSID_2;
     private static final String JOURNALFORER_NAV_IDENT = "567567567";
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
@@ -98,8 +98,9 @@ public class HenvendelsePortTypeMock {
                     .withHenvendelseType(SPORSMAL_MODIA_UTGAAENDE.name()),
 
             createXMLHenvendelse(BEHANDLINGS_ID5, BEHANDLINGS_ID5, now().minusDays(1), null,
-                    null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
-                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
+                    createXMLMeldingTilBruker("ARBD", "TEKST", KORT_TEKST), valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name())
+                    .withKontorsperreEnhet("0122"),
 
             createXMLHenvendelse(BEHANDLINGS_ID6, BEHANDLINGS_ID6, now().minusDays(2), null,
                     null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name())
