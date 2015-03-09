@@ -61,103 +61,17 @@
       }
     }
     .melding {
-      p, h3 {
-        line-height: 1.35rem;
+      &.inngaaende .journalpost-element {
+        float: right;
+        background-color: #e6e6dd;
+        border-top: 1px solid @rammefarge;
       }
-      margin-bottom: 30px;
-      .avsenderBilde {
-        margin-top: 20px;
-        width: 10%;
-        height: 34px;
-        &.inngaaende {
-          float: left;
-        }
-        &.utgaaende {
-          float: right;
-        }
-      }
-      .meldingData {
-        width: 86%;
-        position: relative;
-        padding: 0 25px 30px;
-        p {
-          margin: 30px 0 0 0;
-        }
-        &:before, &:after {
-          position: absolute;
-          top: 40px;
-          border: solid transparent;
-          content: " ";
-          height: 0;
-          width: 0;
-        }
-        &:after {
-          border-width: 13px;
-          margin-top: -13px;
-        }
-        &:before {
-          border-width: 14px;
-          margin-top: -14px;
-        }
-        .meldingstatus {
-          margin-top: 30px;
-          font-weight: 600;
-          font-size: 1.2rem;
-          span {
-            display: inline-block;
-          }
-        }
-        .fritekst {
-          margin-top: 30px;
-          word-wrap: break-word;
-          a {
-            -ms-word-break: break-all;
-            word-break: break-all;
-          }
-        }
-      }
-      &.inngaaende {
-        .meldingData {
-          float: right;
-          background-color: #e6e6dd;
-          &:before, &:after {
-            right: 100%;
-          }
-          &:after {
-            border-right-color: #e5e5dc;
-          }
-          &:before {
-            border-right-color: #e5e5dc;
-          }
-        }
-        .journalpost-element {
-          float: right;
-          background-color: #e6e6dd;
-          border-top: 1px solid @rammefarge;
-        }
-      }
-      &.utgaaende {
-        .meldingData {
-          float: left;
-          background-color: #ffffff;
-          border: 1px solid @rammefarge;
-          &:before, &:after {
-            left: 100%;
-          }
-          &:after {
-            border-left-color: #ffffff;
-          }
-          &:before {
-            border-left-color: @rammefarge;
-          }
-        }
-        .journalpost-element {
+      &.utgaaende .journalpost-element {
           float: left;
           background-color: #ffffff;
           border-bottom: 1px solid @rammefarge;
           border-left: 1px solid @rammefarge;
           border-right: 1px solid @rammefarge;
-        }
       }
       .journalpost-element {
         clear: both;
@@ -433,6 +347,95 @@
     font-weight: bold;
     background: url(../img/melding_flere_innlegg.svg) no-repeat right;
     background-size: 7px;
+  }
+}
+
+.melding {
+  p, h3 {
+    line-height: 1.35rem;
+  }
+  margin-bottom: 30px;
+  .avsenderBilde {
+    margin-top: 20px;
+    width: 10%;
+    height: 34px;
+    &.inngaaende {
+      float: left;
+    }
+    &.utgaaende {
+      float: right;
+    }
+  }
+  .meldingData {
+    width: 86%;
+    position: relative;
+    padding: 0 25px 30px;
+    p {
+      margin: 30px 0 0 0;
+    }
+    &:before, &:after {
+      position: absolute;
+      top: 40px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+    }
+    &:after {
+      border-width: 13px;
+      margin-top: -13px;
+    }
+    &:before {
+      border-width: 14px;
+      margin-top: -14px;
+    }
+    .meldingstatus {
+      margin-top: 30px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      span {
+        display: inline-block;
+      }
+    }
+    .fritekst {
+      margin-top: 30px;
+      word-wrap: break-word;
+      a {
+        -ms-word-break: break-all;
+        word-break: break-all;
+      }
+    }
+  }
+  &.inngaaende {
+    .meldingData {
+      float: right;
+      background-color: #e6e6dd;
+      &:before, &:after {
+        right: 100%;
+      }
+      &:after {
+        border-right-color: #e5e5dc;
+      }
+      &:before {
+        border-right-color: #e5e5dc;
+      }
+    }
+  }
+  &.utgaaende {
+    .meldingData {
+      float: left;
+      background-color: #ffffff;
+      border: 1px solid @rammefarge;
+      &:before, &:after {
+        left: 100%;
+      }
+      &:after {
+        border-left-color: #ffffff;
+      }
+      &:before {
+        border-left-color: @rammefarge;
+      }
+    }
   }
 }
 
