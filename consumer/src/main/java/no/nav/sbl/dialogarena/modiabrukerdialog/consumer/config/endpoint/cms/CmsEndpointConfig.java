@@ -1,12 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms;
 
-import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.content.ContentRetriever;
-import no.nav.modig.content.ValueRetriever;
-import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
+import no.nav.modig.content.*;
 import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +44,11 @@ public class CmsEndpointConfig {
         cmsContentRetriever.setTeksterRetriever(siteContentRetriever());
         cmsContentRetriever.setArtikkelRetriever(siteArtikkelRetriever());
         return cmsContentRetriever;
+    }
+
+    @Bean
+    public PropertyResolver propertyResolver() throws URISyntaxException {
+        return new PropertyResolver(cmsContentRetriever(), Melding.class.getResourceAsStream("Melding.properties"));
     }
 
     @Bean

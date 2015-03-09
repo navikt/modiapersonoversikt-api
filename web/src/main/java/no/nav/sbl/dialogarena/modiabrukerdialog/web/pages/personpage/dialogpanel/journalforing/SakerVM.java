@@ -3,7 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,11 +14,12 @@ public class SakerVM implements Serializable {
 
     public final IModel<Boolean> visFagsaker = Model.of(true);
     public final IModel<Boolean> visGenerelleSaker = Model.of(false);
+    public final IModel<Boolean> tekniskFeil = Model.of(false);
 
     private SakerService sakerService;
     private String fnr;
-
     private Saker saker;
+
 
     public SakerVM(SakerService sakerService, String fnr) {
         this.sakerService = sakerService;
@@ -26,9 +29,14 @@ public class SakerVM implements Serializable {
     }
 
     public final void oppdater() {
-        saker = sakerService.hentSaker(fnr);
-        visFagsaker.setObject(true);
-        visGenerelleSaker.setObject(false);
+        try {
+            saker = sakerService.hentSaker(fnr);
+            visFagsaker.setObject(true);
+            visGenerelleSaker.setObject(false);
+            tekniskFeil.setObject(false);
+        } catch (Exception e) {
+            tekniskFeil.setObject(true);
+        }
     }
 
     public AbstractReadOnlyModel<Boolean> sakerFinnes() {

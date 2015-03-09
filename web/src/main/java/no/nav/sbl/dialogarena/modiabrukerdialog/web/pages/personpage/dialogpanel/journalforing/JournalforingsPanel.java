@@ -29,7 +29,7 @@ public class JournalforingsPanel extends Panel {
         sakValgt.add(visibleIf(henvendelseVM.getObject().sakErSatt()));
         sakValgt.add(new Label("valgtSaksDatoFormatert"));
         sakValgt.add(new Label("valgtSak.temaNavn"));
-        sakValgt.add(new Label("valgtSak.saksId"));
+        sakValgt.add(new Label("valgtSak.saksIdVisning"));
 
         final VelgSakPanel velgSakPanel = new VelgSakPanel("velgSak", fnr, henvendelseVM);
 

@@ -15,12 +15,23 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
     Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
     Modig.shortcutListener.on({alt: true, keyCode: 71}, openGosys);  // Alt+g
+    Modig.shortcutListener.on({alt: true, keyCode: 80}, openArenaPersonmappe);  // Alt+p
+    Modig.shortcutListener.on({alt: true, keyCode: 89}, openArenaUtbetalinger);  // Alt+y
+    Modig.shortcutListener.on({alt: true, keyCode: 87}, openSkrivestotte);  // Alt+w
+    Modig.shortcutListener.on({alt: true, keyCode: 81}, openInnboksSok);  // Alt+q
 
     addPrintEventListener();
 
     $('body').on('click', '.lamell .lamellhode > a', function () {
         if ($('.main > .personsok').is(':visible')) {
             toggleAvansertSok();
+        }
+    });
+
+    // Åpner for bruk av hotkey mens man skriver
+    $('.dialogpanel').on('keydown', '.expandingtextarea', function (event) {
+        if (event.altKey && event.keyCode === 87 /* alt + w */) {
+            openSkrivestotte();
         }
     });
 
@@ -76,6 +87,22 @@ function closeLamellHead() {
 
 function openGosys() {
     $('.hiddenGosysLenkePanel').click();
+}
+
+function openArenaPersonmappe() {
+    $('.hiddenArenaPersonmappeLenkePanel').click();
+}
+
+function openArenaUtbetalinger() {
+    $('.hiddenArenaUtbetalingLenkePanel').click();
+}
+
+function openSkrivestotte() {
+    $('.skrivestotteToggle').click();
+}
+
+function openInnboksSok() {
+    $('.innboksSokToggle').click();
 }
 
 function closeResetPerson() {
@@ -139,7 +166,7 @@ function createTabHandler(application) {
     var sessionStorageId = application + ".tabGuid";
     var isReloadingId = application + ".reloading";
     var greyBackground = '<div class="wicket-mask-dark" style="z-index: 20000; background-image: none; position: absolute; top: 0px; left: 0px;"></div>';
-    var modalDialog = '<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;"><form><div class="w_content_1" ><div class="w_caption" id="_wicket_window_1"><a class="w_close" role="button" id="closeModalButton" style="z-index:1" href="#"></a></div><div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 300px;"><div id="content5c"><section class="bekreft-dialog"><h1 class="robust-ikon-hjelp-strek">Du har allerede et vindu med ModiaBrukerDialog åpent. Hvis du fortsetter i dette vinduet så vil du miste ulagret arbeide i det andre vinduet. Ønsker du å fortsette med dette vinduet?</h1><ul><li><submit class="knapp-stor" id="confirmCloseTab" >Avbryt, jeg vil ikke miste ulagret arbeide</submit></li><li><a id="confirmActivateTab" href="#">Fortsett med dette vinduet</a></li></ul></section></div></div></div></form></div>';
+    var modalDialog = '<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;"><form><div class="w_content_1" ><div class="w_caption" id="_wicket_window_1"><a class="w_close" role="button" id="closeModalButton" style="z-index:1" href="#"></a></div><div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 300px;"><div id="content5c"><section class="bekreft-dialog"><h1 class="medium-ikon-hjelp-strek">Du har allerede et vindu med Modia åpent. Hvis du fortsetter i dette vinduet vil du miste ulagret arbeide i det andre vinduet. Ønsker du å fortsette med dette vinduet?</h1><ul><li><submit class="knapp-stor" id="confirmCloseTab" >Avbryt, jeg vil ikke miste ulagret arbeide</submit></li><li><a id="confirmActivateTab" href="#">Fortsett med dette vinduet</a></li></ul></section></div></div></div></form></div>';
 
     /**
      * Generates a GUID string, according to RFC4122 standards.

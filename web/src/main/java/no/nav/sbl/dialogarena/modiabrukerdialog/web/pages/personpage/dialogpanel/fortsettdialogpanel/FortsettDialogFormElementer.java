@@ -2,13 +2,18 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -22,27 +27,52 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class FortsettDialogFormElementer extends WebMarkupContainer {
-    public FortsettDialogFormElementer(String id, String fnr, final IModel<HenvendelseVM> model) {
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    private final GrunnInfo grunnInfo;
+    private final EnhancedTextArea tekstfelt;
+    private final ReactComponentPanel skrivestotte;
+
+    public FortsettDialogFormElementer(String id, GrunnInfo grunnInfo, final IModel<HenvendelseVM> model) {
         super(id, model);
+
+        this.grunnInfo = grunnInfo;
 
         final List<Component> avhengerAvKanlOgDelMedBrukerValg = new ArrayList<>();
 
-        add(new EnhancedTextArea("tekstfelt", model,
+        tekstfelt = new EnhancedTextArea("tekstfelt", model,
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(150)
                         .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder")
-        ));
+        );
+        add(tekstfelt);
+
+        skrivestotte = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", skrivestotteProps());
+        add(skrivestotte);
+
+        add(new AjaxLink("skrivestotteToggler") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                skrivestotte.callFunction(target, "vis");
+            }
+        });
 
         final RadioGroup<Kanal> kanalRadioGroup = new RadioGroup<>("kanal");
         kanalRadioGroup.setRequired(true);
@@ -84,7 +114,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         kanalbeskrivelse.setOutputMarkupId(true);
         add(kanalbeskrivelse);
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", fnr, model);
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model);
         journalforingsPanel.add(visibleIf(both(brukerKanSvare.getModel()).and(not(model.getObject().traadJournalfort()))));
         add(journalforingsPanel);
 
@@ -118,6 +148,22 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
             brukerKanSvare.getModel().setObject(false);
             brukerKanSvare.modelChanged();
         }
+    }
+
+    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
+    public void oppdaterReferatVM(AjaxRequestTarget target) {
+        skrivestotte.updateState(target, skrivestotteProps());
+        target.add(skrivestotte);
+    }
+
+    private Map<String, Object> skrivestotteProps() {
+        HashMap<String, Object> skrivestotteProps = new HashMap<>();
+        skrivestotteProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
+        skrivestotteProps.put("autofullfor", grunnInfo);
+        if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
+            skrivestotteProps.put("knagger", asList("ks"));
+        }
+        return skrivestotteProps;
     }
 
     @Override

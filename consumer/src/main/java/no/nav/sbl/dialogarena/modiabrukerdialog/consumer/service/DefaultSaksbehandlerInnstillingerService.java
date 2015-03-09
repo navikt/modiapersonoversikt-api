@@ -17,6 +17,10 @@ public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerIn
     @Inject
     private AnsattService ansattService;
 
+    public static String saksbehandlerInnstillingerCookieId() {
+        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
+    }
+
     public String getSaksbehandlerValgtEnhet() {
         List<String> ansattEnhetsIdListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
         String enhetId = ansattEnhetsIdListe.get(0);
@@ -30,6 +34,7 @@ public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerIn
     }
 
     private String hentEnhetFraCookie(List<String> ansattEnhetsIdListe, String enhetId) {
+
         String cookieEnhetId = new CookieUtils().load(saksbehandlerInnstillingerCookieId());
         boolean saksbehanderHarTilgangTilEnhet = ansattEnhetsIdListe.contains(cookieEnhetId);
         return saksbehanderHarTilgangTilEnhet ? cookieEnhetId : enhetId;
@@ -63,10 +68,6 @@ public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerIn
 
     private String saksbehandlerInnstillingerTimeoutCookieId() {
         return "saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid();
-    }
-
-    private String saksbehandlerInnstillingerCookieId() {
-        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
     }
 }
 

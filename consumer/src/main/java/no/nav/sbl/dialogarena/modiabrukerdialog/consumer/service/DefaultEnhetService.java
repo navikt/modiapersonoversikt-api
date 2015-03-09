@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSFinnNAVEnhetRequest;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.FinnNAVEnhetFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSGeneriskMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
 
@@ -24,6 +27,7 @@ public class DefaultEnhetService implements EnhetService {
         EN, FYLKE, SPESEN, ENGR, GR
     }
 
+    @Override
     public List<AnsattEnhet> hentAlleEnheter() {
         List<AnsattEnhet> enheter = new ArrayList<>();
 
@@ -34,6 +38,17 @@ public class DefaultEnhetService implements EnhetService {
         enheter.addAll(finnEnheterMedType(EnhetType.GR));
 
         return on(enheter).collect(ENHET_ID_STIGENDE);
+    }
+
+    @Override
+    public AnsattEnhet hentEnhet(String enhetId) {
+        try {
+            ASBOGOSYSNavEnhet asbogosysNavEnhet = new ASBOGOSYSNavEnhet();
+            asbogosysNavEnhet.setEnhetsId(enhetId);
+            return TIL_ANSATTENHET.transform(enhetWS.hentNAVEnhet(asbogosysNavEnhet));
+        } catch (HentNAVEnhetFaultGOSYSGeneriskMsg | HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private List<AnsattEnhet> finnEnheterMedType(EnhetType enhetType) {
