@@ -23,7 +23,7 @@ module.exports = React.createClass({
         }
 
         return (
-            <div {...this.props} className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.henvendelse)}>
+            <div className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.henvendelse)}>
                 <input id={"melding" + this.props.henvendelse.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={"melding" + this.props.henvendelse.key} className={cls}>
                     <header>

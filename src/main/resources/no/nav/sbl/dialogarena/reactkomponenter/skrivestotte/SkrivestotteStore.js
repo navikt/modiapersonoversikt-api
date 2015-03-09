@@ -1,81 +1,68 @@
 var Utils = require('utils');
+var Store = require('./../store');
 
-var Store = function (state) {
-    this.listeners = [];
-    this.state = state;
+var SkrivestotteStore = function () {
+    Store.apply(this, arguments);
     if(this.state.tekster.length > 0){
         this.state.valgtTekst = this.state.tekster[0];
     }
 };
+SkrivestotteStore.prototype = $.extend({}, Store.prototype, SkrivestotteStore.prototype);
 
-Store.prototype.addListener = function (listener) {
-    this.listeners.push(listener);
-};
-
-Store.prototype.removeListener = function (listener) {
-    var nyeListeners = this.listeners.slice(0);
-    var index = nyeListeners.indexOf(listener);
-    this.listeners.splice(index, 1);
-};
-
-Store.prototype.getState = function () {
-    return this.state;
-};
-
-Store.prototype.tekstChanged = function (tekst) {
+SkrivestotteStore.prototype.tekstChanged = function (tekst) {
     this.state.valgtTekst = tekst;
-    fireUpdate(this.listeners);
+    this.fireUpdate(this.listeners);
 };
 
-Store.prototype.leggTilKnagg = function (knagg) {
+SkrivestotteStore.prototype.leggTilKnagg = function (knagg) {
     this.state.knagger = this.state.knagger || [];
     this.state.knagger.push(knagg);
 
     hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
 
-    fireUpdate(this.listeners);
+    this.fireUpdate(this.listeners);
 };
 
-Store.prototype.slettKnagg = function (knagg) {
+SkrivestotteStore.prototype.slettKnagg = function (knagg) {
     var nyeKnagger = this.state.knagger.slice(0);
     var index = nyeKnagger.indexOf(knagg);
     this.state.knagger.splice(index, 1);
 
     hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
 
-    fireUpdate(this.listeners);
+    this.fireUpdate(this.listeners);
 };
 
-Store.prototype.setLocale = function(locale){
+SkrivestotteStore.prototype.setLocale = function(locale){
     this.state.valgtLocale = locale;
-    fireUpdate(this.listeners);
+    this.fireUpdate(this.listeners);
 };
 
-Store.prototype.onChange = function (data) {
+SkrivestotteStore.prototype.onChange = function (data) {
     this.state.fritekst = data.fritekst;
     this.state.knagger = data.knagger;
 
     hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
 
-    fireUpdate(this.listeners);
+    this.fireUpdate(this.listeners);
 };
 
-Store.prototype.onKeyDown = function (event) {
+SkrivestotteStore.prototype.onKeyDown = function (event) {
     switch (event.keyCode) {
         case 38: /* pil opp */
             event.preventDefault();
             this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
-            fireUpdate(this.listeners);
+            this.fireUpdate(this.listeners);
             break;
         case 40: /* pil ned */
             event.preventDefault();
             this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
-            fireUpdate(this.listeners);
+            this.fireUpdate(this.listeners);
             break;
     }
 };
 
-Store.prototype.submit = function(onSubmit, event){
+SkrivestotteStore.prototype.submit = function(onSubmit, event){
     event.preventDefault();
     var $tekstfelt = $('#' + this.state.tekstfeltId);
     var eksisterendeTekst = $tekstfelt.focus().val();
@@ -88,12 +75,6 @@ Store.prototype.submit = function(onSubmit, event){
 
     onSubmit();
 };
-
-function fireUpdate(listeners){
-    listeners.forEach(function(listener){
-        listener();
-    });
-}
 
 function hentTekst(hentElement, elementer, valgtElement) {
     for (var i = 0; i < elementer.length; i++) {
@@ -116,7 +97,7 @@ var hentSokeresultater =
         sok(fritekst, knagger).done(function (resultat) {
             this.state.tekster = resultat;
             this.state.valgtTekst = resultat[0] || {};
-            fireUpdate(this.listeners);
+            this.fireUpdate(this.listeners);
         }.bind(this))
     }, 150);
 
@@ -156,4 +137,4 @@ function autofullfor(tekst, autofullforMap) {
     });
 }
 
-module.exports = Store;
+module.exports = SkrivestotteStore;

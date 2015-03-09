@@ -5,7 +5,7 @@ var Utils = require('utils');
 var TekstForhandsvisning = require('./tekstforhandsvisning');
 var TekstListeKomponent = require('./tekstlistekomponent');
 var KnaggInput = require('knagginput');
-var Store = require('./Store');
+var SkrivestotteStore = require('./SkrivestotteStore');
 
 var Skrivestotte = React.createClass({
     vis: function(){
@@ -15,7 +15,7 @@ var Skrivestotte = React.createClass({
         this.refs.modal.close();
     },
     getInitialState : function () {
-        this.store = new Store($.extend({},{
+        this.store = new SkrivestotteStore($.extend({},{
             knagger : [],
             fritekst: "",
             tekster: [],
