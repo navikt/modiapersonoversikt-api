@@ -5,41 +5,34 @@
     border-radius: 10px;
     padding: 0 5px;
   }
-
-  .sok-element input[type=radio]:checked + label {
-    em {
-      background-color: #87897d;
+  .sok-visning {
+    .sok-liste .sok-element {
+      border: none;
     }
-  }
-
-  .sok-element label {
-    color: #333;
-
-    &:not(.valgt) {
-      cursor: pointer;
+    .sok-liste .sok-element .meldingsforhandsvisning {
+      overflow: visible;
     }
-    header {
+    .sok-liste .sok-element input[type=radio] + label {
+      color: #3e3832;
+      padding: 16px 30px 16px 30px;
 
-      .opprettet {
-        font-family: arial, helvetica, clean, sans-serif;
-        font-size: 0.85rem;
-        margin: 0.2em 0;
-      }
-      h1 {
-        font-weight: bold;
-        margin: 0;
-        font-size: 1.2em;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+      p {
+        line-height: initial !important;
+
+        &.meldingstatus {
+          font-weight: 600 !important;
+
+          span {
+            font-size: 14px !important;
+            margin-bottom: 0 !important;
+          }
+        }
       }
     }
-    > p {
-      width: 100%;
-      margin: 0;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
+    .sok-liste .sok-element input[type=radio]:checked + label {
+      em {
+        background-color: #87897d;
+      }
     }
   }
 
@@ -47,10 +40,10 @@
     .traadPanel {
       padding: 22px 30px 0 30px;
       overflow: auto;
-      height: 85%;
+      height: 89%;
     }
     .velgPanel {
-      height: 15%;
+      height: 11%;
       text-align: end;
       border-top: 1px solid #ccc;
       padding: 15px;

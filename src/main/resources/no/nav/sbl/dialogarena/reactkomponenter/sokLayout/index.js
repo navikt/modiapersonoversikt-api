@@ -3,7 +3,7 @@ var React = require('react');
 var EnkeltSok = require('./EnkeltSok.js');
 var EnkelVisning = require('./EnkelVisning.js');
 var EnkeltElement = require('./EnkeltElement.js');
-var Utils = require('./Utils.js');
+var Utils = require('utils');
 
 var Soklayout = React.createClass({
     getDefaultProps: function () {

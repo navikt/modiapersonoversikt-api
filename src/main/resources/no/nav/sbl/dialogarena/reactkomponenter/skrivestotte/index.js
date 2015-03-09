@@ -1,17 +1,17 @@
 /** @jsx React.DOM */
 var React = require('react');
 var Modal = require('modal');
-var Utils = require('./utils');
+var Utils = require('utils');
 var TekstForhandsvisning = require('./tekstforhandsvisning');
 var TekstListeKomponent = require('./tekstlistekomponent');
 var KnaggInput = require('knagginput');
-var Store = require('./store');
+var Store = require('./Store');
 
 var Skrivestotte = React.createClass({
-    vis: function () {
+    vis: function(){
         this.refs.modal.open();
     },
-    skjul: function () {
+    skjul: function(){
         this.refs.modal.close();
     },
     getInitialState : function () {

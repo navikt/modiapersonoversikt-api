@@ -1,4 +1,4 @@
-var Utils = require('./utils');
+var Utils = require('utils');
 
 var Store = function (state) {
     this.listeners = [];

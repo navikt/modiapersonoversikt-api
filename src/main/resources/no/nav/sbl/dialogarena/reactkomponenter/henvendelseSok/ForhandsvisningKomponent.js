@@ -3,11 +3,11 @@ var Melding = require('./Melding');
 
 module.exports = React.createClass({
     render: function(){
-        if (!this.props.element.hasOwnProperty('meldinger')){
+        if (!this.props.henvendelse.hasOwnProperty('meldinger')){
             return null;
         }
 
-        var meldinger = this.props.element.meldinger.map(function(melding){
+        var meldinger = this.props.henvendelse.meldinger.map(function(melding){
             return <Melding melding={melding} />
         });
 

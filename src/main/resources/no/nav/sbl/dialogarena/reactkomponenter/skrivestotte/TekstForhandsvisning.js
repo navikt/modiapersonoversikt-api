@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
 
-var Utils = require('./Utils');
+var Utils = require('utils');
 
 var LocaleSelect = require('./LocaleSelect');
 

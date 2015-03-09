@@ -5,27 +5,45 @@ moment.locale('nb');
 
 module.exports = React.createClass({
     statics: {
-        lagAriaLabel: function (element) {
-            return element.temagruppe;
+        lagAriaLabel: function (henvendelse) {
+            return henvendelse.temagruppe;
         }
     },
     render: function () {
-        var cls = this.props.erValgt ? "melding valgt" : "melding";
-        var dato = this.props.element.datoInMillis || new Date();
+        var erValgt = erValgtTekst(this.props.henvendelse, this.props.valgtHenvendelse);
+        var cls = erValgt ? "meldingsforhandsvisning valgt" : "meldingsforhandsvisning";
+        var henvendelse = this.props.henvendelse;
+        var melding = henvendelse.meldinger[0];
+        var dato = henvendelse.datoInMillis || new Date();
         dato = moment(dato).format('LLL');
 
+        var datoString = dato;
+        if (!melding.erInngaaende) {
+            datoString += " - " + melding.fraBruker;
+        }
+
         return (
-            <div {...this.props}>
-                <input id={"melding" + this.props.element.key} name="tekstListeRadio" type="radio" readOnly checked={this.props.erValgt} />
-                <label htmlFor={"melding" + this.props.element.key} className={cls}>
+            <div {...this.props} className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.henvendelse)}>
+                <input id={"melding" + this.props.henvendelse.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
+                <label htmlFor={"melding" + this.props.henvendelse.key} className={cls}>
                     <header>
-                        <p className={'meldingstatus ' + this.props.element.statusKlasse}>{this.props.element.statusTekst}</p>
-                        <p className="opprettet">{dato}</p>
-                        <h1 dangerouslySetInnerHTML={{__html: this.props.element.temagruppe}}></h1>
+                        <p>{datoString}</p>
+                        <div className={this.props.henvendelse.statusKlasse}></div>
+                        <p className={'meldingstatus'}>{this.props.henvendelse.statusTekst}, {this.props.henvendelse.temagruppe}</p>
                     </header>
-                    <p dangerouslySetInnerHTML={{__html: this.props.element.innhold}}></p>
+                    <p className="fritekst" dangerouslySetInnerHTML={{__html: this.props.henvendelse.innhold}}></p>
                 </label>
             </div>
         );
     }
 });
+
+function tekstChangedProxy(store, henvendelse) {
+    return function () {
+        store.henvendelseChanged(henvendelse);
+    };
+}
+
+function erValgtTekst(henvendelse, valgtHenvendelse) {
+    return henvendelse === valgtHenvendelse;
+}

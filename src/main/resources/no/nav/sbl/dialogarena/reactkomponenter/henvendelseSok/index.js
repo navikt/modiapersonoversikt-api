@@ -1,64 +1,83 @@
 var React = require('react');
 var Modal = require('modal');
-var Soklayout = require('sokLayout');
-
-var SokKomponent = require('./SokKomponent');
 var ListevisningKomponent = require('./ListevisningKomponent');
 var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
+var Utils = require('utils');
+var Store = require('./Store');
 
 module.exports = React.createClass({
-    componentWillMount: function () {
-        $.get('/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser');
-    },
-    getInitialState: function () {
-        return {traadRef: {}}
-    },
-    oppdaterTraadRef: function (traadRef) {
-        this.setState({traadRef: traadRef});
-    },
     vis: function () {
         this.refs.modal.open();
     },
     skjul: function () {
         this.refs.modal.close();
     },
-    submit: function (valgtTraad) {
-        $('#' + this.state.traadRef[valgtTraad.traadId]).click();
-        this.skjul();
+    oppdaterTraadRefs: function (traadRefs) {
+        this.store.oppdaterTraadRefs(traadRefs);
+    },
+
+    getInitialState: function () {
+        this.store = new Store($.extend({}, {
+            fritekst: "",
+            henvendelser: [],
+            valgtHenvendelse: {},
+            traadMarkupIds: {}
+        }, this.props));
+        return this.store.getState();
+    },
+    componentDidMount: function () {
+        this.store.addListener(this.storeChanged);
+        this.store.onChange({target: {value: ''}});
+    },
+    componentDidUnmount: function () {
+        this.store.removeListener(this.storeChanged);
+    },
+    keyDownHandler: function (event) {
+        if (event.keyCode === 13) {
+            this.store.submit(this.skjul, event);
+        }
+    },
+    componentWillMount: function () {
+        $.get('/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser');
     },
     render: function () {
+        var listePanelId = Utils.generateId('sok-liste-');
+        var forhandsvisningsPanelId = Utils.generateId('sok-forhandsvisningsPanelId-');
+        var tekstlistekomponenter = this.state.henvendelser.map(function (henvendelse) {
+            return <ListevisningKomponent
+                henvendelse={henvendelse}
+                valgtHenvendelse={this.state.valgtHenvendelse}
+                store={this.store}
+            />
+        }.bind(this));
+
         return (
             <Modal ref="modal">
-                <Soklayout {...this.props} sok={sok.bind(this, this.props.fnr)} submit={this.submit}
-                    containerClassName="henvendelse-sok"
-                    sokKomponent={SokKomponent}
-                    listeelementKomponent={ListevisningKomponent}
-                    visningsKomponent={ForhandsvisningKomponent}
-                    valgtElement={{innhold: {nb_NO: ''}}}
-                />
+                <form className={"sok-layout henvendelse-sok"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
+                    <div tabIndex="-1" className="sok-container">
+                        <input
+                            type="text"
+                            placeholder="Søk"
+                            value={this.state.fritekst}
+                            onChange={this.store.onChange.bind(this.store)}
+                            onKeyDown={this.store.onKeyDown.bind(this.store)}
+                            aria-controls={listePanelId}
+                        />
+                    </div>
+                    <div className="sok-visning">
+                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={listePanelId} aria-live="assertive" aria-atomic="true">
+                        {tekstlistekomponenter}
+                        </div>
+                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
+                            <ForhandsvisningKomponent henvendelse={this.state.valgtHenvendelse} />
+                        </div>
+                    </div>
+                    <input type="submit" value="submit" className="hidden" />
+                </form>
             </Modal>
         );
+    },
+    storeChanged: function(){
+        this.setState(this.store.getState());
     }
 });
-
-function sok(fnr, query) {
-    return hentFraRestAPI(fnr, query)
-        .done(function (traader) {
-            traader.forEach(function (traad) {
-                traad.key = traad.traadId;
-                traad.datoInMillis = traad.dato.millis;
-                traad.innhold = traad.meldinger[0].fritekst;
-                traad.meldinger.forEach(function (melding) {
-                    melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
-                    melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.eksternAktor;
-                });
-            });
-        });
-}
-function hentFraRestAPI(fnr, query) {
-    if (typeof query !== "string") {
-        query = "";
-    }
-    var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
-    return $.get(url);
-}

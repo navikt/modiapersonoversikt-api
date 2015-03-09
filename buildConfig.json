@@ -7,6 +7,7 @@
   "targetPath": "./target/classes/no/nav/sbl/dialogarena/reactkomponenter/build/",
   "navReact": "React",
   "components": [
+    "utils",
     "skrivestotte",
     "knagginput",
     "modal",

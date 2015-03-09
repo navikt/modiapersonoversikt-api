@@ -1,3 +1,6 @@
+@width: 1100px;
+@height: 700px;
+
 body.modal-open {
   height: 100% !important;
   overflow: hidden !important;
@@ -13,15 +16,15 @@ body.modal-open {
     z-index: 1011;
   }
   .centering {
-    width: 900px;
+    width: @width;
     margin: 0 auto;
 
     .content {
       position: fixed;
-      width: 900px;
+      width: @width;
       z-index: 1012;
       top: 20%;
-      height: 500px;
+      height: @height;
       background-color: white;
       box-shadow: #000000 0 0 60px;
 
