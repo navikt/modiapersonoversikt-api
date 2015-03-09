@@ -77,17 +77,15 @@ public class OppgaveBehandlingService {
         }
     }
 
-    public void ferdigstillOppgaveIGsak(Optional<String> oppgaveId) {
-        if (oppgaveId.isSome()) {
-            try {
-                WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId.get())).getOppgave();
-                oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
-                lagreOppgaveIGsak(oppgave);
+    public void ferdigstillOppgaveIGsak(String oppgaveId) {
+        try {
+            WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
+            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
+            lagreOppgaveIGsak(oppgave);
 
-                oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(ENHET));
-            } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
-                throw new RuntimeException(e);
-            }
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(ENHET));
+        } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -176,7 +174,6 @@ public class OppgaveBehandlingService {
         return on(oppgaveWS.finnOppgaveListe(
                 new WSFinnOppgaveListeRequest()
                         .withFilter(new WSFinnOppgaveListeFilter()
-                                .withOpprettetEnhetId(enhetForPlukk(temagruppe))
                                 .withOppgavetypeKodeListe("SPM_OG_SVR")
                                 .withUnderkategoriKode(underkategoriKode(temagruppe))
                                 .withMaxAntallSvar(0)

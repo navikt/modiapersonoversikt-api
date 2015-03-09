@@ -5,14 +5,10 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.*;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
+import no.nav.tjeneste.virksomhet.sak.v1.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
@@ -28,9 +24,11 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
 
 public class SakerServiceImpl implements SakerService {
@@ -72,12 +70,12 @@ public class SakerServiceImpl implements SakerService {
     @Override
     public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws Exception {
         if (!sak.finnesIGsak) {
-            sak.saksId = opprettSak(fnr, sak);
+            sak.saksId = optional(opprettSak(fnr, sak));
         }
 
         behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
                 behandlingskjede,
-                sak.saksId,
+                sak.saksId.get(),
                 sak.temaKode,
                 saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
     }
@@ -89,7 +87,7 @@ public class SakerServiceImpl implements SakerService {
                             .withGjelderBrukerListe(new WSPerson().withIdent(fnr))
                             .withFagomraade(new WSFagomraader().withValue(sak.temaKode))
                             .withFagsystem(new WSFagsystemer().withValue(sak.fagsystemKode))
-                            .withFagsystemSakId(sak.saksId)
+                            .withFagsystemSakId(sak.saksId.getOrElse(null))
                             .withSakstype(new WSSakstyper().withValue(sak.sakstype)));
 
             return behandleSakWS.opprettSak(request).getSakId();
@@ -157,7 +155,6 @@ public class SakerServiceImpl implements SakerService {
         sak.finnesIGsak = false;
         sak.fagsystemKode = GODKJENT_FAGSYSTEM_FOR_GENERELLE;
         sak.sakstype = SAKSTYPE_GENERELL;
-        sak.saksId = "";
         sak.opprettetDato = now();
         return sak;
     }
@@ -166,7 +163,6 @@ public class SakerServiceImpl implements SakerService {
         WSHentSakListeRequest request = new WSHentSakListeRequest()
                 .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker(fnr))
                 .withFagomradeKode("OPP");
-
         try {
             return on(arbeidOgAktivitet.hentSakListe(request).getSakListe())
                     .head()
@@ -174,7 +170,8 @@ public class SakerServiceImpl implements SakerService {
                         @Override
                         public Sak transform(no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak arenaSak) {
                             Sak sak = new Sak();
-                            sak.saksId = arenaSak.getSaksId();
+                            sak.saksId = optional(arenaSak.getSaksId());
+                            sak.fagsystemSaksId = optional(arenaSak.getSaksId());
                             sak.fagsystemKode = "AO01";
                             sak.sakstype = arenaSak.getSakstypeKode().getKode();
                             sak.temaKode = arenaSak.getFagomradeKode().getKode();
@@ -186,7 +183,6 @@ public class SakerServiceImpl implements SakerService {
         } catch (Exception e) {
             return none();
         }
-
     }
 
     static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = new Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak>() {
@@ -194,7 +190,8 @@ public class SakerServiceImpl implements SakerService {
         public Sak transform(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak wsSak) {
             Sak sak = new Sak();
             sak.opprettetDato = wsSak.getOpprettelsetidspunkt();
-            sak.saksId = wsSak.getSakId();
+            sak.saksId = optional(wsSak.getSakId());
+            sak.fagsystemSaksId = isBlank(wsSak.getFagsystemSakId()) ? Optional.<String>none() : optional(wsSak.getFagsystemSakId());
             sak.temaKode = wsSak.getFagomraade().getValue();
             sak.sakstype = wsSak.getSakstype().getValue();
             sak.fagsystemKode = wsSak.getFagsystem().getValue();

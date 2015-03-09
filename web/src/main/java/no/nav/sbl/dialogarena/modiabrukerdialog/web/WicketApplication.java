@@ -197,6 +197,7 @@ public class WicketApplication extends WebApplication {
                         Innboks.MELDINGER_JS
                 )
                 .withModules(ReactResources.SKRIVESTOTTE)
+                .withModules(ReactResources.HENVENDELSE_SOK)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }

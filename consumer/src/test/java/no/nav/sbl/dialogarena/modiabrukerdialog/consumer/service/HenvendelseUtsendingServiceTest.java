@@ -1,17 +1,21 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
+import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,21 +30,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_TELEFON;
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {HenvendelseTestConfig.class})
+@ContextConfiguration(classes = {HenvendelseTestConfig.class, OppgaveTestConfig.class})
 public class HenvendelseUtsendingServiceTest {
 
     private final static String FNR = "fnr";
@@ -57,6 +60,23 @@ public class HenvendelseUtsendingServiceTest {
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
     @Captor
     ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
+    @Captor
+    ArgumentCaptor<Sak> sakArgumentCaptor;
+    @Captor
+    ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Mock
+    public SakerService sakerService;
+    @Mock
+    public OppgaveBehandlingService oppgaveBehandlingService;
+    @Mock
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Mock
+    public AnsattService ansattWS;
+    @Mock
+    public Ruting ruting;
+    @Mock
+    public PropertyResolver propertyResolver;
 
     @Inject
     @Named("pep")
@@ -91,19 +111,55 @@ public class HenvendelseUtsendingServiceTest {
     }
 
     @Test
-    public void skalSendeSvar() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        henvendelseUtsendingService.sendHenvendelse(new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG), Optional.<String>none());
+    public void skalSendeSvar() throws Exception {
+        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SVAR_SKRIFTLIG.name()));
     }
 
     @Test
-    public void skalSendeReferat() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        henvendelseUtsendingService.sendHenvendelse(new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE), Optional.<String>none());
+    public void skalSendeReferat() throws Exception {
+        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.REFERAT_OPPMOTE.name()));
+    }
+
+    @Test
+    public void skalSendeSporsmal() throws Exception {
+        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+
+        verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
+        assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name()));
+    }
+
+    @Test
+    public void skalJournalforeHenvendelseDersomSakErSatt() throws Exception {
+        Sak sak = new Sak();
+        sak.saksId = optional("sakid");
+        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), optional(sak));
+
+        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture());
+
+        Sak sendtSak = sakArgumentCaptor.getValue();
+        assertThat(sendtSak, is(sak));
+    }
+
+    @Test
+    public void skalFerdigstilleOppgaveDersomDenneErSatt() throws Exception {
+        String oppgaveId = "oppgaveId";
+        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE);
+        henvendelseUtsendingService.sendHenvendelse(melding, optional(oppgaveId), Optional.<Sak>none());
+
+        verify(oppgaveBehandlingService).ferdigstillOppgaveIGsak(stringArgumentCaptor.capture());
+
+        String sendtOppgaveId = stringArgumentCaptor.getValue();
+        assertThat(sendtOppgaveId, is(oppgaveId));
     }
 
     @Test

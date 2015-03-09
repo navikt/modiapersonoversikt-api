@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://appconfig.aura.nav.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://appconfig.aura.nav.no http://maven.adeo.no/xsd/appconfig.xsd">
+
     <name>modiabrukerdialog</name>
+
     <selftestPagePath>/modiabrukerdialog/internal/selftest</selftestPagePath>
+
     <artifacts>
         <ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee"/>
     </artifacts>
+
     <security serviceUserResourceAlias="srvModiabrukerdialog">
         <logins>
             <spnego/>
         </logins>
     </security>
+
     <loadBalancer>
         <contextRoot>modiabrukerdialog</contextRoot>
         <lbHealthMonitor type="HTTPS" isAliveUrl="internal/isAlive" interval="5" timeout="16"/>
-        <lbPool slowRampTime="30" loadBalancingMethod="LEAST_CONNECTIONS" connectionLimit="900"/>
+        <lbPool slowRampTime="30" loadBalancingMethod="LEAST_CONNECTIONS" connectionLimit="500"/>
     </loadBalancer>
+
     <resources>
         <!-- Felles -->
         <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint"/>
@@ -49,9 +55,11 @@
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
+        <emailAddress alias="modiabrukerdialog.standardtekster.epost" mapToProperty="modiabrukerdialog.standardtekster.epost"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
     </resources>
+
 </application>
