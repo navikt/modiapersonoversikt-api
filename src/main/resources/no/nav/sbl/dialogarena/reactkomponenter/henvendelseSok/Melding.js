@@ -7,10 +7,11 @@ moment.locale('nb');
 module.exports = React.createClass({
     render: function(){
         var melding = this.props.melding;
-        var clsExt = melding.erInngaaende ? 'ingaaende' : 'utgaaende';
+        var clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
         var cls = 'melding clearfix ' + clsExt;
         var src = '/modiabrukerdialog/img/' + (melding.erInngaaende ? 'personligoppmote.svg' : 'nav-logo.svg');
         var altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
+        var meldingsStatusTekst = melding.statusTekst + ", " + melding.temagruppeNavn;
 
         var paragrafer = melding.fritekst.split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
@@ -21,9 +22,10 @@ module.exports = React.createClass({
             <div className={cls}>
                 <img className={'avsenderBilde '+clsExt} src={src} alt={altTekst} />
                 <div className="meldingData">
-                    <h2 dangerouslySetInnerHTML={{__html: melding.temagruppeNavn}}></h2>
-                    <h3>{melding.statusTekst}</h3>
-                    <h3>{dato} - {melding.fraBruker}</h3>
+                    <p>{dato} - {melding.fraBruker}</p>
+                    <p className="meldingstatus">
+                        <span>{meldingsStatusTekst}</span>
+                    </p>
                     <div className="fritekst">{paragrafer}</div>
                 </div>
             </div>
