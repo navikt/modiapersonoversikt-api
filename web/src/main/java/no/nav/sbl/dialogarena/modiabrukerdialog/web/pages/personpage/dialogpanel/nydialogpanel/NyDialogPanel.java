@@ -6,21 +6,14 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurat
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
-import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -43,9 +36,7 @@ import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -58,8 +49,12 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.Brukerprofil.BRUKERPROFIL_OPPDATERT;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON_OG_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_AVBRUTT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -79,8 +74,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final EpostVarselPanel epostVarselPanel;
     private final FeedbackPanel feedbackPanel;
     private final AjaxButton sendKnapp;
-    private final EnhancedTextArea tekstfelt;
-    private final ReactComponentPanel skrivestotte;
+    private final SkrivestottePanel skrivestottePanel;
 
     public NyDialogPanel(String id, GrunnInfo grunnInfo) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
@@ -117,7 +111,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         kanalbeskrivelse.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
         form.add(kanalbeskrivelse);
 
-        tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
+        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
@@ -127,13 +121,13 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
         form.add(tekstfelt, tekstfeltLabel);
 
-        skrivestotte = new ReactComponentPanel("skrivestotteContainer", "Skrivestotte", skrivestotteProps());
-        form.add(skrivestotte);
+        skrivestottePanel = new SkrivestottePanel("skrivestotteContainer", grunnInfo, tekstfelt);
+        form.add(skrivestottePanel);
 
         form.add(new AjaxLink("skrivestotteToggler") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                skrivestotte.callFunction(target, "vis");
+                skrivestottePanel.vis(target);
             }
         });
 
@@ -217,7 +211,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
     public void oppdaterReferatVM(AjaxRequestTarget target) {
         settOppModellMedDefaultVerdier();
-        skrivestotte.updateState(target, skrivestotteProps());
+        skrivestottePanel.oppdater(target);
         target.add(this);
     }
 
@@ -233,16 +227,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
             getModelObject().kanal = TELEFON;
         }
-    }
-
-    private Map<String, Object> skrivestotteProps() {
-        HashMap<String, Object> skrivestotteProps = new HashMap<>();
-        skrivestotteProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
-        skrivestotteProps.put("autofullfor", grunnInfo);
-        if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
-            skrivestotteProps.put("knagger", asList("ks"));
-        }
-        return skrivestotteProps;
     }
 
     private RadioGroup<Kanal> lagKanalVelger(IModel<Modus> modusModel) {
