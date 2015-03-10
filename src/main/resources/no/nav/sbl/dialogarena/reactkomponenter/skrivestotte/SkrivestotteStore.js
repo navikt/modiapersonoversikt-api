@@ -1,5 +1,5 @@
 var Utils = require('utils');
-var Store = require('./../store');
+var Store = require('./../Store');
 
 var SkrivestotteStore = function () {
     Store.apply(this, arguments);
