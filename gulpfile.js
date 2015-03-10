@@ -25,8 +25,6 @@ var browserifyTask = function (isDev, component) {
     bundler.transform(reactify);
     bundler.transform(globalShim.configure(createShimConfigurationFor(component)));
 
-    bundler.ignore('j')
-
     if (component.name !== config.navReact) {
         bundler.ignore('react');
         bundler.ignore('react');
@@ -142,8 +140,6 @@ gulp.task('default', function () {
         src: config.srcPath + '**/*.less',
         dest: config.targetPath
     });
-
-    //test();
 });
 
 gulp.task('test', function () {

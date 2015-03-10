@@ -12,7 +12,7 @@ module.exports = function (config) {
             '**/tests/*.js': ['browserify', 'coverage']
         },
 
-        reporters: ['progress', 'junit', 'remote', 'coverage'],
+        reporters: ['progress', 'junit', 'coverage'],
 
         colors: true,
 
@@ -24,11 +24,10 @@ module.exports = function (config) {
         captureTimeout: 60000,
 
         plugins: [
+            'karma-bro',
             'karma-phantomjs-launcher',
             'karma-chrome-launcher',
             'karma-junit-reporter',
-            'karma-remote-reporter',
-            'karma-bro',
             'karma-coverage',
             'karma-mocha'
         ],
@@ -41,11 +40,6 @@ module.exports = function (config) {
         coverageReporter: {
             type: 'cobertura',
             dir: './target/karma-coverage'
-        },
-        remoteReporter: {
-            host: 'localhost',
-            port: '9876'
-
         },
         junitReporter: {
             outputFile: './target/surefire-reports/TEST-karma.xml',

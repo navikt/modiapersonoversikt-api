@@ -4,7 +4,7 @@ var Portal = require('./ModalPortal.js');
 var Modal = React.createClass({
     getInitialState: function () {
         return {
-            isOpen: false
+            isOpen: this.props.isOpen || false
         };
     },
     getDefaultProps: function () {

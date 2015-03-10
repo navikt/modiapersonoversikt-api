@@ -24,7 +24,7 @@ module.exports = React.createClass({
                 <div className="meldingData">
                     <p>{dato} - {melding.fraBruker}</p>
                     <p className="meldingstatus">
-                        <span>{meldingsStatusTekst}</span>
+                        <span dangerouslySetInnerHTML={{__html: meldingsStatusTekst}}></span>
                     </p>
                     <div className="fritekst">{paragrafer}</div>
                 </div>
