@@ -39,7 +39,7 @@ public class SkrivestottePanel extends Panel {
         target.add(skrivestotte);
     }
 
-    public Map<String, Object> skrivestotteProps() {
+    private Map<String, Object> skrivestotteProps() {
         HashMap<String, Object> skrivestotteProps = new HashMap<>();
         skrivestotteProps.put("tekstfeltId", tekstfelt.get("text").getMarkupId());
         skrivestotteProps.put("autofullfor", grunnInfo);
