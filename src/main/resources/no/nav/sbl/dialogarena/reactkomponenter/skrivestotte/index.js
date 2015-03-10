@@ -2,8 +2,8 @@
 var React = require('react');
 var Modal = require('modal');
 var Utils = require('utils');
-var TekstForhandsvisning = require('./tekstforhandsvisning');
-var TekstListeKomponent = require('./tekstlistekomponent');
+var TekstForhandsvisning = require('./TekstForhandsvisning');
+var TekstListeKomponent = require('./TekstListeKomponent');
 var KnaggInput = require('knagginput');
 var SkrivestotteStore = require('./SkrivestotteStore');
 
