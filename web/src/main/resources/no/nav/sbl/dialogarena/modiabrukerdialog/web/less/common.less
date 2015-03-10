@@ -668,75 +668,81 @@ UL.feedbackPanel {
 			}
 		}
 		.tab-info {
-          padding: 30px 0 0 140px;
-          .gosyspersonoversiktLinkIkon {
-            a {
-              color: @blue;
-              }
-          }
-			.info {
-				.barn {
-					display: table;
-					margin-top: 1.5rem;
-					.barnAlder {
-						float: left;
-						text-align: center;
-						margin-right: 15px;
-						min-width: 40px;
-						SPAN {
-							display: block;
-							font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-							&.alderEnhet {
-								font-size: 0.7rem;
-								text-transform: uppercase;
-								letter-spacing: 1px;
-							}
-							&.alder {
-								font-size: 2.5rem;
-								font-weight: 600;
-							}
-						}
-					}
-					UL {
-						display: inherit;
-						list-style: none;
-						padding: 0;
-						margin: 0;
-						font-weight: bold;
-						max-width: 290px;
-						LI:last-child {
-							font-weight: normal;
-							font-size: 0.7rem;
-						}
-					}
-					&.boy {
-						.barnAlder {
-							color: #0fba47;
-						}
-					}
-					&.girl {
-						.barnAlder {
-							.alderEnhet {
-								color: #ff61b3;
-							}
-							.alder {
-								color: #ec288d;
-							}
-						}
-					}
-				}
-				&.foreldre {
-					.notBold {
-						font-weight:normal;
-					}
-					.dodMann {
-						color: #0fba47;
-					}
-					.dodKvinne {
-						color: #ec288d;
-					}
-				}
+		  padding: 30px 0 0 140px;
+		  UL {
+			list-style: none outside none;
+			margin: 0;
+			padding: 0;
+			LI {
+			  padding: 0 0 1.2rem !important;
+			  a {
+				color: @blue;
+			  }
 			}
+		  }
+		  .info {
+			.barn {
+			  display: table;
+			  margin-top: 1.5rem;
+			  .barnAlder {
+				float: left;
+				text-align: center;
+				margin-right: 15px;
+				min-width: 40px;
+				SPAN {
+				  display: block;
+				  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+				  &.alderEnhet {
+					font-size: 0.7rem;
+					text-transform: uppercase;
+					letter-spacing: 1px;
+				  }
+				  &.alder {
+					font-size: 2.5rem;
+					font-weight: 600;
+				  }
+				}
+			  }
+			  UL {
+				display: inherit;
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				font-weight: bold;
+				max-width: 290px;
+				LI:last-child {
+				  font-weight: normal;
+				  font-size: 0.7rem;
+				}
+			  }
+			  &.boy {
+				.barnAlder {
+				  color: #0fba47;
+				}
+			  }
+			  &.girl {
+				.barnAlder {
+				  .alderEnhet {
+					color: #ff61b3;
+				  }
+				  .alder {
+					color: #ec288d;
+				  }
+				}
+			  }
+			}
+			&.foreldre {
+			  .notBold {
+				font-weight: normal;
+			  }
+			  .dodMann {
+				color: #0fba47;
+			  }
+			  .dodKvinne {
+				color: #ec288d;
+			  }
+			}
+		  }
 		}
 	}
 }

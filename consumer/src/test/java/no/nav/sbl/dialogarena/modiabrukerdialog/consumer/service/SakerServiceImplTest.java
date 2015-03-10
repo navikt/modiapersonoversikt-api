@@ -4,6 +4,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakResponse;
 import no.nav.tjeneste.virksomhet.sak.v1.*;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
@@ -43,9 +47,12 @@ public class SakerServiceImplTest {
 
     private static final DateTime FIRE_DAGER_SIDEN = now().minusDays(4);
     private static final String FNR = "fnr";
+    private static final String BEHANDLINGSKJEDEID = "behandlingsKjedeId";
 
     @Mock
     private SakV1 sakV1;
+    @Mock
+    private BehandleSakV1 behandleSak;
     @Mock
     private GsakKodeverk gsakKodeverk;
     @Mock
@@ -54,6 +61,10 @@ public class SakerServiceImplTest {
     private LokaltKodeverk lokaltKodeverk;
     @Mock
     private ArbeidOgAktivitet arbeidOgAktivitet;
+    @Mock
+    private BehandleHenvendelsePortType behandleHenvendelsePortType;
+    @Mock
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @InjectMocks
     private SakerServiceImpl sakerService;
@@ -181,6 +192,28 @@ public class SakerServiceImplTest {
         assertThat(oppfolging.saksliste.get(0).opprettetDato, is(dato.toDateTimeAtStartOfDay()));
         assertThat(oppfolging.saksliste.get(0).fagsystemKode, is("AO01"));
         assertThat(oppfolging.saksliste.get(0).finnesIGsak, is(false));
+    }
+
+    @Test
+    public void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak () throws Exception {
+        Sak sak = new Sak();
+        sak.temaKode = "GEN";
+        sak.finnesIGsak = false;
+        sak.fagsystemKode = GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+        sak.sakstype = SAKSTYPE_GENERELL;
+        sak.opprettetDato = now();
+
+        String saksId = "123";
+        String valgtNavEnhet = "0219";
+
+        WSOpprettSakResponse opprettSakResponse = new WSOpprettSakResponse();
+        opprettSakResponse.setSakId(saksId);
+
+        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(opprettSakResponse);
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtNavEnhet);
+
+        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak);
+        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, saksId, sak.temaKode, valgtNavEnhet);
     }
 
     private static SakerForTema hentSakerForTema(SakerListe sakerListe, final String temakode) {

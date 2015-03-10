@@ -5,6 +5,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.FinnNAVEnhetFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSGeneriskMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,4 +85,18 @@ public class DefaultEnhetServiceTest {
         assertThat(enheter.get(1).enhetId, is(equalTo("2222")));
         assertThat(enheter.get(2).enhetId, is(equalTo("3333")));
     }
+
+    @Test
+    public void skalKunneHenteEnkeltEnhet() throws HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg, HentNAVEnhetFaultGOSYSGeneriskMsg {
+         ASBOGOSYSNavEnhet navEnhet1 = new ASBOGOSYSNavEnhet();
+         navEnhet1.setEnhetsId("0219");
+         navEnhet1.setEnhetsNavn("Nav Bærum");
+
+         when(enhetWS.hentNAVEnhet(any(ASBOGOSYSNavEnhet.class))).thenReturn(navEnhet1);
+
+         AnsattEnhet enhet = defaultEnhetService.hentEnhet("0219");
+
+         assertThat(navEnhet1.getEnhetsId(), is(equalTo(enhet.enhetId)));
+         assertThat(navEnhet1.getEnhetsNavn(), is(equalTo(enhet.enhetNavn)));
+     }
 }

@@ -64,7 +64,7 @@
         <personsok.version>1.0.82</personsok.version>
         <kjerneinfo.versjon>1.0.107-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.0.46</utbetaling.version>
+        <utbetaling.version>2.0.47</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.14</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -73,7 +73,7 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>1.7</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>1.8-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>2.8-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>2.0</saksoversikt.version>
     </properties>
@@ -474,7 +474,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>reactkomponenter</artifactId>
-                <version>0.3</version>
+                <version>0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
