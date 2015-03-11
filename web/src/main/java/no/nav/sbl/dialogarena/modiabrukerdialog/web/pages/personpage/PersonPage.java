@@ -133,7 +133,7 @@ public class PersonPage extends BasePage {
         tabs.add(new AbstractTabPanel(new Model<>("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
             @Override
             public WebMarkupContainer getPanel(String panelId) {
-                return new EksterneLenkerPanel(panelId, fnr);
+                return new EksterneLenkerPanel(panelId, fnr, true);
             }
         });
 
