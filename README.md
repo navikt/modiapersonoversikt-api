@@ -26,4 +26,7 @@ npm config set strict-ssl false
 
 ## Test
 
-* For å kjøre tester bruk `mvn test`. (`mvn clean install` vil også kjøre testene)
+Tester kan kjøres på to måter:
+
+1. `gulp test`
+2. `mvn test`, evt. `mvn clean install`

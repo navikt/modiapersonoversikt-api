@@ -43,6 +43,8 @@ function focusable(element, isTabIndexNotNaN) {
         img = $('img[usemap=#' + mapName + ']')[0];
         return !!img && visible(img);
     }
+
+
     return (/input|select|textarea|button|object/.test(nodeName) ?
             !element.disabled :
             'a' === nodeName ?

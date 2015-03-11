@@ -1,29 +1,36 @@
 require('./../../testConfig.js');
 var expect = require('chai').expect;
 var React = require('react/addons');
-var assign = require('object-assign');
 var Modal = require('../index.js');
 var TestUtils = React.addons.TestUtils;
 
+function createModal(props, children) {
+    return TestUtils.renderIntoDocument(React.createElement(
+            Modal, props || {},
+            children || React.createElement('span', {className: 'forReference'}, 'test'))
+    );
+}
+function getContent(modal) {
+    return modal.modal.refs.content;
+}
+
 describe('Modal', function () {
 
-    it('Should create portal as a direct child of body', function () {
-        var modal = TestUtils.renderIntoDocument(
-            <Modal>
-                <span></span>
-            </Modal>
-        );
+    afterEach(function (done) {
+        React.unmountComponentAtNode(document.body);
+        document.body.innerHTML = "";
+        setTimeout(done);
+    });
+
+    it('creates portal as a direct child of body', function () {
+        var modal = createModal();
 
         var modalContainer = document.getElementsByClassName('react-modal-container');
         expect(modalContainer).not.to.be.null;
     });
 
-    it('Should be default closed and have the correct attributes', function () {
-        var modal = TestUtils.renderIntoDocument(
-            <Modal>
-                <span></span>
-            </Modal>
-        );
+    it('default is closed and have the correct attributes', function () {
+        var modal = createModal();
         var portal = modal.modal.getDOMNode();
 
         expect(portal.hasAttribute('tabindex')).to.be.true;
@@ -48,24 +55,16 @@ describe('Modal', function () {
         expect(describedBy).not.to.be.null;
     });
 
-    it('Should repect the isOpen prop', function(){
-        var modal = TestUtils.renderIntoDocument(
-            <Modal isOpen={true}>
-                <span></span>
-            </Modal>
-        );
+    it('repects the isOpen prop', function () {
+        var modal = createModal({isOpen: true});
+
         var portal = modal.modal.getDOMNode();
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
-    it('Renderer content til portal.content div', function () {
-        var modal = TestUtils.renderIntoDocument(
-            <Modal>
-                <span className="forReference">Test</span>
-            </Modal>
-        );
-        var portal = modal.modal;
-        var content = portal.refs.content;
+    it('Renders content til portal.content div', function () {
+        var modal = createModal();
+        var content = getContent(modal);
 
         var span = TestUtils.findRenderedDOMComponentWithClass(content, 'forReference');
         expect(span).not.to.be.null;
