@@ -27,7 +27,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -117,10 +119,14 @@ public class DialogPanel extends Panel {
         }
 
         try {
+            Optional<Attribute> givenname = optional(attributes.get().get("givenname"));
+            Optional<Attribute> surname = optional(attributes.get().get("sn"));
+            BasicAttribute nullAttribute = new BasicAttribute("", "");
             return new Saksbehandler(
-                    enhetService.hentEnhet(valgtEnhet).enhetNavn,
-                    optional((String) attributes.get().get("givenname").get()).getOrElse(""),
-                    optional((String) attributes.get().get("sn").get()).getOrElse(""));
+                    optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
+                    (String) givenname.getOrElse(nullAttribute).get(),
+                    (String) surname.getOrElse(nullAttribute).get()
+            );
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
