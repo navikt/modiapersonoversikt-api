@@ -172,8 +172,8 @@ public class SakerServiceImpl implements SakerService {
                             Sak sak = new Sak();
                             sak.saksId = optional(arenaSak.getSaksId());
                             sak.fagsystemSaksId = optional(arenaSak.getSaksId());
-                            sak.fagsystemKode = "AO01";
-                            sak.sakstype = arenaSak.getSakstypeKode().getKode();
+                            sak.fagsystemKode = FAGSYSTEMKODE_ARENA;
+                            sak.sakstype = SAKSTYPE_MED_FAGSAK;
                             sak.temaKode = arenaSak.getFagomradeKode().getKode();
                             sak.opprettetDato = arenaSak.getEndringsInfo().getOpprettetDato().toDateTimeAtStartOfDay();
                             sak.finnesIGsak = false;
