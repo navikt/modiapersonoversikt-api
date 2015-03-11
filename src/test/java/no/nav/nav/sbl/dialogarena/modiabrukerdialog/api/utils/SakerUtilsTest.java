@@ -15,6 +15,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.FAGSYSTEMKODE_ARENA;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
@@ -261,7 +262,7 @@ public class SakerUtilsTest {
                 createSak("22222222", unikeTema.get(1), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
                 createSak("33333333", godkjentTemaSomFinnesIEnTemagruppe, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
                 createSak("44444444", unikeTema.get(2), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2)),
-                createSak("55555555", "AAP", "AO01", SAKSTYPE_FAG, DateTime.now().minusDays(5))
+                createSak("55555555", "AAP", FAGSYSTEMKODE_ARENA, SAKSTYPE_FAG, DateTime.now().minusDays(5))
         ));
 
         SakerUtils.leggTilFagsystemnavnOgTemanavn(liste, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);

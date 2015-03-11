@@ -23,8 +23,10 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
     public static final String SAKSTYPE_GENERELL = "GEN";
+    public static final String SAKSTYPE_MED_FAGSAK = "MFS";
+    public static final String FAGSYSTEMKODE_ARENA = "AO01";
     public static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = unmodifiableList(asList("AGR", "FUL", "GEN", "KTR", "STO", "SER", "SIK", "SYM", "TRK", "TRY", "VEN", TEMAKODE_OPPFOLGING));
-    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList("AO01", "IT01", "OEBS", "V2", "AO11"));
+    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList(FAGSYSTEMKODE_ARENA, "IT01", "OEBS", "V2", "AO11"));
     public static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
 
     public boolean isSakstypeForVisningGenerell() {
@@ -70,8 +72,8 @@ public class Sak implements Serializable, Comparable<Sak> {
         @Override
         public boolean evaluate(Sak sak) {
             return TEMAKODE_OPPFOLGING.equals(sak.temaKode)
-                    && "AO01".equals(sak.fagsystemKode)
-                    && "MFS".equals(sak.sakstype);
+                    && FAGSYSTEMKODE_ARENA.equals(sak.fagsystemKode)
+                    && SAKSTYPE_MED_FAGSAK.equals(sak.sakstype);
         }
     };
 
