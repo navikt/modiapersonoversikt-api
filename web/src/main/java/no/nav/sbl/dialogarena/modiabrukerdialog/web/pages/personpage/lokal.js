@@ -17,7 +17,7 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 71}, openGosys);  // Alt+g
     Modig.shortcutListener.on({alt: true, keyCode: 80}, openArenaPersonmappe);  // Alt+p
     Modig.shortcutListener.on({alt: true, keyCode: 89}, openArenaUtbetalinger);  // Alt+y
-    Modig.shortcutListener.on({alt: true, keyCode: 87}, openSkrivestotte);  // Alt+w
+    Modig.shortcutListener.on({alt: true, keyCode: 67}, openSkrivestotte);  // Alt+c
     Modig.shortcutListener.on({alt: true, keyCode: 81}, openInnboksSok);  // Alt+q
 
     addPrintEventListener();
