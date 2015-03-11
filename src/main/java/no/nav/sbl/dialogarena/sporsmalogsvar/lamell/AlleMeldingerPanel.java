@@ -1,11 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -16,9 +14,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
@@ -28,34 +23,21 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke
 
 public class AlleMeldingerPanel extends Panel {
 
+    public static final String TRAAD_ID_PREFIX = "allemeldingertraad-";
     private InnboksVM innboksVM;
-    private final Map<String, String> traadRefs = new HashMap<>();
 
     public AlleMeldingerPanel(String id, final InnboksVM innboksVM, final String traadDetaljerMarkupId) {
         super(id, new CompoundPropertyModel<>(innboksVM));
         setOutputMarkupId(true);
 
         this.innboksVM = innboksVM;
-        Map<String, Object> props = new HashMap<>();
-        props.put("fnr", innboksVM.getFnr());
-        final ReactComponentPanel henvendelseSok = new ReactComponentPanel("henvendelseSokContainer", "HenvendelseSok", props);
-        add(henvendelseSok);
-
-        add(new AjaxLink("henvendelseSokToggle") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                henvendelseSok.callFunction(target, "oppdaterTraadRefs", traadRefs);
-                henvendelseSok.callFunction(target, "vis");
-            }
-        });
 
         add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
 
-                item.setMarkupId("allemeldingertraad-"+meldingVM.melding.traadId);
-                traadRefs.put(meldingVM.melding.traadId, item.getMarkupId());
+                item.setMarkupId(TRAAD_ID_PREFIX + meldingVM.melding.traadId);
 
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));

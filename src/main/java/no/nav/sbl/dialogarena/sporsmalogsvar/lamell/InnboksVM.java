@@ -114,6 +114,8 @@ public class InnboksVM implements Serializable {
         return nyesteMeldingerITraad.get(0);
     }
 
+    public List<MeldingVM> getNyesteMeldingerITraad() { return nyesteMeldingerITraad; }
+
     public Map<String, TraadVM> getTraader() {
         return traader;
     }
