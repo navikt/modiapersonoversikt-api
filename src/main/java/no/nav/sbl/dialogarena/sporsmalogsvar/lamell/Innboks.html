@@ -6,11 +6,11 @@
 <body>
 <wicket:panel>
     <div class="meldinglamell flexbox flex1">
-        <div class="flex2">
+        <section class="meldingsliste flex2">
             <button wicket:id="henvendelseSokToggle" class="innboksSokToggle">SØK</button>
             <wicket:container wicket:id="henvendelseSokContainer"></wicket:container>
-            <section wicket:id="meldinger" class="meldingsliste flex2" role="tablist"></section>
-        </div>
+            <section wicket:id="meldinger" role="tablist"></section>
+        </section>
 
         <section wicket:id="detaljpanel" class="traadDetaljer flex3" role="tabpanel" aria-atomic="true" aria-live="polite"></section>
         <div wicket:id="feilmeldingpanel" class="feilmelding">

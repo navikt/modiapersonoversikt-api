@@ -17,7 +17,7 @@ var Meldinger = (function () {
             } else {
                 eventHandled = false;
             }
-            
+
             if (eventHandled) {
                 e.preventDefault();
             }
