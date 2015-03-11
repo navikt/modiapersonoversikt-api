@@ -12,9 +12,6 @@ module.exports = React.createClass({
     skjul: function () {
         this.refs.modal.close();
     },
-    oppdaterTraadRefs: function (traadRefs) {
-        this.store.oppdaterTraadRefs(traadRefs);
-    },
 
     getInitialState: function () {
         this.store = new HenvendelseSokStore($.extend({}, {
