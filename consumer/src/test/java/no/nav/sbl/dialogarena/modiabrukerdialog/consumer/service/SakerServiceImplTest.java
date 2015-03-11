@@ -128,7 +128,7 @@ public class SakerServiceImplTest {
 
     @Test
     public void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        sakerListe.add(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", "AO01"));
+        sakerListe.add(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
 
@@ -155,7 +155,7 @@ public class SakerServiceImplTest {
         String oppfolgingssakGenerellId = "4";
         String oppfolgingssakFagsakId = "5";
         sakerListe.add(createWSGenerellSak(oppfolgingssakGenerellId, "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
-        sakerListe.add(createWSGenerellSak(oppfolgingssakFagsakId, "55", TEMAKODE_OPPFOLGING, now(), "Fag", "AO01"));
+        sakerListe.add(createWSGenerellSak(oppfolgingssakFagsakId, "55", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
 
@@ -168,7 +168,6 @@ public class SakerServiceImplTest {
     @Test
     public void leggerTilOppfolgingssakFraArenaDersomDenneIkkeFinnesIGsak() {
         String saksId = "123456";
-        String sakstype = "sak-1234";
         LocalDate dato = LocalDate.now().minusDays(1);
 
         when(arbeidOgAktivitet.hentSakListe(any(WSHentSakListeRequest.class))).thenReturn(new WSHentSakListeResponse().withSakListe(
@@ -176,7 +175,7 @@ public class SakerServiceImplTest {
                         .withFagomradeKode(new Fagomradekode().withKode(TEMAKODE_OPPFOLGING))
                         .withSaksId(saksId)
                         .withEndringsInfo(new EndringsInfo().withOpprettetDato(dato))
-                        .withSakstypeKode(new Sakstypekode().withKode(sakstype))
+                        .withSakstypeKode(new Sakstypekode().withKode("ARBEID"))
         ));
 
         Saker saker = sakerService.hentSaker(FNR);
@@ -188,9 +187,9 @@ public class SakerServiceImplTest {
         assertThat(oppfolging.saksliste, hasSize(1));
         assertThat(oppfolging.saksliste.get(0).saksId.get(), is(saksId));
         assertThat(oppfolging.saksliste.get(0).fagsystemSaksId.get(), is(saksId));
-        assertThat(oppfolging.saksliste.get(0).sakstype, is(sakstype));
+        assertThat(oppfolging.saksliste.get(0).sakstype, is(Sak.SAKSTYPE_MED_FAGSAK));
         assertThat(oppfolging.saksliste.get(0).opprettetDato, is(dato.toDateTimeAtStartOfDay()));
-        assertThat(oppfolging.saksliste.get(0).fagsystemKode, is("AO01"));
+        assertThat(oppfolging.saksliste.get(0).fagsystemKode, is(FAGSYSTEMKODE_ARENA));
         assertThat(oppfolging.saksliste.get(0).finnesIGsak, is(false));
     }
 
