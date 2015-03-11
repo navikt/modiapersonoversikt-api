@@ -238,7 +238,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void viserFeilmeldingDersomSendHenvendelseKasterException() throws Exception {
+    public void garTilKvitteringssideOgsaaDersomSendHenvendelseKasterException() throws Exception {
         doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
         wicket.goToPageWith(testNyDialogPanel)
                 .inForm(withId("nydialogform"))
@@ -246,11 +246,7 @@ public class NyDialogPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .select("temagruppe", 1)
                 .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsInvisible().and(ofType(KvitteringsPanel.class)))
-                .should().containComponent(thatIsVisible().and(ofType(FeedbackPanel.class)));
-
-        List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, hasItem(testNyDialogPanel.getString("dialogpanel.feilmelding.journalforing")));
+                .should().containComponent(thatIsVisible().and(ofType(KvitteringsPanel.class)));
     }
 
     @Test
