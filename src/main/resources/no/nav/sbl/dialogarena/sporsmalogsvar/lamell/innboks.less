@@ -226,7 +226,7 @@
         label {
           text-align: left;
           &:last-of-type {
-            margin-bottom: 0px;
+            margin-bottom: 0;
           }
         }
         textarea {
@@ -322,8 +322,8 @@
   .statusIkon {
     position: absolute;
     height: 14px;
-    width: 20px;
-    left: 7px;
+    width: 18px;
+    left: 8px;
     top: 50px;
     &.besvart {
       background: url(../img/melding_besvart.svg) no-repeat;
@@ -369,10 +369,7 @@
   .meldingData {
     width: 86%;
     position: relative;
-    padding: 0 25px 30px;
-    p {
-      margin: 30px 0 0 0;
-    }
+    padding: 20px 25px;
     &:before, &:after {
       position: absolute;
       top: 40px;
@@ -389,8 +386,11 @@
       border-width: 14px;
       margin-top: -14px;
     }
+    p:first-of-type {
+      margin-top: 0;
+    }
     .meldingstatus {
-      margin-top: 30px;
+      margin-top: 20px;
       font-weight: 600;
       font-size: 1.2rem;
       span {
@@ -398,11 +398,14 @@
       }
     }
     .fritekst {
-      margin-top: 30px;
+      margin-top: 20px;
       word-wrap: break-word;
       a {
         -ms-word-break: break-all;
         word-break: break-all;
+      }
+      p:last-of-type {
+        margin-bottom: 0;
       }
     }
   }
@@ -449,12 +452,12 @@ hr.linje {
 
 @media print {
   .meldinger {
-    height: 0px !important;
+    height: 0 !important;
     display: inline-block;
   }
 
   .meldinger .lerret {
-    height: 0px !important;
+    height: 0 !important;
     display: inline-block;
   }
 }
