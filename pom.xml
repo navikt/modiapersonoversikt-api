@@ -25,7 +25,7 @@
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
         <modig.frontend.version>1.1.102-SNAPSHOT</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <kjerneinfo.versjon>1.0.105</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.0.106</kjerneinfo.versjon>
         <dialogarena.behandlingsinformasjon.version>0.0.27</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.23</modig.security.version>
