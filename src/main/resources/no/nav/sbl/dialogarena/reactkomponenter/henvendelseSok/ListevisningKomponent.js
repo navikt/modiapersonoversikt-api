@@ -1,7 +1,5 @@
 var React = require('react');
-var moment = require('moment');
-require('moment/locale/nb');
-moment.locale('nb');
+var sanitize = require('sanitize-html');
 
 module.exports = React.createClass({
     statics: {
@@ -14,26 +12,28 @@ module.exports = React.createClass({
         var cls = erValgt ? "meldingsforhandsvisning valgt" : "meldingsforhandsvisning";
         var traad = this.props.traad;
         var melding = traad.meldinger[0];
-        var dato = traad.datoInMillis || new Date();
-        dato = moment(dato).format('LLL');
+        var dato = traad.opprettetDato;
 
         var datoString = dato;
         if (!melding.erInngaaende) {
             datoString += " - " + melding.fraBruker;
         }
+        datoString = sanitize(datoString, {allowedTags: ['em']});
 
         var meldingsStatus = this.props.traad.statusTekst + ", " + this.props.traad.temagruppe;
+        meldingsStatus = sanitize(meldingsStatus, {allowedTags: ['em']});
+        var innhold = sanitize(this.props.traad.innhold, {allowedTags: ['em']});
 
         return (
             <div className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.traad)}>
                 <input id={"melding" + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={"melding" + this.props.traad.key} className={cls}>
                     <header>
-                        <p>{datoString}</p>
+                        <p dangerouslySetInnerHTML={{__html: datoString}}></p>
                         <div className={this.props.traad.statusKlasse}></div>
                         <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
                     </header>
-                    <p className="fritekst" dangerouslySetInnerHTML={{__html: this.props.traad.innhold}}></p>
+                    <p className="fritekst" dangerouslySetInnerHTML={{__html: innhold}}></p>
                 </label>
             </div>
         );

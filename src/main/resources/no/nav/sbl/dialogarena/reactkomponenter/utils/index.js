@@ -1,4 +1,5 @@
 var React = require('react');
+var sanitize = require('sanitize-html');
 
 var Utils = {
     Constants: {
@@ -44,6 +45,9 @@ var Utils = {
     },
     generateId: function (prefix) {
         return prefix + (new Date().getTime()) + '-' + Math.random();
+    },
+    sanitize: function(tekst){
+        return sanitize(tekst);
     },
     leggTilLenkerTags: function(innhold){
         var uriRegex = /(([\w-]+:\/\/?|www[.])[^\s()<>]+)/g;

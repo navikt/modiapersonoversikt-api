@@ -66,6 +66,8 @@ var hentSokeresultater =
                 traad.key = traad.traadId;
                 traad.datoInMillis = traad.dato.millis;
                 traad.innhold = traad.meldinger[0].fritekst;
+                traad.opprettetDato = traad.meldinger[0].opprettetDatoTekst;
+
                 traad.meldinger.forEach(function (melding) {
                     melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
                     melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.eksternAktor;
@@ -79,6 +81,7 @@ var hentSokeresultater =
 
 var sok = function (fnr, query) {
     query = query || "";
+    query = query.replace(/\./g, '');
     var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
     return $.get(url);
 };

@@ -1,8 +1,6 @@
 var React = require('react');
-var moment = require('moment');
 var Utils = require('utils');
-require('moment/locale/nb');
-moment.locale('nb');
+var sanitize = require('sanitize-html');
 
 module.exports = React.createClass({
     render: function(){
@@ -13,16 +11,17 @@ module.exports = React.createClass({
         var altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
         var meldingsStatusTekst = melding.statusTekst + ", " + melding.temagruppeNavn;
 
-        var paragrafer = melding.fritekst.split(/[\r\n]+/)
+        var paragrafer = Utils.sanitize(melding.fritekst).split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        var dato = moment(melding.dato || new Date()).format('LLL');
+        var dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
+        var datoOgBruker = dato + ' - ' +melding.fraBruker;
         return (
             <div className={cls}>
                 <img className={'avsenderBilde '+clsExt} src={src} alt={altTekst} />
                 <div className="meldingData">
-                    <p>{dato} - {melding.fraBruker}</p>
+                    <p dangerouslySetInnerHTML={{__html: datoOgBruker}}></p>
                     <p className="meldingstatus">
                         <span dangerouslySetInnerHTML={{__html: meldingsStatusTekst}}></span>
                     </p>
