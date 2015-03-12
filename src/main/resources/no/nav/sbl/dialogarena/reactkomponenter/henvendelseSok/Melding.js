@@ -9,7 +9,7 @@ module.exports = React.createClass({
         var melding = this.props.melding;
         var clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
         var cls = 'melding clearfix ' + clsExt;
-        var src = '/modiabrukerdialog/img/' + (melding.erInngaaende ? 'personligoppmote.svg' : 'nav-logo.svg');
+        var src = '/modiabrukerdialog/img/' + (melding.erInngaaende ? 'personikon.svg' : 'nav-logo.svg');
         var altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
         var meldingsStatusTekst = melding.statusTekst + ", " + melding.temagruppeNavn;
 
