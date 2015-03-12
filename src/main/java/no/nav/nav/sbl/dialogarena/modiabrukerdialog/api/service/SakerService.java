@@ -2,6 +2,7 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 
 import java.util.List;
 
@@ -10,5 +11,5 @@ public interface SakerService {
 
     public List<Sak> hentListeAvSaker(String fnr);
 
-    void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws Exception;
+    void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws JournalforingFeilet;
 }
