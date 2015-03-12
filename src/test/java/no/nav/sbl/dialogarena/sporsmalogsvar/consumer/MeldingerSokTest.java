@@ -58,7 +58,6 @@ public class MeldingerSokTest {
 
     @Test
     public void fritekstTemagruppeOgArkivtemaErSokbart() {
-        assertSok("tekst 1", "1234");
         assertSok("rbei", "1235");
         assertSok("uføre", "1236");
     }
