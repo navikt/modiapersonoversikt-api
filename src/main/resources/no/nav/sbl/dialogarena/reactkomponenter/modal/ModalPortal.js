@@ -2,9 +2,10 @@ var React = require('react');
 
 var ModalPortal = React.createClass({
     focusAfterClose: undefined,
-    getDefaultProps: function(){
+    getDefaultProps: function () {
         return {
-            skipFocus: ['div']
+            skipFocus: ['div'],
+            isOpen: false
         };
     },
     componentDidMount: function () {
@@ -15,7 +16,10 @@ var ModalPortal = React.createClass({
     componentDidUpdate: function () {
         if (this.props.isOpen) {
             $(document.body).addClass('modal-open');
-            this.focusFirst();
+
+            if (!$.contains(this.refs.content.getDOMNode(), document.activeElement)) {
+                this.focusFirst();
+            }
         } else {
             this.restoreFocus();
             $(document.body).removeClass('modal-open');
@@ -58,7 +62,7 @@ var ModalPortal = React.createClass({
     focusFirst: function () {
         this.focusAfterClose = document.activeElement;
         var tabbables = $(this.refs.content.getDOMNode()).find(':focusable');
-        this.props.skipFocus.forEach(function(skipFocusTag){
+        this.props.skipFocus.forEach(function (skipFocusTag) {
             tabbables = tabbables.not(skipFocusTag);
         });
         if (tabbables.length > 0) {
