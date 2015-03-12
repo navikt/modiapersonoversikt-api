@@ -115,7 +115,7 @@ public class DialogPanel extends Panel {
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
         if (!attributes.isSome()) {
-            return new Saksbehandler(enhetService.hentEnhet(valgtEnhet).enhetNavn, "", "");
+            return new Saksbehandler(optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""), "", "");
         }
 
         try {
