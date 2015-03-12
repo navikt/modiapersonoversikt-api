@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -32,15 +33,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.containedIn;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.modig.lang.collections.ReduceUtils.join;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.TRAAD_ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad.NYESTE_FORST;
-import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.lucene.document.Field.Store.YES;
 import static org.joda.time.DateTime.now;
 
@@ -54,9 +56,16 @@ public class MeldingerSok {
     private static final String FRITEKST = "fritekst";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String ARKIVTEMA = "arkivtema";
+    private static final String DATO = "dato";
 
-    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA};
+    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
+    private static final Transformer<DateTime, String> DATO_TIL_STRING = new Transformer<DateTime, String>() {
+        @Override
+        public String transform(DateTime dateTime) {
+            return DateUtils.dateTime(dateTime);
+        }
+    };
 
     private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, ANALYZER);
 
@@ -71,8 +80,15 @@ public class MeldingerSok {
 
     public void indekser(String fnr, List<Melding> meldinger) {
         String navIdent = getSubjectHandler().getUid();
-
         String key = key(fnr, navIdent);
+
+        meldinger = on(meldinger).map(new Transformer<Melding, Melding>() {
+            @Override
+            public Melding transform(Melding melding) {
+                melding.opprettetDatoTekst = optional(melding.opprettetDato).map(DATO_TIL_STRING).getOrElse("");
+                return melding;
+            }
+        }).collect();
         meldingerCache.put(key, meldinger);
         directories.put(key, indekser(meldinger));
         indexingTimestamps.put(key, now());
@@ -98,7 +114,7 @@ public class MeldingerSok {
             Highlighter highlighter = new Highlighter(formatter, new QueryScorer(query));
             highlighter.setTextFragmenter(new NullFragmenter());
 
-            Map<String, MeldingSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, hits);
+            Map<String, MeldingSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, tekst, hits);
             final List<String> ider = on(resultat).map(TransformerUtils.<String>key()).collect();
 
             Map<String, List<Melding>> traader = on(meldingerCache.get(key))
@@ -161,28 +177,45 @@ public class MeldingerSok {
         document.add(new TextField(FRITEKST, optional(melding.fritekst).getOrElse(""), YES));
         document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppeNavn).getOrElse(""), YES));
         document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), YES));
+        document.add(new TextField(DATO, optional(melding.opprettetDatoTekst).getOrElse(""), YES));
         return document;
     }
 
     private static String query(String tekst) {
-        return "*" + (tekst.isEmpty() ? ":" : trim(tekst)) + "*";
+        return on(asList(tekst.split(" "))).map(new Transformer<String, String>() {
+
+            @Override
+            public String transform(String s) {
+                return "*" + s + "*";
+            }
+        }).reduce(join(" "));
     }
 
-    private static Map<String, MeldingSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, ScoreDoc... hits) {
+    private static Map<String, MeldingSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, final String tekst, ScoreDoc... hits) {
         try {
             Map<String, MeldingSokResultat> resultat = new HashMap<>();
+            boolean gjorHighlighting = tekst.length() > 0;
             for (ScoreDoc hit : hits) {
                 Document doc = searcher.doc(hit.doc);
                 String behandlingsId = searcher.doc(hit.doc).get(BEHANDLINGS_ID);
-                String fritekst = getHighlightedTekst(FRITEKST, doc, searcher, analyzer, highlighter);
-                String temagruppe = getHighlightedTekst(TEMAGRUPPE, doc, searcher, analyzer, highlighter);
-                String arkivtema = getHighlightedTekst(ARKIVTEMA, doc, searcher, analyzer, highlighter);
-                resultat.put(behandlingsId, new MeldingSokResultat(fritekst, temagruppe, arkivtema));
+                String fritekst = getTekst(FRITEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String temagruppe = getTekst(TEMAGRUPPE, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String arkivtema = getTekst(ARKIVTEMA, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String dato = getTekst(DATO, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                resultat.put(behandlingsId, new MeldingSokResultat(fritekst, temagruppe, arkivtema, dato));
             }
             return resultat;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String getTekst(String felt, Document doc, IndexSearcher searcher, StandardAnalyzer analyser, Highlighter highlighter, boolean medHighlighting) {
+        String tekst = doc.get(felt);
+        if (!medHighlighting) {
+            return tekst;
+        }
+        return getHighlightedTekst(felt, doc, searcher, analyser, highlighter);
     }
 
     private static String getHighlightedTekst(String felt, Document doc, IndexSearcher searcher, StandardAnalyzer analyzer, Highlighter highlighter) {
@@ -206,18 +239,20 @@ public class MeldingerSok {
                 melding.fritekst = meldingSokResultat.fritekst;
                 melding.temagruppeNavn = meldingSokResultat.temagruppe;
                 melding.journalfortTemanavn = meldingSokResultat.arkivtema;
+                melding.opprettetDatoTekst = meldingSokResultat.dato;
                 return melding;
             }
         };
     }
 
     private static class MeldingSokResultat {
-        public final String fritekst, temagruppe, arkivtema;
+        public final String fritekst, temagruppe, arkivtema, dato;
 
-        public MeldingSokResultat(String fritekst, String temagruppe, String arkivtema) {
+        public MeldingSokResultat(String fritekst, String temagruppe, String arkivtema, String dato) {
             this.fritekst = fritekst;
             this.temagruppe = temagruppe;
             this.arkivtema = arkivtema;
+            this.dato = dato;
         }
     }
 }
