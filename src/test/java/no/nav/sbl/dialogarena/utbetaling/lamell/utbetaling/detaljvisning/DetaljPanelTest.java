@@ -115,7 +115,6 @@ public class DetaljPanelTest extends AbstractWicketTest {
     public void viserRiktigMetadataForUtbetalingen() {
         wicketTester.goToPageWith(detaljPanel)
                 .should().containComponent(withId("konto").and(withTextSaying("***REMOVED***")))
-                .should().containComponent(withId("omytelsen").and(withTextSaying("Dagpenger")))
                 .should().containComponent(withId("bilagsmelding").and(withTextSaying("Dette er en testmelding")));
     }
 
