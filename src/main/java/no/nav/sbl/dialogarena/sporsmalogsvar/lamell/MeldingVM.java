@@ -20,7 +20,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtil
 public class MeldingVM implements Serializable {
 
     public static final String NAV_LOGO_SVG = "nav-logo.svg";
-    public static final String BRUKER_LOGO_SVG = "personligoppmote.svg";
+    public static final String BRUKER_LOGO_SVG = "personikon.svg";
     public static final String NAV_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.nav";
     public static final String BRUKER_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.bruker";
     public final Melding melding;
