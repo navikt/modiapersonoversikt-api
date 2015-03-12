@@ -18,6 +18,7 @@ module.exports = React.createClass({
         if (!melding.erInngaaende) {
             datoString += " - " + melding.fraBruker;
         }
+        console.log('melding', melding);
         datoString = sanitize(datoString, {allowedTags: ['em']});
 
         var meldingsStatus = this.props.traad.statusTekst + ", " + this.props.traad.temagruppe;

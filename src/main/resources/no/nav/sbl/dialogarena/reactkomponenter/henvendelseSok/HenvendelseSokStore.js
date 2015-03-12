@@ -70,7 +70,7 @@ var hentSokeresultater =
 
                 traad.meldinger.forEach(function (melding) {
                     melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
-                    melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.eksternAktor;
+                    melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
                 });
             });
             this.state.traader = traader;
