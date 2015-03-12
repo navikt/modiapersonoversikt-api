@@ -32,6 +32,7 @@
         <localFiles name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
+        <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
@@ -55,6 +56,7 @@
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
+        <applicationProperties alias="deaktiveraareglenke"/>
         <emailAddress alias="modiabrukerdialog.standardtekster.epost" mapToProperty="modiabrukerdialog.standardtekster.epost"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>

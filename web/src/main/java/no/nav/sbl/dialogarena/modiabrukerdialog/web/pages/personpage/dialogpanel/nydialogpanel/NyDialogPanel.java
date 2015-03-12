@@ -280,6 +280,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<HenvendelseVM> form) {
+        String kvitteringstekst;
         try {
             switch (getModelObject().modus) {
                 case REFERAT:
@@ -289,13 +290,12 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                     sendSporsmal();
                     break;
             }
-            kvittering.visKvittering(target, getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel")), form);
-            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+            kvitteringstekst = getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel"));
         } catch (Exception e) {
-            error(getString("dialogpanel.feilmelding.journalforing"));
-            sendKnapp.setVisibilityAllowed(false);
-            target.add(feedbackPanel, sendKnapp);
+            kvitteringstekst = getString("dialogpanel.feilmelding.journalforing");
         }
+        kvittering.visKvittering(target, kvitteringstekst, form);
+        send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
     }
 
     private void sendReferat() throws Exception {

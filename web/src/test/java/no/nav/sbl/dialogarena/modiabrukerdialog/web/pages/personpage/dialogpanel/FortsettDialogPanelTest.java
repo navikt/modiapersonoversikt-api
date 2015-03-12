@@ -306,19 +306,13 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void viserFeilmeldingOgDisablerKnapperDersomSendHenvendelseKasterException() throws Exception {
+    public void garTilKvitteringssideOgsaDersomSendHenvendelseKasterException() throws Exception {
         doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
                 .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsInvisible().and(ofType(KvitteringsPanel.class)))
-                .should().containComponent(thatIsInvisible().and(withId("send")))
-                .should().containComponent(thatIsInvisible().and(withId("leggtilbake")))
-                .should().containComponent(thatIsVisible().and(ofType(FeedbackPanel.class)));
-
-        List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, hasItem(testFortsettDialogPanel.getString("dialogpanel.feilmelding.journalforing")));
+                .should().containComponent(thatIsVisible().and(ofType(KvitteringsPanel.class)));
     }
 
     @Test
