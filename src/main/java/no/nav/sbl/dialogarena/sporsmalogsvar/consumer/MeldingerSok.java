@@ -57,8 +57,9 @@ public class MeldingerSok {
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String ARKIVTEMA = "arkivtema";
     private static final String DATO = "dato";
+    private static final String NAVIDENT = "navident";
 
-    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO};
+    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO, NAVIDENT};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
     private static final Transformer<DateTime, String> DATO_TIL_STRING = new Transformer<DateTime, String>() {
         @Override
@@ -94,7 +95,7 @@ public class MeldingerSok {
         indexingTimestamps.put(key, now());
     }
 
-    public List<Traad> sok(String fnr, String tekst) {
+    public List<Traad> sok(String fnr, String soketekst) {
         try {
             String navIdent = getSubjectHandler().getUid();
             String key = key(fnr, navIdent);
@@ -106,7 +107,7 @@ public class MeldingerSok {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directories.get(key)));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
 
-            Query query = queryParser.parse(query(tekst));
+            Query query = queryParser.parse(query(soketekst));
             searcher.search(query, collector);
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
@@ -114,7 +115,7 @@ public class MeldingerSok {
             Highlighter highlighter = new Highlighter(formatter, new QueryScorer(query));
             highlighter.setTextFragmenter(new NullFragmenter());
 
-            Map<String, MeldingSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, tekst, hits);
+            Map<String, MeldingSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, soketekst, hits);
             final List<String> ider = on(resultat).map(TransformerUtils.<String>key()).collect();
 
             Map<String, List<Melding>> traader = on(meldingerCache.get(key))
@@ -178,11 +179,12 @@ public class MeldingerSok {
         document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppeNavn).getOrElse(""), YES));
         document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), YES));
         document.add(new TextField(DATO, optional(melding.opprettetDatoTekst).getOrElse(""), YES));
+        document.add(new TextField(NAVIDENT, optional(melding.navIdent).getOrElse(""), YES));
         return document;
     }
 
-    private static String query(String tekst) {
-        return on(asList(tekst.split(" "))).map(new Transformer<String, String>() {
+    private static String query(String soketekst) {
+        return on(asList(soketekst.split(" "))).map(new Transformer<String, String>() {
 
             @Override
             public String transform(String s) {
@@ -191,18 +193,19 @@ public class MeldingerSok {
         }).reduce(join(" "));
     }
 
-    private static Map<String, MeldingSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, final String tekst, ScoreDoc... hits) {
+    private static Map<String, MeldingSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, final String soketekst, ScoreDoc... hits) {
         try {
             Map<String, MeldingSokResultat> resultat = new HashMap<>();
-            boolean gjorHighlighting = tekst.length() > 0;
+            boolean gjorHighlighting = soketekst.length() > 0;
             for (ScoreDoc hit : hits) {
                 Document doc = searcher.doc(hit.doc);
                 String behandlingsId = searcher.doc(hit.doc).get(BEHANDLINGS_ID);
-                String fritekst = getTekst(FRITEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
-                String temagruppe = getTekst(TEMAGRUPPE, doc, searcher, analyzer, highlighter, gjorHighlighting);
-                String arkivtema = getTekst(ARKIVTEMA, doc, searcher, analyzer, highlighter, gjorHighlighting);
-                String dato = getTekst(DATO, doc, searcher, analyzer, highlighter, gjorHighlighting);
-                resultat.put(behandlingsId, new MeldingSokResultat(fritekst, temagruppe, arkivtema, dato));
+                String fritekst = hentTekstResultat(FRITEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String temagruppe = hentTekstResultat(TEMAGRUPPE, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String arkivtema = hentTekstResultat(ARKIVTEMA, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String dato = hentTekstResultat(DATO, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String navIdent = hentTekstResultat(NAVIDENT, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                resultat.put(behandlingsId, new MeldingSokResultat(fritekst, temagruppe, arkivtema, dato, navIdent));
             }
             return resultat;
         } catch (IOException e) {
@@ -210,15 +213,15 @@ public class MeldingerSok {
         }
     }
 
-    private static String getTekst(String felt, Document doc, IndexSearcher searcher, StandardAnalyzer analyser, Highlighter highlighter, boolean medHighlighting) {
-        String tekst = doc.get(felt);
+    private static String hentTekstResultat(String felt, Document doc, IndexSearcher searcher, StandardAnalyzer analyser, Highlighter highlighter, boolean medHighlighting) {
+        String tekstresultat = doc.get(felt);
         if (!medHighlighting) {
-            return tekst;
+            return tekstresultat;
         }
-        return getHighlightedTekst(felt, doc, searcher, analyser, highlighter);
+        return hentHighlightedTekstResultat(felt, doc, searcher, analyser, highlighter);
     }
 
-    private static String getHighlightedTekst(String felt, Document doc, IndexSearcher searcher, StandardAnalyzer analyzer, Highlighter highlighter) {
+    private static String hentHighlightedTekstResultat(String felt, Document doc, IndexSearcher searcher, StandardAnalyzer analyzer, Highlighter highlighter) {
         String tekst = doc.get(felt);
         try {
             int id = Integer.parseInt(doc.get(ID));
@@ -240,19 +243,21 @@ public class MeldingerSok {
                 melding.temagruppeNavn = meldingSokResultat.temagruppe;
                 melding.journalfortTemanavn = meldingSokResultat.arkivtema;
                 melding.opprettetDatoTekst = meldingSokResultat.dato;
+                melding.navIdent = meldingSokResultat.navIdent;
                 return melding;
             }
         };
     }
 
     private static class MeldingSokResultat {
-        public final String fritekst, temagruppe, arkivtema, dato;
+        public final String fritekst, temagruppe, arkivtema, dato, navIdent;
 
-        public MeldingSokResultat(String fritekst, String temagruppe, String arkivtema, String dato) {
+        public MeldingSokResultat(String fritekst, String temagruppe, String arkivtema, String dato, String navIdent) {
             this.fritekst = fritekst;
             this.temagruppe = temagruppe;
             this.arkivtema = arkivtema;
             this.dato = dato;
+            this.navIdent = navIdent;
         }
     }
 }
