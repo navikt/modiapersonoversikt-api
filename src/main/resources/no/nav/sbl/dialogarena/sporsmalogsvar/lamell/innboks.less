@@ -61,45 +61,6 @@
         height: 34px;
       }
     }
-    .melding {
-      &.inngaaende .journalpost-element {
-        float: right;
-        background-color: #e6e6dd;
-        border-top: 1px solid @rammefarge;
-      }
-      &.utgaaende .journalpost-element {
-        float: left;
-        background-color: #ffffff;
-        border-bottom: 1px solid @rammefarge;
-        border-left: 1px solid @rammefarge;
-        border-right: 1px solid @rammefarge;
-      }
-      .journalpost-element {
-        clear: both;
-        width: 86%;
-        padding: 16px 25px;
-        color: @grayDark;
-        text-decoration: none;
-        span {
-          text-align: center;
-        }
-        .ikon {
-          text-align: left;
-          padding-right: 1.4rem;
-          background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
-        }
-        .pil {
-          float: right;
-          width: 20%;
-          margin-top: 4px;
-          .pil(8px, @grayDark); // definisjon i common.less
-        }
-      }
-      .journalpostinformasjon {
-        display: none;
-        margin: 12px 0 5px 0;
-      }
-    }
 
     .traad-info {
       background-color: #333333;
@@ -440,6 +401,43 @@
         border-left-color: @rammefarge;
       }
     }
+  }
+  &.inngaaende .journalpost-element {
+    float: right;
+    background-color: #e6e6dd;
+    border-top: 1px solid @rammefarge;
+  }
+  &.utgaaende .journalpost-element {
+    float: left;
+    background-color: #ffffff;
+    border-bottom: 1px solid @rammefarge;
+    border-left: 1px solid @rammefarge;
+    border-right: 1px solid @rammefarge;
+  }
+  .journalpost-element {
+    clear: both;
+    width: 86%;
+    padding: 16px 25px;
+    color: @grayDark;
+    text-decoration: none;
+    span {
+      text-align: center;
+    }
+    .ikon {
+      text-align: left;
+      padding-right: 1.4rem;
+      background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
+    }
+    .pil {
+      float: right;
+      width: 20%;
+      margin-top: 4px;
+      .pil(8px, @grayDark); // definisjon i common.less
+    }
+  }
+  .journalpostinformasjon {
+    display: none;
+    margin: 12px 0 5px 0;
   }
 }
 
