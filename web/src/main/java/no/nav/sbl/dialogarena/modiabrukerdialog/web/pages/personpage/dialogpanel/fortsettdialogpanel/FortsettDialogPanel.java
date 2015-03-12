@@ -5,6 +5,7 @@ import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWi
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -200,18 +201,17 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error(getString("fortsettdialogform.feilmelding.oppgaveferdigstilt"));
-                visErrorFeedback(target);
-            } catch (Exception e) {
+                sendKnapp.setVisibilityAllowed(false);
+                leggTilbakeKnapp.setVisibilityAllowed(false);
+                target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
+            } catch (JournalforingFeilet e) {
                 send(getPage(), BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
                 kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
+            } catch (Exception e) {
+                error(getString("dialogpanel.feilmelding.send.henvendelse"));
+                target.add(feedbackPanel);
             }
-        }
-
-        private void visErrorFeedback(AjaxRequestTarget target) {
-            sendKnapp.setVisibilityAllowed(false);
-            leggTilbakeKnapp.setVisibilityAllowed(false);
-            target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
         }
 
         private void sendHenvendelse(HenvendelseVM henvendelseVM) throws Exception {

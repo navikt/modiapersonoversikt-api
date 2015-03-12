@@ -3,9 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -15,17 +14,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockCont
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.VelgSakPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -34,7 +28,10 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
@@ -42,11 +39,16 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingsty
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.OVRG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.TestUtils.createMockSaker;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -238,8 +240,8 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void garTilKvitteringssideOgsaaDersomSendHenvendelseKasterException() throws Exception {
-        doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
+    public void garTilKvitteringssideOgsaaDersomJournalforingKasterException() throws Exception {
+        doThrow(new JournalforingFeilet()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
         wicket.goToPageWith(testNyDialogPanel)
                 .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
@@ -247,6 +249,23 @@ public class NyDialogPanelTest extends WicketPageTest {
                 .select("temagruppe", 1)
                 .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsVisible().and(ofType(KvitteringsPanel.class)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void viserFeilmeldingDersomSendHenvendelseKasterException() throws Exception {
+        doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
+        wicket.goToPageWith(testNyDialogPanel)
+                .inForm(withId("nydialogform"))
+                .write("tekstfelt:text", "dette er en fritekst")
+                .select("kanal", 0)
+                .select("temagruppe", 1)
+                .submitWithAjaxButton(withId("send"))
+                .should().containComponent(thatIsInvisible().and(ofType(KvitteringsPanel.class)))
+                .should().containComponent(thatIsVisible().and(ofType(FeedbackPanel.class)));
+
+        List<String> errorMessages = wicket.get().errorMessages();
+        assertThat(errorMessages, hasItem(testNyDialogPanel.getString("dialogpanel.feilmelding.journalforing")));
     }
 
     @Test

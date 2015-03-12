@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.*;
@@ -68,16 +69,19 @@ public class SakerServiceImpl implements SakerService {
     }
 
     @Override
-    public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws Exception {
+    public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws JournalforingFeilet {
         if (!sak.finnesIGsak) {
             sak.saksId = optional(opprettSak(fnr, sak));
         }
-
-        behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                behandlingskjede,
-                sak.saksId.get(),
-                sak.temaKode,
-                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        try {
+            behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
+                    behandlingskjede,
+                    sak.saksId.get(),
+                    sak.temaKode,
+                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        } catch (Exception e) {
+            throw new JournalforingFeilet(e);
+        }
     }
 
     private String opprettSak(String fnr, Sak sak) {

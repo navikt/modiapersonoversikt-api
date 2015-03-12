@@ -7,6 +7,7 @@ import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWi
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
@@ -280,7 +281,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<HenvendelseVM> form) {
-        String kvitteringstekst;
         try {
             switch (getModelObject().modus) {
                 case REFERAT:
@@ -290,12 +290,15 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                     sendSporsmal();
                     break;
             }
-            kvitteringstekst = getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel"));
+            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+            kvittering.visKvittering(target, getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel")), form);
+        } catch (JournalforingFeilet e) {
+            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+            kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form);
         } catch (Exception e) {
-            kvitteringstekst = getString("dialogpanel.feilmelding.journalforing");
+            error(getString("dialogpanel.feilmelding.send.henvendelse"));
+            target.add(feedbackPanel);
         }
-        kvittering.visKvittering(target, kvitteringstekst, form);
-        send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
     }
 
     private void sendReferat() throws Exception {

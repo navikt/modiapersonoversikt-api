@@ -5,6 +5,7 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
@@ -306,13 +307,30 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void garTilKvitteringssideOgsaDersomSendHenvendelseKasterException() throws Exception {
-        doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
+    public void garTilKvitteringssideOgsaDersomJournalforingKasterException() throws Exception {
+        doThrow(new JournalforingFeilet()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
                 .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsVisible().and(ofType(KvitteringsPanel.class)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void viserFeilmeldingDersomSendHenvendelseKasterException() throws Exception {
+        doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
+        wicket.goToPageWith(testFortsettDialogPanel)
+                .inForm(withId("fortsettdialogform"))
+                .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
+                .submitWithAjaxButton(withId("send"))
+                .should().containComponent(thatIsInvisible().and(ofType(KvitteringsPanel.class)))
+                .should().containComponent(thatIsVisible().and(withId("send")))
+                .should().containComponent(thatIsVisible().and(withId("leggtilbake")))
+                .should().containComponent(thatIsVisible().and(ofType(FeedbackPanel.class)));
+
+        List<String> errorMessages = wicket.get().errorMessages();
+        assertThat(errorMessages, hasItem(testFortsettDialogPanel.getString("dialogpanel.feilmelding.journalforing")));
     }
 
     @Test
