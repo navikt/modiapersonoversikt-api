@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
@@ -48,7 +49,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     }
 
     @Test
-    public void skalJournalforeVedSubmit() throws Exception {
+    public void skalJournalforeVedSubmit() throws JournalforingFeilet {
         JournalforingsPanelVelgSak panel = new JournalforingsPanelVelgSak("panel", innboksVM);
         panel.oppdater();
         wicket
