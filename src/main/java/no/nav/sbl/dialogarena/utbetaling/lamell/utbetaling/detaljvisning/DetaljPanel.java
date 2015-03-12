@@ -31,7 +31,6 @@ public class DetaljPanel extends Panel {
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("brutto", utbetalingVM.getBruttoBelop()),
                 new Label("trekk", utbetalingVM.getTrekk()),
-                new Label("omytelsen", utbetalingVM.getYtelse()),
                 new Label("utbetalt", utbetalingVM.getUtbetalt()),
                 createYtelserader(ytelseVMer),
                 new MultiLineLabel("bilagsmelding", melding).add(visibleIf(not(isEmptyString(melding)))));
