@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.AktoerType;
@@ -127,19 +128,18 @@ public class TransformersTest {
                         .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("ThirdEntry"))
                 );
 
-        List<Record<Underytelse>> underytelser = createUnderytelser(wsListe);
+        Optional<List<Record<Underytelse>>> underytelser = createUnderytelser(wsListe);
 
-        assertThat(underytelser.size(), is(3));
-        assertThat(underytelser.get(0).get(Underytelse.ytelsesType), is("SecondEntry"));
-        assertThat(underytelser.get(1).get(Underytelse.ytelsesType), is("ThirdEntry"));
-        assertThat(underytelser.get(2).get(Underytelse.ytelsesType), is("FirstEntry"));
+        assertThat(underytelser.get().size(), is(3));
+        assertThat(underytelser.get().get(0).get(Underytelse.ytelsesType), is("SecondEntry"));
+        assertThat(underytelser.get().get(1).get(Underytelse.ytelsesType), is("ThirdEntry"));
+        assertThat(underytelser.get().get(2).get(Underytelse.ytelsesType), is("FirstEntry"));
     }
 
     @Test
     public void createUnderytelserNaarYtelseskomponenterErNull() {
-        List<Record<Underytelse>> underytelser = createUnderytelser(null);
-        assertNotNull(underytelser);
-        assertTrue(underytelser.isEmpty());
+        Optional<List<Record<Underytelse>>> underytelser = createUnderytelser(null);
+        assertFalse(underytelser.isSome());
     }
 
     @Test

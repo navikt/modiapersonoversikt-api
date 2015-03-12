@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.AktoerType;
@@ -168,11 +169,11 @@ public class Transformers {
         return on(trekkListe).map(TREKK_TRANSFORMER).collect();
     }
 
-    protected static List<Record<Underytelse>> createUnderytelser(List<WSYtelseskomponent> ytelseskomponentListe) {
-        if (ytelseskomponentListe == null) {
-            return new ArrayList<>();
+    protected static Optional<List<Record<Underytelse>>> createUnderytelser(List<WSYtelseskomponent> ytelseskomponentListe) {
+        if (ytelseskomponentListe == null || ytelseskomponentListe.isEmpty()) {
+            return Optional.none();
         }
-        return on(ytelseskomponentListe).map(UNDERYTELSE_TRANSFORMER).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
+        return optional(on(ytelseskomponentListe).map(UNDERYTELSE_TRANSFORMER).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep))));
     }
 
     protected static Interval createPeriode(WSPeriode ytelsesperiode) {
