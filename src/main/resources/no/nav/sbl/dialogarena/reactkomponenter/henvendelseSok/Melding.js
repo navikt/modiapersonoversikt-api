@@ -3,7 +3,7 @@ var Utils = require('utils');
 var sanitize = require('sanitize-html');
 
 module.exports = React.createClass({
-    render: function(){
+    render: function () {
         var melding = this.props.melding;
         var clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
         var cls = 'melding clearfix ' + clsExt;
@@ -11,15 +11,22 @@ module.exports = React.createClass({
         var altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
         var meldingsStatusTekst = melding.statusTekst + ", " + melding.temagruppeNavn;
 
+        var erJournalfort = melding.journalfortTemanavn ? true : false;
+        var journalfortMelding = 'Journalført: ' + melding.journalfortTemanavn;
+        var journalfortVisning = !erJournalfort ? null : <div className="journalpost-element ikon">
+            <span className="ikon"></span>
+            <span dangerouslySetInnerHTML={{__html: journalfortMelding}}></span>
+        </div>;
+
         var paragrafer = Utils.sanitize(melding.fritekst).split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
         var dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
-        var datoOgBruker = dato + ' - ' +melding.fraBruker;
+        var datoOgBruker = dato + ' - ' + melding.fraBruker;
         return (
             <div className={cls}>
-                <img className={'avsenderBilde '+clsExt} src={src} alt={altTekst} />
+                <img className={'avsenderBilde ' + clsExt} src={src} alt={altTekst} />
                 <div className="meldingData">
                     <p dangerouslySetInnerHTML={{__html: datoOgBruker}}></p>
                     <p className="meldingstatus">
@@ -27,6 +34,7 @@ module.exports = React.createClass({
                     </p>
                     <div className="fritekst">{paragrafer}</div>
                 </div>
+            {journalfortVisning}
             </div>
         );
     }
