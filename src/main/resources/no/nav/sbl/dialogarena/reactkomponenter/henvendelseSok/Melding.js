@@ -9,7 +9,11 @@ module.exports = React.createClass({
         var cls = 'melding clearfix ' + clsExt;
         var src = '/modiabrukerdialog/img/' + (melding.erInngaaende ? 'personikon.svg' : 'nav-logo.svg');
         var altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
-        var meldingsStatusTekst = melding.statusTekst + ", " + melding.temagruppeNavn;
+        var meldingsStatusTekst = melding.statusTekst + ", ";
+        if (!melding.erInngaaende) {
+            meldingsStatusTekst += melding.lestStatus + " ";
+        }
+        meldingsStatusTekst += melding.temagruppeNavn;
 
         var erJournalfort = melding.journalfortTemanavn ? true : false;
         var journalfortMelding = 'Journalført: ' + melding.journalfortTemanavn;
