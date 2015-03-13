@@ -20,7 +20,7 @@ import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
 
     public static final AnsattEnhet SKILLE_ENHET = new AnsattEnhet(null, null);
-    public static final AnsattEnhet TOM_ENHET = new AnsattEnhet("&#160;", "&#160;");
+    public static final AnsattEnhet TOM_ENHET = new AnsattEnhet("", "");
     public static final List<AnsattEnhet> IKKE_VELGBARE_ENHETER = asList(SKILLE_ENHET, TOM_ENHET);
 
     public AnsattEnhetDropdown(String id, IModel<AnsattEnhet> model, List<AnsattEnhet> enheter, List<AnsattEnhet> foreslatteEnheter) {
