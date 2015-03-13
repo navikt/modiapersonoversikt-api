@@ -63,6 +63,7 @@ public class MeldingUtils {
                 melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
                 melding.status = STATUS.transform(xmlHenvendelse);
                 melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
+                melding.lestStatus = lagLestStatus(melding);
                 melding.statusKlasse = VisningUtils.lagStatusIkonKlasse(melding);
                 melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
                 melding.oppgaveId = xmlHenvendelse.getOppgaveIdGsak();
@@ -105,6 +106,16 @@ public class MeldingUtils {
                 return melding;
             }
         };
+    }
+
+    private static String lagLestStatus(Melding melding) {
+        if (VisningUtils.FRA_BRUKER.contains(melding.meldingstype)) {
+            return "";
+        } else if (melding.status != Status.IKKE_BESVART) {
+            return "Lest,";
+        } else {
+            return "Ulest,";
+        }
     }
 
     private static void settTemagruppe(Melding melding, String temagruppe, PropertyResolver propertyResolver) {
