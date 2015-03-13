@@ -50,7 +50,7 @@ var Utils = {
         return sanitize(tekst);
     },
     leggTilLenkerTags: function(innhold){
-        var uriRegex = /(([\w-]+:\/\/?|www[.])[^\s()<>]+)/g;
+        var uriRegex = /(([\w-]+:\/\/?|www(?:-\w+)?\.)[^\s()<>]+)/g;
         return innhold.replace(uriRegex, '<a target="_blank" href="$1">$1</a>');
     },
     tilParagraf: function(avsnitt){
