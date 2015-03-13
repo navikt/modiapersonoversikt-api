@@ -12,14 +12,7 @@ module.exports = React.createClass({
         var cls = erValgt ? "meldingsforhandsvisning valgt" : "meldingsforhandsvisning";
         var traad = this.props.traad;
         var melding = traad.meldinger[0];
-        var dato = traad.opprettetDato;
-
-        var datoString = dato;
-        if (!melding.erInngaaende) {
-            datoString += " - " + melding.fraBruker;
-        }
-        console.log('melding', melding);
-        datoString = sanitize(datoString, {allowedTags: ['em']});
+        var dato = sanitize(traad.opprettetDato, {allowedTags: ['em']});
 
         var meldingsStatus = this.props.traad.statusTekst + ", " + this.props.traad.temagruppe;
         meldingsStatus = sanitize(meldingsStatus, {allowedTags: ['em']});
@@ -30,7 +23,7 @@ module.exports = React.createClass({
                 <input id={"melding" + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={"melding" + this.props.traad.key} className={cls}>
                     <header>
-                        <p dangerouslySetInnerHTML={{__html: datoString}}></p>
+                        <p dangerouslySetInnerHTML={{__html: dato}}></p>
                         <div className={this.props.traad.statusKlasse}></div>
                         <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
                     </header>
