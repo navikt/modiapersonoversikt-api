@@ -20,6 +20,8 @@ import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
 
     public static final AnsattEnhet SKILLE_ENHET = new AnsattEnhet(null, null);
+    public static final AnsattEnhet TOM_ENHET = new AnsattEnhet("&#160;", "&#160;");
+    public static final List<AnsattEnhet> IKKE_VELGBARE_ENHETER = asList(SKILLE_ENHET, TOM_ENHET);
 
     public AnsattEnhetDropdown(String id, IModel<AnsattEnhet> model, List<AnsattEnhet> enheter, List<AnsattEnhet> foreslatteEnheter) {
         super(id, model, new AnsattEnhetChoiceProvider(enheter, foreslatteEnheter));
@@ -49,14 +51,14 @@ public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
 
         @Override
         protected boolean isDisabled(AnsattEnhet choice) {
-            return choice == SKILLE_ENHET;
+            return IKKE_VELGBARE_ENHETER.contains(choice);
         }
 
         @Override
         public void query(String term, int page, Response<AnsattEnhet> response) {
             List<AnsattEnhet> resultater = new ArrayList<>();
             for (AnsattEnhet enhet : union(foreslatteEnheter, enheter)) {
-                if (containsIgnoreCase(enhet.enhetId, term) || containsIgnoreCase(enhet.enhetNavn, term) || enhet == SKILLE_ENHET) {
+                if (containsIgnoreCase(enhet.enhetId, term) || containsIgnoreCase(enhet.enhetNavn, term) || IKKE_VELGBARE_ENHETER.contains(enhet)) {
                     resultater.add(enhet);
                 }
             }

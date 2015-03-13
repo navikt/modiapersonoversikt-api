@@ -261,6 +261,8 @@ public class NyOppgaveFormWrapper extends Panel {
         foreslatteEnheter.addAll(gsakService.hentForeslatteEnheter(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode, optional(nyOppgave.underkategori)));
         if (foreslatteEnheter.size() == 1) {
             nyOppgave.enhet = foreslatteEnheter.get(0);
+        } else if (foreslatteEnheter.isEmpty()) {
+            foreslatteEnheter.add(AnsattEnhetDropdown.TOM_ENHET);
         }
         foreslatteEnheter.add(AnsattEnhetDropdown.SKILLE_ENHET);
     }
