@@ -62,6 +62,12 @@ public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
                     resultater.add(enhet);
                 }
             }
+
+            // Ikke vis foreslåtte enheter når man søker, for å ikke vise duplikater og tomme elementer.
+            if (resultater.size() < enheter.size()) {
+                resultater.removeAll(foreslatteEnheter);
+            }
+
             response.addAll(resultater);
         }
 
