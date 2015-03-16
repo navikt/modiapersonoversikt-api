@@ -26,4 +26,4 @@ window.ModiaJS.InitializedComponents = window.ModiaJS.InitializedComponents || {
 })(window.console);
 
 
-module.exports = require('react');
+module.exports = require('react/addons');
