@@ -83,15 +83,15 @@ public class MeldingerSok {
         String navIdent = getSubjectHandler().getUid();
         String key = key(fnr, navIdent);
 
-        meldinger = on(meldinger).map(new Transformer<Melding, Melding>() {
+        List<Melding> transformerteMeldinger = on(meldinger).map(new Transformer<Melding, Melding>() {
             @Override
             public Melding transform(Melding melding) {
                 melding.opprettetDatoTekst = optional(melding.opprettetDato).map(DATO_TIL_STRING).getOrElse("");
                 return melding;
             }
         }).collect();
-        meldingerCache.put(key, meldinger);
-        directories.put(key, indekser(meldinger));
+        meldingerCache.put(key, transformerteMeldinger);
+        directories.put(key, indekser(transformerteMeldinger));
         indexingTimestamps.put(key, now());
     }
 
