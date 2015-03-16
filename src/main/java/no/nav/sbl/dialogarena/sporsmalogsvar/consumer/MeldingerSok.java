@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -50,6 +51,10 @@ public class MeldingerSok {
 
     private static final Logger logger = LoggerFactory.getLogger(MeldingerSok.class);
     public static final Integer TIME_TO_LIVE_MINUTES = 10;
+
+    public static final String REPLACEMENT_STRING = "";
+    public static final String LUCENE_ESCAPE_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|]";
+    public static final Pattern LUCENE_PATTERN = Pattern.compile(LUCENE_ESCAPE_CHARS);
 
     private static final String ID = "id";
     private static final String BEHANDLINGS_ID = "behandlingsId";
@@ -184,7 +189,8 @@ public class MeldingerSok {
     }
 
     private static String query(String soketekst) {
-        return on(asList(soketekst.split(" "))).map(new Transformer<String, String>() {
+        String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING);
+        return on(asList(vasketSoketekst.split(" "))).map(new Transformer<String, String>() {
 
             @Override
             public String transform(String s) {

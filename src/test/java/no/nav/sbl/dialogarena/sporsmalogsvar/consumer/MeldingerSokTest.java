@@ -110,6 +110,14 @@ public class MeldingerSokTest {
         assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
     }
 
+    @Test
+    public void patternetTrefferOgVaskerSpesialtegn() {
+        String soketekst = "\\+!():^[]{}~?=/|";
+        String vasketSoketekst = MeldingerSok.LUCENE_PATTERN.matcher(soketekst).replaceAll(MeldingerSok.REPLACEMENT_STRING);
+
+        assertThat(vasketSoketekst, is(""));
+    }
+
     private void innloggetBrukerEr(String ident) {
         System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
         System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
