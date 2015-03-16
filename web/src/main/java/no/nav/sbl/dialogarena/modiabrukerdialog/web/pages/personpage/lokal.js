@@ -29,8 +29,8 @@ jQuery(document).ready(function ($) {
     });
 
     // Åpner for bruk av hotkey mens man skriver
-    $('.dialogpanel').on('keydown', '.expandingtextarea', function (event) {
-        if (event.altKey && event.keyCode === 87 /* alt + w */) {
+    $('.sidebar-hoyre').on('keydown', '.expandingtextarea', function (event) {
+        if (event.altKey && event.keyCode === 67 /* alt + c */) {
             openSkrivestotte();
         }
     });
