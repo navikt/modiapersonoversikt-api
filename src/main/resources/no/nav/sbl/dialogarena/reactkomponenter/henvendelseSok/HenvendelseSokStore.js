@@ -17,10 +17,22 @@ HenvendelseSokStore.prototype.onChange = function (event) {
     this.fireUpdate(this.listeners);
 };
 
+HenvendelseSokStore.prototype.update = function (props) {
+    $.extend(this.state, props);
+    $.ajax({
+        async: false,
+        url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'
+    });
+
+    this.onChange({target: {value: this.state.fritekst}});
+
+    this.fireUpdate(this.listeners);
+};
+
 HenvendelseSokStore.prototype.traadChanged = function (traad) {
     this.state.valgtTraad = traad;
     this.fireUpdate(this.listeners);
-}
+};
 
 HenvendelseSokStore.prototype.onKeyDown = function (tabliste, event) {
     switch (event.keyCode) {
@@ -41,7 +53,7 @@ HenvendelseSokStore.prototype.onKeyDown = function (tabliste, event) {
             this.fireUpdate(this.listeners);
             break;
     }
-}
+};
 
 HenvendelseSokStore.prototype.oppdaterTraadRefs = function (traadMarkupIds) {
     this.state.traadMarkupIds = traadMarkupIds;
@@ -61,7 +73,8 @@ function updateScroll(tabliste, valgtIndex) {
 
 var hentSokeresultater =
     Utils.debounce(function (fritekst) {
-        sok(this.state.fnr, fritekst).done(function (traader) {
+        sok(this.state.fnr, fritekst)
+        .done(function (traader) {
             traader.forEach(function (traad) {
                 traad.key = traad.traadId;
                 traad.datoInMillis = traad.dato.millis;
@@ -75,8 +88,11 @@ var hentSokeresultater =
             });
             this.state.traader = traader;
             this.state.valgtTraad = traader[0] || {};
-            this.fireUpdate(this.listeners);
+            this.fireUpdate(this.listeners);}.bind(this))
+        .fail(function () {
+            $('.innboksSokToggle').click();
         }.bind(this))
+
     }, 150);
 
 var sok = function (fnr, query) {

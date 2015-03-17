@@ -6,7 +6,9 @@ var Utils = require('utils');
 var HenvendelseSokStore = require('./HenvendelseSokStore');
 
 var HenvendelseSok = React.createClass({
-    vis: function () {
+    vis: function (props) {
+        props = props || {};
+        this.store.update(props);
         this.refs.modal.open();
     },
     skjul: function () {
