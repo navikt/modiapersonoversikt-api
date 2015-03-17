@@ -47,7 +47,7 @@ public class MeldingerSok {
     public static final String DEFAULT_TIME_TO_LIVE_MINUTES = "10";
     public static final String TIME_TO_LIVE_MINUTES_PROPERTY = "meldingersok.time.to.live.minutes";
     public static final String REPLACEMENT_STRING = "";
-    public static final String LUCENE_ESCAPE_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|]";
+    public static final String LUCENE_ESCAPE_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|\\.]+";
     public static final Pattern LUCENE_PATTERN = Pattern.compile(LUCENE_ESCAPE_CHARS);
 
     private static final String ID = "id";

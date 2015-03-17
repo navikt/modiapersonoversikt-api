@@ -110,7 +110,7 @@ public class MeldingerSokTest {
 
     @Test
     public void patternetTrefferOgVaskerSpesialtegn() {
-        String soketekst = "\\+!():^[]{}~?=/|";
+        String soketekst = "\\+!():^[]{}~?=/|.";
         String vasketSoketekst = MeldingerSok.LUCENE_PATTERN.matcher(soketekst).replaceAll(MeldingerSok.REPLACEMENT_STRING);
 
         assertThat(vasketSoketekst, is(""));
