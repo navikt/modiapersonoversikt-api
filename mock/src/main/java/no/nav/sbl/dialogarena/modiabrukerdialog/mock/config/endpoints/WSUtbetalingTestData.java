@@ -47,9 +47,9 @@ public class WSUtbetalingTestData {
                                 kariNordmannYtelse4())
                         .withUtbetalingsdato(now().minusYears(1).plusMonths(2))
                         .withForfallsdato(now().minusYears(1).plusMonths(2))
-                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype(new WSBankkontotyper().withValue("Konto - Utland")))
-                        .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
-                        .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Utbetalt")),
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype("Konto - Utland"))
+                        .withUtbetalingsmetode("Bankkonto")
+                        .withUtbetalingsstatus("Utbetalt"),
                 new WSUtbetaling()
                         .withPosteringsdato(now().minusYears(1).minusMonths(2))
                         .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
@@ -62,10 +62,10 @@ public class WSUtbetalingTestData {
                                         .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(3)).withTom(now().minusYears(1).minusMonths(2)))
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                                        .withYtelseskomponenttype("Grunnpensjon")
                                                         .withYtelseskomponentbeloep(5200.00),
                                                 new WSYtelseskomponent()
-                                                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                        .withYtelseskomponenttype("Særtillegg")
                                                         .withYtelseskomponentbeloep(1456.00))
                                         .withYtelseskomponentersum(6656.00)
                                         .withTrekkListe(new ArrayList<WSTrekk>())
@@ -74,9 +74,9 @@ public class WSUtbetalingTestData {
                                         .withYtelseNettobeloep(4389.00)
                                         .withBilagsnummer("10201445961"))
                         .withForfallsdato(now().minusYears(1).minusMonths(2))
-                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype(new WSBankkontotyper().withValue("Konto - Utland")))
-                        .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
-                        .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Under saksbehandling"))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype("Konto - Utland"))
+                        .withUtbetalingsmetode("Bankkonto")
+                        .withUtbetalingsstatus("Under saksbehandling")
         );
     }
 
@@ -87,13 +87,13 @@ public class WSUtbetalingTestData {
                 .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
                 .withYtelseskomponentListe(
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponenttype("Grunnpensjon")
                                 .withYtelseskomponentbeloep(5200.00),
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponenttype("Særtillegg")
                                 .withYtelseskomponentbeloep(1456.00))
                 .withYtelseskomponentersum(6656.00)
-                .withTrekkListe(new WSTrekk().withTrekktype(new WSTrekktyper().withValue("Kreditorsjekk")).withTrekkbeloep(-900.00).withKreditor("00911111111"))
+                .withTrekkListe(new WSTrekk().withTrekktype("Kreditorsjekk").withTrekkbeloep(-900.00).withKreditor("00911111111"))
                 .withTrekksum(-900.00)
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                 .withSkattsum(-1500.00)
@@ -108,10 +108,10 @@ public class WSUtbetalingTestData {
                 .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
                 .withYtelseskomponentListe(
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponenttype("Grunnpensjon")
                                 .withYtelseskomponentbeloep(5200.00),
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponenttype("Særtillegg")
                                 .withYtelseskomponentbeloep(1456.00))
                 .withYtelseskomponentersum(6656.00)
                 .withTrekkListe(new ArrayList<WSTrekk>())
@@ -128,10 +128,10 @@ public class WSUtbetalingTestData {
                 .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1)).withTom(now().minusYears(1).plusMonths(1)))
                 .withYtelseskomponentListe(
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponenttype("Grunnpensjon")
                                 .withYtelseskomponentbeloep(5200.00),
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponenttype("Særtillegg")
                                 .withYtelseskomponentbeloep(1456.00))
                 .withYtelseskomponentersum(6656.00)
                 .withTrekkListe(new ArrayList<WSTrekk>())
@@ -148,10 +148,10 @@ public class WSUtbetalingTestData {
                 .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(1)).withTom(now().minusYears(1)))
                 .withYtelseskomponentListe(
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnpensjon"))
+                                .withYtelseskomponenttype("Grunnpensjon")
                                 .withYtelseskomponentbeloep(5200.00),
                         new WSYtelseskomponent()
-                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                .withYtelseskomponenttype("Særtillegg")
                                 .withYtelseskomponentbeloep(1456.00))
                 .withYtelseskomponentersum(6656.00)
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
@@ -174,12 +174,12 @@ public class WSUtbetalingTestData {
                                 .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(2).minusDays(15)).withTom(now().minusMonths(1).minusDays(15)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
-                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Sykepenger, arbeidstakere"))
+                                                .withYtelseskomponenttype("Sykepenger, arbeidstakere")
                                                 .withYtelseskomponentbeloep(15000.00))
                                 .withYtelseskomponentersum(15000.00)
                                 .withTrekkListe(
                                         new WSTrekk()
-                                                .withTrekktype(new WSTrekktyper().withValue("Kreditortrekk"))
+                                                .withTrekktype("Kreditortrekk")
                                                 .withTrekkbeloep(-900.00)
                                                 .withKreditor("00911111111"))
                                 .withTrekksum(-900.00)
@@ -188,9 +188,9 @@ public class WSUtbetalingTestData {
                                 .withYtelseNettobeloep(11833.00)
                                 .withBilagsnummer("10201498456"))
                 .withUtbetalingsdato(now().minusMonths(2))
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Konto - Norge")).withKontonummer("22222222222"))
-                .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
-                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Utbetalt"))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetalingsmetode("Bankkonto")
+                .withUtbetalingsstatus("Utbetalt")
 
                 ;
     }
@@ -212,9 +212,9 @@ public class WSUtbetalingTestData {
                                 .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
-                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Dagpenger"))
+                                                .withYtelseskomponenttype("Dagpenger")
                                                 .withSatsbeloep(389.45)
-                                                .withSatstype(new WSSatstyper().withValue("DAG"))
+                                                .withSatstype("DAG")
                                                 .withSatsantall(55.0)
                                                 .withYtelseskomponentbeloep(21419.75))
                                 .withYtelseskomponentersum(21419.75)
@@ -224,9 +224,9 @@ public class WSUtbetalingTestData {
                                 .withYtelseNettobeloep(19152.75)
                                 .withBilagsnummer("30742-5731"))
                 .withForfallsdato(now().minusMonths(1).plusDays(14))
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Utbetalingskort - Norge")))
-                .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Utbetalingskort"))
-                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Returnert for saksbehandling"));
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Utbetalingskort - Norge"))
+                .withUtbetalingsmetode("Utbetalingskort")
+                .withUtbetalingsstatus("Returnert for saksbehandling");
     }
 
 }
