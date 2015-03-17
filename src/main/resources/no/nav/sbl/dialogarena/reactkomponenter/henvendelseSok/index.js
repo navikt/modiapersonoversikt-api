@@ -5,7 +5,7 @@ var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
 var Utils = require('utils');
 var HenvendelseSokStore = require('./HenvendelseSokStore');
 
-module.exports = React.createClass({
+var HenvendelseSok = React.createClass({
     vis: function () {
         this.refs.modal.open();
     },
@@ -46,6 +46,7 @@ module.exports = React.createClass({
         var forhandsvisningsPanelId = Utils.generateId('sok-forhandsvisningsPanelId-');
         var tekstlistekomponenter = this.state.traader.map(function (traad) {
             return <ListevisningKomponent
+                key={traad.traadId}
                 traad={traad}
                 valgtTraad={this.state.valgtTraad}
                 store={this.store}
@@ -82,3 +83,5 @@ module.exports = React.createClass({
         this.setState(this.store.getState());
     }
 });
+
+module.exports = HenvendelseSok;

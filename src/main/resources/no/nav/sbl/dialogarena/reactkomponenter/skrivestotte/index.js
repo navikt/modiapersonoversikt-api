@@ -40,7 +40,7 @@ var Skrivestotte = React.createClass({
         var listePanelId = Utils.generateId('sok-layout-');
         var forhandsvisningsPanelId = Utils.generateId('sok-layout-');
         var tekstlistekomponenter = this.state.tekster.map(function(tekst) {
-            return <TekstListeKomponent tekst={tekst} valgtTekst={this.state.valgtTekst} store={this.store}/>
+            return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} store={this.store}/>
         }.bind(this));
 
         return (

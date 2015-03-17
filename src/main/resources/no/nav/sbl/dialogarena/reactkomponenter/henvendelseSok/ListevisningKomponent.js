@@ -1,7 +1,7 @@
 var React = require('react');
 var sanitize = require('sanitize-html');
 
-module.exports = React.createClass({
+var ListevisningKomponent = React.createClass({
     statics: {
         lagAriaLabel: function (traad) {
             return traad.temagruppe;
@@ -43,3 +43,5 @@ function tekstChangedProxy(store, traad) {
 function erValgtTekst(traad, valgtTraad) {
     return traad === valgtTraad;
 }
+
+module.exports = ListevisningKomponent;

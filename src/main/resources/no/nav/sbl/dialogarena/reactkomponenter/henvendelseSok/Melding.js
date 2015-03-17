@@ -2,7 +2,7 @@ var React = require('react');
 var Utils = require('utils');
 var sanitize = require('sanitize-html');
 
-module.exports = React.createClass({
+var Melding =  React.createClass({
     render: function () {
         var melding = this.props.melding;
         var clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
@@ -26,6 +26,10 @@ module.exports = React.createClass({
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
+        paragrafer = React.addons.createFragment({
+            paragrafer: paragrafer
+        });
+
         var dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
         var datoOgBruker = dato + ' - ' + melding.fraBruker;
         return (
@@ -43,3 +47,5 @@ module.exports = React.createClass({
         );
     }
 });
+
+module.exports = Melding;

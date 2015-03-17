@@ -1,7 +1,7 @@
 var React = require('react');
 
 var KnaggInput = React.createClass({
-    getDefaultProps: function(){
+    getDefaultProps: function () {
         return {
             knagger: [],
             fritekst: ''
@@ -63,9 +63,13 @@ var KnaggInput = React.createClass({
             );
         }.bind(this));
 
+        knagger = React.addons.createFragment({
+            knagger: knagger
+        });
+
         return (
             <div className="knagg-input">
-                <div className={"knagger clearfloat" + (this.state.focus ? " focus" : "")}>
+                <div className={"knagger" + (this.state.focus ? " focus" : "")}>
                     {knagger}
                     <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst}
                         onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}

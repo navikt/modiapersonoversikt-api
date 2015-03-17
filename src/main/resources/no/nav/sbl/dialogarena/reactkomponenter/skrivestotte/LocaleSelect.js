@@ -23,7 +23,7 @@ var LocaleSelect = React.createClass({
             return null;
         } else {
             var options =  uniqueLocales.map(function (locale) {
-                return <option value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>;
+                return <option key={locale} value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>;
             });
             return (
                 <select onChange={this.onChange} value={this.props.locale}>

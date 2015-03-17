@@ -82,8 +82,9 @@ var ModalPortal = React.createClass({
         }
 
         children.map(function (child) {
-            child.props.modal = this.props.modal;
-            return child;
+            return React.addons.cloneWithProps(child, {
+                modal: this.props.modal
+            });
         }.bind(this));
 
         var title = createAriaOptional('title', this.props.title);

@@ -15,9 +15,13 @@ var TekstForhandsvisning = React.createClass({
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
+        paragrafer = React.addons.createFragment({
+            paragrafer: paragrafer
+        });
+
         var knagger = tekst.tags.map(function (tag) {
             return (
-                <button className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>{'#' + tag}</button>
+                <button key={tag} className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>{'#' + tag}</button>
             );
         }.bind(this));
 
