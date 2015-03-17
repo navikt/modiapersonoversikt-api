@@ -53,11 +53,11 @@ public class TransformersTest {
     @Test
     public void underytelseTransformererKorrektFraWSObjekt() {
         WSYtelseskomponent wsYtelseskomponent = new WSYtelseskomponent()
-                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("KompType"))
+                .withYtelseskomponenttype("KompType")
                 .withYtelseskomponentbeloep(-10.0)
                 .withSatsantall(2.0)
                 .withSatsbeloep(20.0)
-                .withSatstype(new WSSatstyper().withValue("SatsType"));
+                .withSatstype("SatsType");
 
         Record<Underytelse> underytelse = UNDERYTELSE_TRANSFORMER.transform(wsYtelseskomponent);
         assertThat(underytelse.get(Underytelse.ytelsesType), is("KompType"));
@@ -83,7 +83,7 @@ public class TransformersTest {
 
     @Test
     public void createKontoFraWSObjekt() {
-        WSBankkonto wsKonto = new WSBankkonto().withKontonummer("1122334455").withKontotype(new WSBankkontotyper().withValue("Bankkonto - Innland"));
+        WSBankkonto wsKonto = new WSBankkonto().withKontonummer("1122334455").withKontotype("Bankkonto - Innland");
         Record<Konto> konto = createKonto(wsKonto);
         assertThat(konto.get(Konto.kontonummer), is("1122334455"));
         assertThat(konto.get(Konto.kontotype), is("Bankkonto - Innland"));
@@ -119,13 +119,13 @@ public class TransformersTest {
         List<WSYtelseskomponent> wsListe = asList(
                 new WSYtelseskomponent()
                         .withYtelseskomponentbeloep(-200.0)
-                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("FirstEntry")),
+                        .withYtelseskomponenttype("FirstEntry"),
                 new WSYtelseskomponent()
                         .withYtelseskomponentbeloep(100.0)
-                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("SecondEntry")),
+                        .withYtelseskomponenttype("SecondEntry"),
                 new WSYtelseskomponent()
                         .withYtelseskomponentbeloep(0.0)
-                        .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("ThirdEntry"))
+                        .withYtelseskomponenttype("ThirdEntry")
                 );
 
         Optional<List<Record<Underytelse>>> underytelser = createUnderytelser(wsListe);
@@ -244,14 +244,14 @@ public class TransformersTest {
     @Test
     public void hovedytelseTransformererKorrektFraWSObjekt() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()
-                .withUtbetaltTil(new WSPerson().withNavn("Ola Normann").withAktoerId("123123123").withDiskresjonskode(new WSDiskresjonskodetyper().withValue("5")))
+                .withUtbetaltTil(new WSPerson().withNavn("Ola Normann").withAktoerId("123123123").withDiskresjonskode("5"))
                 .withPosteringsdato(new DateTime(2015, 1, 1, 13, 37))
                 .withUtbetalingsmelding("Dette er en melding")
                 .withUtbetalingsdato(new DateTime(2015, 1, 2, 3, 4))
                 .withForfallsdato(new DateTime(2000, 1, 1, 1, 1))
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Bankkonto")).withKontonummer("***REMOVED***3"))
-                .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Overføring via bank"))
-                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Utbetalt"))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Bankkonto").withKontonummer("***REMOVED***3"))
+                .withUtbetalingsmetode("Overføring via bank")
+                .withUtbetalingsstatus("Utbetalt")
                 .withYtelseListe(
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
@@ -259,21 +259,21 @@ public class TransformersTest {
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponentbeloep(200.0)
-                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Grunnbeløp"))
+                                                .withYtelseskomponenttype("Grunnbeløp")
                                                 .withSatsantall(2.0)
-                                                .withSatstype(new WSSatstyper().withValue("SatsType"))
+                                                .withSatstype("SatsType")
                                                 .withSatsbeloep(10.0),
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponentbeloep(20000.0)
-                                                .withYtelseskomponenttype(new WSYtelseskomponenttyper().withValue("Særtillegg"))
+                                                .withYtelseskomponenttype("Særtillegg")
                                                 .withSatsantall(12.0)
-                                                .withSatstype(new WSSatstyper().withValue("SatsSats"))
+                                                .withSatstype("SatsSats")
                                                 .withSatsbeloep(20.0))
                                 .withYtelseskomponentersum(22000.0)
                                 .withTrekkListe(
-                                        new WSTrekk().withKreditor("kreditor as").withTrekkbeloep(-2000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
-                                        new WSTrekk().withKreditor("kreditor ans").withTrekkbeloep(-3000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")),
-                                        new WSTrekk().withKreditor("kreditor enk").withTrekkbeloep(-4000.0).withTrekktype(new WSTrekktyper().withValue("kreditortrekk")))
+                                        new WSTrekk().withKreditor("kreditor as").withTrekkbeloep(-2000.0).withTrekktype("kreditortrekk"),
+                                        new WSTrekk().withKreditor("kreditor ans").withTrekkbeloep(-3000.0).withTrekktype("kreditortrekk"),
+                                        new WSTrekk().withKreditor("kreditor enk").withTrekkbeloep(-4000.0).withTrekktype("kreditortrekk"))
                                 .withTrekksum(-9000.0)
                                 .withSkattListe(
                                         new WSSkatt().withSkattebeloep(-1.0),
@@ -282,7 +282,7 @@ public class TransformersTest {
                                 .withSkattsum(-6.0)
                                 .withYtelseNettobeloep(12994.0)
                                 .withBilagsnummer("123456789")
-                                .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***6").withNavn("Kari Normann").withDiskresjonskode(new WSDiskresjonskodetyper().withValue("3")))
+                                .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***6").withNavn("Kari Normann").withDiskresjonskode("3"))
                                 .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("KariNormann AS")));
 
         List<Record<Hovedytelse>> hovedytelser = TO_HOVEDYTELSE.transform(wsUtbetaling);
