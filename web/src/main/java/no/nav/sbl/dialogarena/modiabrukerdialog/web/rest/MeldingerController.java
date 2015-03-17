@@ -7,12 +7,10 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
+import javax.naming.ServiceUnavailableException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -39,8 +37,12 @@ public class MeldingerController {
 
     @GET
     @Path("/sok/{fritekst: .*}")
-    public List<Traad> sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
-        return searcher.sok(fnr, fritekst);
+    public List<Traad> sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) throws ServiceUnavailableException {
+        try {
+            return searcher.sok(fnr, fritekst);
+        } catch (RuntimeException e) {
+            throw new ServiceUnavailableException("Indeksen er ikke tilgjengelig");
+        }
     }
 
     @GET
