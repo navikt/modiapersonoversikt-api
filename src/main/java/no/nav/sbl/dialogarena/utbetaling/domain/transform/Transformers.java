@@ -44,7 +44,7 @@ public class Transformers {
         @Override
         public Record<Trekk> transform(WSTrekk wsTrekk) {
             return new Record<Trekk>()
-                    .with(Trekk.trekksType, wsTrekk.getTrekktype() != null ? wsTrekk.getTrekktype().getValue() : "")
+                    .with(Trekk.trekksType, wsTrekk.getTrekktype() != null ? wsTrekk.getTrekktype() : "")
                     .with(Trekk.trekkBeloep, wsTrekk.getTrekkbeloep())
                     .with(kreditor, wsTrekk.getKreditor());
         }
@@ -54,9 +54,9 @@ public class Transformers {
         @Override
         public Record<Underytelse> transform(WSYtelseskomponent wsYtelseskomponent) {
             return new Record<Underytelse>()
-                    .with(Underytelse.ytelsesType, wsYtelseskomponent.getYtelseskomponenttype() != null ? wsYtelseskomponent.getYtelseskomponenttype().getValue() : "")
+                    .with(Underytelse.ytelsesType, wsYtelseskomponent.getYtelseskomponenttype())
                     .with(Underytelse.satsBeloep, wsYtelseskomponent.getSatsbeloep())
-                    .with(Underytelse.satsType, wsYtelseskomponent.getSatstype() != null ? wsYtelseskomponent.getSatstype().getValue() : "")
+                    .with(Underytelse.satsType, wsYtelseskomponent.getSatstype())
                     .with(Underytelse.satsAntall, wsYtelseskomponent.getSatsantall())
                     .with(Underytelse.ytelseBeloep, wsYtelseskomponent.getYtelseskomponentbeloep());
         }
@@ -77,8 +77,8 @@ public class Transformers {
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
                         .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
-                        .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode() != null ? wsUtbetaling.getUtbetalingsmetode().getValue() : "")
-                        .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus() != null ? wsUtbetaling.getUtbetalingsstatus().getValue() : "")
+                        .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode())
+                        .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus())
                         .with(id, String.valueOf(createHovedytelseId(wsYtelse)))
                         .with(ytelse, wsYtelse.getYtelsestype() != null ? wsYtelse.getYtelsestype().getValue() : "")
                         .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
@@ -190,7 +190,7 @@ public class Transformers {
         }
         return new Record<Konto>()
                 .with(kontonummer, utbetaltTilKonto.getKontonummer())
-                .with(kontotype, utbetaltTilKonto.getKontotype().getValue());
+                .with(kontotype, utbetaltTilKonto.getKontotype());
     }
 
     protected static Record<Aktoer> createAktoer(WSAktoer utbetaltTil) {
@@ -205,7 +205,7 @@ public class Transformers {
 
         if(aktoer.get(Aktoer.aktoerType).equals(AktoerType.PERSON)) {
             WSPerson wsPerson = (WSPerson) utbetaltTil;
-            aktoer = aktoer.with(Aktoer.diskresjonskode, wsPerson.getDiskresjonskode() != null ? wsPerson.getDiskresjonskode().getValue() : "");
+            aktoer = aktoer.with(Aktoer.diskresjonskode, wsPerson.getDiskresjonskode());
         }
 
         return aktoer;
