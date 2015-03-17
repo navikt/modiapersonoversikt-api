@@ -3,7 +3,7 @@ var Store = require('./../Store');
 
 var SkrivestotteStore = function () {
     Store.apply(this, arguments);
-    if(this.state.tekster.length > 0){
+    if (this.state.tekster.length > 0) {
         this.state.valgtTekst = this.state.tekster[0];
     }
 };
@@ -33,7 +33,7 @@ SkrivestotteStore.prototype.slettKnagg = function (knagg) {
     this.fireUpdate(this.listeners);
 };
 
-SkrivestotteStore.prototype.setLocale = function(locale){
+SkrivestotteStore.prototype.setLocale = function (locale) {
     this.state.valgtLocale = locale;
     this.fireUpdate(this.listeners);
 };
@@ -68,18 +68,22 @@ SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
     }
 };
 
-SkrivestotteStore.prototype.submit = function(onSubmit, event){
+SkrivestotteStore.prototype.submit = function (onSubmit, event) {
     event.preventDefault();
     var $tekstfelt = $('#' + this.state.tekstfeltId);
-    var eksisterendeTekst = $tekstfelt.focus().val();
-    eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
+    $tekstfelt.focus();
 
-    $tekstfelt
-        .focus()
-        .val(eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor))
-        .trigger('input');
+    // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
+    setTimeout(function () {
+        var eksisterendeTekst = $tekstfelt.val();
+        eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
+        $tekstfelt
+            .focus()
+            .val(eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor))
+            .trigger('input');
 
-    onSubmit();
+        onSubmit();
+    }.bind(this), 0);
 };
 
 function updateScroll(tabliste, valgtIndex) {
