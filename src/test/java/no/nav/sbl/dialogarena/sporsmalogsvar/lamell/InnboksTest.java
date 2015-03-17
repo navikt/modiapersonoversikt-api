@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SKRIFTLIG;
@@ -27,6 +28,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
@@ -78,6 +81,16 @@ public class InnboksTest extends WicketPageTest {
         }).should().inAjaxResponse().haveComponents(ofType(Innboks.class));
 
         assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
+    }
+
+    @Test
+    public void oppdatererMeldingeneVedKlikkPaaSok() {
+        String fnr = "fnr";
+        Innboks testInnboks = new Innboks("innboks", fnr);
+        wicket.goToPageWith(testInnboks)
+                .click().link(withId("henvendelseSokToggle"));
+
+        verify(henvendelseBehandlingService, atLeast(2)).hentMeldinger(fnr);
     }
 
     @Test
