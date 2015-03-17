@@ -53,6 +53,19 @@ var KnaggInput = React.createClass({
             this.setState({focus: false});
         }
     },
+    componentDidUpdate: function () {
+        //Dette er en IE hack.... Hvis man en gang i fremtiden ikke bruker IE 9, så kanskje man kan fjerne denne.
+        var $knaggcontainer = $(this.refs.knaggcontainer.getDOMNode());
+        var $input = $knaggcontainer.find('input[type="text"]');
+        var $knagger = $knaggcontainer.find('span.knagg');
+
+        var maxWidth = $knaggcontainer.width();
+        $knagger.each(function (index, knagg) {
+            maxWidth -= $(knagg).outerWidth() + 4.2//knagg bredde + margin;
+        });
+        $input.outerWidth(maxWidth);
+        //End IE hack
+    },
     render: function () {
         var knagger = this.props.knagger.map(function (knagg) {
             return (
@@ -68,7 +81,7 @@ var KnaggInput = React.createClass({
         });
 
         return (
-            <div className="knagg-input">
+            <div ref="knaggcontainer" className="knagg-input">
                 <div className={"knagger" + (this.state.focus ? " focus" : "")}>
                     {knagger}
                     <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst}
