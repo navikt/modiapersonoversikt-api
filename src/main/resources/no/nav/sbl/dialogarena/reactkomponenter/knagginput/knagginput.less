@@ -23,10 +23,17 @@
     }
     button {
       background: none;
-      border: none;
       color: #f5f5f5;
       vertical-align: inherit;
-      padding-right: 0;
+      margin-left: 6px;
+      line-height: 12px;
+      padding: 1px 3px;
+      border: 1px dotted transparent;
+
+      &:focus {
+        outline: none;
+        border: 1px dotted white;
+      }
     }
   }
 }

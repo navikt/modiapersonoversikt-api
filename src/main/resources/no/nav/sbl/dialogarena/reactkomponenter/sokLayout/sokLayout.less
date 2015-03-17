@@ -43,6 +43,7 @@
           opacity: 0;
         }
         input[type=radio] + label {
+          border: 1px solid transparent;
           width: 100%;
           margin: 0;
           padding: 10px 15px;
@@ -60,8 +61,11 @@
           }
         }
         input[type=radio]:focus + label {
-          outline-style: dotted;
-          outline-offset: -1px;
+          outline: none;
+          border: 1px solid #4d90fe;
+          -webkit-box-shadow: 0 0 4px 0 #4d90fe;
+          box-shadow: 0 0 4px 0 #4d90fe;
+          text-decoration: underline;
         }
       }
     }
