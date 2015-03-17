@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.modig.core.context.ModigSecurityConstants;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.SubjectHandlerUtils;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
@@ -15,10 +12,11 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.List;
 
+import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.TIME_TO_LIVE_MINUTES;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.DEFAULT_TIME_TO_LIVE_MINUTES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -48,7 +46,7 @@ public class MeldingerSokTest {
         assertThat(meldingerSok.directories.entrySet(), hasSize(1));
         assertThat(meldingerSok.indexingTimestamps.entrySet(), hasSize(1));
 
-        setCurrentMillisOffset(TIME_TO_LIVE_MINUTES * 60 * 1000);
+        setCurrentMillisOffset(Integer.valueOf(DEFAULT_TIME_TO_LIVE_MINUTES) * 60 * 1000);
         meldingerSok.ryddOppCache();
 
         assertThat(meldingerSok.meldingerCache.entrySet(), hasSize(0));
@@ -119,8 +117,8 @@ public class MeldingerSokTest {
     }
 
     private void innloggetBrukerEr(String ident) {
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+        setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
         SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 

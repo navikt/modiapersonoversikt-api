@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -42,8 +43,9 @@ import static org.joda.time.DateTime.now;
 public class MeldingerSok {
 
     private static final Logger logger = LoggerFactory.getLogger(MeldingerSok.class);
-    public static final Integer TIME_TO_LIVE_MINUTES = 10;
 
+    public static final String DEFAULT_TIME_TO_LIVE_MINUTES = "10";
+    public static final String TIME_TO_LIVE_MINUTES_PROPERTY = "meldingersok.time.to.live.minutes";
     public static final String REPLACEMENT_STRING = "";
     public static final String LUCENE_ESCAPE_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|]";
     public static final Pattern LUCENE_PATTERN = Pattern.compile(LUCENE_ESCAPE_CHARS);
@@ -55,7 +57,6 @@ public class MeldingerSok {
     private static final String ARKIVTEMA = "arkivtema";
     private static final String DATO = "dato";
     private static final String NAVIDENT = "navident";
-
     private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO, NAVIDENT};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
     private static final Transformer<DateTime, String> DATO_TIL_STRING = new Transformer<DateTime, String>() {
@@ -65,6 +66,8 @@ public class MeldingerSok {
         }
     };
 
+    private final Integer timeToLiveMinutes;
+
     private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, ANALYZER);
 
     protected Map<String, List<Melding>> meldingerCache = new ConcurrentHashMap<>();
@@ -72,6 +75,7 @@ public class MeldingerSok {
     protected Map<String, DateTime> indexingTimestamps = new ConcurrentHashMap<>();
 
     public MeldingerSok() {
+        timeToLiveMinutes = Integer.valueOf(getProperty(TIME_TO_LIVE_MINUTES_PROPERTY, DEFAULT_TIME_TO_LIVE_MINUTES));
         queryParser.setDefaultOperator(QueryParser.Operator.AND);
         queryParser.setAllowLeadingWildcard(true);
     }
@@ -137,7 +141,7 @@ public class MeldingerSok {
         logger.info("Starter opprydning av cache. Har {} directories", directories.size());
         int count = 0;
         for (Map.Entry<String, DateTime> entry : indexingTimestamps.entrySet()) {
-            if (now().minusMinutes(TIME_TO_LIVE_MINUTES).isAfter(entry.getValue())) {
+            if (now().minusMinutes(timeToLiveMinutes).isAfter(entry.getValue())) {
                 count++;
                 String key = entry.getKey();
                 indexingTimestamps.remove(key);
