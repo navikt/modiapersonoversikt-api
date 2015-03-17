@@ -15,7 +15,9 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
@@ -24,15 +26,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class Innboks extends Lerret {
@@ -49,8 +47,6 @@ public class Innboks extends Lerret {
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     private InnboksVM innboksVM;
-    private AlleMeldingerPanel alleMeldingerPanel;
-    private TraaddetaljerPanel traaddetaljerPanel;
 
     public Innboks(String id, final String fnr) {
         super(id);
@@ -63,12 +59,12 @@ public class Innboks extends Lerret {
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
 
-        traaddetaljerPanel = new TraaddetaljerPanel("detaljpanel", innboksVM);
+        final TraaddetaljerPanel traaddetaljerPanel = new TraaddetaljerPanel("detaljpanel", innboksVM);
         traaddetaljerPanel.setOutputMarkupId(true);
         traaddetaljerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
 
-        alleMeldingerPanel = new AlleMeldingerPanel("meldinger", innboksVM, traaddetaljerPanel.getMarkupId());
+        final AlleMeldingerPanel alleMeldingerPanel = new AlleMeldingerPanel("meldinger", innboksVM, traaddetaljerPanel.getMarkupId());
         alleMeldingerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
         final ReactComponentPanel henvendelseSok = new ReactComponentPanel("henvendelseSokContainer", "HenvendelseSok", getHenvendelseSokProps());
@@ -77,7 +73,7 @@ public class Innboks extends Lerret {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 innboksVM.oppdaterMeldinger();
-                target.add(Innboks.this.alleMeldingerPanel, Innboks.this.traaddetaljerPanel);
+                target.add(alleMeldingerPanel, traaddetaljerPanel);
                 henvendelseSok.callFunction(target, "vis", getHenvendelseSokProps());
             }
         };
