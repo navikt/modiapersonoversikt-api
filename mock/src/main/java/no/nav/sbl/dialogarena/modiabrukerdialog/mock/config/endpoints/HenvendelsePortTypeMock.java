@@ -40,7 +40,13 @@ public class HenvendelsePortTypeMock {
             " in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus" +
             " dynamicus, qui http://stash.devillo.no/projects/DIAL/repos/modiabrukerdialog/browse/web/src/main/java/no/nav/sbl/dialogarena/modiabrukerdialog/web/WicketApplication.java?at=2108eaa21754c08ea0a7eaa6d5acacaf62513e92 sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit" +
             " litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes" +
-            " in futurum.";
+            " in futurum. link test bughunt \n" +
+            "www.nav.no \n" +
+            "http://nav.no \n" +
+            "https://nav.no \n" +
+            "https://tjenester-t4.nav.no/mininnboks/sporsmal/skriv/ARBD?0 \n" +
+            "www.tjenester-t4.nav.no/mininnboks/sporsmal/skriv/ARBD?0 \n" +
+            "www.nav.no?urlparam=param1&param2=parma2";
 
     private static final String KORT_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
