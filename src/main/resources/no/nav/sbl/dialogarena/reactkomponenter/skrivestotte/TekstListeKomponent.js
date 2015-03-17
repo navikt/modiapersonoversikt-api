@@ -8,7 +8,7 @@ var TekstListeKomponent = React.createClass({
                 <input id={"tekstElementRadio" + this.props.tekst.key} name="tekstListeRadio" type="radio"
                     readOnly checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)} />
                 <label htmlFor={"tekstElementRadio" + this.props.tekst.key}>
-                    <h4 dangerouslySetInnerHTML={{__html: this.props.tekst.tittel}}></h4>
+                    <span dangerouslySetInnerHTML={{__html: this.props.tekst.tittel}}></span>
                 </label>
             </div>
         );

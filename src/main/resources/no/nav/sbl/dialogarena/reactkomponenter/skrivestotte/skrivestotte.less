@@ -15,15 +15,20 @@
       div.sok-element {
         text-transform: none;
 
-        h4 {
+        span {
           margin: 0;
-          font-size: 14px;
+          font-size: 14px !important;
+          color: #3e3832;
+          font-weight: 600;
         }
         input[type=radio] + label {
           text-transform: none;
         }
 
         input[type=radio]:checked + label {
+          span {
+            color: white;
+          }
           em {
             background-color: #87897d;
           }
