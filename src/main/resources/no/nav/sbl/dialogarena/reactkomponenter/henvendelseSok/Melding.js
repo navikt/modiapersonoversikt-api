@@ -22,7 +22,7 @@ var Melding =  React.createClass({
             <span dangerouslySetInnerHTML={{__html: journalfortMelding}}></span>
         </div>;
 
-        var paragrafer = Utils.sanitize(melding.fritekst).split(/[\r\n]+/)
+        var paragrafer = melding.fritekst.split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 

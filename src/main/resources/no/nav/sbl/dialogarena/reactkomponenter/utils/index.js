@@ -54,6 +54,7 @@ var Utils = {
         return innhold.replace(uriRegex, '<a target="_blank" href="$1">$1</a>');
     },
     tilParagraf: function(avsnitt){
+        avsnitt = sanitize(avsnitt, {allowedTags: ['a', 'em']});
         return <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>;
     }
 };
