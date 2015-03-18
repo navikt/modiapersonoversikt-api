@@ -42,7 +42,9 @@ var KnaggInput = React.createClass({
         var data = finnKnaggerOgFritekst(event.target.value, this.props.knagger);
         this.props.store.onChange(data);
     },
-    fjernKnagg: function (knagg) {
+    fjernKnagg: function (knagg, event) {
+        event.preventDefault();
+
         this.props.store.slettKnagg(knagg);
         this.refs.search.getDOMNode().focus();
     },
