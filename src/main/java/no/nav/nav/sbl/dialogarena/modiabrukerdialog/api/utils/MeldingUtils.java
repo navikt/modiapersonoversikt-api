@@ -111,7 +111,7 @@ public class MeldingUtils {
     private static String lagLestStatus(Melding melding) {
         if (VisningUtils.FRA_BRUKER.contains(melding.meldingstype)) {
             return "";
-        } else if (melding.status != Status.IKKE_BESVART) {
+        } else if (melding.status == Status.LEST_AV_BRUKER) {
             return "Lest,";
         } else {
             return "Ulest,";
