@@ -35,7 +35,8 @@ public class GsakSakV1PortTypeMock {
             createSak("BIL", "V2", "Bilsøknad", DateTime.now().minusDays(4)),
             createSak("IND", "OEBS", "Individstønad", DateTime.now().minusDays(4)),
             createSak("DAG", "PP01", "Dagpenger", DateTime.now().minusDays(4)),
-            createSak("DAG", "AO11", "Dagpenger", DateTime.now().minusDays(2)));
+            createSak("DAG", "AO11", "Dagpenger", DateTime.now().minusDays(2)),
+            createSak("KLA", "AO11", "Klage/Anke", DateTime.now().minusDays(5)));
 
     private static List<WSSak> saksliste2 = asList(
             createSak("SYM", DateTime.now().minusDays(4)),
