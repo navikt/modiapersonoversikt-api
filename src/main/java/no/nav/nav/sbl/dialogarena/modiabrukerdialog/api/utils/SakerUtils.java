@@ -41,6 +41,7 @@ public class SakerUtils {
     private static SakerListe getFagsaker(Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker, LokaltKodeverk lokaltKodeverk) {
         List<Sak> fagsakerFraGodkjenteFagsystemer = on(generelleOgIkkeGenerelleSaker.get(false))
                 .filter(IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK)
+                .filter(IS_GODKJENT_TEMA_FOR_FAGSAK)
                 .collect();
         return new SakerListe(grupperSakerPaaTema(fagsakerFraGodkjenteFagsystemer, lokaltKodeverk));
     }

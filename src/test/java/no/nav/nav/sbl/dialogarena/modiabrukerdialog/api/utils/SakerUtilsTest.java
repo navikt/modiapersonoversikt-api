@@ -15,10 +15,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.FAGSYSTEMKODE_ARENA;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
@@ -36,7 +33,7 @@ public class SakerUtilsTest {
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
             put("ARBD", asList("FUL", "AAP"));
-            put("FMLI", asList("FOR", "SIK"));
+            put("FMLI", asList("FOR", "BID"));
         }
     };
     private static final Map<String, String> KODEVERK_MOCK_MAP = new HashMap<String, String>() {
@@ -44,7 +41,7 @@ public class SakerUtilsTest {
             put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "FAGSYSTEMNAVN");
         }
     };
-    private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(Arrays.asList("FUL", "SER", "SIK", "VEN"));
+    private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(asList("FUL", "SER", "SYM", "VEN"));
 
     @Mock
     private LokaltKodeverk lokaltKodeverk;
@@ -209,6 +206,33 @@ public class SakerUtilsTest {
     }
 
     @Test
+    public void fagsakerUtenGodkjentFagsystemEllerTemaSkalFiltreresBort() {
+        Sak fagsakUtenGodkjentFagsystem = createSak("id", alleTemaer.get(0), "Ikke godkjent fagsystemkode", SAKSTYPE_MED_FAGSAK, DateTime.now());
+        Saker sakerUtenGodkjentFagsystem = hentGenerelleOgIkkeGenerelleSaker(asList(fagsakUtenGodkjentFagsystem), lokaltKodeverk);
+
+        assertThat(sakerUtenGodkjentFagsystem.getSakerListeFagsak().size(), is(0));
+
+        Sak fagsakUtenGodkjentTema = createSak("id", IKKE_GODKJENTE_TEMA_FOR_FAGSAKER.get(0), GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_MED_FAGSAK, DateTime.now());
+        Saker sakeruteGodkjentTema = hentGenerelleOgIkkeGenerelleSaker(asList(fagsakUtenGodkjentTema), lokaltKodeverk);
+
+        assertThat(sakeruteGodkjentTema.getSakerListeFagsak().size(), is(0));
+    }
+
+    @Test
+    public void generelleSakerUtenGodkjentFagsystemEllerTemaSkalFiltreresBort() {
+        Sak generellSakUtenGodkjentFagsystem = createSak("id", GODKJENTE_TEMA_FOR_GENERELLE.get(0), "Ikke godkjent fagsystemkode", SAKSTYPE_GENERELL, DateTime.now());
+        Saker sakerUtenGodkjentFagsystem = hentGenerelleOgIkkeGenerelleSaker(asList(generellSakUtenGodkjentFagsystem), lokaltKodeverk);
+
+        assertThat(sakerUtenGodkjentFagsystem.getSakerListeGenerelle().size(), is(0));
+
+        Sak generellSakUtenGodkjentTema = createSak("id", "Ikke godkjent tema for generell", GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now());
+        Saker sakeruteGodkjentTema = hentGenerelleOgIkkeGenerelleSaker(asList(generellSakUtenGodkjentTema), lokaltKodeverk);
+
+        assertThat(sakeruteGodkjentTema.getSakerListeGenerelle().size(), is(0));
+
+    }
+
+    @Test
     public void setterFagsystemNavnTilFagsystemKodeDersomNavnetIkkeFinnesIMapping() {
         Sak sak = createSak("id 1", alleTemaer.get(0), GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(1), "sakstype", DateTime.now().minusDays(1));
         List<Sak> sakerForBruker = asList(sak);
@@ -257,7 +281,7 @@ public class SakerUtilsTest {
         List<String> unikeTema = new ArrayList<>(EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE);
         unikeTema.remove(godkjentTemaSomFinnesIEnTemagruppe);
 
-        ArrayList<Sak> liste = new ArrayList<>(Arrays.asList(
+        ArrayList<Sak> liste = new ArrayList<>(asList(
                 createSak("11111111", unikeTema.get(0), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
                 createSak("22222222", unikeTema.get(1), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
                 createSak("33333333", godkjentTemaSomFinnesIEnTemagruppe, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
