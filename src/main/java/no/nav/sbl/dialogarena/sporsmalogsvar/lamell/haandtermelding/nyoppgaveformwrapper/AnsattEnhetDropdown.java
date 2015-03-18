@@ -25,8 +25,12 @@ public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
 
     public AnsattEnhetDropdown(String id, IModel<AnsattEnhet> model, List<AnsattEnhet> enheter, List<AnsattEnhet> foreslatteEnheter) {
         super(id, model, new AnsattEnhetChoiceProvider(enheter, foreslatteEnheter));
-
         getSettings().setContainerCssClass("enhetvalg");
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
         getSettings().setPlaceholder(getString("ansattenhetdropdown.null"));
     }
 
