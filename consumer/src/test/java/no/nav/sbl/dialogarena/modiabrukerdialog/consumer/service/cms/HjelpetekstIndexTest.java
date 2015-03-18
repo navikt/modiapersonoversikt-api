@@ -47,7 +47,7 @@ public class HjelpetekstIndexTest {
     @Test
     public void returnererAlt() {
         List<Hjelpetekst> resultat = hjelpetekstIndex.sok("");
-        assertThat(resultat, hasSize(3));
+        assertThat(resultat, hasSize(4));
     }
 
     @Test
@@ -57,11 +57,27 @@ public class HjelpetekstIndexTest {
     }
 
     @Test
-    public void sokerPaaFlereTags() {
+    public void sokerPaaTagsMedStorForbokstav() {
         List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "generell", "feilsendt");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
+    }
+
+    @Test
+    public void sokerPaaFlereTags() {
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "Store");
+
+        assertThat(resultat, hasSize(1));
+        assertThat(resultat.get(0).tittel, is("Test mer tags"));
+    }
+
+    @Test
+    public void sokerPaaTagsErCaseInsensitive() {
+        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "stORe");
+
+        assertThat(resultat, hasSize(1));
+        assertThat(resultat.get(0).tittel, is("Test mer tags"));
     }
 
     @Test
@@ -117,7 +133,10 @@ public class HjelpetekstIndexTest {
                                 "Dersom du velger å sende inn henvendelsen per post, anbefaler vi at du henter ut en førsteside til saken din på www.nav.no. Alle dokumenter sendes til den adressen som er oppgitt på førstesiden.\n" +
                                 "\n" +
                                 "Søknadsskjemaer, selvbetjeningsløsninger, informasjon og «Dine utbetalinger» finner du på vår internettside www.nav.no. Her vil du også finne besøksadresse til ditt NAV-kontor.\n",
-                        "generell", "sensitiv"));
+                        "generell", "sensitiv"),
+                hjelpetekst("Test mer tags",
+                        "Vi tester tags",
+                        "tag", "Store", "bokstav"));
     }
 
     private static Hjelpetekst hjelpetekst(String tittel, String norsk, String... tags) {

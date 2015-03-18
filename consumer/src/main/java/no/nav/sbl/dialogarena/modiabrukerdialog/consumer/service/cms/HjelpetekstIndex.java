@@ -82,7 +82,7 @@ public class HjelpetekstIndex {
             document.add(new StoredField(INNHOLD + "_" + localeHjelpetekst.getKey(), localeHjelpetekst.getValue()));
         }
         for (String tag : hjelpetekst.tags) {
-            document.add(new StringField(TAGS_FILTER, tag, Store.NO));
+            document.add(new StringField(TAGS_FILTER, tag.toLowerCase(), Store.NO));
         }
         return document;
     }
