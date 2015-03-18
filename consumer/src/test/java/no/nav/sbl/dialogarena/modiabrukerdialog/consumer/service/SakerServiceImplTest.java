@@ -123,7 +123,7 @@ public class SakerServiceImplTest {
     public void leggerTilAlleManglendeGenerelleSakerInkludertOppfolgingssakDersomIngenOppfolgingssakerFinnes() {
         Saker saker = sakerService.hentSaker(FNR);
 
-        assertThat(saker.getSakerListeGenerelle().size(), is(11));
+        assertThat(saker.getSakerListeGenerelle().size(), is(12));
     }
 
     @Test
