@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>4.12-SNAPSHOT</version>
+    <version>4.13-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -73,8 +73,8 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>1.9</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>2.9</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>1.10-SNAPSHOT</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>2.10</sporsmalogsvar.version>
         <saksoversikt.version>2.3</saksoversikt.version>
     </properties>
 
