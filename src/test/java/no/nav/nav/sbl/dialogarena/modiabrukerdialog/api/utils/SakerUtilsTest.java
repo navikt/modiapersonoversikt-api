@@ -206,16 +206,11 @@ public class SakerUtilsTest {
     }
 
     @Test
-    public void fagsakerUtenGodkjentFagsystemEllerTemaSkalFiltreresBort() {
+    public void fagsakerUtenGodkjentFagsystemSkalFiltreresBort() {
         Sak fagsakUtenGodkjentFagsystem = createSak("id", alleTemaer.get(0), "Ikke godkjent fagsystemkode", SAKSTYPE_MED_FAGSAK, DateTime.now());
         Saker sakerUtenGodkjentFagsystem = hentGenerelleOgIkkeGenerelleSaker(asList(fagsakUtenGodkjentFagsystem), lokaltKodeverk);
 
         assertThat(sakerUtenGodkjentFagsystem.getSakerListeFagsak().size(), is(0));
-
-        Sak fagsakUtenGodkjentTema = createSak("id", IKKE_GODKJENTE_TEMA_FOR_FAGSAKER.get(0), GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_MED_FAGSAK, DateTime.now());
-        Saker sakeruteGodkjentTema = hentGenerelleOgIkkeGenerelleSaker(asList(fagsakUtenGodkjentTema), lokaltKodeverk);
-
-        assertThat(sakeruteGodkjentTema.getSakerListeFagsak().size(), is(0));
     }
 
     @Test
