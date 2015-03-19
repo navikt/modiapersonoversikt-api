@@ -57,7 +57,9 @@ public class MeldingerSok {
     private static final String ARKIVTEMA = "arkivtema";
     private static final String DATO = "dato";
     private static final String NAVIDENT = "navident";
-    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO, NAVIDENT};
+    private static final String STATUSTEKST = "statustekst";
+    private static final String KANAL = "kanal";
+    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO, NAVIDENT, STATUSTEKST, KANAL};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
     private static final Transformer<DateTime, String> DATO_TIL_STRING = new Transformer<DateTime, String>() {
         @Override
@@ -181,6 +183,9 @@ public class MeldingerSok {
         document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), YES));
         document.add(new TextField(DATO, optional(melding.opprettetDatoTekst).getOrElse(""), YES));
         document.add(new TextField(NAVIDENT, optional(melding.navIdent).getOrElse(""), YES));
+        document.add(new TextField(STATUSTEKST, optional(melding.statusTekst).getOrElse(""), YES));
+        document.add(new TextField(KANAL, optional(melding.kanal).getOrElse(""), YES));
+
         return document;
     }
 
@@ -207,7 +212,10 @@ public class MeldingerSok {
                 String arkivtema = hentTekstResultat(ARKIVTEMA, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String dato = hentTekstResultat(DATO, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String navIdent = hentTekstResultat(NAVIDENT, doc, searcher, analyzer, highlighter, gjorHighlighting);
-                resultat.put(behandlingsId, new MeldingSokResultat(fritekst, temagruppe, arkivtema, dato, navIdent));
+                String statusTekst = hentTekstResultat(STATUSTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String kanal = hentTekstResultat(KANAL, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                resultat.put(behandlingsId, new MeldingSokResultat().withFritekst(fritekst).withTemagruppe(temagruppe).withArkivtema(arkivtema)
+                        .withDato(dato).withNavident(navIdent).withStatustekst(statusTekst).withKanal(kanal));
             }
             return resultat;
         } catch (IOException e) {
@@ -246,20 +254,52 @@ public class MeldingerSok {
                 melding.journalfortTemanavn = meldingSokResultat.arkivtema;
                 melding.opprettetDatoTekst = meldingSokResultat.dato;
                 melding.navIdent = meldingSokResultat.navIdent;
+                melding.kanal = meldingSokResultat.kanal;
+                melding.statusTekst = meldingSokResultat.statustekst;
                 return melding;
             }
         };
     }
 
     private static class MeldingSokResultat {
-        public final String fritekst, temagruppe, arkivtema, dato, navIdent;
+        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal;
 
-        public MeldingSokResultat(String fritekst, String temagruppe, String arkivtema, String dato, String navIdent) {
+        public MeldingSokResultat() {
+        }
+
+        public MeldingSokResultat withFritekst(String fritekst) {
             this.fritekst = fritekst;
+            return this;
+        }
+
+        public MeldingSokResultat withTemagruppe(String temagruppe) {
             this.temagruppe = temagruppe;
+            return this;
+        }
+
+        public MeldingSokResultat withArkivtema(String arkivtema) {
             this.arkivtema = arkivtema;
+            return this;
+        }
+
+        public MeldingSokResultat withDato(String dato) {
             this.dato = dato;
+            return this;
+        }
+
+        public MeldingSokResultat withNavident(String navIdent) {
             this.navIdent = navIdent;
+            return this;
+        }
+
+        public MeldingSokResultat withStatustekst(String statustekst) {
+            this.statustekst = statustekst;
+            return this;
+        }
+
+        public MeldingSokResultat withKanal(String kanal) {
+            this.kanal = kanal;
+            return this;
         }
     }
 }

@@ -55,19 +55,21 @@ public class MeldingerSokTest {
     }
 
     @Test
-    public void fritekstTemagruppeOgArkivtemaErSokbart() {
+    public void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() {
         assertSok("rbei", "1235");
         assertSok("uføre", "1236");
+        assertSok("svar", "1234");
+        assertSok("skriftlig", "1235");
     }
 
     @Test
     public void returnererMeldingerSortertEtterDato() {
         String fnr = "987654321";
         List<Melding> meldinger = asList(
-                lagMelding("1", "1", "", "", "", DateTime.now().minusDays(2)),
-                lagMelding("2", "2", "", "", "", DateTime.now().minusDays(1)),
-                lagMelding("3", "3", "", "", "", DateTime.now()),
-                lagMelding("4", "4", "", "", "", DateTime.now().minusDays(3)));
+                lagMelding("1", "1", "", "", "", DateTime.now().minusDays(2), "", ""),
+                lagMelding("2", "2", "", "", "", DateTime.now().minusDays(1), "", ""),
+                lagMelding("3", "3", "", "", "", DateTime.now(), "", ""),
+                lagMelding("4", "4", "", "", "", DateTime.now().minusDays(3), "", ""));
         meldingerSok.indekser(fnr, meldinger);
 
         List<Traad> traader = meldingerSok.sok(fnr, "");
@@ -82,10 +84,10 @@ public class MeldingerSokTest {
         String fnr = "4561234789";
         DateTime now = DateTime.now();
         List<Melding> meldinger = asList(
-                lagMelding("1", "1", "", "", "", now.minusDays(2)),
-                lagMelding("2", "1", "", "", "", now.minusDays(1)),
-                lagMelding("3", "2", "", "", "", now),
-                lagMelding("4", "4", "", "", "", now.minusDays(3)));
+                lagMelding("1", "1", "", "", "", now.minusDays(2), "", ""),
+                lagMelding("2", "1", "", "", "", now.minusDays(1), "", ""),
+                lagMelding("3", "2", "", "", "", now, "", ""),
+                lagMelding("4", "4", "", "", "", now.minusDays(3), "", ""));
         meldingerSok.indekser(fnr, meldinger);
 
         List<Traad> traader = meldingerSok.sok(fnr, "");
@@ -130,21 +132,24 @@ public class MeldingerSokTest {
 
     private static List<Melding> lagMeldinger() {
         return asList(
-                lagMelding("1234", "tekst 1 tekst 1 tekst 1", "Familie", ""),
-                lagMelding("1235", "tekst 2 tekst 2 tekst 2", "Arbeid", "Dagpenger"),
-                lagMelding("1236", "tekst 3 tekst 3 tekst 3", "Pensjon", "Uførepensjon"));
+                lagMelding("1234", "tekst 1 tekst 1 tekst 1", "Familie", "", "svar", "telefon"),
+                lagMelding("1235", "tekst 2 tekst 2 tekst 2", "Arbeid", "Dagpenger", "spørsmål", "skriftlig"),
+                lagMelding("1236", "tekst 3 tekst 3 tekst 3", "Pensjon", "Uførepensjon", "referat", ""));
     }
 
-    private static Melding lagMelding(String behandlingsId, String fritekst, String temagruppe, String arkivtema) {
-        return lagMelding(behandlingsId, behandlingsId, fritekst, temagruppe, arkivtema, DateTime.now());
+    private static Melding lagMelding(String behandlingsId, String fritekst, String temagruppe, String arkivtema, String statustekst, String kanal) {
+        return lagMelding(behandlingsId, behandlingsId, fritekst, temagruppe, arkivtema, DateTime.now(), statustekst, kanal);
     }
 
-    private static Melding lagMelding(String behandlingsId, String behandlingskjedeId, String fritekst, String temagruppe, String arkivtema, DateTime dato) {
+    private static Melding lagMelding(String behandlingsId, String behandlingskjedeId, String fritekst, String temagruppe,
+                                      String arkivtema, DateTime dato, String statustekst, String kanal) {
         Melding melding = new Melding(behandlingsId, SAMTALEREFERAT_OPPMOTE, dato);
         melding.traadId = behandlingskjedeId;
         melding.fritekst = fritekst;
         melding.temagruppeNavn = temagruppe;
         melding.journalfortTemanavn = arkivtema;
+        melding.statusTekst = statustekst;
+        melding.kanal = kanal;
         return melding;
     }
 
