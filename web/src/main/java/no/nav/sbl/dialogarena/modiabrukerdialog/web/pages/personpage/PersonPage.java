@@ -140,13 +140,13 @@ public class PersonPage extends BasePage {
 
     private List<AbstractTab> createTabs() {
         List<AbstractTab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTabPanel(new Model<>("img/familie_ikon.svg"), "familie") {
+        tabs.add(new AbstractTabPanel(new Model<>("img/familie_ikon.svg"), "Familie") {
             @Override
             public WebMarkupContainer getPanel(String panelId) {
                 return new PersonKjerneinfoPanel(panelId, fnr);
             }
         });
-        tabs.add(new AbstractTabPanel(new Model<>("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
+        tabs.add(new AbstractTabPanel(new Model<>("svg/kjerneinfo/lenker_ikon.svg"), "Lenker") {
             @Override
             public WebMarkupContainer getPanel(String panelId) {
 
