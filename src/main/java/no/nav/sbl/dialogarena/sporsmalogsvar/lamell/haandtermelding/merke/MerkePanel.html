@@ -10,20 +10,26 @@
     <div class="robust-strek"></div>
     <form wicket:id="merkForm">
         <div wicket:id="merkType">
-            <input wicket:id="feilsendtRadio" type="radio"/>
-            <label wicket:for="feilsendtRadio" class="medium">
-                <wicket:message key="merke.feilsendt"/>
-            </label>
-            <br/>
-            <input wicket:id="bidragRadio" type="radio"/>
-            <label wicket:for="bidragRadio" class="medium">
-                <wicket:message key="merke.bidrag"/>
-            </label>
-            <br/>
-            <input wicket:id="kontorsperretRadio" type="radio"/>
-            <label wicket:for="kontorsperretRadio" class="medium">
-                <wicket:message key="merke.kontorsperret"/>
-            </label>
+            <span>
+                <input wicket:id="feilsendtRadio" type="radio"/>
+                <label wicket:for="feilsendtRadio" class="medium">
+                    <wicket:message key="merke.feilsendt"/>
+                </label>
+                <br/>
+            </span>
+            <span wicket:id="bidragRadioValg">
+                <input wicket:id="bidragRadio" type="radio"/>
+                <label wicket:for="bidragRadio" class="medium">
+                    <wicket:message key="merke.bidrag"/>
+                </label>
+                <br/>
+            </span>
+            <span wicket:id="kontorsperretRadioValg">
+                <input wicket:id="kontorsperretRadio" type="radio"/>
+                <label wicket:for="kontorsperretRadio" class="medium">
+                    <wicket:message key="merke.kontorsperret"/>
+                </label>
+            </span>
 
             <div wicket:id="kontorsperrePanel"></div>
         </div>
