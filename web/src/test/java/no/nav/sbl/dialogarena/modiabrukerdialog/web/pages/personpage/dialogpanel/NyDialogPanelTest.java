@@ -14,6 +14,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockCont
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.VelgSakPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
@@ -28,10 +29,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
@@ -103,7 +101,8 @@ public class NyDialogPanelTest extends WicketPageTest {
                 .should().containComponent(withId("tekstfelt").and(ofType(EnhancedTextArea.class)))
                 .should().containComponent(withId("send").and(ofType(AjaxButton.class)))
                 .should().containComponent(withId("feedback").and(ofType(FeedbackPanel.class)))
-                .should().containComponent(withId("kvittering").and(ofType(KvitteringsPanel.class).thatIsInvisible()));
+                .should().containComponent(withId("kvittering").and(ofType(KvitteringsPanel.class).thatIsInvisible()))
+                .should().containComponent(withId("brukerKanSvareContainer").and(ofType(WebMarkupContainer.class).thatIsInvisible()));
     }
 
     @Test
@@ -220,6 +219,18 @@ public class NyDialogPanelTest extends WicketPageTest {
                 .submitWithAjaxButton(withId("velgSak"))
                 .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
                 .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)));
+    }
+
+    @Test
+    public void viserDisabledCheckedBrukerKanSvareDersomISporsmalsmodus() {
+        settISporsmalsModus();
+
+        wicket.goToPageWith(testNyDialogPanel)
+                .should().containComponent(withId("brukerKanSvareContainer").thatIsVisible())
+                .should().containComponent(withId("brukerKanSvare").and(ofType(CheckBox.class).thatIsVisible().and(thatIsDisabled())));
+
+        Boolean brukerKanSvare = (Boolean) wicket.get().component(withId("brukerKanSvare").and(ofType(CheckBox.class))).getDefaultModelObject();
+        assertThat(brukerKanSvare, is(true));
     }
 
     private void settISporsmalsModus() {

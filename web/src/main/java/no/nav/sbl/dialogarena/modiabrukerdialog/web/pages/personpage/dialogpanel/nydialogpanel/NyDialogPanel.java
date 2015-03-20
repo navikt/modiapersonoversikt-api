@@ -45,6 +45,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
@@ -89,12 +90,13 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(lagModusVelger(modusModel));
-        form.add(new Label("navIdent", getSubjectHandler().getUid()));
 
         epostVarselPanel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.bruker.fnr);
         epostVarselPanel.setOutputMarkupPlaceholderTag(true);
         modusKomponenter.add(epostVarselPanel);
         form.add(epostVarselPanel);
+
+        form.add(new Label("navIdent", getSubjectHandler().getUid()));
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel());
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
@@ -124,18 +126,12 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         skrivestottePanel = new SkrivestottePanel("skrivestotteContainer", grunnInfo, tekstfelt);
         form.add(skrivestottePanel);
-
         form.add(new AjaxLink("skrivestotteToggler") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 skrivestottePanel.vis(target);
             }
         });
-
-        feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-        modusKomponenter.add(feedbackPanel);
-        feedbackPanel.setOutputMarkupId(true);
-        form.add(feedbackPanel);
 
         RadioGroup<Kanal> radioGroup = lagKanalVelger(modusModel);
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
@@ -156,6 +152,22 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         temagruppeVelger.setOutputMarkupPlaceholderTag(true);
         modusKomponenter.add(temagruppeVelger);
         temagruppeVelger.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
+
+
+        final CheckBox brukerKanSvare = new CheckBox("brukerKanSvare", Model.of(true));
+        brukerKanSvare.add(enabledIf(Model.of(false)));
+
+        WebMarkupContainer brukerKanSvareContainer = new WebMarkupContainer("brukerKanSvareContainer");
+        brukerKanSvareContainer.setOutputMarkupPlaceholderTag(true);
+        brukerKanSvareContainer.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
+        brukerKanSvareContainer.add(brukerKanSvare);
+        modusKomponenter.add(brukerKanSvareContainer);
+        form.add(brukerKanSvareContainer);
+
+        feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+        modusKomponenter.add(feedbackPanel);
+        feedbackPanel.setOutputMarkupId(true);
+        form.add(feedbackPanel);
 
         sendKnapp = getSubmitKnapp(modusModel, form);
         form.add(sendKnapp);
