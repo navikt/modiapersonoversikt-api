@@ -28,8 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
@@ -73,9 +71,9 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         wicket.goToPageWith(nyOppgaveWrapper)
                 .inForm("panel:nyoppgaveform")
                 .submit()
-                .should().containComponent(thatIsInvisible().withId("enhetContainer"))
-                .should().containComponent(thatIsInvisible().withId("typeContainer"))
-                .should().containComponent(thatIsInvisible().withId("prioritetContainer"));
+                .should().containComponent(withId("enhetContainer"))
+                .should().containComponent(withId("typeContainer"))
+                .should().containComponent(withId("prioritetContainer"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertTrue(errorMessages.contains(nyOppgaveWrapper.getString("nyoppgaveform.tema.Required")));
@@ -109,5 +107,4 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
         verify(gsakService).opprettGsakOppgave(any(NyOppgave.class));
     }
-
 }
