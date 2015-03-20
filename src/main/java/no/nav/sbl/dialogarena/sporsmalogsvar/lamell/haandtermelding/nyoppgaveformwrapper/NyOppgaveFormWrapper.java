@@ -27,6 +27,7 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 
@@ -166,7 +167,8 @@ public class NyOppgaveFormWrapper extends Panel {
                 not(isEmptyList(underkategoriModel)))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
-        underkategoriContainer.add(visibleIf(visUnderkategoriValg));
+        underkategoriContainer.add(hasCssClassIf("hidden", not(visUnderkategoriValg)));
+//        underkategoriContainer.add(visibleIf(visUnderkategoriValg));
 
         return underkategoriContainer;
     }
@@ -193,7 +195,8 @@ public class NyOppgaveFormWrapper extends Panel {
         typeContainer.add(new AttributeAppender("for", typeDropdown.getMarkupId()));
 
         typeContainer.add(typeDropdown);
-        typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
+        typeContainer.add(hasCssClassIf("hidden", isEmptyList(typeModel)));
+//        typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
 
         return typeContainer;
     }
@@ -211,7 +214,8 @@ public class NyOppgaveFormWrapper extends Panel {
         IModel<Boolean> visEnhetsValg = both(not(isEmptyList(enhetModel)))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema"))))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.OppgaveType>(form.getModel(), "type"))));
-        enhetContainer.add(visibleIf(visEnhetsValg));
+        enhetContainer.add(hasCssClassIf("hidden", not(visEnhetsValg)));
+//        enhetContainer.add(visibleIf(visEnhetsValg));
         enhetContainer.add(new AttributeAppender("for", ansattEnhetDropdown.getMarkupId()));
 
         return enhetContainer;
@@ -246,7 +250,8 @@ public class NyOppgaveFormWrapper extends Panel {
                 not(isEmptyList(prioritetModel)))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
-        prioritetContainer.add(visibleIf(visPrioritetsValg));
+        prioritetContainer.add(hasCssClassIf("hidden", not(visPrioritetsValg)));
+//        prioritetContainer.add(visibleIf(visPrioritetsValg));
         prioritetContainer.add(new AttributeAppender("for", prioritetDropdown.getMarkupId()));
 
         return prioritetContainer;
