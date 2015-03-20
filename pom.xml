@@ -72,8 +72,8 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>1.10-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>2.11-SNAPSHOT</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>1.10</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>2.11</sporsmalogsvar.version>
         <saksoversikt.version>2.3</saksoversikt.version>
     </properties>
 
