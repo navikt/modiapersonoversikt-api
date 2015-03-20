@@ -75,7 +75,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final List<Component> modusKomponenter = new ArrayList<>();
     private final EpostVarselPanel epostVarselPanel;
     private final FeedbackPanel feedbackPanel;
-    private final AjaxButton sendKnapp;
     private final SkrivestottePanel skrivestottePanel;
 
     public NyDialogPanel(String id, GrunnInfo grunnInfo) {
@@ -169,7 +168,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
 
-        sendKnapp = getSubmitKnapp(modusModel, form);
+        AjaxButton sendKnapp = getSubmitKnapp(modusModel, form);
         form.add(sendKnapp);
         form.add(getAvbrytKnapp());
 
