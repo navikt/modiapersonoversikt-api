@@ -68,6 +68,7 @@ public class Innboks extends Lerret {
         alleMeldingerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
         final ReactComponentPanel henvendelseSok = new ReactComponentPanel("henvendelseSokContainer", "HenvendelseSok", getHenvendelseSokProps());
+        henvendelseSok.add(visibleIf(not(innboksVM.harFeilmelding())));
 
         AjaxLink henvendelseSokToggleButton = new AjaxLink("henvendelseSokToggle") {
             @Override
@@ -77,6 +78,7 @@ public class Innboks extends Lerret {
                 henvendelseSok.callFunction(target, "vis", getHenvendelseSokProps());
             }
         };
+        henvendelseSokToggleButton.add(visibleIf(not(innboksVM.harFeilmelding())));
 
         WebMarkupContainer feilmeldingPanel = new WebMarkupContainer("feilmeldingpanel");
         feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
