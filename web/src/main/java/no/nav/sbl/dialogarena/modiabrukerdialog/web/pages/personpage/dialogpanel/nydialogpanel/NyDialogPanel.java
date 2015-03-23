@@ -152,14 +152,9 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         modusKomponenter.add(temagruppeVelger);
         temagruppeVelger.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
 
-
-        final CheckBox brukerKanSvare = new CheckBox("brukerKanSvare", Model.of(true));
-        brukerKanSvare.add(enabledIf(Model.of(false)));
-
         WebMarkupContainer brukerKanSvareContainer = new WebMarkupContainer("brukerKanSvareContainer");
         brukerKanSvareContainer.setOutputMarkupPlaceholderTag(true);
         brukerKanSvareContainer.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
-        brukerKanSvareContainer.add(brukerKanSvare);
         modusKomponenter.add(brukerKanSvareContainer);
         form.add(brukerKanSvareContainer);
 
