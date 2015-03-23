@@ -1,6 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.frontend.ClientProxy;
@@ -11,7 +16,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.namespace.QName;
+import java.util.List;
 
+import static java.util.Arrays.asList;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.NORG_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.getSecurityProps;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
@@ -45,4 +54,28 @@ public class NAVAnsattEndpointConfig {
 
         return gosysnaVansatt;
     }
+
+    @Bean
+    public Pingable gosysNavAnsattPing() {
+        final GOSYSNAVansatt ws = createGosysNavAnsattPortType();
+        return new Pingable() {
+            @Override
+            public List<PingResult> ping() {
+                long start = System.currentTimeMillis();
+                String name = "GOSYSNAV_ANSATT";
+                try {
+                    ASBOGOSYSNAVAnsatt hentNAVAnsattRequest = new ASBOGOSYSNAVAnsatt();
+                    hentNAVAnsattRequest.setAnsattId("");
+                    ws.hentNAVAnsatt(hentNAVAnsattRequest);
+                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+                } catch (HentNAVAnsattFaultGOSYSGeneriskfMsg | HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg e) {
+                    //Exception generert av endepunktet betyr at endepunktet er oppe.
+                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+                } catch (Exception e) {
+                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
+                }
+            }
+        };
+    }
+
 }
