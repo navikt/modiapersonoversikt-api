@@ -150,8 +150,8 @@ public class PersonPage extends BasePage {
             @Override
             public WebMarkupContainer getPanel(String panelId) {
 
-                boolean hasEeregTilgang = pep.hasAccess(forRequest(actionId("eeregles"), resourceId("")));
-                return new EksterneLenkerPanel(panelId, fnr, hasEeregTilgang);
+                boolean hasAaregTilgang = pep.hasAccess(forRequest(actionId("aaregles"), resourceId("")));
+                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang);
             }
         });
 
