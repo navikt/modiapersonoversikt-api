@@ -46,14 +46,19 @@ var Utils = {
     generateId: function (prefix) {
         return prefix + (new Date().getTime()) + '-' + Math.random();
     },
-    sanitize: function(tekst){
+    sanitize: function (tekst) {
         return sanitize(tekst);
     },
-    leggTilLenkerTags: function(innhold){
+    leggTilLenkerTags: function (innhold) {
         var uriRegex = /(([\w-]+:\/\/?|www(?:-\w+)?\.)[^\s()<>]+)/g;
-        return innhold.replace(uriRegex, '<a target="_blank" href="$1">$1</a>');
+        var httpRegex = /^(https?):\/\/.*$/;
+
+        return innhold.replace(uriRegex, function (match) {
+            match = match.match(httpRegex) ? match : 'http://' + match;
+            return '<a target="_blank" href="' + match + '">' + match + '</a>'
+        });
     },
-    tilParagraf: function(avsnitt){
+    tilParagraf: function (avsnitt) {
         avsnitt = sanitize(avsnitt, {allowedTags: ['a', 'em']});
         return <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>;
     }
