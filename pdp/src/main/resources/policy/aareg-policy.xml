@@ -10,7 +10,7 @@
         <Actions>
             <Action>
                 <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">eeregles</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">aaregles</AttributeValue>
                     <ActionAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" />
                 </ActionMatch>
             </Action>
@@ -22,7 +22,7 @@
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-EREG_LESE</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Aa-register-Lese</AttributeValue>
                     <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
                 </Apply>
             </Apply>

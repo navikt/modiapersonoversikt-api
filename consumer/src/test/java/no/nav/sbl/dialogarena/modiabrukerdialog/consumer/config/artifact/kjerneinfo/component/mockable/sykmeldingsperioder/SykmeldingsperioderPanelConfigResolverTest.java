@@ -52,8 +52,8 @@ public class SykmeldingsperioderPanelConfigResolverTest {
         verifyZeroInteractions(sykepengerServiceDefault.wrappedObject);
     }
 
-    @Ignore //trenger endring på SykepengerWidgetServiceImpl som må fjerne @Inject
-    @Test
+//    @Ignore //trenger endring på SykepengerWidgetServiceImpl som må fjerne @Inject
+//    @Test
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.sykepengerWidgetService().getWidgetContent("");

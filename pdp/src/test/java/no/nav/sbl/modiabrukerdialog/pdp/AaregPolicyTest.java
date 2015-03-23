@@ -14,8 +14,8 @@ public class AaregPolicyTest extends AbstractPDPTest {
 	@Test
 	public void allowAccessPlukkOppgavePanel() throws Exception {
 		RequestContext request = createRequestBuilder()
-				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-EREG_LESE")
-				.withActionAttr(ATTRIBUTEID_ACTION_ID, "eeregles")
+				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-Aa-register-Lese")
+				.withActionAttr(ATTRIBUTEID_ACTION_ID, "aaregles")
 				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, "")
 				.build();
 		assertEquals("Access should be permitted.", DecisionType.PERMIT, pdp.evaluate(request).getResult().getDecision());
@@ -24,7 +24,7 @@ public class AaregPolicyTest extends AbstractPDPTest {
 	@Test
 	public void denyAccessPlukkOppgavePanel() throws Exception {
 		RequestContext request = createRequestBuilder()
-				.withActionAttr(ATTRIBUTEID_ACTION_ID, "eeregles")
+				.withActionAttr(ATTRIBUTEID_ACTION_ID, "aaregles")
 				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, "")
 				.build();
 		assertEquals("Access should be denied.", DecisionType.DENY, pdp.evaluate(request).getResult().getDecision());
