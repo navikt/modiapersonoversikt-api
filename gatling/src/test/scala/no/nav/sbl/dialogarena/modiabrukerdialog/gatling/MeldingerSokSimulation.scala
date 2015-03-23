@@ -1,13 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.gatling
 
-import io.gatling.http.request.builder.{Http, HttpRequestBuilder}
-
-import scala.concurrent.duration._
-import io.gatling.core.session
-
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.jdbc.Predef._
+
+import scala.concurrent.duration._
+import scala.util.Random
 
 class MeldingerSokSimulation extends Simulation {
 
@@ -23,16 +20,23 @@ class MeldingerSokSimulation extends Simulation {
 
   val headers = Map("Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 
-  def sokChain(ord: String) = {
-    def split(ord: String): List[String] = {
-      if (ord.isEmpty) {
-        List(ord)
+
+  def query: String = {
+    val queries = Array("Arbeid", "Familie", "Arbeidsavklaringspenger", "Sykepenger", "Pensjon", "Samtalereferat telefon")
+    val index = new Random(System.currentTimeMillis()).nextInt(queries.length)
+    queries(index)
+  }
+
+  def sokChain(query: String) = {
+    def split(s: String): List[String] = {
+      if (s.isEmpty) {
+        List(s)
       } else {
-        ord :: split(ord.init)
+        s :: split(s.init)
       }
     }
 
-    split(ord).sortBy(_.length).map(s =>
+    split(query).sortBy(_.length).map(_.replace(" ", "%20")).map(s =>
       exec(
         http("søk")
           .get("/modiabrukerdialog/rest/meldinger/${fnr}/sok/" + s)
@@ -56,7 +60,7 @@ class MeldingerSokSimulation extends Simulation {
         .get("/modiabrukerdialog/rest/meldinger/${fnr}/indekser")
         .headers(headers))
     .pause(100 millis)
-    .exec(sokChain("Arbeid"))
+    .exec(sokChain(query))
 
   setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 }
