@@ -8,7 +8,7 @@
         <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.kortoppsummering.tabellbeskrivelse">
             <thead>
             <tr>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.periode"/></th>
+                <th></th>
                 <th></th>
                 <th><wicket:message key="utbetaling.lamell.oppsummering.brutto"/></th>
                 <th><wicket:message key="utbetaling.lamell.oppsummering.trekk"/></th>
@@ -17,7 +17,10 @@
             </thead>
             <tbody>
             <tr class="uthevet">
-                <td><span wicket:id="oppsummertPeriode" style="text-transform: uppercase;"></span></td>
+                <td>
+                    <span style="display:block;font-weight: 100;"><wicket:message key="utbetaling.lamell.oppsummering.periode"/></span>
+                    <span wicket:id="oppsummertPeriode" style="text-transform: uppercase;"></span>
+                </td>
                 <td></td>
                 <td><span wicket:id="brutto"></span></td>
                 <td><span wicket:id="trekk"></span></td>
@@ -40,14 +43,14 @@
             </thead>
             <tbody wicket:id="hovedytelser">
             <tr class="uthevet">
-                <td class="medium cap-1st" wicket:id="hovedYtelsesBeskrivelse">[]</td>
+                <td class="hovedytelse cap-1st" wicket:id="hovedYtelsesBeskrivelse">[]</td>
                 <td></td>
                 <td wicket:id="bruttoUnderytelser">[]</td>
                 <td wicket:id="trekkUnderytelser">[]</td>
                 <td wicket:id="nettoUnderytelser">[]</td>
             </tr>
             <tr>
-                <td wicket:id="hovedYtelsesPeriode">[]</td>
+                <td class="ytelseperiode" wicket:id="hovedYtelsesPeriode">[]</td>
                 <td></td>
                 <td></td>
                 <td></td>

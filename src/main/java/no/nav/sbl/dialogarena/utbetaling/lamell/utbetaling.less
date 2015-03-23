@@ -59,11 +59,13 @@
       }
       .utbetaling-metadata-widget {
         display: block;
-        padding: @hoydePadding 22px @hoydePadding 22px;
+        padding: @hoydePadding 22px 14px 22px;
         margin: 0;
+        font-size: 13px;
 
         .utbetaling-status {
-          margin-left: 10px;
+          font-weight: bold;
+
         }
         &:hover {
           border-color: @grayLight;
@@ -85,10 +87,13 @@
           float: right;
         }
         .periode {
-          display: inline-block;
+          display: block;
+          font-size: 13px;
+          margin-top: 4px;
         }
         .utbetaling-til {
-          margin-top: 7px;
+          margin-top: 14px;
+          font-size: 13px;
         }
       }
     }
@@ -228,14 +233,21 @@
     tbody {
       page-break-inside: avoid;
       page-break-after: auto;
+      .uthevet {
+        td {
+          padding-top: 10px;
+          vertical-align: top;
+        }
+      }
     }
     th {
       text-align: right; // IE8+ fiks siden ikke th arver text-align
       text-transform: uppercase;
       font-weight: normal;
       color: #3e3832;
-      font-size: 0.857rem;
+      font-size: 0.8rem;
       width: 16.5%;
+
       &:first-of-type {
         width: 34%;
         text-align: left;
@@ -288,11 +300,23 @@
         display: none;
       }
     }
+    .hovedytelse {
+      font-size: 14px;
+      font-weight: bold;
+      font-family: @sansFontFamily;
+    }
+    .ytelseperiode {
+      padding: 6px 0 10px 0;
+    }
+    table.utbetaling-tabell {
+      th {
+        border-bottom: 1px solid @borderColor;
+      }
+    }
   }
 
   .detaljpanel {
     table {
-      border-top: 1px solid @borderColor;
       padding-top: 1rem;
     }
     .skillestrek-topp {
