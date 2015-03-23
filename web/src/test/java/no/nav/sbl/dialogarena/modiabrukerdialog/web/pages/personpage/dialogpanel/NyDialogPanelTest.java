@@ -226,11 +226,7 @@ public class NyDialogPanelTest extends WicketPageTest {
         settISporsmalsModus();
 
         wicket.goToPageWith(testNyDialogPanel)
-                .should().containComponent(withId("brukerKanSvareContainer").thatIsVisible())
-                .should().containComponent(withId("brukerKanSvare").and(ofType(CheckBox.class).thatIsVisible().and(thatIsDisabled())));
-
-        Boolean brukerKanSvare = (Boolean) wicket.get().component(withId("brukerKanSvare").and(ofType(CheckBox.class))).getDefaultModelObject();
-        assertThat(brukerKanSvare, is(true));
+                .should().containComponent(withId("brukerKanSvareContainer").thatIsVisible());
     }
 
     private void settISporsmalsModus() {
