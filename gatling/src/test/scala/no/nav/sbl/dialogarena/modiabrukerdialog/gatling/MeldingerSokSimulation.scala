@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.gatling
 
+import java.lang.Double._
+
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
@@ -8,8 +10,12 @@ import scala.util.Random
 
 class MeldingerSokSimulation extends Simulation {
 
+  val baseUrl = System.getProperty("baseUrl")
+  val users = Integer.getInteger("users")
+  val duration: Double = valueOf(System.getProperty("duration"))
+
   val httpProtocol = http
-    .baseURL("http://localhost:8083")
+    .baseURL(baseUrl)
     .inferHtmlResources()
     .acceptHeader("*/*")
     .acceptEncodingHeader("gzip, deflate")
@@ -62,5 +68,5 @@ class MeldingerSokSimulation extends Simulation {
     .pause(100 millis)
     .exec(sokChain(query))
 
-  setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(users) over(duration minutes))).protocols(httpProtocol)
 }
