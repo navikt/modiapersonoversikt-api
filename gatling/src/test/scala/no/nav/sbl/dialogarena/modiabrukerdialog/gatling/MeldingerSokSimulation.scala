@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.gatling
 import io.gatling.http.request.builder.{Http, HttpRequestBuilder}
 
 import scala.concurrent.duration._
+import io.gatling.core.session
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
@@ -33,28 +34,26 @@ class MeldingerSokSimulation extends Simulation {
 
     split(ord).sortBy(_.length).map(s =>
       exec(
-        http("søk " + s: String)
-          .get("/modiabrukerdialog/rest/meldinger/***REMOVED***/sok/" + s)
+        http("søk")
+          .get("/modiabrukerdialog/rest/meldinger/${fnr}/sok/" + s)
           .headers(headers))
         .pause(50 millis))
   }
 
   val scn = scenario("Søk i meldinger")
-    .exec(
-      http("Slå opp person")
-        .get("/modiabrukerdialog/person/***REMOVED***")
-        .headers(headers))
+    .feed(csv("fnr.csv").random)
+    .feed(csv("navIdenter.csv").random)
     .exec(
       http("login")
         .post("/modiabrukerdialog/j_security_check")
         .headers(headers)
-        .formParam("j_username", "Z000001")
-        .formParam("j_password", "***REMOVED***"))
+        .formParam("j_username", session => session("navIdent").as[String])
+        .formParam("j_password", session => session("passord").as[String]))
     .pause(1)
     .exitHereIfFailed
     .exec(
       http("indekser")
-        .get("/modiabrukerdialog/rest/meldinger/***REMOVED***/indekser")
+        .get("/modiabrukerdialog/rest/meldinger/${fnr}/indekser")
         .headers(headers))
     .pause(100 millis)
     .exec(sokChain("Arbeid"))
