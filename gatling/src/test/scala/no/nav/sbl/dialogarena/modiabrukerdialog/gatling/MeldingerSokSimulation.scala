@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.gatling
 
+import io.gatling.http.request.builder.{Http, HttpRequestBuilder}
+
 import scala.concurrent.duration._
 
 import io.gatling.core.Predef._
@@ -20,6 +22,23 @@ class MeldingerSokSimulation extends Simulation {
 
   val headers = Map("Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 
+  def sokChain(ord: String) = {
+    def split(ord: String): List[String] = {
+      if (ord.isEmpty) {
+        List(ord)
+      } else {
+        ord :: split(ord.init)
+      }
+    }
+
+    split(ord).sortBy(_.length).map(s =>
+      exec(
+        http("søk " + s: String)
+          .get("/modiabrukerdialog/rest/meldinger/***REMOVED***/sok/" + s)
+          .headers(headers))
+        .pause(50 millis))
+  }
+
   val scn = scenario("Søk i meldinger")
     .exec(
       http("Slå opp person")
@@ -32,15 +51,13 @@ class MeldingerSokSimulation extends Simulation {
         .formParam("j_username", "Z000001")
         .formParam("j_password", "***REMOVED***"))
     .pause(1)
+    .exitHereIfFailed
     .exec(
       http("indekser")
         .get("/modiabrukerdialog/rest/meldinger/***REMOVED***/indekser")
         .headers(headers))
-    .exec(
-      http("søk")
-        .get("/modiabrukerdialog/rest/meldinger/***REMOVED***/sok/")
-        .headers(headers)
-    )
+    .pause(100 millis)
+    .exec(sokChain("Arbeid"))
 
   setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 }
