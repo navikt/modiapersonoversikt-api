@@ -52,6 +52,7 @@ public class MeldingerSok {
 
     private static final String ID = "id";
     private static final String BEHANDLINGS_ID = "behandlingsId";
+    private static final String ANTALL_MELDINGER_I_TRAAD = "antallMeldingerITraad";
     private static final String FRITEKST = "fritekst";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String ARKIVTEMA = "arkivtema";
@@ -162,10 +163,16 @@ public class MeldingerSok {
         try {
             RAMDirectory directory = new RAMDirectory();
             IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, ANALYZER));
+
+            Map<String, List<Melding>> traader = on(meldinger).reduce(indexBy(TRAAD_ID));
             int i = 0;
-            for (Melding melding : meldinger) {
-                writer.addDocument(lagDokument(melding, i));
-                i++;
+            for(String key : traader.keySet()) {
+                List<Melding> meldingerITraad = traader.get(key);
+                int antallMeldnigerITraad = meldingerITraad.size();
+                for (Melding melding : meldingerITraad) {
+                    writer.addDocument(lagDokument(antallMeldnigerITraad, melding, i));
+                    i++;
+                }
             }
             writer.commit();
             return directory;
@@ -174,10 +181,11 @@ public class MeldingerSok {
         }
     }
 
-    private static Document lagDokument(Melding melding, int id) {
+    private static Document lagDokument(int antallMeldingerITraad, Melding melding, int id) {
         Document document = new Document();
         document.add(new StoredField(ID, id));
         document.add(new StoredField(BEHANDLINGS_ID, melding.id));
+        document.add(new StoredField(ANTALL_MELDINGER_I_TRAAD, Integer.toString(antallMeldingerITraad)));
         document.add(new TextField(FRITEKST, optional(melding.fritekst).getOrElse(""), YES));
         document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppeNavn).getOrElse(""), YES));
         document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), YES));
@@ -207,6 +215,7 @@ public class MeldingerSok {
             for (ScoreDoc hit : hits) {
                 Document doc = searcher.doc(hit.doc);
                 String behandlingsId = searcher.doc(hit.doc).get(BEHANDLINGS_ID);
+                String antallMeldingerITraad = searcher.doc(hit.doc).get(ANTALL_MELDINGER_I_TRAAD);
                 String fritekst = hentTekstResultat(FRITEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String temagruppe = hentTekstResultat(TEMAGRUPPE, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String arkivtema = hentTekstResultat(ARKIVTEMA, doc, searcher, analyzer, highlighter, gjorHighlighting);
@@ -215,7 +224,8 @@ public class MeldingerSok {
                 String statusTekst = hentTekstResultat(STATUSTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String kanal = hentTekstResultat(KANAL, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 resultat.put(behandlingsId, new MeldingSokResultat().withFritekst(fritekst).withTemagruppe(temagruppe).withArkivtema(arkivtema)
-                        .withDato(dato).withNavident(navIdent).withStatustekst(statusTekst).withKanal(kanal));
+                        .withDato(dato).withNavident(navIdent).withStatustekst(statusTekst).withKanal(kanal)
+                        .withAntallMeldingerITraad(antallMeldingerITraad));
             }
             return resultat;
         } catch (IOException e) {
@@ -249,6 +259,7 @@ public class MeldingerSok {
             @Override
             public Melding transform(Melding melding) {
                 MeldingSokResultat meldingSokResultat = resultat.get(melding.id);
+                melding.antallMeldingerITraad = meldingSokResultat.antallMeldingerITraad;
                 melding.fritekst = meldingSokResultat.fritekst;
                 melding.temagruppeNavn = meldingSokResultat.temagruppe;
                 melding.journalfortTemanavn = meldingSokResultat.arkivtema;
@@ -262,7 +273,7 @@ public class MeldingerSok {
     }
 
     private static class MeldingSokResultat {
-        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal;
+        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal, antallMeldingerITraad;
 
         public MeldingSokResultat() {
         }
@@ -299,6 +310,11 @@ public class MeldingerSok {
 
         public MeldingSokResultat withKanal(String kanal) {
             this.kanal = kanal;
+            return this;
+        }
+
+        public MeldingSokResultat withAntallMeldingerITraad(String antallMeldingerITraad) {
+            this.antallMeldingerITraad = antallMeldingerITraad;
             return this;
         }
     }
