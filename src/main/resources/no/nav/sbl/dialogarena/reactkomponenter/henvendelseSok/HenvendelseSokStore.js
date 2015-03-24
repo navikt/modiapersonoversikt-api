@@ -29,8 +29,11 @@ HenvendelseSokStore.prototype.update = function (props) {
     this.fireUpdate(this.listeners);
 };
 
-HenvendelseSokStore.prototype.traadChanged = function (traad) {
+HenvendelseSokStore.prototype.traadChanged = function (traad, tabliste) {
     this.state.valgtTraad = traad;
+
+    updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+
     this.fireUpdate(this.listeners);
 };
 
@@ -40,7 +43,7 @@ HenvendelseSokStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTraad = hentHenvendelse(forrigeHenvendelse, this.state.traader, this.state.valgtTraad);
 
-            updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+            updateScroll(tabliste.getDOMNode(), this.state.traader.indexOf(this.state.valgtTraad));
 
             this.fireUpdate(this.listeners);
             break;
@@ -48,7 +51,7 @@ HenvendelseSokStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTraad = hentHenvendelse(nesteHenvendelse, this.state.traader, this.state.valgtTraad);
 
-            updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+            updateScroll(tabliste.getDOMNode(), this.state.traader.indexOf(this.state.valgtTraad));
 
             this.fireUpdate(this.listeners);
             break;
@@ -66,8 +69,9 @@ HenvendelseSokStore.prototype.submit = function (afterSubmit, event) {
 };
 
 function updateScroll(tabliste, valgtIndex) {
-    var $parent = $(tabliste.getDOMNode());
+    var $parent = $(tabliste);
     var $valgt = $parent.find('.sok-element').eq(valgtIndex);
+
     Utils.adjustScroll($parent, $valgt);
 }
 

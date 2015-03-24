@@ -19,7 +19,7 @@ var ListevisningKomponent = React.createClass({
         var innhold = sanitize(this.props.traad.innhold, {allowedTags: ['em']});
 
         return (
-            <div className="sok-element" onClick={tekstChangedProxy(this.props.store, this.props.traad)}>
+            <div className="sok-element" onClick={tekstChangedProxy.bind(this)}>
                 <input id={"melding" + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={"melding" + this.props.traad.key} className={cls}>
                     <header>
@@ -34,10 +34,8 @@ var ListevisningKomponent = React.createClass({
     }
 });
 
-function tekstChangedProxy(store, traad) {
-    return function () {
-        store.traadChanged(traad);
-    };
+function tekstChangedProxy() {
+    this.props.store.traadChanged(this.props.traad, this.getDOMNode().parentNode);
 }
 
 function erValgtTekst(traad, valgtTraad) {
