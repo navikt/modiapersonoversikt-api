@@ -4,7 +4,7 @@ var React = require('react');
 var TekstListeKomponent = React.createClass({
     render: function(){
         return (
-            <div className="sok-element" onClick={this.props.store.tekstChanged.bind(this.props.store, this.props.tekst)}>
+            <div className="sok-element" onClick={tekstChanged.bind(this)}>
                 <input id={"tekstElementRadio" + this.props.tekst.key} name="tekstListeRadio" type="radio"
                     readOnly checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)} />
                 <label htmlFor={"tekstElementRadio" + this.props.tekst.key}>
@@ -14,6 +14,10 @@ var TekstListeKomponent = React.createClass({
         );
     }
 });
+
+function tekstChanged() {
+    this.props.store.tekstChanged(this.props.tekst, this.getDOMNode().parentNode);
+}
 
 function erValgtTekst(tekst, valgtTekst){
     return tekst === valgtTekst;

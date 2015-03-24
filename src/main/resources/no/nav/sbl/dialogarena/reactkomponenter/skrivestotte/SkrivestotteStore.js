@@ -9,8 +9,11 @@ var SkrivestotteStore = function () {
 };
 SkrivestotteStore.prototype = $.extend({}, Store.prototype, SkrivestotteStore.prototype);
 
-SkrivestotteStore.prototype.tekstChanged = function (tekst) {
+SkrivestotteStore.prototype.tekstChanged = function (tekst, tabliste) {
     this.state.valgtTekst = tekst;
+
+    updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+
     this.fireUpdate(this.listeners);
 };
 
@@ -53,7 +56,7 @@ SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
 
-            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+            updateScroll(tabliste.getDOMNode(), this.state.tekster.indexOf(this.state.valgtTekst));
 
             this.fireUpdate(this.listeners);
             break;
@@ -61,7 +64,7 @@ SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
 
-            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+            updateScroll(tabliste.getDOMNode(), this.state.tekster.indexOf(this.state.valgtTekst));
 
             this.fireUpdate(this.listeners);
             break;
@@ -87,7 +90,7 @@ SkrivestotteStore.prototype.submit = function (onSubmit, event) {
 };
 
 function updateScroll(tabliste, valgtIndex) {
-    var $parent = $(tabliste.getDOMNode());
+    var $parent = $(tabliste);
     var $valgt = $parent.find('.sok-element').eq(valgtIndex);
     Utils.adjustScroll($parent, $valgt);
 }
