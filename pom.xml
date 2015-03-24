@@ -163,7 +163,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
-            <version>1.11-SNAPSHOT</version>
+            <version>1.11</version>
             <scope>provided</scope>
         </dependency>
 
@@ -239,7 +239,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>reactkomponenter</artifactId>
-            <version>0.6-SNAPSHOT</version>
+            <version>0.6</version>
             <scope>provided</scope>
         </dependency>
 
