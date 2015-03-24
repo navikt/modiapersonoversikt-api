@@ -16,8 +16,8 @@ class MeldingerSokSimulation extends Simulation {
 
   val httpProtocol = http
     .baseURL(baseUrl)
-    .inferHtmlResources()
-    .acceptHeader("*/*")
+    .disableWarmUp
+    .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .acceptEncodingHeader("gzip, deflate")
     .acceptLanguageHeader("nb-no,nb;q=0.9,no-no;q=0.8,no;q=0.6,nn-no;q=0.5,nn;q=0.4,en-us;q=0.3,en;q=0.1")
     .connection("keep-alive")
@@ -54,11 +54,16 @@ class MeldingerSokSimulation extends Simulation {
     .feed(csv("fnr.csv").random)
     .feed(csv("navIdenter.csv").random)
     .exec(
+      http("start")
+        .get("/modiabrukerdialog/")
+        .check(status.is(401)))
+    .pause(5)
+    .exec(
       http("login")
         .post("/modiabrukerdialog/j_security_check")
         .headers(headers)
-        .formParam("j_username", session => session("navIdent").as[String])
-        .formParam("j_password", session => session("passord").as[String]))
+        .formParam("j_username", "${navIdent}")
+        .formParam("j_password", "${passord}"))
     .pause(1)
     .exitHereIfFailed
     .exec(
@@ -68,5 +73,5 @@ class MeldingerSokSimulation extends Simulation {
     .pause(100 millis)
     .exec(sokChain(query))
 
-  setUp(scn.inject(rampUsers(users) over(duration minutes))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(users) over (duration minutes))).protocols(httpProtocol)
 }
