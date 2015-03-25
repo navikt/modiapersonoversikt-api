@@ -73,7 +73,7 @@ var KnaggInput = React.createClass({
             return (
                 <span className="knagg">
                     {knagg}
-                    <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}>X</button>
+                    <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}></button>
                 </span>
             );
         }.bind(this));
