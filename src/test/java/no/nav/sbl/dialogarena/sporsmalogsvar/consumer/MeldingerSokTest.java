@@ -111,6 +111,19 @@ public class MeldingerSokTest {
     }
 
     @Test
+    public void returnererTraaderMedAntallMeldingerIOpprinneligTraad() {
+        List<Traad> pernsjonsTraader = meldingerSok.sok(FNR, "Hjelpemidler");
+
+        assertThat(pernsjonsTraader.size(), is(1));
+        assertThat(pernsjonsTraader.get(0).antallMeldingerIOpprinneligTraad, is(2));
+
+        List<Traad> familieTraader = meldingerSok.sok(FNR, "Familie");
+
+        assertThat(familieTraader.size(), is(1));
+        assertThat(familieTraader.get(0).antallMeldingerIOpprinneligTraad, is(1));
+    }
+
+    @Test
     public void patternetTrefferOgVaskerSpesialtegn() {
         String soketekst = "\\+!():^[]{}~?=/|.";
         String vasketSoketekst = MeldingerSok.LUCENE_PATTERN.matcher(soketekst).replaceAll(MeldingerSok.REPLACEMENT_STRING);
@@ -134,7 +147,9 @@ public class MeldingerSokTest {
         return asList(
                 lagMelding("1234", "tekst 1 tekst 1 tekst 1", "Familie", "", "svar", "telefon"),
                 lagMelding("1235", "tekst 2 tekst 2 tekst 2", "Arbeid", "Dagpenger", "spørsmål", "skriftlig"),
-                lagMelding("1236", "tekst 3 tekst 3 tekst 3", "Pensjon", "Uførepensjon", "referat", ""));
+                lagMelding("1236", "tekst 3 tekst 3 tekst 3", "Pensjon", "Uførepensjon", "referat", ""),
+                lagMelding("1237", "tekst 3 tekst 3 tekst 3", "Hjelpemidler", "Hjelpemiddel", "referat", ""),
+                lagMelding("1237", "yyy yyy yyy", "yyyy", "yyyyy", "yyyy", ""));
     }
 
     private static Melding lagMelding(String behandlingsId, String fritekst, String temagruppe, String arkivtema, String statustekst, String kanal) {

@@ -52,7 +52,6 @@ public class MeldingerSok {
 
     private static final String ID = "id";
     private static final String BEHANDLINGS_ID = "behandlingsId";
-    private static final String ANTALL_MELDINGER_I_TRAAD = "antallMeldingerITraad";
     private static final String FRITEKST = "fritekst";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String ARKIVTEMA = "arkivtema";
@@ -99,10 +98,10 @@ public class MeldingerSok {
         indexingTimestamps.put(key, now());
     }
 
-    public List<Traad> sok(String fnr, String soketekst) {
+    public List<Traad> sok(final String fnr, String soketekst) {
         try {
-            String navIdent = getSubjectHandler().getUid();
-            String key = key(fnr, navIdent);
+            final String navIdent = getSubjectHandler().getUid();
+            final String key = key(fnr, navIdent);
 
             if (!directories.containsKey(key)) {
                 throw new ServiceUnavailableException(String.format("Man må kalle %s.indekser før man kan søke", MeldingerSok.class.getName()));
@@ -120,23 +119,31 @@ public class MeldingerSok {
             highlighter.setTextFragmenter(new NullFragmenter());
 
             Map<String, MeldingSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, soketekst, hits);
-            final List<String> ider = on(resultat).map(TransformerUtils.<String>key()).collect();
 
-            Map<String, List<Melding>> traader = on(meldingerCache.get(key))
-                    .filter(where(Melding.ID, containedIn(ider)))
-                    .map(highlighting(resultat))
-                    .reduce(indexBy(TRAAD_ID));
-
-            return on(traader.entrySet()).map(new Transformer<Map.Entry<String, List<Melding>>, Traad>() {
-                @Override
-                public Traad transform(Map.Entry<String, List<Melding>> entry) {
-                    return new Traad(entry.getKey(), entry.getValue());
-                }
-            }).collect(NYESTE_FORST);
+            return lagTraader(key, resultat);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<Traad> lagTraader(String key, Map<String, MeldingSokResultat> resultat) {
+        final List<String> ider = on(resultat).map(TransformerUtils.<String>key()).collect();
+        final List<Melding> opprinneligeMeldinger = meldingerCache.get(key);
+
+        Map<String, List<Melding>> traader = on(opprinneligeMeldinger)
+                .filter(where(Melding.ID, containedIn(ider)))
+                .map(highlighting(resultat))
+                .reduce(indexBy(TRAAD_ID));
+
+        final Map<String, List<Melding>> opprinneligeTraader = on(opprinneligeMeldinger).reduce(indexBy(TRAAD_ID));
+        return on(traader.entrySet()).map(new Transformer<Map.Entry<String, List<Melding>>, Traad>() {
+            @Override
+            public Traad transform(Map.Entry<String, List<Melding>> entry) {
+                int antallMeldingerIOpprinneligTraad = opprinneligeTraader.get(entry.getKey()).size();
+                return new Traad(entry.getKey(), antallMeldingerIOpprinneligTraad, entry.getValue());
+            }
+        }).collect(NYESTE_FORST);
     }
 
     @Scheduled(cron = "1 * * * * *") // Hvert minutt
@@ -164,16 +171,12 @@ public class MeldingerSok {
             RAMDirectory directory = new RAMDirectory();
             IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, ANALYZER));
 
-            Map<String, List<Melding>> traader = on(meldinger).reduce(indexBy(TRAAD_ID));
             int i = 0;
-            for(String key : traader.keySet()) {
-                List<Melding> meldingerITraad = traader.get(key);
-                int antallMeldnigerITraad = meldingerITraad.size();
-                for (Melding melding : meldingerITraad) {
-                    writer.addDocument(lagDokument(antallMeldnigerITraad, melding, i));
-                    i++;
-                }
+            for (Melding melding : meldinger) {
+                writer.addDocument(lagDokument(melding, i));
+                i++;
             }
+
             writer.commit();
             return directory;
         } catch (IOException e) {
@@ -181,11 +184,10 @@ public class MeldingerSok {
         }
     }
 
-    private static Document lagDokument(int antallMeldingerITraad, Melding melding, int id) {
+    private static Document lagDokument(Melding melding, int id) {
         Document document = new Document();
         document.add(new StoredField(ID, id));
         document.add(new StoredField(BEHANDLINGS_ID, melding.id));
-        document.add(new StoredField(ANTALL_MELDINGER_I_TRAAD, Integer.toString(antallMeldingerITraad)));
         document.add(new TextField(FRITEKST, optional(melding.fritekst).getOrElse(""), YES));
         document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppeNavn).getOrElse(""), YES));
         document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), YES));
@@ -215,7 +217,6 @@ public class MeldingerSok {
             for (ScoreDoc hit : hits) {
                 Document doc = searcher.doc(hit.doc);
                 String behandlingsId = searcher.doc(hit.doc).get(BEHANDLINGS_ID);
-                String antallMeldingerITraad = searcher.doc(hit.doc).get(ANTALL_MELDINGER_I_TRAAD);
                 String fritekst = hentTekstResultat(FRITEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String temagruppe = hentTekstResultat(TEMAGRUPPE, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String arkivtema = hentTekstResultat(ARKIVTEMA, doc, searcher, analyzer, highlighter, gjorHighlighting);
@@ -224,8 +225,7 @@ public class MeldingerSok {
                 String statusTekst = hentTekstResultat(STATUSTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String kanal = hentTekstResultat(KANAL, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 resultat.put(behandlingsId, new MeldingSokResultat().withFritekst(fritekst).withTemagruppe(temagruppe).withArkivtema(arkivtema)
-                        .withDato(dato).withNavident(navIdent).withStatustekst(statusTekst).withKanal(kanal)
-                        .withAntallMeldingerITraad(antallMeldingerITraad));
+                        .withDato(dato).withNavident(navIdent).withStatustekst(statusTekst).withKanal(kanal));
             }
             return resultat;
         } catch (IOException e) {
@@ -259,7 +259,6 @@ public class MeldingerSok {
             @Override
             public Melding transform(Melding melding) {
                 MeldingSokResultat meldingSokResultat = resultat.get(melding.id);
-                melding.antallMeldingerITraad = meldingSokResultat.antallMeldingerITraad;
                 melding.fritekst = meldingSokResultat.fritekst;
                 melding.temagruppeNavn = meldingSokResultat.temagruppe;
                 melding.journalfortTemanavn = meldingSokResultat.arkivtema;
@@ -273,7 +272,7 @@ public class MeldingerSok {
     }
 
     private static class MeldingSokResultat {
-        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal, antallMeldingerITraad;
+        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal;
 
         public MeldingSokResultat() {
         }
@@ -310,11 +309,6 @@ public class MeldingerSok {
 
         public MeldingSokResultat withKanal(String kanal) {
             this.kanal = kanal;
-            return this;
-        }
-
-        public MeldingSokResultat withAntallMeldingerITraad(String antallMeldingerITraad) {
-            this.antallMeldingerITraad = antallMeldingerITraad;
             return this;
         }
     }
