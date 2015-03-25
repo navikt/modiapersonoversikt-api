@@ -21,7 +21,9 @@ var TekstForhandsvisning = React.createClass({
 
         var knagger = tekst.tags.map(function (tag) {
             return (
-                <button key={tag} className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>{'#' + tag}</button>
+                <button key={tag} className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>
+                    <span>{'#' + tag}</span>
+                </button>
             );
         }.bind(this));
 
