@@ -175,4 +175,5 @@ public class FilterFormPanel extends Panel {
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
         target.add(ytelsesContainer);
     }
+
 }
