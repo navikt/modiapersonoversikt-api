@@ -7,7 +7,8 @@ var ForhandsvisningKomponent = React.createClass({
             return null;
         }
 
-        var meldinger = this.props.traad.meldinger;
+        var traad = this.props.traad;
+        var meldinger = traad.meldinger;
 
         var meldingElementer = meldinger.map(function(melding){
             return <Melding key={melding.id} melding={melding} />
@@ -20,8 +21,8 @@ var ForhandsvisningKomponent = React.createClass({
                         {"Viser "}
                         <span className="antall-meldinger">{meldinger.length}</span>
                         {" av "}
-                        <span className="antall-meldinger">{meldinger[0].antallMeldingerITraad}</span>
-                        {" " + (meldinger[0].antallMeldingerITraad === "1" ? "melding" : "meldinger") + " i dialogen"}
+                        <span className="antall-meldinger">{traad.antallMeldingerIOpprinneligTraad}</span>
+                        {" " + (traad.antallMeldingerIOpprinneligTraad === 1 ? "melding" : "meldinger") + " i dialogen"}
                     </div>
                     <div>{meldingElementer}</div>
                 </div>
