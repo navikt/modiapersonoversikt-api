@@ -25,7 +25,10 @@ var Meldinger = (function () {
     };
 
     var focusOnSelectedElement = function () {
-        setTimeout(function(){$('.melding.valgt').focus()},0);
+        setTimeout(function(){
+            $('.melding.valgt').focus();
+            $(document).scrollTop(0);
+        },0);
     };
 
     return {
