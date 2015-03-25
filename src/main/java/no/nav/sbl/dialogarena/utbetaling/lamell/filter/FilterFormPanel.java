@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
+import no.nav.modig.wicket.component.daterangepicker.StrictDateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
@@ -144,7 +145,7 @@ public class FilterFormPanel extends Panel {
                 new PropertyModel<LocalDate>(filterParametere, "startDato"),
                 new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
 
-        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
+        return new StrictDateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
     private AjaxButton createSokKnapp() {
