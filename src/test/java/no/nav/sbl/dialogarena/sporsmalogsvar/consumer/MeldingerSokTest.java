@@ -42,16 +42,12 @@ public class MeldingerSokTest {
 
     @Test
     public void sletterCacheEtterEnGittStund() {
-        assertThat(meldingerSok.meldingerCache.entrySet(), hasSize(1));
-        assertThat(meldingerSok.directories.entrySet(), hasSize(1));
-        assertThat(meldingerSok.indexingTimestamps.entrySet(), hasSize(1));
+        assertThat(meldingerSok.cache.entrySet(), hasSize(1));
 
         setCurrentMillisOffset(Integer.valueOf(DEFAULT_TIME_TO_LIVE_MINUTES) * 60 * 1000);
         meldingerSok.ryddOppCache();
 
-        assertThat(meldingerSok.meldingerCache.entrySet(), hasSize(0));
-        assertThat(meldingerSok.directories.entrySet(), hasSize(0));
-        assertThat(meldingerSok.indexingTimestamps.entrySet(), hasSize(0));
+        assertThat(meldingerSok.cache.entrySet(), hasSize(0));
     }
 
     @Test
@@ -103,9 +99,7 @@ public class MeldingerSokTest {
         meldingerSok.indekser(FNR, Collections.<Melding>emptyList());
 
         assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
-        assertThat(meldingerSok.meldingerCache.entrySet(), hasSize(2));
-        assertThat(meldingerSok.directories.entrySet(), hasSize(2));
-        assertThat(meldingerSok.indexingTimestamps.entrySet(), hasSize(2));
+        assertThat(meldingerSok.cache.entrySet(), hasSize(2));
 
         assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
     }

@@ -7,11 +7,18 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
-import org.apache.lucene.index.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
@@ -22,7 +29,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.naming.ServiceUnavailableException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -71,10 +80,7 @@ public class MeldingerSok {
     private final Integer timeToLiveMinutes;
 
     private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, ANALYZER);
-
-    protected Map<String, List<Melding>> meldingerCache = new ConcurrentHashMap<>();
-    protected Map<String, RAMDirectory> directories = new ConcurrentHashMap<>();
-    protected Map<String, DateTime> indexingTimestamps = new ConcurrentHashMap<>();
+    protected Map<String, MeldingerCacheEntry> cache = new ConcurrentHashMap<>();
 
     public MeldingerSok() {
         timeToLiveMinutes = Integer.valueOf(getProperty(TIME_TO_LIVE_MINUTES_PROPERTY, DEFAULT_TIME_TO_LIVE_MINUTES));
@@ -93,9 +99,13 @@ public class MeldingerSok {
                 return melding;
             }
         }).collect();
-        meldingerCache.put(key, transformerteMeldinger);
-        directories.put(key, indekser(transformerteMeldinger));
-        indexingTimestamps.put(key, now());
+
+        MeldingerCacheEntry cacheEntry = new MeldingerCacheEntry(
+                transformerteMeldinger,
+                indekser(transformerteMeldinger),
+                now()
+        );
+        cache.put(key, cacheEntry);
     }
 
     public List<Traad> sok(final String fnr, String soketekst) {
@@ -103,11 +113,12 @@ public class MeldingerSok {
             final String navIdent = getSubjectHandler().getUid();
             final String key = key(fnr, navIdent);
 
-            if (!directories.containsKey(key)) {
+            if (!cache.containsKey(key)) {
                 throw new ServiceUnavailableException(String.format("Man må kalle %s.indekser før man kan søke", MeldingerSok.class.getName()));
             }
+            MeldingerCacheEntry entry = cache.get(key);
 
-            IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directories.get(key)));
+            IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(entry.directory));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
 
             Query query = queryParser.parse(query(soketekst));
@@ -128,15 +139,16 @@ public class MeldingerSok {
     }
 
     private List<Traad> lagTraader(String key, Map<String, MeldingerSokResultat> resultat) {
-        final List<String> ider = on(resultat).map(TransformerUtils.<String>key()).collect();
-        final List<Melding> opprinneligeMeldinger = meldingerCache.get(key);
+        MeldingerCacheEntry cacheEntry = cache.get(key);
+        final List<String> behandlingsIder = on(resultat).map(TransformerUtils.<String>key()).collect();
+        final List<Melding> opprinneligeMeldinger = cacheEntry.meldinger;
+        final Map<String, List<Melding>> opprinneligeTraader = cacheEntry.traader;
 
         Map<String, List<Melding>> traader = on(opprinneligeMeldinger)
-                .filter(where(Melding.ID, containedIn(ider)))
+                .filter(where(Melding.ID, containedIn(behandlingsIder)))
                 .map(highlighting(resultat))
                 .reduce(indexBy(TRAAD_ID));
 
-        final Map<String, List<Melding>> opprinneligeTraader = on(opprinneligeMeldinger).reduce(indexBy(TRAAD_ID));
         return on(traader.entrySet()).map(new Transformer<Map.Entry<String, List<Melding>>, Traad>() {
             @Override
             public Traad transform(Map.Entry<String, List<Melding>> entry) {
@@ -148,15 +160,13 @@ public class MeldingerSok {
 
     @Scheduled(cron = "1 * * * * *") // Hvert minutt
     public void ryddOppCache() {
-        logger.info("Starter opprydning av cache. Har {} directories", directories.size());
+        logger.info("Starter opprydning av cache. Har {} directories", cache.size());
         int count = 0;
-        for (Map.Entry<String, DateTime> entry : indexingTimestamps.entrySet()) {
-            if (now().minusMinutes(timeToLiveMinutes).isAfter(entry.getValue())) {
+        for (Map.Entry<String, MeldingerCacheEntry> entry : cache.entrySet()) {
+            if (now().minusMinutes(timeToLiveMinutes).isAfter(entry.getValue().lastIndexed)) {
                 count++;
                 String key = entry.getKey();
-                indexingTimestamps.remove(key);
-                directories.remove(key);
-                meldingerCache.remove(key);
+                cache.remove(key);
             }
         }
         logger.info("Fjernet {} directories", count);
@@ -310,6 +320,20 @@ public class MeldingerSok {
         public MeldingerSokResultat withKanal(String kanal) {
             this.kanal = kanal;
             return this;
+        }
+    }
+
+    private static class MeldingerCacheEntry {
+        final List<Melding> meldinger;
+        final RAMDirectory directory;
+        final DateTime lastIndexed;
+        final Map<String, List<Melding>> traader;
+
+        public MeldingerCacheEntry(List<Melding> meldinger, RAMDirectory directory, DateTime lastIndexed) {
+            this.meldinger = meldinger;
+            this.directory = directory;
+            this.lastIndexed = lastIndexed;
+            this.traader = on(meldinger).reduce(indexBy(TRAAD_ID));
         }
     }
 }
