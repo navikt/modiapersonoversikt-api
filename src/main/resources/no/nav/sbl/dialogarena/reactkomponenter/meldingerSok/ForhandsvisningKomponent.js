@@ -1,8 +1,9 @@
 var React = require('react');
 var Melding = require('./Melding');
+var format = require('string-format');
 
 var ForhandsvisningKomponent = React.createClass({
-    render: function() {
+    render: function () {
         if (!this.props.traad.hasOwnProperty('meldinger')) {
             return null;
         }
@@ -14,15 +15,17 @@ var ForhandsvisningKomponent = React.createClass({
             return <Melding key={melding.id} melding={melding} />
         });
 
+        var antallInformasjon = format('Viser <b>{}</b> av <b>{}</b> {} i dialogen',
+            meldinger.length,
+            traad.antallMeldingerIOpprinneligTraad,
+            traad.antallMeldingerIOpprinneligTraad === 1 ? "melding" : "meldinger"
+        );
+
         return (
             <div>
                 <div className="traadPanel">
                     <div className="traadinfo">
-                        {"Viser "}
-                        <span className="antall-meldinger">{meldinger.length}</span>
-                        {" av "}
-                        <span className="antall-meldinger">{traad.antallMeldingerIOpprinneligTraad}</span>
-                        {" " + (traad.antallMeldingerIOpprinneligTraad === 1 ? "melding" : "meldinger") + " i dialogen"}
+                        <span dangerouslySetInnerHTML={{__html: antallInformasjon}}></span>
                     </div>
                     <div>{meldingElementer}</div>
                 </div>
