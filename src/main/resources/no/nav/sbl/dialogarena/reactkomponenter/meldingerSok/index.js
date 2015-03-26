@@ -36,13 +36,6 @@ var MeldingerSok = React.createClass({
             this.store.submit(this.skjul, event);
         }
     },
-    componentWillMount: function () {
-        //For å passe på at indeksering er gjort før komponenten blir mountet blir dette kallet gjort i sync.
-        $.ajax({
-            async: false,
-            url: '/modiabrukerdialog/rest/meldinger/' + this.props.fnr + '/indekser'
-        });
-    },
     render: function () {
         var listePanelId = Utils.generateId('sok-liste-');
         var forhandsvisningsPanelId = Utils.generateId('sok-forhandsvisningsPanelId-');
