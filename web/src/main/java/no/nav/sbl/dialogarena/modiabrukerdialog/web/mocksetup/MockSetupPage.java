@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.CmsSkrivestotte;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndex;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -25,7 +25,7 @@ import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor.AktorEndpointConfig.AKTOER_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsHjelpetekstConfig.CMS_SKRIVESTOTTE_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig.CMS_SKRIVESTOTTE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
@@ -47,7 +47,7 @@ public class MockSetupPage extends BasePage {
     @Inject
     private CmsSkrivestotte cmsSkrivestotte;
     @Inject
-    private HjelpetekstIndex hjelpetekstIndex;
+    private SkrivestotteSok skrivestotteSok;
 
 
     public MockSetupPage() {
@@ -68,7 +68,7 @@ public class MockSetupPage extends BasePage {
                 new AjaxLink("reindekserSkrivestotte") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        hjelpetekstIndex.indekser(cmsSkrivestotte.hentHjelpetekster());
+                        skrivestotteSok.indekser(cmsSkrivestotte.hentSkrivestotteTekster());
                     }
                 });
 

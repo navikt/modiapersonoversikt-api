@@ -28,7 +28,7 @@ public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
     }
 
     @Override
-    public List<Hjelpetekst> hentHjelpetekster() {
+    public List<SkrivestotteTekst> hentSkrivestotteTekster() {
         try {
             Future<Content> resp = Async.newInstance().execute(Request.Get(String.format(APPRES_URL, appresUrl)));
 
@@ -38,16 +38,16 @@ public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
 
             NodeList nodeset = document.getElementsByTagName("contentdata");
 
-            List<Hjelpetekst> hjelpetekster = new ArrayList<>();
+            List<SkrivestotteTekst> skrivestotteTekster = new ArrayList<>();
             for (int i = 0; i < nodeset.getLength(); i++) {
                 Node node = nodeset.item(i);
-                hjelpetekster.add(new Hjelpetekst(
+                skrivestotteTekster.add(new SkrivestotteTekst(
                         String.valueOf(i),
                         getChildValueByName(node, "overskrift"),
                         lagInnholdMap(getChildrenWithName(node, "innhold")),
                         split(getChildValueByName(node, "tags"), " ")));
             }
-            return hjelpetekster;
+            return skrivestotteTekster;
 
         } catch (Exception e) {
             throw new RuntimeException(e);

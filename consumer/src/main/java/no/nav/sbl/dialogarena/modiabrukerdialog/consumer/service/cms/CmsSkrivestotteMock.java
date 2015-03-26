@@ -10,9 +10,9 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
     private static int key = 0;
 
     @Override
-    public List<Hjelpetekst> hentHjelpetekster() {
+    public List<SkrivestotteTekst> hentSkrivestotteTekster() {
         return asList(
-                hjelpetekst(
+                skrivestotteTekst(
                         "Taushetsbelagt eller sensitiv informasjon",
                         "Takk for din henvendelse.\n" +
                                 "\n" +
@@ -24,7 +24,7 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
                                 "\n" +
                                 "Søknadsskjemaer, selvbetjeningsløsninger, informasjon og «Dine utbetalinger» finner du på vår internettside www.nav.no. Her vil du også finne besøksadresse til ditt NAV-kontor.\n",
                         "generell", "sensitiv", "feilsendt"),
-                hjelpetekst(
+                skrivestotteTekst(
                         "Status i sak",
                         "Takk for din henvendelse til NAV. \n" +
                                 "\n" +
@@ -32,7 +32,7 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
                                 "\n" +
                                 "Du kan kontakte oss på telefon 55 55 33 33 dersom du har ytterligere spørsmål knyttet til din sak. Av hensyn til personvern og taushetsplikt kan vi ikke sende taushetsbelagt informasjon på e-post. \n",
                         "generell"),
-                hjelpetekst(
+                skrivestotteTekst(
                         "Krav om underskrift/skannet dokument",
                         "Takk for din henvendelse.\n" +
                                 "\n" +
@@ -46,9 +46,9 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
                         "generell", "sensitiv", "feilsendt"));
     }
 
-    private static Hjelpetekst hjelpetekst(String tittel, String norsk, String... tags) {
+    private static SkrivestotteTekst skrivestotteTekst(String tittel, String norsk, String... tags) {
         HashMap<String, String> innhold = new HashMap<>();
-        innhold.put(Hjelpetekst.LOCALE_DEFAULT, norsk);
-        return new Hjelpetekst(String.valueOf(key++), tittel, innhold, tags);
+        innhold.put(SkrivestotteTekst.LOCALE_DEFAULT, norsk);
+        return new SkrivestotteTekst(String.valueOf(key++), tittel, innhold, tags);
     }
 }

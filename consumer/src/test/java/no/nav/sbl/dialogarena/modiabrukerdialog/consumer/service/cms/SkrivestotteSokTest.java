@@ -7,24 +7,24 @@ import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndex.HIGHLIGHTED_BEGIN;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndex.HIGHLIGHTED_END;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.HIGHLIGHTED_BEGIN;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.HIGHLIGHTED_END;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
-public class HjelpetekstIndexTest {
+public class SkrivestotteSokTest {
 
-    private HjelpetekstIndex hjelpetekstIndex = new HjelpetekstIndex();
+    private SkrivestotteSok skrivestotteSok = new SkrivestotteSok();
 
     @Before
     public void setup() {
-        hjelpetekstIndex.indekser(lagMockHjelpetekster());
+        skrivestotteSok.indekser(lagMockSkrivestotteTekster());
     }
 
     @Test
-    public void skalIndeksereHjelpetekster() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("knadsskjemaer Taushetsbe ");
+    public void skalIndeksereSkrivestotteTekster() {
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok("knadsskjemaer Taushetsbe ");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is(HIGHLIGHTED_BEGIN + "Taushetsbelagt" + HIGHLIGHTED_END + " eller sensitiv informasjon"));
@@ -33,32 +33,32 @@ public class HjelpetekstIndexTest {
     @Test
     public void skalHighlighteTrefford() {
         String sokeord = "sensitiv";
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok(sokeord);
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok(sokeord);
 
         assertThat(resultat.get(0).tittel.contains(HIGHLIGHTED_BEGIN + sokeord + HIGHLIGHTED_END), is(true));
     }
 
     @Test
     public void kanIndeksereFlereGanger() {
-        hjelpetekstIndex.indekser(lagMockHjelpetekster());
-        hjelpetekstIndex.indekser(lagMockHjelpetekster());
+        skrivestotteSok.indekser(lagMockSkrivestotteTekster());
+        skrivestotteSok.indekser(lagMockSkrivestotteTekster());
     }
 
     @Test
     public void returnererAlt() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("");
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok("");
         assertThat(resultat, hasSize(4));
     }
 
     @Test
     public void kanSokeKunPaaTags() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "generell");
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok("", "generell");
         assertThat(resultat, hasSize(3));
     }
 
     @Test
     public void sokerPaaTagsMedStorForbokstav() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "generell", "feilsendt");
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok("", "generell", "feilsendt");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Taushetsbelagt eller sensitiv informasjon"));
@@ -66,7 +66,7 @@ public class HjelpetekstIndexTest {
 
     @Test
     public void sokerPaaFlereTags() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "Store");
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok("", "Store");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Test mer tags"));
@@ -74,7 +74,7 @@ public class HjelpetekstIndexTest {
 
     @Test
     public void sokerPaaTagsErCaseInsensitive() {
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("", "stORe");
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok("", "stORe");
 
         assertThat(resultat, hasSize(1));
         assertThat(resultat.get(0).tittel, is("Test mer tags"));
@@ -82,27 +82,27 @@ public class HjelpetekstIndexTest {
 
     @Test
     public void henterUtDetSammeSomBleIndeksert() {
-        Hjelpetekst hjelpetekst = hjelpetekst("tittel", "dette er norsk", "this is english, yes!!", asList("tag1", "tag2"));
-        hjelpetekstIndex.indekser(asList(hjelpetekst));
-        Hjelpetekst resultat = hjelpetekstIndex.sok("").get(0);
+        SkrivestotteTekst skrivestotteTekst = skrivestotteTekst("tittel", "dette er norsk", "this is english, yes!!", asList("tag1", "tag2"));
+        skrivestotteSok.indekser(asList(skrivestotteTekst));
+        SkrivestotteTekst resultat = skrivestotteSok.sok("").get(0);
 
-        assertThat(resultat.tittel, is(hjelpetekst.tittel));
-        assertThat(resultat.innhold, is(hjelpetekst.innhold));
-        assertThat(resultat.tags, is(hjelpetekst.tags));
+        assertThat(resultat.tittel, is(skrivestotteTekst.tittel));
+        assertThat(resultat.innhold, is(skrivestotteTekst.innhold));
+        assertThat(resultat.tags, is(skrivestotteTekst.tags));
     }
 
     @Test
     public void ikkeSokbarHvisDefaultLocaleIkkeOppgitt() {
         HashMap<String, String> innhold = new HashMap<>();
-        hjelpetekstIndex.indekser(asList(new Hjelpetekst("", "tittel", innhold)));
+        skrivestotteSok.indekser(asList(new SkrivestotteTekst("", "tittel", innhold)));
 
-        List<Hjelpetekst> resultat = hjelpetekstIndex.sok("");
+        List<SkrivestotteTekst> resultat = skrivestotteSok.sok("");
         assertThat(resultat, hasSize(0));
     }
 
-    private static List<Hjelpetekst> lagMockHjelpetekster() {
+    private static List<SkrivestotteTekst> lagMockSkrivestotteTekster() {
         return asList(
-                hjelpetekst(
+                skriveStotteTekst(
                         "Taushetsbelagt eller sensitiv informasjon",
                         "Takk for din henvendelse.\n" +
                                 "\n" +
@@ -114,7 +114,7 @@ public class HjelpetekstIndexTest {
                                 "\n" +
                                 "Søknadsskjemaer, selvbetjeningsløsninger, informasjon og «Dine utbetalinger» finner du på vår internettside www.nav.no. Her vil du også finne besøksadresse til ditt NAV-kontor.\n",
                         "generell", "sensitiv", "feilsendt"),
-                hjelpetekst(
+                skriveStotteTekst(
                         "Status i sak",
                         "Takk for din henvendelse til NAV. \n" +
                                 "\n" +
@@ -122,7 +122,7 @@ public class HjelpetekstIndexTest {
                                 "\n" +
                                 "Du kan kontakte oss på telefon 55 55 33 33 dersom du har ytterligere spørsmål knyttet til din sak. Av hensyn til personvern og taushetsplikt kan vi ikke sende taushetsbelagt informasjon på e-post. \n",
                         "generell"),
-                hjelpetekst(
+                skriveStotteTekst(
                         "Krav om underskrift/skannet dokument",
                         "Takk for din henvendelse.\n" +
                                 "\n" +
@@ -134,21 +134,21 @@ public class HjelpetekstIndexTest {
                                 "\n" +
                                 "Søknadsskjemaer, selvbetjeningsløsninger, informasjon og «Dine utbetalinger» finner du på vår internettside www.nav.no. Her vil du også finne besøksadresse til ditt NAV-kontor.\n",
                         "generell", "sensitiv"),
-                hjelpetekst("Test mer tags",
+                skriveStotteTekst("Test mer tags",
                         "Vi tester tags",
                         "tag", "Store", "bokstav"));
     }
 
-    private static Hjelpetekst hjelpetekst(String tittel, String norsk, String... tags) {
+    private static SkrivestotteTekst skriveStotteTekst(String tittel, String norsk, String... tags) {
         HashMap<String, String> innhold = new HashMap<>();
-        innhold.put(Hjelpetekst.LOCALE_DEFAULT, norsk);
-        return new Hjelpetekst("", tittel, innhold, tags);
+        innhold.put(SkrivestotteTekst.LOCALE_DEFAULT, norsk);
+        return new SkrivestotteTekst("", tittel, innhold, tags);
     }
 
-    private static Hjelpetekst hjelpetekst(String tittel, String norsk, String englesk, List<String> tags) {
+    private static SkrivestotteTekst skrivestotteTekst(String tittel, String norsk, String englesk, List<String> tags) {
         HashMap<String, String> innhold = new HashMap<>();
-        innhold.put(Hjelpetekst.LOCALE_DEFAULT, norsk);
+        innhold.put(SkrivestotteTekst.LOCALE_DEFAULT, norsk);
         innhold.put("en_US", englesk);
-        return new Hjelpetekst("", tittel, innhold, tags);
+        return new SkrivestotteTekst("", tittel, innhold, tags);
     }
 }

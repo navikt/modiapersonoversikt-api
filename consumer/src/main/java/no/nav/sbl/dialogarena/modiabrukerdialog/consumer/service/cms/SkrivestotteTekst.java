@@ -8,7 +8,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 
-public class Hjelpetekst {
+public class SkrivestotteTekst {
 
     public static final String LOCALE_DEFAULT = "nb_NO";
 
@@ -16,11 +16,11 @@ public class Hjelpetekst {
     public List<String> tags;
     public Map<String, String> innhold;
 
-    public Hjelpetekst(String key, String tittel, Map<String, String> innhold, String... tags) {
+    public SkrivestotteTekst(String key, String tittel, Map<String, String> innhold, String... tags) {
         this(key, tittel, innhold, asList(tags));
     }
 
-    public Hjelpetekst(String key, String tittel, Map<String, String> innhold, List<String> tags) {
+    public SkrivestotteTekst(String key, String tittel, Map<String, String> innhold, List<String> tags) {
         this.key = key;
         this.tittel = tittel;
         this.innhold = innhold;

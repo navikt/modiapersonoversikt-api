@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface CmsSkrivestotte {
 
-    List<Hjelpetekst> hentHjelpetekster();
+    List<SkrivestotteTekst> hentSkrivestotteTekster();
 }

@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor.AktorEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsHjelpetekstConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig;
@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Import;
         NAVAnsattEndpointConfig.class,
         NAVOrgEnhetEndpointConfig.class,
         CmsEndpointConfig.class,
-        CmsHjelpetekstConfig.class,
+        CmsSkrivestotteConfig.class,
         ArbeidOgAktivitetEndpointConfig.class
 })
 public class EndpointsConfig {

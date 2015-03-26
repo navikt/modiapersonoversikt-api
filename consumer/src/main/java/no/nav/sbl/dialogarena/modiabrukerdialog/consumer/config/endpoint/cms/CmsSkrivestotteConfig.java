@@ -10,7 +10,7 @@ import java.util.List;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
-public class CmsHjelpetekstConfig {
+public class CmsSkrivestotteConfig {
 
     public static final String CMS_SKRIVESTOTTE_KEY = "start.cms.skrivestotte.withmock";
 
@@ -22,13 +22,13 @@ public class CmsHjelpetekstConfig {
     }
 
     @Bean
-    public HjelpetekstIndex hjelpetekstIndex() {
-        return new HjelpetekstIndex();
+    public SkrivestotteSok skrivestotteSok() {
+        return new SkrivestotteSok();
     }
 
     @Scheduled(fixedRate = EN_TIME_MILLIS, initialDelay = 5000)
-    public void reIndekserHjelpetekster() {
-        List<Hjelpetekst> hjelpetekster = cmsSkrivestotte().hentHjelpetekster();
-        hjelpetekstIndex().indekser(hjelpetekster);
+    public void reIndekserSkrivestotteTekster() {
+        List<SkrivestotteTekst> skrivestotteTekster = cmsSkrivestotte().hentSkrivestotteTekster();
+        skrivestotteSok().indekser(skrivestotteTekster);
     }
 }

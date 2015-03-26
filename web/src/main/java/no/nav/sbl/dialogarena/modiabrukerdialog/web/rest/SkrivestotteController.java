@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Hjelpetekst;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.HjelpetekstIndex;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok;
 import org.apache.commons.collections15.Transformer;
 import org.springframework.stereotype.Controller;
 
@@ -23,21 +23,21 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 public class SkrivestotteController {
 
     @Inject
-    private HjelpetekstIndex hjelpetekstIndex;
+    private SkrivestotteSok skrivestotteSok;
 
     @GET
     @Path("/sok")
-    public List<Hjelpetekst> hentHjelpetekster(@QueryParam("fritekst") String fritekst, @QueryParam("tags") List<String> tags) {
-        return hjelpetekstIndex.sok(fritekst, tags);
+    public List<SkrivestotteTekst> hentSkrivestotteTekster(@QueryParam("fritekst") String fritekst, @QueryParam("tags") List<String> tags) {
+        return skrivestotteSok.sok(fritekst, tags);
     }
 
     @GET
     @Path("alletags")
     public Set<String> hentAlleTags() {
-        return on(hjelpetekstIndex.sok("")).flatmap(new Transformer<Hjelpetekst, List<String>>() {
+        return on(skrivestotteSok.sok("")).flatmap(new Transformer<SkrivestotteTekst, List<String>>() {
             @Override
-            public List<String> transform(Hjelpetekst hjelpetekst) {
-                return hjelpetekst.tags;
+            public List<String> transform(SkrivestotteTekst skrivestotteTekst) {
+                return skrivestotteTekst.tags;
             }
         }).collectIn(new HashSet<String>());
     }

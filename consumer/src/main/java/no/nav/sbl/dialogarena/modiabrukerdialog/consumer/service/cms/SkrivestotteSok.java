@@ -30,10 +30,10 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Hjelpetekst.LOCALE_DEFAULT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst.LOCALE_DEFAULT;
 import static org.apache.commons.lang3.StringUtils.*;
 
-public class HjelpetekstIndex {
+public class SkrivestotteSok {
     public static final String ID = "id";
     public static final String INNHOLD = "innhold";
     public static final String TITTEL = "tittel";
@@ -49,19 +49,19 @@ public class HjelpetekstIndex {
     private RAMDirectory directory;
     private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, analyzer);
 
-    public HjelpetekstIndex() {
+    public SkrivestotteSok() {
         queryParser.setDefaultOperator(Operator.AND);
         queryParser.setAllowLeadingWildcard(true);
     }
 
-    public void indekser(List<Hjelpetekst> hjelpetekster) {
+    public void indekser(List<SkrivestotteTekst> skrivestotteTekster) {
         try {
             directory = new RAMDirectory();
             IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer));
             int i = 0;
-            for (Hjelpetekst hjelpetekst : hjelpetekster) {
-                if (hjelpetekst.isValid()) {
-                    writer.addDocument(lagDokument(hjelpetekst, i));
+            for (SkrivestotteTekst skrivestotteTekst : skrivestotteTekster) {
+                if (skrivestotteTekst.isValid()) {
+                    writer.addDocument(lagDokument(skrivestotteTekst, i));
                     i++;
                 }
             }
@@ -71,23 +71,23 @@ public class HjelpetekstIndex {
         }
     }
 
-    private static Document lagDokument(Hjelpetekst hjelpetekst, int id) {
+    private static Document lagDokument(SkrivestotteTekst skrivestotteTekst, int id) {
         Document document = new Document();
         document.add(new StoredField(ID, id));
-        document.add(new TextField(TITTEL, hjelpetekst.tittel, Store.YES));
-        document.add(new TextField(INNHOLD, hjelpetekst.getDefaultLocaleInnhold().get(), Store.YES));
-        document.add(new TextField(TAGS, join(hjelpetekst.tags, " "), Store.YES));
+        document.add(new TextField(TITTEL, skrivestotteTekst.tittel, Store.YES));
+        document.add(new TextField(INNHOLD, skrivestotteTekst.getDefaultLocaleInnhold().get(), Store.YES));
+        document.add(new TextField(TAGS, join(skrivestotteTekst.tags, " "), Store.YES));
 
-        for (Map.Entry<String, String> localeHjelpetekst : hjelpetekst.innhold.entrySet()) {
-            document.add(new StoredField(INNHOLD + "_" + localeHjelpetekst.getKey(), localeHjelpetekst.getValue()));
+        for (Map.Entry<String, String> localeSkrivestotteTekst : skrivestotteTekst.innhold.entrySet()) {
+            document.add(new StoredField(INNHOLD + "_" + localeSkrivestotteTekst.getKey(), localeSkrivestotteTekst.getValue()));
         }
-        for (String tag : hjelpetekst.tags) {
+        for (String tag : skrivestotteTekst.tags) {
             document.add(new StringField(TAGS_FILTER, tag.toLowerCase(), Store.NO));
         }
         return document;
     }
 
-    public List<Hjelpetekst> sok(String frisok, List<String> tags) {
+    public List<SkrivestotteTekst> sok(String frisok, List<String> tags) {
         try {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directory));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
@@ -100,13 +100,13 @@ public class HjelpetekstIndex {
             Highlighter highlighter = new Highlighter(formatter, new QueryScorer(query));
             highlighter.setTextFragmenter(new NullFragmenter());
 
-            return lagHjelpetekster(searcher, analyzer, highlighter, hits);
+            return lagSkrivestotteTekster(searcher, analyzer, highlighter, hits);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public List<Hjelpetekst> sok(String frisok, String... tags) {
+    public List<SkrivestotteTekst> sok(String frisok, String... tags) {
         return sok(frisok, asList(tags));
     }
 
@@ -126,10 +126,10 @@ public class HjelpetekstIndex {
         return frisokQuery + (isBlank(tagsQuery) ? "" : (" AND " + tagsQuery));
     }
 
-    private static List<Hjelpetekst> lagHjelpetekster(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, ScoreDoc... hits) {
-        return on(hits).map(new Transformer<ScoreDoc, Hjelpetekst>() {
+    private static List<SkrivestotteTekst> lagSkrivestotteTekster(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, ScoreDoc... hits) {
+        return on(hits).map(new Transformer<ScoreDoc, SkrivestotteTekst>() {
             @Override
-            public Hjelpetekst transform(ScoreDoc hit) {
+            public SkrivestotteTekst transform(ScoreDoc hit) {
                 try {
                     Document doc = searcher.doc(hit.doc);
                     String tittel = getHighlightedTekst(TITTEL, doc, searcher, analyzer, highlighter);
@@ -143,7 +143,7 @@ public class HjelpetekstIndex {
                             }
                         }
                     }
-                    return new Hjelpetekst(doc.get(ID), tittel, innhold, split(doc.get(TAGS), " "));
+                    return new SkrivestotteTekst(doc.get(ID), tittel, innhold, split(doc.get(TAGS), " "));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
