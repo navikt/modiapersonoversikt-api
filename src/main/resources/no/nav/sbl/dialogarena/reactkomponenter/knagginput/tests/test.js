@@ -13,12 +13,12 @@ describe('KnaggInput', function () {
         },
         'onKeyDown': function () {
         },
-        'aria-label': 'Søk etter hjelpetekster',
+        'aria-label': 'Søk etter skrivestøttetekster',
         'aria-controls': 'tekstListePanel',
         'auto-focus': false
     };
 
-    it('Burde bli laget', function () {
+    it('Lager komponenten', function () {
         var TestUtils = React.addons.TestUtils;
 
         var props = assign({}, defaultProps);
@@ -34,7 +34,7 @@ describe('KnaggInput', function () {
         expect(knagg.length).to.be.eql(0);
     });
 
-    it('Burde legge inn default knagger', function () {
+    it('Legger inn default knagger', function () {
         var TestUtils = React.addons.TestUtils;
 
         var props = assign({}, defaultProps);

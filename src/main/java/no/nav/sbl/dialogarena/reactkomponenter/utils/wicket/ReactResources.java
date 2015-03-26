@@ -6,17 +6,17 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class ReactResources {
-    public static final FrontendModule HENVENDELSE_SOK = new FrontendModule.With()
+    public static final FrontendModule MELDINGER_SOK = new FrontendModule.With()
             .scripts(
                     new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
                     new JavaScriptResourceReference(ResourceReference.class, "build/Utils.js"),
                     new JavaScriptResourceReference(ResourceReference.class, "build/Modal.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/HenvendelseSok.js")
+                    new JavaScriptResourceReference(ResourceReference.class, "build/MeldingerSok.js")
             )
             .less(
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
                     new PackageResourceReference(ResourceReference.class, "build/sokLayout.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/henvendelseSok.less")
+                    new PackageResourceReference(ResourceReference.class, "build/meldingerSok.less")
             )
             .done();
 
