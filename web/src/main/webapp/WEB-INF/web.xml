@@ -46,6 +46,7 @@
             <web-resource-name>Public</web-resource-name>
             <url-pattern>/img/*</url-pattern>
             <url-pattern>/internal/selftest</url-pattern>
+            <url-pattern>/internal/selftest.json</url-pattern>
             <url-pattern>/internal/isAlive</url-pattern>
         </web-resource-collection>
     </security-constraint>
