@@ -17,6 +17,8 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.DEFAULT_TIME_TO_LIVE_MINUTES;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.LUCENE_PATTERN;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.REPLACEMENT_STRING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -119,8 +121,8 @@ public class MeldingerSokTest {
 
     @Test
     public void patternetTrefferOgVaskerSpesialtegn() {
-        String soketekst = "\\+!():^[]{}~?=/|.";
-        String vasketSoketekst = MeldingerSok.LUCENE_PATTERN.matcher(soketekst).replaceAll(MeldingerSok.REPLACEMENT_STRING);
+        String soketekst = "\\+!():^[]{}~?=/|.\"";
+        String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING);
 
         assertThat(vasketSoketekst, is(""));
     }

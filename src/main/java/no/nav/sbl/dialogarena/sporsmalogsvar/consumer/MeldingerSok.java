@@ -7,18 +7,11 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
@@ -29,9 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.naming.ServiceUnavailableException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -46,6 +37,7 @@ import static no.nav.modig.lang.collections.ReduceUtils.join;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.TRAAD_ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad.NYESTE_FORST;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.lucene.document.Field.Store.YES;
 import static org.joda.time.DateTime.now;
 
@@ -55,9 +47,9 @@ public class MeldingerSok {
 
     public static final String DEFAULT_TIME_TO_LIVE_MINUTES = "10";
     public static final String TIME_TO_LIVE_MINUTES_PROPERTY = "meldingersok.time.to.live.minutes";
-    public static final String REPLACEMENT_STRING = "";
-    public static final String LUCENE_SPECIAL_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|\\.]+";
+    public static final String LUCENE_SPECIAL_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|\\.\"]+";
     public static final Pattern LUCENE_PATTERN = Pattern.compile(LUCENE_SPECIAL_CHARS);
+    public static final String REPLACEMENT_STRING = "";
 
     private static final String ID = "id";
     private static final String BEHANDLINGS_ID = "behandlingsId";
@@ -210,12 +202,11 @@ public class MeldingerSok {
     }
 
     private static String query(String soketekst) {
-        String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING);
-        return on(asList(vasketSoketekst.split(" "))).map(new Transformer<String, String>() {
-
+        String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING).trim();
+        return isBlank(vasketSoketekst) ? "*:*" : on(asList(vasketSoketekst.split(" "))).map(new Transformer<String, String>() {
             @Override
             public String transform(String s) {
-                return "*" + s + "*";
+                return isBlank(s) ? "" : "*" + s + "*";
             }
         }).reduce(join(" "));
     }
