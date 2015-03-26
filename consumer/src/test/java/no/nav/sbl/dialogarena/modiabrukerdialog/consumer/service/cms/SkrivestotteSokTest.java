@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,6 +10,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.HIGHLIGHTED_BEGIN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.HIGHLIGHTED_END;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.LUCENE_PATTERN;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.REPLACEMENT_STRING;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -98,6 +101,14 @@ public class SkrivestotteSokTest {
 
         List<SkrivestotteTekst> resultat = skrivestotteSok.sok("");
         assertThat(resultat, hasSize(0));
+    }
+
+    @Test
+    public void patternetTrefferOgVaskerSpesialtegn() {
+        String soketekst = "\\+!():^[]{}~?=/|.\"";
+        String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING);
+
+        assertThat(vasketSoketekst, Matchers.is(""));
     }
 
     private static List<SkrivestotteTekst> lagMockSkrivestotteTekster() {
