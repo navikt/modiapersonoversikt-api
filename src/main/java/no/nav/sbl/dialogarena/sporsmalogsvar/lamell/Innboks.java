@@ -67,27 +67,27 @@ public class Innboks extends Lerret {
         final AlleMeldingerPanel alleMeldingerPanel = new AlleMeldingerPanel("meldinger", innboksVM, traaddetaljerPanel.getMarkupId());
         alleMeldingerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
-        final ReactComponentPanel henvendelseSok = new ReactComponentPanel("henvendelseSokContainer", "HenvendelseSok", getHenvendelseSokProps());
-        henvendelseSok.add(visibleIf(not(innboksVM.harFeilmelding())));
+        final ReactComponentPanel meldingerSok = new ReactComponentPanel("meldingerSokContainer", "MeldingerSok", getMeldingerSokProps());
+        meldingerSok.add(visibleIf(not(innboksVM.harFeilmelding())));
 
-        AjaxLink henvendelseSokToggleButton = new AjaxLink("henvendelseSokToggle") {
+        AjaxLink meldingerSokToggleButton = new AjaxLink("meldingerSokToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
-                henvendelseSok.callFunction(target, "vis", getHenvendelseSokProps());
+                meldingerSok.callFunction(target, "vis", getMeldingerSokProps());
             }
         };
-        henvendelseSokToggleButton.add(visibleIf(not(innboksVM.harFeilmelding())));
+        meldingerSokToggleButton.add(visibleIf(not(innboksVM.harFeilmelding())));
 
         WebMarkupContainer feilmeldingPanel = new WebMarkupContainer("feilmeldingpanel");
         feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
         feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
 
-        add(henvendelseSok, henvendelseSokToggleButton, alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
+        add(meldingerSok, meldingerSokToggleButton, alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
     }
 
-    private Map<String, Object> getHenvendelseSokProps() {
+    private Map<String, Object> getMeldingerSokProps() {
         Map<String, Object> props = new HashMap<>();
         props.put("fnr", innboksVM.getFnr());
         props.put("traadMarkupIds", traadRefs(innboksVM));

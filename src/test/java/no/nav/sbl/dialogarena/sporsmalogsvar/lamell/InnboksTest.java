@@ -88,7 +88,7 @@ public class InnboksTest extends WicketPageTest {
         String fnr = "fnr";
         Innboks testInnboks = new Innboks("innboks", fnr);
         wicket.goToPageWith(testInnboks)
-                .click().link(withId("henvendelseSokToggle"));
+                .click().link(withId("meldingerSokToggle"));
 
         verify(henvendelseBehandlingService, atLeast(2)).hentMeldinger(fnr);
     }

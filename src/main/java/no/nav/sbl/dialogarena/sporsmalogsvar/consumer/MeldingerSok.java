@@ -47,8 +47,8 @@ public class MeldingerSok {
     public static final String DEFAULT_TIME_TO_LIVE_MINUTES = "10";
     public static final String TIME_TO_LIVE_MINUTES_PROPERTY = "meldingersok.time.to.live.minutes";
     public static final String REPLACEMENT_STRING = "";
-    public static final String LUCENE_ESCAPE_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|\\.]+";
-    public static final Pattern LUCENE_PATTERN = Pattern.compile(LUCENE_ESCAPE_CHARS);
+    public static final String LUCENE_SPECIAL_CHARS = "[\\\\+\\!\\(\\)\\:\\^\\[\\]\\{\\}\\~\\?\\=\\/\\|\\.]+";
+    public static final Pattern LUCENE_PATTERN = Pattern.compile(LUCENE_SPECIAL_CHARS);
 
     private static final String ID = "id";
     private static final String BEHANDLINGS_ID = "behandlingsId";
@@ -118,7 +118,7 @@ public class MeldingerSok {
             Highlighter highlighter = new Highlighter(formatter, new QueryScorer(query));
             highlighter.setTextFragmenter(new NullFragmenter());
 
-            Map<String, MeldingSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, soketekst, hits);
+            Map<String, MeldingerSokResultat> resultat = hentResultat(searcher, ANALYZER, highlighter, soketekst, hits);
 
             return lagTraader(key, resultat);
 
@@ -127,7 +127,7 @@ public class MeldingerSok {
         }
     }
 
-    private List<Traad> lagTraader(String key, Map<String, MeldingSokResultat> resultat) {
+    private List<Traad> lagTraader(String key, Map<String, MeldingerSokResultat> resultat) {
         final List<String> ider = on(resultat).map(TransformerUtils.<String>key()).collect();
         final List<Melding> opprinneligeMeldinger = meldingerCache.get(key);
 
@@ -210,9 +210,9 @@ public class MeldingerSok {
         }).reduce(join(" "));
     }
 
-    private static Map<String, MeldingSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, final String soketekst, ScoreDoc... hits) {
+    private static Map<String, MeldingerSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, final String soketekst, ScoreDoc... hits) {
         try {
-            Map<String, MeldingSokResultat> resultat = new HashMap<>();
+            Map<String, MeldingerSokResultat> resultat = new HashMap<>();
             boolean gjorHighlighting = soketekst.length() > 0;
             for (ScoreDoc hit : hits) {
                 Document doc = searcher.doc(hit.doc);
@@ -224,7 +224,7 @@ public class MeldingerSok {
                 String navIdent = hentTekstResultat(NAVIDENT, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String statusTekst = hentTekstResultat(STATUSTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String kanal = hentTekstResultat(KANAL, doc, searcher, analyzer, highlighter, gjorHighlighting);
-                resultat.put(behandlingsId, new MeldingSokResultat().withFritekst(fritekst).withTemagruppe(temagruppe).withArkivtema(arkivtema)
+                resultat.put(behandlingsId, new MeldingerSokResultat().withFritekst(fritekst).withTemagruppe(temagruppe).withArkivtema(arkivtema)
                         .withDato(dato).withNavident(navIdent).withStatustekst(statusTekst).withKanal(kanal));
             }
             return resultat;
@@ -254,60 +254,60 @@ public class MeldingerSok {
         return tekst;
     }
 
-    private static Transformer<Melding, Melding> highlighting(final Map<String, MeldingSokResultat> resultat) {
+    private static Transformer<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
         return new Transformer<Melding, Melding>() {
             @Override
             public Melding transform(Melding melding) {
-                MeldingSokResultat meldingSokResultat = resultat.get(melding.id);
-                melding.fritekst = meldingSokResultat.fritekst;
-                melding.temagruppeNavn = meldingSokResultat.temagruppe;
-                melding.journalfortTemanavn = meldingSokResultat.arkivtema;
-                melding.opprettetDatoTekst = meldingSokResultat.dato;
-                melding.navIdent = meldingSokResultat.navIdent;
-                melding.kanal = meldingSokResultat.kanal;
-                melding.statusTekst = meldingSokResultat.statustekst;
+                MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
+                melding.fritekst = meldingerSokResultat.fritekst;
+                melding.temagruppeNavn = meldingerSokResultat.temagruppe;
+                melding.journalfortTemanavn = meldingerSokResultat.arkivtema;
+                melding.opprettetDatoTekst = meldingerSokResultat.dato;
+                melding.navIdent = meldingerSokResultat.navIdent;
+                melding.kanal = meldingerSokResultat.kanal;
+                melding.statusTekst = meldingerSokResultat.statustekst;
                 return melding;
             }
         };
     }
 
-    private static class MeldingSokResultat {
+    private static class MeldingerSokResultat {
         public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal;
 
-        public MeldingSokResultat() {
+        public MeldingerSokResultat() {
         }
 
-        public MeldingSokResultat withFritekst(String fritekst) {
+        public MeldingerSokResultat withFritekst(String fritekst) {
             this.fritekst = fritekst;
             return this;
         }
 
-        public MeldingSokResultat withTemagruppe(String temagruppe) {
+        public MeldingerSokResultat withTemagruppe(String temagruppe) {
             this.temagruppe = temagruppe;
             return this;
         }
 
-        public MeldingSokResultat withArkivtema(String arkivtema) {
+        public MeldingerSokResultat withArkivtema(String arkivtema) {
             this.arkivtema = arkivtema;
             return this;
         }
 
-        public MeldingSokResultat withDato(String dato) {
+        public MeldingerSokResultat withDato(String dato) {
             this.dato = dato;
             return this;
         }
 
-        public MeldingSokResultat withNavident(String navIdent) {
+        public MeldingerSokResultat withNavident(String navIdent) {
             this.navIdent = navIdent;
             return this;
         }
 
-        public MeldingSokResultat withStatustekst(String statustekst) {
+        public MeldingerSokResultat withStatustekst(String statustekst) {
             this.statustekst = statustekst;
             return this;
         }
 
-        public MeldingSokResultat withKanal(String kanal) {
+        public MeldingerSokResultat withKanal(String kanal) {
             this.kanal = kanal;
             return this;
         }
