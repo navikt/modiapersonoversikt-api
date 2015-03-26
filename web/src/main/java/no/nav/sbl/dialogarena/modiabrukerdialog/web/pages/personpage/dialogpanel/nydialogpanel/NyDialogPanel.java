@@ -45,7 +45,6 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
