@@ -77,14 +77,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
                 return unescapeHtml3(getString("opplaeringslenke.href"));
             }
         }));
-        add(new ExternalLink("skrivestotteForslagLenke", new AbstractReadOnlyModel<String>() {
-            @Override
-            public String getObject() {
-                return String.format("mailto:%s?subject=%s",
-                        getProperty("modiabrukerdialog.standardtekster.epost.address"),
-                        escapeHtml3(getString("saksbehandlerinnstillinger.skrivestotte.forslag.subject")));
-            }
-        }));
+        add(new ExternalLink("skrivestotteForslagLenke", getProperty("modiabrukerdialog.standardtekster.tilbakemelding.url")));
     }
 
     public final void oppdaterAriaLabel() {
