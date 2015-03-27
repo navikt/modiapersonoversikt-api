@@ -26,7 +26,6 @@ var MeldingerSok = React.createClass({
     },
     componentDidMount: function () {
         this.store.addListener(this.storeChanged);
-        this.store.onChange({target: {value: ''}});
     },
     componentDidUnmount: function () {
         this.store.removeListener(this.storeChanged);
