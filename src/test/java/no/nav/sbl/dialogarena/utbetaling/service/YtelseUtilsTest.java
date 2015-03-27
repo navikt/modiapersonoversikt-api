@@ -141,7 +141,7 @@ public class YtelseUtilsTest {
 
     @Test
     public void skalSkillePaaUtbetalingerMedForskjelligHovedytelse() {
-        List<Record<Hovedytelse>> ytelser = asList(lagHovedytelse("ytelse1"), lagHovedytelse("ytelse2"));
+        List<Record<Hovedytelse>> ytelser = asList(lagHovedytelse("ytelse1", now(), now()), lagHovedytelse("ytelse2", now(), now()));
         List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
         assertEquals(2, resultat.size());
     }
@@ -201,8 +201,19 @@ public class YtelseUtilsTest {
         assertThat(sortedList.get(2).get(hovedytelsedato), is(new DateTime(2015, 01, 01, 1, 1)));
     }
 
-    private Record<Hovedytelse> lagHovedytelse(String ytelseBeskrivelse) {
-        return lagHovedytelse(ytelseBeskrivelse, DateTime.now(), DateTime.now());
+    @Test
+    public void sortererYtelserUtenPeriodeSammen() {
+        String ytelse = "Ytelse";
+        List<Record<Hovedytelse>> ytelser = asList(
+                lagHovedytelse(ytelse, "01.01.2012", "01.02.2012"),
+                lagHovedytelseUtenPeriode(ytelse),
+                lagHovedytelseUtenPeriode(ytelse));
+        List<List<Record<Hovedytelse>>> resultat = groupByHovedytelseAndPeriod(ytelser);
+        assertEquals(2, resultat.size());
+    }
+
+    private Record<Hovedytelse> lagHovedytelseUtenPeriode(String ytelseBeskrivelse) {
+        return lagHovedytelse(ytelseBeskrivelse, new DateTime(0), new DateTime(0));
     }
 
     private Record<Hovedytelse> lagHovedytelse(String ytelseBeskrivelse, String fom, String tom) {
