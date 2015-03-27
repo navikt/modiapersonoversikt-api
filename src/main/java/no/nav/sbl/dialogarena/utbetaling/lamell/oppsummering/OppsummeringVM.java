@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -22,10 +23,9 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.groupByHovedytelseAndPeriod;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.groupByHovedytelseAndPeriod;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.HOVEDYTELSE_NAVN;
 
 
@@ -79,6 +79,8 @@ public class OppsummeringVM implements Serializable {
     public String getOppsummertPeriode() {
         if (isPeriodeWithinSameMonthAndYear()) {
             return startDato.toString("MMMM yyyy", Locale.getDefault());
+        } else if(isUnixEpoch(startDato) && isUnixEpoch(sluttDato)) {
+            return new StringResourceModel("utbetaling.lamell.total.oppsummering.udefinertperiode", null).getString();
         }
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
                 Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());

@@ -71,7 +71,6 @@ public class WSUtbetalingTestData {
                                 new WSYtelse()
                                         .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
                                         .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
                                                         .withYtelseskomponenttype("Grunnpensjon")
