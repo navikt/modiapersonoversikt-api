@@ -64,4 +64,12 @@ public final class DateUtils {
             }
         };
     }
+
+    public static boolean isUnixEpoch(DateTime dateTime) {
+        return dateTime.getMillis() == 0;
+    }
+
+    public static boolean isUnixEpoch(LocalDate localDate) {
+        return localDate.getYear() == 1970;
+    }
 }

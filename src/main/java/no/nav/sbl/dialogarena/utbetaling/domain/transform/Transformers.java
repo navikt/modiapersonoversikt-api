@@ -177,7 +177,7 @@ public class Transformers {
     }
 
     protected static Interval createPeriode(WSPeriode ytelsesperiode) {
-        if (ytelsesperiode == null) {
+        if (ytelsesperiode == null || (ytelsesperiode.getFom() == null || ytelsesperiode.getTom() == null)) {
             LOGGER.debug("Ytelsesperiode er null, setter interval til new Interval(0,0)");
             return new Interval(0, 0);
         }
