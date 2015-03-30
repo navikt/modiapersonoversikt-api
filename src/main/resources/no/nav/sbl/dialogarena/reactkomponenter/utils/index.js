@@ -50,7 +50,7 @@ var Utils = {
         return sanitize(tekst);
     },
     leggTilLenkerTags: function (innhold) {
-        var uriRegex = /(([\w-]+:\/\/?|www(?:-\w+)?\.)[^\s()<>]+)/g;
+        var uriRegex = /(([\w-]+:\/\/?|www(?:-\w+)?\.)[^\s()<>]+\w)/g;
         var httpRegex = /^(https?):\/\/.*$/;
 
         return innhold.replace(uriRegex, function (match) {
