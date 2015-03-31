@@ -168,7 +168,6 @@ public class NyOppgaveFormWrapper extends Panel {
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
         underkategoriContainer.add(hasCssClassIf("hidden", not(visUnderkategoriValg)));
-//        underkategoriContainer.add(visibleIf(visUnderkategoriValg));
 
         return underkategoriContainer;
     }
@@ -196,7 +195,6 @@ public class NyOppgaveFormWrapper extends Panel {
 
         typeContainer.add(typeDropdown);
         typeContainer.add(hasCssClassIf("hidden", isEmptyList(typeModel)));
-//        typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
 
         return typeContainer;
     }
@@ -251,7 +249,6 @@ public class NyOppgaveFormWrapper extends Panel {
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
         prioritetContainer.add(hasCssClassIf("hidden", not(visPrioritetsValg)));
-//        prioritetContainer.add(visibleIf(visPrioritetsValg));
         prioritetContainer.add(new AttributeAppender("for", prioritetDropdown.getMarkupId()));
 
         return prioritetContainer;
