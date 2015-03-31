@@ -1,28 +1,29 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.components;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.StringResourceModel;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.attributeIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
-public class StatusIkon extends WebMarkupContainer {
-
-    private MeldingVM meldingVM;
+public class StatusIkon extends Panel {
 
     public StatusIkon(String id, MeldingVM meldingVM) {
         super(id);
-        this.meldingVM = meldingVM;
+        WebMarkupContainer statusIkon = new WebMarkupContainer("statusIkon");
+        Label statusIkonTekst = new Label("statusIkonTekst", new StringResourceModel(
+                String.format("innboks.melding.%s", (meldingVM.erBesvart().getObject()) ? "besvart" : "ubesvart"), this, null)
+        );
 
-        add(hasCssClassIf("ubesvart", not(meldingVM.erBesvart())));
-        add(hasCssClassIf("besvart", meldingVM.erBesvart()));
-    }
 
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
-        add(attributeIf("aria-label", getString("innboks.melding.ubesvart"), not(meldingVM.erBesvart())));
-        add(attributeIf("aria-label", getString("innboks.melding.besvart"), meldingVM.erBesvart()));
+        statusIkon.add(hasCssClassIf("ubesvart", not(meldingVM.erBesvart())));
+        statusIkon.add(hasCssClassIf("besvart", meldingVM.erBesvart()));
+
+        add(statusIkon, statusIkonTekst);
     }
 }
