@@ -17,6 +17,7 @@ var ListevisningKomponent = React.createClass({
         var meldingsStatus = this.props.traad.statusTekst + ", " + this.props.traad.temagruppe;
         meldingsStatus = sanitize(meldingsStatus, {allowedTags: ['em']});
         var innhold = sanitize(this.props.traad.innhold, {allowedTags: ['em']});
+        var statusIkonTekst = this.props.traad.statusKlasse.match(/ubesvart$/) ? 'ubesvart' : 'besvart';
 
         return (
             <div className="sok-element" onClick={tekstChangedProxy.bind(this)}>
@@ -24,6 +25,7 @@ var ListevisningKomponent = React.createClass({
                 <label htmlFor={"melding" + this.props.traad.key} className={cls}>
                     <header>
                         <p dangerouslySetInnerHTML={{__html: dato}}></p>
+                        <span className="vekk">{statusIkonTekst}</span>
                         <div className={this.props.traad.statusKlasse}></div>
                         <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
                     </header>
