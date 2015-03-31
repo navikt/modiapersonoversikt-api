@@ -20,7 +20,9 @@ var MeldingerSok = React.createClass({
             fritekst: "",
             traader: [],
             valgtTraad: {},
-            traadMarkupIds: {}
+            traadMarkupIds: {},
+            listePanelId: Utils.generateId('sok-liste-'),
+            forhandsvisningsPanelId: Utils.generateId('sok-forhandsvisningsPanelId-')
         }, this.props));
         return this.store.getState();
     },
@@ -36,8 +38,6 @@ var MeldingerSok = React.createClass({
         }
     },
     render: function () {
-        var listePanelId = Utils.generateId('sok-liste-');
-        var forhandsvisningsPanelId = Utils.generateId('sok-forhandsvisningsPanelId-');
         var tekstlistekomponenter = this.state.traader.map(function (traad) {
             return <ListevisningKomponent
                 key={traad.traadId}
@@ -57,14 +57,14 @@ var MeldingerSok = React.createClass({
                             value={this.state.fritekst}
                             onChange={this.store.onChange.bind(this.store)}
                             onKeyDown={this.store.onKeyDown.bind(this.store, this.refs.tablist)}
-                            aria-controls={listePanelId}
+                            aria-controls={this.state.listePanelId}
                         />
                     </div>
                     <div className="sok-visning">
-                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={listePanelId} aria-live="assertive" aria-atomic="true">
+                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
                         {tekstlistekomponenter}
                         </div>
-                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
+                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
                             <ForhandsvisningKomponent traad={this.state.valgtTraad} />
                         </div>
                     </div>

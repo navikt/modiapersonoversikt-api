@@ -20,7 +20,9 @@ var Skrivestotte = React.createClass({
             fritekst: "",
             tekster: [],
             valgtTekst: {},
-            valgtLocale: Utils.Constants.LOCALE_DEFAULT
+            valgtLocale: Utils.Constants.LOCALE_DEFAULT,
+            listePanelId: Utils.generateId('sok-layout-'),
+            forhandsvisningsPanelId: Utils.generateId('sok-layout-')
         }, this.props));
         return this.store.getState();
     },
@@ -37,8 +39,6 @@ var Skrivestotte = React.createClass({
         }
     },
     render: function () {
-        var listePanelId = Utils.generateId('sok-layout-');
-        var forhandsvisningsPanelId = Utils.generateId('sok-layout-');
         var tekstlistekomponenter = this.state.tekster.map(function(tekst) {
             return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} store={this.store}/>
         }.bind(this));
@@ -50,10 +50,10 @@ var Skrivestotte = React.createClass({
                         <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tabliste={this.refs.tablist} />
                     </div>
                     <div className="sok-visning">
-                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={listePanelId} aria-live="assertive" aria-atomic="true">
+                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
                         {tekstlistekomponenter}
                         </div>
-                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
+                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
                             <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
                         </div>
                     </div>

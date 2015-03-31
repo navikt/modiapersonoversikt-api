@@ -2,11 +2,18 @@ var React = require('react');
 
 var ModalPortal = React.createClass({
     focusAfterClose: undefined,
+
     getDefaultProps: function () {
         return {
             skipFocus: ['div'],
             isOpen: false
         };
+    },
+    getInitialState: function() {
+        return {
+            title: createAriaOptional('title', this.props.title),
+            description: createAriaOptional('description', this.props.description)
+        }
     },
     componentDidMount: function () {
         if (this.props.isOpen === true) {
@@ -89,8 +96,8 @@ var ModalPortal = React.createClass({
             });
         }.bind(this));
 
-        var title = createAriaOptional('title', this.props.title);
-        var description = createAriaOptional('description', this.props.description);
+        var title = this.state.title;
+        var description = this.state.description;
 
         var cls = this.props.isOpen ? '' : 'hidden';
         return (
