@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.components;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -9,7 +8,6 @@ import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class StatusIkon extends Panel {
 
