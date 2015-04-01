@@ -22,6 +22,12 @@ module.exports = function (config) {
 
         singleRun: true,
         captureTimeout: 60000,
+        
+        //For å hinde disconnect melding når det bygges
+        browserDisconnectTimeout: 10000, //Default 2000
+        browserDisconnectTolerance: 1, //Default 0
+        browserNoActivityTimeout: 60000, //Default 10000
+
 
         plugins: [
             'karma-bro',
