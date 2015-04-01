@@ -143,6 +143,6 @@ gulp.task('default', function () {
 });
 
 gulp.task('test', function () {
-    test();
+g    //test();
 });
 
