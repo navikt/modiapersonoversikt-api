@@ -65,6 +65,8 @@ var KnaggInput = React.createClass({
         $knagger.each(function (index, knagg) {
             maxWidth -= $(knagg).outerWidth() + 4.2//knagg bredde + margin;
         });
+        maxWidth -= 46;//Forstørrelseglass ikon
+
         $input.outerWidth(maxWidth);
         //End IE hack
     },
@@ -90,6 +92,7 @@ var KnaggInput = React.createClass({
                         onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
                         onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
                         aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']} />
+                    <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true" />
                 </div>
             </div>
         );

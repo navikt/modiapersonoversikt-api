@@ -76,14 +76,17 @@ var MeldingerSok = React.createClass({
             <Modal ref="modal" title={modalTitle} description={modalDescription}>
                 <form className={"sok-layout meldinger-sok"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
                     <div tabIndex="-1" className="sok-container">
-                        <input
-                            type="text"
-                            placeholder="Søk"
-                            value={this.state.fritekst}
-                            onChange={this.store.onChange.bind(this.store)}
-                            onKeyDown={this.store.onKeyDown.bind(this.store, this.refs.tablist)}
-                            aria-controls={this.state.listePanelId}
-                        />
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="Søk"
+                                value={this.state.fritekst}
+                                onChange={this.store.onChange.bind(this.store)}
+                                onKeyDown={this.store.onKeyDown.bind(this.store, this.refs.tablist)}
+                                aria-controls={this.state.listePanelId}
+                            />
+                            <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
+                        </div>
                     </div>
                     {sokVisning}
                     <input type="submit" value="submit" className="hidden" />
