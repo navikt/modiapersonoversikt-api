@@ -54,27 +54,32 @@ var Skrivestotte = React.createClass({
             return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} store={this.store}/>
         }.bind(this));
 
-        var sokVisning = this.state.tekster.length > 0 ?
-            (<div className="sok-visning">
+        var erTom = this.state.tekster.length === 0;
+        var sokVisning = (
+            <div className={"sok-visning " + (erTom ? 'hidden' : '')}>
                 <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
                     {tekstlistekomponenter}
                 </div>
                 <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
                     <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
                 </div>
-            </div>)
-            :
-            (<div className="sok-visning">
+            </div>
+        );
+
+        var tomVisning = (
+            <div className={"sok-visning " + (erTom ? '' : 'hidden')}>
                 <h1 className="ingen-treff">Ingen treff</h1>
-            </div>);
+            </div>
+        );
 
         return (
-            <Modal ref="modal" skipFocus={['div', '.knagg > button']} title={modalTitle} description={modalDescription}>
+            <Modal ref="modal" skipFocus={['.knagg > button']} title={modalTitle} description={modalDescription}>
                 <form className={"sok-layout tekstforslag"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
                     <div tabIndex="-1" className="sok-container">
                         <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tabliste={this.refs.tablist} placeholder={'Søk'}/>
                     </div>
                     {sokVisning}
+                    {tomVisning}
                     <input type="submit" value="submit" className="hidden" />
                 </form>
             </Modal>
