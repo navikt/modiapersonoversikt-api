@@ -42,6 +42,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultS
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.YTELSE_FILTER_KLIKKET;
 
 public final class UtbetalingLerret extends Lerret {
 
@@ -197,6 +198,23 @@ public final class UtbetalingLerret extends Lerret {
 
         List<Record<Hovedytelse>> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
         oppdaterYtelser(hovedytelser);
+
+        List<Record<Hovedytelse>> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
+        oppdaterUtbetalingsvisning(synligeUtbetalinger);
+        endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
+
+        target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
+        target.appendJavaScript("Utbetalinger.addKeyNavigation();");
+    }
+    @SuppressWarnings("unused")
+    @RunOnEvents(YTELSE_FILTER_KLIKKET)
+    private void oppdaterUtbetalingslisteFraYtelsesvalg(AjaxRequestTarget target) {
+        feilmelding.setVisibilityAllowed(false);
+        DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
+        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
+
+
+        List<Record<Hovedytelse>> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
 
         List<Record<Hovedytelse>> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
