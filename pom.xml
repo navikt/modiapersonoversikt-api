@@ -19,7 +19,7 @@
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<modig.wicket.version>2.0.47</modig.wicket.version>
 		<wicket.version>6.11.0</wicket.version>
-		<modig.frontend.version>1.1.20</modig.frontend.version>
+		<modig.frontend.version>1.1.105</modig.frontend.version>
 		<common.records.version>1.3</common.records.version>
 		<utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
 	</properties>

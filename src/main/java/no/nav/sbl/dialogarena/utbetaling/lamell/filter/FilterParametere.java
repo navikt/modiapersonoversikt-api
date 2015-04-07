@@ -18,6 +18,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultS
 public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
 
     public static final String FILTER_ENDRET = "filterParametere.endret";
+    public static final String YTELSE_FILTER_KLIKKET = "ytelse.filterparametere.klikket";
     public static final String HOVEDYTELSER_ENDRET = "hovedytelser.endret";
 
     private LocalDate startDato;

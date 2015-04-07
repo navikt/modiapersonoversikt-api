@@ -32,6 +32,7 @@ import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.YTELSE_FILTER_KLIKKET;
 import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
@@ -105,7 +106,7 @@ public class FilterFormPanel extends Panel {
                                 filterParametere.fjernOnsketYtelse(ytelse);
                             }
                         }
-                        sendFilterEndretEvent();
+                        sendYtelsesfilterCheckedEvent();
                     }
                 };
                 item.add(checkbox);
@@ -169,6 +170,10 @@ public class FilterFormPanel extends Panel {
 
     private void sendFilterEndretEvent() {
         send(getPage(), Broadcast.DEPTH, FILTER_ENDRET);
+    }
+
+    private void sendYtelsesfilterCheckedEvent() {
+        send(getPage(), Broadcast.DEPTH, YTELSE_FILTER_KLIKKET);
     }
 
     @SuppressWarnings("unused")

@@ -160,12 +160,21 @@
           input[type=checkbox] + label {
             text-transform: lowercase;
             color: @grayDark;
-            margin-top: 0;
             font-weight: 100;
-
+            border: 1px dashed transparent;
+            display: block;
+            margin: 0 auto;
+            min-height: 25px;
+            line-height: 25px;
+            background-position: 0 center;
+            padding: 5px 5px 5px 34px;
           }
-          .ytelse-filter-liste {
+          input[type=checkbox]:focus + label {
+            border-color: #0067c5;
+          }
+          .ytelse-filter-liste-element {
             margin-left: 30px;
+            margin-bottom: 0;
           }
         }
       }
