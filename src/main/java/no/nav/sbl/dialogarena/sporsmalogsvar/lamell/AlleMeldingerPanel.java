@@ -42,7 +42,7 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("avsenderDato"));
-                item.add(new StatusIkon("statusIkon", meldingVM));
+                item.add(new StatusIkon("statusIkon", blirBesvart(meldingVM.melding.traadId).getObject(), meldingVM));
                 item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
                 item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
