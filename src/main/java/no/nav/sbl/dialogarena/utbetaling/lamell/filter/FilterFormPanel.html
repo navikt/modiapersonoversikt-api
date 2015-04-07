@@ -18,18 +18,16 @@
                 <label class="filter-header">
                     <wicket:message key="utbetaling.lamell.filter.mottaker"/>
                 </label>
-                <div>
-                    <input type="checkbox" wicket:id="visBruker" value="Bruker" />
-                    <label wicket:for="visBruker" class="cap-1st">
-                        <wicket:message key="utbetaling.lamell.filter.vis_bruker"/>
-                    </label>
-                </div>
-                <div>
-                    <input type="checkbox" wicket:id="visAnnenMottaker" />
-                    <label wicket:for="visAnnenMottaker" class="cap-1st">
-                        <wicket:message key="utbetaling.lamell.filter.vis_annen_mottaker"/>
-                    </label>
-                </div>
+
+                <input type="checkbox" wicket:id="visBruker" value="Bruker" />
+                <label wicket:for="visBruker" class="cap-1st">
+                    <wicket:message key="utbetaling.lamell.filter.vis_bruker"/>
+                </label>
+
+                <input type="checkbox" wicket:id="visAnnenMottaker" />
+                <label wicket:for="visAnnenMottaker" class="cap-1st">
+                    <wicket:message key="utbetaling.lamell.filter.vis_annen_mottaker"/>
+                </label>
             </div>
 
             <div class="filter-block-content ytelser" wicket:id="ytelseContainer">
