@@ -8,15 +8,15 @@ var KnaggInput = require('knagginput');
 var SkrivestotteStore = require('./SkrivestotteStore');
 
 var Skrivestotte = React.createClass({
-    vis: function(){
+    vis: function () {
         this.refs.modal.open();
     },
-    skjul: function(){
+    skjul: function () {
         this.refs.modal.close();
     },
-    getInitialState : function () {
-        this.store = new SkrivestotteStore($.extend({},{
-            knagger : [],
+    getInitialState: function () {
+        this.store = new SkrivestotteStore($.extend({}, {
+            knagger: [],
             fritekst: "",
             tekster: [],
             valgtTekst: {},
@@ -26,22 +26,36 @@ var Skrivestotte = React.createClass({
         }, this.props));
         return this.store.getState();
     },
-    componentDidMount : function() {
+    componentDidMount: function () {
         this.store.addListener(this.storeChanged);
         this.store.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
     },
-    componentDidUnmount : function() {
+    componentDidUnmount: function () {
         this.store.removeListener(this.storeChanged);
     },
-    keyDownHandler: function(event){
+    keyDownHandler: function (event) {
         if (event.keyCode === 13) {
             this.store.submit(this.skjul, event);
         }
     },
     render: function () {
-        var tekstlistekomponenter = this.state.tekster.map(function(tekst) {
+        var tekstlistekomponenter = this.state.tekster.map(function (tekst) {
             return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} store={this.store}/>
         }.bind(this));
+
+        var sokVisning = this.state.tekster.length > 0 ?
+            (<div className="sok-visning">
+                <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
+                    {tekstlistekomponenter}
+                </div>
+                <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
+                    <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
+                </div>
+            </div>)
+            :
+            (<div className="sok-visning">
+                <h1 className="ingen-treff">Ingen treff</h1>
+            </div>);
 
         return (
             <Modal ref="modal" skipFocus={['div', '.knagg > button']}>
@@ -49,14 +63,7 @@ var Skrivestotte = React.createClass({
                     <div tabIndex="-1" className="sok-container">
                         <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tabliste={this.refs.tablist} />
                     </div>
-                    <div className="sok-visning">
-                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
-                        {tekstlistekomponenter}
-                        </div>
-                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
-                            <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
-                        </div>
-                    </div>
+                    {sokVisning}
                     <input type="submit" value="submit" className="hidden" />
                 </form>
             </Modal>

@@ -47,6 +47,20 @@ var MeldingerSok = React.createClass({
             />
         }.bind(this));
 
+        var sokVisning = this.state.traader.length > 0 ?
+            (<div className="sok-visning">
+                <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
+                        {tekstlistekomponenter}
+                </div>
+                <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
+                    <ForhandsvisningKomponent traad={this.state.valgtTraad} />
+                </div>
+            </div>)
+            :
+            (<div className="sok-visning">
+                <h1 className="ingen-treff">Ingen treff</h1>
+            </div>);
+
         return (
             <Modal ref="modal">
                 <form className={"sok-layout meldinger-sok"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
@@ -60,14 +74,7 @@ var MeldingerSok = React.createClass({
                             aria-controls={this.state.listePanelId}
                         />
                     </div>
-                    <div className="sok-visning">
-                        <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
-                        {tekstlistekomponenter}
-                        </div>
-                        <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
-                            <ForhandsvisningKomponent traad={this.state.valgtTraad} />
-                        </div>
-                    </div>
+                    {sokVisning}
                     <input type="submit" value="submit" className="hidden" />
                 </form>
             </Modal>
