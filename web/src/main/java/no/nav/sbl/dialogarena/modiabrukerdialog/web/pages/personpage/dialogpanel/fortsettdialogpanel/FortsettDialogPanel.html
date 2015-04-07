@@ -25,11 +25,12 @@
                 <wicket:container wicket:id="fortsettdialogformelementer">
                     <div wicket:id="journalforing" class="journalforingSporsmal"></div>
 
-                    <wicket:container wicket:id="skrivestotteContainer" />
+                    <wicket:container wicket:id="skrivestotteContainer"/>
 
                     <h2 class="medium kanaloverskrift">
-                        <button wicket:id="skrivestotteToggler" class="skrivestotteToggle"
-                                wicket:message="aria-label:skrivestotte.arialabel"></button>
+                        <button wicket:id="skrivestotteToggler" class="skrivestotteToggle">
+                            <span class="vekk"><wicket:message key="skrivestotte.arialabel"/></span>
+                        </button>
                         <span wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</span>
                     </h2>
                     <section wicket:id="tekstfelt" class="tekstfelt"></section>
