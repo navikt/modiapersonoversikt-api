@@ -242,6 +242,32 @@ public class TransformersTest {
     }
 
     @Test
+    public void transformererIntervalKorrekt() {
+        DateTime start = new DateTime(2015, 01, 01, 01, 01);
+        DateTime end = new DateTime(2015, 01, 02, 01, 01);
+        Interval periode = Transformers.createPeriode(new WSPeriode().withFom(start).withTom(end));
+        assertNotNull(periode);
+        assertThat(periode.getStart(), is(start));
+        assertThat(periode.getEnd(), is(end));
+    }
+
+    @Test
+    public void tomPeriodeBlirINtervallFraUnixEpoch() {
+        Interval periode = Transformers.createPeriode(new WSPeriode());
+        assertNotNull(periode);
+        assertThat(periode.getStart(), is(new DateTime(1970, 1, 1, 1, 0)));
+        assertThat(periode.getEnd(), is(new DateTime(1970, 1, 1, 1, 0)));
+    }
+
+    @Test
+    public void nullPeriodeBlirIntervallFraUnixEpoch() {
+        Interval periode = Transformers.createPeriode(null);
+        assertNotNull(periode);
+        assertThat(periode.getStart(), is(new DateTime(1970, 1, 1, 1, 0)));
+        assertThat(periode.getEnd(), is(new DateTime(1970, 1, 1, 1, 0)));
+    }
+
+    @Test
     public void hovedytelseTransformererKorrektFraWSObjekt() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()
                 .withUtbetaltTil(new WSPerson().withNavn("Ola Normann").withAktoerId("123123123").withDiskresjonskode("5"))
