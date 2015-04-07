@@ -7,6 +7,17 @@ var TekstListeKomponent = require('./TekstListeKomponent');
 var KnaggInput = require('knagginput');
 var SkrivestotteStore = require('./SkrivestotteStore');
 
+var modalTitle = {
+    text: 'Skrivestøtte modal',
+    show: false,
+    tag: 'h1.vekk'
+};
+var modalDescription = {
+    text: '',
+    show: false,
+    tag: 'div.vekk'
+};
+
 var Skrivestotte = React.createClass({
     vis: function () {
         this.refs.modal.open();
@@ -58,7 +69,7 @@ var Skrivestotte = React.createClass({
             </div>);
 
         return (
-            <Modal ref="modal" skipFocus={['div', '.knagg > button']}>
+            <Modal ref="modal" skipFocus={['div', '.knagg > button']} title={modalTitle} description={modalDescription}>
                 <form className={"sok-layout tekstforslag"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
                     <div tabIndex="-1" className="sok-container">
                         <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tabliste={this.refs.tablist} />

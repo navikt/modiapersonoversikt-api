@@ -11,12 +11,12 @@ var Modal = React.createClass({
         return {
             title: {
                 text: 'Modal Title',
-                show: 'false',
+                show: false,
                 tag: 'h1'
             },
             description: {
                 text: '',
-                show: 'false',
+                show: false,
                 tag: 'div'
             }
         }

@@ -106,9 +106,9 @@ var ModalPortal = React.createClass({
                     {title.hidden}
                     {description.hidden}
                 <div className="centering">
+                    <div className="content" ref="content">
                         {title.visible}
                         {description.visible}
-                    <div className="content" ref="content">
                         {children}
                     </div>
                 </div>
@@ -119,15 +119,13 @@ var ModalPortal = React.createClass({
 
 function createAriaOptional(name, data) {
     var id = createId('react-modalx-' + name + '-');
-
     var tagComponent = data.tag.split(".");
     var tagType = tagComponent[0];
     var className = "";
 
-    if (tagComponent.length > 2) {
+    if (tagComponent.length > 1) {
         className = tagComponent[1];
     }
-
     var element = React.createElement(tagType, {id: id, className: className}, data.text);
     return {
         id: id,
