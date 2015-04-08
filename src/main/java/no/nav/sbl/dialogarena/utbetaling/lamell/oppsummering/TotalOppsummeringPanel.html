@@ -17,14 +17,14 @@
             </thead>
             <tbody>
             <tr class="uthevet">
-                <td>
+                <td aria-labelledby="totalt utbetalt for perioden">
                     <span style="display:block;font-weight: 100;"><wicket:message key="utbetaling.lamell.oppsummering.periode"/></span>
                     <span wicket:id="oppsummertPeriode" style="text-transform: uppercase;"></span>
                 </td>
                 <td></td>
-                <td><span wicket:id="brutto"></span></td>
-                <td><span wicket:id="trekk"></span></td>
-                <td><span wicket:id="utbetalt"></span></td>
+                <td aria-labelledby="totalt bruttobeløp"><span class="vekk">Totalt bruttobeløp:</span><span wicket:id="brutto"></span></td>
+                <td aria-labelledby="totalt trukket"><span class="vekk">Totalt trukket:</span><span wicket:id="trekk"></span></td>
+                <td aria-labelledby="totalt utbetalt"><span class="vekk">Totalt utbetalt:</span><span wicket:id="utbetalt"></span></td>
             </tr>
             </tbody>
         </table>
@@ -43,24 +43,48 @@
             </thead>
             <tbody wicket:id="hovedytelser">
             <tr class="uthevet">
-                <td class="hovedytelse cap-1st" wicket:id="hovedYtelsesBeskrivelse">[]</td>
+                <td class="hovedytelse cap-1st" aria-labelledby="ytelse">
+                    <span class="vekk">Hovedytelse:</span>
+                    <span wicket:id="hovedYtelsesBeskrivelse"></span>
+                </td>
                 <td></td>
-                <td wicket:id="bruttoUnderytelser">[]</td>
-                <td wicket:id="trekkUnderytelser">[]</td>
-                <td wicket:id="nettoUnderytelser">[]</td>
+                <td aria-labelledby="brutto">
+                    <span class="vekk">Brutto:</span>
+                    <span wicket:id="bruttoUnderytelser"></span>
+                </td>
+                <td aria-labelledby="trekk">
+                    <span class="vekk">Trekk:</span>
+                    <span wicket:id="trekkUnderytelser"></span>
+                </td>
+                <td aria-labelledby="utbetalt">
+                    <span class="vekk">Utbetalt:</span>
+                    <span wicket:id="nettoUnderytelser"></span>
+                </td>
             </tr>
             <tr>
-                <td class="ytelseperiode" wicket:id="hovedYtelsesPeriode">[]</td>
+                <td class="ytelseperiode" aria-labelledby="ytelsesperiode">
+                    <span class="vekk">Ytelsesperiode:</span>
+                    <span wicket:id="hovedYtelsesPeriode"></span>
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
             </tr>
             <tr wicket:id="underYtelsesBeskrivelser">
-                <td class="cap-1st" wicket:id="underYtelsesBeskrivelse">[]</td>
-                <td wicket:id="ytelsesBelop">[]</td>
+                <td class="cap-1st" aria-labelledby="underytelse">
+                    <span class="vekk">Underytelse:</span>
+                    <span wicket:id="underYtelsesBeskrivelse"></span>
+                </td>
+                <td aria-labelledby="delbeløp">
+                    <span class="vekk">Delbeløp:</span>
+                    <span wicket:id="ytelsesBelop"></span>
+                </td>
                 <td></td>
-                <td wicket:id="trekkBelop">[]</td>
+                <td aria-labelledby="trekkbeløp">
+                    <span class="vekk">Trekkbeløp:</span>
+                    <span wicket:id="trekkBelop"></span>
+                </td>
                 <td></td>
             </tr>
             </tbody>
