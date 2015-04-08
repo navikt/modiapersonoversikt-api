@@ -5,16 +5,22 @@ var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
 var Utils = require('utils');
 var MeldingerSokStore = require('./MeldingerSokStore');
 
-var modalTitle = {
-    text: 'Meldingersøk modal',
-    show: false,
-    tag: 'h1.vekk'
-};
-var modalDescription = {
-    text: '',
-    show: false,
-    tag: 'div.vekk'
-};
+var modalConfig = {
+    title: {
+        text: 'Meldingersøk modal',
+        show: false,
+        tag: 'h1.vekk'
+    },
+    description: {
+        text: '',
+        show: false,
+        tag: 'div.vekk'
+    },
+    closeButton: {
+        text: 'Lukk meldingersøk modal',
+        tag: 'span.vekk'
+    }
+}
 
 var MeldingerSok = React.createClass({
     vis: function (props) {
@@ -75,7 +81,7 @@ var MeldingerSok = React.createClass({
         );
 
         return (
-            <Modal ref="modal" title={modalTitle} description={modalDescription}>
+            <Modal ref="modal" title={modalConfig.title} description={modalConfig.description} closeButton={modalConfig.closeButton}>
                 <form className={"sok-layout meldinger-sok"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
                     <div tabIndex="-1" className="sok-container">
                         <div>
