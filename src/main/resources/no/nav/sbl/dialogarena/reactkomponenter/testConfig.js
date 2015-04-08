@@ -53,10 +53,21 @@ function focusable(element, isTabIndexNotNaN) {
         visible(element);
 }
 
-$.extend($.expr[':'], {
-    focusable: function(element) {
-        return focusable(element, !isNaN($.attr(element, 'tabindex')));
+function tabbable(element) {
+    var tabIndex = $.attr(element, 'tabindex');
+    if (tabIndex === null) {
+        tabIndex = undefined;
     }
+
+    var isTabIndexNaN = isNaN(tabIndex);
+    return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
+}
+
+$.extend($.expr[':'], {
+    focusable: function (element) {
+        return focusable(element, !isNaN($.attr(element, 'tabindex')));
+    },
+    tabbable: tabbable
 });
 
 

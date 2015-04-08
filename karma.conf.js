@@ -9,7 +9,7 @@ module.exports = function (config) {
         exclude: [],
 
         preprocessors: {
-            '**/tests/*.js': ['browserify', 'coverage']
+            './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/tests/*.js': ['browserify', 'coverage']
         },
 
         reporters: ['progress', 'junit', 'coverage'],
