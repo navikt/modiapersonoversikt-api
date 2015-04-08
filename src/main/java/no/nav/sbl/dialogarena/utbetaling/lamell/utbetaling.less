@@ -62,10 +62,17 @@
         padding: @hoydePadding 22px 14px 22px;
         margin: 0;
         font-size: 13px;
-
+        h2.utbetaling-dato {
+          font-size: 13px;
+          display: inline-block;
+          font-family: @sansFontFamily;
+          margin-bottom: 0;
+        }
         .utbetaling-status {
           font-weight: bold;
-
+          display: inline-block;
+          margin: 0;
+          line-height: 1.3;
         }
         &:hover {
           border-color: @grayLight;
@@ -73,8 +80,11 @@
       }
       .utbetaling {
         padding: 0 22px @hoydePadding 22px;
-        margin: 0;
-        line-height: 1.3;
+        p {
+          margin: 0;
+          line-height: 1.3;
+          display: inline-block;
+        }
         .ytelse {
           font-weight: bold;
           margin-right: 5px;
