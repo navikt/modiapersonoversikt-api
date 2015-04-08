@@ -18,6 +18,7 @@ var modalConfig = {
     },
     closeButton: {
         text: 'Lukk meldingersøk modal',
+        show: true,
         tag: 'span.vekk'
     }
 }
