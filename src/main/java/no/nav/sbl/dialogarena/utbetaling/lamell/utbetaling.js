@@ -1,5 +1,5 @@
 var Utbetalinger = (function () {
-    var aapneUtbetalingText = 'Utvid';
+    var aapneUtbetalingText = 'Ekspander';
     var lukkUtbetalingText = 'Minimer';
 
     var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
@@ -51,8 +51,12 @@ var Utbetalinger = (function () {
     var toggleEkspandertHjelpetekst = function ($element) {
         if ($element.hasClass('ekspandert')) {
             $element.find('.ekspander-pil span').text(lukkUtbetalingText);
+            $element.find('.ekspander-pil').attr('aria-label', lukkUtbetalingText)
+            $element.find('.ekspander-pil').attr('title', lukkUtbetalingText)
         } else {
             $element.find('.ekspander-pil span').text(aapneUtbetalingText);
+            $element.find('.ekspander-pil').attr('aria-label', aapneUtbetalingText)
+            $element.find('.ekspander-pil').attr('title', aapneUtbetalingText)
         }
     }
 
