@@ -19,10 +19,7 @@ public class WSUtbetalingTestData {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createOlaNordmannUtbetaling());
         utbetalinger.add(createOsloKommuneUtbetaling());
-        utbetalinger.add(createOsloKommuneUtbetaling());
-        utbetalinger.add(createOsloKommuneUtbetaling());
-        utbetalinger.add(createOsloKommuneUtbetaling());
-        utbetalinger.add(createOsloKommuneUtbetaling());
+        utbetalinger.add(createOsloKommuneUtbetalingUtenPeriode());
         utbetalinger.addAll(kariNordmannUtbetaling());
 
         final Interval periode = new Interval(startDato, sluttDato);
@@ -193,6 +190,38 @@ public class WSUtbetalingTestData {
                 .withUtbetalingsstatus("Utbetalt")
 
                 ;
+    }
+
+    private static WSUtbetaling createOsloKommuneUtbetalingUtenPeriode() {
+        return new WSUtbetaling()
+                .withPosteringsdato(now().minusDays(19))
+                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("00999999999").withNavn("Oslo kommune Utbetaling 4"))
+                .withUtbetalingNettobeloep(11833.00)
+                .withUtbetalingsmelding("Sykepenger")
+                .withYtelseListe(
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
+                                .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
+                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Plan- og bygningsetaten"))
+                                .withYtelseskomponentListe(
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponenttype("Sykepenger, arbeidstakere")
+                                                .withYtelseskomponentbeloep(15007.00))
+                                .withYtelseskomponentersum(15007.00)
+                                .withTrekkListe(
+                                        new WSTrekk()
+                                                .withTrekktype("Kreditortrekk")
+                                                .withTrekkbeloep(-900.00)
+                                                .withKreditor("00911111111"))
+                                .withTrekksum(-900.00)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
+                                .withSkattsum(-2267.00)
+                                .withYtelseNettobeloep(11840.00)
+                                .withBilagsnummer("10201498456"))
+                .withUtbetalingsdato(now().minusMonths(2))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetalingsmetode("Bankkonto")
+                .withUtbetalingsstatus("Utbetalt");
     }
 
     private static WSUtbetaling createOlaNordmannUtbetaling() {
