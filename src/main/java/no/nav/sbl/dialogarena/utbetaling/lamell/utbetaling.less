@@ -450,18 +450,19 @@
       width: 17px;
       height: 12px;
       margin-left: 16px;
-      transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-      -webkit-transform: rotate(180deg);
+      transform: none;
+      -ms-transform: none;
+      -webkit-transform: none;
       &:hover {
         background-image: url('../img/pil_hover.svg');
       }
     }
 
     &.ekspandert .ekspander-pil {
-      transform: none;
-      -ms-transform: none;
-      -webkit-transform: none;
+
+      transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+      -webkit-transform: rotate(180deg);
     }
   }
 
