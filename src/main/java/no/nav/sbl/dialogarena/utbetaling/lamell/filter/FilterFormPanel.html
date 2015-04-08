@@ -7,17 +7,17 @@
                 <h2 aria-label="Filtrering" class="boks-overskrift"><wicket:message key="utbetaling.lamell.filter.filtrering.overskrift"/></h2>
             </div>
             <div class="filter-block-content dato-plukker-filter">
-                <label class="filter-header">
+                <h3 aria-label="Velg periode" class="filter-header">
                     <wicket:message key="utbetaling.lamell.filter.datofilter"/>
-                </label>
+                </h3>
                 <wicket:container wicket:id="datoFilter"/>
                 <input type="submit" wicket:id="sok" class="knapp-hoved-liten"/>
             </div>
 
             <div class="filter-block-content">
-                <label class="filter-header">
+                <h3 aria-label="Utbetaling til" class="filter-header">
                     <wicket:message key="utbetaling.lamell.filter.mottaker"/>
-                </label>
+                </h3>
 
                 <input type="checkbox" wicket:id="visBruker" value="Bruker" />
                 <label wicket:for="visBruker" class="cap-1st">
@@ -31,9 +31,9 @@
             </div>
 
             <div class="filter-block-content ytelser" wicket:id="ytelseContainer">
-                <label class="filter-header">
+                <h3 aria-label="Velg ytelse" class="filter-header">
                     <wicket:message key="utbetaling.lamell.filter.ytelser"/>
-                </label>
+                </h3>
 
                 <input type="checkbox" wicket:id="visAlleYtelser" />
                 <label class="cap-1st" wicket:for="visAlleYtelser">
