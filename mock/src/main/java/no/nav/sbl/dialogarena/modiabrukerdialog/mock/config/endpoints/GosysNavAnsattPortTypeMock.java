@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static java.util.Arrays.asList;
 
@@ -126,8 +127,9 @@ public class GosysNavAnsattPortTypeMock {
                 "Hedmark",
                 "Oppland"
         };
-        String t = type[(int)(type.length * Math.random())];
-        String p = place[(int)(place.length * Math.random())];
+        Random r = new Random();
+        String t = type[r.nextInt(type.length)];
+        String p = place[r.nextInt(place.length)];
 
         return "NAV "+t+" - "+p;
     }
