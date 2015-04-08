@@ -55,20 +55,8 @@ var KnaggInput = React.createClass({
             this.setState({focus: false});
         }
     },
-    componentDidUpdate: function () {
-        //Dette er en IE hack.... Hvis man en gang i fremtiden ikke bruker IE 9, så kanskje man kan fjerne denne.
-        var $knaggcontainer = $(this.refs.knaggcontainer.getDOMNode());
-        var $input = $knaggcontainer.find('input[type="text"]');
-        var $knagger = $knaggcontainer.find('span.knagg');
-
-        var maxWidth = $knaggcontainer.width();
-        $knagger.each(function (index, knagg) {
-            maxWidth -= $(knagg).outerWidth() + 4.2//knagg bredde + margin;
-        });
-        maxWidth -= 46;//Forstørrelseglass ikon
-
-        $input.outerWidth(maxWidth);
-        //End IE hack
+    componentDidUpdate: function(){
+        IEHack.call(this);
     },
     render: function () {
         var knagger = this.props.knagger.map(function (knagg) {
@@ -127,6 +115,25 @@ function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
         knagger: eksistendeKnagger,
         fritekst: fritekst
     }
+}
+
+function IEHack() {
+    //Dette er en IE hack.... Hvis man en gang i fremtiden ikke bruker IE 9, så kanskje man kan fjerne denne.
+    var $knaggcontainer = $(this.refs.knaggcontainer.getDOMNode());
+    if (!$knaggcontainer.is(':visible')) {
+        return;
+    }
+    var $input = $knaggcontainer.find('input[type="text"]');
+    var $knagger = $knaggcontainer.find('span.knagg');
+
+    var maxWidth = $knaggcontainer.width();
+    $knagger.each(function (index, knagg) {
+        maxWidth -= $(knagg).outerWidth() + 4.2//knagg bredde + margin;
+    });
+    maxWidth -= 46;//Forstørrelseglass ikon
+
+    $input.outerWidth(maxWidth);
+    //End IE hack
 }
 
 module.exports = KnaggInput;

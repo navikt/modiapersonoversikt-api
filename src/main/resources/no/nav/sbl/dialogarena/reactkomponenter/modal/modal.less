@@ -20,6 +20,19 @@ body.modal-open {
     margin: 0 auto;
 
     .content {
+      .closeButton {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        right: 15px;
+        top: 23px;
+        background: url('../img/kryss.svg') no-repeat;
+        border: none;
+
+        &:focus, &:hover {
+          background: url('../img/kryss_hover.svg') no-repeat;
+        }
+      }
       position: fixed;
       width: @width;
       z-index: 1012;

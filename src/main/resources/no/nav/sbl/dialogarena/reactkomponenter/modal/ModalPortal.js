@@ -9,10 +9,11 @@ var ModalPortal = React.createClass({
             isOpen: false
         };
     },
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             title: createAriaOptional('title', this.props.title),
-            description: createAriaOptional('description', this.props.description)
+            description: createAriaOptional('description', this.props.description),
+            closeButton: createAriaOptional('closeButton', this.props.closeButton)
         }
     },
     componentDidMount: function () {
@@ -55,7 +56,7 @@ var ModalPortal = React.createClass({
     },
     handleTab: function (isShiftkey) {
         var $content = $(this.refs.content.getDOMNode());
-        var focusable = $content.find(':not(div):focusable').not('div');
+        var focusable = $content.find(':tabbable');
         var lastValidIndex = isShiftkey ? 0 : focusable.length - 1;
 
 
@@ -70,10 +71,11 @@ var ModalPortal = React.createClass({
     },
     focusFirst: function () {
         this.focusAfterClose = document.activeElement;
-        var tabbables = $(this.refs.content.getDOMNode()).find(':focusable');
+        var tabbables = $(this.refs.content.getDOMNode()).find(':tabbable');
         this.props.skipFocus.forEach(function (skipFocusTag) {
             tabbables = tabbables.not(skipFocusTag);
         });
+
         if (tabbables.length > 0) {
             tabbables.eq(0).focus();
         }
@@ -98,6 +100,12 @@ var ModalPortal = React.createClass({
 
         var title = this.state.title;
         var description = this.state.description;
+        var closeButton = null;
+        if (this.props.closeButton.show) {
+            closeButton = <button className="closeButton" onClick={this.props.modal.close}>
+                {this.state.closeButton.visible}
+            </button>;
+        }
 
         var cls = this.props.isOpen ? '' : 'hidden';
         return (
@@ -110,6 +118,7 @@ var ModalPortal = React.createClass({
                         {title.visible}
                         {description.visible}
                         {children}
+                        {closeButton}
                     </div>
                 </div>
             </div>
@@ -136,4 +145,5 @@ function createAriaOptional(name, data) {
 function createId(prefix) {
     return prefix + new Date().getTime() + "-" + Math.random();
 }
+
 module.exports = ModalPortal;

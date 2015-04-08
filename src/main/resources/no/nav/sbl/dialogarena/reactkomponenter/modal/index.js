@@ -18,6 +18,11 @@ var Modal = React.createClass({
                 text: '',
                 show: false,
                 tag: 'div'
+            },
+            closeButton: {
+                text: '',
+                show: true,
+                tag: 'span'
             }
         }
     },
