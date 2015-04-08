@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -10,6 +11,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
 
 import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
+import static no.nav.sbl.dialogarena.utbetaling.util.VMUtils.erGyldigStartSluttVerdier;
 
 public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
 
@@ -33,10 +35,15 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
     }
 
     private Label createPeriodeLabel(HovedytelseVM hovedytelseVM) {
-        IModel<String> periodeModel = getPeriodeModel(
-                getDatoModel(hovedytelseVM.getStartDato(), Datoformat.KortDatoUtenLiteral, "startdato.mangler"),
-                getDatoModel(hovedytelseVM.getSluttDato(), Datoformat.KortDatoUtenLiteral, "sluttdato.mangler"));
-        return new Label("periode", periodeModel);
+        if (erGyldigStartSluttVerdier(hovedytelseVM.getStartDato(), hovedytelseVM.getSluttDato())) {
+            return new Label("periode", getPeriodeModel(
+                    getDatoModel(hovedytelseVM.getStartDato(), Datoformat.KortDatoUtenLiteral, "startdato.mangler"),
+                    getDatoModel(hovedytelseVM.getSluttDato(), Datoformat.KortDatoUtenLiteral, "sluttdato.mangler")
+            ));
+        }
+        return (Label) new Label("periode",
+                new StringResourceModel("utbetaling.lamell.utbetaling.udefinertperiode", UtbetalingWidgetPanel.this, null).getString())
+                .add(new AttributeAppender("class", "kursiv").setSeparator(" "));
     }
 
     private IModel<String> getDatoModel(DateTime dato, Datoformat datoformat, String resourceKey) {
