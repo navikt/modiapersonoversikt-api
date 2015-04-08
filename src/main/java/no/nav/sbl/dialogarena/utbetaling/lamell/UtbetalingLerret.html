@@ -16,7 +16,7 @@
         <div class="utbetaling-ramme">
             <div class="ramme-header">
                 <div id="ajax-indikator" style="display: none;"></div>
-                <wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/>
+                <h2 aria-label="Totalt utbetalt for perioden" class="boks-overskrift"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></h2>
             </div>
             <div wicket:id="ingenutbetalinger"></div>
             <div wicket:id="feilmelding" class="feilmelding"></div>
@@ -24,7 +24,9 @@
         </div>
 
         <div class="utbetaling-ramme" wicket:id="utbetalingslisteContainer">
-            <div class="ramme-header"><wicket:message key="utbetaling.lamell.utbetalinger-utfort"/></div>
+            <div class="ramme-header">
+                <h2 aria-label="Liste over utbetalinger" class="boks-overskrift"><wicket:message key="utbetaling.lamell.utbetalinger-utfort"/></h2>
+            </div>
             <div class="utbetaling-ramme-innhold">
                 <wicket:container wicket:id="maanedsPaneler">
                     <wicket:container wicket:id="maanedsPanel"/>
