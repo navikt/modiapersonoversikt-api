@@ -18,22 +18,21 @@ var ListevisningKomponent = React.createClass({
         var meldingsStatus = this.props.traad.statusTekst + ", " + this.props.traad.temagruppe;
         meldingsStatus = sanitize(meldingsStatus, {allowedTags: ['em']});
         var innhold = sanitize(this.props.traad.innhold, {allowedTags: ['em']});
-        var statusIkonTekst = format('{0}, {1}, {2}',
-            this.props.traad.statusKlasse.match(/ubesvart$/) ? 'Ubesvart' : 'Besvart',
-            dato,
-            meldingsStatus
-        );
+
+        var statusIkonTekst = format('{0}, {1} {2}',
+                this.props.traad.statusKlasse.match(/ubesvart$/) ? 'Ubesvart' : 'Besvart',
+                this.props.traad.antallMeldingerIOpprinneligTraad,
+                this.props.traadantallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
+            );
 
         return (
             <div className="sok-element" onClick={tekstChangedProxy.bind(this)}>
                 <input id={"melding" + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={"melding" + this.props.traad.key} className={cls}>
-                    <header>
-                        <p dangerouslySetInnerHTML={{__html: dato}} aria-hidden="true"></p>
-                        <span className="vekk">{statusIkonTekst}</span>
-                        <div className={this.props.traad.statusKlasse} aria-hidden="true"></div>
-                        <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}} aria-hidden="true"></p>
-                    </header>
+                    <p className="vekk">{statusIkonTekst}</p>
+                    <p dangerouslySetInnerHTML={{__html: dato}}></p>
+                    <div className={this.props.traad.statusKlasse} aria-hidden="true"></div>
+                    <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
                     <p className="fritekst" dangerouslySetInnerHTML={{__html: innhold}} aria-hidden="true"></p>
                 </label>
             </div>
