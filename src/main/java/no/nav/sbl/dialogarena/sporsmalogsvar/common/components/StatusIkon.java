@@ -14,10 +14,10 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 public class StatusIkon extends Panel {
 
     public StatusIkon(String id, MeldingVM meldingVM) {
-        this(id, false, meldingVM);
+        this(id, false, false, meldingVM);
     }
 
-    public StatusIkon(String id, boolean underBehandling, MeldingVM meldingVM) {
+    public StatusIkon(String id, boolean underBehandling, boolean erValgt, MeldingVM meldingVM) {
         super(id);
         WebMarkupContainer statusIkon = new WebMarkupContainer("statusIkon");
 
@@ -32,13 +32,11 @@ public class StatusIkon extends Panel {
         String typeMelding = new PropertyModel<String>(meldingVM, "melding.statusTekst").getObject();
         String tema = new PropertyModel<String>(meldingVM, "melding.temagruppeNavn").getObject();
 
-        Label statusIkonTekst = new Label("statusIkonTekst", format("%s%s, %s, %s, %s, %s",
+        Label statusIkonTekst = new Label("statusIkonTekst", format("%s%s%s, %s",
+                erValgt ? "Valgt, " : "",
                 underBehandling ? "Under behandling, " : "",
                 besvartStatus,
-                antallMeldinger,
-                dato,
-                typeMelding,
-                tema));
+                antallMeldinger));
 
 
         statusIkon.add(hasCssClassIf("ubesvart", not(meldingVM.erBesvart())));

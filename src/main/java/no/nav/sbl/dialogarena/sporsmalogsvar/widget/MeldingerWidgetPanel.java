@@ -14,9 +14,9 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
         setOutputMarkupId(true);
 
         add(
+                new StatusIkon("statusIkon", getModelObject()),
                 new Label("traadlengde").setVisibilityAllowed(getModelObject().traadlengde > 2),
                 new Label("opprettetDato"),
-                new StatusIkon("statusIkon", getModelObject()),
                 new Label("meldingstatus", new PropertyModel<String>(getModel(), "melding.statusTekst")),
                 new Label("temagruppe", new PropertyModel<String>(getModel(), "melding.temagruppeNavn"))
         );
