@@ -7,12 +7,15 @@
 <wicket:panel>
     <div class="meldinglamell flexbox flex1">
         <section class="meldingsliste flex2">
-            <button wicket:id="meldingerSokToggle" class="knapp-stor innboksSokToggle">SØK</button>
+            <div class="clearfix innboksSokToggle">
+                <button wicket:id="meldingerSokToggle" class="knapp-stor">SØK</button>
+            </div>
             <wicket:container wicket:id="meldingerSokContainer"></wicket:container>
             <section wicket:id="meldinger" role="tablist"></section>
         </section>
 
-        <section wicket:id="detaljpanel" class="traadDetaljer flex3" role="tabpanel" aria-atomic="true" aria-live="polite"></section>
+        <section wicket:id="detaljpanel" class="traadDetaljer flex3" role="tabpanel" aria-atomic="true"
+                 aria-live="polite"></section>
         <div wicket:id="feilmeldingpanel" class="feilmelding">
             <div class="robust-ikon-feil-gra"></div>
             <span wicket:id="feilmelding" class="stor"></span>
