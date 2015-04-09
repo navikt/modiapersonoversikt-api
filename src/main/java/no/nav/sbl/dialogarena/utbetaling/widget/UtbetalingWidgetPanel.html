@@ -1,30 +1,33 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="utbetaling-metadata-widget">
-        <h2 wicket:id="utbetalingsDato" class="utbetaling-dato"></h2>
-        <span>/</span>
+        <p class="utbetaling-dato">
+            <span class="vekk">Utbetalingsdato:</span>
+            <span wicket:id="utbetalingsDato"></span>
+        </p>
         <p class="utbetaling-status">
+            <span>/</span>
             <span class="vekk">Utbetalingssstatus:</span>
             <span wicket:id="statusTekst"></span>
         </p>
     </div>
     <div class="utbetaling">
-        <p>
+        <p class="ytelse">
             <span class="vekk">Ytelse:</span>
-            <span class="ytelse" wicket:id="ytelse"></span>
+            <span wicket:id="ytelse"></span>
         </p>
         <p class="belop">
             <span class="vekk">Utbetalt beløp:</span>
             <span wicket:id="belop" ></span>
         </p>
-        <p>
+        <p class="periode">
             <span class="vekk">Periode:</span>
-            <span wicket:id="periode" class="periode"></span>
+            <span wicket:id="periode"></span>
         </p>
-        <div class="utbetaling-til">
+        <p class="utbetaling-til">
             <span><wicket:message key="utbetaling.utbetalt.til" /></span>
             <span wicket:id="utbetaltTil"></span>
-        </div>
+        </p>
     </div>
 </wicket:panel>
 </html>

@@ -34,6 +34,7 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
     private String utbetalingId;
     private Mottakertype mottakertype;
     private String mottaker;
+    private boolean isUtbetalt;
 
 
     public HovedytelseVM(Record<Hovedytelse> hovedytelse) {
@@ -45,6 +46,11 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
         this.utbetalingId = hovedytelse.get(Hovedytelse.id).toString();
         this.mottakertype = hovedytelse.get(Hovedytelse.mottakertype);
         this.mottaker = hovedytelse.get(Hovedytelse.utbetaltTil).get(Aktoer.navn);
+        this.isUtbetalt = hovedytelse.get(Hovedytelse.utbetalingsDato) != null;
+    }
+
+    public boolean isUtbetalt() {
+        return isUtbetalt;
     }
 
     public DateTime getHovedytelseDato() {
