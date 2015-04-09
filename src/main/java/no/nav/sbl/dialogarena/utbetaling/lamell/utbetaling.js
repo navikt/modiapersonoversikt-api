@@ -9,14 +9,14 @@ var Utbetalinger = (function () {
 
         // Event listeners
         // Utbetalinger
-        $(document).on('keypress', '.utbetaling-ramme-innhold .utbetalingslinje', function (event) {
+        $(document).on('keydown', '.utbetaling-ramme-innhold .utbetalingslinje', function (event) {
             if (event.which === 13) {
                 Utbetalinger.toggleDetaljPanel($(this));
             }
         });
 
         // Totalt utbetalt
-        $(document).on('keypress', '.utbetaling-ramme-innhold.oppsummering-total', function (event) {
+        $(document).on('keydown', '.utbetaling-ramme-innhold.oppsummering-total', function (event) {
             if (event.which === 13) {
                 Utbetalinger.toggleDetaljPanel($(this));
             }
