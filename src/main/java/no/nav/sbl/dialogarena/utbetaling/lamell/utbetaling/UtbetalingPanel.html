@@ -1,28 +1,44 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-
-    <div class="main">
-        <div class="statuspanel" wicket:id="statuspanel">
-            <span wicket:id="utbetalingDato"></span>
-            <span wicket:id="status"></span>
-            <span wicket:id="forfallDatoLabel" class="dato-label"></span>
-            <span wicket:id="forfallDato"></span>
-        </div>
-
-        <wicket:container wicket:id="printEkspander"></wicket:container>
-
+    <div class="utbetaling-head">
         <div class="utbetaling-metadata">
-            <p class="ytelse" wicket:id="ytelse"></p>
-            <span class="periode" wicket:id="periodeMedKortDato"></span>
-            <span class="vekk">/</span>
-            <span araclass="belop" wicket:id="belopMedValuta"></span>
-            <div class="utbetaling-til">
-                <wicket:message key="utbetaling.lamell.utbetalt.til" />
-                <span wicket:id="utbetaltTil"></span>
+         <wicket:container wicket:id="printEkspander"></wicket:container>
+            <p class="utbetaling-dato">
+                <span class="vekk">Utbetalingsdato:</span>
+                <span wicket:id="utbetalingDato"></span>
+            </p>
+            <p class="utbetaling-status">
+                <span>/</span>
+                <span class="vekk">Utbetalingssstatus:</span>
+                <span wicket:id="status"></span>
+            </p>
+        </div>
+        <div class="utbetaling">
+            <p class="ytelse">
+                <span class="vekk">Ytelse:</span>
+                <span wicket:id="ytelse"></span>
+            </p>
+            <div class="align-right">
+                <p class="belop">
+                    <span class="vekk">Utbetalt beløp:</span>
+                    <span wicket:id="belop" ></span>
+                </p>
+                <div class="forfallsdato" wicket:id="forfallsdatoContainer">
+                    <span class="vekk">/</span>
+                    <span wicket:id="forfallDatoLabel" class="dato-label"></span>
+                    <span wicket:id="forfallDato"></span>
+                </div>
             </div>
+            <p class="periode">
+                <span class="vekk">Periode:</span>
+                <span wicket:id="periode"></span>
+            </p>
+            <p class="utbetaling-til">
+                <span><wicket:message key="utbetaling.lamell.utbetalt.til" /></span>
+                <span wicket:id="utbetaltTil"></span>
+            </p>
         </div>
     </div>
-
     <div wicket:id="detaljpanel" class="detaljpanel"></div>
 </wicket:panel>
 </html>

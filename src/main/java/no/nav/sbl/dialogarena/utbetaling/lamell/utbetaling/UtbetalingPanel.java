@@ -17,40 +17,40 @@ public class UtbetalingPanel extends Panel {
 
         add(new DetaljPanel("detaljpanel", utbetalingVM),
                 new PrintEkspanderContainer("printEkspander", UtbetalingPanel.this.getMarkupId()),
-                createStatusPanel("statuspanel", utbetalingVM),
+                new Label("utbetalingDato", utbetalingVM.getVisningsdatoFormatted()),
+                createStatusLabel(utbetalingVM),
                 new Label("ytelse", utbetalingVM.getYtelse()),
-                new Label("utbetaltTil", utbetalingVM.getMottakerNavn()),
+                new Label("belop", utbetalingVM.getUtbetalt()),
                 getHovedYtelsesPeriodeLabel(utbetalingVM),
-                new Label("belopMedValuta", utbetalingVM.getUtbetalt()));
+                forfallsdatoContainer(utbetalingVM),
+                new Label("utbetaltTil", utbetalingVM.getMottakerNavn())
+                );
+    }
+
+    private Label createStatusLabel(UtbetalingVM utbetalingVM) {
+        Label statusLabel = new Label("status", utbetalingVM.getStatus());
+        if(utbetalingVM.isUtbetalt()) {
+            statusLabel.add(new AttributeAppender("class", "utbetalt").setSeparator(" "));
+        }
+        return statusLabel;
+    }
+
+    private WebMarkupContainer forfallsdatoContainer(UtbetalingVM utbetalingVM) {
+        WebMarkupContainer container = new WebMarkupContainer("forfallsdatoContainer");
+        container.add(
+                new Label("forfallDato", utbetalingVM.getForfallsDatoFormatted()),
+                new Label("forfallDatoLabel", new StringResourceModel("utbetaling.lamell.utbetaling.forfallsdato.label", this, null))
+                ).setVisible(skalViseForfallsdato(utbetalingVM));
+        return container;
     }
 
     private Label getHovedYtelsesPeriodeLabel(UtbetalingVM utbetalingVM) {
         if (erGyldigStartSluttVerdier(utbetalingVM.getStartDato(), utbetalingVM.getSluttDato())) {
-            return new Label("periodeMedKortDato", utbetalingVM.getPeriodeMedKortDato());
+            return new Label("periode", utbetalingVM.getPeriodeMedKortDato());
         }
-        return (Label) new Label("periodeMedKortDato",
+        return (Label) new Label("periode",
                 new StringResourceModel("utbetaling.lamell.utbetaling.udefinertperiode", UtbetalingPanel.this, null).getString())
                 .add(new AttributeAppender("class", "kursiv").setSeparator(" "));
-    }
-
-    protected WebMarkupContainer createStatusPanel(String id, UtbetalingVM utbetalingVM) {
-        WebMarkupContainer container = new WebMarkupContainer(id);
-
-        String statusText = utbetalingVM.getStatus();
-        if(skalViseForfallsdato(utbetalingVM)) {
-            statusText += ", ";
-        }
-
-        container.add(
-                new Label("utbetalingDato", utbetalingVM.getVisningsdatoFormatted()),
-                new Label("status", statusText),
-                new Label("forfallDatoLabel", new StringResourceModel("utbetaling.lamell.utbetaling.forfallsdato.label", this, null))
-                    .setVisible(skalViseForfallsdato(utbetalingVM)),
-                new Label("forfallDato", utbetalingVM.getForfallsDatoFormatted())
-                    .setVisible(skalViseForfallsdato(utbetalingVM))
-        );
-
-        return container;
     }
 
     /**

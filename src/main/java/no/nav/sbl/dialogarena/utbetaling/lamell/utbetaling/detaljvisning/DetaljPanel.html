@@ -2,7 +2,7 @@
 <wicket:panel>
 
     <!-- Header informasjon -->
-    <table class="skillestrek-topp utbetaling-tabell" wicket:message="summary:utbetaling.hovedinfo.tabelloppsummering">
+    <table class="utbetaling-tabell" wicket:message="summary:utbetaling.hovedinfo.tabelloppsummering">
         <thead>
         <tr>
             <th><wicket:message key="konto.label" /></th>
@@ -18,11 +18,11 @@
                 <span wicket:id="konto"></span>
             </td>
             <td></td>
-            <td class="uthevet" aria-labelledby="brutto">
+            <td aria-labelledby="brutto">
                 <span class="vekk">Brutto:</span>
                 <span wicket:id="brutto"></span>
             </td>
-            <td class="uthevet" aria-labelledby="trekk">
+            <td aria-labelledby="trekk">
                 <span class="vekk">Trekk:</span>
                 <span wicket:id="trekk"></span>
             </td>
@@ -33,8 +33,9 @@
         </tbody>
     </table>
 
+    <hr class="skillestrek-topp" />
     <!-- Detaljpanel -->
-    <table class="skillestrek-topp utbetaling-tabell" wicket:message="summary:utbetaling.detaljer.tabelloppsummering">
+    <table class="utbetaling-tabell ytelsekomponent-tabell" wicket:message="summary:utbetaling.detaljer.tabelloppsummering">
         <thead>
         <tr>
             <th><wicket:message key="utbetaling.ytelse"/></th>
@@ -67,11 +68,11 @@
         </tbody>
     </table>
 
-    <div class="element skillestrek-topp" style="margin-bottom: 20px;">
-        <label>
-            <wicket:message key="bilagsmelding.header"/>
-        </label>
-        <div wicket:id="bilagsmelding">[]</div>
+    <hr class="skillestrek-topp" />
+
+    <div class="element">
+        <h3 class="sub-heading"><wicket:message key="bilagsmelding.header"/></h3>
+        <p wicket:id="utbetalingsmelding"></p>
     </div>
 
 </wicket:panel>
