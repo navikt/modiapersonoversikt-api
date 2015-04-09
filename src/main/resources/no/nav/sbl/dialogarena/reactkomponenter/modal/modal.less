@@ -5,6 +5,7 @@ body.modal-open {
   height: 100% !important;
   overflow: hidden !important;
 }
+
 .react-modal-container {
   .backdrop {
     position: fixed;
@@ -33,11 +34,12 @@ body.modal-open {
           background: url('../img/kryss_hover.svg') no-repeat;
         }
       }
-      position: fixed;
-      width: @width;
-      z-index: 1012;
-      top: 20%;
+      position: absolute;
+      top: 50%;
       height: @height;
+      margin-top: (@height/(-2));
+      width: inherit;
+      z-index: 1012;
       background-color: white;
       box-shadow: #000000 0 0 60px;
 
