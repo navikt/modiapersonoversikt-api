@@ -10,9 +10,10 @@ import scala.util.Random
 
 class MeldingerSokSimulation extends Simulation {
 
-  val baseUrl = System.getProperty("baseUrl")
+  val env = System.getProperty("env")
   val users = Integer.getInteger("users")
   val duration: Double = valueOf(System.getProperty("duration"))
+  val baseUrl = "https://modapp-" + env + ".adeo.no"
 
   val httpProtocol = http
     .baseURL(baseUrl)
@@ -52,7 +53,7 @@ class MeldingerSokSimulation extends Simulation {
 
   val scn = scenario("Søk i meldinger")
     .feed(csv("fnr.csv").random)
-    .feed(csv("navIdenter.csv").random)
+    .feed(csv("navIdenter_" + env + ".csv").random)
     .exec(
       http("start")
         .get("/modiabrukerdialog/")
