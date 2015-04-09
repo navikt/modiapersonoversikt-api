@@ -415,21 +415,20 @@
   }
 
   .oppsummeringslinje {
-    background-color: #333333;
-    color: #b7b1a9;
-    padding: 1rem 2rem;
-    .utbetaling-tabell {
-      margin-top: 0;
+    .maaned-header {
+      background-color: #E0DED8;
+      box-sizing: border-box;
+      padding: 5px 20px;
       h3 {
-        font-size: 0.9rem;
-        color: #B7B1A9;
+        font-size: 14px;
         font-family: @font-family-sans-serif;
-        font-weight: 100;
+        font-weight: bold;
         margin: 0;
       }
     }
   }
   .utbetalingslinje {
+    border-top: 1px solid #ffffff;
     border-bottom: 1px solid @borderColor;
     cursor: pointer;
     &:last-of-type {
@@ -463,6 +462,8 @@
     }
     &.ekspandert {
       background-color: #f1f1f1;
+      border-top: 1px solid #0ca9e1;
+      border-bottom: 1px solid #0ca9e1;
     }
   }
 
