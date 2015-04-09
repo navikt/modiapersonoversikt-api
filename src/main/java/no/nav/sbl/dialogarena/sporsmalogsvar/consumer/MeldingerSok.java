@@ -71,13 +71,10 @@ public class MeldingerSok {
 
     private final Integer timeToLiveMinutes;
 
-    private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, ANALYZER);
     protected Map<String, MeldingerCacheEntry> cache = new ConcurrentHashMap<>();
 
     public MeldingerSok() {
         timeToLiveMinutes = Integer.valueOf(getProperty(TIME_TO_LIVE_MINUTES_PROPERTY, DEFAULT_TIME_TO_LIVE_MINUTES));
-        queryParser.setDefaultOperator(QueryParser.Operator.AND);
-        queryParser.setAllowLeadingWildcard(true);
     }
 
     public void indekser(String fnr, List<Melding> meldinger) {
@@ -113,7 +110,7 @@ public class MeldingerSok {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(entry.directory));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
 
-            Query query = queryParser.parse(query(soketekst));
+            Query query = queryParser().parse(query(soketekst));
             searcher.search(query, collector);
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
@@ -128,6 +125,13 @@ public class MeldingerSok {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static QueryParser queryParser() {
+        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, ANALYZER);
+        queryParser.setDefaultOperator(QueryParser.Operator.AND);
+        queryParser.setAllowLeadingWildcard(true);
+        return queryParser;
     }
 
     private List<Traad> lagTraader(String key, Map<String, MeldingerSokResultat> resultat) {
