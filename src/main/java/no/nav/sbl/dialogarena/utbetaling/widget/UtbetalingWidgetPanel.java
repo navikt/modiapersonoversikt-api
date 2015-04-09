@@ -25,9 +25,17 @@ public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
                 new Label("ytelse", hovedytelseVM.getBeskrivelse()),
                 createPeriodeLabel(hovedytelseVM),
                 new Label("belop", hovedytelseVM.getBelop()),
-                new Label("statusTekst", hovedytelseVM.getStatus()),
+                createStatusLabel(hovedytelseVM),
                 new Label("utbetaltTil", hovedytelseVM.getMottaker())
         );
+    }
+
+    private Label createStatusLabel(HovedytelseVM hovedytelseVM) {
+        Label label = new Label("statusTekst", hovedytelseVM.getStatus());
+        if(hovedytelseVM.isUtbetalt()) {
+            label.add(new AttributeAppender("class", "utbetalt").setSeparator(" "));
+        }
+        return label;
     }
 
     private Label createUtbetalingsDatoLabel(HovedytelseVM hovedytelseVM) {
