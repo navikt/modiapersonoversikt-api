@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static java.lang.String.format;
@@ -28,9 +27,6 @@ public class StatusIkon extends Panel {
                 meldingVM.traadlengde,
                 meldingVM.traadlengde == 1 ? "melding" : "meldinger"
         );
-        String dato = meldingVM.getAvsenderDato();
-        String typeMelding = new PropertyModel<String>(meldingVM, "melding.statusTekst").getObject();
-        String tema = new PropertyModel<String>(meldingVM, "melding.temagruppeNavn").getObject();
 
         Label statusIkonTekst = new Label("statusIkonTekst", format("%s%s%s, %s",
                 erValgt ? "Valgt, " : "",
