@@ -66,6 +66,10 @@ public class UtbetalingVM {
         return ytelse.get(Hovedytelse.utbetalingsDato);
     }
 
+    public boolean isUtbetalt() {
+        return ytelse.get(Hovedytelse.utbetalingsDato) != null;
+    }
+
     public String getVisningsdatoFormatted() {
         DateTime ytelseDato = ytelse.get(Hovedytelse.hovedytelsedato);
         if(ytelseDato == null) {

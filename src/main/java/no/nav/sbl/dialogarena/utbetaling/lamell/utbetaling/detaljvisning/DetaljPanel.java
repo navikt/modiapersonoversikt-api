@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -33,7 +32,7 @@ public class DetaljPanel extends Panel {
                 new Label("trekk", utbetalingVM.getTrekk()),
                 new Label("utbetalt", utbetalingVM.getUtbetalt()),
                 createYtelserader(ytelseVMer),
-                new MultiLineLabel("bilagsmelding", melding).add(visibleIf(not(isEmptyString(melding)))));
+                new Label("utbetalingsmelding", melding).add(visibleIf(not(isEmptyString(melding)))));
     }
 
     protected List<YtelseVM> createYtelseVMerList(UtbetalingVM utbetalingVM) {
