@@ -8,7 +8,9 @@
     <div class="meldinglamell flexbox flex1">
         <section class="meldingsliste flex2">
             <div class="clearfix innboksSokToggle">
-                <button wicket:id="meldingerSokToggle" class="knapp-liten">SØK</button>
+                <button wicket:id="meldingerSokToggle" class="knapp-liten" wicket:message="title:innboks.sok.knapp.title">
+                    <wicket:message key="innboks.sok.knapp.tekst"/>
+                </button>
             </div>
             <wicket:container wicket:id="meldingerSokContainer"></wicket:container>
             <section wicket:id="meldinger" role="tablist"></section>
