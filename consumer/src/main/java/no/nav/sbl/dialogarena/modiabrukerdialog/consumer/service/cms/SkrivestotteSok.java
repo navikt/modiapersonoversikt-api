@@ -8,6 +8,7 @@ import org.apache.lucene.document.*;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser.Operator;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
@@ -43,12 +44,6 @@ public class SkrivestotteSok {
 
     private StandardAnalyzer analyzer = new StandardAnalyzer();
     private RAMDirectory directory;
-    private MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, analyzer);
-
-    public SkrivestotteSok() {
-        queryParser.setDefaultOperator(Operator.AND);
-        queryParser.setAllowLeadingWildcard(true);
-    }
 
     public void indekser(List<SkrivestotteTekst> skrivestotteTekster) {
         try {
@@ -88,7 +83,7 @@ public class SkrivestotteSok {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directory));
             TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
 
-            Query query = queryParser.parse(query(frisok, tags));
+            Query query = queryParser().parse(query(frisok, tags));
             searcher.search(query, collector);
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
@@ -104,6 +99,13 @@ public class SkrivestotteSok {
 
     public List<SkrivestotteTekst> sok(String frisok, String... tags) {
         return sok(frisok, asList(tags));
+    }
+
+    private QueryParser queryParser() {
+        MultiFieldQueryParser queryParser = new MultiFieldQueryParser(FIELDS, analyzer);
+        queryParser.setDefaultOperator(QueryParser.Operator.AND);
+        queryParser.setAllowLeadingWildcard(true);
+        return queryParser;
     }
 
     private static String query(String frisok, List<String> tags) {
