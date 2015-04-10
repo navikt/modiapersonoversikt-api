@@ -86,7 +86,6 @@
         display: block;
         font-size: 14px;
         margin: 10px 0 16px 0;
-        text-transform: uppercase;
       }
       .utbetaling-til {
         font-size: 12px;
@@ -201,7 +200,7 @@
             margin: 0 auto;
             min-height: 25px;
             line-height: 25px;
-            background-position: 0 center;
+            background-position: 0 6px;
             padding: 5px 5px 5px 34px;
             width: 100%;
           }
@@ -367,14 +366,25 @@
             padding-top: 10px;
           }
         }
+        &.oppsummering-total-underytelse {
+          td {
+            padding-top: 16px;
+          }
+          &:first-of-type { //TODO: Finne ut av dette. Første element skal ikke ha padding!
+            td {
+              padding-top: 0;
+            }
+          }
+        }
       }
     }
     .detaljpanel {
-      margin-top: 16px;
+      margin-top: 20px;
     }
   }
 
   .utbetaling-liste {
+    border-bottom: none;
     .detaljpanel {
       margin: 6px 20px 32px 20px;
       table {
@@ -443,12 +453,9 @@
     }
   }
   .utbetalingslinje {
-    border-top: 1px solid #ffffff;
+    border-top: 2px solid #ffffff;
     border-bottom: 1px solid @borderColor;
     cursor: pointer;
-    &:last-of-type {
-      border: none;
-    }
     .main {
       position: relative;
       .statuspanel {
@@ -477,8 +484,8 @@
     }
     &.ekspandert {
       background-color: #f1f1f1;
-      border-top: 1px solid #0ca9e1;
-      border-bottom: 1px solid #0ca9e1;
+      border-top: 2px solid @blue-light;
+      border-bottom: 2px solid @blue-light;
     }
   }
 
