@@ -65,12 +65,13 @@ class MeldingerSokSimulation extends Simulation {
         .headers(headers)
         .formParam("j_username", "${navIdent}")
         .formParam("j_password", "${passord}"))
-    .pause(1)
     .exitHereIfFailed
+    .pause(1)
     .exec(
       http("indekser")
         .get("/modiabrukerdialog/rest/meldinger/${fnr}/indekser")
         .headers(headers))
+    .exitHereIfFailed
     .pause(100 millis)
     .exec(sokChain(query))
 
