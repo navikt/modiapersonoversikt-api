@@ -102,7 +102,7 @@ function openSkrivestotte() {
 }
 
 function openInnboksSok() {
-    $('.innboksSokToggle').click();
+    $('.innboksSokToggle button').click();
 }
 
 function closeResetPerson() {
