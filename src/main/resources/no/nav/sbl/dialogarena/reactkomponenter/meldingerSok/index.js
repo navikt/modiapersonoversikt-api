@@ -21,7 +21,7 @@ var modalConfig = {
         show: true,
         tag: 'span.vekk'
     }
-}
+};
 
 var MeldingerSok = React.createClass({
     vis: function (props) {
@@ -77,7 +77,12 @@ var MeldingerSok = React.createClass({
         );
         var tomVisning = (
             <div className={"sok-visning " + (erTom ? '' : 'hidden')}>
-                <h1 className="ingen-treff">Ingen treff</h1>
+            {this.state.initialisert ?
+                <h1 className="tom">Ingen treff</h1> :
+                <div className="tom">
+                    <img src="../img/ajaxloader/hvit/loader_hvit_128.gif" alt="Henter meldinger"></img>
+                </div>}
+
             </div>
         );
 

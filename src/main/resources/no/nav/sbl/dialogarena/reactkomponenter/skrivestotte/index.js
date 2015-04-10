@@ -75,7 +75,7 @@ var Skrivestotte = React.createClass({
 
         var tomVisning = (
             <div className={"sok-visning " + (erTom ? '' : 'hidden')}>
-                <h1 className="ingen-treff">Ingen treff</h1>
+                <h1 className="tom">Ingen treff</h1>
             </div>
         );
 

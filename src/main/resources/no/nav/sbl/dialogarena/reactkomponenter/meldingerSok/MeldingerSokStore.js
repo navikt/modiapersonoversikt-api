@@ -6,6 +6,7 @@ var MeldingerSokStore = function () {
     if (this.state.traader.length > 0) {
         this.state.valgtTraad = this.state.traader[0];
     }
+    this.state.initialisert = false;
 };
 MeldingerSokStore.prototype = $.extend({}, Store.prototype, MeldingerSokStore.prototype);
 
@@ -78,24 +79,26 @@ function updateScroll(tabliste, valgtIndex) {
 var hentSokeresultater =
     Utils.debounce(function (fritekst) {
         sok(this.state.fnr, fritekst)
-        .done(function (traader) {
-            traader.forEach(function (traad) {
-                traad.key = traad.traadId;
-                traad.datoInMillis = traad.dato.millis;
-                traad.innhold = traad.meldinger[0].fritekst;
-                traad.opprettetDato = traad.meldinger[0].opprettetDatoTekst;
+            .done(function (traader) {
+                traader.forEach(function (traad) {
+                    traad.key = traad.traadId;
+                    traad.datoInMillis = traad.dato.millis;
+                    traad.innhold = traad.meldinger[0].fritekst;
+                    traad.opprettetDato = traad.meldinger[0].opprettetDatoTekst;
 
-                traad.meldinger.forEach(function (melding) {
-                    melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
-                    melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
+                    traad.meldinger.forEach(function (melding) {
+                        melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
+                        melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
+                    });
                 });
-            });
-            this.state.traader = traader;
-            this.state.valgtTraad = traader[0] || {};
-            this.fireUpdate(this.listeners);}.bind(this))
-        .fail(function () {
-            $('.innboksSokToggle').click();
-        }.bind(this))
+                this.state.traader = traader;
+                this.state.valgtTraad = traader[0] || {};
+                this.state.initialisert = true;
+                this.fireUpdate(this.listeners);
+            }.bind(this))
+            .fail(function () {
+                $('.innboksSokToggle').click();
+            }.bind(this))
 
     }, 150);
 
