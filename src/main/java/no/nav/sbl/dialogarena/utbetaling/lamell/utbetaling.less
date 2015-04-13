@@ -312,12 +312,6 @@
         font-weight: bold;
       }
     }
-    tbody:not(:first-of-type) tr:first-child td {
-      padding-top: 1rem;
-    }
-    tbody:not(:last-of-type) tr:last-child td {
-      padding-bottom: 1rem;
-    }
     .uthevet {
       font-weight: bold;
     }
@@ -350,7 +344,7 @@
       font-family: @sansFontFamily;
     }
     .ytelseperiode {
-      padding: 6px 0 10px 0;
+      padding: 10px 0 16px 0;
     }
     .detaljpanel {
       margin-top: 20px;
@@ -371,9 +365,16 @@
             }
           }
         }
-        tbody.oppsummering-total-underytelse {
-          td {
-            padding-top: 16px;
+        tbody.oppsummering-total-underytelser {
+          tr {
+            td {
+              padding-top: 16px;
+            }
+          }
+          tr:first-child {
+            td {
+              padding-top: 0;
+            }
           }
         }
         &:first-of-type, &:last-of-type {
@@ -381,13 +382,6 @@
           padding-bottom: 0;
         }
       }
-/*
-      tbody:not(:first-of-type) tr:first-child td {
-        padding-top: 1rem;
-      }
-      tbody:not(:last-of-type) tr:last-child td {
-        padding-bottom: 1rem;
-      }*/
     }
   }
 
