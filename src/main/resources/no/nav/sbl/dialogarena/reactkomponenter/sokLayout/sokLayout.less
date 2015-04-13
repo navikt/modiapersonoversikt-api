@@ -1,8 +1,10 @@
 @border-color: #ccc;
+@sokHeight: 76px;
 
 .sok-layout {
   height: 100%;
   border: 1px solid @border-color;
+  position: relative;
 
   h1.tomt {
     text-align: center;
@@ -11,7 +13,7 @@
   }
 
   .sok-container {
-    min-height: 11%;
+    height: @sokHeight;
     padding: 1rem;
     border-bottom: 1px solid @border-color;
     * {
@@ -25,8 +27,10 @@
     }
   }
   .sok-visning {
-    position: relative;
-    height: 89%;
+    position: absolute;
+    top: @sokHeight;
+    bottom: 0px;
+    width: 100%;
 
     .sok-liste {
       margin: 0;
