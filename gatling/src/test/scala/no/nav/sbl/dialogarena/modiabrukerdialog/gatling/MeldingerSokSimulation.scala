@@ -11,7 +11,8 @@ import scala.util.Random
 class MeldingerSokSimulation extends Simulation {
 
   val env = System.getProperty("env")
-  val users = Integer.getInteger("users")
+  val meldingerSokUsers = Integer.getInteger("meldingersok.users")
+  val skrivestotteSokUsers = Integer.getInteger("skrivestottesok.users")
   val duration: Double = valueOf(System.getProperty("duration"))
   val baseUrl = "https://modapp-" + env + ".adeo.no"
 
@@ -34,7 +35,7 @@ class MeldingerSokSimulation extends Simulation {
     queries(index)
   }
 
-  def sokChain(query: String) = {
+  def sokChain(name: String, url: String, query: String) = {
     def split(s: String): List[String] = {
       if (s.isEmpty) {
         List(s)
@@ -43,15 +44,16 @@ class MeldingerSokSimulation extends Simulation {
       }
     }
 
-    split(query).sortBy(_.length).map(_.replace(" ", "%20")).map(s =>
+    split(query).sortBy(_.length).map(_.replace(" ", "%20")).map(s => {
       exec(
-        http("søk")
-          .get("/modiabrukerdialog/rest/meldinger/${fnr}/sok/" + s)
+        http(name)
+          .get(url + s)
           .headers(headers))
-        .pause(50 millis))
+        .pause(50 millis)
+    })
   }
 
-  val scn = scenario("Søk i meldinger")
+  val meldingerSokScenario = scenario("Søk i meldinger")
     .feed(csv("fnr.csv").random)
     .feed(csv("navIdenter_" + env + ".csv").random)
     .exec(
@@ -73,7 +75,27 @@ class MeldingerSokSimulation extends Simulation {
         .headers(headers))
     .exitHereIfFailed
     .pause(100 millis)
-    .exec(sokChain(query))
+    .exec(sokChain("Søk i meldinger", "/modiabrukerdialog/rest/meldinger/${fnr}/sok/", query))
 
-  setUp(scn.inject(rampUsers(users) over (duration minutes))).protocols(httpProtocol)
+  val skrivestotteSokScenario = scenario("Søk i hjelpetekster")
+    .feed(csv("navIdenter_" + env + ".csv").random)
+    .exec(
+      http("start")
+        .get("/modiabrukerdialog/")
+        .check(status.is(401)))
+    .pause(5)
+    .exec(
+      http("login")
+        .post("/modiabrukerdialog/j_security_check")
+        .headers(headers)
+        .formParam("j_username", "${navIdent}")
+        .formParam("j_password", "${passord}"))
+    .exitHereIfFailed
+    .pause(1)
+    .exec(sokChain("Søk i hjelpetekster", "/modiabrukerdialog/rest/skrivestotte/sok?fritekst=", query))
+
+  setUp(
+    meldingerSokScenario.inject(rampUsers(meldingerSokUsers) over (duration minutes)),
+    skrivestotteSokScenario.inject(rampUsers (skrivestotteSokUsers) over (duration minutes)))
+    .protocols(httpProtocol)
 }
