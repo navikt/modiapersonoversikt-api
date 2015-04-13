@@ -13,6 +13,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -70,12 +72,13 @@ public class Innboks extends Lerret {
         final ReactComponentPanel meldingerSok = new ReactComponentPanel("meldingerSokContainer", "MeldingerSok", getMeldingerSokProps());
         meldingerSok.add(visibleIf(not(innboksVM.harFeilmelding())));
 
-        AjaxLink meldingerSokToggleButton = new AjaxLink("meldingerSokToggle") {
+        AjaxLink meldingerSokToggleButton = new SokKnapp("meldingerSokToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 meldingerSok.callFunction(target, "vis", getMeldingerSokProps());
+                target.add(this);
             }
         };
         meldingerSokToggleButton.add(visibleIf(not(innboksVM.harFeilmelding())));
@@ -127,6 +130,12 @@ public class Innboks extends Lerret {
         if (isNotBlank(traadBesvares)) {
             innboksVM.traadBesvares = traadBesvares;
         }
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(OnDomReadyHeaderItem.forScript("$(document).on('click', '.innboksSokToggle button', function(){$(this).addClass('laster');});"));
     }
 
     @Override
