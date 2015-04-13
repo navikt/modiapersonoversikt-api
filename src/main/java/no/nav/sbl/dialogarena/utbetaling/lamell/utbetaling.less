@@ -317,7 +317,6 @@
     }
     tbody:not(:last-of-type) tr:last-child td {
       padding-bottom: 1rem;
-      border-bottom: 1px solid @borderColor;
     }
     .uthevet {
       font-weight: bold;
@@ -353,34 +352,42 @@
     .ytelseperiode {
       padding: 6px 0 10px 0;
     }
-    table.utbetaling-tabell {
-      th {
+    .detaljpanel {
+      margin-top: 20px;
+      table.utbetaling-tabell {
         border-bottom: 1px solid @borderColor;
-        padding-bottom: 5px;
-      }
-      tr {
-        td {
-          vertical-align: top;
+        padding-bottom: 10px;
+        th {
+          border-bottom: 1px solid @borderColor;
+          padding-bottom: 5px;
         }
-        &:first-child {
+        tr {
           td {
-            padding-top: 10px;
+            vertical-align: top;
           }
-        }
-        &.oppsummering-total-underytelse {
-          td {
-            padding-top: 16px;
-          }
-          &:first-of-type { //TODO: Finne ut av dette. Første element skal ikke ha padding!
+          &:first-child {
             td {
-              padding-top: 0;
+              padding-top: 10px;
             }
           }
         }
+        tbody.oppsummering-total-underytelse {
+          td {
+            padding-top: 16px;
+          }
+        }
+        &:first-of-type, &:last-of-type {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
       }
-    }
-    .detaljpanel {
-      margin-top: 20px;
+/*
+      tbody:not(:first-of-type) tr:first-child td {
+        padding-top: 1rem;
+      }
+      tbody:not(:last-of-type) tr:last-child td {
+        padding-bottom: 1rem;
+      }*/
     }
   }
 
