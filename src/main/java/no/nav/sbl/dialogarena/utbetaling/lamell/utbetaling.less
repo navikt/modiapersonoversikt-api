@@ -85,7 +85,7 @@
         .periode {
           float: left;
           font-size: 14px;
-          margin: 10px 0 16px 0;
+          margin: 8px 0 16px 0;
         }
       }
       .utbetaling-til {
@@ -285,6 +285,7 @@
         }
       }
     }
+
     th {
       text-align: right; // IE8+ fiks siden ikke th arver text-align
       text-transform: uppercase;
@@ -300,6 +301,7 @@
     }
     td {
       vertical-align: bottom;
+      width: 16.5%;
       &:first-of-type {
         text-align: left;
         width: 34%;
@@ -348,6 +350,7 @@
     }
     .detaljpanel {
       margin-top: 20px;
+    }
       table.utbetaling-tabell {
         border-bottom: 1px solid @borderColor;
         padding-bottom: 10px;
@@ -382,7 +385,6 @@
           padding-bottom: 0;
         }
       }
-    }
   }
 
   .utbetaling-liste {
@@ -500,9 +502,14 @@
       span {
         display: none;
       }
+      button {
+        margin-right: 8px;
+        &:last-of-type {
+          margin-right: 0;
+        }
+      }
     }
     .skriv-ut {
-      float: right;
       background: transparent url('../img/print.svg') no-repeat;
       width: 16px;
       height: 12px;
@@ -513,7 +520,6 @@
     }
 
     .ekspander-pil {
-      float: right;
       border: 0;
       background: transparent url('../img/pil.svg') no-repeat;
       width: 17px;
@@ -546,7 +552,12 @@
       }
     }
     .utbetalingslinje {
-      border-bottom: none;
+      border: none;
+      .detaljpanel {
+        display: block;
+        overflow: auto;
+        height: auto;
+      }
     }
   }
 }
