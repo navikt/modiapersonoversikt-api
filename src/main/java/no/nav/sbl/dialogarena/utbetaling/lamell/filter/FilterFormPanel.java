@@ -43,14 +43,25 @@ public class FilterFormPanel extends Panel {
 
     private MarkupContainer ytelsesContainer;
     private FeedbackPanel valideringsfeil;
+    private AjaxCheckBox visAlleYtelserCheckbox;
 
     private IModel<Boolean> visAlleYtelser;
 
-    public FilterFormPanel(String id, FilterParametere filterParametere) {
+    public FilterFormPanel(String id, final FilterParametere filterParametere) {
         super(id);
 
         this.filterParametere = filterParametere;
-        this.visAlleYtelser = new PropertyModel<>(this.filterParametere, "alleYtelserValgt");
+        this.visAlleYtelser = new Model<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return filterParametere.isAlleYtelserValgt();
+            }
+
+            @Override
+            public void setObject(Boolean visAlle) {
+                filterParametere.toggleAlleYtelser(visAlle);
+            }
+        };
         this.ytelsesContainer = createYtelser();
 
         add(createFilterForm());
@@ -91,21 +102,22 @@ public class FilterFormPanel extends Panel {
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                boolean erValgt = filterParametere.erYtelseOnsket(item.getModelObject()) && !visAlleYtelser.getObject();
+                boolean erValgt = filterParametere.erYtelseOnsket(item.getModelObject());
                 AjaxCheckBox checkbox = new AjaxCheckBox("visYtelse", new Model<>(erValgt)) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
                         String ytelse = item.getModelObject();
-                        if (visAlleYtelser.getObject()) {
-                            visAlleYtelser.setObject(false);
-                            filterParametere.velgEnYtelse(ytelse);
-                        } else {
+//                        if (visAlleYtelser.getObject()) {
+//                            visAlleYtelser.setObject(false);
+//                            filterParametere.velgEnYtelse(ytelse);
+//                        } else {
                             if (this.getModelObject()) {
                                 filterParametere.leggTilOnsketYtelse(ytelse);
                             } else {
                                 filterParametere.fjernOnsketYtelse(ytelse);
                             }
-                        }
+//                        }
+
                         sendYtelsesfilterCheckedEvent();
                     }
                 };
@@ -113,8 +125,9 @@ public class FilterFormPanel extends Panel {
                 item.add(new Label("ytelseLabel", item.getModel()).add(new AttributeModifier("for", checkbox.getMarkupId())));
             }
         };
+        visAlleYtelserCheckbox = createAlleYtelserCheckbox();
         return (MarkupContainer) new WebMarkupContainer("ytelseContainer")
-                .add(createAlleYtelserCheckbox())
+                .add(visAlleYtelserCheckbox)
                 .add(listView)
                 .setOutputMarkupId(true);
     }
@@ -180,6 +193,12 @@ public class FilterFormPanel extends Panel {
     @RunOnEvents(HOVEDYTELSER_ENDRET)
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
         target.add(ytelsesContainer);
+    }
+
+    @SuppressWarnings("unused")
+    @RunOnEvents(YTELSE_FILTER_KLIKKET)
+    private void oppdaterVelgAlleCheckbox(AjaxRequestTarget target) {
+        target.add(visAlleYtelserCheckbox);
     }
 
 }
