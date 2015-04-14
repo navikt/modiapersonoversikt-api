@@ -12,11 +12,11 @@
         <wicket:container wicket:id="filterFormPanel"/>
     </div>
 
-    <div class="kolonne-hoyre">
+    <div class="kolonne-hoyre" aria-live="polite" aria-labelledby="totaltUtbetaltHeading utbetalingerHeading" id="utbetalingsdata">
         <div class="utbetaling-ramme">
             <div class="ramme-header">
                 <div id="ajax-indikator" style="display: none;"></div>
-                <h2 aria-label="Totalt utbetalt for perioden" class="boks-overskrift"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></h2>
+                <h2 aria-label="Totalt utbetalt for perioden" id="totaltUtbetaltHeading" class="boks-overskrift"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></h2>
             </div>
             <div wicket:id="ingenutbetalinger"></div>
             <div wicket:id="feilmelding" class="feilmelding"></div>
@@ -25,7 +25,7 @@
 
         <div class="utbetaling-ramme utbetaling-liste" wicket:id="utbetalingslisteContainer">
             <div class="ramme-header">
-                <h2 aria-label="Liste over utbetalinger" class="boks-overskrift"><wicket:message key="utbetaling.lamell.utbetalinger-utfort"/></h2>
+                <h2 aria-label="Liste over utbetalinger" id="utbetalingerHeading" class="boks-overskrift"><wicket:message key="utbetaling.lamell.utbetalinger-utfort"/></h2>
             </div>
             <div class="utbetaling-ramme-innhold">
                 <wicket:container wicket:id="maanedsPaneler">

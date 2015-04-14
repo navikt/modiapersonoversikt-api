@@ -19,12 +19,12 @@
                     <wicket:message key="utbetaling.lamell.filter.mottaker"/>
                 </h3>
 
-                <input type="checkbox" wicket:id="visBruker" value="Bruker" aria-live="polite" />
+                <input type="checkbox" wicket:id="visBruker" value="Bruker" aria-controls="utbetalingsdata" />
                 <label wicket:for="visBruker" class="cap-1st">
                     <wicket:message key="utbetaling.lamell.filter.vis_bruker"/>
                 </label>
 
-                <input type="checkbox" wicket:id="visAnnenMottaker" aria-live="polite" />
+                <input type="checkbox" wicket:id="visAnnenMottaker" aria-controls="utbetalingsdata" />
                 <label wicket:for="visAnnenMottaker" class="cap-1st">
                     <wicket:message key="utbetaling.lamell.filter.vis_annen_mottaker"/>
                 </label>
@@ -35,13 +35,13 @@
                     <wicket:message key="utbetaling.lamell.filter.ytelser"/>
                 </h3>
 
-                <input type="checkbox" wicket:id="visAlleYtelser" aria-live="polite" />
+                <input type="checkbox" wicket:id="visAlleYtelser" aria-controls="utbetalingsdata" />
                 <label class="cap-1st" wicket:for="visAlleYtelser">
                     <wicket:message key="utbetaling.lamell.filter.vis_alle"/>
                 </label>
 
                 <div wicket:id="ytelseFilter" class="ytelse-filter-liste-element">
-                    <input type="checkbox" wicket:id="visYtelse" aria-live="polite" />
+                    <input type="checkbox" wicket:id="visYtelse" aria-controls="utbetalingsdata" />
                     <label class="cap-1st" wicket:id="ytelseLabel"></label>
                 </div>
             </div>
