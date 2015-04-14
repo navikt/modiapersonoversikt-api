@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
@@ -146,5 +147,28 @@ public class FilterParametereTest {
         filterparams.toggleAlleYtelser(false);
         assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, DAGPENGER)), is(false));
         assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, BARNETRYGD)), is(false));
+    }
+
+    @Test
+    public void isAlleytelserValgt() {
+        Set<String> ytelser = new HashSet<>(asList("Ytelse A", "Ytelse B"));
+        FilterParametere params = new FilterParametere(ytelser);
+
+        assertTrue(params.isAlleYtelserValgt());
+
+        params.velgEnYtelse("Ytelse C");
+        assertFalse(params.isAlleYtelserValgt());
+    }
+
+    @Test
+    public void toggleAlleYtelser() {
+        Set<String> ytelser = new HashSet<>(asList("Ytelse A", "Ytelse B"));
+        FilterParametere params = new FilterParametere(ytelser);
+
+        params.toggleAlleYtelser(true);
+        assertTrue(params.isAlleYtelserValgt());
+
+        params.toggleAlleYtelser(false);
+        assertFalse(params.isAlleYtelserValgt());
     }
 }

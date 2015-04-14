@@ -14,6 +14,7 @@ import java.util.Set;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
+import static org.apache.commons.collections15.CollectionUtils.*;
 
 public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
 
@@ -26,8 +27,6 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
 
     private Map<Mottakertype, Boolean> mottakere;
 
-    private boolean alleYtelserValgt;
-
     private Set<String> alleYtelser;
     private Set<String> onskedeYtelser;
 
@@ -39,7 +38,6 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
         this.mottakere.put(Mottakertype.ANNEN_MOTTAKER, true);
         this.mottakere.put(Mottakertype.BRUKER, true);
 
-        this.alleYtelserValgt = true;
         this.alleYtelser = hovedYtelser;
         this.onskedeYtelser = new HashSet<>(this.alleYtelser);
     }
@@ -65,7 +63,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     }
 
     public boolean isAlleYtelserValgt() {
-        return alleYtelserValgt;
+        return isEqualCollection(alleYtelser, onskedeYtelser);
     }
 
     public Set<String> getAlleYtelser() {
@@ -73,7 +71,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     }
 
     public void setYtelser(Set<String> hovedYtelser) {
-        if (alleYtelserValgt) {
+        if (isAlleYtelserValgt()) {
             onskedeYtelser.addAll(hovedYtelser);
         }
         alleYtelser = hovedYtelser;
