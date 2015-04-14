@@ -7,11 +7,19 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
-import org.apache.lucene.index.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
@@ -20,9 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.naming.ServiceUnavailableException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -97,13 +106,13 @@ public class MeldingerSok {
         cache.put(key, cacheEntry);
     }
 
-    public List<Traad> sok(final String fnr, String soketekst) {
+    public List<Traad> sok(final String fnr, String soketekst) throws IkkeIndeksertException {
         try {
             final String navIdent = getSubjectHandler().getUid();
             final String key = key(fnr, navIdent);
 
             if (!cache.containsKey(key)) {
-                throw new ServiceUnavailableException(String.format("Man må kalle %s.indekser før man kan søke", MeldingerSok.class.getName()));
+                throw new IkkeIndeksertException(String.format("Man må kalle %s.indekser før man kan søke", MeldingerSok.class.getName()));
             }
             MeldingerCacheEntry entry = cache.get(key);
 
@@ -122,7 +131,7 @@ public class MeldingerSok {
 
             return lagTraader(key, resultat);
 
-        } catch (Exception e) {
+        } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
     }

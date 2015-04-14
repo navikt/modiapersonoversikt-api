@@ -37,7 +37,7 @@ public class MeldingerSokTest {
     }
 
     @Test
-    public void returnererAlleMeldingerVedTomtSok() {
+    public void returnererAlleMeldingerVedTomtSok() throws IkkeIndeksertException {
         List<Melding> meldinger = alleMeldinger(meldingerSok.sok(FNR, ""));
         assertThat(meldinger, hasSize(lagMeldinger().size()));
     }
@@ -53,7 +53,7 @@ public class MeldingerSokTest {
     }
 
     @Test
-    public void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() {
+    public void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() throws IkkeIndeksertException {
         assertSok("rbei", "1235");
         assertSok("uføre", "1236");
         assertSok("svar", "1234");
@@ -61,7 +61,7 @@ public class MeldingerSokTest {
     }
 
     @Test
-    public void returnererMeldingerSortertEtterDato() {
+    public void returnererMeldingerSortertEtterDato() throws IkkeIndeksertException {
         String fnr = "987654321";
         List<Melding> meldinger = asList(
                 lagMelding("1", "1", "", "", "", DateTime.now().minusDays(2), "", ""),
@@ -78,7 +78,7 @@ public class MeldingerSokTest {
     }
 
     @Test
-    public void gruppererMeldingerISammeTraad() {
+    public void gruppererMeldingerISammeTraad() throws IkkeIndeksertException {
         String fnr = "4561234789";
         DateTime now = DateTime.now();
         List<Melding> meldinger = asList(
@@ -96,7 +96,7 @@ public class MeldingerSokTest {
     }
 
     @Test
-    public void forskjelligeSaksbehandlereFaarIkkeSammeResultat() {
+    public void forskjelligeSaksbehandlereFaarIkkeSammeResultat() throws IkkeIndeksertException {
         innloggetBrukerEr("Z132456");
         meldingerSok.indekser(FNR, Collections.<Melding>emptyList());
 
@@ -107,7 +107,7 @@ public class MeldingerSokTest {
     }
 
     @Test
-    public void returnererTraaderMedAntallMeldingerIOpprinneligTraad() {
+    public void returnererTraaderMedAntallMeldingerIOpprinneligTraad() throws IkkeIndeksertException {
         List<Traad> pernsjonsTraader = meldingerSok.sok(FNR, "Hjelpemidler");
 
         assertThat(pernsjonsTraader.size(), is(1));
@@ -133,7 +133,7 @@ public class MeldingerSokTest {
         SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
-    private void assertSok(String frisok, String id) {
+    private void assertSok(String frisok, String id) throws IkkeIndeksertException {
         List<Melding> fritekst = alleMeldinger(meldingerSok.sok(FNR, frisok));
         assertThat(fritekst, hasSize(1));
         assertThat(fritekst.get(0).id, is(id));
