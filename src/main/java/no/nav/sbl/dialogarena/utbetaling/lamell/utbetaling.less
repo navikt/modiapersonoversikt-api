@@ -552,11 +552,13 @@
       }
     }
     .utbetalingslinje {
-      border: none;
-      .detaljpanel {
-        display: block;
-        overflow: auto;
-        height: auto;
+      &.ekspandert {
+        border: none;
+        .detaljpanel {
+          display: block;
+          overflow: auto;
+          height: 100%;
+        }
       }
     }
   }
