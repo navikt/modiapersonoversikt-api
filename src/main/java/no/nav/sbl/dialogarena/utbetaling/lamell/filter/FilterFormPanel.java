@@ -107,16 +107,11 @@ public class FilterFormPanel extends Panel {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
                         String ytelse = item.getModelObject();
-//                        if (visAlleYtelser.getObject()) {
-//                            visAlleYtelser.setObject(false);
-//                            filterParametere.velgEnYtelse(ytelse);
-//                        } else {
-                            if (this.getModelObject()) {
-                                filterParametere.leggTilOnsketYtelse(ytelse);
-                            } else {
-                                filterParametere.fjernOnsketYtelse(ytelse);
-                            }
-//                        }
+                        if (this.getModelObject()) {
+                            filterParametere.leggTilOnsketYtelse(ytelse);
+                        } else {
+                            filterParametere.fjernOnsketYtelse(ytelse);
+                        }
 
                         sendYtelsesfilterCheckedEvent();
                     }
