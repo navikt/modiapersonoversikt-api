@@ -3,18 +3,24 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService.saksbehandlerInnstillingerCookieId;
 
 @Controller
@@ -29,15 +35,23 @@ public class MeldingerController {
 
     @GET
     @Path("/traader")
-    public List<Traad> hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
+    public Response hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         indekser(fnr, request);
-        return searcher.sok(fnr, "");
+        try {
+            return Response.ok(searcher.sok(fnr, "")).build();
+        } catch (IkkeIndeksertException e) {
+            return Response.status(FORBIDDEN).type(TEXT_PLAIN).entity(e.getMessage()).build();
+        }
     }
 
     @GET
     @Path("/sok/{fritekst: .*}")
-    public List<Traad> sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
-        return searcher.sok(fnr, fritekst);
+    public Response sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
+        try {
+            return Response.ok(searcher.sok(fnr, fritekst)).build();
+        } catch (IkkeIndeksertException e) {
+            return Response.status(FORBIDDEN).type(TEXT_PLAIN).entity(e.getMessage()).build();
+        }
     }
 
     @GET
