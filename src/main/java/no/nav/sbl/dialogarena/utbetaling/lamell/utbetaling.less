@@ -389,56 +389,56 @@
 
   .utbetaling-liste {
     border-bottom: none;
-    .detaljpanel {
-      margin: 6px 20px 32px 20px;
-      table {
-        font-family: @font-family-sans-serif;
-        font-size: 14px;
-        th {
-          text-transform: uppercase;
-          font-size: 12px;
-          padding-bottom: 10px;
-        }
-        tbody {
-          tr {
-            td {
-              padding-top: 16px;
-            }
-            &:first-child {
-              td {
-                padding-top: 0;
-              }
-            }
-          }
-        }
-        &.ytelsekomponent-tabell {
-          tbody {
-            tr:last-child {
-              td {
-                padding-bottom: 10px;
-              }
-            }
-          }
-        }
-      }
-      hr.skillestrek-topp {
-        border: 0;
-        border-top: 1px solid @borderColor;
-        margin: 16px 0;
-        width: 100%;
-      }
-      h3.sub-heading {
-        display: block;
-        font-size: 14px;
-        font-weight: 100;
+  }
+  .detaljpanel {
+    margin: 6px 20px 32px 20px;
+    table {
+      font-family: @font-family-sans-serif;
+      font-size: 14px;
+      th {
         text-transform: uppercase;
-        font-family: @font-family-sans-serif;
-        margin: 0 0 10px 0;
+        font-size: 12px;
+        padding-bottom: 10px;
       }
-      .element {
-        p {
-          margin: 0;
+      tbody {
+        tr {
+          td {
+            padding-top: 16px;
+          }
+          &:first-child {
+            td {
+              padding-top: 0;
+            }
+          }
         }
+      }
+      &.ytelsekomponent-tabell {
+        tbody {
+          tr:last-child {
+            td {
+              padding-bottom: 10px;
+            }
+          }
+        }
+      }
+    }
+    hr.skillestrek-topp {
+      border: 0;
+      border-top: 1px solid @borderColor;
+      margin: 16px 0;
+      width: 100%;
+    }
+    h3.sub-heading {
+      display: block;
+      font-size: 14px;
+      font-weight: 100;
+      text-transform: uppercase;
+      font-family: @font-family-sans-serif;
+      margin: 0 0 10px 0;
+    }
+    .element {
+      p {
+        margin: 0;
       }
     }
   }
@@ -544,21 +544,19 @@
   .content .utbetalinger .utbetaling-tabell th {
     padding-bottom: 0.9rem;
   }
-  .content {
-    .utbetalinger {
-      .utbetaling-head {
-        padding-right: 0;
-        padding-left: 0;
-      }
+  .utbetalinger {
+    .utbetaling-head {
+      padding-right: 0;
+      padding-left: 0;
     }
-    .utbetalingslinje {
-      &.ekspandert {
-        border: none;
-        .detaljpanel {
-          display: block;
-          overflow: auto;
-          height: 100%;
-        }
+  }
+  .utbetalingslinje {
+    &.ekspandert {
+      border: none;
+      .detaljpanel {
+        display: block;
+        overflow: auto;
+        height: 100%;
       }
     }
   }

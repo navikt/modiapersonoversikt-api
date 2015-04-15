@@ -8,10 +8,10 @@
         <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.kortoppsummering.tabellbeskrivelse">
             <thead>
             <tr>
-                <th colspan="2" style="border:0;"><wicket:message key="utbetaling.lamell.oppsummering.periode"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.brutto"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.trekk"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/></th>
+                <th colspan="2" style="border:0;" aria-labelledby="Oppsummert periode"><wicket:message key="utbetaling.lamell.oppsummering.periode"/></th>
+                <th aria-labelledby="brutto utbetalt"><wicket:message key="utbetaling.lamell.oppsummering.brutto"/></th>
+                <th aria-labelledby="trekk totalt"><wicket:message key="utbetaling.lamell.oppsummering.trekk"/></th>
+                <th aria-labelledby="netto utbetalt"><wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/></th>
             </tr>
             </thead>
             <tbody>
@@ -20,9 +20,9 @@
                     <span wicket:id="oppsummertPeriode" style="text-transform: uppercase;"></span>
                 </td>
                 <td></td>
-                <td aria-labelledby="totalt bruttobeløp"><span class="vekk">Totalt bruttobeløp:</span><span wicket:id="brutto"></span></td>
-                <td aria-labelledby="totalt trukket"><span class="vekk">Totalt trukket:</span><span wicket:id="trekk"></span></td>
-                <td aria-labelledby="totalt utbetalt"><span class="vekk">Totalt utbetalt:</span><span wicket:id="utbetalt"></span></td>
+                <td aria-labelledby="brutto utbetalt for perioden"><span class="vekk">Totalt bruttobeløp:</span><span wicket:id="brutto"></span></td>
+                <td aria-labelledby="trekk for perioden"><span class="vekk">Totalt trukket:</span><span wicket:id="trekk"></span></td>
+                <td aria-labelledby="netto utbetalt for perioden"><span class="vekk">Totalt utbetalt:</span><span wicket:id="utbetalt"></span></td>
             </tr>
             </tbody>
         </table>
@@ -31,13 +31,13 @@
     <div wicket:id="oppsummeringDetalj" class="detaljpanel">
         <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.langoppsummering.tabellbeskrivelse">
             <thead>
-            <tr>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.ytelse"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.delbelop"/></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
+                <tr>
+                    <th aria-labelledby="ytelse"><wicket:message key="utbetaling.lamell.oppsummering.ytelse"/></th>
+                    <th aria-labelledby="delbeløp"><wicket:message key="utbetaling.lamell.oppsummering.delbelop"/></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
             </thead>
         </table>
         <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.langoppsummering.tabellbeskrivelse" wicket:id="hovedytelser">
