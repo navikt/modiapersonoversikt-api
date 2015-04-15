@@ -5,11 +5,11 @@
     <table class="utbetaling-tabell" wicket:message="summary:utbetaling.hovedinfo.tabelloppsummering">
         <thead>
         <tr>
-            <th><wicket:message key="konto.label" /></th>
+            <th aria-labelledby="kontonummer"><wicket:message key="konto.label" /></th>
             <th></th>
-            <th><wicket:message key="brutto.label" /></th>
-            <th><wicket:message key="trekk.label" /></th>
-            <th><wicket:message key="utbetalt.label" /></th>
+            <th aria-labelledby="brutto utbetalt"><wicket:message key="brutto.label" /></th>
+            <th aria-labelledby="trekk"><wicket:message key="trekk.label" /></th>
+            <th aria-labelledby="netto utbetalt"><wicket:message key="utbetalt.label" /></th>
         </tr>
         </thead>
         <tbody>
@@ -38,11 +38,11 @@
     <table class="utbetaling-tabell ytelsekomponent-tabell" wicket:message="summary:utbetaling.detaljer.tabelloppsummering">
         <thead>
         <tr>
-            <th><wicket:message key="utbetaling.ytelse"/></th>
+            <th aria-labelledby="utbetalt ytelse"><wicket:message key="utbetaling.ytelse"/></th>
             <th></th>
-            <th><wicket:message key="utbetaling.sats"/></th>
-            <th><wicket:message key="utbetaling.antall"/></th>
-            <th><wicket:message key="utbetaling.belop"/></th>
+            <th aria-labelledby="sats"><wicket:message key="utbetaling.sats"/></th>
+            <th aria-labelledby="antall"><wicket:message key="utbetaling.antall"/></th>
+            <th aria-labelledby="utbetalt beløp"><wicket:message key="utbetaling.belop"/></th>
         </tr>
         </thead>
         <tbody>
