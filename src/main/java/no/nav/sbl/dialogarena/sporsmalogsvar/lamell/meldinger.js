@@ -11,7 +11,7 @@ var Meldinger = (function () {
             } else if (e.keyCode === PIL_NED) {
                 $(e.currentTarget).next().click();
             } else if (e.keyCode === TAB && e.shiftKey) {
-                $('.meldinglamell .innboksSokToggle').focus();
+                $('.meldinglamell .innboksSokToggle button').focus();
             } else if (e.keyCode === TAB) {
                 $('.haandter-meldinger a').first().focus();
             } else {
