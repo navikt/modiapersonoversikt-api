@@ -7,6 +7,7 @@ var MeldingerSokStore = function () {
         this.state.valgtTraad = this.state.traader[0];
     }
     this.state.initialisert = false;
+    this.state.feilet = false;
 };
 MeldingerSokStore.prototype = $.extend({}, Store.prototype, MeldingerSokStore.prototype);
 
@@ -96,8 +97,13 @@ var hentSokeresultater =
                 this.state.initialisert = true;
                 this.fireUpdate(this.listeners);
             }.bind(this))
-            .fail(function () {
-                $('.innboksSokToggle').click();
+            .fail(function (jqXHR) {
+                if (jqXHR.status == 403) {
+                    $('.innboksSokToggle').click();
+                } else {
+                    this.state.feilet = true;
+                    this.fireUpdate(this.listeners);
+                }
             }.bind(this))
 
     }, 150);
