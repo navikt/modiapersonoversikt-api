@@ -72,22 +72,26 @@ public class Innboks extends Lerret {
         final ReactComponentPanel meldingerSok = new ReactComponentPanel("meldingerSokContainer", "MeldingerSok", getMeldingerSokProps());
         meldingerSok.add(visibleIf(not(innboksVM.harFeilmelding())));
 
+
+        final WebMarkupContainer meldingerSokToggleContainer = new WebMarkupContainer("meldingerSokToggleContainer");
+        meldingerSokToggleContainer.setOutputMarkupId(true);
         AjaxLink meldingerSokToggleButton = new SokKnapp("meldingerSokToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 meldingerSok.callFunction(target, "vis", getMeldingerSokProps());
-                target.add(this);
+                target.add(meldingerSokToggleContainer);
             }
         };
         meldingerSokToggleButton.add(visibleIf(not(innboksVM.harFeilmelding())));
+        meldingerSokToggleContainer.add(meldingerSokToggleButton);
 
         WebMarkupContainer feilmeldingPanel = new WebMarkupContainer("feilmeldingpanel");
         feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
         feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
 
-        add(meldingerSok, meldingerSokToggleButton, alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
+        add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
     }
 
     private Map<String, Object> getMeldingerSokProps() {
@@ -135,7 +139,8 @@ public class Innboks extends Lerret {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(OnDomReadyHeaderItem.forScript("$(document).on('click', '.innboksSokToggle button', function(){$(this).addClass('laster');});"));
+        response.render(OnDomReadyHeaderItem.forScript(
+                "$(document).on('click', '.innboksSokToggle button',function(){$(this).hide().siblings('img').show();});"));
     }
 
     @Override

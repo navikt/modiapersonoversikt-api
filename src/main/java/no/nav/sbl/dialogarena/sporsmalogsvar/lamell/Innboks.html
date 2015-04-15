@@ -7,11 +7,11 @@
 <wicket:panel>
     <div class="meldinglamell flexbox flex1">
         <section class="meldingsliste flex2">
-            <div class="clearfix innboksSokToggle">
+            <div wicket:id="meldingerSokToggleContainer" class="clearfix innboksSokToggle">
                 <button wicket:id="meldingerSokToggle" class="knapp-liten" wicket:message="title:innboks.sok.knapp.title">
-                    <span><wicket:message key="innboks.sok.knapp.tekst"/></span>
-                    <img src="img/ajaxloader/graa/loader_graa_16.gif" alt="Snurrepipp" />
+                    <wicket:message key="innboks.sok.knapp.tekst"/>
                 </button>
+                <img src="img/ajaxloader/graa/loader_graa_32.gif" alt="Snurrepipp" />
             </div>
             <wicket:container wicket:id="meldingerSokContainer"></wicket:container>
             <section wicket:id="meldinger" role="tablist"></section>
