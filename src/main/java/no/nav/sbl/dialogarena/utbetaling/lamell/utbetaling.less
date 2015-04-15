@@ -526,7 +526,6 @@
       height: 12px;
       margin-left: 16px;
       transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
       -webkit-transform: rotate(180deg);
       &:hover {
         background-image: url('../img/pil_hover.svg');
@@ -534,7 +533,6 @@
     }
     &.ekspandert .ekspander-pil {
       transform: none;
-      -ms-transform: none;
       -webkit-transform: none;
     }
   }
@@ -549,14 +547,14 @@
       padding-right: 0;
       padding-left: 0;
     }
-  }
-  .utbetalingslinje {
-    &.ekspandert {
-      border: none;
-      .detaljpanel {
-        display: block;
-        overflow: auto;
-        height: 100%;
+    .utbetalingslinje {
+      &.ekspandert {
+        border: none;
+        .detaljpanel {
+          display: block;
+          overflow: auto;
+          height: 100%;
+        }
       }
     }
   }
