@@ -35,7 +35,7 @@
         <!-- versjoner -->
         <wicket.version>6.17.0</wicket.version>
         <spring.version>3.2.9.RELEASE</spring.version>
-        <modig.frontend.version>1.1.105</modig.frontend.version>
+        <modig.frontend.version>1.1.108</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
@@ -64,7 +64,7 @@
         <personsok.version>1.0.82</personsok.version>
         <kjerneinfo.versjon>1.0.111</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.0.66</utbetaling.version>
+        <utbetaling.version>2.0.68</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
