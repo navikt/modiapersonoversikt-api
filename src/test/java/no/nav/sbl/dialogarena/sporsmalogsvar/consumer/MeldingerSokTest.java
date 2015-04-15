@@ -55,7 +55,7 @@ public class MeldingerSokTest {
     @Test
     public void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() throws IkkeIndeksertException {
         assertSok("rbei", "1235");
-        assertSok("uføre", "1236");
+        assertSok("dagp", "1235");
         assertSok("svar", "1234");
         assertSok("skriftlig", "1235");
     }
