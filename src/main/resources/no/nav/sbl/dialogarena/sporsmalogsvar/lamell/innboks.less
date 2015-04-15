@@ -431,25 +431,32 @@
     border-left: 1px solid @rammefarge;
     border-right: 1px solid @rammefarge;
   }
-  .journalpost-element {
-    clear: both;
-    width: 86%;
-    padding: 16px 25px;
-    color: @grayDark;
-    text-decoration: none;
-    span {
-      text-align: center;
+  a.journalpost-link {
+    .journalpost-element {
+      clear: both;
+      width: 86%;
+      padding: 16px 25px;
+      color: @grayDark;
+      text-decoration: none;
+      span {
+        text-align: center;
+      }
+      .ikon {
+        text-align: left;
+        padding-right: 1.4rem;
+        background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
+      }
+      .pil {
+        float: right;
+        width: 20%;
+        margin-top: 4px;
+        .pil(8px, @grayDark); // definisjon i common.less
+      }
     }
-    .ikon {
-      text-align: left;
-      padding-right: 1.4rem;
-      background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
-    }
-    .pil {
-      float: right;
-      width: 20%;
-      margin-top: 4px;
-      .pil(8px, @grayDark); // definisjon i common.less
+    &:focus .journalpost-element {
+      span.status {
+        text-decoration: underline;
+      }
     }
   }
   .journalpostinformasjon {
