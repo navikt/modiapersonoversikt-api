@@ -149,7 +149,7 @@
   }
   .navident {
     font-weight: bold;
-    margin-top:0;
+    margin-top: 0;
   }
   .send {
     margin: 2em 0;
@@ -256,9 +256,17 @@
       }
     }
   }
-  input[type=checkbox] + label {
-    width: 12em;
-    color: #3e3832;
+  input[type=checkbox] {
+    + label {
+      width: 12em;
+      color: #3e3832;
+    }
+    &:focus + label{
+      border: 1px dashed #00a9e0;
+      padding: 2px 2px 2px 32px;
+      background-position: 2px 2px;
+      line-height: 1.7rem;
+    }
   }
 
   input[disabled=disabled] + label {
