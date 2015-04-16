@@ -10,7 +10,9 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -35,14 +37,42 @@ public class SelfTestPage extends SelfTestBase {
             try {
                 List<PingResult> pingResults = pingable.ping();
                 for (PingResult pingResult : pingResults) {
-                    String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
-                    serviceStatuses.add(new AvhengighetStatus(pingResult.getServiceName().toUpperCase() + "_PING", status, pingResult.getElapsedTime()));
+                    String serviceName = pingResult.getServiceName().toUpperCase();
+                    if(shouldServiceBeIncluded(serviceName)) {
+                        String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
+                        serviceStatuses.add(new AvhengighetStatus(serviceName + "_PING", status, pingResult.getElapsedTime()));
+                    }
                 }
             } catch (Exception e) {
                 logger.warn("Service was not retrievable. Class: " + pingable.getClass().getCanonicalName() + ". Exception message: " + e.getMessage(), e);
             }
         }
         return serviceStatuses;
+    }
+
+    /**
+     * True hvis tjenesten skal inkluderes i selftesten
+     * @param serviceName
+     * @return
+     */
+    private boolean shouldServiceBeIncluded(String serviceName) {
+        Map<String, String> services = possibleServicesToBeExcluded();
+        if(services.containsKey(serviceName)) {
+            return Boolean.valueOf(System.getProperty(services.get(serviceName), "false"));
+        }
+        return true;
+    }
+
+    /**
+     * Map av properties hvor key er serviceName og value er systemProperty som styrer
+     * om tjenesten skal legges til i selftesten eller ikke.
+     *
+     * @return
+     */
+    private Map<String, String> possibleServicesToBeExcluded() {
+        Map<String, String> serviceMap = new HashMap<String, String>();
+        serviceMap.put("UTBETALING", "visUtbetalinger");
+        return serviceMap;
     }
 
 }
