@@ -28,15 +28,15 @@ public class YtelseVM implements Serializable {
     }
 
     public String getSats() {
-        return sats != null ? String.valueOf(sats) : "";
+        return sats != null ? getBelopString(sats, 2) : "";
     }
 
     public String getAntall() {
-        return antall != null ? String.valueOf(antall) : "";
+        return antall != null ? getBelopString(antall, 1) : "";
     }
 
     public String getBelop() {
-        return belop != null ? getBelopString(belop) : "";
+        return belop != null ? getBelopString(belop, 2) : "";
     }
 
     public static final Comparator<YtelseVM> DESC_BELOP = new Comparator<YtelseVM>() {
