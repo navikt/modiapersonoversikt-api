@@ -5,29 +5,25 @@
     <table class="utbetaling-tabell" wicket:message="summary:utbetaling.hovedinfo.tabelloppsummering">
         <thead>
         <tr>
-            <th aria-labelledby="kontonummer"><wicket:message key="konto.label" /></th>
-            <th></th>
-            <th aria-labelledby="brutto utbetalt"><wicket:message key="brutto.label" /></th>
-            <th aria-labelledby="trekk"><wicket:message key="trekk.label" /></th>
-            <th aria-labelledby="netto utbetalt"><wicket:message key="utbetalt.label" /></th>
+            <th aria-labelledby="kontonummer" scope="col"><wicket:message key="konto.label" /></th>
+            <th aria-hidden="true"></th>
+            <th aria-labelledby="brutto utbetalt" scope="col"><wicket:message key="brutto.label" /></th>
+            <th aria-labelledby="trekk" scope="col"><wicket:message key="trekk.label" /></th>
+            <th aria-labelledby="netto utbetalt" scope="col"><wicket:message key="utbetalt.label" /></th>
         </tr>
         </thead>
         <tbody>
             <td aria-labelledby="konto">
-                <span class="vekk">Konto:</span>
                 <span wicket:id="konto"></span>
             </td>
-            <td></td>
+            <td aria-hidden="true"></td>
             <td aria-labelledby="brutto">
-                <span class="vekk">Brutto:</span>
                 <span wicket:id="brutto"></span>
             </td>
             <td aria-labelledby="trekk">
-                <span class="vekk">Trekk:</span>
                 <span wicket:id="trekk"></span>
             </td>
-            <td class="uthevet" aria-labelledby="utbetalt">
-                <span class="vekk">Utbetalt:</span>
+            <td class="uthevet">
                 <span wicket:id="utbetalt"></span>
             </td>
         </tbody>
@@ -38,30 +34,26 @@
     <table class="utbetaling-tabell ytelsekomponent-tabell" wicket:message="summary:utbetaling.detaljer.tabelloppsummering">
         <thead>
         <tr>
-            <th aria-labelledby="utbetalt ytelse"><wicket:message key="utbetaling.ytelse"/></th>
-            <th></th>
-            <th aria-labelledby="sats"><wicket:message key="utbetaling.sats"/></th>
-            <th aria-labelledby="antall"><wicket:message key="utbetaling.antall"/></th>
-            <th aria-labelledby="utbetalt beløp"><wicket:message key="utbetaling.belop"/></th>
+            <th aria-labelledby="utbetalt ytelse" scope="col"><wicket:message key="utbetaling.ytelse"/></th>
+            <th aria-hidden="true"></th>
+            <th aria-labelledby="sats" scope="col"><wicket:message key="utbetaling.sats"/></th>
+            <th aria-labelledby="antall" scope="col"><wicket:message key="utbetaling.antall"/></th>
+            <th aria-labelledby="utbetalt beløp" scope="col"><wicket:message key="utbetaling.belop"/></th>
         </tr>
         </thead>
         <tbody>
         <tr wicket:id="underytelser">
             <td class="cap-1st" aria-labelledby="underytelse">
-                <span class="vekk">Underytelse:</span>
                 <span wicket:id="underytelse"></span>
             </td>
             <td></td>
             <td aria-labelledby="sats">
-                <span class="vekk">Sats:</span>
                 <span wicket:id="sats"></span>
             </td>
             <td aria-labelledby="antall">
-                <span class="vekk">Antall:</span>
                 <span wicket:id="antall"></span>
             </td>
             <td aria-labelledby="beløp">
-                <span class="vekk">Beløp:</span>
                 <span wicket:id="belop"></span>
             </td>
         </tr>
