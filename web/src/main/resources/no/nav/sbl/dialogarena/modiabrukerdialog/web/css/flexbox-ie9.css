@@ -4,6 +4,9 @@
 	min-height: 86.5vh;
 }
 
+.kjerneinfo .tab-row .tomDiv {
+	min-height: 700px;
+}
 
 .kjerneinfo .flexbox .row .flex1 {
 	display: table-cell;
