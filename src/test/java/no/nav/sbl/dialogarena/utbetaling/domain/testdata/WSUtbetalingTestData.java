@@ -91,7 +91,9 @@ public class WSUtbetalingTestData {
                                         .withYtelseskomponentListe(
                                                 new WSYtelseskomponent()
                                                         .withYtelseskomponenttype("Grunnpensjon")
-                                                        .withYtelseskomponentbeloep(5200.00),
+                                                        .withYtelseskomponentbeloep(5200.00)
+                                                        .withSatsbeloep(1200.12)
+                                                        .withSatsantall(3.5),
                                                 new WSYtelseskomponent()
                                                         .withYtelseskomponenttype("Særtillegg")
                                                         .withYtelseskomponentbeloep(1456.00))
