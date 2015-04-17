@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.lang.collections.ComparatorUtils;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
@@ -52,7 +53,8 @@ public class GsakKodeverkTema implements Serializable {
             ) {
                 Document gsakKoder = parseDocument(isFagomrade);
                 List<Node> temaNodes = compileAndEvaluate(gsakKoder, "//fagomradeListe/fagomrade/gosys[@person='true' and not(@erGyldig = 'false')]");
-                return on(temaNodes).map(new NodeTemaTransformer(isOppgavetype, isPrioritet, isUnderkategori)).collect();
+                return on(temaNodes).map(new NodeTemaTransformer(isOppgavetype, isPrioritet, isUnderkategori))
+                        .collect(ComparatorUtils.compareWith(GsakKodeTema.TEKST));
             } catch (Exception e) {
                 throw new ApplicationException("Kunne ikke laste inn gsak kodeverk", e);
             }
