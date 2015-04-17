@@ -1,5 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
+import org.apache.commons.collections15.Transformer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
@@ -20,6 +21,13 @@ public abstract class GsakKodeTema implements Serializable {
         this.kode = kode;
         this.tekst = tekst;
     }
+
+    public static final Transformer<? super Tema, String> TEKST = new Transformer<GsakKodeTema.Tema, String>() {
+        @Override
+        public String transform(GsakKodeTema.Tema tema) {
+            return tema.tekst;
+        }
+    };
 
     public static class Tema extends GsakKodeTema implements Serializable {
         public final List<OppgaveType> oppgaveTyper;
