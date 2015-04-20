@@ -45,10 +45,13 @@ public class YtelseUtils {
     public static final class UtbetalingComparator {
         public static final Comparator<Record<Hovedytelse>> HOVEDYTELSE_DATO_COMPARATOR = new Comparator<Record<Hovedytelse>>() {
             @Override
-            public int compare(Record<Hovedytelse> o1, Record<Hovedytelse> o2) {
-                int compareDato = -o1.get(hovedytelsedato).toLocalDate().compareTo(o2.get(hovedytelsedato).toLocalDate());
+            public int compare(Record<Hovedytelse> ytelse1, Record<Hovedytelse> ytelse2) {
+                DateTime ytelse1Hovedytelsedato = ytelse1.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
+                DateTime ytelse2Hovedytelsedato = ytelse2.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
+
+                int compareDato = -ytelse1Hovedytelsedato.compareTo(ytelse2Hovedytelsedato);
                 if (compareDato == 0) {
-                    return o1.get(ytelse).compareToIgnoreCase(o2.get(ytelse));
+                    return ytelse1.get(ytelse).compareToIgnoreCase(ytelse2.get(ytelse));
                 }
                 return compareDato;
             }
