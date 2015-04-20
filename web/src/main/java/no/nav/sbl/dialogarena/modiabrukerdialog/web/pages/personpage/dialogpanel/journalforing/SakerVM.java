@@ -25,7 +25,6 @@ public class SakerVM implements Serializable {
         this.sakerService = sakerService;
         this.fnr = fnr;
         saker = new Saker();
-        oppdater();
     }
 
     public final void oppdater() {
