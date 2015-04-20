@@ -69,7 +69,7 @@ public class YtelseUtilsTest {
 
     @Test
     public void ytelserGroupedByYearMonth_sortertSynkende() {
-        List<Record<Hovedytelse>> ytelseListe = new ArrayList<>(Arrays.asList(
+        List<Record<Hovedytelse>> ytelseListe = new ArrayList<>(asList(
                 new Record<Hovedytelse>().with(Hovedytelse.hovedytelsedato, new DateTime(2015, 01, 1, 1, 1)),
                 new Record<Hovedytelse>().with(Hovedytelse.hovedytelsedato, new DateTime(2015, 03, 1, 1, 1)),
                 new Record<Hovedytelse>().with(Hovedytelse.hovedytelsedato, new DateTime(2015, 02, 1, 1, 1))
@@ -227,4 +227,21 @@ public class YtelseUtilsTest {
                 .with(Hovedytelse.ytelsesperiode, new Interval(fom, tom));
     }
 
+    @Test
+    public void sortererYtelserMedSammeHovedytelsedatoPaaYtelsen() {
+        List<Record<Hovedytelse>> ytelser = asList(new Record<Hovedytelse>()
+                        .with(Hovedytelse.hovedytelsedato, new DateTime(2015, 1, 1, 1, 1))
+                        .with(Hovedytelse.ytelse, "Aytelse"),
+                new Record<Hovedytelse>()
+                        .with(Hovedytelse.hovedytelsedato, new DateTime(2015, 1, 1, 1, 1))
+                        .with(Hovedytelse.ytelse, "Cytelse"),
+                new Record<Hovedytelse>()
+                        .with(Hovedytelse.hovedytelsedato, new DateTime(2015, 1, 1, 1, 1))
+                        .with(Hovedytelse.ytelse, "Bytelse"));
+        List<Record<Hovedytelse>> sortedYtelser = on(ytelser).collect(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR);
+
+        assertThat(sortedYtelser.get(0).get(Hovedytelse.ytelse), is("Aytelse"));
+        assertThat(sortedYtelser.get(1).get(Hovedytelse.ytelse), is("Bytelse"));
+        assertThat(sortedYtelser.get(2).get(Hovedytelse.ytelse), is("Cytelse"));
+    }
 }
