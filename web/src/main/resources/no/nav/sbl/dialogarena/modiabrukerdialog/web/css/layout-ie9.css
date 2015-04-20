@@ -1,0 +1,29 @@
+#modia-app > .personpanel > .flexbox.col {
+	display: table;
+	table-layout: fixed;
+}
+
+#modia-app > .personpanel > .flexbox.col > .row {
+	display: table-row;
+}
+
+#modia-app > .personpanel > .flexbox.col > .content.row > .sidebar-venstre,
+#modia-app > .personpanel > .flexbox.col > .content.row > .sidebar-hoyre,
+#modia-app > .personpanel > .flexbox.col > .content.row > .main-content {
+	display: table-cell;
+	overflow: hidden;
+}
+
+#modia-app > .personpanel > .flexbox.col > .content.row > .flex1.sidebar-venstre,
+#modia-app > .personpanel > .flexbox.col > .content.row > .flex1.sidebar-hoyre {
+	width: 25%;
+}
+
+#modia-app > .personpanel > .flexbox.col > .content.row > .flex2.main-content {
+	width: 50%;
+	vertical-align: top;
+}
+
+#modia-app > .personpanel > .flexbox.col > .content.row > .sidebar-venstre {
+	vertical-align: top;
+}

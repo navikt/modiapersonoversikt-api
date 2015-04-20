@@ -15,8 +15,8 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class BasePage extends WebPage {
 
-	public static final ConditionalCssResource MODIA_FLEXBOX_IE_CSS = new ConditionalCssResource(
-			new CssResourceReference(BasePage.class, "css/flexbox-ie9.css"), "screen", "lt IE 10");
+	public static final ConditionalCssResource MODIA_LAYOUT_IE_CSS = new ConditionalCssResource(
+			new CssResourceReference(BasePage.class, "css/layout-ie9.css"), "screen", "lt IE 10");
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(PersonPage.class, "lokal.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
@@ -25,7 +25,7 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference MODIA_COMMON_LESS = new PackageResourceReference(BasePage.class, "less/common.less");
     public static final PackageResourceReference MODIA_KOMPONENTER_LESS = new PackageResourceReference(BasePage.class, "less/komponenter.less");
     public static final PackageResourceReference MODIA_RAMME_LESS = new PackageResourceReference(BasePage.class, "less/ramme.less");
-    public static final PackageResourceReference MODIA_FLEXBOX_LESS = new PackageResourceReference(BasePage.class, "less/flexbox.less");
+    public static final PackageResourceReference MODIA_LAYOUT_LESS = new PackageResourceReference(BasePage.class, "less/layout.less");
     public static final PackageResourceReference MELDINGERWIDGET = new PackageResourceReference(MeldingerWidget.class, "meldingerwidget.less");
     public static final PackageResourceReference MELDINGERLAMELL = new PackageResourceReference(Innboks.class, "innboks.less");
 
