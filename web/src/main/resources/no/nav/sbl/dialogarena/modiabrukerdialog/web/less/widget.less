@@ -1,0 +1,168 @@
+/* grundstyling for alle widgets */
+.widget {
+  margin-bottom: 30px;
+  border: 1px solid @borderColorLight;
+  background-color: @bodyBackground;
+  &:focus {
+    border-color: @linkColor;
+    outline: none;
+  }
+  A:hover {
+    text-decoration: none;
+  }
+  UL {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  HEADER {
+    padding: 13px 0;
+    background-color: @white;
+    text-align: center;
+    border-bottom: 1px solid @borderColorLight;
+    &.selected {
+      background-color: @grayLighter;
+    }
+    H1 {
+      ._H3;
+      font-size: 1.14rem;
+      margin: 5px 0 0 0;
+    }
+    .initial {
+      margin: 0 auto;
+      width: 23px;
+      height: 23px;
+      line-height: 22px;
+      font-weight: bold;
+      background-color: #767676;
+      border-radius: 20px;
+      text-align: center;
+      color: @white;
+    }
+  }
+  .error-panel {
+    border: none;
+  }
+  .feederroritem {
+    background: @white;
+    P {
+      margin: 15px 0 0 0;
+      padding: 30px 0 15px 0;
+    }
+  }
+  & > UL > LI {
+    display: block;
+    margin: 0;
+    position: relative;
+    border-top: 1px solid @white;
+    border-bottom: 1px solid @borderColorLight;
+    &:last-of-type {
+      border-bottom: none;
+    }
+    &:hover:not(.selected):not(.feederroritem) {
+      border-top: 1px solid @white;
+      background-color: #dadada;
+    }
+    A, A:visited, A:active {
+      display: block;
+      padding: 20px 30px;
+      color: @white;
+      text-decoration: none;
+    }
+    UL.metadata {
+      margin: 1rem 37px 0 0;
+      overflow: auto;
+      LI {
+        float: left;
+        display: inline;
+        padding: 0 8px 0 0;
+        margin-right: 8px;
+        border-right: 1px solid;
+      }
+      LI:last-of-type {
+        margin-right: 0;
+        padding-right: 0;
+        border-right: none;
+      }
+    }
+  }
+}
+
+.widget-navigasjon {
+
+  .klikkbar-header {
+    cursor: pointer;
+    &:hover {
+      background-color: #dadada;
+      .initial {
+        background-color: #0067c5;
+      }
+    }
+  }
+
+  .widget;
+  & > UL > LI {
+    A:focus {
+      background-color: @linkColor;
+      color: @white !important;
+      outline: none;
+      .tidsrom, .subject, UL.metadata {
+        color: @white !important;
+      }
+      .action .tidsrom {
+        color: @white !important;
+      }
+      &:visited, &:selected {
+        color: @white !important;
+      }
+    }
+    A, A:visited, A:active {
+      color: @grayDark;
+    }
+    .tingikon {
+      width: 65%;
+    }
+    .tingstatus {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      padding-bottom: 30px;
+      min-width: 32px;
+      text-transform: uppercase;
+      text-align: center;
+      font-size: 0.857rem;
+      line-height: 1.2em;
+      font-family: Modus;
+      font-weight: 600;
+    }
+    .tidsrom {
+      margin: 0 50px 2px 0;
+      line-height: 1.2em;
+      font-size: 0.857rem;
+      text-transform: uppercase;
+    }
+    .subject {
+      margin: 0;
+      font-size: 1.14em;
+      font-weight: bold;
+    }
+    A.OK .tingstatus {
+      background: url(../img/gront-sjekk.png) bottom center no-repeat;
+    }
+    A.OK:hover .tingstatus {
+      background: url(../img/gront-sjekk-hover.png) bottom center no-repeat;
+    }
+    A.OK:focus .tingstatus {
+      background: url(../img/gront-sjekk-fokus.png) bottom center no-repeat;
+    }
+    A.ERROR .tingstatus {
+      background: url(../img/utropstegn.png) bottom center no-repeat;
+    }
+    A.ERROR:hover .tingstatus {
+      background: url(../img/utropstegn-hover.png) bottom center no-repeat;
+    }
+    A.ERROR:focus .tingstatus {
+      background: url(../img/utropstegn-fokus.png) bottom center no-repeat;
+    }
+  }
+}

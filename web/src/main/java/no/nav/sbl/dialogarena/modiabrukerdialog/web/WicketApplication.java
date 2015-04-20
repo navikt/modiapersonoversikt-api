@@ -161,14 +161,23 @@ public class WicketApplication extends WebApplication {
                 )
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
-                        BasePage.MODIA_KOMPONENTER_LESS,
-                        BasePage.MODIA_RAMME_LESS,
+                        BasePage.MODIA_WIDGET_LESS,
+                        BasePage.MODIA_LAMELL_LESS,
                         BasePage.MODIA_LAYOUT_LESS,
+                        BasePage.LISTE,
+                        BasePage.HEADER,
+                        BasePage.RESPONSIVE,
                         BasePage.PERSONINFO_LESS,
                         UtbetalingLerret.UTBETALING_LESS,
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
+                        BasePage.OPPFOLGING,
+                        BasePage.OPPGAVEFORM,
+                        BasePage.PERSONSOK,
+                        BasePage.SAKBEHANDLERINNSTILLINGER,
+                        BasePage.JOURNALFORING,
+                        BasePage.BRUKERPROFIL,
                         PersonPage.DIALOGPANEL_LESS
                 )
                 .addCss(

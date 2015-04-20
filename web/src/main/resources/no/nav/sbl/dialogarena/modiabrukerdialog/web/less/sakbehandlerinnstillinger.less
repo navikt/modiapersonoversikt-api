@@ -1,0 +1,78 @@
+.saksbehandlerinnstillinger-toggle {
+  position: absolute;
+  z-index: 1020;
+  width: 240px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  :hover {
+    cursor: pointer;
+  }
+  .togglebilde {
+    width: 85%;
+  }
+  .pil {
+    margin-top: 25px;
+    float: right;
+    .pil(8px, #fff);
+  }
+  &:focus, &:hover {
+    outline: 1px dashed @grayLight;
+  }
+}
+
+.saksbehandlerinnstillinger {
+  text-align: center;
+  background-color: @graabakgrunn;
+  color: #000000;
+  padding: 2em 0;
+  -webkit-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
+  box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
+  .lenke-container {
+    float: left;
+    margin-left: 3em;
+    top: 20px;
+    position: relative;
+    a {
+      display: block;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+  }
+  .enhetsform {
+    max-width: 23%;
+    margin: auto;
+  }
+  .enhetsvalg {
+    text-align: left;
+    label {
+      padding: 5px 5px 5px 37px;
+      min-height: 22px;
+      line-height: 22px;
+    }
+    input[type=radio] + label {
+      background-position: 5px;
+      border: 1px solid transparent;
+    }
+    input[type=radio]:focus + label {
+      border: 1px dashed @dodgerblue;
+    }
+  }
+  .linje {
+    height: 1px;
+    width: 100%;
+    background-color: #d1d1d1;
+    border: none;
+    margin: 30px 0 40px;
+  }
+  .centered {
+    text-align: center;
+  }
+  .sort-skrift {
+    color: #000000;
+  }
+  label {
+    width: auto;
+  }
+}
