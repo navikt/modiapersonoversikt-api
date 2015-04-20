@@ -91,6 +91,7 @@ public class PlukkOppgavePanel extends Panel {
     private class PlukkOppgaveKnapp extends AjaxButton {
         public PlukkOppgaveKnapp(String id) {
             super(id);
+            setMarkupId(id);
         }
 
         @Override

@@ -4,7 +4,8 @@
         <span wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></span>
 
         <div class="oppgavepanel">
-            <a class="velg-temagruppe" wicket:message="title:plukkoppgave.temavelger.mouseover" tabindex="0" wicket:id="velg-temagruppe-knapp"></a>
+            <a class="velg-temagruppe" wicket:message="title:plukkoppgave.temavelger.mouseover" tabindex="0"
+               wicket:id="velg-temagruppe-knapp"></a>
             <input type="submit"
                    class="plukk-oppgave plukk-knapp"
                    wicket:id="plukkOppgave"
@@ -13,11 +14,15 @@
                     />
 
             <div class="temagruppe-liste">
-                <div wicket:id="temagruppe" role="radiogroup" class="radiogroup" tabindex="-1" wicket:message="aria-label:plukkoppgave.temavelger.mouseover">
-                    <wicket:container wicket:id="temagrupper">
-                        <input wicket:id="temagruppevalg" type="radio">
-                        <label wicket:for="temagruppevalg"><span wicket:id="temagruppenavn"></span></label>
-                    </wicket:container>
+                <div wicket:id="temagruppe" role="radiogroup" class="radiogroup" tabindex="-1"
+                     wicket:message="aria-label:plukkoppgave.temavelger.mouseover">
+                    <fieldset class="wcag">
+                        <legend><wicket:message key="plukkoppgave.temavelger.legend"/></legend>
+                        <wicket:container wicket:id="temagrupper">
+                            <input wicket:id="temagruppevalg" type="radio">
+                            <label wicket:for="temagruppevalg"><span wicket:id="temagruppenavn"></span></label>
+                        </wicket:container>
+                    </fieldset>
                 </div>
 
                 <a wicket:id="PlukkOppgaveFraTemaliste" class="knapp-hoved-liten plukk-knapp"
