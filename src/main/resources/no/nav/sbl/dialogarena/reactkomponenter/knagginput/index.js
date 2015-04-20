@@ -76,7 +76,7 @@ var KnaggInput = React.createClass({
             <div ref="knaggcontainer" className="knagg-input">
                 <div className={"knagger" + (this.state.focus ? " focus" : "")}>
                     {knagger}
-                    <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst}
+                    <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst} title={this.props.placeholder}
                         onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
                         onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
                         aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']} />

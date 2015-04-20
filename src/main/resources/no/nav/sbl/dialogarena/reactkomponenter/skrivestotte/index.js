@@ -86,7 +86,10 @@ var Skrivestotte = React.createClass({
                     <div tabIndex="-1" className="sok-container">
                         <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tabliste={this.refs.tablist} placeholder={'Søk'}/>
                     </div>
+                    <fieldset className="wcag">
+                        <legend>Tekst liste</legend>
                     {sokVisning}
+                    </fieldset>
                     {tomVisning}
                     <input type="submit" value="submit" className="hidden" />
                 </form>

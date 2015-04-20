@@ -106,6 +106,7 @@ var MeldingerSok = React.createClass({
                                 type="text"
                                 placeholder="Søk"
                                 value={this.state.fritekst}
+                                title="Søk"
                                 onChange={this.store.onChange.bind(this.store)}
                                 onKeyDown={this.store.onKeyDown.bind(this.store, this.refs.tablist)}
                                 aria-controls={this.state.listePanelId}

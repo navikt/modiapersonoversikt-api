@@ -6,7 +6,7 @@ var TekstListeKomponent = React.createClass({
         return (
             <div className="sok-element" onClick={tekstChanged.bind(this)}>
                 <input id={"tekstElementRadio" + this.props.tekst.key} name="tekstListeRadio" type="radio"
-                    readOnly checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)} />
+                    checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)} />
                 <label htmlFor={"tekstElementRadio" + this.props.tekst.key}>
                     <span dangerouslySetInnerHTML={{__html: this.props.tekst.tittel}}></span>
                 </label>
