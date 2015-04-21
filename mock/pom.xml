@@ -143,10 +143,6 @@
         <!--Modig-->
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
         </dependency>
         <dependency>
@@ -160,6 +156,10 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
 
         <!--Spring-->
