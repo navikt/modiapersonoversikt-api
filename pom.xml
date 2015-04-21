@@ -73,7 +73,7 @@
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>1.13-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>2.16-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>3.0-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>2.3</saksoversikt.version>
     </properties>
 
