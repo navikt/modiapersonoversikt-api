@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
-import no.nav.modig.modia.widget.FeedWidget;
+import no.nav.modig.modia.widget.AsyncFeedWidget;
 import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -24,7 +24,7 @@ import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.widget.WidgetMeldingVM.NYESTE_OVERST;
 
-public class MeldingerWidget extends FeedWidget<WidgetMeldingVM> {
+public class MeldingerWidget extends AsyncFeedWidget<WidgetMeldingVM> {
 
     private static final Logger log = LoggerFactory.getLogger(MeldingerWidget.class);
 
@@ -32,9 +32,8 @@ public class MeldingerWidget extends FeedWidget<WidgetMeldingVM> {
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     public MeldingerWidget(String id, String initial, final String fnr) {
-        super(id, initial, true, "info.mangemeldinger");
+        super(id, initial, true, "info.mangemeldinger", 5);
         setOutputMarkupId(true);
-        setMaxNumberOfFeedItems(5);
 
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<List<? extends FeedItemVM>>() {
             @Override
