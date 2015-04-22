@@ -29,7 +29,6 @@
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.12</junit.version>
         <args4j.version>2.0.23</args4j.version>
-        <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
         <ws.security.version>1.6.10</ws.security.version>
         <mockito.version>1.10.19</mockito.version>
@@ -72,6 +71,7 @@
         <common-integrasjonsutils.version>0.0.7</common-integrasjonsutils.version>
         <common-cxf.version>1.1</common-cxf.version>
         <common-jetty.version>1.0.25</common-jetty.version>
+        <jetty.version>9.2.3.v20140905</jetty.version>
         <common-kodeverk.version>1.0.0</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
@@ -470,6 +470,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jaas</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-test</artifactId>
                 <version>${common-test.version}</version>
@@ -794,26 +800,6 @@
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-highlighter</artifactId>
                 <version>${lucene.version}</version>
-            </dependency>
-
-            <!--Jetty-->
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jaas</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <!--Logging-->
