@@ -376,7 +376,7 @@
 
         <dependency>
             <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
+            <artifactId>javax.annotation-api</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -421,13 +421,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                    <destFile>${sonar.jacoco.reportPath}</destFile>
-                </configuration>
-            </plugin>
         </plugins>
         <resources>
             <resource>
