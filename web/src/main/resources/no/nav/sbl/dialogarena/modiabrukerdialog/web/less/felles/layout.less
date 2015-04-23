@@ -138,6 +138,11 @@
 }
 
 #modia-app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
   .navbar {
     height: @headerHeight;
     z-index: 1000;
@@ -155,5 +160,9 @@
     .sidebar-venstre, .sidebar-hoyre {
       z-index: 500;
     }
+  }
+  .personpanel {
+    position: relative;
+    height: 100%;
   }
 }

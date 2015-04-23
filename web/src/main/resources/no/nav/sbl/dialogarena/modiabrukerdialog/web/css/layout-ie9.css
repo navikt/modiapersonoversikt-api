@@ -7,23 +7,23 @@
 	display: table-row;
 }
 
-#modia-app > .personpanel > .flexbox.col > .content.row > .sidebar-venstre,
-#modia-app > .personpanel > .flexbox.col > .content.row > .sidebar-hoyre,
-#modia-app > .personpanel > .flexbox.col > .content.row > .main-content {
+#modia-app .app-content .sidebar-venstre,
+#modia-app .app-content  .sidebar-hoyre,
+#modia-app .app-content  .main-content {
 	display: table-cell;
 	overflow: hidden;
 }
 
-#modia-app > .personpanel > .flexbox.col > .content.row > .flex1.sidebar-venstre,
-#modia-app > .personpanel > .flexbox.col > .content.row > .flex1.sidebar-hoyre {
+#modia-app .app-content  .sidebar-venstre,
+#modia-app .app-content .sidebar-hoyre {
 	width: 25%;
 }
 
-#modia-app > .personpanel > .flexbox.col > .content.row > .flex2.main-content {
+#modia-app .app-content .main-content {
 	width: 50%;
 	vertical-align: top;
 }
 
-#modia-app > .personpanel > .flexbox.col > .content.row > .sidebar-venstre {
+#modia-app .app-content .sidebar-venstre {
 	vertical-align: top;
 }
