@@ -32,6 +32,8 @@ var Modal = React.createClass({
             this.portalElement.className = "react-modal-container";
             document.body.appendChild(this.portalElement);
         }
+
+        this.renderPortal(this.props, this.state)
     },
     componentWillReceiveProps: function (props) {
         this.renderPortal(props, this.state)
