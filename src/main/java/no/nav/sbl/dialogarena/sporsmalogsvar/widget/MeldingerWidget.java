@@ -28,7 +28,7 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     public MeldingerWidget(String id, String initial, final String fnr) {
-        super(id, initial);
+        super(id, initial, 5);
         setOutputMarkupId(true);
         this.fnr = fnr;
         this.errorKey = "info.feil";
