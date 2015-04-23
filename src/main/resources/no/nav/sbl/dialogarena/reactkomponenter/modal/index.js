@@ -32,8 +32,6 @@ var Modal = React.createClass({
             this.portalElement.className = "react-modal-container";
             document.body.appendChild(this.portalElement);
         }
-
-        this.renderPortal(this.props, this.state);
     },
     componentWillReceiveProps: function (props) {
         this.renderPortal(props, this.state)
@@ -41,14 +39,31 @@ var Modal = React.createClass({
     componentWillUnmount: function () {
         document.body.removeChild(this.portalElement);
     },
-    componentDidUpdate: function(){
+    componentDidUpdate: function () {
         this.renderPortal(this.props, this.state)
     },
     open: function () {
+        var elementsByClassName = document.getElementsByClassName('react-modal-container');
+        var match = false;
+        for(var i = 0; i < elementsByClassName.length; i++) {
+            if (elementsByClassName[i].innerHTML === this.portalElement.innerHTML) {
+                match = true;
+                break;
+            }
+        }
+
+        if (!match) {
+            document.body.appendChild(this.portalElement);
+        }
+
+        $(document.body).addClass('modal-open');
         this.setState({isOpen: true});
     },
     close: function () {
         this.setState({isOpen: false});
+        React.unmountComponentAtNode(this.portalElement);
+        document.body.removeChild(this.portalElement);
+        $(document.body).removeClass('modal-open');
     },
     renderPortal: function (props, state) {
         var modal = {
