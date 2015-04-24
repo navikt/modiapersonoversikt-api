@@ -36,11 +36,6 @@ public class ServiceTestContext {
     }
 
     @Bean
-    public LokaltKodeverk lokaltKodeverk() {
-        return mock(LokaltKodeverk.class);
-    }
-
-    @Bean
     public StandardKodeverk standardKodeverk() {
         return mock(StandardKodeverk.class);
     }
