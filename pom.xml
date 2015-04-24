@@ -40,7 +40,7 @@
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>2.0.53-SNAPSHOT</modig.wicket.version>
+        <modig.wicket.version>2.0.53</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>2.0.2</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -72,8 +72,8 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>1.13-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>2.16-SNAPSHOT</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>1.13</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>2.16</sporsmalogsvar.version>
         <saksoversikt.version>2.3</saksoversikt.version>
     </properties>
 
@@ -473,7 +473,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>reactkomponenter</artifactId>
-                <version>0.12-SNAPSHOT</version>
+                <version>0.12</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
