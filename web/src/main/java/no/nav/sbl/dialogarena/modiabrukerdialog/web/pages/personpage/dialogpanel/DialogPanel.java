@@ -9,6 +9,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -159,8 +160,9 @@ public class DialogPanel extends Panel {
         } else {
             if (erEnkeltstaaendeSporsmalFraBruker(traad)) {
                 try {
-                    String sporsmalOppgaveId = traad.get(0).oppgaveId;
-                    oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId);
+                    Melding sporsmal = traad.get(0);
+                    String sporsmalOppgaveId = sporsmal.oppgaveId;
+                    oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId, Temagruppe.valueOf(sporsmal.temagruppe));
                     oppgaveId = optional(sporsmalOppgaveId);
                 } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                     oppgavetilordningFeiletModal.vis(target);

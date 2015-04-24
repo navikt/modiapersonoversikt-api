@@ -75,7 +75,7 @@ public class PlukkOppgaveServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
 
         assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(oppgave2)));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class PlukkOppgaveServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
         assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI));
     }
 
     @Test
@@ -97,6 +97,6 @@ public class PlukkOppgaveServiceTest {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenThrow(new AuthorizationException(""));
 
         assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI));
     }
 }

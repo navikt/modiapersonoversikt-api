@@ -10,6 +10,7 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -156,7 +157,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString());
+        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class));
     }
 
     @Test
@@ -167,7 +168,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingService).tilordneOppgaveIGsak(spsm.oppgaveId);
+        verify(oppgaveBehandlingService).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD);
     }
 
     @Test

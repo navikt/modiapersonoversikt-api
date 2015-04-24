@@ -36,7 +36,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingService {
 
-    public static final Integer ENHET = 4100;
+    public static final Integer DEFAULT_ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
 
@@ -51,8 +51,8 @@ public class OppgaveBehandlingService {
     @Inject
     private Ruting ruting;
 
-    public void tilordneOppgaveIGsak(String oppgaveId) throws FikkIkkeTilordnet {
-        tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
+    public void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) throws FikkIkkeTilordnet {
+        tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId), temagruppe);
     }
 
     public Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe) {
@@ -67,7 +67,7 @@ public class OppgaveBehandlingService {
         Optional<WSOppgave> oppgave = finnEldsteIkkeTilordnedeOppgave(temagruppe);
         if (oppgave.isSome()) {
             try {
-                WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get());
+                WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get(), temagruppe);
                 return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
             } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
                 return plukkOppgaveFraGsak(temagruppe, antallForsokIgjen - 1);
@@ -77,13 +77,13 @@ public class OppgaveBehandlingService {
         }
     }
 
-    public void ferdigstillOppgaveIGsak(String oppgaveId) {
+    public void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) {
         try {
             WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
-            lagreOppgaveIGsak(oppgave);
+            lagreOppgaveIGsak(oppgave, temagruppe);
 
-            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(ENHET));
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe))));
         } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
             throw new RuntimeException(e);
         }
@@ -108,17 +108,17 @@ public class OppgaveBehandlingService {
                     wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe.get())));
                 }
 
-                lagreOppgaveIGsak(wsOppgave);
+                lagreOppgaveIGsak(wsOppgave, temagruppe);
             } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
                 throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
             }
         }
     }
 
-    public void systemLeggTilbakeOppgaveIGsak(String oppgaveId) {
+    public void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) {
         try {
             WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId).withAnsvarligId("");
-            lagreOppgaveIGsak(wsOppgave);
+            lagreOppgaveIGsak(wsOppgave, temagruppe);
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
@@ -148,22 +148,26 @@ public class OppgaveBehandlingService {
         }
     }
 
-    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave) throws FikkIkkeTilordnet {
+    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Temagruppe temagruppe) throws FikkIkkeTilordnet {
         try {
             WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
-            lagreOppgaveIGsak(wsOppgave);
+            lagreOppgaveIGsak(wsOppgave, temagruppe);
             return wsOppgave;
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new FikkIkkeTilordnet(lagreOppgaveOptimistiskLasing);
         }
     }
 
-    private void lagreOppgaveIGsak(WSOppgave wsOppgave) throws LagreOppgaveOptimistiskLasing {
+    private void lagreOppgaveIGsak(WSOppgave wsOppgave, Temagruppe temagruppe) throws LagreOppgaveOptimistiskLasing {
+        lagreOppgaveIGsak(wsOppgave, optional(temagruppe));
+    }
+
+    private void lagreOppgaveIGsak(WSOppgave wsOppgave, Optional<Temagruppe> temagruppe) throws LagreOppgaveOptimistiskLasing {
         try {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
                             .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
-                            .withEndretAvEnhetId(ENHET)
+                            .withEndretAvEnhetId(Integer.valueOf(enhetFor(temagruppe)))
             );
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
@@ -179,7 +183,7 @@ public class OppgaveBehandlingService {
                                 .withMaxAntallSvar(0)
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligEnhetId(enhetForPlukk(temagruppe))
+                                .withAnsvarligEnhetId(enhetFor(temagruppe))
                                 .withFagomradeKodeListe("KNA"))
                         .withSorteringKode(new WSFinnOppgaveListeSortering()
                                 .withSorteringKode("STIGENDE")
@@ -189,9 +193,17 @@ public class OppgaveBehandlingService {
                 .head();
     }
 
-    private String enhetForPlukk(Temagruppe temagruppe) {
+    private String enhetFor(Temagruppe temagruppe) {
+        return enhetFor(optional(temagruppe));
+    }
+
+    private String enhetFor(Optional<Temagruppe> optional) {
+        if (!optional.isSome()) {
+            return DEFAULT_ENHET.toString();
+        }
+        Temagruppe temagruppe = optional.get();
         if (asList(ARBD, FMLI, ORT_HJE).contains(temagruppe)) {
-            return ENHET.toString();
+            return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
         }

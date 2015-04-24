@@ -48,7 +48,7 @@ public class PlukkOppgaveService {
     }
 
     private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, Temagruppe temagruppe) {
-        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId);
+        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe);
         return plukkOppgave(temagruppe);
     }
 
