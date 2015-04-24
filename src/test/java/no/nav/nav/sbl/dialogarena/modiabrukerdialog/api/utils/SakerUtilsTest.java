@@ -1,15 +1,16 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
@@ -21,12 +22,10 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SakerUtilsTest {
-    private static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
     private static final String SAKSTYPE_FAG = "Fag";
     private static final String KODEVERK_TEMAKODE = "Tema kode";
     private static final String KODEVERK_TEMANAVN = "Tema navn";
@@ -44,8 +43,6 @@ public class SakerUtilsTest {
     private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(asList("FUL", "SER", "SYM", "VEN"));
 
     @Mock
-    private LokaltKodeverk lokaltKodeverk;
-    @Mock
     private GsakKodeverk gsakKodeverk;
     @Mock
     private StandardKodeverk standardKodeverk;
@@ -54,7 +51,6 @@ public class SakerUtilsTest {
     private List<String> alleTemaer;
     private List<String> alleTemagrupper;
     private String godkjentTemaSomFinnesIEnTemagruppe;
-    private String temagruppeMedEtGodkjentTema;
 
     @Before
     public void setup() {
@@ -62,20 +58,6 @@ public class SakerUtilsTest {
         saksliste = createSakslisteBasertPaTemaMap();
         alleTemagrupper = getAlleEksisterendeTemagrupper();
 
-        when(lokaltKodeverk.hentTemagruppeForTema(anyString())).thenAnswer(new Answer<String>() {
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                Object[] args = invocation.getArguments();
-                String tema = (String) args[0];
-                for (Map.Entry<String, List<String>> temaEntry : TEMAGRUPPE_TEMA_MAPPING.entrySet()) {
-                    if (temaEntry.getValue().contains(tema)) {
-                        return temaEntry.getKey();
-                    }
-                }
-                return TEMA_UTEN_TEMAGRUPPE;
-
-            }
-        });
         when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
         when(standardKodeverk.getArkivtemaNavn(KODEVERK_TEMAKODE)).thenReturn(KODEVERK_TEMANAVN);
     }
@@ -83,7 +65,7 @@ public class SakerUtilsTest {
     // Gruppering på tema
     @Test
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(createSakslisteBasertPaTemaMap(), lokaltKodeverk);
+        Saker saker = hentGenerelleOgIkkeGenerelleSaker(createSakslisteBasertPaTemaMap());
 
         List<SakerForTema> sakerForTemaListe = saker.getSakerListeGenerelle();
         assertThat(sakerForTemaListe.size(), is(4));
@@ -98,7 +80,7 @@ public class SakerUtilsTest {
         Sak sak4 = createSak("44444444", alleTemaer.get(0), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
         saksliste.add(sak4);
 
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste, lokaltKodeverk);
+        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste);
 
         List<SakerForTema> sakerForTemaListe = saker.getSakerListeGenerelle();
         assertThat(sakerForTemaListe.size(), is(4));
@@ -111,15 +93,6 @@ public class SakerUtilsTest {
         }
     }
 
-    //Valgt temagruppe øverst
-    @Test
-    public void gittEnValgtTemagruppeSjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste, lokaltKodeverk);
-        List<SakerForTema> sakerListeGenerelle = saker.getSakerListeGenerelle().sorter(temagruppeMedEtGodkjentTema);
-
-        assertThat(sakerListeGenerelle.get(0).temagruppe, is(temagruppeMedEtGodkjentTema));
-    }
-
     // Sorterer alfabetisk innen valgt temagruppe
     @Test
     public void gittEnTemagruppeSjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadErSortertAlfabetisk() {
@@ -130,7 +103,7 @@ public class SakerUtilsTest {
             saksliste.add(createSak("44444444", tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
 
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste, lokaltKodeverk);
+        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste);
         List<SakerForTema> sakerListeGenerelle = saker.getSakerListeGenerelle().sorter(traadTemagruppe);
 
         List<SakerForTema> sakerForTemagruppeInnenforValgtTema = sakerListeGenerelle.subList(0, traadTemagruppeLengde);
@@ -144,7 +117,7 @@ public class SakerUtilsTest {
         List<String> traadTemagruppeSineTemaer = TEMAGRUPPE_TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
 
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste, lokaltKodeverk);
+        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste);
         List<SakerForTema> alleSakerForTemaListe = saker.getSakerListeGenerelle().sorter(traadTemagruppe);
 
         List<SakerForTema> temaUtenforValgtTemagruppe = alleSakerForTemaListe.subList(traadTemagruppeLengde, alleSakerForTemaListe.size());
@@ -160,7 +133,7 @@ public class SakerUtilsTest {
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
 
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste, lokaltKodeverk);
+        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste);
 
         List<SakerForTema> sakerForTemaListe = saker.getSakerListeGenerelle();
         for (SakerForTema sakerForTema : sakerForTemaListe) {
@@ -177,7 +150,7 @@ public class SakerUtilsTest {
         }
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
 
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste, lokaltKodeverk);
+        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste);
 
         List<SakerForTema> sakerForTemaListeGenerell = saker.getSakerListeGenerelle();
         List<SakerForTema> sakerForTemaListeFag = saker.getSakerListeFagsak();
@@ -187,7 +160,7 @@ public class SakerUtilsTest {
 
     @Test
     public void ingenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
-        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste, lokaltKodeverk);
+        Saker saker = hentGenerelleOgIkkeGenerelleSaker(saksliste);
 
         for (String temagruppe : alleTemagrupper) {
             List<SakerForTema> sakerForTemaListe = saker.getSakerListeGenerelle().sorter(temagruppe);
@@ -208,7 +181,7 @@ public class SakerUtilsTest {
     @Test
     public void fagsakerUtenGodkjentFagsystemSkalFiltreresBort() {
         Sak fagsakUtenGodkjentFagsystem = createSak("id", alleTemaer.get(0), "Ikke godkjent fagsystemkode", SAKSTYPE_MED_FAGSAK, DateTime.now());
-        Saker sakerUtenGodkjentFagsystem = hentGenerelleOgIkkeGenerelleSaker(asList(fagsakUtenGodkjentFagsystem), lokaltKodeverk);
+        Saker sakerUtenGodkjentFagsystem = hentGenerelleOgIkkeGenerelleSaker(asList(fagsakUtenGodkjentFagsystem));
 
         assertThat(sakerUtenGodkjentFagsystem.getSakerListeFagsak().size(), is(0));
     }
@@ -216,12 +189,12 @@ public class SakerUtilsTest {
     @Test
     public void generelleSakerUtenGodkjentFagsystemEllerTemaSkalFiltreresBort() {
         Sak generellSakUtenGodkjentFagsystem = createSak("id", GODKJENTE_TEMA_FOR_GENERELLE.get(0), "Ikke godkjent fagsystemkode", SAKSTYPE_GENERELL, DateTime.now());
-        Saker sakerUtenGodkjentFagsystem = hentGenerelleOgIkkeGenerelleSaker(asList(generellSakUtenGodkjentFagsystem), lokaltKodeverk);
+        Saker sakerUtenGodkjentFagsystem = hentGenerelleOgIkkeGenerelleSaker(asList(generellSakUtenGodkjentFagsystem));
 
         assertThat(sakerUtenGodkjentFagsystem.getSakerListeGenerelle().size(), is(0));
 
         Sak generellSakUtenGodkjentTema = createSak("id", "Ikke godkjent tema for generell", GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now());
-        Saker sakeruteGodkjentTema = hentGenerelleOgIkkeGenerelleSaker(asList(generellSakUtenGodkjentTema), lokaltKodeverk);
+        Saker sakeruteGodkjentTema = hentGenerelleOgIkkeGenerelleSaker(asList(generellSakUtenGodkjentTema));
 
         assertThat(sakeruteGodkjentTema.getSakerListeGenerelle().size(), is(0));
 
@@ -293,7 +266,6 @@ public class SakerUtilsTest {
         for (String godkjentTema : EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE) {
             for (String temagruppe : TEMAGRUPPE_TEMA_MAPPING.keySet()) {
                 if (TEMAGRUPPE_TEMA_MAPPING.get(temagruppe).contains(godkjentTema)) {
-                    temagruppeMedEtGodkjentTema = temagruppe;
                     godkjentTemaSomFinnesIEnTemagruppe = godkjentTema;
                     return;
                 }

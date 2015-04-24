@@ -30,12 +30,8 @@ public class SakerTest {
 
     @Test
     public void skalReturnereTrueOmDetFinnesSaker() {
-        SakerListe fagsaker = new SakerListe(asList(
-                new SakerForTema()
-        ));
-        SakerListe generelleSaker = new SakerListe(asList(
-                new SakerForTema()
-        ));
+        SakerListe fagsaker = new SakerListe(asList(new SakerForTema()));
+        SakerListe generelleSaker = new SakerListe(asList(new SakerForTema()));
 
         Saker finnesFagsaker = new Saker(fagsaker, null);
         Saker finnesGenerellesaker = new Saker(null, generelleSaker);
