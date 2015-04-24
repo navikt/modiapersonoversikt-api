@@ -7,8 +7,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingServi
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -20,19 +18,15 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.widget.WidgetMeldingVM.NYEST
 
 public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
-    private static final Logger log = LoggerFactory.getLogger(MeldingerWidget.class);
-
     private final String fnr;
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     public MeldingerWidget(String id, String initial, final String fnr) {
-        super(id, initial, 5);
+        super(id, initial, 5, "info.feil", "info.mangemeldinger");
         setOutputMarkupId(true);
         this.fnr = fnr;
-        this.errorKey = "info.feil";
-        this.overflowKey = "info.mangemeldinger";
     }
 
     @Override
@@ -43,8 +37,7 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
     @Override
     public List<WidgetMeldingVM> getFeedItems() {
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
-        List<WidgetMeldingVM> collect = on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
-        return collect;
+        return on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
     }
 
     private static final Transformer<List<Melding>, WidgetMeldingVM> TIL_MELDINGVM = new Transformer<List<Melding>, WidgetMeldingVM>() {
