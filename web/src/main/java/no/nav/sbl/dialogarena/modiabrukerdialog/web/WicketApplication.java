@@ -178,6 +178,10 @@ public class WicketApplication extends WebApplication {
                         BasePage.SAKBEHANDLERINNSTILLINGER,
                         BasePage.JOURNALFORING,
                         BasePage.BRUKERPROFIL,
+                        BasePage.HENTPERSON,
+                        BasePage.KJERNEINFO,
+                        BasePage.OVERSIKT,
+                        BasePage.SYKEPENGER_FORELDREPENGER,
                         PersonPage.DIALOGPANEL_LESS
                 )
                 .addCss(

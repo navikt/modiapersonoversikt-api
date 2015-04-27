@@ -38,6 +38,10 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference LISTE = new PackageResourceReference(BasePage.class, "less/komponenter/liste.less");
     public static final PackageResourceReference JOURNALFORING = new PackageResourceReference(BasePage.class, "less/komponenter/journalforing.less");
     public static final PackageResourceReference BRUKERPROFIL = new PackageResourceReference(BasePage.class, "less/komponenter/brukerprofil.less");
+    public static final PackageResourceReference HENTPERSON = new PackageResourceReference(BasePage.class, "less/komponenter/hentperson.less");
+    public static final PackageResourceReference KJERNEINFO = new PackageResourceReference(BasePage.class, "less/komponenter/kjerneinfo.less");
+    public static final PackageResourceReference OVERSIKT = new PackageResourceReference(BasePage.class, "less/komponenter/oversikt.less");
+    public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(BasePage.class, "less/komponenter/sykepenger_foreldrepenger.less");
 
     private final WebMarkupContainer body;
 
