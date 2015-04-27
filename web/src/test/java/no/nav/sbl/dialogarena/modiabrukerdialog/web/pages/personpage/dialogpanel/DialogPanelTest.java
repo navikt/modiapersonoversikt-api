@@ -10,6 +10,7 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -34,7 +35,7 @@ import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_AVBRUTT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
@@ -156,7 +157,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString());
+        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class));
     }
 
     @Test
@@ -167,7 +168,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingService).tilordneOppgaveIGsak(spsm.oppgaveId);
+        verify(oppgaveBehandlingService).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD);
     }
 
     @Test

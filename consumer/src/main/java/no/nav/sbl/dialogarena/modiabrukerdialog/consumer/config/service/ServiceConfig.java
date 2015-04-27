@@ -4,7 +4,6 @@ import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.LokaltKodeverkImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
@@ -62,11 +61,6 @@ public class ServiceConfig {
     @Bean
     public GsakKodeverk gsakKodeverk() {
         return new GsakKodeverkFraFil();
-    }
-
-    @Bean
-    public LokaltKodeverk lokaltKodeverk() {
-        return new LokaltKodeverkImpl();
     }
 
     @Bean

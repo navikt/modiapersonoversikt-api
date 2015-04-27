@@ -4,12 +4,19 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.*;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
-import no.nav.tjeneste.virksomhet.sak.v1.*;
+import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
+import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
+import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
@@ -43,8 +50,6 @@ public class SakerServiceImpl implements SakerService {
     @Inject
     private StandardKodeverk standardKodeverk;
     @Inject
-    private LokaltKodeverk lokaltKodeverk;
-    @Inject
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
@@ -56,7 +61,7 @@ public class SakerServiceImpl implements SakerService {
     public Saker hentSaker(String fnr) {
         List<Sak> sakerForBruker = hentListeAvSaker(fnr);
         leggTilFagsystemnavnOgTemanavn(sakerForBruker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
-        return hentGenerelleOgIkkeGenerelleSaker(sakerForBruker, lokaltKodeverk);
+        return hentGenerelleOgIkkeGenerelleSaker(sakerForBruker);
     }
 
     @Override

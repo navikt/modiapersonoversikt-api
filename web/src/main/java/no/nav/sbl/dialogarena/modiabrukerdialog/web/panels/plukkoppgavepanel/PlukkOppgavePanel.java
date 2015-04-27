@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
