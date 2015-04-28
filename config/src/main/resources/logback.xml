@@ -78,6 +78,8 @@
         <appender-ref ref="personaccessappender"/>
     </logger>
 
+    <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
+
     <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="exceptionlog"/>
         <appender-ref ref="infolog"/>
