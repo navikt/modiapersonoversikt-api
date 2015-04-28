@@ -32,17 +32,6 @@ public class FilterParametereTest {
     }
 
     @Test
-    public void filtrererBortUtbetalingUtenforDatointervall() {
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.hovedytelsedato, now().minusYears(2))
-                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
-                .with(Hovedytelse.ytelse, DAGPENGER);
-
-        assertFalse(filterparams.evaluate(ytelse));
-    }
-
-    @Test
     public void filtrererBortUtbetalingForAnnenMottakertype() {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
