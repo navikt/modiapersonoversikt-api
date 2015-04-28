@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk;
 
 
-import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
@@ -21,28 +20,23 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        KodeverkV2EndpointConfig.class,
-})
+@ContextConfiguration(classes = {KodeverkV2EndpointConfig.class,})
 public class KodeverkCacheTest extends CacheTest {
 
     public static final String CACHE_NAME = "kodeverkCache";
+
+    @Inject
+    private KodeverkPortType kodeverk;
+
+    public KodeverkCacheTest() {
+        super(CACHE_NAME);
+    }
 
     @BeforeClass
     public static void fixEnvironment() {
         setProperty("kodeverkendpoint.v2.url", "http://www.value.com");
         setProperty(KODEVERK_KEY, "true");
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
-    }
-
-    @Inject
-    private KodeverkPortType kodeverk;
-
-    @Inject
-    private KodeverkClient kodeverkClient;
-
-    public KodeverkCacheTest() {
-        super(CACHE_NAME);
     }
 
     @Test
@@ -59,17 +53,4 @@ public class KodeverkCacheTest extends CacheTest {
 
         assertThat(antallCacheinstanser, is(2));
     }
-
-    //@Test -- Kodeverklienten har innebygget caching.
-    public void cacheManager_harEntryForKodeverkClient_etterKallTilKodeverkClient() {
-        kodeverkClient.hentFoersteTermnavnForKode("a", "b");
-        kodeverkClient.hentFoersteTermnavnForKode("a", "b");
-        kodeverkClient.hentKodeverk("ab");
-        kodeverkClient.hentKodeverk("ab");
-
-        int antallCacheinstanser = getCache().getSize();
-
-        assertThat(antallCacheinstanser, is(2));
-    }
-
 }

@@ -10,17 +10,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
-import static java.lang.System.setProperty;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        HenvendelseSoknaderEndpointConfig.class
-})
+@ContextConfiguration(classes = {HenvendelseSoknaderEndpointConfig.class})
 public class HenvendelseSoknaderCacheTest extends CacheTest {
 
     public static final String CACHE_NAME = "endpointCache";

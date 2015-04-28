@@ -9,7 +9,9 @@ import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
@@ -20,13 +22,12 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,11 +41,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {HenvendelseTestConfig.class, OppgaveTestConfig.class})
+@RunWith(MockitoJUnitRunner.class)
 public class HenvendelseUtsendingServiceTest {
 
     private final static String FNR = "fnr";
@@ -78,13 +76,11 @@ public class HenvendelseUtsendingServiceTest {
     public Ruting ruting;
     @Mock
     public PropertyResolver propertyResolver;
-
-    @Inject
-    @Named("pep")
+    @Mock
     private EnforcementPoint pep;
-    @Inject
+    @Mock
     private HenvendelsePortType henvendelsePortType;
-    @Inject
+    @Mock
     protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
 
     @InjectMocks
@@ -92,7 +88,6 @@ public class HenvendelseUtsendingServiceTest {
 
     @Before
     public void init() {
-        MockitoAnnotations.initMocks(this);
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(
                 new WSSendUtHenvendelseResponse().withBehandlingsId("ID_1")
         );

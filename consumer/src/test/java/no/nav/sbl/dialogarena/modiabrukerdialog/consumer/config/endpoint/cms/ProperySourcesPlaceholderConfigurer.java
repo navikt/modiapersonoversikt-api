@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.testconfig;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

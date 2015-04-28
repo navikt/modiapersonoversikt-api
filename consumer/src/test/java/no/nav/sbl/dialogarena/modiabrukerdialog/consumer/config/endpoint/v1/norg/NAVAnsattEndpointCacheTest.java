@@ -20,10 +20,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        NAVAnsattEndpointConfig.class
-})
+@ContextConfiguration(classes = {NAVAnsattEndpointConfig.class})
 public class NAVAnsattEndpointCacheTest extends CacheTest {
+
     public static final String CACHE_NAME = "asbogosysAnsatt";
 
     @Inject
