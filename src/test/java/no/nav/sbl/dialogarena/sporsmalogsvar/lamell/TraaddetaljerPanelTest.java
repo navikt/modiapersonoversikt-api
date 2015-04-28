@@ -93,4 +93,15 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     private Melding createStandardMelding() {
         return createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1");
     }
+
+    @Test
+    public void skalIkkeKunneBesvareTraadSomErMarkertSomFeilsendt() {
+        Melding melding = createStandardMelding();
+        String fnr = "13245679810";
+        melding.markertSomFeilsendtAv = "navIdent";
+        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
+
+        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM(fnr, henvendelseBehandlingService)))
+                .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
+    }
 }

@@ -71,7 +71,8 @@ public class TraadVM implements Serializable {
     public boolean traadKanBesvares() {
         return SPORSMAL.contains(getEldsteMelding().melding.meldingstype) &&
                 !getEldsteMelding().melding.kassert
-                && !getEldsteMelding().erKontorsperret();
+                && !getEldsteMelding().erKontorsperret()
+                && !getEldsteMelding().erFeilsendt();
     }
 
 }
