@@ -36,7 +36,7 @@ public class JournalforingsPanel extends Panel {
                 new AjaxLink<InnboksVM>("avbrytJournalforing") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        ((AnimertPanel) getParent()).lukkPanel(target);
+                        ((AnimertPanel) JournalforingsPanel.this.getParent()).lukkPanel(target);
                     }
                 });
     }
