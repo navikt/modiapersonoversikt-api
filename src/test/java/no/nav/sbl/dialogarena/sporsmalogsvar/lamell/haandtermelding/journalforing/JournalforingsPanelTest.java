@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,7 +16,6 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @ContextConfiguration(classes = {ServiceTestContext.class})
@@ -36,7 +34,6 @@ public class JournalforingsPanelTest extends WicketPageTest {
         doThrow(Exception.class).when(sakerService).hentSaker(anyString());
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("id", new InnboksVM("", henvendelseBehandlingService));
-        journalforingsPanel.togglePanel(mock(AjaxRequestTarget.class));
 
         wicket.goToPageWith(journalforingsPanel)
                 .should().containComponent(thatIsVisible().and(withId("tekniskFeilContainer")))

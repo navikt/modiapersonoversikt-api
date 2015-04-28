@@ -19,7 +19,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel.TRAAD_JOURNALFORT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.AnimertJournalforingsPanel.TRAAD_JOURNALFORT;
 
 public class JournalforingsPanelEnkeltSak extends Panel {
 

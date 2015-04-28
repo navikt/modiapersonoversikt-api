@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -14,10 +14,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
-public class JournalforingsPanel extends AnimertPanel {
-
-    public static final String TRAAD_JOURNALFORT = "sos.journalforingspanel.traadJournalfort";
-
+public class JournalforingsPanel extends Panel {
     private final JournalforingsPanelEnkeltSak journalforingsPanelEnkeltSak;
     private final JournalforingsPanelVelgSak journalforingsPanelVelgSak;
     private final IModel<Boolean> tekniskFeil = Model.of(false);
@@ -39,7 +36,7 @@ public class JournalforingsPanel extends AnimertPanel {
                 new AjaxLink<InnboksVM>("avbrytJournalforing") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        lukkPanel(target);
+                        ((AnimertPanel) getParent()).lukkPanel(target);
                     }
                 });
     }
@@ -53,27 +50,17 @@ public class JournalforingsPanel extends AnimertPanel {
         };
     }
 
-    @Override
-    public void togglePanel(AjaxRequestTarget target) {
-        if (!isVisibilityAllowed()) {
-            try {
-                oppdatereJournalforingssaker();
-                tekniskFeil.setObject(false);
-            } catch (Exception e) {
-                tekniskFeil.setObject(true);
-            }
-        }
-        super.togglePanel(target);
-    }
-
-    @RunOnEvents(TRAAD_JOURNALFORT)
-    @Override
-    public void lukkPanel(AjaxRequestTarget target) {
-        super.lukkPanel(target);
-    }
-
     public void oppdatereJournalforingssaker() {
-        journalforingsPanelVelgSak.oppdater();
-        journalforingsPanelEnkeltSak.oppdater();
+        try {
+            journalforingsPanelVelgSak.oppdater();
+            journalforingsPanelEnkeltSak.oppdater();
+            setTekniskFeil(false);
+        } catch (Exception e) {
+            setTekniskFeil(true);
+        }
+    }
+
+    public void setTekniskFeil(boolean value) {
+        this.tekniskFeil.setObject(value);
     }
 }
