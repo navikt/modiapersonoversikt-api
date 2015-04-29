@@ -72,16 +72,16 @@ public class AnimertJournalforingsPanel extends AnimertPanel {
         super.lukkPanel(target);
     }
 
-    private static abstract class Ajax extends AbstractDefaultAjaxBehavior {
+    private abstract static class Ajax extends AbstractDefaultAjaxBehavior {
         @Override
         public void renderHead(final Component component, final IHeaderResponse response) {
             super.renderHead(component, response);
             CharSequence js = getCallbackScript(component);
-            handleCallbackScript(response, js, component);
+            handleCallbackScript(response, js);
         }
 
         private void handleCallbackScript(final IHeaderResponse response,
-                                          final CharSequence callbackScript, final Component component) {
+                                          final CharSequence callbackScript) {
             response.render(OnDomReadyHeaderItem.forScript(callbackScript));
         }
 
