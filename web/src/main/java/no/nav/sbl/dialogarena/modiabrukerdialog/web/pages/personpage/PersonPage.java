@@ -85,7 +85,7 @@ public class PersonPage extends BasePage {
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String ERROR = "error";
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
-    public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
+    public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(HenvendelseVM.class, "jquery-ui-selectmenu.min.js");
 

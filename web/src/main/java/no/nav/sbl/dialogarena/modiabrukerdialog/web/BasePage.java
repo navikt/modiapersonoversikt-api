@@ -16,7 +16,10 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 public class BasePage extends WebPage {
 
 	public static final ConditionalCssResource MODIA_LAYOUT_IE_CSS = new ConditionalCssResource(
-			new CssResourceReference(BasePage.class, "css/layout-ie9.css"), "screen", "lt IE 10");
+			new CssResourceReference(BasePage.class, "css/felles/layout-ie9.css"), "screen", "lt IE 10");
+
+    public static final ConditionalCssResource KJERNEINFO_IE9_CSS = new ConditionalCssResource(
+            new CssResourceReference(BasePage.class, "css/komponenter/kjerneinfo_ie9.css"), "screen", "lt IE 10");
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(PersonPage.class, "lokal.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
