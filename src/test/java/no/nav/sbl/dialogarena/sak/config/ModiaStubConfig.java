@@ -66,7 +66,7 @@ public class ModiaStubConfig {
         CmsContentRetriever cmsMock = new CmsContentRetriever() {
             @Override
             public String hentTekst(String key) {
-                switch(key) {
+                switch (key) {
                     case "mange.saker":
                         return "Vis alle {0} saker";
                     case "ingen.saker":
@@ -77,9 +77,10 @@ public class ModiaStubConfig {
                         return "default tekst fra CMS-mock";
                 }
             }
+
             @Override
             public String hentArtikkel(String key) {
-                switch(key) {
+                switch (key) {
                     default:
                         return "default tekst fra CMS-mock";
                 }

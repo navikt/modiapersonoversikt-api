@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.Filter;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
@@ -23,9 +24,7 @@ import javax.inject.Inject;
 import java.util.Locale;
 
 import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.RETURNS_MOCKS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Configuration
 public class WicketTesterConfig {
@@ -40,12 +39,14 @@ public class WicketTesterConfig {
             protected void init() {
                 super.init();
                 getResourceSettings().getStringResourceLoaders().add(0, new IStringResourceLoader() {
-                    @Override public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
+                    @Override
+                    public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
                         return "Mock-tekst fra CMS";
                     }
 
-                    @Override public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
-                        if(key.equals("mange.saker")) {
+                    @Override
+                    public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
+                        if (key.equals("mange.saker")) {
                             return "Vis alle {0} saker";
                         }
                         return "Mock-tekst fra CMS";
@@ -78,14 +79,15 @@ public class WicketTesterConfig {
 
     @Bean
     public BulletproofCmsService bulletproofCmsService() {
-        return new BulletproofCmsService();
+        return new BulletproofCmsServiceImpl();
     }
 
     @Bean
     public Filter sakOgBehandlingFilter() {
         Filter mock = mock(Filter.class, RETURNS_MOCKS);
         when(mock.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
-            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
             }
         });

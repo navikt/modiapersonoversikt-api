@@ -33,7 +33,7 @@ public class SaksoversiktLerretTest extends AbstractWicketTest {
     }
 
     @Test
-    public void skalÅpneLerretUtenFeil() {
+    public void skalAapneLerretUtenFeil() {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
         List<GenerellBehandling> behandlinger = asList(lagBehandling());
         TemaVM temaVM = new TemaVM().withSistOppdaterteBehandling(lagBehandling()).withTemaKode("abc");

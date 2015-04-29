@@ -20,7 +20,7 @@ public class SaksoversiktWidgetPanelTest extends AbstractWicketTest {
     }
 
     @Test
-    public void skalÅpneWidgetUtenFeil() {
+    public void skalAapneWidgetUtenFeil() {
 
     }
 

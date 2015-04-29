@@ -16,7 +16,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BulletProofKodeverkServiceTest {
+public class BulletProofKodeverkServiceImplTest {
 
     public static final String SKJEMANUMMER_DAGPENGER = "NAV 04-01.03";
     public static final String TEMANAVN_DAGPENGER = "Dagpenger";
@@ -29,7 +29,7 @@ public class BulletProofKodeverkServiceTest {
     private static final String EXCEPTION_TITTEL = "exc_tittel";
 
     @InjectMocks
-    private BulletProofKodeverkService kodeverkWrapper = new BulletProofKodeverkService();
+    private BulletProofKodeverkServiceImpl kodeverkWrapper = new BulletProofKodeverkServiceImpl();
 
     @Mock
     private Kodeverk lokaltKodeverk;
