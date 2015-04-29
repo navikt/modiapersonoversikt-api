@@ -17,7 +17,7 @@ public class SaksoversiktWidget extends AsyncWidget<TemaVM> {
     private final String fnr;
 
     public SaksoversiktWidget(String id, String initial, String fnr) {
-        super(id, initial, 5, "widget.error.default", "mange.saker");
+        super(id, initial, new PropertyKeys().withErrorKey("saker.feilet").withOverflowKey("mange.saker").withEmptyKey("ingen.saker"));
         this.fnr = fnr;
     }
 
