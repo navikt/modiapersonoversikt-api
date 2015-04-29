@@ -122,6 +122,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modia-felleskomponenter</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-test</artifactId>
             <version>1.2</version>
@@ -164,12 +170,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
             <version>1.13</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modia-felleskomponenter</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
