@@ -1,6 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.modig.core.context.*;
+import no.nav.modig.core.context.ModigSecurityConstants;
+import no.nav.modig.core.context.SubjectHandler;
+import no.nav.modig.core.context.SubjectHandlerUtils;
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
@@ -16,19 +19,17 @@ import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.DEFAULT_TIME_TO_LIVE_MINUTES;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.LUCENE_PATTERN;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok.REPLACEMENT_STRING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSokImpl.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTimeUtils.setCurrentMillisOffset;
 
-public class MeldingerSokTest {
+public class MeldingerSokImplTest {
 
     private static final String NAV_IDENT = "Z999999";
     private static final String FNR = "11111111111";
-    private MeldingerSok meldingerSok = new MeldingerSok();
+    private MeldingerSokImpl meldingerSok = new MeldingerSokImpl();
 
     @Before
     public void setup() {

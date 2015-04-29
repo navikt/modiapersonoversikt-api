@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GsakServiceTest {
+public class GsakServiceImplTest {
 
     private static final String JOURNALFORENDE_ENHET = "2222";
 
@@ -45,7 +45,7 @@ public class GsakServiceTest {
     private AnsattService ansattWS;
 
     @InjectMocks
-    private GsakService gsakService;
+    private GsakServiceImpl gsakService;
 
 
     @Before
@@ -136,7 +136,7 @@ public class GsakServiceTest {
         verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
         WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
 
-        assertThat(request.getOpprettetAvEnhetId(), is(GsakService.DEFAULT_OPPRETTET_AV_ENHET_ID));
+        assertThat(request.getOpprettetAvEnhetId(), is(GsakServiceImpl.DEFAULT_OPPRETTET_AV_ENHET_ID));
 
     }
 
