@@ -193,7 +193,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new UtbetalingLerret(id, fnrFromRequest);
+                return new AjaxLazyLoadLerret(id) {
+                    @Override
+                    public Component getLazyLoadComponent(String markupId) {
+                        return new UtbetalingLerret(markupId, fnrFromRequest);
+                    }
+                };
             }
         });
     }
