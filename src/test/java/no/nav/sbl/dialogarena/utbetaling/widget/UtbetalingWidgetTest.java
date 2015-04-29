@@ -45,31 +45,31 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
     @Test
     public void transformererKorrekteUtbetalingerTilVMer() {
         List<Record<Hovedytelse>> hovedytelser = Arrays.asList(
-            new Record<Hovedytelse>()
-                .with(Hovedytelse.id, "1")
-                .with(Hovedytelse.nettoUtbetalt, 0D)
-                .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                .with(Hovedytelse.hovedytelsedato, now()),
-            new Record<Hovedytelse>()
-                    .with(Hovedytelse.id, "2")
-                    .with(Hovedytelse.nettoUtbetalt, 0D)
-                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW - 1)),
-            new Record<Hovedytelse>()
-                    .with(Hovedytelse.id, "3")
-                    .with(Hovedytelse.nettoUtbetalt, 0D)
-                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW)),
-            new Record<Hovedytelse>()
-                    .with(Hovedytelse.id, "4")
-                    .with(Hovedytelse.nettoUtbetalt, 0D)
-                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW).toDateMidnight().toDateTime().minusMillis(1)),
-            new Record<Hovedytelse>()
-                    .with(Hovedytelse.id, "5")
-                    .with(Hovedytelse.nettoUtbetalt, 0D)
-                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW + 1))
+                new Record<Hovedytelse>()
+                        .with(Hovedytelse.id, "1")
+                        .with(Hovedytelse.nettoUtbetalt, 0D)
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
+                        .with(Hovedytelse.hovedytelsedato, now()),
+                new Record<Hovedytelse>()
+                        .with(Hovedytelse.id, "2")
+                        .with(Hovedytelse.nettoUtbetalt, 0D)
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
+                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW - 1)),
+                new Record<Hovedytelse>()
+                        .with(Hovedytelse.id, "3")
+                        .with(Hovedytelse.nettoUtbetalt, 0D)
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
+                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW)),
+                new Record<Hovedytelse>()
+                        .with(Hovedytelse.id, "4")
+                        .with(Hovedytelse.nettoUtbetalt, 0D)
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
+                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW).toDateMidnight().toDateTime().minusMillis(1)),
+                new Record<Hovedytelse>()
+                        .with(Hovedytelse.id, "5")
+                        .with(Hovedytelse.nettoUtbetalt, 0D)
+                        .with(Hovedytelse.utbetaltTil, dummyAktoer())
+                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW + 1))
         );
 
         List<HovedytelseVM> hovedytelseVMs = UtbetalingWidget.transformUtbetalingToVM(hovedytelser);
@@ -159,7 +159,7 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
     }
 
     @Test
-    public void viserFemUtbetalingerSisteTreMaanedeneMedFemAktuelle(){
+    public void viserFemUtbetalingerSisteTreMaanedeneMedFemAktuelle() {
         List<Record<Hovedytelse>> list = Arrays.asList(
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "1")
@@ -195,15 +195,15 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
 
         when(utbetalingService.hentUtbetalinger(Matchers.matches(FNR), Matchers.any(LocalDate.class), Matchers.any(LocalDate.class))).thenReturn(list);
 
-        UtbetalingWidget utbetalingWidget = new UtbetalingWidget("utbetalingWidget","initial", FNR);
+        UtbetalingWidget utbetalingWidget = new UtbetalingWidget("utbetalingWidget", "initial", FNR);
         wicketTester.goToPageWith(utbetalingWidget);
 
-        wicketTester.should().containComponents(5,is(ofType(UtbetalingWidgetPanel.class)));
+        wicketTester.should().containComponents(5, is(ofType(UtbetalingWidgetPanel.class)));
         wicketTester.should().notContainPatterns("Vis alle utbetalingene");
     }
 
     @Test
-    public void viserFireUtbetalingerSisteTreMaanedeneMedSyvAktuelle(){
+    public void viserFireUtbetalingerSisteTreMaanedeneMedSyvAktuelle() {
         List<Record<Hovedytelse>> list = Arrays.asList(
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "1")
@@ -249,10 +249,10 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
 
         when(utbetalingService.hentUtbetalinger(Matchers.matches(FNR), Matchers.any(LocalDate.class), Matchers.any(LocalDate.class))).thenReturn(list);
 
-        UtbetalingWidget utbetalingWidget = new UtbetalingWidget("utbetalingWidget","initial", FNR);
+        UtbetalingWidget utbetalingWidget = new UtbetalingWidget("utbetalingWidget", "initial", FNR);
         wicketTester.goToPageWith(utbetalingWidget);
 
-        wicketTester.should().containComponents(4,is(ofType(UtbetalingWidgetPanel.class)));
+        wicketTester.should().containComponents(4, is(ofType(UtbetalingWidgetPanel.class)));
         wicketTester.should().containPatterns("Vis alle utbetalingene");
     }
 }
