@@ -42,7 +42,7 @@
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
         <modig.wicket.version>2.0.53</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
-        <modig.lang.version>2.0.2</modig.lang.version>
+        <modig.lang.version>2.0.3</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.log.version>1.1.2</modig.log.version>
         <hamcrest.version>1.3</hamcrest.version>
@@ -64,7 +64,7 @@
         <personsok.version>1.0.82</personsok.version>
         <kjerneinfo.versjon>1.0.111</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.0.76</utbetaling.version>
+        <utbetaling.version>2.0.77</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
