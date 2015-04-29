@@ -145,7 +145,6 @@ public class Innboks extends Lerret {
 
     @Override
     public void onOpening(AjaxRequestTarget target) {
-        innboksVM.oppdaterMeldinger();
         if (target != null) {
             target.appendJavaScript("Meldinger.addKeyNavigation();");
         }
