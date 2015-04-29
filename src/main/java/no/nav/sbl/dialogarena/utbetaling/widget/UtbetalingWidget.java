@@ -16,7 +16,6 @@ import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.UtbetalingV
 
 public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
 
-    private static final int MAX_NUMBER_OF_UTBETALINGER = 5;
     public static final int NUMBER_OF_MONTHS_TO_SHOW = 3;
 
     private final String fnr;
@@ -24,8 +23,7 @@ public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
     private UtbetalingService utbetalingService;
 
     public UtbetalingWidget(String id, String initial, String fnr) {
-        super(id, initial, MAX_NUMBER_OF_UTBETALINGER,
-                "utbetalinger.feilet", "widget.utbetalingWidget.flereUtbetalinger");
+        super(id, initial, new PropertyKeys().withErrorKey("utbetalinger.feilet").withOverflowKey("widget.utbetalingWidget.flereUtbetalinger").withEmptyKey("ingen.utbetalinger"));
         this.fnr = fnr;
     }
 
