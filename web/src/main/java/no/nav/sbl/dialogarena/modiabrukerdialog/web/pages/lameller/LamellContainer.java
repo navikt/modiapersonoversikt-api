@@ -223,7 +223,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             public Lerret createLerret(String id) {
                 return new AjaxLazyLoadLerret(id) {
                     @Override
-                    public Component getLazyLoadComponent(String markupId) {
+                    public Lerret getLazyLoadComponent(String markupId) {
                         return new Innboks(markupId, fnrFromRequest);
                     }
                 };
