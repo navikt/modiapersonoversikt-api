@@ -34,6 +34,7 @@ public class JournalforingsPanelTest extends WicketPageTest {
         doThrow(Exception.class).when(sakerService).hentSaker(anyString());
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("id", new InnboksVM("", henvendelseBehandlingService));
+        journalforingsPanel.oppdatereJournalforingssaker();
 
         wicket.goToPageWith(journalforingsPanel)
                 .should().containComponent(thatIsVisible().and(withId("tekniskFeilContainer")))

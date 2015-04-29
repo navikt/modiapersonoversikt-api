@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.AnimertJournalforingsPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel;
 import org.junit.Test;
@@ -124,7 +125,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
 
         wicket.goToPageWith(new HaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .click().link(containedInComponent(withId(JOURNALFOR_VALG_ID)))
-                .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanel.class)))
+                .should().containComponent(thatIsVisible().and(ofType(AnimertJournalforingsPanel.class)))
                 .should().containComponent(thatIsInvisible().and(ofType(OppgavePanel.class)));
     }
 
