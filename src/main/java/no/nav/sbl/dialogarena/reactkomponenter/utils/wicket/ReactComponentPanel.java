@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class ReactComponentPanel extends Panel {
 
-    private static final String JS_REF_REACT = "window.ModiaJS.React";
-    private static final String JS_REF_COMPONENTS = "window.ModiaJS.Components";
-    private static final String JS_REF_INITIALIZED_COMPONENTS = "window.ModiaJS.InitializedComponents";
+    protected static final String JS_REF_REACT = "window.ModiaJS.React";
+    protected static final String JS_REF_COMPONENTS = "window.ModiaJS.Components";
+    protected static final String JS_REF_INITIALIZED_COMPONENTS = "window.ModiaJS.InitializedComponents";
 
     private String componentName;
     private Map<String, Object> props;
