@@ -2,18 +2,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.widget.LenkeWidget;
-import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.modia.widget.async.AsyncWidget;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
-import org.apache.commons.collections15.Closure;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
