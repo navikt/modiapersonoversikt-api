@@ -11,6 +11,6 @@ public interface HenvendelseUtsendingService {
 
     List<Melding> hentTraad(String fnr, String traadId);
 
-    public static class OppgaveErFerdigstilt extends Exception {
+    class OppgaveErFerdigstilt extends Exception {
     }
 }

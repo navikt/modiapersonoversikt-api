@@ -17,7 +17,7 @@ public interface OppgaveBehandlingService {
 
     boolean oppgaveErFerdigstilt(String oppgaveid);
 
-    public static class FikkIkkeTilordnet extends Exception {
+    class FikkIkkeTilordnet extends Exception {
         public FikkIkkeTilordnet(Throwable cause) {
             super(cause);
         }
