@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HenvendelseUtsendingServiceTest {
+public class HenvendelseUtsendingServiceImplTest {
 
     private final static String FNR = "fnr";
     private final static String TRAAD_ID = "id";
@@ -84,7 +84,7 @@ public class HenvendelseUtsendingServiceTest {
     protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
 
     @InjectMocks
-    private HenvendelseUtsendingService henvendelseUtsendingService;
+    private HenvendelseUtsendingServiceImpl henvendelseUtsendingService;
 
     @Before
     public void init() {

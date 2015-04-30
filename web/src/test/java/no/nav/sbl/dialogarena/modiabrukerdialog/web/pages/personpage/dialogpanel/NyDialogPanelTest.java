@@ -3,24 +3,29 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.VelgSakPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,23 +42,17 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingsty
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OVRG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.TestUtils.createMockSaker;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        ConsumerServicesMockContext.class,
-        EndpointMockContext.class})
+@DirtiesContext(classMode = AFTER_CLASS)
+@ContextConfiguration(classes = {DialogPanelMockContext.class})
 public class NyDialogPanelTest extends WicketPageTest {
 
     private static final String VALGT_ENHET = "valgtEnhet";
@@ -83,18 +82,19 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", ""), new GrunnInfo.Saksbehandler("", "", ""));
         saker = createMockSaker();
+        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", ""), new GrunnInfo.Saksbehandler("", "", ""));
+        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
+
         when(sakerService.hentSaker(anyString())).thenReturn(saker);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
-
-        testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
-        MockitoAnnotations.initMocks(this);
+        when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(false);
+        initMocks(this);
     }
 
     @Test
     public void inneholderReferatspesifikkeKomponenter() {
-        wicket.goToPageWith(testNyDialogPanel)
+        wicket.goToPageWith(new NyDialogPanel("id", grunnInfo))
                 .should().containComponent(withId("temagruppe").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
                 .should().containComponent(withId("nydialogform").and(ofType(Form.class)))
@@ -119,6 +119,8 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferattypeMedRiktigeVerdierTilHenvendelse() throws Exception {
+        reset(henvendelseUtsendingService);
+
         wicket.goToPageWith(testNyDialogPanel)
                 .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", FRITEKST)
@@ -142,6 +144,8 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderOgJournalforerSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws Exception {
+        reset(henvendelseUtsendingService);
+
         settISporsmalsModus();
 
         Sak sak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
@@ -172,6 +176,8 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void girFeilmeldingDersomManSenderSporsmalUtenValgtJournalforingssak() throws Exception {
+        reset(henvendelseUtsendingService);
+
         settISporsmalsModus();
 
         wicket.goToPageWith(testNyDialogPanel)
@@ -287,8 +293,6 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void ingenDefaultKanalHvisSaksbehandlerIkkeErTilknyttetKontaktsenter() {
-        when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(false);
-
         wicket.goToPageWith(testNyDialogPanel);
 
         HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("nydialogform").and(ofType(Form.class))).getDefaultModelObject();

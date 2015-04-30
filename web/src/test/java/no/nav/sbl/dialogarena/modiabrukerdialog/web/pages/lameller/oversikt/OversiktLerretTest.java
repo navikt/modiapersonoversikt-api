@@ -2,14 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.KodeverkV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
-import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,17 +19,9 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        EndpointMockContext.class,
-        SykepengerWidgetMockContext.class,
-        UtbetalingLamellContext.class,
-        SporsmalOgSvarContext.class,
-        SaksoversiktServiceConfig.class,
-        KodeverkV2PortTypeMock.class,
-        PersonPageMockContext.class
-})
+@DirtiesContext(classMode = AFTER_CLASS)
+@ContextConfiguration(classes = {PersonPageMockContext.class})
 public class OversiktLerretTest extends WicketPageTest {
 
     @Inject

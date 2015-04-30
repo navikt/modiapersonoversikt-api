@@ -23,13 +23,13 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultSaksbehandlerInnstillingerServiceTest {
+public class SaksbehandlerInnstillingerServiceImplTest {
 
     @Mock
     private AnsattService ansattService;
 
     @InjectMocks
-    private DefaultSaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private SaksbehandlerInnstillingerServiceImpl saksbehandlerInnstillingerService;
 
     private WicketTester tester = new WicketTester();
 

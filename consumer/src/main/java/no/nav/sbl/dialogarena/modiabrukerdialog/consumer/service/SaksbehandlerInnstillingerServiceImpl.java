@@ -12,7 +12,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet.ENHET_ID;
 
 
-public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerInnstillingerService {
+public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnstillingerService {
 
     @Inject
     private AnsattService ansattService;

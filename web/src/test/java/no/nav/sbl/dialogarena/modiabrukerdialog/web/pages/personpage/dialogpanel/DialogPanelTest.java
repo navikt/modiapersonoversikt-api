@@ -14,7 +14,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.velgdialogpanel.VelgDialogPanel;
@@ -44,11 +44,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {PersonPageMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = AFTER_CLASS)
+@ContextConfiguration(classes = {DialogPanelMockContext.class})
 public class DialogPanelTest extends WicketPageTest {
 
     private static final String FNR = "fnr";
@@ -154,6 +154,8 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void tilordnerIkkeOppgaveIGsakDersomerTraadenIkkeErEtEnkeltstaaendeSporsmalFraBrukerVedEventetSVAR_PAA_MELDING() throws OppgaveBehandlingService.FikkIkkeTilordnet {
+        reset(oppgaveBehandlingService);
+
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
@@ -162,6 +164,8 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void tilordnerOppgaveIGsakDersomerTraadenErEtEnkeltstaaendeSporsmalFraBrukerVedEventetSVAR_PAA_MELDING() throws OppgaveBehandlingService.FikkIkkeTilordnet {
+        reset(oppgaveBehandlingService);
+
         Melding spsm = lagBrukerSporsmalMedOppgaveId();
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
 

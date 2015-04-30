@@ -6,7 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.SaksbehandlerInnstillingerServiceImpl;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.DefaultJournalfortTemaAttributeLocatorDelegate;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.springframework.cache.annotation.EnableCaching;
@@ -46,7 +46,7 @@ public class JournalfortTemaPipConfig {
 
     @Bean
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return new DefaultSaksbehandlerInnstillingerService();
+        return new SaksbehandlerInnstillingerServiceImpl();
     }
 
 }

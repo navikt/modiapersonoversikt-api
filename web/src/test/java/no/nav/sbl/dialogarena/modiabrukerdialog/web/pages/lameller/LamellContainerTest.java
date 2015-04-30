@@ -11,25 +11,26 @@ import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_FORELDREPENGER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_KONTRAKTER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_SYKEPENGER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.*;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {
         WicketTesterConfig.class,
         SykmeldingsperiodePanelMockContext.class,
         ForeldrepengerPanelMockContext.class,
         LamellServicesAndLoaders.class})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class LamellContainerTest {
 
     private LamellContainer lamellContainer;

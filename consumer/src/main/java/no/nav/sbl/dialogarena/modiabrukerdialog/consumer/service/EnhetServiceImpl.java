@@ -18,7 +18,7 @@ import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl.TIL_ANSATTENHET;
 
-public class DefaultEnhetService implements EnhetService {
+public class EnhetServiceImpl implements EnhetService {
 
     @Inject
     private GOSYSNAVOrgEnhet enhetWS;

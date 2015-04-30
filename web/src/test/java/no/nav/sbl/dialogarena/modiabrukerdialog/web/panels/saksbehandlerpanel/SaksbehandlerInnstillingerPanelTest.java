@@ -5,9 +5,8 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
@@ -26,16 +25,13 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerp
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_CLASS)
-@ContextConfiguration(classes = {
-        KjerneinfoPepMockContext.class,
-        SaksbehandlerInnstillingerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = AFTER_CLASS)
+@ContextConfiguration(classes = {SaksbehandlerInnstillingerPanelMockContext.class})
 public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Inject
-    private DefaultSaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private AnsattService ansattService;
 

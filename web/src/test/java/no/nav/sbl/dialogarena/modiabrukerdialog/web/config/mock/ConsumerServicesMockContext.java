@@ -33,6 +33,11 @@ public class ConsumerServicesMockContext {
     }
 
     @Bean
+    public EnhetService enhetService() {
+        return mock(EnhetService.class);
+    }
+
+    @Bean
     public LDAPService ldapService() {
         LDAPService mock = mock(LDAPService.class);
         when(mock.hentSaksbehandler(anyString())).thenReturn(Optional.<Attributes>none());

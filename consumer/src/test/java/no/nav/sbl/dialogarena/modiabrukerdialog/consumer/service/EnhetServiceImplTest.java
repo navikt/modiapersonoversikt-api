@@ -26,13 +26,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultEnhetServiceTest {
+public class EnhetServiceImplTest {
 
     @Mock
     private GOSYSNAVOrgEnhet enhetWS;
 
     @InjectMocks
-    private DefaultEnhetService defaultEnhetService;
+    private EnhetServiceImpl enhetServiceImpl;
 
     @Test
     public void skalHenteAlleTyperEnheter() throws FinnNAVEnhetFaultGOSYSGeneriskMsg {
@@ -43,7 +43,7 @@ public class DefaultEnhetServiceTest {
         enhetListe.getNAVEnheter().add(navEnhet);
         when(enhetWS.finnNAVEnhet(any(ASBOGOSYSFinnNAVEnhetRequest.class))).thenReturn(enhetListe);
 
-        List<AnsattEnhet> enheter = defaultEnhetService.hentAlleEnheter();
+        List<AnsattEnhet> enheter = enhetServiceImpl.hentAlleEnheter();
 
         verify(enhetWS, times(5)).finnNAVEnhet(any(ASBOGOSYSFinnNAVEnhetRequest.class));
         assertThat(enheter.size(), is(5));
@@ -58,7 +58,7 @@ public class DefaultEnhetServiceTest {
         enhetListe.getNAVEnheter().add(navEnhet);
         when(enhetWS.finnNAVEnhet(any(ASBOGOSYSFinnNAVEnhetRequest.class))).thenThrow(new FinnNAVEnhetFaultGOSYSGeneriskMsg()).thenReturn(enhetListe);
 
-        List<AnsattEnhet> enheter = defaultEnhetService.hentAlleEnheter();
+        List<AnsattEnhet> enheter = enhetServiceImpl.hentAlleEnheter();
 
         verify(enhetWS, times(5)).finnNAVEnhet(any(ASBOGOSYSFinnNAVEnhetRequest.class));
         assertThat(enheter.size(), is(4));
@@ -79,7 +79,7 @@ public class DefaultEnhetServiceTest {
         enhetListe.getNAVEnheter().addAll(asList(navEnhet3, navEnhet2, navEnhet1));
         when(enhetWS.finnNAVEnhet(any(ASBOGOSYSFinnNAVEnhetRequest.class))).thenReturn(enhetListe).thenReturn(new ASBOGOSYSNAVEnhetListe());
 
-        List<AnsattEnhet> enheter = defaultEnhetService.hentAlleEnheter();
+        List<AnsattEnhet> enheter = enhetServiceImpl.hentAlleEnheter();
 
         assertThat(enheter.get(0).enhetId, is(equalTo("1111")));
         assertThat(enheter.get(1).enhetId, is(equalTo("2222")));
@@ -94,7 +94,7 @@ public class DefaultEnhetServiceTest {
 
          when(enhetWS.hentNAVEnhet(any(ASBOGOSYSNavEnhet.class))).thenReturn(navEnhet1);
 
-         AnsattEnhet enhet = defaultEnhetService.hentEnhet("0219");
+         AnsattEnhet enhet = enhetServiceImpl.hentEnhet("0219");
 
          assertThat(navEnhet1.getEnhetsId(), is(equalTo(enhet.enhetId)));
          assertThat(navEnhet1.getEnhetsNavn(), is(equalTo(enhet.enhetNavn)));

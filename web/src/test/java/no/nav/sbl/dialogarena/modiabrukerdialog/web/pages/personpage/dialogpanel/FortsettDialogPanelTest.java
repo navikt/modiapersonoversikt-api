@@ -8,14 +8,14 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Saksbehandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.TidligereMeldingPanel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -25,7 +25,10 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -46,17 +49,12 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        ConsumerServicesMockContext.class,
-        EndpointMockContext.class})
+@DirtiesContext(classMode = AFTER_CLASS)
+@ContextConfiguration(classes = {DialogPanelMockContext.class})
 public class FortsettDialogPanelTest extends WicketPageTest {
 
     private static final String FNR = "fnr";
@@ -116,6 +114,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderHenvendelseMedRiktigeFelterTilHenvendelseUtsendingService() throws Exception {
+        reset(henvendelseUtsendingService);
+
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
@@ -136,6 +136,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderSvarDersomManVelgerTekstSomKanal() throws Exception {
+        reset(henvendelseUtsendingService);
+
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
@@ -150,6 +152,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferatDersomManVelgerTelefonSomKanal() throws Exception {
+        reset(henvendelseUtsendingService);
+
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
@@ -164,6 +168,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferatDersomManVelgerOppmoteSomKanal() throws Exception {
+        reset(henvendelseUtsendingService);
+
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
@@ -178,6 +184,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderSvarDersomManVelgerBrukerKanSvareMenHarValgtReferatSomKanal() throws Exception {
+        reset(henvendelseUtsendingService);
+
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
@@ -193,6 +201,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderIkkeSporsmalOgFaarFeilmeldingDersomManVelgerBrukerKanSvareOgSkriftligKanalMenIkkeVelgerJournalforingssak() throws Exception {
+        reset(henvendelseUtsendingService);
+
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
@@ -207,6 +217,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderOgJournalforerSporsmalDersomManVelgerBrukerKanSvareOgSkriftligKanalOgJournalforingssak() throws Exception {
+        reset(henvendelseUtsendingService);
+
         Sak sak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
         testFortsettDialogPanel.getModelObject().valgtSak = sak;
 
@@ -229,6 +241,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderOppgaveIdTilFerdigstillelseDersomDenneErSatt() throws Exception {
+        reset(henvendelseUtsendingService);
+
         String oppgaveId = "oppgaveid";
         wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), optional(oppgaveId)))
                 .inForm(withId("fortsettdialogform"))

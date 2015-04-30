@@ -25,12 +25,12 @@ public class ServiceConfig {
 
     @Bean
     public HenvendelseUtsendingService henvendelseUtsendingService() {
-        return new HenvendelseUtsendingService();
+        return new HenvendelseUtsendingServiceImpl();
     }
 
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService() {
-        return new OppgaveBehandlingService();
+        return new OppgaveBehandlingServiceImpl();
     }
 
     @Bean
@@ -40,12 +40,12 @@ public class ServiceConfig {
 
     @Bean
     public EnhetService enhetService() {
-        return new DefaultEnhetService();
+        return new EnhetServiceImpl();
     }
 
     @Bean
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return new DefaultSaksbehandlerInnstillingerService();
+        return new SaksbehandlerInnstillingerServiceImpl();
     }
 
     @Bean

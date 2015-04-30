@@ -36,7 +36,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl.ANTALL_PLUKK_FORSOK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl.DEFAULT_ENHET;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -46,7 +48,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OppgaveBehandlingServiceTest {
+public class OppgaveBehandlingServiceImplTest {
 
     @Captor
     ArgumentCaptor<WSFinnOppgaveListeRequest> finnOppgaveListeRequestCaptor;
@@ -67,7 +69,7 @@ public class OppgaveBehandlingServiceTest {
     private OppgavebehandlingV3 oppgavebehandlingWS;
 
     @InjectMocks
-    private OppgaveBehandlingService oppgaveBehandlingService;
+    private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
 
     @Before
     public void init() {
@@ -200,7 +202,7 @@ public class OppgaveBehandlingServiceTest {
     public void skalKonvertereFraWSOppgaveTilWSEndreOppgave() {
         WSOppgave oppgave = lagWSOppgave();
 
-        WSEndreOppgave endreOppgave = OppgaveBehandlingService.tilWSEndreOppgave(oppgave);
+        WSEndreOppgave endreOppgave = OppgaveBehandlingServiceImpl.tilWSEndreOppgave(oppgave);
 
         assertThat(endreOppgave.getOppgaveId(), is(oppgave.getOppgaveId()));
         assertThat(endreOppgave.getAnsvarligId(), is(oppgave.getAnsvarligId()));

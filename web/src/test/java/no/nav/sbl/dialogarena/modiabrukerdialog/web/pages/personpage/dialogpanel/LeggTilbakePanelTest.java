@@ -5,7 +5,6 @@ import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -16,6 +15,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,11 +27,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        ConsumerServicesMockContext.class,
-        EndpointMockContext.class})
+@DirtiesContext(classMode = AFTER_CLASS)
+@ContextConfiguration(classes = {ConsumerServicesMockContext.class})
 public class LeggTilbakePanelTest extends WicketPageTest {
 
     @Before

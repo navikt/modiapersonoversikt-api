@@ -34,9 +34,7 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -44,20 +42,14 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {PersonPageMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = AFTER_CLASS)
+@ContextConfiguration(classes = {PersonPageMockContext.class})
 public class PersonPageTest extends WicketPageTest {
 
     @Inject

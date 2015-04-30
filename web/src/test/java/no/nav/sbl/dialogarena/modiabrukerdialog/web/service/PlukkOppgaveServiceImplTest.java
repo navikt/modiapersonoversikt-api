@@ -7,8 +7,8 @@ import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,19 +28,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PlukkOppgaveServiceTest {
+public class PlukkOppgaveServiceImplTest {
 
     @Mock
     private OppgaveBehandlingService oppgaveBehandlingService;
-
     @Mock
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-
     @Mock
     private EnforcementPoint pep;
 
     @InjectMocks
-    private PlukkOppgaveService plukkOppgaveService;
+    private PlukkOppgaveServiceImpl plukkOppgaveService;
 
     @Before
     public void setUp() {

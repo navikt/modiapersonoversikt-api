@@ -14,8 +14,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TI
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {ModiaApplicationContext.class})
 public class ApplicationContextTest {
 
