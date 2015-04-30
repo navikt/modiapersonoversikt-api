@@ -35,7 +35,7 @@ public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
     }
 
     @Override
-    public List<HovedytelseVM> getFeedItems() throws Exception {
+    public List<HovedytelseVM> getFeedItems() {
         List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
         return transformUtbetalingToVM(hovedytelser);
     }
