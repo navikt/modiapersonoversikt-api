@@ -22,7 +22,7 @@ public class SaksoversiktWidget extends AsyncWidget<TemaVM> {
     }
 
     @Override
-    public List<TemaVM> getFeedItems() throws Exception {
+    public List<TemaVM> getFeedItems() {
         return saksoversiktService.hentTemaer(fnr);
     }
 
