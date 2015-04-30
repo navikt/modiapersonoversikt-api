@@ -20,7 +20,7 @@ public interface GsakService {
 
     void opprettGsakOppgave(NyOppgave nyOppgave);
 
-    public static class OppgaveErFerdigstilt extends Exception {
+    class OppgaveErFerdigstilt extends Exception {
         public OppgaveErFerdigstilt(Throwable cause) {
             super("Oppgaven er allerede ferdigstilt", cause);
         }
