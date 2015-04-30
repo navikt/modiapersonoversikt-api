@@ -10,9 +10,11 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLEnkeltKodeverk;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLKode;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLKodeverk;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLPeriode;
+import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLTerm;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +101,7 @@ public class StandardKodeverkImpl implements StandardKodeverk {
 
     @Override
     public String getArkivtemaNavn(String arkivtemaKode) {
-        return hentFoersteTermnavnFraKodeIKodeverk(arkivtemaKode, ARKIVTEMA_KODEVERKNAVN);
+        return hentFoersteGyldigeTermnavnFraGyldigKodeIKodeverk(arkivtemaKode, ARKIVTEMA_KODEVERKNAVN);
     }
 
     @Override
@@ -134,13 +136,32 @@ public class StandardKodeverkImpl implements StandardKodeverk {
         return kodeverk.get(kodeverknavn);
     }
 
-    private String hentFoersteTermnavnFraKodeIKodeverk(String kodenavn, String kodeverknavn) {
+    private String hentFoersteGyldigeTermnavnFraGyldigKodeIKodeverk(String kodenavn, String kodeverknavn) {
         for (XMLKode kode : kodeverkMedNavn(kodeverknavn).getKode()) {
-            if (kode.getNavn().equalsIgnoreCase(kodenavn)) {
-                return kode.getTerm().get(0).getNavn();
+            if (kode.getNavn().equalsIgnoreCase(kodenavn) && erGyldigPeriode(kode.getGyldighetsperiode())) {
+                for(XMLTerm term : kode.getTerm()) {
+                    if(erGyldigPeriode(term.getGyldighetsperiode())){
+                        return term.getNavn();
+                    }
+                }
             }
         }
         return null;
+    }
+
+    private boolean erGyldigPeriode(List<XMLPeriode> gyldighetsperiode) {
+        if(gyldighetsperiode == null || gyldighetsperiode.size() == 0) {
+            return true;
+        }
+        DateMidnight fom = gyldighetsperiode.get(0).getFom();
+        DateMidnight tom = gyldighetsperiode.get(0).getTom();
+        DateMidnight now = DateMidnight.now();
+
+        if(now.isAfter(fom) && now.isBefore(tom)) {
+            return true;
+        }
+
+        return false;
     }
 
     private XMLEnkeltKodeverk hentKodeverk(String navn) {
