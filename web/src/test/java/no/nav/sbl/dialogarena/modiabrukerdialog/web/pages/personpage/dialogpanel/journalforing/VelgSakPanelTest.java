@@ -4,7 +4,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +29,7 @@ public class VelgSakPanelTest extends WicketPageTest {
         doThrow(Exception.class).when(sakerService).hentSaker(anyString());
 
         VelgSakPanel velgSakPanel = new VelgSakPanel("id", "", new CompoundPropertyModel<>(new HenvendelseVM()));
-        velgSakPanel.togglePanel(mock(AjaxRequestTarget.class));
+        velgSakPanel.oppdaterSaker();
 
         wicket.goToPageWith(velgSakPanel)
                 .should().containComponent(thatIsVisible().and(withId("tekniskFeil")))

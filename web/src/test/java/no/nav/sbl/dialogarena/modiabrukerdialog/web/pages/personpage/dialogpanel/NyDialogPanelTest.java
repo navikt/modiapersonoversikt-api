@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.modig.wicket.test.FluentWicketTester;
+import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
@@ -12,14 +14,17 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInn
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.AjaxLazyLoadVelgSakPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.VelgSakPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -193,10 +198,12 @@ public class NyDialogPanelTest extends WicketPageTest {
     public void viserVelgSakPanelForSporsmalDersomManKlikkerValgtSakLenke() {
         settISporsmalsModus();
 
-        wicket.goToPageWith(testNyDialogPanel)
-                .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)))
-                .click().link(withId("valgtSakLenke"))
-                .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
+        FluentWicketTester<? extends WebApplication> tester = wicket.goToPageWith(testNyDialogPanel);
+
+        tester.should().containComponent(thatIsInvisible().and(ofType(AjaxLazyLoadVelgSakPanel.class)))
+                .click().link(withId("valgtSakLenke"));
+        tester.onComponent(ofType(AjaxLazyLoadVelgSakPanel.class)).executeAjaxBehaviors(BehaviorMatchers.ofType(AbstractDefaultAjaxBehavior.class));
+        tester.should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
                 .should().containComponent(thatIsVisible().and(ofType(VelgSakPanel.class)));
     }
 
@@ -204,9 +211,10 @@ public class NyDialogPanelTest extends WicketPageTest {
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerAvbryt() {
         settISporsmalsModus();
 
-        wicket.goToPageWith(testNyDialogPanel)
-                .click().link(withId("valgtSakLenke"))
-                .click().link(withId("avbrytJournalforing"))
+        FluentWicketTester<? extends WebApplication> tester = wicket.goToPageWith(testNyDialogPanel);
+        tester.click().link(withId("valgtSakLenke"));
+        tester.onComponent(ofType(AjaxLazyLoadVelgSakPanel.class)).executeAjaxBehaviors(BehaviorMatchers.ofType(AbstractDefaultAjaxBehavior.class));
+        tester.click().link(withId("avbrytJournalforing"))
                 .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
                 .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)));
     }
@@ -215,8 +223,10 @@ public class NyDialogPanelTest extends WicketPageTest {
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerVelgerSak() {
         settISporsmalsModus();
 
-        wicket.goToPageWith(testNyDialogPanel)
-                .click().link(withId("valgtSakLenke"))
+        FluentWicketTester<? extends WebApplication> tester = wicket.goToPageWith(testNyDialogPanel);
+        tester.click().link(withId("valgtSakLenke"));
+        tester.onComponent(ofType(AjaxLazyLoadVelgSakPanel.class)).executeAjaxBehaviors(BehaviorMatchers.ofType(AbstractDefaultAjaxBehavior.class));
+        tester
                 .inForm(withId("plukkSakForm"))
                 .select("valgtSak", 0)
                 .submitWithAjaxButton(withId("velgSak"))

@@ -37,7 +37,6 @@ public class VelgSakPanel extends Panel {
     public VelgSakPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
-        setVisibilityAllowed(false);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
@@ -66,7 +65,7 @@ public class VelgSakPanel extends Panel {
     }
 
     private AjaxButton getSubmitLenke(final FeedbackPanel feedbackPanel) {
-        return new IndicatingAjaxButtonWithImageUrl("velgSak", "../img/ajaxloader/svart/loader_svart_48.gif") {
+        return new AjaxButton("velgSak") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 lukkPanel(target);
@@ -82,25 +81,15 @@ public class VelgSakPanel extends Panel {
 
     private void lukkPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
-            this.setVisibilityAllowed(false);
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(lukket)", this.getMarkupId()));
-            target.add(this);
+            ((AjaxLazyLoadVelgSakPanel) this.getParent()).lukkPanel(target);
             if (!isBlank(this.fokusEtterLukking)) {
                 target.appendJavaScript(format("$('#%s').focus();", this.fokusEtterLukking));
             }
         }
     }
 
-    public void togglePanel(AjaxRequestTarget target) {
-        if (isVisibilityAllowed()) {
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(lukket)", this.getMarkupId()));
-            this.setVisibilityAllowed(false);
-        } else {
-            sakerVM.oppdater();
-            target.appendJavaScript(format("$('#%s').slideDown()", this.getMarkupId()));
-            this.setVisibilityAllowed(true);
-        }
-        target.add(this);
+    public void oppdaterSaker() {
+        sakerVM.oppdater();
     }
 
     public void settFokusEtterLukking(String markupId) {

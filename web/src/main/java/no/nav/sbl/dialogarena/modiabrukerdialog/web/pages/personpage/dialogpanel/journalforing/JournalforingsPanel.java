@@ -31,7 +31,7 @@ public class JournalforingsPanel extends Panel {
         sakValgt.add(new Label("valgtSak.temaNavn"));
         sakValgt.add(new Label("valgtSak.saksIdVisning"));
 
-        final VelgSakPanel velgSakPanel = new VelgSakPanel("velgSak", fnr, henvendelseVM);
+        final AjaxLazyLoadVelgSakPanel velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM);
 
         AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
             @Override
