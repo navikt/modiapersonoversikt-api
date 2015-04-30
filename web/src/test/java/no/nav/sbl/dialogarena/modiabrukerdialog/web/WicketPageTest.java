@@ -5,10 +5,14 @@ import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.inject.Inject;
 
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
+
+@DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = WicketTesterConfig.class)
 public abstract class WicketPageTest {
 

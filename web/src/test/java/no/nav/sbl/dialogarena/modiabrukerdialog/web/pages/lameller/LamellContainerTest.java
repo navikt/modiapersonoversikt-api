@@ -3,15 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ForeldrepengerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykmeldingsperiodePanelMockContext;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,16 +19,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DirtiesContext(classMode = AFTER_CLASS)
-@ContextConfiguration(classes = {
-        WicketTesterConfig.class,
-        SykmeldingsperiodePanelMockContext.class,
-        ForeldrepengerPanelMockContext.class,
-        LamellServicesAndLoaders.class})
-public class LamellContainerTest {
+@ContextConfiguration(classes = {LamellServicesAndLoaders.class})
+public class LamellContainerTest extends WicketPageTest {
 
     private LamellContainer lamellContainer;
 

@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 @Configuration
 @Import({
-        EndpointMockContext.class,
         SykepengerWidgetMockContext.class,
         UtbetalingerMockContext.class,
         SporsmalOgSvarMockContext.class,
