@@ -4,6 +4,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -54,6 +55,11 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
                     send(getPage(), BREADTH, new NamedEventPayload(SVAR_PAA_MELDING, getModelObject().getValgtTraad().getEldsteMelding().melding.id));
+                }
+
+                @Override
+                protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+                    attributes.setEventPropagation(AjaxRequestAttributes.EventPropagation.BUBBLE);
                 }
             }.add(visibleIf(not(traadBesvares()))));
         }

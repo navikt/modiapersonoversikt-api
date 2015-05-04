@@ -39,7 +39,7 @@ public class AlleMeldingerPanel extends Panel {
 
                 item.setMarkupId(TRAAD_ID_PREFIX + meldingVM.melding.traadId);
 
-                item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))));
+                item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))).setOutputMarkupPlaceholderTag(true));
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("avsenderDato"));
                 item.add(new StatusIkon("statusIkon",
