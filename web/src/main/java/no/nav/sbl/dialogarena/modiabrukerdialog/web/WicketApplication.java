@@ -208,7 +208,8 @@ public class WicketApplication extends WebApplication {
                         PersonPage.SELECTMENU_JS,
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
-                        Innboks.MELDINGER_JS
+                        Innboks.MELDINGER_JS,
+                        Innboks.BESVAR_INDIKATOR_JS
                 )
                 .withModules(ReactResources.SKRIVESTOTTE)
                 .withModules(ReactResources.MELDINGER_SOK)
