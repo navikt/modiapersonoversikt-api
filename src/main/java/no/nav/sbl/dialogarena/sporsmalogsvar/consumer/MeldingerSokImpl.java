@@ -168,16 +168,18 @@ public class MeldingerSokImpl implements MeldingerSok {
     @Override
     @Scheduled(cron = "1 * * * * *") // Hvert minutt
     public void ryddOppCache() {
-        logger.info("Starter opprydning av cache. Har {} directories", cache.size());
-        int count = 0;
-        for (Map.Entry<String, MeldingerCacheEntry> entry : cache.entrySet()) {
-            if (now().minusMinutes(timeToLiveMinutes).isAfter(entry.getValue().lastIndexed)) {
-                count++;
-                String key = entry.getKey();
-                cache.remove(key);
+        if (cache.size() > 0) {
+            logger.info("Starter opprydning av cache. Har {} directories", cache.size());
+            int count = 0;
+            for (Map.Entry<String, MeldingerCacheEntry> entry : cache.entrySet()) {
+                if (now().minusMinutes(timeToLiveMinutes).isAfter(entry.getValue().lastIndexed)) {
+                    count++;
+                    String key = entry.getKey();
+                    cache.remove(key);
+                }
             }
+            logger.info("Fjernet {} directories", count);
         }
-        logger.info("Fjernet {} directories", count);
     }
 
     private static String key(String fnr, String navIdent) {
