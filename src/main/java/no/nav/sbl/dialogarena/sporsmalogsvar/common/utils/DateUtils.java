@@ -8,31 +8,15 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.Locale;
 
 import static java.lang.String.format;
+import static no.bekk.bekkopen.date.NorwegianDateUtil.addWorkingDaysToDate;
 import static org.apache.commons.collections15.FactoryUtils.constantFactory;
-import static org.joda.time.DateTimeConstants.SATURDAY;
-import static org.joda.time.DateTimeConstants.SUNDAY;
 
 public class DateUtils {
 
     private static Factory<Locale> locale = constantFactory(Locale.getDefault());
 
-    public static LocalDate ukedagerFraDato(int ukedager, LocalDate startDato) {
-        LocalDate dato = new LocalDate(startDato);
-        for (int dagerIgjen = ukedager; dagerIgjen > 0; dagerIgjen--) {
-            dato = dato.plusDays(1);
-            while (erHelg(dato)) {
-                dato = dato.plusDays(1);
-            }
-        }
-        return dato;
-    }
-
-    public static boolean erHelg(LocalDate dato) {
-        return dato.getDayOfWeek() == SATURDAY || dato.getDayOfWeek() == SUNDAY;
-    }
-
-    public static void useLocaleFrom(Factory<Locale> localeProvider) {
-        locale = localeProvider;
+    public static LocalDate arbeidsdagerFraDato(int ukedager, LocalDate startDato) {
+        return LocalDate.fromDateFields(addWorkingDaysToDate(startDato.toDate(), ukedager));
     }
 
     public static String date(DateTime dateTime) {

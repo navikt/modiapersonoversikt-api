@@ -30,7 +30,7 @@ import static java.util.Collections.emptyList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.ukedagerFraDato;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
@@ -147,7 +147,7 @@ public class GsakServiceImpl implements GsakService {
                                 new WSOpprettOppgave()
                                         .withHenvendelseId(nyOppgave.henvendelseId)
                                         .withAktivFra(LocalDate.now())
-                                        .withAktivTil(ukedagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
+                                        .withAktivTil(arbeidsdagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
                                         .withBeskrivelse(leggTilBeskrivelse(beskrivelse, valgtEnhetIdString))
                                         .withFagomradeKode(nyOppgave.tema.kode)
