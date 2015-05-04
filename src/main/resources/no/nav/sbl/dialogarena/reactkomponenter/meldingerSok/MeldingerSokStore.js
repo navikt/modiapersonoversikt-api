@@ -1,4 +1,4 @@
-var Utils = require('utils');
+var Utils = require('./../utils');
 var Store = require('./../Store');
 
 var MeldingerSokStore = function () {
@@ -45,7 +45,7 @@ MeldingerSokStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTraad = hentMelding(forrigeMelding, this.state.traader, this.state.valgtTraad);
 
-            updateScroll(tabliste.getDOMNode(), this.state.traader.indexOf(this.state.valgtTraad));
+            updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
             this.fireUpdate(this.listeners);
             break;
@@ -53,7 +53,7 @@ MeldingerSokStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTraad = hentMelding(nesteMelding, this.state.traader, this.state.valgtTraad);
 
-            updateScroll(tabliste.getDOMNode(), this.state.traader.indexOf(this.state.valgtTraad));
+            updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
             this.fireUpdate(this.listeners);
             break;

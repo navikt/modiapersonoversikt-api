@@ -1,7 +1,3 @@
-window.ModiaJS = window.ModiaJS || {};
-window.ModiaJS.Components = window.ModiaJS.Components || {};
-window.ModiaJS.InitializedComponents = window.ModiaJS.InitializedComponents || {};
-
 //Vår egen polyfill for console
 (function(con){
     "use strict";

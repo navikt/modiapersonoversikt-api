@@ -1,10 +1,11 @@
-var React = require('react');
+var React = require('react/addons');
 
 var KnaggInput = React.createClass({
     getDefaultProps: function () {
         return {
             knagger: [],
-            fritekst: ''
+            fritekst: '',
+            tablisteId: null
         };
     },
     getInitialState: function () {
@@ -36,7 +37,7 @@ var KnaggInput = React.createClass({
             selectionStart: this.refs.search.getDOMNode().selectionStart,
             selectionEnd: this.refs.search.getDOMNode().selectionEnd
         });
-        this.props.store.onKeyDown(this.props.tabliste, event);
+        this.props.store.onKeyDown($('#' + this.props.tablisteId), event);
     },
     onChangeProxy: function (event) {
         var data = finnKnaggerOgFritekst(event.target.value, this.props.knagger);
@@ -55,7 +56,7 @@ var KnaggInput = React.createClass({
             this.setState({focus: false});
         }
     },
-    componentDidUpdate: function(){
+    componentDidUpdate: function () {
         IEHack.call(this);
     },
     render: function () {
@@ -76,11 +77,12 @@ var KnaggInput = React.createClass({
             <div ref="knaggcontainer" className="knagg-input">
                 <div className={"knagger" + (this.state.focus ? " focus" : "")}>
                     {knagger}
-                    <input type="text" ref="search" className="search" placeholder={this.props.placeholder} value={this.props.fritekst} title={this.props.placeholder}
-                        onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
-                        onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
-                        aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']} />
-                    <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true" />
+                    <input type="text" ref="search" className="search" placeholder={this.props.placeholder}
+                           value={this.props.fritekst} title={this.props.placeholder}
+                           onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
+                           onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
+                           aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']}/>
+                    <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
                 </div>
             </div>
         );

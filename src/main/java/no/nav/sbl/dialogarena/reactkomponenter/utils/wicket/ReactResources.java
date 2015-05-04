@@ -6,41 +6,13 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class ReactResources {
-    public static final FrontendModule MELDINGER_SOK = new FrontendModule.With()
-            .scripts(
-                    new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/Utils.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/Modal.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/MeldingerSok.js")
-            )
+    public static final FrontendModule REACT_KOMPONENTER = new FrontendModule.With()
+            .scripts(new JavaScriptResourceReference(ResourceReference.class, "build/reactkomponenter.js"))
             .less(
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
                     new PackageResourceReference(ResourceReference.class, "build/sokLayout.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/meldingerSok.less")
-            )
-            .done();
-
-    public static final FrontendModule SKRIVESTOTTE = new FrontendModule.With()
-            .scripts(
-                    new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/Utils.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/Modal.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/Knagginput.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/Skrivestotte.js")
-            )
-            .less(
-                    new PackageResourceReference(ResourceReference.class, "build/modal.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/sokLayout.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/meldingerSok.less"),
                     new PackageResourceReference(ResourceReference.class, "build/knagginput.less"),
                     new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less")
-            )
-            .done();
-
-    public static final FrontendModule TAGINPUT = new FrontendModule.With()
-            .scripts(
-                    new JavaScriptResourceReference(ResourceReference.class, "build/React.js"),
-                    new JavaScriptResourceReference(ResourceReference.class, "build/Knagginput.js")
-            )
-            .less(new PackageResourceReference(ResourceReference.class, "build/knagginput.less"))
-            .done();
+            ).done();
 }

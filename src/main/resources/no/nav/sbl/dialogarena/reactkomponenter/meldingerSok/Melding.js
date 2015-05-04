@@ -1,5 +1,5 @@
-var React = require('react');
-var Utils = require('utils');
+var React = require('react/addons');
+var Utils = require('./../utils');
 var sanitize = require('sanitize-html');
 
 var Melding =  React.createClass({

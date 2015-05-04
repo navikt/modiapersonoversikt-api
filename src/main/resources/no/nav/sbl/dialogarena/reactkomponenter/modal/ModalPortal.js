@@ -1,4 +1,4 @@
-var React = require('react');
+var React = require('react/addons');
 
 var ModalPortal = React.createClass({
     focusAfterClose: undefined,
@@ -29,7 +29,7 @@ var ModalPortal = React.createClass({
                 this.focusFirst();
             }
         } else {
-            $(document.body).children().not(this.getDOMNode().parentNode).removeAttr('aria-hidden');
+            $(document.body).children().removeAttr('aria-hidden');
             this.restoreFocus();
         }
     },
@@ -108,12 +108,14 @@ var ModalPortal = React.createClass({
         var cls = this.props.isOpen ? '' : 'hidden';
 
         return (
-            <div tabIndex="-1" className={cls} aria-hidden={!this.props.isOpen} onKeyDown={this.keyHandler} role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
+            <div tabIndex="-1" className={cls} aria-hidden={!this.props.isOpen} onKeyDown={this.keyHandler}
+                 role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
                 <div className="backdrop" onClick={this.props.modal.close}></div>
-                    {title.hidden}
-                    {description.hidden}
+                {title.hidden}
+                {description.hidden}
                 <div className="centering" style={this.props.width ? {"width": this.props.width+'px'} : null}>
-                    <div className="content" ref="content" style={this.props.height ? {"height": this.props.height+'px', "marginTop": (this.props.height/-2)+'px'} : null}>
+                    <div className="content" ref="content"
+                         style={this.props.height ? {"height": this.props.height+'px', "marginTop": (this.props.height/-2)+'px'} : null}>
                         {title.visible}
                         {description.visible}
                         {children}

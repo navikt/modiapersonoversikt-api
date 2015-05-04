@@ -47,7 +47,7 @@ var Modal = React.createClass({
     open: function () {
         var elementsByClassName = document.getElementsByClassName('react-modal-container');
         var match = false;
-        for(var i = 0; i < elementsByClassName.length; i++) {
+        for (var i = 0; i < elementsByClassName.length; i++) {
             if (elementsByClassName[i].innerHTML === this.portalElement.innerHTML) {
                 match = true;
                 break;
@@ -63,7 +63,6 @@ var Modal = React.createClass({
     },
     close: function () {
         this.setState({isOpen: false});
-        React.unmountComponentAtNode(this.portalElement);
         document.body.removeChild(this.portalElement);
         $(document.body).removeClass('modal-open');
     },
@@ -73,7 +72,7 @@ var Modal = React.createClass({
             close: this.close
         };
 
-        this.modal = React.render(<Portal {...props} {...state} modal={modal} />, this.portalElement);
+        this.modal = React.render(<Portal {...props} {...state} modal={modal}/>, this.portalElement);
     },
     render: function () {
         return null;

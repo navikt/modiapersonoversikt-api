@@ -1,8 +1,8 @@
-var React = require('react');
-var Modal = require('modal');
+var React = require('react/addons');
+var Modal = require('./../modal');
 var ListevisningKomponent = require('./ListevisningKomponent');
 var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
-var Utils = require('utils');
+var Utils = require('./../utils');
 var MeldingerSokStore = require('./MeldingerSokStore');
 
 var modalConfig = {
@@ -67,7 +67,7 @@ var MeldingerSok = React.createClass({
         var erTom = this.state.traader.length === 0;
         var sokVisning = (
             <div className={"sok-visning " + (erTom ? 'hidden' : '')}>
-                <div tabIndex="-1" className="sok-liste" role="tablist" ref="tablist" id={this.state.listePanelId}
+                <div tabIndex="-1" className="sok-liste" role="tablist" id={this.state.listePanelId}
                      aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
                     {tekstlistekomponenter}
                 </div>
@@ -108,7 +108,7 @@ var MeldingerSok = React.createClass({
                                 value={this.state.fritekst}
                                 title="Søk"
                                 onChange={this.store.onChange.bind(this.store)}
-                                onKeyDown={this.store.onKeyDown.bind(this.store, this.refs.tablist)}
+                                onKeyDown={this.store.onKeyDown.bind(this.store, $('#'+this.state.listePanelId))}
                                 aria-controls={this.state.listePanelId}
                                 />
                             <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>

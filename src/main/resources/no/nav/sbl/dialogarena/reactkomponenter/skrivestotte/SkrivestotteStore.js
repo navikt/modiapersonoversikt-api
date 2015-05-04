@@ -1,4 +1,4 @@
-var Utils = require('utils');
+var Utils = require('./../utils');
 var Store = require('./../Store');
 
 var SkrivestotteStore = function () {
@@ -56,7 +56,7 @@ SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
 
-            updateScroll(tabliste.getDOMNode(), this.state.tekster.indexOf(this.state.valgtTekst));
+            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
             this.fireUpdate(this.listeners);
             break;
@@ -64,7 +64,7 @@ SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
             event.preventDefault();
             this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
 
-            updateScroll(tabliste.getDOMNode(), this.state.tekster.indexOf(this.state.valgtTekst));
+            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
             this.fireUpdate(this.listeners);
             break;
