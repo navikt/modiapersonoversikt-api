@@ -7,7 +7,7 @@ import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
-public class AnsattDropdown extends DropDownChoice<Ansatt> {
+public class AnsattDropdown extends FancySelect<Ansatt> {
     public AnsattDropdown(String id, IModel<Ansatt> model, IModel<List<Ansatt>> choices) {
         super(id, model, choices, new AnsattChoiceRenderer());
     }
