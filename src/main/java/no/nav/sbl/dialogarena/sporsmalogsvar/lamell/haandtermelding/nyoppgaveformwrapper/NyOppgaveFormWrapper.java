@@ -296,7 +296,9 @@ public class NyOppgaveFormWrapper extends Panel {
     private void oppdaterAnsatteListe() {
         NyOppgave nyOppgave = form.getModelObject();
         AnsattEnhet enhet = nyOppgave.enhet;
-        nyOppgave.ansatteTilknyttetEnhet = ansattService.ansatteForEnhet(enhet);
+        if (enhet != null) {
+            nyOppgave.ansatteTilknyttetEnhet = ansattService.ansatteForEnhet(enhet);
+        }
         nyOppgave.valgtAnsatt = null;
     }
 
