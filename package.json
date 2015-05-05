@@ -23,6 +23,7 @@
     "karma-mocha": "^0.1.10",
     "react-tools": "^0.13.0",
     "chai": "^2.0.0",
+    "sinon": "^1.14.1",
     "karma-chrome-launcher": "^0.1.7",
     "gulp-karma": "0.0.4",
     "karma-coverage": "^0.2.7",
