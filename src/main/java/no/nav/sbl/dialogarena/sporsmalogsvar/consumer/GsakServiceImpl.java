@@ -149,6 +149,7 @@ public class GsakServiceImpl implements GsakService {
                                         .withAktivFra(LocalDate.now())
                                         .withAktivTil(arbeidsdagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
+                                        .withAnsvarligId(nyOppgave.valgtAnsatt != null ? nyOppgave.valgtAnsatt.ident : null)
                                         .withBeskrivelse(leggTilBeskrivelse(beskrivelse, valgtEnhetIdString))
                                         .withFagomradeKode(nyOppgave.tema.kode)
                                         .withUnderkategoriKode(underkategori.kode)

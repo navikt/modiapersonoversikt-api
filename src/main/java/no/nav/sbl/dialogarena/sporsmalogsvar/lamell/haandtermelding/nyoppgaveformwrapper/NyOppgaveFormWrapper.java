@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Ansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -10,6 +12,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -41,12 +44,14 @@ public class NyOppgaveFormWrapper extends Panel {
     private GsakKodeverk gsakKodeverk;
     @Inject
     private EnhetService enhetService;
+    @Inject
+    private AnsattService ansattService;
 
     private final InnboksVM innboksVM;
     private final List<AnsattEnhet> enheter, foreslatteEnheter;
     private final IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer;
     private final Form<NyOppgave> form;
-    private final MarkupContainer typeVelger, enhetVelger, prioritetVelger, underkategoriVelger;
+    private final MarkupContainer typeVelger, enhetVelger, ansattVelger, prioritetVelger, underkategoriVelger;
 
     public final IModel<Boolean> oppgaveOpprettet = Model.of(false);
 
@@ -61,6 +66,7 @@ public class NyOppgaveFormWrapper extends Panel {
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
         this.typeVelger = lagOppgavetypeVelger();
         this.enhetVelger = lagEnhetVelger();
+        this.ansattVelger = lagAnsattVelger();
         this.prioritetVelger = lagPrioritetVelger();
         this.underkategoriVelger = lagUnderkategoriVelger();
 
@@ -77,6 +83,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 lagTemaVelger(),
                 typeVelger,
                 enhetVelger,
+                ansattVelger,
                 prioritetVelger,
                 underkategoriVelger,
                 new TextArea<String>("beskrivelse").setRequired(true),
@@ -154,7 +161,8 @@ public class NyOppgaveFormWrapper extends Panel {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 hentForeslatteEnheter();
-                target.add(enhetVelger);
+                oppdaterAnsatteListe();
+                target.add(enhetVelger, ansattVelger);
             }
         });
 
@@ -184,7 +192,8 @@ public class NyOppgaveFormWrapper extends Panel {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslatteEnheter();
-                target.add(enhetVelger);
+                oppdaterAnsatteListe();
+                target.add(enhetVelger, ansattVelger);
             }
         };
         typeDropdown.setRequired(true);
@@ -202,8 +211,16 @@ public class NyOppgaveFormWrapper extends Panel {
     private MarkupContainer lagEnhetVelger() {
         final IModel<List<AnsattEnhet>> enhetModel = new PropertyModel<>(this, "enheter");
 
-        AnsattEnhetDropdown ansattEnhetDropdown = new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
+        final AnsattEnhetDropdown ansattEnhetDropdown = new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
         ansattEnhetDropdown.setRequired(true);
+
+        ansattEnhetDropdown.add(new AjaxEventBehavior("change") {
+            @Override
+            protected void onEvent(AjaxRequestTarget target) {
+                oppdaterAnsatteListe();
+                target.add(ansattVelger);
+            }
+        });
 
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
         enhetContainer.setOutputMarkupPlaceholderTag(true);
@@ -213,10 +230,17 @@ public class NyOppgaveFormWrapper extends Panel {
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema"))))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.OppgaveType>(form.getModel(), "type"))));
         enhetContainer.add(hasCssClassIf("hidden", not(visEnhetsValg)));
-//        enhetContainer.add(visibleIf(visEnhetsValg));
         enhetContainer.add(new AttributeAppender("for", ansattEnhetDropdown.getMarkupId()));
 
         return enhetContainer;
+    }
+
+    private MarkupContainer lagAnsattVelger() {
+        WebMarkupContainer container = new WebMarkupContainer("ansattContainer");
+        container.setOutputMarkupPlaceholderTag(true);
+        container.add(new AnsattDropdown("ansatte", new PropertyModel<Ansatt>(form.getModel(), "valgtAnsatt"), new PropertyModel<List<Ansatt>>(form.getModel(), "ansatteTilknyttetEnhet")));
+        container.add(visibleIf(not(nullValue(new PropertyModel<List<AnsattEnhet>>(form.getModel(), "enhet")))));
+        return container;
     }
 
     private MarkupContainer lagPrioritetVelger() {
@@ -267,6 +291,13 @@ public class NyOppgaveFormWrapper extends Panel {
             foreslatteEnheter.add(AnsattEnhetDropdown.TOM_ENHET);
         }
         foreslatteEnheter.add(AnsattEnhetDropdown.SKILLE_ENHET);
+    }
+
+    private void oppdaterAnsatteListe() {
+        NyOppgave nyOppgave = form.getModelObject();
+        AnsattEnhet enhet = nyOppgave.enhet;
+        nyOppgave.ansatteTilknyttetEnhet = ansattService.ansatteForEnhet(enhet);
+        nyOppgave.valgtAnsatt = null;
     }
 
     private abstract static class OppdaterbarListeModel<T> extends AbstractReadOnlyModel<List<T>> {

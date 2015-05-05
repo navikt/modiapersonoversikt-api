@@ -4,6 +4,8 @@ import com.vaynberg.wicket.select2.ChoiceProvider;
 import com.vaynberg.wicket.select2.Response;
 import com.vaynberg.wicket.select2.Select2Choice;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.IModel;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -26,6 +28,12 @@ public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
     public AnsattEnhetDropdown(String id, IModel<AnsattEnhet> model, List<AnsattEnhet> enheter, List<AnsattEnhet> foreslatteEnheter) {
         super(id, model, new AnsattEnhetChoiceProvider(enheter, foreslatteEnheter));
         getSettings().setContainerCssClass("enhetvalg");
+        add(new AjaxFormComponentUpdatingBehavior("change") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                // nop
+            }
+        });
     }
 
     @Override
