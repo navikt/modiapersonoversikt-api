@@ -16,12 +16,21 @@
 
     <properties>
         <spring.version>3.2.9.RELEASE</spring.version>
-        <modig.wicket.version>2.0.37</modig.wicket.version>
-        <modig.core.version>1.0.1</modig.core.version>
         <wicket.version>6.17.0</wicket.version>
-        <modig.frontend.version>1.1.75</modig.frontend.version>
         <mockito.core.version>1.9.5</mockito.core.version>
+        <joda-time.version>2.7</joda-time.version>
+        <commons-io.version>2.4</commons-io.version>
+
+        <modig.frontend.version>1.1.75</modig.frontend.version>
+        <modig.wicket.version>3.0.0-SNAPSHOT</modig.wicket.version>
         <modig.lang.version>2.0.2</modig.lang.version>
+        <modig.core.version>1.0.1</modig.core.version>
+        <modia-felleskomponenter.version>1.0.0-SNAPSHOT</modia-felleskomponenter.version>
+        <common-lokalt-kodeverk.version>1.1.4</common-lokalt-kodeverk.version>
+
+
+        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.19</henvendelse-soknader-tjenestespesifikasjon.version>
+        <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
     </properties>
 
     <dependencies>
@@ -38,7 +47,11 @@
             <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-util</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
@@ -60,7 +73,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-lokalt-kodeverk</artifactId>
-            <version>1.1.4</version>
+            <version>${common-lokalt-kodeverk.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>cglib</groupId>
@@ -81,17 +94,25 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modia-felleskomponenter</artifactId>
+            <version>${modia-felleskomponenter.version}</version>
+        </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-            <version>1.0.15</version>
+            <version>${sakogbehandling-tjenestespesifikasjon.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.3</version>
+            <version>${joda-time.version}</version>
         </dependency>
 
         <dependency>
@@ -103,7 +124,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
-            <version>0.0.19</version>
+            <version>${henvendelse-soknader-tjenestespesifikasjon.version}</version>
         </dependency>
 
         <dependency>
