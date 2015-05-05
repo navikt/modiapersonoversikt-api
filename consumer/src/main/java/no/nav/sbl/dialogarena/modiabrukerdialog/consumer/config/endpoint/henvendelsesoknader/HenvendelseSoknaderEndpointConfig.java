@@ -5,11 +5,9 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -52,14 +50,11 @@ public class HenvendelseSoknaderEndpointConfig {
     }
 
     private HenvendelseSoknaderPortType createHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsesoknader/v1/Soknader.wsdl");
-        proxyFactoryBean.setAddress(System.getProperty("henvendelser.ws.url"));
-        proxyFactoryBean.setServiceClass(HenvendelseSoknaderPortType.class);
-        proxyFactoryBean.getOutInterceptors().add(interceptor);
-        proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
-        proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        return proxyFactoryBean.create(HenvendelseSoknaderPortType.class);
+        return new CXFClient<>(HenvendelseSoknaderPortType.class)
+                .wsdl("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsesoknader/v1/Soknader.wsdl")
+                .address(System.getProperty("henvendelser.ws.url"))
+                .withOutInterceptor(interceptor)
+                .build();
     }
 
 }
