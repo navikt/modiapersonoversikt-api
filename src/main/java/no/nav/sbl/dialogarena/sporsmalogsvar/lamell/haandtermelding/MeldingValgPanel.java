@@ -12,8 +12,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.modia.aria.AriaHelpers.toggleButtonConnector;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_LUKKET;
@@ -30,17 +30,18 @@ public class MeldingValgPanel extends Panel {
         setOutputMarkupId(true);
 
         this.tilknyttetPanel = tilknyttetPanel;
+        IModel<Boolean> panelErSynlig = new PropertyModel<>(tilknyttetPanel, "visibilityAllowed");
 
-        add(enabledIf(enabled), hasCssClassIf("inaktiv", not(enabled)));
 
-        add(new AjaxLink("link") {
+        AjaxLink linkTekst = new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 onclick(target);
             }
-        }.add(new Label("linkTekst", new ResourceModel(id + ".linkTekst"))));
+        };
+        linkTekst.add(new Label("linkTekst", new ResourceModel(id + ".linkTekst")));
 
-        IModel<Boolean> panelErSynlig = new PropertyModel<>(tilknyttetPanel, "visibilityAllowed");
+
         WebMarkupContainer pil = new WebMarkupContainer("pil");
         pil.add(hasCssClassIf("opp", panelErSynlig),
                 hasCssClassIf("ned", not(panelErSynlig)),
@@ -50,7 +51,12 @@ public class MeldingValgPanel extends Panel {
                         onclick(target);
                     }
                 });
-        add(pil);
+
+        linkTekst.add(attributeIf("aria-disabled", "true", not(enabled)));
+        toggleButtonConnector(linkTekst, tilknyttetPanel, panelErSynlig);
+
+        add(linkTekst, pil);
+        add(enabledIf(enabled), hasCssClassIf("inaktiv", not(enabled)));
     }
 
     private void onclick(AjaxRequestTarget target) {
