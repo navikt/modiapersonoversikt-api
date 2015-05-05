@@ -60,7 +60,13 @@ public class GosysNavAnsattPortTypeMock {
             @Override
             public ASBOGOSYSNAVAnsattListe hentNAVAnsattListe(ASBOGOSYSNavEnhet hentNAVAnsattListeRequest)
                     throws HentNAVAnsattListeFaultGOSYSNAVEnhetIkkeFunnetMsg, HentNAVAnsattListeFaultGOSYSGeneriskMsg {
-                return new ASBOGOSYSNAVAnsattListe();
+                ASBOGOSYSNAVAnsattListe liste = new ASBOGOSYSNAVAnsattListe();
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z000001", "Jens", "Hansen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z000002", "Arne", "Jensen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z000003", "Olav", "Nilsen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z000004", "Nina", "Ingebritsen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z000005", "Astrid", "Frank"));
+                return liste;
             }
 
             @Override
@@ -101,6 +107,14 @@ public class GosysNavAnsattPortTypeMock {
         return navEnhet;
     }
 
+    private static ASBOGOSYSNAVAnsatt lagNavAnsatt(String ident, String fornavn, String etternav) {
+        ASBOGOSYSNAVAnsatt ansatt = new ASBOGOSYSNAVAnsatt();
+        ansatt.setAnsattId(ident);
+        ansatt.setFornavn(fornavn);
+        ansatt.setEtternavn(etternav);
+        return ansatt;
+    }
+
     private static String lagEnhetId(int id) {
         String base = String.valueOf(id);
         while (base.length() < 4) {
@@ -108,6 +122,7 @@ public class GosysNavAnsattPortTypeMock {
         }
         return base;
     }
+
     public static String lagEnhetNavn() {
         String[] type = new String[]{
                 "Drift og Utvikling",
