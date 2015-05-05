@@ -6,7 +6,6 @@ import org.eclipse.jetty.jaas.JAASLoginService;
 
 import java.io.File;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.System.setProperty;
 import static no.nav.modig.core.test.FilesAndDirs.TEST_RESOURCES;
 import static no.nav.modig.core.test.FilesAndDirs.WEBAPP_SOURCE;
@@ -15,7 +14,6 @@ import static no.nav.modig.lang.collections.RunnableUtils.first;
 import static no.nav.modig.lang.collections.RunnableUtils.waitFor;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TLSOppsettUtils.SKRU_AV_SERTIFIKATSJEKK_LOKALT;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
 
@@ -34,7 +32,6 @@ public class StartJetty {
 
     private static void setupProperties() {
         setProperty("wicket.configuration", "development");
-        setProperty(SKRU_AV_SERTIFIKATSJEKK_LOKALT, TRUE.toString());
         setFrom("jetty-environment.properties");
         setupKeyAndTrustStore();
     }
