@@ -168,7 +168,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     @Override
     @Scheduled(cron = "1 * * * * *") // Hvert minutt
     public void ryddOppCache() {
-        if (cache.size() > 0) {
+        if (!cache.isEmpty()) {
             logger.info("Starter opprydning av cache. Har {} directories", cache.size());
             int count = 0;
             for (Map.Entry<String, MeldingerCacheEntry> entry : cache.entrySet()) {
