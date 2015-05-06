@@ -211,7 +211,8 @@ public class WicketApplication extends WebApplication {
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS,
-                        Innboks.BESVAR_INDIKATOR_JS
+                        Innboks.BESVAR_INDIKATOR_JS,
+                        FancySelect.JS
                 )
                 .withModules(ReactResources.REACT_KOMPONENTER)
                 .withResourcePacking(this.usesDeploymentConfig())

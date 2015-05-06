@@ -4,114 +4,119 @@
 
 /* Mixins */
 .kolonne {
-	float: left;
-	display: block;
-	min-height: 30px;
-	width: 47.93617021276595%;
+  float: left;
+  display: block;
+  min-height: 30px;
+  width: 47.93617021276595%;
+}
+
+.generell-pil(@verticalSize, @horizontalSize, @color) {
+  height: 0;
+  width: 0;
+  border-left: @verticalSize solid transparent;
+  border-right: @verticalSize solid transparent;
+
+  &.ned {
+    border-top: @horizontalSize solid @color;
+  }
+  &.opp {
+    border-bottom: @horizontalSize solid @color;
+  }
 }
 
 .pil(@size, @color) {
-  height: 0;
-  width: 0;
-  border-left: @size solid transparent;
-  border-right: @size solid transparent;
-  &.ned {
-    border-top: @size solid @color;
-  }
-  &.opp {
-    border-bottom: @size solid @color;
-  }
+  .generell-pil(@size, @size, @color);
 }
 
 /* Generelle elementer */
 
 HTML {
-	overflow-y: auto;
-	height: 100%;
-	background: @white;
-	font-size: 14px;
+  overflow-y: auto;
+  height: 100%;
+  background: @white;
+  font-size: 14px;
 }
 
 BODY {
-	height: auto;
-	min-height: 100%;
-	background: @white;
+  height: auto;
+  min-height: 100%;
+  background: @white;
 }
 
 /* Typografi */
 H1, H2, H3 {
-	font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-weight: normal;
-	line-height: 1.2em;
+  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  line-height: 1.2em;
 }
 
 H1 {
-	font-size: 2.5rem;
+  font-size: 2.5rem;
 }
 
 H2, ._H2 {
-	font-size: 2.0rem;
+  font-size: 2.0rem;
 }
 
 H3, ._H3 {
-	font-size: 1.43rem;
-	font-weight: 600;
-	text-transform: uppercase;
+  font-size: 1.43rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 /* FORMS */
 LABEL, .label {
-	text-transform: uppercase;
-	position: relative;
-	margin-top: 1em;
-	color: @grayLight;
-	font-size: 0.857rem;
+  text-transform: uppercase;
+  position: relative;
+  margin-top: 1em;
+  color: @grayLight;
+  font-size: 0.857rem;
 }
 
 INPUT.errorJS, SELECT.errorJS {
-	background-color: @errorBackgroundLight;
-	border: 1px solid @errorTextLight;
+  background-color: @errorBackgroundLight;
+  border: 1px solid @errorTextLight;
 }
 
 LABEL.errorJS {
-	position: absolute;
-	left: 0;
-	bottom: -2.9rem;
-	white-space: nowrap;
-	color: @errorTextLight;
-	text-transform: none;
+  position: absolute;
+  left: 0;
+  bottom: -2.9rem;
+  white-space: nowrap;
+  color: @errorTextLight;
+  text-transform: none;
 }
 
 UL.feedbackPanel {
-	padding: 1rem 1rem 1rem 2rem;
-	list-style-type: none;
-	color: @white;
-	background-color: #da153a;
-	font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	LI:before {
-		content: "* ";
-	}
-	A, A:visited {
-		color: @white;
-		font-weight: bold;
-		text-decoration: underline;
-	}
+  padding: 1rem 1rem 1rem 2rem;
+  list-style-type: none;
+  color: @white;
+  background-color: #da153a;
+  font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  LI:before {
+    content: "* ";
+  }
+  A, A:visited {
+    color: @white;
+    font-weight: bold;
+    text-decoration: underline;
+  }
 }
 
 .description {
-	color: @grayLight;
-	font-size: 0.714rem;
-	white-space: nowrap;
-	text-transform: none;
+  color: @grayLight;
+  font-size: 0.714rem;
+  white-space: nowrap;
+  text-transform: none;
 }
 
 .dateGroup INPUT[type=text] {
-	background: @white url(../img/kalender.svg) no-repeat right center;
-	background-size: 21px;
+  background: @white url(../img/kalender.svg) no-repeat right center;
+  background-size: 21px;
 }
 
 [class*=-liten] {
-	margin-top: 2px;
+  margin-top: 2px;
 }
 
 .default-error {
@@ -169,6 +174,7 @@ fieldset.wcag {
     height: 0;
   }
 }
+
 .wicket-ajax-indicator {
   display: block;
 }
@@ -184,8 +190,8 @@ fieldset.wcag {
   text-align: left;
   font-weight: bold;
   p {
-	margin: 0;
-	padding-left: 12px;
-	border-left: 1px solid #f18a10;
+    margin: 0;
+    padding-left: 12px;
+    border-left: 1px solid #f18a10;
   }
 }
