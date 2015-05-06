@@ -159,7 +159,8 @@ public class WicketApplication extends WebApplication {
                         SaksoversiktLerret.SAKSOVERSIKT_IE_CSS,
                         BasePage.MODIA_LAYOUT_IE_CSS,
                         BasePage.KJERNEINFO_IE9_CSS,
-                        Innboks.MELDINGER_IE_CSS
+                        Innboks.MELDINGER_IE_CSS,
+                        FancySelect.IECSS
                 )
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
