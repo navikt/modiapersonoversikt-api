@@ -16,17 +16,37 @@ select + span.jquery-combobox {
     right: 0;
     top: 0;
     bottom: 0;
+    padding-top: 20px;
+
+    i {
+      .generell-pil(3px, 6px, black);
+    }
   }
 
 }
-.ui-menu.ui-autocomplete {
+
+.ui-autocomplete-wrapper {
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+  height: auto;
+  overflow: hidden;
   background-color: white;
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: rgba(0, 0, 0, 0.14902) 0px 4px 5px;
+  border: 1px solid #aaa;
+  border-top: none;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  display: none;
+}
+
+.ui-menu.ui-autocomplete {
   margin: 0;
-  padding: 0 0 0 4px;
-  width: 100% !important;
-  max-height: 200px;
-  overflow-x: hidden;
+  padding: 0;
   overflow-y: auto;
+  max-height: 200px;
+
   > .ui-menu-item {
     color: #000;
     font-size: 14px;

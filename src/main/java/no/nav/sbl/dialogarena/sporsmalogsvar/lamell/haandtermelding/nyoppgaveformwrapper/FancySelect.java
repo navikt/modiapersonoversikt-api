@@ -5,6 +5,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import static java.lang.String.format;
 
 public class FancySelect<T> extends DropDownChoice<T> {
     public static final PackageResourceReference LESS = new PackageResourceReference(FancySelect.class, "FancySelect.less");
+    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(FancySelect.class, "jquery.combobox.js");
 
     public FancySelect(String id) {
         super(id);
