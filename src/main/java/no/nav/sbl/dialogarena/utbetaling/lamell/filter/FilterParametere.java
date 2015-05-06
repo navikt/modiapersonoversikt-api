@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
-import static org.apache.commons.collections15.CollectionUtils.*;
+import static org.apache.commons.collections15.CollectionUtils.isEqualCollection;
 
 public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
 
@@ -72,6 +72,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     }
 
     public boolean isAlleYtelserValgt() {
+        onskedeYtelser.retainAll(alleYtelser);
         return isEqualCollection(alleYtelser, onskedeYtelser);
     }
 
