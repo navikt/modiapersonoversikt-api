@@ -11,19 +11,7 @@
                     <wicket:message key="utbetaling.lamell.filter.datofilter"/>
                 </h3>
 
-                <div class="periodevelger">
-                    <input type="radio" name="valgtPeriode" value="siste3mnd" checked />
-                    <label class="cap-1st">Siste 3 måneder</label>
-
-                    <input type="radio" name="valgtPeriode" value="innevaerendeAaar" />
-                    <label class="cap-1st">Inneværende år</label>
-
-                    <input type="radio" name="valgtPeriode" value="ifjor" />
-                    <label class="cap-1st">I fjor</label>
-
-                    <input type="radio" name="valgtPeriode" value="egendefinert" />
-                    <label class="cap-1st">Egendefinert</label>
-                </div>
+                <div class="periodevelger" wicket:id="periodeVelger"></div>
                 <div class="datovelger">
                     <wicket:container wicket:id="datoFilter"/>
                     <input type="submit" wicket:id="sok" class="knapp-hoved-liten"/>

@@ -8,14 +8,18 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -28,11 +32,10 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.YTELSE_FILTER_KLIKKET;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
 import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
@@ -72,12 +75,35 @@ public class FilterFormPanel extends Panel {
         valideringsfeil = new FeedbackPanel("feedbackpanel");
         return (Form) filterForm.add(
                 valideringsfeil.setOutputMarkupId(true),
+
+                createPeriodeVelger(),
                 createDateRangePicker(),
                 createSokKnapp(),
                 createMottakerButton("visBruker", Mottakertype.BRUKER),
                 createMottakerButton("visAnnenMottaker", Mottakertype.ANNEN_MOTTAKER),
                 ytelsesContainer)
                 .setOutputMarkupId(true);
+    }
+
+    private Component createPeriodeVelger() {
+        PropertyModel<PeriodeVelger> periodeVelgerModel = new PropertyModel<>(Model.of(filterParametere), "periodeVelgerValg");
+        RadioChoice<PeriodeVelger> velger = new RadioChoice<>("periodeVelger", periodeVelgerModel, asList(PeriodeVelger.values()));
+
+        velger.setSuffix("");
+        velger.setChoiceRenderer(new ChoiceRenderer<PeriodeVelger>() {
+            @Override
+            public Object getDisplayValue(PeriodeVelger enumVal) {
+                String displayKey = enumVal.name().toLowerCase().replace("_", "");
+                return getString("utbetaling.lamell.filter.valgtperiode." + displayKey);
+            }
+        });
+        velger.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+                System.out.println("Clicked:" + filterParametere.periodeVelgerValg);
+            }
+        });
+        return velger;
     }
 
     private AjaxCheckBox createAlleYtelserCheckbox() {
