@@ -148,6 +148,15 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
+    public void vellykketGotoHentPersonPageErrortextAndWrongFnr() {
+        wicket.goTo(PersonPage.class, with().param("soektfnr", "wrongFnr").param("error", "errorMessage"))
+        .should().containPatterns("wrongFnr")
+        .should().containPatterns("errorMessage");
+
+        wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}"));
+    }
+
+    @Test
     public void vellykketGotoHentPersonPageKunErrortekst() {
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
@@ -158,7 +167,9 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
         PersonPage page = new PersonPage(new PageParameters());
-        String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+        String sikkerhetstiltak =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
+                        HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         assertEquals("Farlig.", sikkerhetstiltak);
     }
 
@@ -166,14 +177,30 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void shouldExtractErrortext() throws JSONException {
         PersonPage page = new PersonPage(new PageParameters());
-        String errorTxt = page.getErrorText("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+        String errorTxt =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
+                        HentPersonPanel.JSON_ERROR_TEXT);
         assertEquals("Feil tekst", errorTxt);
+    }
+
+    @Test
+    public void shouldExtractErrortextAndFnr() throws JSONException {
+        PersonPage page = new PersonPage(new PageParameters());
+        String errorTxt =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}",
+                        HentPersonPanel.JSON_ERROR_TEXT);
+        String soektfnr =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}",
+                        HentPersonPanel.JSON_SOKT_FNR);
+        assertEquals("Feil tekst", errorTxt);
+        assertEquals("wrongFnr", soektfnr);
     }
 
     @Test
     public void shouldExtractNullWhenFnrtExist() throws JSONException {
         PersonPage page = new PersonPage(new PageParameters());
-        String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\"}");
+        String sikkerhetstiltak =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         Assert.assertNull(sikkerhetstiltak);
     }
 

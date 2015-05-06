@@ -84,6 +84,7 @@ public class PersonPage extends BasePage {
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String ERROR = "error";
+    public static final String SOKT_FNR = "soektfnr";
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
@@ -112,7 +113,7 @@ public class PersonPage extends BasePage {
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
 
         add(
-                new HentPersonPanel("searchPanel"),
+                new HentPersonPanel("searchPanel",""),
                 new Button("toggle-sok"),
                 new NullstillLink("nullstill"),
                 lamellContainer,
@@ -190,14 +191,15 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
     public void gotoHentPersonPage(AjaxRequestTarget target, String query) throws JSONException {
-        String errorText = getErrorText(query);
-        String sikkerhetstiltak = getSikkerhetsTiltakBeskrivelse(query);
+        String errorText = getTextFromPayload(query, HentPersonPanel.JSON_ERROR_TEXT);
+        String sikkerhetstiltak = getTextFromPayload(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        String soktFnr = getTextFromPayload(query, HentPersonPanel.JSON_SOKT_FNR);
 
         PageParameters pageParameters = new PageParameters();
         if (!StringUtils.isEmpty(sikkerhetstiltak)) {
-            pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak);
+            pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak).set(SOKT_FNR, soktFnr);
         } else {
-            pageParameters.set(ERROR, errorText);
+            pageParameters.set(ERROR, errorText).set(SOKT_FNR, soktFnr);
         }
 
         throw new RestartResponseException(HentPersonPage.class, pageParameters);
@@ -311,12 +313,15 @@ public class PersonPage extends BasePage {
         }
     }
 
-    protected String getSikkerhetsTiltakBeskrivelse(String query) throws JSONException {
-        return getJsonField(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
-    }
-
-    protected String getErrorText(String query) throws JSONException {
-        return getJsonField(query, HentPersonPanel.JSON_ERROR_TEXT);
+    /**
+     * Hente forskjellige teksten fra en payload (JSONobjekt).
+     * @param query
+     * @param JSONfield
+     * @return
+     * @throws JSONException
+     */
+    protected String getTextFromPayload(String query, String JSONfield) throws JSONException {
+        return getJsonField(query, JSONfield);
     }
 
     private String getJsonField(String query, String field) throws JSONException {
