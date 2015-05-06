@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
@@ -28,7 +30,15 @@ public final class StartJettyUtbetalinger {
         setProperty("wicket.configuration", "development");
         setProperty("utbetal.endpoint.mock", MOCK_DATA);
         setProperty("server.arena.url", "arenaserver");
-        setProperty("utbetalingendpoint.url", "https://wasapp-t4.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1");
+        setProperty("utbetalingendpoint.url", getEndpointUrl("T4"));
+    }
+
+    private static String getEndpointUrl(String env) {
+        Map<String, String> urls = new HashMap<>();
+        urls.put("T4", "https://wasapp-t4.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1");
+        urls.put("U1", "https://e34wasl00319.devillo.no:9443/nav-utbetaldata-ws/virksomhet/Utbetaling_v1");
+
+        return urls.get(env);
     }
 
 }
