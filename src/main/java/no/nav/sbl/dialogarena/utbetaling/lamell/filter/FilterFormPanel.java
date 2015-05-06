@@ -91,6 +91,7 @@ public class FilterFormPanel extends Panel {
     private WebMarkupContainer createDatovelgerWrapper() {
         WebMarkupContainer container = new WebMarkupContainer("datovelger");
         container.setOutputMarkupId(true);
+        container.add(new AttributeModifier("style", "display: none;"));
         container.add(
                 createDateRangePicker(),
                 createSokKnapp());
@@ -114,11 +115,14 @@ public class FilterFormPanel extends Panel {
         velger.add(new AjaxFormChoiceComponentUpdatingBehavior() {
 
             @Override
-            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 PeriodeVelger valgtPeriode = filterParametere.periodeVelgerValg;
                 if(valgtPeriode.equals(EGENDEFINERT)) {
-                    ajaxRequestTarget.appendJavaScript("$('.datovelger').css('display','block');");
+                    datovelgerContainer.add(new AttributeModifier("style", "display: block;"));
+                    target.add(datovelgerContainer);
                 } else {
+                    datovelgerContainer.add(new AttributeModifier("style", "display: none;"));
+                    target.add(datovelgerContainer);
                     LocalDate today = LocalDate.now();
                     if(valgtPeriode.equals(SISTE_3_MND)) {
                         filterParametere.setSluttDato(today);
@@ -221,6 +225,7 @@ public class FilterFormPanel extends Panel {
         AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.sok", this, null)) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                filterParametere.toggleAlleYtelser(true);
                 sendFilterEndretEvent();
                 target.add(datovelgerContainer, ytelsesContainer, valideringsfeil);
             }
@@ -237,6 +242,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private void velgPeriodeEvents() {
+        filterParametere.toggleAlleYtelser(true);
         send(getPage(), Broadcast.DEPTH, FILTER_ENDRET);
         send(getPage(), Broadcast.DEPTH, "periodevalg.event");
     }
@@ -264,6 +270,6 @@ public class FilterFormPanel extends Panel {
     @SuppressWarnings("unused")
     @RunOnEvents(YTELSE_FILTER_KLIKKET)
     private void oppdaterVelgAlleCheckbox(AjaxRequestTarget target) {
-        target.add(visAlleYtelserCheckbox, datovelgerContainer);
+        target.add(visAlleYtelserCheckbox);
     }
 }
