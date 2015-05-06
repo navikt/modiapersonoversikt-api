@@ -96,8 +96,11 @@ public class KvitteringsPanel extends Panel {
 
     private void leggTilVedleggFeiletPoput() {
         modalWindow = new ModigModalWindow("vedleggFeiletPopup");
-        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, "Dokumentet er slettet", "Dette dokumentet kan ikke vises fordi det er slettet.", "Lukk"));
         add(modalWindow);
+    }
+
+    private ModalAdvarselPanel vedleggSlettetVarsel() {
+        return new ModalAdvarselPanel(modalWindow, "Dokumentet er slettet", "Dette dokumentet kan ikke vises fordi det er slettet.", "Lukk");
     }
 
     private void leggTilInnsendteVedlegg(Kvittering kvittering) {
@@ -147,6 +150,7 @@ public class KvitteringsPanel extends Panel {
                                 add(resourceStreamAjaxBehavoiur);
                                 resourceStreamAjaxBehavoiur.init(target);
                             } else {
+                                modalWindow.setContent(vedleggSlettetVarsel());
                                 modalWindow.show(target);
                             }
                         }
