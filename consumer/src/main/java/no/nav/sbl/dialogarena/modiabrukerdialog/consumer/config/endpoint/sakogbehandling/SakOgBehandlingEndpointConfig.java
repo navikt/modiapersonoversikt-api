@@ -5,11 +5,9 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -52,14 +50,11 @@ public class SakOgBehandlingEndpointConfig {
     }
 
     private SakOgBehandling_v1PortType createSakogbehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/sakOgBehandling.wsdl");
-        proxyFactoryBean.setAddress(System.getProperty("sakogbehandling.ws.url"));
-        proxyFactoryBean.setServiceClass(SakOgBehandling_v1PortType.class);
-        proxyFactoryBean.getOutInterceptors().add(interceptor);
-        proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
-        proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        return proxyFactoryBean.create(SakOgBehandling_v1PortType.class);
+        return new CXFClient<>(SakOgBehandling_v1PortType.class)
+                .wsdl("classpath:sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/sakOgBehandling.wsdl")
+                .address(System.getProperty("sakogbehandling.ws.url"))
+                .withOutInterceptor(interceptor)
+                .build();
     }
 
 }

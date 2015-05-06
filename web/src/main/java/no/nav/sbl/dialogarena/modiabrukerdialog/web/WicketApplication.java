@@ -31,6 +31,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.FancySelect;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -183,7 +184,8 @@ public class WicketApplication extends WebApplication {
                         BasePage.KJERNEINFO,
                         BasePage.OVERSIKT,
                         BasePage.SYKEPENGER_FORELDREPENGER,
-                        PersonPage.DIALOGPANEL_LESS
+                        PersonPage.DIALOGPANEL_LESS,
+                        FancySelect.LESS
                 )
                 .addCss(
                         BasePage.PERSONSOKRESULT,

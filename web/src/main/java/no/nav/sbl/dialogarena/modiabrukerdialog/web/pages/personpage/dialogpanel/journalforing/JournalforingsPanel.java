@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing;
 
+import no.nav.modig.modia.aria.AriaHelpers;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -12,7 +13,6 @@ import org.apache.wicket.model.Model;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static org.apache.wicket.AttributeModifier.append;
 
 public class JournalforingsPanel extends Panel {
 
@@ -41,14 +41,16 @@ public class JournalforingsPanel extends Panel {
             }
         };
         velgSakPanel.settFokusEtterLukking(valgtSakLenke.getMarkupId());
-        valgtSakLenke.add(append("aria-controls", velgSakPanel.getMarkupId()));
         IModel<Boolean> velgSakPanelOpen = new Model<Boolean>() {
             @Override
             public Boolean getObject() {
                 return velgSakPanel.isVisibilityAllowed();
             }
         };
-        valgtSakLenke.add(ingenSakValgt, sakValgt, new PilOppNed("pilVelgSaker", valgtSakLenke, velgSakPanelOpen));
+        valgtSakLenke.add(ingenSakValgt, sakValgt);
+        valgtSakLenke.add(new PilOppNed("pilVelgSaker", velgSakPanelOpen));
+
+        AriaHelpers.toggleButtonConnector(valgtSakLenke, velgSakPanel, velgSakPanelOpen);
 
         add(valgtSakLenke, velgSakPanel);
     }
