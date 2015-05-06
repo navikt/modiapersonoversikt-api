@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
+import no.nav.modig.frontend.ConditionalCssResource;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
@@ -14,6 +16,7 @@ import static java.lang.String.format;
 
 public class FancySelect<T> extends DropDownChoice<T> {
     public static final PackageResourceReference LESS = new PackageResourceReference(FancySelect.class, "FancySelect.less");
+    public static final ConditionalCssResource IECSS = new ConditionalCssResource(new CssResourceReference(FancySelect.class, "FancySelect-ie9.css"), "screen", "lt IE 10");
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(FancySelect.class, "jquery.combobox.js");
 
     public FancySelect(String id) {

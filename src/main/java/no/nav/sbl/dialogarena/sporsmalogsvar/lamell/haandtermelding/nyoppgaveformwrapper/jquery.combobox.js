@@ -55,7 +55,6 @@
 
             var widget = this;
             $("<button>")
-                .addClass('ned')
                 .attr("tabIndex", -1)
                 .attr("title", "Show All Items")
                 .tooltip()
