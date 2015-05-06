@@ -36,6 +36,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PeriodeVelger.*;
 import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
@@ -45,6 +46,7 @@ public class FilterFormPanel extends Panel {
     private FilterParametere filterParametere;
 
     private MarkupContainer ytelsesContainer;
+    private MarkupContainer datovelgerContainer;
     private FeedbackPanel valideringsfeil;
     private AjaxCheckBox visAlleYtelserCheckbox;
 
@@ -73,16 +75,27 @@ public class FilterFormPanel extends Panel {
     private Form createFilterForm() {
         Form filterForm = new AjaxIndicator.SnurrepippFilterForm("filterForm");
         valideringsfeil = new FeedbackPanel("feedbackpanel");
+        datovelgerContainer = createDatovelgerWrapper();
+
         return (Form) filterForm.add(
                 valideringsfeil.setOutputMarkupId(true),
 
                 createPeriodeVelger(),
-                createDateRangePicker(),
-                createSokKnapp(),
+                datovelgerContainer,
                 createMottakerButton("visBruker", Mottakertype.BRUKER),
                 createMottakerButton("visAnnenMottaker", Mottakertype.ANNEN_MOTTAKER),
                 ytelsesContainer)
                 .setOutputMarkupId(true);
+    }
+
+    private WebMarkupContainer createDatovelgerWrapper() {
+        WebMarkupContainer container = new WebMarkupContainer("datovelger");
+        container.setOutputMarkupId(true);
+        container.add(
+                createDateRangePicker(),
+                createSokKnapp());
+
+        return container;
     }
 
     private Component createPeriodeVelger() {
@@ -97,12 +110,33 @@ public class FilterFormPanel extends Panel {
                 return getString("utbetaling.lamell.filter.valgtperiode." + displayKey);
             }
         });
+
         velger.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                System.out.println("Clicked:" + filterParametere.periodeVelgerValg);
+                PeriodeVelger valgtPeriode = filterParametere.periodeVelgerValg;
+                if(valgtPeriode.equals(EGENDEFINERT)) {
+                    ajaxRequestTarget.appendJavaScript("$('.datovelger').css('display','block');");
+                } else {
+                    LocalDate today = LocalDate.now();
+                    if(valgtPeriode.equals(SISTE_3_MND)) {
+                        filterParametere.setSluttDato(today);
+                        filterParametere.setStartDato(today.minusMonths(3));
+                    } else if(valgtPeriode.equals(INNEVAERENDE_AAR)) {
+                        LocalDate firstDayOfTheYear = new LocalDate(today.getYear(), 1, 1);
+                        filterParametere.setSluttDato(today);
+                        filterParametere.setStartDato(firstDayOfTheYear);
+                    } else if(valgtPeriode.equals(I_FJOR)) {
+                        int lastYear = today.getYear() - 1;
+                        filterParametere.setSluttDato(new LocalDate(lastYear, 12, 31));
+                        filterParametere.setStartDato(new LocalDate(lastYear, 1, 1));
+                    }
+                    velgPeriodeEvents();
+                }
             }
         });
+
         return velger;
     }
 
@@ -188,7 +222,7 @@ public class FilterFormPanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 sendFilterEndretEvent();
-                target.add(ytelsesContainer, valideringsfeil);
+                target.add(datovelgerContainer, ytelsesContainer, valideringsfeil);
             }
 
             @Override
@@ -200,6 +234,17 @@ public class FilterFormPanel extends Panel {
         button.add(new AttributeModifier("alt", new StringResourceModel("utbetaling.lamell.filter.sok.alt", this, null)));
 
         return button;
+    }
+
+    private void velgPeriodeEvents() {
+        send(getPage(), Broadcast.DEPTH, FILTER_ENDRET);
+        send(getPage(), Broadcast.DEPTH, "periodevalg.event");
+    }
+
+    @SuppressWarnings("unused")
+    @RunOnEvents("periodevalg.event")
+    private void oppdaterPeriodevelger(AjaxRequestTarget target) {
+        target.add(visAlleYtelserCheckbox, datovelgerContainer);
     }
 
     private void sendFilterEndretEvent() {
@@ -219,7 +264,6 @@ public class FilterFormPanel extends Panel {
     @SuppressWarnings("unused")
     @RunOnEvents(YTELSE_FILTER_KLIKKET)
     private void oppdaterVelgAlleCheckbox(AjaxRequestTarget target) {
-        target.add(visAlleYtelserCheckbox);
+        target.add(visAlleYtelserCheckbox, datovelgerContainer);
     }
-
 }
