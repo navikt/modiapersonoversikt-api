@@ -18,6 +18,13 @@ import static org.apache.commons.collections15.CollectionUtils.*;
 
 public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
 
+    public enum PeriodeVelger {
+        SISTE_3_MND,
+        INNEVAERENDE_AAR,
+        I_FJOR,
+        EGENDEFINERT
+    }
+
     public static final String FILTER_ENDRET = "filterParametere.endret";
     public static final String YTELSE_FILTER_KLIKKET = "ytelse.filterparametere.klikket";
     public static final String HOVEDYTELSER_ENDRET = "hovedytelser.endret";
@@ -29,8 +36,10 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
 
     private Set<String> alleYtelser;
     private Set<String> onskedeYtelser;
+    public PeriodeVelger periodeVelgerValg;
 
     public FilterParametere(Set<String> hovedYtelser) {
+        this.periodeVelgerValg = PeriodeVelger.SISTE_3_MND;
         this.startDato = defaultStartDato();
         this.sluttDato = defaultSluttDato();
 
