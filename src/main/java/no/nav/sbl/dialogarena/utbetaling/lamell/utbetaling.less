@@ -169,6 +169,9 @@
     width: @kolonneVenstreWidth;
 
     .filter-form {
+      ul.feedbackPanel {
+        margin-top: 0;
+      }
       .filter-block {
         border: 1px solid @borderColor;
         background-color: #f1f1f1;
@@ -188,7 +191,7 @@
           margin: 0 0 8px 0;
         }
         .filter-block-content {
-          padding: 10px @sidePadding;
+          padding: 20px @sidePadding;
           div {
             margin-bottom: 0.75rem;
             &:last-child {
@@ -254,7 +257,11 @@
           }
         }
         div.datovelger {
-          //display: none;
+            margin-left: 37px;
+          .knapp-hoved-liten {
+            display: block;
+            margin-top: 10px;
+          }
         }
       }
     }
@@ -546,6 +553,9 @@
       &:hover {
         background-image: url('../img/print_hover.svg');
       }
+      &:focus {
+        background-image: url('../img/print_hover.svg');
+      }
     }
 
     .ekspander-pil {
@@ -557,6 +567,9 @@
       transform: rotate(180deg);
       -webkit-transform: rotate(180deg);
       &:hover {
+        background-image: url('../img/pil_hover.svg');
+      }
+      &:focus {
         background-image: url('../img/pil_hover.svg');
       }
     }
