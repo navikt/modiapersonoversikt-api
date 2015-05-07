@@ -203,10 +203,10 @@
             font-weight: 100;
             border: 1px dashed transparent;
             margin: 0 auto;
-            min-height: 25px;
-            line-height: 25px;
-            background-position: 0 6px;
-            padding: 5px 5px 5px 34px;
+            padding: 5px 5px 5px 37px;
+            line-height: 22px;
+            min-height: 22px;
+            background-position: 5px;
             width: 100%;
           }
           input[type=checkbox]:focus + label {
@@ -242,6 +242,16 @@
               width: 100%;
               display: block;
             }
+          input[type=radio] + label {
+            border: 1px dashed transparent;
+            padding: 5px 5px 5px 37px;
+            line-height: 22px;
+            min-height: 22px;
+            background-position: 5px;
+          }
+          input[type=radio]:focus + label {
+            border-color: #0067c5;
+          }
         }
         div.datovelger {
           //display: none;
