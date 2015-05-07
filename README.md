@@ -15,14 +15,13 @@ npm config set strict-ssl false
 ```
 
 
-
 * Kjør `maven clean install` for å laste ned alle JS-avhengigheter og bygge JS-modulene (hvis du starter maven i en terminal, må den ha støtte for GIT).
 
-* Alternativt, kan du kjøre `npm install && gulp`
+* Alternativt og anbefalt, kan du installere gulp globalt (`npm install gulp -g`) og så kjøre `npm install && gulp` fra rotmappa (reactkomponenter).
 
 ## Utvikling
 
-* Under utvikling kjøres `gulp dev`. Forandringer i koden vil da automatisk bli bygd inn og lagt i `target` mappen.
+* Under utvikling kjøres `gulp dev` fra rot-katalogen (reactkomponenter). Forandringer i koden vil da automatisk bli bygd inn og lagt i `target` mappen.
 
 ## Test
 
@@ -30,3 +29,7 @@ Tester kan kjøres på to måter:
 
 1. `gulp test`
 2. `mvn test`, evt. `mvn clean install`
+
+##Tips
+
+* Marker node_modules mappen som ekskludert i IntelliJ. Høyreklikk på mappen, velg "Mark Directory As" og "Excluded".
