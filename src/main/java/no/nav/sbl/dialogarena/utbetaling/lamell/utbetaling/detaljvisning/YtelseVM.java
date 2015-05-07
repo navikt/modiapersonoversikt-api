@@ -11,16 +11,18 @@ public class YtelseVM implements Serializable {
     private final Double sats;
     private final Double antall;
     private final Double belop;
+    private final String satsType;
 
     public YtelseVM(String ytelse, Double belop) {
-        this(ytelse, belop, null, null);
+        this(ytelse, belop, null, null, null);
     }
 
-    public YtelseVM(String ytelse, Double belop, Double antall, Double sats) {
+    public YtelseVM(String ytelse, Double belop, Double antall, Double sats, String satsType) {
         this.ytelse = ytelse;
         this.sats = sats;
         this.antall = antall;
         this.belop = belop;
+        this.satsType = satsType;
     }
 
     public String getYtelse() {
@@ -32,11 +34,18 @@ public class YtelseVM implements Serializable {
     }
 
     public String getAntall() {
-        return antall != null ? getBelopString(antall, 1) : "";
+        return antall != null ? conditionalPercentage(getBelopString(antall, 1)) : "";
     }
 
     public String getBelop() {
         return belop != null ? getBelopString(belop, 2) : "";
+    }
+
+    private String conditionalPercentage(String antall) {
+        if(satsType != null && satsType.equalsIgnoreCase("prosent")) {
+            return antall + "%";
+        }
+        return antall;
     }
 
     public static final Comparator<YtelseVM> DESC_BELOP = new Comparator<YtelseVM>() {

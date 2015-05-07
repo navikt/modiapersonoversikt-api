@@ -34,9 +34,9 @@ public class DetaljPanelTest extends AbstractWicketTest {
     public void opprettYtelsesrader() {
         List<YtelseVM> ytelseVMer = asList(
                 new YtelseVM("Grunnbeløp", 100D),
-                new YtelseVM("Grunnbeløp utvidet", 100D, 1D, 10D),
+                new YtelseVM("Grunnbeløp utvidet", 100D, 1D, 10D, "dag"),
                 new YtelseVM("Særtillegg", 123D),
-                new YtelseVM("Særtillegg utvidet", 123D, 2D, 200D));
+                new YtelseVM("Særtillegg utvidet", 123D, 2D, 200D, "dag"));
 
         ListView listView = detaljPanel.createYtelserader(ytelseVMer);
         assertThat(listView.getId(), is("underytelser"));

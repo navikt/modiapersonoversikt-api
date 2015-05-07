@@ -53,4 +53,22 @@ public class YtelseVMTest {
 
         assertThat(DESC_BELOP.compare(vm1, vm2), is(1));
     }
+
+    @Test
+    public void satsTypeTomGirIkkeProsent() {
+        YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, null);
+        assertThat(vm.getAntall(), is("11.0"));
+    }
+
+    @Test
+    public void satsTypeUtenomProsentGirIkkeProsent() {
+        YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, "Dag");
+        assertThat(vm.getAntall(), is("11.0"));
+    }
+
+    @Test
+    public void satsTypeProsentGirProsentBakAntall() {
+        YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, "Prosent");
+        assertThat(vm.getAntall(), is("11.0%"));
+    }
 }

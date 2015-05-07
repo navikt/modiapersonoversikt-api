@@ -51,7 +51,8 @@ public class VMUtils {
                         underytelse.get(Underytelse.ytelsesType),
                         underytelse.get(Underytelse.ytelseBeloep),
                         underytelse.get(Underytelse.satsAntall),
-                        underytelse.get(Underytelse.satsBeloep));
+                        underytelse.get(Underytelse.satsBeloep),
+                        underytelse.get(Underytelse.satsType));
             }
     };
 }
