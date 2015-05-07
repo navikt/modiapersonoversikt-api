@@ -1,11 +1,6 @@
 package no.nav.sbl.dialogarena.sak.config;
 
-import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.service.DataFletter;
-import no.nav.sbl.dialogarena.sak.service.HenvendelseService;
-import no.nav.sbl.dialogarena.sak.service.Filter;
-import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingService;
-import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -39,6 +34,11 @@ public class SaksoversiktServiceConfig {
     @Bean
     public HenvendelseService henvendelseService() {
         return new HenvendelseService();
+    }
+
+    @Bean
+    public GSakService gSakService() {
+        return new GSakService();
     }
 
     @Bean

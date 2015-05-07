@@ -31,6 +31,7 @@
 
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.19</henvendelse-soknader-tjenestespesifikasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
+        <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
     </properties>
 
     <dependencies>
@@ -103,6 +104,11 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
             <version>${sakogbehandling-tjenestespesifikasjon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dial-nav-tjeneste-sak</artifactId>
+            <version>${dial-nav-tjeneste-sak.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
