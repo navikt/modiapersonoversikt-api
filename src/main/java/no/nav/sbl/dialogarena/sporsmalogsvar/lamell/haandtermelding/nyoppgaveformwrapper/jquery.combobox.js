@@ -1,4 +1,28 @@
 (function ($) {
+    $.widget("custom.autocomplete", $.ui.autocomplete, {
+        _create: function () {
+            this._super();
+            this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+        },
+        _renderMenu: function (ul, items) {
+            var that = this;
+            var currentCategory = undefined;
+            $.each(items, function (index, item) {
+                var li;
+                if (item.category != currentCategory) {
+                    $('<li>' + item.category + '</li>')
+                        .addClass('ui-autocomplete-category')
+                        .addClass(item.category)
+                        .appendTo(ul);
+                    currentCategory = item.category;
+                }
+                li = that._renderItemData(ul, item);
+                if (item.category) {
+                    li.attr('aria-label', item.category + " : " + item.label);
+                }
+            });
+        }
+    });
     $.widget("custom.combobox", {
         _create: function () {
             this.wrapper = $("<span>")
@@ -16,16 +40,17 @@
 
             this.input = $('<input type="text">')
                 .appendTo(this.wrapper)
+                .attr('placeholder', this.element.find('[selected]').text())
                 .val(value)
                 .autocomplete({
                     delay: 0,
                     minLength: 0,
                     source: $.proxy(this, "_source"),
                     appendTo: this.wrapper,
-                    close: function(){
+                    close: function () {
                         $(this).parent().find('.ui-autocomplete-wrapper').hide();
                     },
-                    open: function(){
+                    open: function () {
                         $(this)
                             .parent()
                             .find('.ui-autocomplete-wrapper')
@@ -33,6 +58,9 @@
                             .find('.ui-autocomplete')
                             .css({top: 0, left: 0});
                     }
+                })
+                .click(function () {
+                    $(this).siblings('button').click();
                 });
             var widget = this.input.autocomplete('widget').wrap('<div class="ui-autocomplete-wrapper" />');
 
@@ -80,14 +108,22 @@
 
         _source: function (request, response) {
             var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
-            response(this.element.children("option").map(function () {
-                var text = $(this).text();
-                if (this.value && ( !request.term || matcher.test(text) ))
-                    return {
+
+            response(this.element.find('option').map(function () {
+                var $this = $(this);
+                var text = $this.text();
+                var hasCategory = $this.parent().is('optgroup');
+                if (this.value && ( !request.term || matcher.test(text) )) {
+                    var item = {
                         label: text,
                         value: text,
                         option: this
                     };
+                    if (hasCategory) {
+                        item.category = $this.parent().attr('label') || $this.parent().text();
+                    }
+                    return item;
+                }
             }));
         },
 
@@ -118,17 +154,20 @@
             this.input
                 .val("")
                 .attr("title", value + " didn't match any item")
-                .tooltip("open");
+                .attr('placeholder', this.element.find('[selected]').text());
             this.element.val("");
             this._delay(function () {
                 this.input.tooltip("close").attr("title", "");
             }, 2500);
             this.input.autocomplete("instance").term = "";
-        },
+        }
+        ,
 
         _destroy: function () {
             this.wrapper.remove();
             this.element.show();
         }
-    });
-})(jQuery);
+    })
+    ;
+})
+(jQuery);
