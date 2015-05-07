@@ -188,7 +188,6 @@
           margin: 0 0 8px 0;
         }
         .filter-block-content {
-          background-color: @grayLighter;
           padding: 10px @sidePadding;
           div {
             margin-bottom: 0.75rem;
@@ -206,8 +205,9 @@
             padding: 5px 5px 5px 37px;
             line-height: 22px;
             min-height: 22px;
-            background-position: 5px;
+            background-position: 5px 5px;
             width: 100%;
+            word-wrap: break-word;
           }
           input[type=checkbox]:focus + label {
             border-color: #0067c5;
@@ -372,6 +372,7 @@
       font-size: 14px;
       font-weight: bold;
       font-family: @sansFontFamily;
+      word-break: break-all;
     }
     .ytelseperiode {
       padding: 10px 0 16px 0;
