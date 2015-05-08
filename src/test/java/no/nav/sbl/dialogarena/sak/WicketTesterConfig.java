@@ -34,7 +34,7 @@ public class WicketTesterConfig {
     private ApplicationContext applicationContext;
 
     @Bean
-    public FluentWicketTester<? extends WebApplication> wicketTester() {
+    public FluentWicketTester wicketTester() {
         DummyApplication dummyApplication = new DummyApplication(applicationContext) {
             @Override
             protected void init() {
