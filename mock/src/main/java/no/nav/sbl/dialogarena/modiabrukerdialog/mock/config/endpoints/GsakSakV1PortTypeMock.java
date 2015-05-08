@@ -4,6 +4,8 @@ import no.nav.tjeneste.virksomhet.sak.v1.*;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
+import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakRequest;
+import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakResponse;
 import org.joda.time.DateTime;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -68,8 +70,14 @@ public class GsakSakV1PortTypeMock {
                     return new WSFinnSakResponse().withSakListe(sakerForBruker(bruker));
                 }
             });
+            when(sakV1.hentSak(any(WSHentSakRequest.class))).thenAnswer(new Answer<WSHentSakResponse>() {
+                @Override
+                public WSHentSakResponse answer(InvocationOnMock invocation) {
+                    return new WSHentSakResponse().withSak(createSak("DAG", DateTime.now().minusDays(5)));
+                }
+            });
             return sakV1;
-        } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
+        } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster | HentSakSakIkkeFunnet e) {
             throw new RuntimeException(e);
         }
     }

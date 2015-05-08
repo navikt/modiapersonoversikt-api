@@ -147,7 +147,10 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>javax.servlet</artifactId>
+        </dependency>
         <!--Modig-->
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -357,12 +360,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
