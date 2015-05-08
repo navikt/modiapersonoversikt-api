@@ -15,7 +15,7 @@ import org.apache.wicket.model.ResourceModel;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.VALGT_MELDING_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_LUKKET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_TOGGLET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
