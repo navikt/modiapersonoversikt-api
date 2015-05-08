@@ -32,7 +32,7 @@ import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.VALGT_MELDING_EVENT;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -156,7 +156,7 @@ public class Innboks extends Lerret {
         String itemId = feedItemPayload.getItemId();
         if (!itemId.equals(innboksVM.getValgtTraad().getNyesteMelding().melding.id)) {
             innboksVM.setValgtMelding(itemId);
-            send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
+            send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
             target.add(this);
         }
     }

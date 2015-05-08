@@ -15,12 +15,12 @@ import org.apache.wicket.model.ResourceModel;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.VALGT_MELDING_EVENT;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_LUKKET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_TOGGLET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
-@RefreshOnEvents({PANEL_LUKKET, VALGT_MELDING_EVENT})
+@RefreshOnEvents({PANEL_LUKKET, MELDING_VALGT})
 public class MeldingValgPanel extends Panel {
 
     private final AnimertPanel tilknyttetPanel;
