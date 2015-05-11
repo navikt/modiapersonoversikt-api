@@ -4,7 +4,7 @@ import no.nav.modig.content.*;
 import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
 import org.apache.commons.io.Charsets;
 import org.slf4j.Logger;
