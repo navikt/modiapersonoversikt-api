@@ -32,6 +32,7 @@ import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -41,7 +42,6 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference BESVAR_INDIKATOR_JS = new JavaScriptResourceReference(Innboks.class, "besvarIndikator.js");
     public static final ConditionalCssResource MELDINGER_IE_CSS = new ConditionalCssResource(new CssResourceReference(Innboks.class, "innboks-ie.css"), "screen", "IE");
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
-    public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
     public static final String BESVARMODUS_PARAM = "sos.innboks.modus.besvarer";
 
     @Inject
@@ -153,8 +153,12 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        innboksVM.setValgtMelding(feedItemPayload.getItemId());
-        target.add(this);
+        String itemId = feedItemPayload.getItemId();
+        if (!itemId.equals(innboksVM.getValgtTraad().getNyesteMelding().melding.id)) {
+            innboksVM.setValgtMelding(itemId);
+            send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
+            target.add(this);
+        }
     }
 
     @RunOnEvents(MELDING_SENDT_TIL_BRUKER)

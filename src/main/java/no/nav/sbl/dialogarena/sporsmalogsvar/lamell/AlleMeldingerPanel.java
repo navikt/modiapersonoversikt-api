@@ -16,8 +16,8 @@ import org.apache.wicket.model.PropertyModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.AnimertJournalforingsPanel.TRAAD_JOURNALFORT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 
@@ -43,9 +43,9 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("avsenderDato"));
                 item.add(new StatusIkon("statusIkon",
-                        blirBesvart(meldingVM.melding.traadId).getObject(),
-                        innboksVM.erValgtMelding(meldingVM).getObject(),
-                        meldingVM)
+                                blirBesvart(meldingVM.melding.traadId).getObject(),
+                                innboksVM.erValgtMelding(meldingVM).getObject(),
+                                meldingVM)
                 );
                 item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
                 item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
@@ -57,11 +57,13 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
-                        AlleMeldingerPanel.this.innboksVM.setValgtMelding(meldingVM);
-                        send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
-                        settFokusPaaValgtMelding(target);
-                        target.add(AlleMeldingerPanel.this);
-                        target.focusComponent(item);
+                        if (!meldingVM.melding.id.equals(innboksVM.getValgtTraad().getNyesteMelding().melding.id)) {
+                            AlleMeldingerPanel.this.innboksVM.setValgtMelding(meldingVM);
+                            send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
+                            settFokusPaaValgtMelding(target);
+                            target.add(AlleMeldingerPanel.this);
+                            target.focusComponent(item);
+                        }
                     }
                 });
             }
@@ -90,9 +92,9 @@ public class AlleMeldingerPanel extends Panel {
             if (innboksVM.harTraader()) {
                 if (innboksVM.getValgtTraad() == null) {
                     innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
+                    send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
                 }
                 target.appendJavaScript("Meldinger.addKeyNavigation();");
-                send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                 settFokusPaaValgtMelding(target);
             }
             send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
