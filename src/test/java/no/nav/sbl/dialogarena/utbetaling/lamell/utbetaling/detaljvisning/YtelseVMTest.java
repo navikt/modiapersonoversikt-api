@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM.DESC_BELOP;
@@ -11,6 +13,11 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class YtelseVMTest {
+
+    @BeforeClass
+    public static void setUp() {
+        Locale.setDefault(new Locale("no"));
+    }
 
     @Test
     public void sortererYtelserSynkendePaaBelop() {
@@ -57,18 +64,18 @@ public class YtelseVMTest {
     @Test
     public void satsTypeTomGirIkkeProsent() {
         YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, null);
-        assertThat(vm.getSats(), is("12.00"));
+        assertThat(vm.getSats(), is("12,00"));
     }
 
     @Test
     public void satsTypeUtenomProsentGirIkkeProsent() {
         YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, "Dag");
-        assertThat(vm.getSats(), is("12.00"));
+        assertThat(vm.getSats(), is("12,00"));
     }
 
     @Test
     public void satsTypeProsentGirProsentBakSats() {
         YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, "Prosent");
-        assertThat(vm.getSats(), is("12.00%"));
+        assertThat(vm.getSats(), is("12,00%"));
     }
 }
