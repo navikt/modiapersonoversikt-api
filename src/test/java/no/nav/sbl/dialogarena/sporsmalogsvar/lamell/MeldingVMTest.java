@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import org.joda.time.DateTime;
@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;

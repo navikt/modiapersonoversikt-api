@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.modig.lang.collections.TransformerUtils;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
@@ -44,8 +44,8 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.join;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.TRAAD_ID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad.NYESTE_FORST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.TRAAD_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad.NYESTE_FORST;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.lucene.document.Field.Store.YES;
 import static org.joda.time.DateTime.now;

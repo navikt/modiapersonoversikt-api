@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.PDFMelding;
 import org.joda.time.DateTime;
 import org.junit.Assert;

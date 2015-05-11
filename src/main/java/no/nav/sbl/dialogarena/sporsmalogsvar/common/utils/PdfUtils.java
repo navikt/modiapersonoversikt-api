@@ -5,8 +5,8 @@ import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.MeldingsTypeMapping.SAMTALEREFERAT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 

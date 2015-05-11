@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Ansatt;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;

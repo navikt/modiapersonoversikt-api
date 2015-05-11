@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.SAKS_ID_3;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

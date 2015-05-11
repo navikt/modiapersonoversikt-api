@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Traad;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;

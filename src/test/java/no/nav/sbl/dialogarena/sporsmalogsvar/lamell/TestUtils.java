@@ -8,7 +8,13 @@ import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.SubjectHandlerUtils;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerListe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -16,7 +22,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 
 public class TestUtils {
 
