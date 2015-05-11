@@ -101,7 +101,7 @@ public final class UtbetalingLerret extends Lerret {
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
 
         utbetalingslisteContainer = createUtbetalinglisteContainer();
-        utbetalingslisteContainer.add(createMaanedsPanelListe());
+        utbetalingslisteContainer.add(createMaanedsPanelListe(synligeUtbetalinger));
         utbetalingslisteContainer.setOutputMarkupPlaceholderTag(true);
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
@@ -132,8 +132,8 @@ public final class UtbetalingLerret extends Lerret {
         return new TotalOppsummeringPanel("totalOppsummeringPanel", new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()));
     }
 
-    private ListView<List<Record<Hovedytelse>>> createMaanedsPanelListe() {
-        Map<YearMonth, List<Record<Hovedytelse>>> yearMonthListMap = ytelserGroupedByYearMonth(on(hentHovedytelseListe()).filter(filterParametere).collect());
+    private ListView<List<Record<Hovedytelse>>> createMaanedsPanelListe(List<Record<Hovedytelse>> hovedytelseListe) {
+        Map<YearMonth, List<Record<Hovedytelse>>> yearMonthListMap = ytelserGroupedByYearMonth(on(hovedytelseListe).filter(filterParametere).collect());
 
         return new ListView<List<Record<Hovedytelse>>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
@@ -157,7 +157,7 @@ public final class UtbetalingLerret extends Lerret {
 
     protected void oppdaterUtbetalingsvisning(List<Record<Hovedytelse>> synligeUtbetalinger) {
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
-        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
+        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(synligeUtbetalinger));
     }
 
     private void endreSynligeKomponenter(boolean synligeUtbetalinger) {

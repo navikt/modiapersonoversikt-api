@@ -82,7 +82,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
 
     public void setYtelser(Set<String> hovedYtelser) {
         if (isAlleYtelserValgt()) {
-            onskedeYtelser.addAll(hovedYtelser);
+            onskedeYtelser = new HashSet<>(hovedYtelser);
         }
         alleYtelser = hovedYtelser;
     }

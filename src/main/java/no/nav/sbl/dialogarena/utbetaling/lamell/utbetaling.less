@@ -327,7 +327,7 @@
       font-weight: normal;
       color: #3e3832;
       font-size: 0.8rem;
-      width: 16.5%;
+      width: 12%;
 
       &:first-of-type {
         width: 34%;
@@ -336,7 +336,7 @@
     }
     td {
       vertical-align: bottom;
-      width: 16.5%;
+      width: 12%;
       &:first-of-type {
         text-align: left;
         width: 34%;
@@ -596,6 +596,27 @@
           display: block;
           overflow: auto;
           height: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1280px) {
+  .utbetalinger {
+    .kolonne-venstre {
+      .filter-form {
+        .filter-block {
+          .filter-block-content {
+            padding: 20px 8px;
+          }
+        }
+      }
+    }
+    .detaljpanel {
+      table.utbetaling-tabell {
+        td:first-of-type, th:first-of-type {
+//          width: 2%;
         }
       }
     }
