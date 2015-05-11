@@ -6,10 +6,14 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
+
+import static java.lang.String.format;
 
 public class EnhetDropdown extends Select<AnsattEnhet> {
     public EnhetDropdown(String id, IModel<AnsattEnhet> model, IModel<List<AnsattEnhet>> alle, IModel<List<AnsattEnhet>> foreslatte) {
@@ -23,6 +27,13 @@ public class EnhetDropdown extends Select<AnsattEnhet> {
 
         add(new SelectOptions<>("foreslatte", foreslatte, new EnhetRenderer()).setRecreateChoices(true));
         add(new SelectOptions<>("alle", alle, new EnhetRenderer()).setRecreateChoices(true));
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        String placeholder = getString("ansattenhetdropdown.null");
+        response.render(OnDomReadyHeaderItem.forScript(format("$('#%s').combobox({placeholder: '%s'})", this.getMarkupId(), placeholder)));
+        super.renderHead(response);
     }
 
     static class EnhetRenderer implements IOptionRenderer<AnsattEnhet> {

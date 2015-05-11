@@ -6,9 +6,12 @@ import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
-public class AnsattDropdown extends FancySelect<Ansatt> {
+import static java.lang.String.format;
+
+public class AnsattDropdown extends DropDownChoice<Ansatt> {
     public AnsattDropdown(String id, IModel<Ansatt> model, IModel<List<Ansatt>> choices) {
         super(id, model, choices, new AnsattChoiceRenderer());
+        this.setOutputMarkupPlaceholderTag(true);
     }
 
     private static class AnsattChoiceRenderer implements IChoiceRenderer<Ansatt> {
@@ -21,5 +24,12 @@ public class AnsattDropdown extends FancySelect<Ansatt> {
         public String getIdValue(Ansatt ansatt, int i) {
             return ansatt.ident;
         }
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        String placeholder = getString("ansattdropdown.null");
+        response.render(OnDomReadyHeaderItem.forScript(format("$('#%s').combobox({placeholder: '%s'})", this.getMarkupId(), placeholder)));
+        super.renderHead(response);
     }
 }

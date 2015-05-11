@@ -211,9 +211,23 @@ public class NyOppgaveFormWrapper extends Panel {
     private MarkupContainer lagEnhetVelger() {
         final IModel<List<AnsattEnhet>> enhetModel = new PropertyModel<>(this, "enheter");
 
-        final AnsattEnhetDropdown ansattEnhetDropdown = new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
+        final EnhetDropdown ansattEnhetDropdown = new EnhetDropdown(
+                "enhet",
+                new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"),
+                new AbstractReadOnlyModel<List<AnsattEnhet>>() {
+                    @Override
+                    public List<AnsattEnhet> getObject() {
+                        return enheter;
+                    }
+                },
+                new AbstractReadOnlyModel<List<AnsattEnhet>>() {
+                    @Override
+                    public List<AnsattEnhet> getObject() {
+                        return foreslatteEnheter;
+                    }
+                }
+        );
         ansattEnhetDropdown.setRequired(true);
-
         ansattEnhetDropdown.add(new AjaxEventBehavior("change") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
@@ -287,10 +301,7 @@ public class NyOppgaveFormWrapper extends Panel {
         foreslatteEnheter.addAll(gsakService.hentForeslatteEnheter(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode, optional(nyOppgave.underkategori)));
         if (foreslatteEnheter.size() == 1) {
             nyOppgave.enhet = foreslatteEnheter.get(0);
-        } else if (foreslatteEnheter.isEmpty()) {
-            foreslatteEnheter.add(AnsattEnhetDropdown.TOM_ENHET);
         }
-        foreslatteEnheter.add(AnsattEnhetDropdown.SKILLE_ENHET);
     }
 
     private void oppdaterAnsatteListe() {

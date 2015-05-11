@@ -1,4 +1,16 @@
 (function ($) {
+    function wicketEvent(element, event) {
+        if (document.createEventObject) {
+            //For IE
+            var evt = document.createEventObject();
+            return element.fireEvent('on' + event, evt);
+        } else {
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent(event, true, true);
+            return !element.dispatchEvent(evt);
+        }
+    }
+
     $.widget("custom.autocomplete", $.ui.autocomplete, {
         _create: function () {
             this._super();
@@ -40,7 +52,7 @@
 
             this.input = $('<input type="text">')
                 .appendTo(this.wrapper)
-                .attr('placeholder', this.element.find('[selected]').text())
+                .attr('placeholder', this.options.placeholder)
                 .val(value)
                 .autocomplete({
                     delay: 0,
@@ -48,7 +60,10 @@
                     source: $.proxy(this, "_source"),
                     appendTo: this.wrapper,
                     close: function () {
-                        $(this).parent().find('.ui-autocomplete-wrapper').hide();
+                        $(this)
+                            .focus()
+                            .parent()
+                            .find('.ui-autocomplete-wrapper').hide();
                     },
                     open: function () {
                         $(this)
@@ -57,6 +72,10 @@
                             .show()
                             .find('.ui-autocomplete')
                             .css({top: 0, left: 0});
+                    },
+                    select: function (event, ui) {
+                        wicketEvent($(ui.item.option).closest('select')[0], 'change');
+                        return true;
                     }
                 })
                 .click(function () {
@@ -153,8 +172,7 @@
             // Remove invalid value
             this.input
                 .val("")
-                .attr("title", value + " didn't match any item")
-                .attr('placeholder', this.element.find('[selected]').text());
+                .attr("title", value + " didn't match any item");
             this.element.val("");
             this._delay(function () {
                 this.input.tooltip("close").attr("title", "");
