@@ -10,20 +10,29 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.util.ListModel;
 
 import java.util.List;
 
 import static java.lang.String.format;
 
 public class EnhetDropdown extends Select<AnsattEnhet> {
-    public EnhetDropdown(String id, IModel<AnsattEnhet> model, IModel<List<AnsattEnhet>> alle, IModel<List<AnsattEnhet>> foreslatte) {
+
+    private final List<AnsattEnhet> foreslatteEnheter;
+
+    public EnhetDropdown(String id, IModel<AnsattEnhet> model, final List<AnsattEnhet> alleEnheter, final List<AnsattEnhet> foreslatteEnheter) {
         super(id, model);
+        this.foreslatteEnheter = foreslatteEnheter;
+
         add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 // må være her for at modellen blit oppdatert hver gang man endrer enhet
             }
         });
+
+        IModel<List<AnsattEnhet>> alle = new ListModel<>(alleEnheter);
+        IModel<List<AnsattEnhet>> foreslatte = new ListModel<>(this.foreslatteEnheter);
 
         add(new SelectOptions<>("foreslatte", foreslatte, new EnhetRenderer()).setRecreateChoices(true));
         add(new SelectOptions<>("alle", alle, new EnhetRenderer()).setRecreateChoices(true));

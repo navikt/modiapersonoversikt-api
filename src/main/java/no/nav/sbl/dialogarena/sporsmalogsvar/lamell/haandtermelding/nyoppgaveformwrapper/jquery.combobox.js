@@ -1,4 +1,7 @@
 (function ($) {
+    var ENTER = 13;
+
+    //Brukes for å sendes oppdatering slik at wicket holder følge.
     function wicketEvent(element, event) {
         if (document.createEventObject) {
             //For IE
@@ -11,12 +14,17 @@
         }
     }
 
+    //Overriding av autocomplete funksjonalitet
     $.widget("custom.autocomplete", $.ui.autocomplete, {
         _create: function () {
             this._super();
+
+            //Kategory elementer skal ikke være selektbare
             this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
         },
         _renderMenu: function (ul, items) {
+            console.log('t', this);
+            //Egen render metode for dropdownmenyen. NB bruk that._renderItemData for å underelementer
             var that = this;
             var currentCategory = undefined;
             $.each(items, function (index, item) {
@@ -35,6 +43,8 @@
             });
         }
     });
+
+    //Custom komponent
     $.widget("custom.combobox", {
         _create: function () {
             this.wrapper = $("<span>")
@@ -47,7 +57,7 @@
         },
 
         _createAutocomplete: function () {
-            var selected = this.element.children(":selected"),
+            var selected = this.element.find("[selected]"),
                 value = selected.val() ? selected.text() : "";
 
             this.input = $('<input type="text">')
@@ -75,7 +85,6 @@
                     },
                     select: function (event, ui) {
                         wicketEvent($(ui.item.option).closest('select')[0], 'change');
-                        return true;
                     }
                 })
                 .click(function () {
@@ -83,6 +92,18 @@
                 });
             var widget = this.input.autocomplete('widget').wrap('<div class="ui-autocomplete-wrapper" />');
 
+            //Fjerning av ugyldig data når dropdown blir lukket
+            this.input.on('keydown', function (e) {
+                if (e.keyCode === ENTER) {
+                    this._removeIfInvalid(e, {});
+                    this.input.autocomplete('close');
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            }.bind(this));
+            this.wrapper.on('change', 'input[type=text]', function (e) {
+                this._removeIfInvalid(e, {});
+            }.bind(this));
 
             this._on(this.input, {
                 autocompleteselect: function (event, ui) {
@@ -111,7 +132,6 @@
                 })
                 .click(function (event) {
                     event.preventDefault();
-
                     input.focus();
 
                     // Close if already visible
@@ -157,7 +177,7 @@
             var value = this.input.val(),
                 valueLowerCase = value.toLowerCase(),
                 valid = false;
-            this.element.children("option").each(function () {
+            this.element.find("option").each(function () {
                 if ($(this).text().toLowerCase() === valueLowerCase) {
                     this.selected = valid = true;
                     return false;
@@ -174,12 +194,8 @@
                 .val("")
                 .attr("title", value + " didn't match any item");
             this.element.val("");
-            this._delay(function () {
-                this.input.tooltip("close").attr("title", "");
-            }, 2500);
             this.input.autocomplete("instance").term = "";
-        }
-        ,
+        },
 
         _destroy: function () {
             this.wrapper.remove();

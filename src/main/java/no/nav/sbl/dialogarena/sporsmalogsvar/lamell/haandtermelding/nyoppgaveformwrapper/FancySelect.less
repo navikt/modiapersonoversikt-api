@@ -5,6 +5,21 @@ select + span.jquery-combobox {
   input[type=text] {
     width: 100%;
     padding-right: 4%;
+    padding-left: 12px;
+
+    //Disse kan ikke grupperes...
+    &::-webkit-input-placeholder {
+      color: black;
+    }
+    &:-moz-placeholder {
+      color: black;
+    }
+    &::-moz-placeholder {
+      color: black;
+    }
+    &:-ms-input-placeholder {
+      color: black;
+    }
   }
   button {
     position: absolute;
