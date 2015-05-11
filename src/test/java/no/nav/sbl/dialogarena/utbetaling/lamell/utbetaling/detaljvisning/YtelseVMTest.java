@@ -57,18 +57,18 @@ public class YtelseVMTest {
     @Test
     public void satsTypeTomGirIkkeProsent() {
         YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, null);
-        assertThat(vm.getAntall(), is("11,0"));
+        assertThat(vm.getSats(), is("12.00"));
     }
 
     @Test
     public void satsTypeUtenomProsentGirIkkeProsent() {
         YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, "Dag");
-        assertThat(vm.getAntall(), is("11,0"));
+        assertThat(vm.getSats(), is("12.00"));
     }
 
     @Test
-    public void satsTypeProsentGirProsentBakAntall() {
+    public void satsTypeProsentGirProsentBakSats() {
         YtelseVM vm = new YtelseVM("Dagpenger", 10.0, 11.0, 12.0, "Prosent");
-        assertThat(vm.getAntall(), is("11,0%"));
+        assertThat(vm.getSats(), is("12.00%"));
     }
 }
