@@ -39,7 +39,7 @@ public class HaandterMeldingPanel extends Panel {
 
         MerkePanel merkePanel = new MerkePanel("merkePanel", innboksVM);
         add(merkePanel);
-        add(new MeldingValgPanel("merkeValg", both(not(eldsteMeldingErJournalfort)).and(erBehandlet), merkePanel));
+        add(new MeldingValgPanel("merkeValg", both(not(eldsteMeldingErJournalfort)).and(erBehandlet).and(not(erFeilsendt)), merkePanel));
 
         PrintLenke printLenke = new PrintLenke("print", new PropertyModel<List<MeldingVM>>(innboksVM, "valgtTraad.meldinger"));
         add(printLenke);
