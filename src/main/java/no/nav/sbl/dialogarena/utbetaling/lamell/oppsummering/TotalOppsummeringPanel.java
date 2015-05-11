@@ -2,8 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import no.nav.sbl.dialogarena.utbetaling.lamell.components.PrintEkspanderContainer;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -26,26 +24,8 @@ public class TotalOppsummeringPanel extends Panel {
         super(id, new CompoundPropertyModel<>(oppsummeringVM));
         setOutputMarkupPlaceholderTag(true);
 
-        add(createShowHideBehavior());
         add(createTopplinje(), createYtelsesOppsummering());
         add(hasCssClassIf("ekspandert", ekspandert));
-    }
-
-    private AjaxEventBehavior createShowHideBehavior() {
-        return new AjaxEventBehavior("click") {
-            @Override
-            protected void onEvent(AjaxRequestTarget target) {
-                ekspandert.setObject(!ekspandert.getObject());
-                target.appendJavaScript(createJavascript());
-                target.add();
-            }
-
-            private String createJavascript() {
-                return "$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);" +
-                        "$('#" + getMarkupId() + "').toggleClass('ekspandert');" +
-                        "Utbetalinger.toggleEkspandertHjelpetekst($('#" + getMarkupId() + "'));";
-            }
-        };
     }
 
     private MarkupContainer createTopplinje() {

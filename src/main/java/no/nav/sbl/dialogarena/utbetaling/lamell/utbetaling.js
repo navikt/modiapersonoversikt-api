@@ -1,8 +1,7 @@
 var Utbetalinger = (function () {
     var aapneUtbetalingText = 'Ekspander';
     var lukkUtbetalingText = 'Minimer';
-
-    var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
+    var ENTER_KEYCODE = 13;
 
     var init = function () {
         addKeyNavigation();
@@ -10,19 +9,30 @@ var Utbetalinger = (function () {
         // Event listeners
         // Utbetalinger
         $(document).on('keydown', '.utbetaling-ramme-innhold .utbetalingslinje', function (event) {
-            if (event.which === 13) {
+            if (event.which === ENTER_KEYCODE) {
                 Utbetalinger.toggleDetaljPanel($(this));
             }
         });
 
         // Totalt utbetalt
         $(document).on('keydown', '.utbetaling-ramme-innhold.oppsummering-total', function (event) {
-            if (event.which === 13) {
+            if (event.which === ENTER_KEYCODE) {
                 Utbetalinger.toggleDetaljPanel($(this));
             }
         });
 
-        $(document).on('click', utbetalingslinjeSelector, function () {
+        $(document).on('keydown', '.ekspander-pil', function(event) {
+            if(event.which === ENTER_KEYCODE) {
+               Utbetalinger.toggleDetaljPanel($(this));
+               event.stopPropagation();
+           }
+        });
+
+        $(document).on('click', '.utbetaling-ramme-innhold.oppsummering-total', function () {
+            Utbetalinger.toggleDetaljPanel($(this));
+        });
+
+        $(document).on('click', '.utbetaling-ramme .utbetalingslinje', function () {
             Utbetalinger.toggleDetaljPanel($(this));
         });
 
