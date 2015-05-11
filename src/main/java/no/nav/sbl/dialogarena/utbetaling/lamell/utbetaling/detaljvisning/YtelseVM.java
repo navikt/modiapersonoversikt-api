@@ -30,22 +30,22 @@ public class YtelseVM implements Serializable {
     }
 
     public String getSats() {
-        return sats != null ? getBelopString(sats, 2) : "";
+        return sats != null ? conditionalPercentage(getBelopString(sats, 2)) : "";
     }
 
     public String getAntall() {
-        return antall != null ? conditionalPercentage(getBelopString(antall, 1)) : "";
+        return antall != null ? getBelopString(antall, 1) : "";
     }
 
     public String getBelop() {
         return belop != null ? getBelopString(belop, 2) : "";
     }
 
-    private String conditionalPercentage(String antall) {
+    private String conditionalPercentage(String number) {
         if(satsType != null && satsType.equalsIgnoreCase("prosent")) {
-            return antall + "%";
+            return number + "%";
         }
-        return antall;
+        return number;
     }
 
     public static final Comparator<YtelseVM> DESC_BELOP = new Comparator<YtelseVM>() {
