@@ -136,7 +136,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-pdf-generering</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>bouncycastle</groupId>

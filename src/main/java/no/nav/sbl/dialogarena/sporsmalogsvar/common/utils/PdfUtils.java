@@ -23,17 +23,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class PdfUtils {
 
-    public static byte[] genererPdf(Melding melding) {
-        Map<String, Helper<?>> helpers = generateHelpers();
-        try {
-            PDFMelding innhold = new PDFMelding(melding);
-            String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(innhold, "html/melding", helpers);
-            return PDFFabrikk.lagPdfFil(html);
-        } catch (IOException e) {
-            throw new ApplicationException("Kunne ikke lage markup av melding", e);
-        }
-    }
-
     public static byte[] genererPdfForPrint(List<MeldingVM> meldinger) {
         Map<String, Helper<?>> helpers = generateHelpers();
         List<PDFMelding> pdfMeldinger = new ArrayList<>();
