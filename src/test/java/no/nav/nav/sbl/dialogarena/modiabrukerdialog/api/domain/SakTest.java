@@ -1,5 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.junit.Test;
 
 import static no.nav.modig.lang.option.Optional.optional;

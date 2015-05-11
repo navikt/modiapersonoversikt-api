@@ -1,4 +1,4 @@
-package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg;
 
 import org.apache.commons.collections15.Transformer;
 

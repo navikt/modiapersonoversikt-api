@@ -1,7 +1,7 @@
-package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 
 import java.util.List;

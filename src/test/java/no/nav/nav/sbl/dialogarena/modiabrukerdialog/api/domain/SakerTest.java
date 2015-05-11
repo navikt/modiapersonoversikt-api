@@ -1,6 +1,9 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerListe;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;

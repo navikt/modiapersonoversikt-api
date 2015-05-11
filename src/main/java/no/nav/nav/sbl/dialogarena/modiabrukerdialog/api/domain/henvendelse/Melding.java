@@ -1,4 +1,4 @@
-package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;

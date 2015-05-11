@@ -1,7 +1,7 @@
-package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak;
 
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 
 import java.io.Serializable;
 import java.util.List;

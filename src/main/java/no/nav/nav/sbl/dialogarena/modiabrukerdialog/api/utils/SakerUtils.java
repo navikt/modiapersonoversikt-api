@@ -1,10 +1,10 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerListe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerListe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import org.apache.commons.collections15.Closure;
 import org.apache.commons.collections15.Transformer;
 
@@ -15,7 +15,7 @@ import java.util.TreeMap;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 
 public class SakerUtils {
 

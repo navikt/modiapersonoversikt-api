@@ -1,4 +1,4 @@
-package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk;
 
 public interface StandardKodeverk {
 
