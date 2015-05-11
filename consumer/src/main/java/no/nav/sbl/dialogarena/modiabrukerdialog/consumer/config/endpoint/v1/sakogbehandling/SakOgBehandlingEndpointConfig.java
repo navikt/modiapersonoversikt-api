@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling;
 
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;

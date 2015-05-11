@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling;
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

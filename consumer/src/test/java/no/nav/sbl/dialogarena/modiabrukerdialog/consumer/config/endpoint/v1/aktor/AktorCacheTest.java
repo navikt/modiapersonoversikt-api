@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor.AktorEndpointConfig.AKTOER_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig.AKTOER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

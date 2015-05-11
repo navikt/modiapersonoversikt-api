@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.ping.PingResult;

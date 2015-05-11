@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor;
 
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.PingResult;
