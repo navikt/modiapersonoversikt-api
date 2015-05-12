@@ -54,6 +54,7 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(attributeIf("aria-selected", "true", innboksVM.erValgtMelding(meldingVM), true));
                 item.add(attributeIf("aria-controls", traadDetaljerMarkupId, innboksVM.erValgtMelding(meldingVM), true));
+                item.add(attributeIf("aria-owns", traadDetaljerMarkupId, innboksVM.erValgtMelding(meldingVM), true));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
