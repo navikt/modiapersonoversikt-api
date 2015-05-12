@@ -23,13 +23,10 @@ var ModalPortal = React.createClass({
     },
     componentDidUpdate: function () {
         if (this.props.isOpen) {
-            $(document.body).children().not(this.getDOMNode().parentNode).attr('aria-hidden', true);
-
             if (!$.contains(this.refs.content.getDOMNode(), document.activeElement)) {
                 this.focusFirst();
             }
         } else {
-            $(document.body).children().removeAttr('aria-hidden');
             this.restoreFocus();
         }
     },

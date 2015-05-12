@@ -39,7 +39,7 @@ var Modal = React.createClass({
         this.renderPortal(props, this.state)
     },
     componentWillUnmount: function () {
-        document.body.removeChild(this.portalElement);
+        this.close();
     },
     componentDidUpdate: function () {
         this.renderPortal(this.props, this.state)
@@ -59,12 +59,14 @@ var Modal = React.createClass({
         }
 
         $(document.body).addClass('modal-open');
+        $(document.body).children().not(this.portalElement).attr('aria-hidden', true);
         this.setState({isOpen: true});
     },
     close: function () {
         this.setState({isOpen: false});
         document.body.removeChild(this.portalElement);
         $(document.body).removeClass('modal-open');
+        $(document.body).children().removeAttr('aria-hidden');
     },
     renderPortal: function (props, state) {
         var modal = {
