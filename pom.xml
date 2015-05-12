@@ -246,7 +246,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>reactkomponenter</artifactId>
-            <version>0.14-SNAPSHOT</version>
+            <version>0.15-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
