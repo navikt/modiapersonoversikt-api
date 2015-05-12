@@ -98,8 +98,6 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
                 .select("typeContainer:type", 0);
         wicket.tester.executeBehavior((AbstractAjaxBehavior) typeBehavior);
 
-        wicket.tester.getRequest().setParameter("enhetContainer:enhet", "1231");
-
         wicket.inForm("panel:nyoppgaveform")
                 .select("prioritetContainer:prioritet", 0)
                 .write("beskrivelse", "Beskrivelse")
