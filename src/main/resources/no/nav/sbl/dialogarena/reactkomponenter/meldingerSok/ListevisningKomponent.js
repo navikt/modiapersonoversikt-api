@@ -29,9 +29,9 @@ var ListevisningKomponent = React.createClass({
             <div className="sok-element" onClick={tekstChangedProxy.bind(this)}>
                 <input id={"melding" + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={"melding" + this.props.traad.key} className={cls}>
+                    <div className={this.props.traad.statusKlasse} aria-hidden="true"></div>
                     <p className="vekk">{statusIkonTekst}</p>
                     <p dangerouslySetInnerHTML={{__html: dato}}></p>
-                    <div className={this.props.traad.statusKlasse} aria-hidden="true"></div>
                     <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
                     <p className="fritekst" dangerouslySetInnerHTML={{__html: innhold}} aria-hidden="true"></p>
                 </label>
