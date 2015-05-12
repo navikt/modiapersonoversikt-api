@@ -13,6 +13,7 @@ public interface Hovedytelse {
 
     Key<DateTime> forfallsdato = new Key<>("FORFALLS_DATO");
     Key<DateTime> utbetalingsDato = new Key<>("UTBETALINGS_DATO");
+    Key<DateTime> posteringsDato = new Key<>("POSTERINGS_DATO");
     Key<Record<Aktoer>> utbetaltTil = new Key<>("UTBETALT_TIL");
     Key<Mottakertype> mottakertype = new Key<>("MOTTAKER_TYPE");
     Key<String> utbetalingsmelding = new Key<>("UTBETALING_MELDING");
@@ -32,7 +33,7 @@ public interface Hovedytelse {
     Key<Record<Aktoer>> rettighetshaver = new Key<>("RETTIGHETSHAVER");
     Key<Record<Aktoer>> refundertForOrg = new Key<>("REFUNDERT_FOR_ORG");
 
-    Key<DateTime> hovedytelsedato = new Key<>("POSTERINGS_DATO");
+    Key<DateTime> hovedytelsedato = new Key<>("HOVEDYTELSES_DATO");
     Key<Double> bruttoUtbetalt = new Key<>("AGGREGERT_BRUTTO_BELOEP");
     Key<Double> sammenlagtTrekkBeloep = new Key<>("AGGREGERT_TREKK_BELOEP");
 

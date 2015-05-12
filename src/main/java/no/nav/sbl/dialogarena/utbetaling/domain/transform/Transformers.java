@@ -74,6 +74,7 @@ public class Transformers {
                         .with(hovedytelsedato, determineHovedytelseDato(wsUtbetaling))
                         .with(forfallsdato, wsUtbetaling.getForfallsdato())
                         .with(utbetalingsDato, optional(wsUtbetaling.getUtbetalingsdato()))
+                        .with(posteringsDato, wsUtbetaling.getPosteringsdato())
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
                         .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
