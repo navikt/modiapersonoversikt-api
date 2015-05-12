@@ -17,6 +17,11 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
+    public TilgangskontrollService tilgangskontrollService() {
+        return new TilgangskontrollService();
+    }
+
+    @Bean
     public BulletproofCmsService bulletproofCmsService() {
         return new BulletproofCmsService();
     }

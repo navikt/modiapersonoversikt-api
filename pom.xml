@@ -15,23 +15,39 @@
     <packaging>jar</packaging>
 
     <properties>
+        <!-- Tredjeparts dependencies  -->
         <spring.version>4.1.6.RELEASE</spring.version>
         <wicket.version>6.17.0</wicket.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <joda-time.version>2.7</joda-time.version>
         <commons-io.version>2.4</commons-io.version>
+        <collections-generic.version>4.01</collections-generic.version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <junit.version>4.11</junit.version>
 
+        <!-- Egenlagde dependencies  -->
         <modig.frontend.version>1.1.75</modig.frontend.version>
         <modig.wicket.version>3.0.0-SNAPSHOT</modig.wicket.version>
         <modig.lang.version>2.0.2</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modia-felleskomponenter.version>1.0.0-SNAPSHOT</modia-felleskomponenter.version>
         <common-lokalt-kodeverk.version>1.1.4</common-lokalt-kodeverk.version>
+        <common-test.version>1.2</common-test.version>
+        <common-jetty.version>1.0.23</common-jetty.version>
+        <modig-lang.version>2.0.1</modig-lang.version>
+        <modig-content.version>2.0.2</modig-content.version>
+        <modig-core.version>1.0.1</modig-core.version>
 
-
+        <!-- Tjenester  -->
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.19</henvendelse-soknader-tjenestespesifikasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
+        <common-kodeverk.version>1.0.1</common-kodeverk.version>
+        <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
+
+        <!-- Java  -->
+        <javax.inject.version>1</javax.inject.version>
     </properties>
 
     <dependencies>
@@ -86,7 +102,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-kodeverk</artifactId>
-            <version>1.0.1</version>
+            <version>${common-kodeverk.version}</version>
         </dependency>
 
         <dependency>
@@ -124,7 +140,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>aktorid-jaxws</artifactId>
-            <version>1.3</version>
+            <version>${aktorid-jaxws.version}</version>
         </dependency>
 
         <dependency>
@@ -136,67 +152,67 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
-            <version>1.0.1</version>
+            <version>${modig-core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
-            <version>2.0.1</version>
+            <version>${modig-lang.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
-            <version>4.01</version>
+            <version>${collections-generic.version}</version>
         </dependency>
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-jetty</artifactId>
-            <version>1.0.23</version>
+            <version>${common-jetty.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-test</artifactId>
-            <version>1.2</version>
+            <version>${common-test.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <version>${javax.inject.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
-            <version>1.3</version>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
-            <version>1.3</version>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -209,7 +225,7 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-content</artifactId>
-            <version>2.0.2</version>
+            <version>${modig-content.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -240,7 +256,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
+            <version>${slf4j.version}</version>
         </dependency>
 
     </dependencies>
