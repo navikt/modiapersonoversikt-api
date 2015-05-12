@@ -26,9 +26,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.hovedytelsedato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelse;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelsesperiode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
 import static org.joda.time.LocalDate.now;
 
@@ -75,7 +73,7 @@ public class YtelseUtils {
     public static List<Record<Hovedytelse>> hovedytelserFromPeriod(List<Record<Hovedytelse>> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         final Interval intervall = intervalFromStartEndDate(startDato, sluttDato);
         return on(hovedytelser)
-                .filter(where(hovedytelsedato, isWithinRange(intervall))).collect();
+                .filter(either(where(posteringsDato, isWithinRange(intervall))).or(where(utbetalingsDato, isWithinRange(intervall)))).collect();
     }
 
     /**
