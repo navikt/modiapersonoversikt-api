@@ -4,7 +4,7 @@
         <div wicket:id="feedbackpanel"></div>
         <div class="filter-block" role="form" wicket:message="aria-label:utbetaling.lamell.filter.sok.alt">
             <div class="ramme-header">
-                <h2 aria-label="Filtrering" class="boks-overskrift"><wicket:message key="utbetaling.lamell.filter.filtrering.overskrift"/></h2>
+                <h2 aria-label="Velg periode" class="boks-overskrift"><wicket:message key="utbetaling.lamell.filter.periode.overskrift"/></h2>
             </div>
             <div class="filter-block-content dato-plukker-filter">
                 <h3 aria-label="Velg periode" class="filter-header">
@@ -16,6 +16,12 @@
                     <wicket:container wicket:id="datoFilter"/>
                     <input type="submit" wicket:id="sok" class="knapp-hoved-liten"/>
                 </div>
+            </div>
+        </div>
+
+        <div class="filter-block" role="form" wicket:message="aria-label:utbetaling.lamell.filter.filtrering.alt">
+            <div class="ramme-header">
+                <h2 aria-label="Filtrering" class="boks-overskrift"><wicket:message key="utbetaling.lamell.filter.filtrering.overskrift"/></h2>
             </div>
 
             <div class="filter-block-content">
