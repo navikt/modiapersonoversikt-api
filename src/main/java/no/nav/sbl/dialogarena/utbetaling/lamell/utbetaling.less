@@ -609,20 +609,40 @@
 @media (max-width: 1280px) {
   .utbetalinger {
     .kolonne-venstre {
-      .filter-form {
-        .filter-block {
-          .filter-block-content {
-            padding: 20px 8px;
-          }
+      float: none;
+      padding: 0;
+      width: 100%;
+      display: block;
+      margin-bottom: 2rem;
+      &:before {
+        display: table;
+        content: "";
+        line-height: 0;
+      }
+      &:after {
+        clear: both;
+        display: table;
+        content: "";
+        line-height: 0;
+      }
+      .filter-block {
+        display: inline-block;
+
+        &.periode-block {
+          width: 220px;
+          float: left;
+        }
+        &.filtrering-block {
+          width: calc(100%-220px);
+          float: right;
         }
       }
     }
-    .detaljpanel {
-      table.utbetaling-tabell {
-        td:first-of-type, th:first-of-type {
-//          width: 2%;
-        }
-      }
+    .kolonne-hoyre {
+      float: none;
+      padding: 0;
+      width: 100%;
+      display: block;
     }
   }
 }
