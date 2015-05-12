@@ -1,18 +1,17 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -210,12 +209,12 @@ public class NyOppgaveFormWrapper extends Panel {
 
     private MarkupContainer lagEnhetVelger() {
         final IModel<List<AnsattEnhet>> enhetModel = new PropertyModel<>(this, "enheter");
-        final EnhetDropdown ansattEnhetDropdown = new EnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
+        final EnhetDropdown enhetDropdown = new EnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
 
-        ansattEnhetDropdown.setRequired(true);
-        ansattEnhetDropdown.add(new AjaxEventBehavior("change") {
+        enhetDropdown.setRequired(true);
+        enhetDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onEvent(AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 oppdaterAnsatteListe();
                 target.add(ansattVelger);
             }
@@ -224,12 +223,12 @@ public class NyOppgaveFormWrapper extends Panel {
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
         enhetContainer.setOutputMarkupPlaceholderTag(true);
 
-        enhetContainer.add(ansattEnhetDropdown);
+        enhetContainer.add(enhetDropdown);
         IModel<Boolean> visEnhetsValg = both(not(isEmptyList(enhetModel)))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema"))))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.OppgaveType>(form.getModel(), "type"))));
         enhetContainer.add(hasCssClassIf("hidden", not(visEnhetsValg)));
-        enhetContainer.add(new AttributeAppender("for", ansattEnhetDropdown.getMarkupId()));
+        enhetContainer.add(new AttributeAppender("for", enhetDropdown.getMarkupId()));
 
         return enhetContainer;
     }

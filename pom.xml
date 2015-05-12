@@ -281,11 +281,6 @@
             <version>${wicket.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.vaynberg.wicket.select2</groupId>
-            <artifactId>wicket-select2</artifactId>
-            <version>2.2.3</version>
-        </dependency>
 
         <!--Spring-->
         <dependency>
@@ -365,11 +360,6 @@
         </dependency>
 
         <!--Diverse-->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20090211</version>
-        </dependency>
         <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
