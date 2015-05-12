@@ -6,14 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({
-        KodeverkConfig.class
-})
+@Import({KodeverkConfig.class})
 public class SaksoversiktServiceConfig {
 
     @Bean
     public SaksoversiktService saksoversiktService() {
-        return new SaksoversiktService();
+        return new SaksoversiktServiceImpl();
     }
 
     @Bean
@@ -23,22 +21,22 @@ public class SaksoversiktServiceConfig {
 
     @Bean
     public BulletproofCmsService bulletproofCmsService() {
-        return new BulletproofCmsService();
+        return new BulletproofCmsServiceImpl();
     }
 
     @Bean
     public Filter sakOgBehandlingFilter() {
-        return new Filter();
+        return new FilterImpl();
     }
 
     @Bean
     public SakOgBehandlingService sakOgBehandlingService() {
-        return new SakOgBehandlingService();
+        return new SakOgBehandlingServiceImpl();
     }
 
     @Bean
     public HenvendelseService henvendelseService() {
-        return new HenvendelseService();
+        return new HenvendelseServiceImpl();
     }
 
     @Bean
@@ -48,7 +46,7 @@ public class SaksoversiktServiceConfig {
 
     @Bean
     public DataFletter dataFletter() {
-        return new DataFletter();
+        return new DataFletterImpl();
     }
 
 }

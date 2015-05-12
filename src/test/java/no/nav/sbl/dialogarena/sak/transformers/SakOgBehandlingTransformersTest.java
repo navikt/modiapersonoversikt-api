@@ -14,9 +14,7 @@ import org.mockito.stubbing.Answer;
 
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
-import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
-import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDE_TIL_BEHANDLING;
-import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.temaVMTransformer;
+import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.*;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -59,7 +57,8 @@ public class SakOgBehandlingTransformersTest {
     public void temaVMtransformerKomplettObjektMapping() {
         Filter filter = mock(Filter.class);
         when(filter.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
-            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
             }
         });

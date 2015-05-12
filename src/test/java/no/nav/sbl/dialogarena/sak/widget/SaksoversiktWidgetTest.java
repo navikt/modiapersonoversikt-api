@@ -1,22 +1,20 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
-import no.nav.modig.core.exception.SystemException;
-import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.sbl.dialogarena.sak.AbstractWicketTest;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.Matchers.anyString;
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -35,63 +33,20 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
     }
 
     @Test
-    public void skalKunneAapneSideMedSaker() {
-        TemaVM temaVM = new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now()));
-        ArrayList<TemaVM> temaVMs = new ArrayList<>();
-        temaVMs.add(temaVM);
-        when(saksoversiktService.hentTemaer(anyString())).thenReturn(temaVMs);
-        when(kodeverk.getTemanavnForTemakode("AAP", BulletProofKodeverkService.ARKIVTEMA)).thenReturn("Arbeidsavklaringspæng");
+    public void widgetReturnererSakerFraService() throws Exception {
+        String fnr = "11111111111";
+        SaksoversiktWidget widget = new SaksoversiktWidget("id", "S", fnr);
+        when(saksoversiktService.hentTemaer(fnr)).thenReturn(temaer());
 
-        SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
-        widget.setMaxNumberOfFeedItems(7);
-        wicketTester.goToPageWith(widget).should().containPatterns("Arbeidsavklaringspæng");
+        assertThat(widget.getFeedItems(), is(temaer()));
+
     }
 
-    @Test
-    public void skalViseMeldingNårNullSaker() {
-        when(saksoversiktService.hentTemaer(anyString())).thenReturn(new ArrayList<TemaVM>());
-
-        SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
-        wicketTester.goToPageWith(widget);
-
-        wicketTester.should().containPatterns("finnes ikke noen saker");
+    private static List<TemaVM> temaer() {
+        return asList(tema("AAP"), tema("DAG"), tema("BIL"));
     }
 
-    @Test
-    public void skalViseMeldingNårFeilPåTjeneste() {
-        when(saksoversiktService.hentTemaer(anyString())).thenThrow(new SystemException("You messed up", new RuntimeException()));
-
-        SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
-        wicketTester.goToPageWith(widget);
-
-        wicketTester.should().containPatterns("kan ikke vise saker");
-    }
-
-    @Test
-    public void skalViseMeldingVedForMangeSaker() {
-        ArrayList<TemaVM> temaVMs = new ArrayList<>();
-        for (int x = 0; x < 10 + 3; x++) {
-            temaVMs.add(new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now())));
-        }
-
-        when(saksoversiktService.hentTemaer(anyString())).thenReturn(temaVMs);
-
-        SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
-        wicketTester.goToPageWith(widget);
-        wicketTester.should().containPatterns("Vis alle (\\d+) saker");
-    }
-
-    @Test
-    public void skalIkkeViseMeldingVedAkkuratNokSaker() {
-        ArrayList<TemaVM> temaVMs = new ArrayList<>();
-        for (int x = 0; x < 10; x++) {
-            temaVMs.add(new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now())));
-        }
-
-        when(saksoversiktService.hentTemaer(anyString())).thenReturn(temaVMs);
-
-        SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
-        wicketTester.goToPageWith(widget);
-        wicketTester.should().notContainPatterns("flere saker.");
+    private static TemaVM tema(String temakode) {
+        return new TemaVM().withTemaKode(temakode);
     }
 }

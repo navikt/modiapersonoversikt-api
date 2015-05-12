@@ -11,12 +11,13 @@
 
     <name>modia-saksoversikt</name>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>2.5-SNAPSHOT</version>
+    <version>3.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <!-- Tredjeparts dependencies  -->
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>3.2.9.RELEASE</spring.version>
+        <modig.wicket.version>2.0.37</modig.wicket.version>
+        <modig.core.version>1.0.1</modig.core.version>
         <wicket.version>6.17.0</wicket.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <joda-time.version>2.7</joda-time.version>
@@ -58,7 +59,6 @@
             <artifactId>modig-wicket</artifactId>
             <version>${modig.wicket.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>

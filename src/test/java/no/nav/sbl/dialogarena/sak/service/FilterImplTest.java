@@ -5,12 +5,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +19,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
-import static no.nav.sbl.dialogarena.sak.service.Filter.DOKUMENTINNSENDING_KVITTERINGSTYPE;
-import static no.nav.sbl.dialogarena.sak.service.Filter.SEND_SOKNAD_KVITTERINGSTYPE;
+import static no.nav.sbl.dialogarena.sak.util.KvitteringstypeUtils.DOKUMENTINNSENDING_KVITTERINGSTYPE;
+import static no.nav.sbl.dialogarena.sak.util.KvitteringstypeUtils.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -34,13 +29,13 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FilterTest {
+public class FilterImplTest {
 
     @Mock
     private CmsContentRetriever cmsContentRetriever;
 
     @InjectMocks
-    private Filter filter = new Filter();
+    private FilterImpl filter = new FilterImpl();
 
     @Before
     public void setup() {
@@ -190,7 +185,7 @@ public class FilterTest {
                                         .withSisteBehandlingsoppdatering(tolvteDesember2014.plus(2))
                                         .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                                         .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue("opphoert"))
-                                )
+                        )
 
         );
 
