@@ -3,11 +3,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Ansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -36,6 +38,11 @@ public class AnsattServiceImpl implements AnsattService {
         } catch (HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattFaultGOSYSGeneriskfMsg e) {
             throw new RuntimeException("Noe gikk galt ved henting av ansatt med ident " + ident, e);
         }
+    }
+
+    @Override
+    public List<Ansatt> ansatteForEnhet(AnsattEnhet enhet) {
+        return new ArrayList<>();
     }
 
     protected static final Transformer<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = new Transformer<ASBOGOSYSNavEnhet, AnsattEnhet>() {

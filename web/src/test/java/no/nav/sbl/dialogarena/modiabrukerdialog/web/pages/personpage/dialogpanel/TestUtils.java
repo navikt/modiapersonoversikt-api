@@ -1,14 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerListe;
 import org.joda.time.DateTime;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 
 public class TestUtils {
 
@@ -22,16 +25,16 @@ public class TestUtils {
     public final static String TEMA_2 = GODKJENTE_TEMA_FOR_GENERELLE.get(1);
 
     public static Saker createMockSaker() {
-        List<Sak> generelleSakerTema1 = new ArrayList<>(Arrays.asList(
+        List<Sak> generelleSakerTema1 = new ArrayList<>(asList(
                 createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
                 createSak(SAKS_ID_2, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4))));
-        SakerForTema sakerforTemaGenerelle = new SakerForTema(TEMA_1, "navn", "temagruppe", generelleSakerTema1);
-        SakerListe sakerListeGenerelle = new SakerListe(Arrays.asList(sakerforTemaGenerelle));
+        SakerForTema sakerforTemaGenerelle = new SakerForTema(TEMA_1, "navn", generelleSakerTema1);
+        SakerListe sakerListeGenerelle = new SakerListe(asList(sakerforTemaGenerelle));
 
-        List<Sak> fagSakerTema2 = new ArrayList<>(Arrays.asList(
+        List<Sak> fagSakerTema2 = new ArrayList<>(asList(
                 createSak(SAKS_ID_3, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_FAG, DateTime.now().minusDays(4))));
-        SakerForTema sakerforTemaFagsaker = new SakerForTema(TEMA_2, "navn", "temagruppe", fagSakerTema2);
-        SakerListe sakerListeFagsaker = new SakerListe(Arrays.asList(sakerforTemaFagsaker));
+        SakerForTema sakerforTemaFagsaker = new SakerForTema(TEMA_2, "navn", fagSakerTema2);
+        SakerListe sakerListeFagsaker = new SakerListe(asList(sakerforTemaFagsaker));
 
         return new Saker(sakerListeFagsaker, sakerListeGenerelle);
     }

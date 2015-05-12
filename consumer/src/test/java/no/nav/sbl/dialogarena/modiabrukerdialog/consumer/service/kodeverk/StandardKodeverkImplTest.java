@@ -70,7 +70,9 @@ public class StandardKodeverkImplTest {
     }
 
     private static XMLHentKodeverkResponse arkivtemaKodeverkResponse() {
-        XMLKode dagpenger = new XMLKode().withNavn("DAG").withTerm(new XMLTerm().withNavn("Dagpenger")).withGyldighetsperiode(new XMLPeriode().withFom(DateMidnight.now().minusDays(1)).withTom(DateMidnight.now().plusDays(1)));
+        XMLKode dagpenger = new XMLKode().withNavn("DAG").withGyldighetsperiode(new XMLPeriode().withFom(DateMidnight.now().minusDays(1)).withTom(DateMidnight.now().plusDays(1)))
+                .withTerm(new XMLTerm().withNavn("Dagpenger2").withGyldighetsperiode(new XMLPeriode().withFom(DateMidnight.now().minusDays(5)).withTom(DateMidnight.now().minusDays(1))))
+                .withTerm(new XMLTerm().withNavn("Dagpenger").withGyldighetsperiode(new XMLPeriode().withFom(DateMidnight.now().minusDays(1)).withTom(DateMidnight.now().plusDays(1))));
         XMLKode bidrag = new XMLKode().withNavn("BID").withTerm(new XMLTerm().withNavn("Bidrag")).withGyldighetsperiode(new XMLPeriode().withFom(DateMidnight.now().minusDays(1)).withTom(DateMidnight.now().plusDays(1)));
 
         return new XMLHentKodeverkResponse().withKodeverk(

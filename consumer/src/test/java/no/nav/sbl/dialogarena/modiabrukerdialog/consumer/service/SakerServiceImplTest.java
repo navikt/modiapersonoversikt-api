@@ -2,28 +2,43 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerListe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakResponse;
-import no.nav.tjeneste.virksomhet.sak.v1.*;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
+import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
+import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
+import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
-import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.*;
+import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo;
+import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode;
+import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse;
 import org.apache.commons.collections15.Predicate;
-import org.hamcrest.*;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -37,10 +52,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SakerServiceImplTest {
@@ -57,8 +69,6 @@ public class SakerServiceImplTest {
     private GsakKodeverk gsakKodeverk;
     @Mock
     private StandardKodeverk standardKodeverk;
-    @Mock
-    private LokaltKodeverk lokaltKodeverk;
     @Mock
     private ArbeidOgAktivitet arbeidOgAktivitet;
     @Mock
@@ -194,7 +204,7 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak () throws Exception {
+    public void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak() throws Exception {
         Sak sak = new Sak();
         sak.temaKode = "GEN";
         sak.finnesIGsak = false;
