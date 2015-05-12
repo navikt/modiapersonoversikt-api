@@ -16,6 +16,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.hovedytelsedato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.posteringsDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -43,18 +44,22 @@ public class YtelseUtilsTest {
         hovedytelseListe = asList(
                 new Record<Hovedytelse>()
                         .with(hovedytelsedato, JAN_2012_DATE_2)
+                        .with(posteringsDato, JAN_2012_DATE_2)
                         .with(Hovedytelse.utbetalingsmelding, JAN_2012_NR1)
                         .with(Hovedytelse.ytelse, DAGPENGER),
                 new Record<Hovedytelse>()
                         .with(hovedytelsedato, JAN_2012_DATE)
+                        .with(posteringsDato, JAN_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, JAN_2012_NR2)
                         .with(Hovedytelse.ytelse, SYKEPENGER),
                 new Record<Hovedytelse>()
                         .with(hovedytelsedato, MAR_2012_DATE)
+                        .with(posteringsDato, MAR_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, MAR_2012_NR1)
                         .with(Hovedytelse.ytelse, SYKEPENGER),
                 new Record<Hovedytelse>()
                         .with(hovedytelsedato, SEPT_2012_DATE)
+                        .with(posteringsDato, SEPT_2012_DATE)
                         .with(Hovedytelse.utbetalingsmelding, SEP_2012_NR1)
                         .with(Hovedytelse.ytelse, BARNETRYGD));
     }
@@ -128,15 +133,11 @@ public class YtelseUtilsTest {
 
     @Test
     public void hentUtbetalingerFraPeriode_inneholderKunUtbetalingerInnenforPeriode() {
-        DateTime startDato = now().minusMonths(2);
-        DateTime sluttDato = now();
-        Interval intervall = new Interval(startDato, sluttDato.plusDays(1));
-
+        DateTime startDato = new DateTime(2012, 1, 2, 0, 0, 0);
+        DateTime sluttDato = new DateTime(2012, 3, 1, 0, 0, 0);
         List<Record<Hovedytelse>> utbetalingsperiode = hovedytelserFromPeriod(hovedytelseListe, startDato.toLocalDate(), sluttDato.toLocalDate());
 
-        for (Record<Hovedytelse> hovedytelse : utbetalingsperiode) {
-            assertTrue(intervall.contains(hovedytelse.get(hovedytelsedato)));
-        }
+        assertThat(utbetalingsperiode.size(), is(2));
     }
 
     @Test
