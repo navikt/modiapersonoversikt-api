@@ -30,7 +30,7 @@ var ForhandsvisningKomponent = React.createClass({
                     <div>{meldingElementer}</div>
                 </div>
                 <div className="velgPanel">
-                    <input type="submit" value="Velg tråd" className="knapp-hoved-liten" />
+                    <input type="submit" value="Vis dialog" className="knapp-hoved-liten" />
                 </div>
             </div>
         );
