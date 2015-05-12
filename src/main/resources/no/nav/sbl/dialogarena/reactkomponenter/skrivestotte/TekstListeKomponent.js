@@ -2,11 +2,11 @@
 var React = require('react/addons');
 
 var TekstListeKomponent = React.createClass({
-    render: function(){
+    render: function () {
         return (
             <div className="sok-element" onClick={tekstChanged.bind(this)}>
                 <input id={"tekstElementRadio" + this.props.tekst.key} name="tekstListeRadio" type="radio"
-                    readOnly checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)} />
+                       readOnly checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)}/>
                 <label htmlFor={"tekstElementRadio" + this.props.tekst.key}>
                     <span dangerouslySetInnerHTML={{__html: this.props.tekst.tittel}}></span>
                 </label>
@@ -17,9 +17,10 @@ var TekstListeKomponent = React.createClass({
 
 function tekstChanged() {
     this.props.store.tekstChanged(this.props.tekst, this.getDOMNode().parentNode);
+    $(this.getDOMNode()).find('input').focus();
 }
 
-function erValgtTekst(tekst, valgtTekst){
+function erValgtTekst(tekst, valgtTekst) {
     return tekst === valgtTekst;
 }
 
