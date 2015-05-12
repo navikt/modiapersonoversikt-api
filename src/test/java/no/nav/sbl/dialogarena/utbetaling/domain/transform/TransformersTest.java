@@ -68,6 +68,21 @@ public class TransformersTest {
     }
 
     @Test
+    public void underytelseTransformererUtenSatsType() {
+        WSYtelseskomponent wsYtelseskomponent = new WSYtelseskomponent()
+                .withYtelseskomponenttype("KompType")
+                .withYtelseskomponentbeloep(-10.0)
+                .withSatsantall(2.0)
+                .withSatsbeloep(20.0);
+
+        Record<Underytelse> underytelse = UNDERYTELSE_TRANSFORMER.transform(wsYtelseskomponent);
+        assertThat(underytelse.get(Underytelse.ytelsesType), is("KompType"));
+        assertThat(underytelse.get(Underytelse.ytelseBeloep), is(-10.0));
+        assertThat(underytelse.get(Underytelse.satsAntall), is(2.0));
+        assertThat(underytelse.get(Underytelse.satsBeloep), is(20.0));
+    }
+
+    @Test
     public void createAktoerFraWSObjekt() {
         WSPerson wsAktoer = new WSPerson().withAktoerId("12121266666").withNavn("Ola Normann");
         Record<? extends Aktoer> aktoer = createAktoer(wsAktoer);
