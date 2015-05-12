@@ -196,8 +196,7 @@ public class WicketApplication extends WebApplication {
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS
                 )
-                .withModules(ReactResources.SKRIVESTOTTE)
-                .withModules(ReactResources.MELDINGER_SOK)
+                .withModules(ReactResources.REACT_KOMPONENTER)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }
