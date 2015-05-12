@@ -3,32 +3,35 @@
     <div class="utbetaling-head">
         <div class="utbetaling-metadata">
             <p class="utbetaling-dato">
-                <span class="vekk">Utbetalingsdato:</span>
+                <span class="vekk">Utbetalingsdato: </span>
                 <span wicket:id="utbetalingsDato"></span>
             </p>
-            <span>/</span>
+            <span aria-hidden="true">/</span>
+
             <p class="utbetaling-status">
-                <span class="vekk">Utbetalingssstatus:</span>
+                <span class="vekk">Utbetalingssstatus: </span>
                 <span wicket:id="statusTekst"></span>
             </p>
         </div>
         <div class="utbetaling">
             <p class="ytelse">
-                <span class="vekk">Ytelse:</span>
+                <span class="vekk">Ytelse: </span>
                 <span wicket:id="ytelse"></span>
             </p>
+
             <p class="belop">
-                <span class="vekk">Utbetalt beløp:</span>
-                <span wicket:id="belop" ></span>
+                <span class="vekk">Utbetalt beløp: </span>
+                <span wicket:id="belop"></span>
             </p>
+
             <div class="dato-wrapper clearfix">
                 <p class="periode">
-                    <span class="vekk">Periode:</span>
+                    <span class="vekk">Periode: </span>
                     <span wicket:id="periode"></span>
                 </p>
             </div>
             <p class="utbetaling-til">
-                <span><wicket:message key="utbetaling.utbetalt.til" /></span>
+                <span><wicket:message key="utbetaling.utbetalt.til"/></span>
                 <span wicket:id="utbetaltTil"></span>
             </p>
         </div>
