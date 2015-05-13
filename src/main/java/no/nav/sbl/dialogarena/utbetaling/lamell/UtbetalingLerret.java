@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
+import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
@@ -50,6 +52,8 @@ public final class UtbetalingLerret extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
     public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
+    public static final ConditionalCssResource UTBETALING_IE_CSS = new ConditionalCssResource(new CssResourceReference(UtbetalingLerret.class, "utbetaling_ie9.css"), "screen", "lt IE 10");
+
     private static final String FEILMELDING_DEFAULT_KEY = "feil.utbetalinger.default";
 
     @Inject
