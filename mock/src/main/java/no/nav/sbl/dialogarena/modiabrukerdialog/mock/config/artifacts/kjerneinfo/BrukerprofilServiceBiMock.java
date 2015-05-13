@@ -19,10 +19,8 @@ public class BrukerprofilServiceBiMock {
 
         try {
             when(serviceMock.hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class))).thenReturn(mockReturnValue);
-        } catch (HentKontaktinformasjonOgPreferanserPersonIkkeFunnet hentKontaktinformasjonOgPreferanserPersonIkkeFunnet) {
-            throw new RuntimeException(hentKontaktinformasjonOgPreferanserPersonIkkeFunnet);
-        } catch (HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning hentKontaktinformasjonOgPreferanserSikkerhetsbegrensning) {
-            throw new RuntimeException(hentKontaktinformasjonOgPreferanserSikkerhetsbegrensning);
+        } catch (HentKontaktinformasjonOgPreferanserPersonIkkeFunnet | HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning e) {
+            throw new RuntimeException(e);
         }
         return serviceMock;
     }
