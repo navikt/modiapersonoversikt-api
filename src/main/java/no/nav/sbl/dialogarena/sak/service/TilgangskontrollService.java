@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
+import no.nav.sbl.dialogarena.sak.tilgang.TilgangFeilmeldinger;
+import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
@@ -8,7 +10,7 @@ import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostSikkerhetsbe
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
-import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakResponse;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -29,40 +31,43 @@ public class TilgangskontrollService {
 
     private Logger logger = getLogger(TilgangskontrollService.class);
 
-    //Tanken er at tilgang sjekkes her og evt. feil logges og kastes videre
-    //basert på hvilke feil som kastes viser Kvitteringspanelet den feilmeldingen den ønsker å vise ved de forskjellige feilene.
+    public TilgangsKontrollResult harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
+        TilgangsKontrollResult resultat;
+        try {
+            resultat = sjekkTilgang(journalpostId, fnr);
+        } catch (HentAktoerIdForIdentPersonIkkeFunnet e) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.AKTOER_ID_IKKE_FUNNET);
+        } catch (HentSakSakIkkeFunnet e) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.SAK_IKKE_FUNNET);
+        } catch (HentJournalpostJournalpostIkkeFunnet e) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.JOURNALPOST_IKKE_FUNNET);
+        } catch (HentJournalpostSikkerhetsbegrensning e) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.SIKKERHETSBEGRENSNING);
+        } catch (Exception e) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.UKJENT_FEIL);
+        }
+        return resultat;
+    }
 
-    //TODO Får journalpostId fra den enkelte Kvitteringen
-    public boolean harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
-        //1. Hent JournalPost fra JOARK (ikke tilgjengelig enda). Får GSAK saksnummer og metadata og journalforingsstatus.
-        // Hvis Gsak saksnummer ikke finnes er dokumentet ikke ferdig journalført og saksbehandler skal ikke få tilgang.
-        return true;
-        //TODO kommentert ut fram til journalpost er fullstendig og dette kan gjøres skikkelig.
-//        Journalpost journalpost = hentJournalpost(journalpostId);
-//        if (erJournalfort(journalpost) && erIkkeFeilRegistrert(journalpost)) {
-//            if (erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
-//                return true;
-//            }
-//        }
-//        return false;
+    private TilgangsKontrollResult sjekkTilgang(String journalpostId, String fnr) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
+        Journalpost journalpost = hentJournalpost(journalpostId);
+        if (!erJournalfort(journalpost)) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.IKKE_JOURNALFORT);
+        } else if (erFeilregistrert(journalpost)) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.FEILREGISTRERT);
+        } else if (erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
+            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.IKKE_SAKSPART);
+        }
+        return new TilgangsKontrollResult(true);
     }
 
     private Journalpost hentJournalpost(String journalpostId) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
         try {
             return joarkService.hentJournalpost(journalpostId);
         } catch (HentJournalpostJournalpostIkkeFunnet | HentJournalpostSikkerhetsbegrensning e) {
+            logger.warn("Exception i hentJournalpost. ", e);
             throw e;
         }
-    }
-
-    private boolean erIkkeFeilRegistrert(Journalpost journalPost) {
-//        boolean riktigRegistrert = !journalPost.isSaksrelasjonFeilregistrert();
-        boolean riktigRegistrert = true; //Denne mangler enn så lenge.
-        if (!riktigRegistrert) {
-            logger.warn("Journalposten med Id: {} er feilregistrert. Den har feilregistrert satt til true i databasen.", "journalpost.getJournalpostId");
-            //TODO throwe FeilRegistrertException??
-        }
-        return riktigRegistrert;
     }
 
     private boolean erJournalfort(Journalpost journalPost) {
@@ -70,13 +75,21 @@ public class TilgangskontrollService {
         boolean erJournalfort = true; //Dette mangler også enn så lenge.
         if (!erJournalfort) {
             logger.warn("Journalposten med Id: {} er ikke journalført enda.", "journalpost.getJournalpostId");
-            //TODO throwe IkkeJounalfortException??
+            return false;
         }
-        return erJournalfort;
+        return true;
     }
 
+    private boolean erFeilregistrert(Journalpost journalPost) {
+        boolean feilregistrert = journalPost.getGjelderSak().getErFeilregistrert();
+        if (feilregistrert) {
+            logger.warn("Journalposten med Id: {} er feilregistrert. Den har feilregistrert satt til true i databasen.", journalPost.getJournalpostId());
+            return true;
+        }
+        return false;
+    }
 
-    private WSHentSakResponse hentSak(String sakId) throws HentSakSakIkkeFunnet {
+    private WSSak hentSak(String sakId) throws HentSakSakIkkeFunnet {
         try {
             return gSakServiceImpl.hentSak(sakId);
         } catch (HentSakSakIkkeFunnet hentSakSakIkkeFunnet) {
@@ -86,16 +99,15 @@ public class TilgangskontrollService {
     }
 
     private boolean erInnsenderSakspart(String sakId, String fnr) throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
-        WSHentSakResponse gSak = hentSak(sakId);
+        WSSak gSak = hentSak(sakId);
         String aktoerId = hentAktoerIdForIdent(fnr);
-        List<WSAktoer> brukerListe = gSak.getSak().getGjelderBrukerListe();
+        List<WSAktoer> brukerListe = gSak.getGjelderBrukerListe();
         for (WSAktoer aktoer : brukerListe) {
             if (aktoer.getIdent().equals(aktoerId)) {
                 return true;
             }
         }
         logger.warn("Fant ikke innsender med aktoerId {] i listen over gjeldene brukere.", aktoerId);
-        //TODO throwe InnsenderIkkeGjeldeneBrukerException??
         return false;
     }
 

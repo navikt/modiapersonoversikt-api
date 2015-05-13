@@ -5,13 +5,10 @@ import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.TilgangskontrollService;
+import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
 import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
-import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostJournalpostIkkeFunnet;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -110,22 +107,6 @@ public class KvitteringsPanel extends Panel {
         add(modalWindow);
     }
 
-    private ModalAdvarselPanel vedleggSlettetVarsel() {
-        return new ModalAdvarselPanel(modalWindow, "Dokumentet er slettet", "Dette dokumentet kan ikke vises fordi det er slettet.", "Lukk");
-    }
-
-    private ModalAdvarselPanel aktoerIdIkkeFunnetVarsel() {
-        return new ModalAdvarselPanel(modalWindow, "AtkørId ikke funnet", "Vi fant ingen aktørId knyttet til denne personen.", "Lukk");
-    }
-
-    private ModalAdvarselPanel sakIkkeFunnetVarsel() {
-        return new ModalAdvarselPanel(modalWindow, "Sak ikke funnet", "Vi fant ingen sak i GSak for denne henvendelsen.", "Lukk");
-    }
-
-    private ModalAdvarselPanel ukjentFeilVarsel() {
-        return new ModalAdvarselPanel(modalWindow, "Ukjent systemfeil", "Det skjedde en uventet systemfeil.", "Lukk");
-    }
-
     private void leggTilInnsendteVedlegg(Kvittering kvittering) {
         WebMarkupContainer innsendteVedlegg = new WebMarkupContainer("innsendteVedleggSection");
         innsendteVedlegg.add(visibleIf(of(!kvittering.innsendteDokumenter.isEmpty())));
@@ -166,20 +147,17 @@ public class KvitteringsPanel extends Panel {
                     AjaxLink<Void> hentVedleggLenke = new AjaxLink<Void>("hent-vedlegg") {
                         @Override
                         public void onClick(AjaxRequestTarget target) {
-                            //TODO send inn kvitteringen sin journalpostId
-                            try {
-                                if (harSaksbehandlerTilgangTilDokument("123123123")) {
-                                    ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf());
-                                    add(resourceStreamAjaxBehavoiur);
-                                    resourceStreamAjaxBehavoiur.init(target);
-                                } else {
-                                    //En feil som ikke ble fanget opp skjedde. Burde vel egentlig ikke skje dette
-                                    throw new Exception();
-                                }
-                            } catch (Exception exception) {
-                                modalWindow.setContent(hentFeilmelding(exception));
+                            TilgangsKontrollResult tilgangsKontrollResult = harSaksbehandlerTilgangTilDokument("123123123");
+                            if (tilgangsKontrollResult.isHarTilgang()) {
+                                ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf());
+                                add(resourceStreamAjaxBehavoiur);
+                                resourceStreamAjaxBehavoiur.init(target);
+                            } else {
+                                //En feil som ikke ble fanget opp skjedde. Burde vel egentlig ikke skje dette
+                                modalWindow.setContent(new ModalAdvarselPanel(modalWindow, tilgangsKontrollResult.getFeilmelding().heading(), tilgangsKontrollResult.getFeilmelding().lead(), "Lukk"));
                                 modalWindow.show(target);
                             }
+
                         }
                     };
 
@@ -189,17 +167,7 @@ public class KvitteringsPanel extends Panel {
         };
     }
 
-    private ModalAdvarselPanel hentFeilmelding(Exception e) {
-        if (e instanceof HentAktoerIdForIdentPersonIkkeFunnet) {
-            return aktoerIdIkkeFunnetVarsel();
-        } else if (e instanceof HentSakSakIkkeFunnet) {
-            return sakIkkeFunnetVarsel();
-        } else {
-            return ukjentFeilVarsel();
-        }
-    }
-
-    private boolean harSaksbehandlerTilgangTilDokument(String journalpostId) throws HentAktoerIdForIdentPersonIkkeFunnet, HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+    private TilgangsKontrollResult harSaksbehandlerTilgangTilDokument(String journalpostId) {
         //TODO Bedre å catche og skrive ut feilmeldinger i TilgangskontrollService der man har mer informasjon. F. eks. sakId mot GSak.
         return tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
     }
