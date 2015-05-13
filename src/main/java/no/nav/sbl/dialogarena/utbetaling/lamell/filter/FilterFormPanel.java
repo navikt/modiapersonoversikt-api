@@ -12,7 +12,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.event.Broadcast;
@@ -82,6 +81,7 @@ public class FilterFormPanel extends Panel {
                 valideringsfeil.setOutputMarkupId(true),
                 createPeriodeVelger(),
                 datovelgerContainer,
+                createSokKnapp(),
                 createMottakerButton("visBruker", Mottakertype.BRUKER),
                 createMottakerButton("visAnnenMottaker", Mottakertype.ANNEN_MOTTAKER),
                 ytelsesContainer)
@@ -92,9 +92,7 @@ public class FilterFormPanel extends Panel {
         WebMarkupContainer container = new WebMarkupContainer("datovelger");
         container.setOutputMarkupId(true);
         container.add(new AttributeModifier("style", "display: none;"));
-        container.add(
-                createDateRangePicker(),
-                createSokKnapp());
+        container.add(createDateRangePicker());
 
         return container;
     }
@@ -136,7 +134,6 @@ public class FilterFormPanel extends Panel {
                         filterParametere.setSluttDato(new LocalDate(lastYear, 12, 31));
                         filterParametere.setStartDato(new LocalDate(lastYear, 1, 1));
                     }
-                    velgPeriodeEvents();
                 }
             }
         });
@@ -222,7 +219,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private AjaxButton createSokKnapp() {
-        AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.sok", this, null)) {
+        AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.periode.sok", this, null)) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 filterParametere.toggleAlleYtelser(true);
