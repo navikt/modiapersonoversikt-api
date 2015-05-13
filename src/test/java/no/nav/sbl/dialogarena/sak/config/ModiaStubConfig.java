@@ -2,11 +2,11 @@ package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.sak.service.*;
+import no.nav.sbl.dialogarena.sak.service.DataFletter;
+import no.nav.sbl.dialogarena.sak.service.HenvendelseService;
+import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.JournalV1;
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
@@ -26,11 +26,6 @@ public class ModiaStubConfig {
     @Bean
     public AktoerPortType fodselnummerAktorService() {
         return mock(AktoerPortType.class);
-    }
-
-    @Bean
-    public JournalV1 joarkPortType() {
-        return mock(JournalV1.class);
     }
 
     @Bean
@@ -66,21 +61,6 @@ public class ModiaStubConfig {
         return mock(KodeverkClient.class);
     }
 
-    @Bean
-    public GSakService gSakService() {
-        return mock(GSakService.class);
-    }
-
-    @Bean
-    public JoarkService joarkService() {
-        return mock(JoarkService.class);
-    }
-
-
-    @Bean
-    public SakV1 sakEndpoint() {
-        return mock(SakV1.class);
-    }
     @Bean
     public CmsContentRetriever cmsContentRetriever() {
         CmsContentRetriever cmsMock = new CmsContentRetriever() {
