@@ -1,9 +1,1 @@
 .personsok-button:after { margin-left: -14px; }
-/** Utbetalinger **/
-.utbetalinger .utbetalingslinje .ekspander-pil, .utbetalinger .oppsummering-total .ekspander-pil {background-image: url('../img/pil-strek-ned.png');}
-.utbetalinger .utbetalingslinje .ekspander-pil:hover, .utbetalinger .oppsummering-total .ekspander-pil:hover {background-image: url('../img/pil-strek-ned-hover.png');}
-.utbetalinger .utbetalingslinje .ekspander-pil:focus, .utbetalinger .oppsummering-total .ekspander-pil:focus {background-image: url('../img/pil-strek-ned-hover.png');}
-
-.utbetalinger .utbetalingslinje.ekspandert .ekspander-pil, .utbetalinger .oppsummering-total.ekspandert .ekspander-pil{background-image: url('../img/pil-strek-opp.png');}
-.utbetalinger .utbetalingslinje.ekspandert .ekspander-pil:hover, .utbetalinger .oppsummering-total.ekspandert .ekspander-pil:hover{background-image: url('../img/pil-strek-opp-hover.png');}
-.utbetalinger .utbetalingslinje.ekspandert .ekspander-pil:focus, .utbetalinger .oppsummering-total.ekspandert .ekspander-pil:focus{background-image: url('../img/pil-strek-opp-hover.png');}
