@@ -653,32 +653,76 @@ UL.feedbackPanel {
 			  	background-color: #2d2b2a;
             }
 			li {
-				color: #fff;
-				width: 110px;
-				height: 102px;
-                border-right: 1px solid #000;
-                border-bottom: 1px solid #000;
-                &.selected {
-				  	border-right: none;
-				 	background-color: @modiasvart;
-                }
-			  	&:not(.selected) {
-				  	background-color: #2d2b2a;
+			  color: #fff;
+			  width: 110px;
+			  height: 102px;
+			  border-right: 1px solid #000;
+			  border-bottom: 1px solid #000;
+			  a {
+				display: block;
+				min-height: 102px;
+				min-width: 111px;
+				padding-top: 18px;
+				text-decoration: none;
+				div {
+				  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+				  font-size: 1rem;
+				  letter-spacing: 1px;
+				  padding-top: 50px;
+				  color: @white;
 				}
-			  	a {
-					display: block;
-					min-height: 102px;
-					min-width: 111px;
-					padding-top: 18px;
-					text-decoration: none;
-					div {
-				  		font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-				  		font-size: 1rem;
-				  		letter-spacing: 1px;
-				  		padding-top: 5px;
-				  		color: @white;
-					}
-			  	}
+			  }
+			  &.selected {
+				  border-right: none;
+				  background-color: @modiasvart;
+				.familie {
+				  background-image: url(../img/hjerte.svg);
+				  background-repeat: no-repeat;
+				  background-position: 34px 18px;
+				  background-size: 48px 48px;
+				}
+				.lenker {
+				  background-image: url(../svg/kjerneinfo/lenker_ikon.svg);
+				  background-repeat: no-repeat;
+				  background-position: 34px 18px;
+				  background-size: 48px 48px;
+				}
+			  }
+			  &:not(.selected) {
+				  background-color: #2d2b2a;
+				.familie {
+				  background-image: url(../img/hjerte.svg);
+				  background-repeat: no-repeat;
+				  background-position: 34px 18px;
+				  background-size: 48px 48px;
+				  &:focus, :hover {
+					background-color: @modiasvart;
+					border: inherit;
+					text-decoration: underline;
+					color: @white;
+					background-image: url(../svg/kjerneinfo/familie_ikon_lys.svg);
+					background-repeat: no-repeat;
+					background-position: 34px 18px;
+					background-size: 48px 48px;
+				  }
+				}
+				.lenker {
+				  background-image: url(../svg/kjerneinfo/lenker_ikon.svg);
+				  background-repeat: no-repeat;
+				  background-position: 34px 18px;
+				  background-size: 48px 48px;
+				  &:focus, :hover {
+					background-color: @modiasvart;
+					border: inherit;
+					text-decoration: underline;
+					color: @white;
+					background-image: url(../svg/kjerneinfo/lenker_modia_lys.svg);
+					background-repeat: no-repeat;
+					background-position: 34px 18px;
+					background-size: 48px 48px;
+				  }
+				}
+			  }
 			}
 		   	.tomDiv {
 				.flex1;
