@@ -50,7 +50,7 @@ public class TilgangskontrollServiceTest {
     //TODO greiere å skrive ordentlige tester når man har alle tjenestene på plass
     @Test
     public void testSuitenFungerer() throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
-        when(gSakServiceImpl.hentSak(anyString())).thenReturn(new WSHentSakResponse().withSak(createSak("DAG", DateTime.now().minusDays(5))));
+        when(gSakServiceImpl.hentSak(anyString())).thenReturn(createSak("DAG", DateTime.now().minusDays(5)));
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId("1232131");
         when(fodselnummerAktorService.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenReturn(hentAktoerIdForIdentResponse);
