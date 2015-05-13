@@ -36,12 +36,12 @@
         <!-- versjoner -->
         <wicket.version>6.17.0</wicket.version>
         <spring.version>3.2.9.RELEASE</spring.version>
-        <modig.frontend.version>1.1.110-SNAPSHOT</modig.frontend.version>
+        <modig.frontend.version>1.1.110</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>3.0.0-SNAPSHOT</modig.wicket.version>
+        <modig.wicket.version>3.0.0</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>2.0.3</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -65,7 +65,7 @@
         <personsok.version>1.0.82</personsok.version>
         <kjerneinfo.versjon>1.1.0</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.1.1-SNAPSHOT</utbetaling.version>
+        <utbetaling.version>2.1.1</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -73,9 +73,9 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>2.0-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>3.0-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>3.1-SNAPSHOT</saksoversikt.version>
+        <modiabrukerdialog-api.version>2.0</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>3.0</sporsmalogsvar.version>
+        <saksoversikt.version>3.1</saksoversikt.version>
     </properties>
 
     <dependencyManagement>
@@ -365,7 +365,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -474,7 +474,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>reactkomponenter</artifactId>
-                <version>0.15-SNAPSHOT</version>
+                <version>0.15</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
