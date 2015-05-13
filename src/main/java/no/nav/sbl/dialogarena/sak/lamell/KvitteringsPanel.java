@@ -9,6 +9,8 @@ import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostJournalpostIkkeFunnet;
+import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -167,17 +169,9 @@ public class KvitteringsPanel extends Panel {
                             //TODO send inn kvitteringen sin journalpostId
                             try {
                                 if (harSaksbehandlerTilgangTilDokument("123123123")) {
-                                    final byte[] pdfSomBytes = getMockPdf();
-
-                                    if (pdfSomBytes.length > 0) {
-                                        ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(pdfSomBytes);
-                                        add(resourceStreamAjaxBehavoiur);
-                                        resourceStreamAjaxBehavoiur.init(target);
-                                    } else {
-                                        //TODO throw VedleggSlettetException og flytte til feilmeldingshåndteringen?
-                                        modalWindow.setContent(vedleggSlettetVarsel());
-                                        modalWindow.show(target);
-                                    }
+                                    ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf());
+                                    add(resourceStreamAjaxBehavoiur);
+                                    resourceStreamAjaxBehavoiur.init(target);
                                 } else {
                                     //En feil som ikke ble fanget opp skjedde. Burde vel egentlig ikke skje dette
                                     throw new Exception();
@@ -205,7 +199,7 @@ public class KvitteringsPanel extends Panel {
         }
     }
 
-    private boolean harSaksbehandlerTilgangTilDokument(String journalpostId) throws HentAktoerIdForIdentPersonIkkeFunnet, HentSakSakIkkeFunnet {
+    private boolean harSaksbehandlerTilgangTilDokument(String journalpostId) throws HentAktoerIdForIdentPersonIkkeFunnet, HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
         //TODO Bedre å catche og skrive ut feilmeldinger i TilgangskontrollService der man har mer informasjon. F. eks. sakId mot GSak.
         return tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
     }

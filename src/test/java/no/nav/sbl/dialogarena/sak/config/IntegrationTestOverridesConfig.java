@@ -4,6 +4,7 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
+import no.nav.tjeneste.virksomhet.journal.v1.binding.JournalV1;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,12 @@ public class IntegrationTestOverridesConfig {
     @Named("sakEndpoint")
     public SakV1 sakEndpoint() {
         return mock(SakV1.class);
+    }
+
+    @Bean
+    @Named("joarkPortType")
+    public JournalV1 joarkPortType() {
+        return mock(JournalV1.class);
     }
 
     @Bean

@@ -41,8 +41,14 @@ public class SaksoversiktServiceConfig {
 
     @Bean
     public GSakService gSakService() {
-        return new GSakService();
+        return new GSakServiceImpl();
     }
+
+    @Bean
+    public JoarkService joarkService() {
+        return new JoarkServiceImpl();
+    }
+
 
     @Bean
     public DataFletter dataFletter() {

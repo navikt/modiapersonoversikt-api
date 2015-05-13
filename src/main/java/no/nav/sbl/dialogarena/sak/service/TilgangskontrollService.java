@@ -3,6 +3,9 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostJournalpostIkkeFunnet;
+import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakResponse;
@@ -16,10 +19,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class TilgangskontrollService {
 
     @Inject
-    private GSakService gSakService;
+    private GSakService gSakServiceImpl;
 
     @Inject
     private AktoerPortType fodselnummerAktorService;
+
+    @Inject
+    private JoarkService joarkService;
 
     private Logger logger = getLogger(TilgangskontrollService.class);
 
@@ -27,22 +33,31 @@ public class TilgangskontrollService {
     //basert på hvilke feil som kastes viser Kvitteringspanelet den feilmeldingen den ønsker å vise ved de forskjellige feilene.
 
     //TODO Får journalpostId fra den enkelte Kvitteringen
-    public boolean harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
+    public boolean harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
         //1. Hent JournalPost fra JOARK (ikke tilgjengelig enda). Får GSAK saksnummer og metadata og journalforingsstatus.
         // Hvis Gsak saksnummer ikke finnes er dokumentet ikke ferdig journalført og saksbehandler skal ikke få tilgang.
+        return true;
+        //TODO kommentert ut fram til journalpost er fullstendig og dette kan gjøres skikkelig.
+//        Journalpost journalpost = hentJournalpost(journalpostId);
+//        if (erJournalfort(journalpost) && erIkkeFeilRegistrert(journalpost)) {
+//            if (erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
+//                return true;
+//            }
+//        }
+//        return false;
+    }
 
-        //TODO NB!! Dette er en mock. Endres til responsen vi får tilbake fra Joark når vi henter Journalpost
-        Journalpost journalPost = new Journalpost("sakId", "J", false);
-        if (erJournalfort(journalPost) && erIkkeFeilRegistrert(journalPost)) {
-            if (erInnsenderSakspart(journalPost.getSakId(), fnr)) {
-                return true;
-            }
+    private Journalpost hentJournalpost(String journalpostId) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        try {
+            return joarkService.hentJournalpost(journalpostId);
+        } catch (HentJournalpostJournalpostIkkeFunnet | HentJournalpostSikkerhetsbegrensning e) {
+            throw e;
         }
-        return false;
     }
 
     private boolean erIkkeFeilRegistrert(Journalpost journalPost) {
-        boolean riktigRegistrert = !journalPost.isSaksrelasjonFeilregistrert();
+//        boolean riktigRegistrert = !journalPost.isSaksrelasjonFeilregistrert();
+        boolean riktigRegistrert = true; //Denne mangler enn så lenge.
         if (!riktigRegistrert) {
             logger.warn("Journalposten med Id: {} er feilregistrert. Den har feilregistrert satt til true i databasen.", "journalpost.getJournalpostId");
             //TODO throwe FeilRegistrertException??
@@ -51,7 +66,8 @@ public class TilgangskontrollService {
     }
 
     private boolean erJournalfort(Journalpost journalPost) {
-        boolean erJournalfort = journalPost.getJournalstatus().equalsIgnoreCase("J");
+//        boolean erJournalfort = journalPost.getJournalstatus().equalsIgnoreCase("J");
+        boolean erJournalfort = true; //Dette mangler også enn så lenge.
         if (!erJournalfort) {
             logger.warn("Journalposten med Id: {} er ikke journalført enda.", "journalpost.getJournalpostId");
             //TODO throwe IkkeJounalfortException??
@@ -62,7 +78,7 @@ public class TilgangskontrollService {
 
     private WSHentSakResponse hentSak(String sakId) throws HentSakSakIkkeFunnet {
         try {
-            return gSakService.hentSak(sakId);
+            return gSakServiceImpl.hentSak(sakId);
         } catch (HentSakSakIkkeFunnet hentSakSakIkkeFunnet) {
             logger.warn("Fant ikke sak hos GSak. SakId: {}", sakId);
             throw new HentSakSakIkkeFunnet();
@@ -91,30 +107,4 @@ public class TilgangskontrollService {
             throw new HentAktoerIdForIdentPersonIkkeFunnet();
         }
     }
-
-    //TODO Dette er bare et midlertidig objekt som erstatning for kallet for å hente Journalpost fra JOARK.
-    private class Journalpost {
-        private String sakId;
-        private String journalstatus;
-        private boolean saksrelasjonFeilregistrert;
-
-        private Journalpost(String sakId, String journalstatus, boolean saksrelasjonFeilregistrert) {
-            this.sakId = sakId;
-            this.journalstatus = journalstatus;
-            this.saksrelasjonFeilregistrert = saksrelasjonFeilregistrert;
-        }
-
-        public String getSakId() {
-            return sakId;
-        }
-
-        public String getJournalstatus() {
-            return journalstatus;
-        }
-
-        public boolean isSaksrelasjonFeilregistrert() {
-            return saksrelasjonFeilregistrert;
-        }
-    }
-
 }
