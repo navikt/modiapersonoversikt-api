@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.CmsContentRetriever;
@@ -56,6 +57,11 @@ public class PersonPageMockContext {
     @Bean
     public BrukerprofilServiceBi brukerprofilServiceBi() {
         return mock(BrukerprofilServiceBi.class);
+    }
+
+    @Bean
+    public GOSYSNAVOrgEnhet gosysnavOrgEnhet() {
+        return mock(GOSYSNAVOrgEnhet.class);
     }
 
     @Bean
