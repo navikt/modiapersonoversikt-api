@@ -130,7 +130,7 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
-            <scope>test</scope>
+            <scope>provided</scope>
 		</dependency>
 
 		<dependency>

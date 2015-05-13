@@ -12,6 +12,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.event.Broadcast;
@@ -79,7 +80,6 @@ public class FilterFormPanel extends Panel {
 
         return (Form) filterForm.add(
                 valideringsfeil.setOutputMarkupId(true),
-
                 createPeriodeVelger(),
                 datovelgerContainer,
                 createMottakerButton("visBruker", Mottakertype.BRUKER),

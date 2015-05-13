@@ -7,13 +7,19 @@ var Utbetalinger = (function () {
         addKeyNavigation();
 
         // Event listeners
-        // Utbetalinger
-        $(document).on('keydown', '.utbetaling-ramme-innhold .utbetalingslinje', function (event) {
-            if (event.which === ENTER_KEYCODE) {
+        $(document).on('keydown', '.ekspander-pil', function(event) {
+            if(event.which === ENTER_KEYCODE) {
                 Utbetalinger.toggleDetaljPanel($(this));
+                event.stopPropagation();
             }
         });
 
+        toggleTotaltUtbetalt();
+        toggleUtbetaling();
+        toggleFiltrering();
+    };
+
+    var toggleTotaltUtbetalt = function() {
         // Totalt utbetalt
         $(document).on('keydown', '.utbetaling-ramme-innhold.oppsummering-total', function (event) {
             if (event.which === ENTER_KEYCODE) {
@@ -21,21 +27,44 @@ var Utbetalinger = (function () {
             }
         });
 
-        $(document).on('keydown', '.ekspander-pil', function(event) {
-            if(event.which === ENTER_KEYCODE) {
-               Utbetalinger.toggleDetaljPanel($(this));
-               event.stopPropagation();
-           }
-        });
-
         $(document).on('click', '.utbetaling-ramme-innhold.oppsummering-total', function () {
             Utbetalinger.toggleDetaljPanel($(this));
+        });
+    };
+
+    var toggleUtbetaling = function() {
+
+        $(document).on('keydown', '.utbetaling-ramme-innhold .utbetalingslinje', function (event) {
+            if (event.which === ENTER_KEYCODE) {
+                Utbetalinger.toggleDetaljPanel($(this));
+            }
         });
 
         $(document).on('click', '.utbetaling-ramme .utbetalingslinje', function () {
             Utbetalinger.toggleDetaljPanel($(this));
         });
+    };
 
+    var toggleFiltrering = function() {
+        $(document).on('click', '.ekspander-pil-filtrering', function () {
+            $('#filter-content').slideToggle();
+            $('#filter-content').parent().toggleClass('skjul-innhold');
+            ariaLabel($('#filter-content').parent());
+        });
+
+        var ariaLabel = function($element) {
+            if($element.hasClass('skjul-innhold')) {
+                console.log('has class');
+                $element.find('.ekspander-pil-filtrering span').text(aapneUtbetalingText);
+                $element.find('.ekspander-pil-filtrering').attr('aria-label', aapneUtbetalingText);
+                $element.find('.ekspander-pil-filtrering').attr('title', aapneUtbetalingText);
+            } else {
+                console.log('nope');
+                $element.find('.ekspander-pil-filtrering span').text(lukkUtbetalingText);
+                $element.find('.ekspander-pil-filtrering').attr('aria-label', lukkUtbetalingText);
+                $element.find('.ekspander-pil-filtrering').attr('title', lukkUtbetalingText);
+            }
+        };
     };
 
     var addKeyNavigation = function () {
