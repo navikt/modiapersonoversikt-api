@@ -665,9 +665,38 @@
           }
         }
         .column {
-          width: 49%;
+          width: 50%;
           vertical-align: top;
-          display: inline-block;
+          display: inline;
+          margin: 20px 0;
+          box-sizing: border-box;
+          float: left;
+          &:first-of-type {
+            border-right: 1px solid @borderColor;
+            margin-right: -1px;
+          }
+          &:last-of-type {
+            border-left: 1px solid @borderColor;
+          }
+          .filter-block-content:first-of-type {
+            padding-top: 0;
+          }
+          .filter-block-content:last-of-type {
+            padding-bottom: 0;
+          }
+        }
+      }
+      .clearfix {
+        &:before {
+          display: table;
+          content: "";
+          line-height: 0;
+        }
+        &:after {
+          clear: both;
+          display: table;
+          content: "";
+          line-height: 0;
         }
       }
     }
