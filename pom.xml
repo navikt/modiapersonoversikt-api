@@ -96,7 +96,7 @@
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>1.14-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>2.19-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>2.5-SNAPSHOT</saksoversikt.version>
+        <saksoversikt.version>3.1-SNAPSHOT</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>1.0.0-SNAPSHOT</modia-felleskomponenter.version>
@@ -104,6 +104,7 @@
         <nav-fellessystemer-environment.version>4.4.32</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.23</henvendelse-soknader-tjenestespesifikasjon.version>
+        <nav-fim-journal-v1-tjenestespesifikasjon.version>1.1.0</nav-fim-journal-v1-tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
@@ -368,6 +369,12 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
                 <version>${sakogbehandling-tjenestespesifikasjon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.tjenester.fim</groupId>
+                <artifactId>nav-fim-journal-v1-tjenestespesifikasjon</artifactId>
+                <version>${nav-fim-journal-v1-tjenestespesifikasjon.version}</version>
+                <classifier>jaxws</classifier>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
