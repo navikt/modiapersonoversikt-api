@@ -4,16 +4,19 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.modig.common.SporingsAksjon;
+import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
@@ -52,6 +55,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private StandardKodeverk standardKodeverk;
     @Inject
     private PropertyResolver propertyResolver;
+    @Inject
+    private SporingsLogger sporingsLogger;
 
     @Override
     public List<Melding> hentMeldinger(String fnr) {
@@ -70,13 +75,23 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 SPORSMAL_MODIA_UTGAAENDE.name(),
                 SVAR_SBL_INNGAAENDE.name());
 
-        return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
+
+        List<Object> wsMeldinger = wsHentHenvendelseListeResponse.getAny();
+
+        if (!wsMeldinger.isEmpty()) {
+            sporingsLogger.logg(wsMeldinger.get(0), SporingsAksjon.Les);
+        }
+
+        List<Melding> meldinger = on(wsMeldinger)
                 .map(castTo(XMLHenvendelse.class))
                 .map(tilMelding(propertyResolver))
                 .map(journalfortTemaTilTemanavn)
                 .filter(kontorsperreTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect();
+
+        return meldinger;
     }
 
     @Override
