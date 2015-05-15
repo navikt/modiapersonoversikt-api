@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Sak;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentURLRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentResponse;
 import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentJournalpostRequest;
 import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentJournalpostResponse;
 import org.apache.commons.io.IOUtils;
@@ -24,10 +25,12 @@ public class JoarkPortTypeMock {
     @Bean(name = "joarkPortType")
     public static JournalV1 getJournalPortTypeMock() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet, HentDokumentURLDokumentIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
         JournalV1 mock = mock(JournalV1.class);
-        when(mock.hentDokument(any(HentDokumentURLRequest.class))).thenAnswer(new Answer<Object>() {
+        when(mock.hentDokument(any(HentDokumentRequest.class))).thenAnswer(new Answer<HentDokumentResponse>() {
             @Override
-            public Object answer(InvocationOnMock invocation) {
-                return createDokument();
+            public HentDokumentResponse answer(InvocationOnMock invocation) {
+                HentDokumentResponse response = new HentDokumentResponse();
+                response.setDokument(new Byte("1"));
+                return response;
             }
         });
 

@@ -32,9 +32,6 @@ public class JoarkEndpointConfig {
                 .address(joarkEndpoint)
                 .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .withHandler(new MDCOutHandler());
-        //TODO hvis man inkulder denne får man Could not find definition for service {http://nav.no/tjeneste/virksomhet/journal/v1}JournalV1Service.
-        //TODO trolig fordi den heter JournalV1_Service
-//                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/journal/v1/journal.wsdl");
     }
 
     @Bean(name ="joarkPortType" )
