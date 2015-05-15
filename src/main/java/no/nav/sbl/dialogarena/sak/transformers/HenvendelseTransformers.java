@@ -34,14 +34,15 @@ public class HenvendelseTransformers {
             return (Kvittering) new Kvittering()
                     .withAvsluttet(INNSENDT.transform(wsSoknad))
                     .withInnsendteDokumenter(hentDokument(wsSoknad, ER_DOKUMENT_INNSENDT))
-                    .withManglendeDokumenter(hentDokument(wsSoknad, not(ER_DOKUMENT_INNSENDT)))
-                    .withEttersending(wsSoknad.isEttersending())
-                    .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
-                    .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
-                    .withBehandlingsDato(wsSoknad.getInnsendtDato())
-                    .withHenvendelseType(HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
-                    .withBehandlingStatus(status)
-                    .withBehandlingsId(wsSoknad.getBehandlingsId());
+                    .withManglendeDokumenter(hentDokument(wsSoknad, both(not(ER_DOKUMENT_INNSENDT)).and(not(er_Hovedskjema(wsSoknad.getHovedskjemaKodeverkId())))))
+                            .withEttersending(wsSoknad.isEttersending())
+                            .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
+                            .withJournalPostId(wsSoknad.getJournalpostId())
+                            .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
+                            .withBehandlingsDato(wsSoknad.getInnsendtDato())
+                            .withHenvendelseType(HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
+                            .withBehandlingStatus(status)
+                            .withBehandlingsId(wsSoknad.getBehandlingsId());
         }
     };
 
@@ -55,14 +56,15 @@ public class HenvendelseTransformers {
                         .withInnsendt(innsendt)
                         .withKodeverkRef(wsDokumentforventning.getKodeverkId())
                         .withInnsendingsvalg(wsDokumentforventning.getInnsendingsvalg())
+                        .withArkivreferanse(wsDokumentforventning.getArkivreferanse())
                         .withTilleggsTittel(wsDokumentforventning.getTilleggsTittel());
             }
         };
     }
 
-    private static List<Dokument> hentDokument(WSSoknad wsSoknad, Predicate<WSDokumentforventning> erInnsendtPredikat) {
+    private static List<Dokument> hentDokument(WSSoknad wsSoknad, Predicate<WSDokumentforventning> betingelse) {
         return on(wsSoknad.getDokumentforventninger().getDokumentforventning())
-                .filter(both(erInnsendtPredikat).and(not(er_Hovedskjema(wsSoknad.getHovedskjemaKodeverkId()))).and(not(ER_KVITTERING)))
+                .filter(both(betingelse).and(not(ER_KVITTERING)))
                 .map(tilDokument(wsSoknad.getHovedskjemaKodeverkId()))
                 .collect();
     }

@@ -112,7 +112,7 @@ public class KvitteringsPanel extends Panel {
         innsendteVedlegg.add(visibleIf(of(!kvittering.innsendteDokumenter.isEmpty())));
         innsendteVedlegg.add(
                 new Label("innsendteDokumenterHeader", cms.hentTekst("behandling.innsendte.dokumenter.header")),
-                getDokumenterView("innsendteVedlegg", kvittering.innsendteDokumenter, false)
+                getDokumenterView("innsendteVedlegg", kvittering.journalpostId, kvittering.innsendteDokumenter, false)
         );
         add(innsendteVedlegg);
     }
@@ -122,17 +122,17 @@ public class KvitteringsPanel extends Panel {
         manglendeVedlegg.add(visibleIf(of(!kvittering.manglendeDokumenter.isEmpty() && !kvittering.ettersending)));
         manglendeVedlegg.add(
                 new Label("manglendeVedleggHeader", cms.hentTekst("behandling.manglende.dokumenter.header")),
-                getDokumenterView("manglendeVedlegg", kvittering.manglendeDokumenter, true)
+                getDokumenterView("manglendeVedlegg", kvittering.journalpostId, kvittering.manglendeDokumenter, true)
         );
         add(manglendeVedlegg);
     }
 
-    private PropertyListView<Dokument> getDokumenterView(String listViewId, List<Dokument> dokumenter, final boolean visInnsendingsvalg) {
+    private PropertyListView<Dokument> getDokumenterView(String listViewId, final String journalpostId, List<Dokument> dokumenter, final boolean visInnsendingsvalg) {
         return new PropertyListView<Dokument>(listViewId, dokumenter) {
 
             @Override
             protected void populateItem(ListItem<Dokument> item) {
-                Dokument dokument = item.getModelObject();
+                final Dokument dokument = item.getModelObject();
 
                 String dokumentTittel = kodeverk.getSkjematittelForSkjemanummer(dokument.kodeverkRef);
                 if (kodeverk.isEgendefinert(dokument.kodeverkRef)) {
@@ -149,7 +149,7 @@ public class KvitteringsPanel extends Panel {
                         public void onClick(AjaxRequestTarget target) {
                             TilgangsKontrollResult tilgangsKontrollResult = harSaksbehandlerTilgangTilDokument("123123123");
                             if (tilgangsKontrollResult.isHarTilgang()) {
-                                ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf());
+                                ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf(journalpostId, dokument.arkivreferanse));
                                 add(resourceStreamAjaxBehavoiur);
                                 resourceStreamAjaxBehavoiur.init(target);
                             } else {
@@ -193,7 +193,7 @@ public class KvitteringsPanel extends Panel {
     }
 
     //TODO midlertidig. Byttes ut med ordentlig mock-oppsett når tjenesten kommer mer på plass
-    private byte[] getMockPdf() {
+    private byte[] getMockPdf(String journalPostId, String arkivreferanse) {
         try {
             return IOUtils.toByteArray(getClass().getResourceAsStream("/mock/mock.pdf"));
         } catch (IOException e) {

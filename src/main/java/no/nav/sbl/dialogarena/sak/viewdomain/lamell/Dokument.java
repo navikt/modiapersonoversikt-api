@@ -6,6 +6,7 @@ public class Dokument implements Serializable {
 
     public String kodeverkRef;
     public String tilleggstittel;
+    public String arkivreferanse;
     public boolean innsendt;
     public boolean hovedskjema;
     public String innsendingsvalg;
@@ -17,6 +18,11 @@ public class Dokument implements Serializable {
 
     public Dokument withTilleggsTittel(String tittel) {
         tilleggstittel = tittel;
+        return this;
+    }
+
+    public Dokument withArkivreferanse(String referanse) {
+        arkivreferanse = referanse;
         return this;
     }
 

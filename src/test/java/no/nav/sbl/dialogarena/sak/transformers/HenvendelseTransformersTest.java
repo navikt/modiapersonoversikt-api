@@ -32,22 +32,54 @@ public class HenvendelseTransformersTest {
         String id = "behandlingsIdForTest";
         String kjedeId = "behandlingsKjedeIdForTest";
         String hovedskjema = "hovedskjemaKodeverkIdForTest";
+        String journalpostId = "journalpostId";
         WSSoknad wsKvittering = createWSSoknad()
                 .withInnsendtDato(new DateTime())
                 .withBehandlingsId(id)
                 .withBehandlingsKjedeId(kjedeId)
+                .withJournalpostId(journalpostId)
                 .withHovedskjemaKodeverkId(hovedskjema)
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger()
-                        .withDokumentforventning(createWSDokumentforventning().withInnsendingsvalg(WSInnsendingsvalg.INNSENDT.name()))
-                        .withDokumentforventning(createWSDokumentforventning().withInnsendingsvalg(WSInnsendingsvalg.INNSENDT.name()))
-                        .withDokumentforventning(createWSDokumentforventning().withInnsendingsvalg(WSInnsendingsvalg.SEND_SENERE.name()))
+                                .withDokumentforventning(createWSDokumentforventning().withInnsendingsvalg(WSInnsendingsvalg.INNSENDT.name()))
+                                .withDokumentforventning(createWSDokumentforventning().withInnsendingsvalg(WSInnsendingsvalg.INNSENDT.name()))
+                                .withDokumentforventning(createWSDokumentforventning().withInnsendingsvalg(WSInnsendingsvalg.SEND_SENERE.name()))
                 );
         Kvittering kvittering = KVITTERING.transform(wsKvittering);
         assertThat(kvittering.behandlingsId, equalTo(id));
         assertThat(kvittering.behandlingskjedeId, equalTo(kjedeId));
+        assertThat(kvittering.journalpostId, equalTo(journalpostId));
         assertThat(kvittering.skjemanummerRef, equalTo(hovedskjema));
         assertThat(kvittering.innsendteDokumenter.size(), equalTo(2));
         assertThat(kvittering.manglendeDokumenter.size(), equalTo(1));
+    }
+
+    @Test
+    public void skalLeggeTilHovedskjemaPaaKvitteringHvisHovedskjemaErInnsendt() {
+        String hovedskjemaId = "hovedskjemaKodeverkIdForTest";
+        WSSoknad wsKvittering = createWSSoknad()
+                .withHovedskjemaKodeverkId(hovedskjemaId)
+                .withDokumentforventninger(new WSSoknad.Dokumentforventninger()
+                                .withDokumentforventning(createWSDokumentforventning().withKodeverkId(hovedskjemaId).withInnsendingsvalg(WSInnsendingsvalg.INNSENDT.name()))
+                );
+
+        Kvittering kvittering = KVITTERING.transform(wsKvittering);
+
+        assertThat(kvittering.innsendteDokumenter.size(), equalTo(1));
+    }
+
+    @Test
+    public void skalIkkeLeggeTilHovedskjemaPaaKvitteringHvisHovedskjemaIkkeErInnsendt() {
+        String hovedskjemaId = "hovedskjemaKodeverkIdForTest";
+        WSSoknad wsKvittering = createWSSoknad()
+                .withHovedskjemaKodeverkId(hovedskjemaId)
+                .withDokumentforventninger(new WSSoknad.Dokumentforventninger()
+                                .withDokumentforventning(createWSDokumentforventning().withKodeverkId(hovedskjemaId).withInnsendingsvalg(WSInnsendingsvalg.SEND_SENERE.name()))
+                );
+
+        Kvittering kvittering = KVITTERING.transform(wsKvittering);
+
+        assertThat(kvittering.innsendteDokumenter.size(), equalTo(0));
+        assertThat(kvittering.manglendeDokumenter.size(), equalTo(0));
     }
 
 }
