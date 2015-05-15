@@ -1,7 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Sak;
 import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentURLRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentJournalpostRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentJournalpostResponse;
 import org.apache.commons.io.IOUtils;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -22,11 +26,35 @@ public class JoarkPortTypeMock {
         JournalV1 mock = mock(JournalV1.class);
         when(mock.hentDokument(any(HentDokumentURLRequest.class))).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocation) throws Exception {
+            public Object answer(InvocationOnMock invocation) {
                 return createDokument();
             }
         });
+
+        when(mock.hentJournalpost(any(HentJournalpostRequest.class))).thenAnswer(new Answer<HentJournalpostResponse>() {
+            @Override
+            public HentJournalpostResponse answer(InvocationOnMock invocationOnMock) throws Throwable {
+                HentJournalpostResponse journalpostResponse = new HentJournalpostResponse();
+                journalpostResponse.setJournalpost(createJournalpost());
+                return journalpostResponse;
+            }
+        });
+
         return mock;
+    }
+
+    private static Journalpost createJournalpost() {
+        Journalpost journalpost = new Journalpost();
+        journalpost.setJournalpostId("journalpostid");
+        journalpost.setGjelderSak(createSak());
+        return journalpost;
+    }
+
+    private static Sak createSak() {
+        Sak sak = new Sak();
+        sak.setSakId("sakId");
+        sak.setErFeilregistrert(false);
+        return sak;
     }
 
     private static byte[] createDokument() {
