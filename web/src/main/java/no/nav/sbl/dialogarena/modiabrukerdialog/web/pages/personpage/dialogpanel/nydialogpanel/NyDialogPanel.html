@@ -18,15 +18,18 @@
             <div wicket:id="journalforing" class="journalforingSporsmal"></div>
 
             <wicket:container wicket:id="skrivestotteContainer"/>
-
-            <h2 class="medium kanaloverskrift">
+            <div class="kanaloverskrift">
+                <h2 class="medium">
+                    <span wicket:id="tekstfeltOverskrift"></span>
+                    <span class="vekk">: </span><!-- så skjermleseren også får mellomrom -->
+                    <span wicket:id="kanalbeskrivelse" class="lowercase">Beskrivelse av kanalen som er valgt</span>
+                </h2>
                 <button wicket:id="skrivestotteToggler" class="skrivestotteToggle"
                         wicket:message="title:skrivestotte.title">
                     <span class="vekk"><wicket:message key="skrivestotte.arialabel"/></span>
                 </button>
-                <span wicket:id="tekstfeltOverskrift"></span>
-                <span wicket:id="kanalbeskrivelse" class="lowercase">Beskrivelse av kanalen som er valgt</span>
-            </h2>
+
+            </div>
             <label wicket:id="tekstfelt-label" class="hidden"></label>
             <section wicket:id="tekstfelt" class="tekstfelt"></section>
             <section class="kanalvelger clearfix">
