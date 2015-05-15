@@ -1,9 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-
-import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
 
 public interface TilgangskontrollService {
-
-    TilgangsKontrollResult harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr);
+    VedleggResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr);
 }

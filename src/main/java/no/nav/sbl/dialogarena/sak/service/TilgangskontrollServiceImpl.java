@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-import no.nav.sbl.dialogarena.sak.tilgang.TilgangFeilmeldinger;
-import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
@@ -11,11 +10,13 @@ import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
+import org.apache.commons.collections15.Predicate;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.List;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat.Feilmelding.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
@@ -29,36 +30,36 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     @Inject
     private JoarkService joarkService;
 
-    private Logger logger = getLogger(TilgangskontrollServiceImpl.class);
+    private Logger logger = getLogger(TilgangskontrollService.class);
 
-    public TilgangsKontrollResult harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
-        TilgangsKontrollResult resultat;
+    public VedleggResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
+        VedleggResultat resultat;
         try {
             resultat = sjekkTilgang(journalpostId, fnr);
         } catch (HentAktoerIdForIdentPersonIkkeFunnet e) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.AKTOER_ID_IKKE_FUNNET);
+            return new VedleggResultat(false, AKTOER_ID_IKKE_FUNNET);
         } catch (HentSakSakIkkeFunnet e) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.SAK_IKKE_FUNNET);
+            return new VedleggResultat(false, SAK_IKKE_FUNNET);
         } catch (HentJournalpostJournalpostIkkeFunnet e) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.JOURNALPOST_IKKE_FUNNET);
+            return new VedleggResultat(false, JOURNALPOST_IKKE_FUNNET);
         } catch (HentJournalpostSikkerhetsbegrensning e) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.SIKKERHETSBEGRENSNING);
+            return new VedleggResultat(false, SIKKERHETSBEGRENSNING);
         } catch (Exception e) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.UKJENT_FEIL);
+            return new VedleggResultat(false, UKJENT_FEIL);
         }
         return resultat;
     }
 
-    private TilgangsKontrollResult sjekkTilgang(String journalpostId, String fnr) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
+    private VedleggResultat sjekkTilgang(String journalpostId, String fnr) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
         Journalpost journalpost = hentJournalpost(journalpostId);
         if (!erJournalfort(journalpost)) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.IKKE_JOURNALFORT);
+            return new VedleggResultat(false, IKKE_JOURNALFORT);
         } else if (erFeilregistrert(journalpost)) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.FEILREGISTRERT);
+            return new VedleggResultat(false, FEILREGISTRERT);
         } else if (!erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.IKKE_SAKSPART);
+            return new VedleggResultat(false, IKKE_SAKSPART);
         }
-        return new TilgangsKontrollResult(true);
+        return new VedleggResultat(true);
     }
 
     private Journalpost hentJournalpost(String journalpostId) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
@@ -75,18 +76,28 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         boolean erJournalfort = true; //Dette mangler også enn så lenge.
         if (!erJournalfort) {
             logger.warn("Journalposten med Id: {} er ikke journalført enda.", "journalpost.getJournalpostId");
-            return false;
         }
-        return true;
+        return erJournalfort;
     }
 
     private boolean erFeilregistrert(Journalpost journalPost) {
         boolean feilregistrert = journalPost.getGjelderSak().getErFeilregistrert();
         if (feilregistrert) {
             logger.warn("Journalposten med Id: {} er feilregistrert. Den har feilregistrert satt til true i databasen.", journalPost.getJournalpostId());
-            return true;
         }
-        return false;
+        return feilregistrert;
+    }
+
+    private boolean erInnsenderSakspart(String sakId, String fnr) throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
+        WSSak gSak = hentSak(sakId);
+        final String aktoerId = hentAktoerIdForIdent(fnr);
+        boolean erInnsenderSakspart = on(gSak.getGjelderBrukerListe()).exists(aktoerMedAktoerId(aktoerId));
+
+        if (!erInnsenderSakspart) {
+            logger.warn("Fant ikke innsender med aktoerId {} i listen over gjeldene brukere.", aktoerId);
+        }
+
+        return erInnsenderSakspart;
     }
 
     private WSSak hentSak(String sakId) throws HentSakSakIkkeFunnet {
@@ -94,29 +105,26 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             return gSakServiceImpl.hentSak(sakId);
         } catch (HentSakSakIkkeFunnet hentSakSakIkkeFunnet) {
             logger.warn("Fant ikke sak hos GSak. SakId: {}", sakId);
-            throw new HentSakSakIkkeFunnet();
+            throw hentSakSakIkkeFunnet;
         }
     }
 
-    private boolean erInnsenderSakspart(String sakId, String fnr) throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
-        WSSak gSak = hentSak(sakId);
-        String aktoerId = hentAktoerIdForIdent(fnr);
-        List<WSAktoer> brukerListe = gSak.getGjelderBrukerListe();
-        for (WSAktoer aktoer : brukerListe) {
-            if (aktoer.getIdent().equals(aktoerId)) {
-                return true;
-            }
-        }
-        logger.warn("Fant ikke innsender med aktoerId {] i listen over gjeldene brukere.", aktoerId);
-        return false;
-    }
 
     private String hentAktoerIdForIdent(String fnr) throws HentAktoerIdForIdentPersonIkkeFunnet {
         try {
             return fodselnummerAktorService.hentAktoerIdForIdent(new HentAktoerIdForIdentRequest(fnr)).getAktoerId();
         } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
             logger.warn("Fant ikke AktoerId for Fnr: {} ", fnr);
-            throw new HentAktoerIdForIdentPersonIkkeFunnet();
+            throw hentAktoerIdForIdentPersonIkkeFunnet;
         }
+    }
+
+    private static Predicate<WSAktoer> aktoerMedAktoerId(final String aktoerId) {
+        return new Predicate<WSAktoer>() {
+            @Override
+            public boolean evaluate(WSAktoer wsAktoer) {
+                return wsAktoer.getIdent().equals(aktoerId);
+            }
+        };
     }
 }

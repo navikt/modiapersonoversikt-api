@@ -4,12 +4,12 @@ import no.nav.modig.wicket.component.modal.ModalAdvarselPanel;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.service.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
+import no.nav.sbl.dialogarena.sak.service.JoarkService;
 import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
-import org.apache.commons.io.IOUtils;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat.Feilmelding;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -45,7 +45,7 @@ public class KvitteringsPanel extends Panel {
     private BulletProofKodeverkService kodeverk;
 
     @Inject
-    private TilgangskontrollService tilgangskontrollService;
+    private JoarkService joarkService;
 
     private Logger logger = LoggerFactory.getLogger(KvitteringsPanel.class);
     private ModigModalWindow modalWindow;
@@ -147,18 +147,13 @@ public class KvitteringsPanel extends Panel {
                     AjaxLink<Void> hentVedleggLenke = new AjaxLink<Void>("hent-vedlegg") {
                         @Override
                         public void onClick(AjaxRequestTarget target) {
-                            TilgangsKontrollResult tilgangsKontrollResult = harSaksbehandlerTilgangTilDokument(journalpostId);
-                            if (tilgangsKontrollResult.isHarTilgang()) {
-                                visVedlegg(target);
-                            } else {
-                                visFeilmeldingVindu(target, tilgangsKontrollResult);
-                            }
-                        }
+                            VedleggResultat vedleggResultat = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
 
-                        private void visVedlegg(AjaxRequestTarget target) {
-                            ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf(journalpostId, dokument.arkivreferanse));
-                            add(resourceStreamAjaxBehavoiur);
-                            resourceStreamAjaxBehavoiur.init(target);
+                            if (vedleggResultat.harTilgang && vedleggResultat.eksisterer()) {
+                                visVedlegg(target, vedleggResultat.pdfSomBytes);
+                            } else {
+                                visFeilmeldingVindu(target, vedleggResultat.feilmelding);
+                            }
                         }
                     };
 
@@ -168,13 +163,15 @@ public class KvitteringsPanel extends Panel {
         };
     }
 
-    private void visFeilmeldingVindu(AjaxRequestTarget target, TilgangsKontrollResult tilgangsKontrollResult) {
-        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, tilgangsKontrollResult.getFeilmelding().heading(), tilgangsKontrollResult.getFeilmelding().lead(), "Lukk"));
-        modalWindow.show(target);
+    private void visVedlegg(AjaxRequestTarget target, byte[] pdfSomBytes) {
+        ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(pdfSomBytes);
+        add(resourceStreamAjaxBehavoiur);
+        resourceStreamAjaxBehavoiur.init(target);
     }
 
-    private TilgangsKontrollResult harSaksbehandlerTilgangTilDokument(String journalpostId) {
-        return tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
+    private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding) {
+        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, feilmelding.heading, feilmelding.lead, "Lukk"));
+        modalWindow.show(target);
     }
 
     private ResourceStreamAjaxBehaviour lagHentPdfAjaxBehaviour(final byte[] pdfSomBytes) {
@@ -197,12 +194,4 @@ public class KvitteringsPanel extends Panel {
         response.render(OnLoadHeaderItem.forScript("addKvitteringsPanelEvents()"));
     }
 
-    //TODO midlertidig. Byttes ut med ordentlig mock-oppsett når tjenesten kommer mer på plass
-    private byte[] getMockPdf(String journalPostId, String arkivreferanse) {
-        try {
-            return IOUtils.toByteArray(getClass().getResourceAsStream("/mock/mock.pdf"));
-        } catch (IOException e) {
-            throw new RuntimeException("IOException ved henting av Mock PDFen", e);
-        }
-    }
 }
