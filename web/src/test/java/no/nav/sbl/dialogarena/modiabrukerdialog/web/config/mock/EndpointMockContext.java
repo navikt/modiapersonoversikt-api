@@ -24,7 +24,8 @@ import static org.mockito.Mockito.mock;
         GsakOppgavebehandlingV3PortTypeMock.class,
         GsakRutingPortTypeMock.class,
         GosysNavAnsattPortTypeMock.class,
-        KodeverkV2PortTypeMock.class
+        KodeverkV2PortTypeMock.class,
+        JoarkPortTypeMock.class
 })
 public class EndpointMockContext {
 

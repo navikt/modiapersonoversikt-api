@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Named;
-
 import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
@@ -39,8 +37,7 @@ public class JoarkEndpointConfig {
 //                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/journal/v1/journal.wsdl");
     }
 
-    @Bean
-    @Named("joarkPortType")
+    @Bean(name ="joarkPortType" )
     public JournalV1 joarkPortType() throws HentJournalpostSikkerhetsbegrensning, HentJournalpostJournalpostIkkeFunnet, HentDokumentURLDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
         final JournalV1 prod = createJoarkPortType().build();
         return createSwitcher(
