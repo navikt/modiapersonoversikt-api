@@ -16,6 +16,7 @@ import java.util.*;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock.AKTOER_ID_MOCK;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -93,6 +94,7 @@ public class GsakSakV1PortTypeMock {
     private static WSSak createSak(String tema, DateTime opprettet) {
         return new WSSak()
                 .withSakId("" + idGenerator.nextInt(100000000))
+                .withGjelderBrukerListe(new WSPerson().withIdent(AKTOER_ID_MOCK))
                 .withFagsystemSakId("" + idGenerator.nextInt(100000000))
                 .withFagomraade(new WSFagomraader().withValue(tema))
                 .withOpprettelsetidspunkt(opprettet)
