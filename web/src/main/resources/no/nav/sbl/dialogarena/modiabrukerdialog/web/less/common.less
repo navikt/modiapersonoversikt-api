@@ -672,19 +672,25 @@ UL.feedbackPanel {
 			  }
 			  &:not(.selected) {
 				  background-color: #2d2b2a;
-				.familie {
-				  &:focus, :hover {
+				.familie:focus {
 					background-image: url(../svg/kjerneinfo/hjerte_lys.svg);
 					.kjerneinfoTabpanelImage;
 					.kjerneinfoTabpanelHoverFokus;
-				  }
 				}
-				.lenker {
-				  &:focus, :hover {
+				.familie:hover {
+				  background-image: url(../svg/kjerneinfo/hjerte_lys.svg);
+				  .kjerneinfoTabpanelImage;
+				  .kjerneinfoTabpanelHoverFokus;
+				}
+				.lenker:focus {
 					background-image: url(../svg/kjerneinfo/lenker_lys.svg);
 					.kjerneinfoTabpanelImage;
 					.kjerneinfoTabpanelHoverFokus;
-				  }
+				}
+				.lenker:hover {
+					background-image: url(../svg/kjerneinfo/lenker_lys.svg);
+					.kjerneinfoTabpanelImage;
+					.kjerneinfoTabpanelHoverFokus;
 				}
 			  }
 			  a {
@@ -824,6 +830,7 @@ UL.feedbackPanel {
   text-decoration: underline;
   color: @white;
   border-right: 1px solid #000;
+  width: 111px;
+  height: inherit;
   border-bottom: 1px solid #000;
-  padding-left: 1px;
 }
