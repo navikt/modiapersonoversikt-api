@@ -653,32 +653,60 @@ UL.feedbackPanel {
 			  	background-color: #2d2b2a;
             }
 			li {
-				color: #fff;
-				width: 110px;
-				height: 102px;
-                border-right: 1px solid #000;
-                border-bottom: 1px solid #000;
-                &.selected {
-				  	border-right: none;
-				 	background-color: @modiasvart;
-                }
-			  	&:not(.selected) {
-				  	background-color: #2d2b2a;
+			  color: #fff;
+			  width: 110px;
+			  height: 102px;
+			  border-right: 1px solid #000;
+			  border-bottom: 1px solid #000;
+			  .familie {
+				background-image: url(../img/hjerte.svg);
+				.kjerneinfoTabpanelImage;
+			  }
+			  .lenker {
+				background-image: url(../svg/kjerneinfo/lenker_ikon.svg);
+				.kjerneinfoTabpanelImage;
+			  }
+			  &.selected {
+				  border-right: none;
+				  background-color: @modiasvart;
+			  }
+			  &:not(.selected) {
+				  background-color: #2d2b2a;
+				.familie:focus {
+					background-image: url(../svg/kjerneinfo/hjerte_lys.svg);
+					.kjerneinfoTabpanelImage;
+					.kjerneinfoTabpanelHoverFokus;
 				}
-			  	a {
-					display: block;
-					min-height: 102px;
-					min-width: 111px;
-					padding-top: 18px;
-					text-decoration: none;
-					div {
-				  		font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-				  		font-size: 1rem;
-				  		letter-spacing: 1px;
-				  		padding-top: 5px;
-				  		color: @white;
-					}
-			  	}
+				.familie:hover {
+				  background-image: url(../svg/kjerneinfo/hjerte_lys.svg);
+				  .kjerneinfoTabpanelImage;
+				  .kjerneinfoTabpanelHoverFokus;
+				}
+				.lenker:focus {
+					background-image: url(../svg/kjerneinfo/lenker_lys.svg);
+					.kjerneinfoTabpanelImage;
+					.kjerneinfoTabpanelHoverFokus;
+				}
+				.lenker:hover {
+					background-image: url(../svg/kjerneinfo/lenker_lys.svg);
+					.kjerneinfoTabpanelImage;
+					.kjerneinfoTabpanelHoverFokus;
+				}
+			  }
+			  a {
+				display: block;
+				min-height: 102px;
+				min-width: 110px;
+				text-decoration: none;
+				div {
+				  font-family: Helvetica, Arial, sans-serif;
+				  font-size: 1rem;
+				  letter-spacing: 1px;
+				  padding-top: 70px;
+				  color: @white;
+				  min-height: inherit;
+				}
+			  }
 			}
 		   	.tomDiv {
 				.flex1;
@@ -789,4 +817,20 @@ UL.feedbackPanel {
 	padding-left: 12px;
 	border-left: 1px solid #f18a10;
   }
+}
+
+.kjerneinfoTabpanelImage {
+  background-repeat: no-repeat;
+  background-position: center 18px;
+  background-size: 48px 48px;
+}
+
+.kjerneinfoTabpanelHoverFokus {
+  background-color: @modiasvart;
+  text-decoration: underline;
+  color: @white;
+  border-right: 1px solid #000;
+  width: 111px;
+  height: inherit;
+  border-bottom: 1px solid #000;
 }

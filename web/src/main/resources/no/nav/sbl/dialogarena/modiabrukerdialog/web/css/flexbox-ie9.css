@@ -17,6 +17,24 @@
 	 padding: 30px 0 0 140px;
  }
 
+[class*=sidebar-venstre] .kjerneinfo .tab-row li:not(.selected) .familie:focus {
+	padding-left: 1px;
+	width: 109px;
+ }
+[class*=sidebar-venstre] .kjerneinfo .tab-row li:not(.selected) .familie:hover {
+	padding-left: 1px;
+	width: 109px;
+}
+
+[class*=sidebar-venstre] .kjerneinfo .tab-row li:not(.selected) .lenker:focus {
+	padding-left: 1px;
+	width: 109px;
+}
+[class*=sidebar-venstre] .kjerneinfo .tab-row li:not(.selected) .lenker:hover {
+	padding-left: 1px;
+	width: 109px;
+}
+
 .flexbox .flex2 {
 	display: table-cell;
 	width: 50%;
