@@ -674,8 +674,6 @@ UL.feedbackPanel {
 				  background-color: #2d2b2a;
 				.familie {
 				  &:focus, :hover {
-					border-right: 1px solid #000;
-					border-bottom: 1px solid #000;
 					background-image: url(../svg/kjerneinfo/hjerte_lys.svg);
 					.kjerneinfoTabpanelImage;
 					.kjerneinfoTabpanelHoverFokus;
@@ -683,8 +681,6 @@ UL.feedbackPanel {
 				}
 				.lenker {
 				  &:focus, :hover {
-					border-right: 1px solid #000;
-					border-bottom: 1px solid #000;
 					background-image: url(../svg/kjerneinfo/lenker_lys.svg);
 					.kjerneinfoTabpanelImage;
 					.kjerneinfoTabpanelHoverFokus;
@@ -694,13 +690,13 @@ UL.feedbackPanel {
 			  a {
 				display: block;
 				min-height: 102px;
-				min-width: 111px;
+				min-width: 110px;
 				text-decoration: none;
 				div {
-				  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+				  font-family: Helvetica, Arial, sans-serif;
 				  font-size: 1rem;
 				  letter-spacing: 1px;
-				  padding-top: 68px;
+				  padding-top: 70px;
 				  color: @white;
 				  min-height: inherit;
 				}
@@ -819,7 +815,7 @@ UL.feedbackPanel {
 
 .kjerneinfoTabpanelImage {
   background-repeat: no-repeat;
-  background-position: 32px 18px;
+  background-position: center 18px;
   background-size: 48px 48px;
 }
 
@@ -827,4 +823,7 @@ UL.feedbackPanel {
   background-color: @modiasvart;
   text-decoration: underline;
   color: @white;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  padding-left: 1px;
 }
