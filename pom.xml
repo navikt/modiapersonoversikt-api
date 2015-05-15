@@ -96,7 +96,7 @@
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>1.14-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>2.19-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>3.1-SNAPSHOT</saksoversikt.version>
+        <saksoversikt.version>3.1.0-SNAPSHOT</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>1.0.0-SNAPSHOT</modia-felleskomponenter.version>
