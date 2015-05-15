@@ -55,7 +55,7 @@ public class TilgangskontrollService {
             return new TilgangsKontrollResult(false, TilgangFeilmeldinger.IKKE_JOURNALFORT);
         } else if (erFeilregistrert(journalpost)) {
             return new TilgangsKontrollResult(false, TilgangFeilmeldinger.FEILREGISTRERT);
-        } else if (erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
+        } else if (!erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
             return new TilgangsKontrollResult(false, TilgangFeilmeldinger.IKKE_SAKSPART);
         }
         return new TilgangsKontrollResult(true);

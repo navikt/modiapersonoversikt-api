@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 
+import no.nav.sbl.dialogarena.sak.tilgang.TilgangFeilmeldinger;
+import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
@@ -9,22 +11,21 @@ import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Sak;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper;
-import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakResponse;
-import org.apache.commons.io.IOUtils;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -33,54 +34,190 @@ import static org.mockito.Mockito.when;
 public class TilgangskontrollServiceTest {
 
     @Mock
-    private GSakService gSakServiceImpl;
+    private GSakService gSakService;
 
     @Mock
     private AktoerPortType fodselnummerAktorService;
 
     @Mock
-    private JoarkService joarkServiceImpl;
+    private JoarkService joarkService;
 
     @InjectMocks
     private TilgangskontrollService tilgangskontrollService;
 
     private static Random idGenerator = new Random();
     public static final String SAKSTYPE_GENERELL = "GEN";
+    public static final String BRUKERS_IDENT = "12345678901";
+    public static final String IKKE_BRUKERS_IDENT = "12345678902";
 
-    //TODO greiere å skrive ordentlige tester når man har alle tjenestene på plass
-    @Test
-    public void testSuitenFungerer() throws HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
-        when(gSakServiceImpl.hentSak(anyString())).thenReturn(createSak("DAG", DateTime.now().minusDays(5)));
+
+    @Before
+    public void setup() throws HentAktoerIdForIdentPersonIkkeFunnet {
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
-        hentAktoerIdForIdentResponse.setAktoerId("1232131");
+        hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
         when(fodselnummerAktorService.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenReturn(hentAktoerIdForIdentResponse);
-        when(joarkServiceImpl.hentDokument(anyString(), anyString())).thenReturn(new byte[10]);
-        when(joarkServiceImpl.hentJournalpost(anyString())).thenReturn(createJournalpost());
-
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("123123", "123213213");
     }
 
-    private static WSSak createSak(String tema, DateTime opprettet) {
+    @Test
+    public void harTilgangHvisAlleSjekkerOk() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakMedSakspart();
+        setJournalfortOgIkkeFeilRegistrert();
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertTrue(tilgangsKontrollResult.isHarTilgang());
+    }
+
+    //TODO ignore fram til journalført er på plass på Journalpost-objektet.
+    @Ignore
+    @Test
+    public void harIkkeTilgangHvisIkkeJournalfort() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakMedSakspart();
+        setIkkeJournalfortOgIkkeFeilRegistrert();
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(tilgangsKontrollResult.isHarTilgang());
+        assertEquals(tilgangsKontrollResult.getFeilmelding(), TilgangFeilmeldinger.IKKE_SAKSPART);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisIkkeSakspart() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakUtenSakspart();
+        setJournalfortOgIkkeFeilRegistrert();
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(tilgangsKontrollResult.isHarTilgang());
+        assertEquals(tilgangsKontrollResult.getFeilmelding(), TilgangFeilmeldinger.IKKE_SAKSPART);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisFeilRegistrert() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakMedSakspart();
+        setJournalfortOgFeilRegistrert();
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(tilgangsKontrollResult.isHarTilgang());
+        assertEquals(tilgangsKontrollResult.getFeilmelding(), TilgangFeilmeldinger.FEILREGISTRERT);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisJournalpostIkkeFunnet() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakMedSakspart();
+        setJoarkThrows(HentJournalpostJournalpostIkkeFunnet.class);
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(tilgangsKontrollResult.isHarTilgang());
+        assertEquals(tilgangsKontrollResult.getFeilmelding(), TilgangFeilmeldinger.JOURNALPOST_IKKE_FUNNET);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisJournalpostSikkerhetsbegrensning() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakMedSakspart();
+        setJoarkThrows(HentJournalpostSikkerhetsbegrensning.class);
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(tilgangsKontrollResult.isHarTilgang());
+        assertEquals(tilgangsKontrollResult.getFeilmelding(), TilgangFeilmeldinger.SIKKERHETSBEGRENSNING);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisGsakIkkeFinnerSak() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakThrows(HentSakSakIkkeFunnet.class);
+        setJournalfortOgIkkeFeilRegistrert();
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(tilgangsKontrollResult.isHarTilgang());
+        assertEquals(tilgangsKontrollResult.getFeilmelding(), TilgangFeilmeldinger.SAK_IKKE_FUNNET);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisAtkorIdIkkeFunnet() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentAktoerIdForIdentPersonIkkeFunnet {
+        setGsakMedSakspart();
+        setJournalfortOgIkkeFeilRegistrert();
+        settAktorIdTilAFeile();
+
+        TilgangsKontrollResult tilgangsKontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(tilgangsKontrollResult.isHarTilgang());
+        assertEquals(tilgangsKontrollResult.getFeilmelding(), TilgangFeilmeldinger.AKTOER_ID_IKKE_FUNNET);
+    }
+
+    private void setIkkeJournalfortOgIkkeFeilRegistrert() throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        when(joarkService.hentJournalpost(anyString())).thenReturn(createIkkeJournalfortJournalpost());
+    }
+
+    private void setJournalfortOgIkkeFeilRegistrert() throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        when(joarkService.hentJournalpost(anyString())).thenReturn(createOKJournalpost());
+    }
+
+    private void setJournalfortOgFeilRegistrert() throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        when(joarkService.hentJournalpost(anyString())).thenReturn(createFeilRegistrertJournalpost());
+    }
+
+    private void setJoarkThrows(Class e) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        when(joarkService.hentJournalpost(anyString())).thenThrow(e);
+    }
+
+    private void setGsakThrows(Class e) throws HentSakSakIkkeFunnet {
+        when(gSakService.hentSak(anyString())).thenThrow(e);
+    }
+
+    private void setGsakMedSakspart() throws HentSakSakIkkeFunnet {
+        WSAktoer aktoerKnyttetTilSaken = new WSPerson();
+        aktoerKnyttetTilSaken.setIdent(BRUKERS_IDENT);
+        when(gSakService.hentSak(anyString())).thenReturn(createSak("DAG", DateTime.now().minusDays(5), aktoerKnyttetTilSaken));
+    }
+
+    private void setGsakUtenSakspart() throws HentSakSakIkkeFunnet {
+        WSAktoer aktoerKnyttetTilSaken = new WSPerson();
+        aktoerKnyttetTilSaken.setIdent(IKKE_BRUKERS_IDENT);
+        when(gSakService.hentSak(anyString())).thenReturn(createSak("DAG", DateTime.now().minusDays(5), aktoerKnyttetTilSaken));
+    }
+
+    private void settAktorIdTilAFeile() throws HentAktoerIdForIdentPersonIkkeFunnet {
+        when(fodselnummerAktorService.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenThrow(HentAktoerIdForIdentPersonIkkeFunnet.class);
+    }
+
+    private static WSSak createSak(String tema, DateTime opprettet, WSAktoer... brukere) {
         return new WSSak()
                 .withSakId("" + idGenerator.nextInt(100000000))
                 .withFagsystemSakId("" + idGenerator.nextInt(100000000))
                 .withFagomraade(new WSFagomraader().withValue(tema))
                 .withOpprettelsetidspunkt(opprettet)
+                .withGjelderBrukerListe(brukere)
                 .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
                 .withFagsystem(new WSFagsystemer().withValue("FS22"));
     }
 
-    private Journalpost createJournalpost() {
+    private Journalpost createOKJournalpost() {
+        //TODO sett journalført
+
         Journalpost journalpost = new Journalpost();
         journalpost.setJournalpostId("journalpostid");
-        journalpost.setGjelderSak(createSak());
+        journalpost.setGjelderSak(createSak(false));
         return journalpost;
     }
 
-    private Sak createSak() {
+    private Journalpost createFeilRegistrertJournalpost() {
+        //TODO sett journalført
+
+        Journalpost journalpost = new Journalpost();
+        journalpost.setJournalpostId("journalpostid");
+        journalpost.setGjelderSak(createSak(true));
+        return journalpost;
+    }
+
+    private Journalpost createIkkeJournalfortJournalpost() {
+        //TODO sett ikke journalført
+
+        Journalpost journalpost = new Journalpost();
+        journalpost.setJournalpostId("journalpostid");
+        journalpost.setGjelderSak(createSak(false));
+        return journalpost;
+    }
+
+    private Sak createSak(boolean feilregistret) {
         Sak sak = new Sak();
         sak.setSakId("sakId");
-        sak.setErFeilregistrert(false);
+        sak.setErFeilregistrert(feilregistret);
         return sak;
     }
 }
