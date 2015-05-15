@@ -16,7 +16,7 @@ public class SaksoversiktServiceConfig {
 
     @Bean
     public TilgangskontrollService tilgangskontrollService() {
-        return new TilgangskontrollService();
+        return new TilgangskontrollServiceImpl();
     }
 
     @Bean

@@ -4,7 +4,6 @@ import no.nav.modig.wicket.component.modal.ModalAdvarselPanel;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.service.JoarkService;
 import no.nav.sbl.dialogarena.sak.service.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
 import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;

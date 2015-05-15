@@ -43,7 +43,7 @@ public class TilgangskontrollServiceTest {
     private JoarkService joarkService;
 
     @InjectMocks
-    private TilgangskontrollService tilgangskontrollService;
+    private TilgangskontrollService tilgangskontrollService = new TilgangskontrollServiceImpl();
 
     private static Random idGenerator = new Random();
     public static final String SAKSTYPE_GENERELL = "GEN";
