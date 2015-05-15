@@ -4,6 +4,7 @@ import no.nav.modig.wicket.component.modal.ModalAdvarselPanel;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import no.nav.sbl.dialogarena.sak.service.JoarkService;
 import no.nav.sbl.dialogarena.sak.service.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.tilgang.TilgangsKontrollResult;
 import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;
@@ -147,17 +148,18 @@ public class KvitteringsPanel extends Panel {
                     AjaxLink<Void> hentVedleggLenke = new AjaxLink<Void>("hent-vedlegg") {
                         @Override
                         public void onClick(AjaxRequestTarget target) {
-                            TilgangsKontrollResult tilgangsKontrollResult = harSaksbehandlerTilgangTilDokument("123123123");
+                            TilgangsKontrollResult tilgangsKontrollResult = harSaksbehandlerTilgangTilDokument(journalpostId);
                             if (tilgangsKontrollResult.isHarTilgang()) {
-                                ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf(journalpostId, dokument.arkivreferanse));
-                                add(resourceStreamAjaxBehavoiur);
-                                resourceStreamAjaxBehavoiur.init(target);
+                                visVedlegg(target);
                             } else {
-                                //En feil som ikke ble fanget opp skjedde. Burde vel egentlig ikke skje dette
-                                modalWindow.setContent(new ModalAdvarselPanel(modalWindow, tilgangsKontrollResult.getFeilmelding().heading(), tilgangsKontrollResult.getFeilmelding().lead(), "Lukk"));
-                                modalWindow.show(target);
+                                visFeilmeldingVindu(target, tilgangsKontrollResult);
                             }
+                        }
 
+                        private void visVedlegg(AjaxRequestTarget target) {
+                            ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(getMockPdf(journalpostId, dokument.arkivreferanse));
+                            add(resourceStreamAjaxBehavoiur);
+                            resourceStreamAjaxBehavoiur.init(target);
                         }
                     };
 
@@ -167,8 +169,12 @@ public class KvitteringsPanel extends Panel {
         };
     }
 
+    private void visFeilmeldingVindu(AjaxRequestTarget target, TilgangsKontrollResult tilgangsKontrollResult) {
+        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, tilgangsKontrollResult.getFeilmelding().heading(), tilgangsKontrollResult.getFeilmelding().lead(), "Lukk"));
+        modalWindow.show(target);
+    }
+
     private TilgangsKontrollResult harSaksbehandlerTilgangTilDokument(String journalpostId) {
-        //TODO Bedre å catche og skrive ut feilmeldinger i TilgangskontrollService der man har mer informasjon. F. eks. sakId mot GSak.
         return tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
     }
 
