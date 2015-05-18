@@ -10,10 +10,10 @@
 
     <logger name="no.nav.modig" level="WARN"/>
     <logger name="org.apache.wicket" level="WARN"/>
-    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework" level="TRACE"/>
     <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
 
-    <root level="INFO">
+    <root level="TRACE">
         <appender-ref ref="CONSOLE"/>
     </root>
 

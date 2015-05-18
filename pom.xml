@@ -81,8 +81,8 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>2.0</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>3.0</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>2.1-SNAPSHOT</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>3.1-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>3.1</saksoversikt.version>
     </properties>
 
@@ -373,7 +373,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

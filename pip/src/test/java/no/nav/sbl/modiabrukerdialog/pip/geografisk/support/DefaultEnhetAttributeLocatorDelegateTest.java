@@ -38,7 +38,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		delegate = new DefaultEnhetAttributeLocatorDelegate(ansattService, enhetService);
+		delegate = new DefaultEnhetAttributeLocatorDelegate();
 	}
 
 	@BeforeClass
