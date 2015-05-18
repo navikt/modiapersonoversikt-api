@@ -5,11 +5,8 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import org.apache.cxf.feature.Feature;
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,15 +47,10 @@ public class GsakOppgaveV3EndpointConfig {
     }
 
     private static OppgaveV3 createOppgavePortType(AbstractSAMLOutInterceptor interceptor) {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(System.getProperty("gsak.oppgave.v3.url"));
-        proxyFactoryBean.setServiceClass(OppgaveV3.class);
-        proxyFactoryBean.getOutInterceptors().add(interceptor);
-        List<Feature> features = proxyFactoryBean.getFeatures();
-        features.add(new LoggingFeature());
-        features.add(new WSAddressingFeature());
-
-        return proxyFactoryBean.create(OppgaveV3.class);
+        return new CXFClient<>(OppgaveV3.class)
+                .address(System.getProperty("gsak.oppgave.v3.url"))
+                .withOutInterceptor(interceptor)
+                .build();
     }
 
 }

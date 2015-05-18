@@ -1,0 +1,19 @@
+.flexbox.col {
+	display: table;
+	table-layout: fixed;
+}
+
+.flexbox .row {
+	display: table-row;
+}
+
+.flexbox .flex1 {
+	display: table-cell;
+	width: 25%;
+}
+
+.flexbox .flex2 {
+	display: table-cell;
+	width: 50%;
+	vertical-align: top;
+}

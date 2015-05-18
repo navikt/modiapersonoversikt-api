@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import static org.mockito.Mockito.mock;
 
 @Configuration
-@Import({EndpointMockContext.class})
+@Import(value = {SaksbehandlerInnstillingerPanelMockContext.class})
 public class HentPersonPanelMockContext {
 
     @Bean

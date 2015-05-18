@@ -22,10 +22,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        NAVOrgEnhetEndpointConfig.class
-})
+@ContextConfiguration(classes = {NAVOrgEnhetEndpointConfig.class})
 public class NAVOrgEnhetEndpointCacheTest extends CacheTest {
+
     public static final String CACHE_NAME = "asbogosysEnhet";
 
     @Inject

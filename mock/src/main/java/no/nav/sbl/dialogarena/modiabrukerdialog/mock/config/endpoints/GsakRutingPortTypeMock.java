@@ -1,10 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForSakRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForSakResponse;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.*;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -28,6 +24,16 @@ public class GsakRutingPortTypeMock {
                 new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("0122").withEnhetNavn("NAV Trøgstad"),
                 new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("0100").withEnhetNavn("NAV Østfold"),
                 new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("2960").withEnhetNavn("Nav Drift og Utvikling - Anskaffelse og økonomi"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4412").withEnhetNavn("Nav Drift og Utvikling - IKT"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4414").withEnhetNavn("Nav Drift og Utvikling - DevOps"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4415").withEnhetNavn("Nav Drift og Utvikling - Aura"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("0313").withEnhetNavn("Nav Drift og Utvikling - Team Ulv"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4416").withEnhetNavn("Nav Drift og Utvikling - Team Ørn"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("0314").withEnhetNavn("Nav Drift og Utvikling - Team Bjørn"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4417").withEnhetNavn("Nav Drift og Utvikling - Team Gaupe"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4219").withEnhetNavn("Nav Drift og Utvikling - Team Rev"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("0315").withEnhetNavn("Nav Drift og Utvikling - Team Kanary"),
+                new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4418").withEnhetNavn("Nav Drift og Utvikling - Team Hakkespett"),
                 new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4303").withEnhetNavn("NAV Id og fordeling"));
 
         when(ruting.finnAnsvarligEnhetForSak(any(WSFinnAnsvarligEnhetForSakRequest.class))).thenAnswer(new Answer<WSFinnAnsvarligEnhetForSakResponse>() {
@@ -39,13 +45,21 @@ public class GsakRutingPortTypeMock {
         when(ruting.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class))).thenAnswer(new Answer<WSFinnAnsvarligEnhetForOppgavetypeResponse>() {
             @Override
             public WSFinnAnsvarligEnhetForOppgavetypeResponse answer(InvocationOnMock invocation) {
-                WSFinnAnsvarligEnhetForSakResponse enhet = responser.get(new Random().nextInt(responser.size()));
+                WSFinnAnsvarligEnhetForOppgavetypeRequest request = (WSFinnAnsvarligEnhetForOppgavetypeRequest) invocation.getArguments()[0];
                 WSFinnAnsvarligEnhetForOppgavetypeResponse response = new WSFinnAnsvarligEnhetForOppgavetypeResponse();
-                response.getEnhetListe().add(new WSEnhet().withEnhetId(enhet.getEnhetId()).withEnhetNavn(enhet.getEnhetNavn()));
+                leggTilEnhet(response, responser.get(new Random().nextInt(responser.size())));
+
+                if ("DAG".equals(request.getFagomradeKode()) && "KONT_BRUK_DAG".equals(request.getOppgaveKode())) {
+                    leggTilEnhet(response, responser.get(new Random().nextInt(responser.size())));
+                }
                 return response;
             }
         });
         return ruting;
+    }
+
+    private static void leggTilEnhet(WSFinnAnsvarligEnhetForOppgavetypeResponse response, WSFinnAnsvarligEnhetForSakResponse enhet) {
+        response.getEnhetListe().add(new WSEnhet().withEnhetId(enhet.getEnhetId()).withEnhetNavn(enhet.getEnhetNavn()));
     }
 
 }

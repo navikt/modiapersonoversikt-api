@@ -6,7 +6,7 @@
         <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-error.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-error-%d{yyyy-MM-dd}.gz</FileNamePattern>
-            <maxHistory>90</maxHistory>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
@@ -27,10 +27,13 @@
     </appender>
 
     <appender name="infolog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-debug.log</File>
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-info.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-info-%d{yyyy-MM-dd}.gz</FileNamePattern>
-            <maxHistory>90</maxHistory>
+            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-info-%d{yyyy-MM-dd}.%i.gz</FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>400MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
         </rollingPolicy>
         <encoder>
             <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
@@ -78,10 +81,12 @@
         <appender-ref ref="personaccessappender"/>
     </logger>
 
+    <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
+
     <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="exceptionlog"/>
         <appender-ref ref="infolog"/>
-        <appender-ref ref="SYSLOG" />
+        <appender-ref ref="SYSLOG"/>
     </root>
 
 </configuration>

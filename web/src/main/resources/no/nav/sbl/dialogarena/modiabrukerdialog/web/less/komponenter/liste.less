@@ -1,0 +1,168 @@
+.liste {
+  margin-bottom: 2rem;
+  border: 1px solid @borderColorLight;
+  &:focus {
+    border: 1px solid @linkColor;
+    outline: 0;
+  }
+  H1 {
+    ._H3;
+    font-size: 1.14rem;
+    width: 100%;
+    padding: 20px 0;
+    margin: 0 !important;
+    text-align: center;
+    border-bottom: 1px solid @borderColorLight;
+    background-color: @bodyBackground;
+  }
+  A:hover {
+    text-decoration: none;
+  }
+  P {
+    margin: 0.4em 0;
+  }
+  TABLE {
+    float: none;
+    clear: both;
+    width: 100%;
+    margin-top: 1rem;
+    border-spacing: 0;
+    TH, TD {
+      text-align: left;
+      padding: 0 1rem 0 0;
+      width: 50%;
+    }
+    TH {
+      font-weight: normal;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+    TD {
+      font-weight: bold;
+      font-size: 0.92rem;
+    }
+  }
+  UL {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  & > UL > LI {
+    display: block;
+    margin: 0;
+    position: relative;
+    padding: 10px 30px;
+    overflow: auto;
+    border-top: 1px solid @white;
+    border-bottom: 1px solid @borderColorLight;
+    color: @grayDark;
+    &:last-of-type {
+      border-bottom: none;
+    }
+    &:focus {
+      outline: none;
+    }
+    H4 {
+      margin: 10px 0 0 0;
+    }
+    DL > *:nth-child(4n+1) {
+      margin-top: 1rem;
+      clear: left;
+      &:before {
+        content: "";
+        display: table;
+        width: 100%;
+      }
+    }
+    DT {
+      font-size: 0.78rem;
+    }
+    DD {
+      font-size: 0.92rem;
+    }
+    A, A:visited, A:active {
+      color: @grayDark;
+      overflow: auto;
+      display: block;
+      text-decoration: none;
+    }
+    &.empty {
+      background-color: @bodyBackground;
+      H2 {
+        color: @grayLight;
+        font-weight: 700;
+      }
+    }
+    &.expandable {
+      background-image: none;
+      padding: 0;
+      & > * {
+        padding: 0 30px;
+      }
+      .hidden {
+        display: none;
+        padding-bottom: 20px;
+        TABLE:first-of-type {
+          margin-top: 4px;
+        }
+        DL:first-of-type DT:first-child {
+          margin-top: 4px;
+        }
+      }
+      A:hover {
+        text-decoration: none;
+        background-color: @bodyBackground;
+      }
+      A, A:visited, A:active {
+        padding: 20px 30px 10px;
+        background-image: url(../img/pil-hoyre.svg);
+        background-position: 10px 22px;
+        background-repeat: no-repeat;
+      }
+      A:focus {
+        background-color: @bodyBackground;
+        outline: none;
+      }
+      &.expanded {
+        background-color: @bodyBackground;
+        A, A:visited, A:active {
+          background-image: url(../img/pil-ned.svg);
+          background-position: 10px 25px;
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.lamell {
+  .liste {
+    float: none;
+    width: auto;
+    P.overskrift, LI.expandable A {
+      font-weight: 600;
+      font-size: 1.16rem;
+      font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      position: relative;
+      padding-right: 30px;
+      .dato {
+        display: block;
+        font-size: 0.857rem;
+        font-weight: normal;
+        font-family: Helvetica, Arial, sans-serif;
+        text-transform: uppercase;
+      }
+      .belop {
+        position: absolute;
+        left: 50%;
+      }
+      DL {
+        font-weight: normal;
+      }
+    }
+    .gradering {
+      position: absolute;
+      right: 0;
+    }
+  }
+}

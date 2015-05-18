@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
+import no.nav.sbl.dialogarena.common.cxf.TimeoutFeature;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.frontend.ClientProxy;
@@ -34,6 +35,7 @@ public class NAVOrgEnhetEndpointConfig {
         proxyFactoryBean.setEndpointName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVOrgEnhet/Binding", "GOSYSNAVOrgEnhetWSEXP_GOSYSNAVOrgEnhetHttpPort"));
         proxyFactoryBean.setServiceClass(GOSYSNAVOrgEnhet.class);
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
+        proxyFactoryBean.getFeatures().add(new TimeoutFeature());
         proxyFactoryBean.getOutInterceptors().add(new WSS4JOutInterceptor(getSecurityProps()));
 
         GOSYSNAVOrgEnhet navOrgEnhet = proxyFactoryBean.create(GOSYSNAVOrgEnhet.class);

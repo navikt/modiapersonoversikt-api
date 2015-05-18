@@ -12,6 +12,7 @@
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
     <version>5.0-SNAPSHOT</version>
+    <version>5.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -55,9 +56,9 @@
         <modig.frontend.version>1.1.108</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.0.0-SNAPSHOT</modig.wicket.version>
+        <modig.wicket.version>3.0.1-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
-        <modig.lang.version>2.0.2</modig.lang.version>
+        <modig.lang.version>2.0.4</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig-log-jaxws.version>1.1.3</modig-log-jaxws.version>
@@ -69,12 +70,10 @@
         <common-collections.version>1.0</common-collections.version>
         <common-integrasjonsutils.version>0.0.7</common-integrasjonsutils.version>
         <common-cxf.version>1.1</common-cxf.version>
-        <common-jetty.version>1.0.23</common-jetty.version>
-        <jetty.version>9.0.5.v20130815</jetty.version>
         <common-kodeverk.version>1.0.0</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>0.13</reactkomponenter.version>
+        <reactkomponenter.version>0.15</reactkomponenter.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -83,10 +82,21 @@
         <javax.ws.rs.version>2.0.1</javax.ws.rs.version>
 
         <!-- Modia-komponenter / Tjenester-->
+        <!-- Kan ikke uppes -->
+        <jetty.version>9.0.5.v20130815</jetty.version>
+        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.
+        Dette blir oppfylt fra Jetty 9.1. I SimpleLoginModule som vi bruker lokalt får man satt rollen DummyRole uansett.
+        Her overrides getName() og "*" returneres. Dette gjør at i sjekken isUserinRole i Jetty sin ConstraintSecurityHandler
+        feiler da den finner "*" som navn på rollen. For å fikse dette må rollenavnet som blir overridet i DummyRole endres
+        til f. eks dobbelstjerne "**" og SecurityConstrainten må bli overridet i override-web.xml og satt tilsvarende role-name
+        der som i DummyRole.  -->
+        <common-jetty.version>1.0.23</common-jetty.version> <!-- Samme som Jetty -->
+
+        <!-- Modia-komponenter-->
         <personsok.version>1.0.82</personsok.version>
-        <kjerneinfo.versjon>1.0.111</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.0</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.0.82</utbetaling.version>
+        <utbetaling.version>2.1.1</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -94,12 +104,12 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>1.14-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>2.19-SNAPSHOT</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>2.0</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>3.0</sporsmalogsvar.version>
         <saksoversikt.version>3.1.0-SNAPSHOT</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>1.0.0-SNAPSHOT</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>1.0.0</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.32</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>

@@ -31,6 +31,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.FancySelect;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -130,7 +131,7 @@ public class WicketApplication extends WebApplication {
                 try {
                     return cms.hentTekst(key);
                 } catch (Exception e) {
-                    log.warn("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
+                    log.trace("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
                     return null;
                 }
             }
@@ -156,20 +157,36 @@ public class WicketApplication extends WebApplication {
                 .addConditionalCss(
                         PersonPage.INTERN_IE,
                         SaksoversiktLerret.SAKSOVERSIKT_IE_CSS,
-                        BasePage.MODIA_FLEXBOX_IE_CSS,
-                        Innboks.MELDINGER_IE_CSS
+                        BasePage.MODIA_LAYOUT_IE_CSS,
+                        BasePage.KJERNEINFO_IE9_CSS,
+                        Innboks.MELDINGER_IE_CSS,
+                        FancySelect.IECSS
                 )
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
-                        BasePage.MODIA_KOMPONENTER_LESS,
-                        BasePage.MODIA_RAMME_LESS,
-                        BasePage.MODIA_FLEXBOX_LESS,
+                        BasePage.MODIA_WIDGET_LESS,
+                        BasePage.MODIA_LAMELL_LESS,
+                        BasePage.MODIA_LAYOUT_LESS,
+                        BasePage.LISTE,
+                        BasePage.HEADER,
+                        BasePage.RESPONSIVE,
                         BasePage.PERSONINFO_LESS,
                         UtbetalingLerret.UTBETALING_LESS,
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
-                        PersonPage.DIALOGPANEL_LESS
+                        BasePage.OPPFOLGING,
+                        BasePage.OPPGAVEFORM,
+                        BasePage.PERSONSOK,
+                        BasePage.SAKBEHANDLERINNSTILLINGER,
+                        BasePage.JOURNALFORING,
+                        BasePage.BRUKERPROFIL,
+                        BasePage.HENTPERSON,
+                        BasePage.KJERNEINFO,
+                        BasePage.OVERSIKT,
+                        BasePage.SYKEPENGER_FORELDREPENGER,
+                        PersonPage.DIALOGPANEL_LESS,
+                        FancySelect.LESS
                 )
                 .addCss(
                         BasePage.PERSONSOKRESULT,
@@ -194,10 +211,11 @@ public class WicketApplication extends WebApplication {
                         PersonPage.SELECTMENU_JS,
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
-                        Innboks.MELDINGER_JS
+                        Innboks.MELDINGER_JS,
+                        Innboks.BESVAR_INDIKATOR_JS,
+                        FancySelect.JS
                 )
-                .withModules(ReactResources.SKRIVESTOTTE)
-                .withModules(ReactResources.MELDINGER_SOK)
+                .withModules(ReactResources.REACT_KOMPONENTER)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }

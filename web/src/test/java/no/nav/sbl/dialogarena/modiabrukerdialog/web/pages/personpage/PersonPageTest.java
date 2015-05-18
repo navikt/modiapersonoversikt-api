@@ -7,9 +7,9 @@ import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -24,7 +24,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -34,9 +33,7 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -44,20 +41,12 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.mockito.Mockito.*;
 
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {PersonPageMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {PersonPageMockContext.class})
 public class PersonPageTest extends WicketPageTest {
 
     @Inject
@@ -159,6 +148,15 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
+    public void vellykketGotoHentPersonPageErrortextAndWrongFnr() {
+        wicket.goTo(PersonPage.class, with().param("soektfnr", "wrongFnr").param("error", "errorMessage"))
+        .should().containPatterns("wrongFnr")
+        .should().containPatterns("errorMessage");
+
+        wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}"));
+    }
+
+    @Test
     public void vellykketGotoHentPersonPageKunErrortekst() {
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
@@ -169,7 +167,9 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
         PersonPage page = new PersonPage(new PageParameters());
-        String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+        String sikkerhetstiltak =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
+                        HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         assertEquals("Farlig.", sikkerhetstiltak);
     }
 
@@ -177,14 +177,30 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void shouldExtractErrortext() throws JSONException {
         PersonPage page = new PersonPage(new PageParameters());
-        String errorTxt = page.getErrorText("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+        String errorTxt =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
+                        HentPersonPanel.JSON_ERROR_TEXT);
         assertEquals("Feil tekst", errorTxt);
+    }
+
+    @Test
+    public void shouldExtractErrortextAndFnr() throws JSONException {
+        PersonPage page = new PersonPage(new PageParameters());
+        String errorTxt =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}",
+                        HentPersonPanel.JSON_ERROR_TEXT);
+        String soektfnr =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}",
+                        HentPersonPanel.JSON_SOKT_FNR);
+        assertEquals("Feil tekst", errorTxt);
+        assertEquals("wrongFnr", soektfnr);
     }
 
     @Test
     public void shouldExtractNullWhenFnrtExist() throws JSONException {
         PersonPage page = new PersonPage(new PageParameters());
-        String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\"}");
+        String sikkerhetstiltak =
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         Assert.assertNull(sikkerhetstiltak);
     }
 

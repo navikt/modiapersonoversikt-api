@@ -1,0 +1,12 @@
+.kjerneinfo .tab-row .tomDiv {
+    min-height: 700px;
+}
+
+.kjerneinfo .flexbox .row .flex1 {
+    display: table-cell;
+    width: 25%;
+}
+
+[class*=sidebar-venstre] .kjerneinfo .tab-info {
+    padding: 30px 0 0 140px;
+}

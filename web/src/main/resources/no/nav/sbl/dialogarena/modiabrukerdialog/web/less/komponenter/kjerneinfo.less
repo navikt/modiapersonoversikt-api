@@ -1,0 +1,261 @@
+[class*=sidebar-venstre] {
+  overflow: visible;
+  color: #b7b1a9;
+  background: @modiaBackground;
+  > * {
+    margin: 0 30px;
+  }
+  HR {
+    height: 1px;
+    width: 20px;
+    margin: -5px auto 0;
+    border: 0;
+    color: @white;
+    background-color: @white;
+  }
+  P {
+    margin: 0;
+    line-height: 1.2em;
+    &.dato {
+      text-align: center;
+    }
+  }
+  .visittkort {
+    margin: 0;
+    padding: 15px @sidebarYtrePadding 5px 0;
+    min-height: 266px;
+    background: no-repeat 27px 30px;
+    background-color: inherit;
+    background-size: 64px;
+    color: @grayLight;
+    border-top: 1px solid #000;
+    width: 100%;
+    A {
+      color: @blue;
+    }
+    &.mann {
+      background-image: url(../img/mann.svg);
+      .left > * {
+        color: #0fba47;
+      }
+    }
+    &.kvinne {
+      background-image: url(../img/kvinne.svg);
+      .left {
+        .label {
+          color: #ff61b3;
+        }
+        .year {
+          color: #ec288d;
+        }
+      }
+    ;
+    }
+    H1, H2 {
+      ._H2;
+      font-size: 2.2rem;
+      line-height: 104%;
+      margin: 0;
+      color: @grayLight;
+    }
+    .left {
+      font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      float: left;
+      text-align: center;
+      width: 55px;
+      margin: 68px 25px 0 0;
+      line-height: 1.6rem;
+      text-transform: uppercase;
+      .label, .year {
+        display: block;
+      }
+      .label {
+        font-size: 0.7rem;
+      }
+      .year {
+        font-size: 2.5rem;
+        font-weight: 600;
+      }
+    }
+    .right {
+      padding-left: 80px;
+      .notBold {
+        font-weight:normal;
+      }
+    }
+    #visittkortinfo {
+      padding: 15px 15px 30px 30px;
+    }
+  }
+  table {
+    border-collapse: collapse;
+    margin: 0 0 1.5rem;
+    tbody {
+      tr:first-child {
+        th, td {
+          padding-top: 3px;
+        }
+      }
+      tr:last-child {
+        th, td {
+          padding-bottom: 3px;
+        }
+      }
+    }
+    tr {
+      th {
+        float: left;
+        clear: right;
+        padding: 1.2rem 0 0 !important;
+        text-transform: uppercase;
+        font-size: 0.857rem;
+        font-weight: normal;
+        text-align: left;
+      }
+      td {
+        float: left;
+        clear: left;
+        font-weight: bold;
+        text-align: left;
+        font-size: 1.3rem;
+        font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+    }
+  }
+  .kjerneinfo {
+    margin: 0;
+    padding-right: @sidebarYtrePadding;
+    border-top: 1px solid #000;
+    .tab-row {
+      .flexbox;
+      .col;
+      min-height: inherit;
+      max-width: 110px;
+      float: left;
+      text-align: center;
+      ul {
+        display: inline;
+        padding: 0px;
+        margin: 0px;
+        background-color: #2d2b2a;
+      }
+      li {
+        color: #fff;
+        width: 110px;
+        height: 102px;
+        border-right: 1px solid #000;
+        border-bottom: 1px solid #000;
+        &.selected {
+          border-right: none;
+          background-color: @modiasvart;
+        }
+        &:not(.selected) {
+          background-color: #2d2b2a;
+        }
+        a {
+          display: block;
+          min-height: 102px;
+          min-width: 111px;
+          padding-top: 18px;
+          text-decoration: none;
+          div {
+            font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            padding-top: 5px;
+            color: @white;
+          }
+        }
+      }
+      .tomDiv {
+        .flex1;
+        .flexbox;
+        min-width: 110px;
+        border-right: 1px solid #000000;
+        background-color: #2d2b2a;
+      }
+    }
+    .tab-info {
+      padding: 30px 0 0 30px;
+      UL {
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+        &.lenkeliste {
+          LI {
+            padding: 0 0 1.2rem !important;
+            a {
+              color: @blue;
+            }
+          }
+        }
+      }
+      .info {
+        .barn {
+          display: table;
+          margin-top: 1.5rem;
+          .barnAlder {
+            float: left;
+            text-align: center;
+            margin-right: 15px;
+            min-width: 40px;
+            SPAN {
+              display: block;
+              font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+              &.alderEnhet {
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              }
+              &.alder {
+                font-size: 2.5rem;
+                font-weight: 600;
+              }
+            }
+          }
+          UL {
+            display: inherit;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-weight: bold;
+            max-width: 290px;
+            LI:last-child {
+              font-weight: normal;
+              font-size: 0.7rem;
+            }
+            .kjonnVisning {
+              font-weight: normal;
+            }
+          }
+          &.boy {
+            .barnAlder {
+              color: #0fba47;
+            }
+          }
+          &.girl {
+            .barnAlder {
+              .alderEnhet {
+                color: #ff61b3;
+              }
+              .alder {
+                color: #ec288d;
+              }
+            }
+          }
+        }
+        &.foreldre {
+          .notBold {
+            font-weight: normal;
+          }
+          .dodMann {
+            color: #0fba47;
+          }
+          .dodKvinne {
+            color: #ec288d;
+          }
+        }
+      }
+    }
+  }
+}

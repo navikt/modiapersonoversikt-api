@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -60,7 +60,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         final Form form = new Form<>("enhetsform");
         form.add(gruppe);
 
-        form.add(new AjaxButton("velg") {
+        form.add(new IndicatingAjaxButtonWithImageUrl("velg", "/modiabrukerdialog/img/ajaxloader/graa/loader_graa_32.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie(valgtEnhet);

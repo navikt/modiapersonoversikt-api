@@ -7,10 +7,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
-import no.nav.modig.modia.lamell.LamellFactory;
-import no.nav.modig.modia.lamell.Lerret;
-import no.nav.modig.modia.lamell.LerretFactory;
-import no.nav.modig.modia.lamell.TokenLamellPanel;
+import no.nav.modig.modia.lamell.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
@@ -195,7 +192,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new UtbetalingLerret(id, fnrFromRequest);
+                return new AjaxLazyLoadLerret(id) {
+                    @Override
+                    public Lerret getLazyLoadComponent(String markupId) {
+                        return new UtbetalingLerret(markupId, fnrFromRequest);
+                    }
+                };
             }
         });
     }
@@ -204,7 +206,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new SaksoversiktLerret(id, fnrFromRequest);
+                return new AjaxLazyLoadLerret(id) {
+                    @Override
+                    public Lerret getLazyLoadComponent(String markupId) {
+                        return new SaksoversiktLerret(markupId, fnrFromRequest);
+                    }
+                };
             }
         });
     }
@@ -213,7 +220,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_MELDINGER, "M", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new Innboks(id, fnrFromRequest);
+                return new AjaxLazyLoadLerret(id) {
+                    @Override
+                    public Lerret getLazyLoadComponent(String markupId) {
+                        return new Innboks(markupId, fnrFromRequest);
+                    }
+                };
             }
         });
     }
