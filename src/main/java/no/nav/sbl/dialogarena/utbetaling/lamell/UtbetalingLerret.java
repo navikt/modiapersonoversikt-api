@@ -8,6 +8,7 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.lamell.components.ExternalLinkWithLabel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
@@ -23,6 +24,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -81,9 +83,9 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private ExternalLink createArenaLenke(String fnr) {
-        return new ExternalLink("arenalink", arenaUtbetalingUrl + fnr) {
+        return new ExternalLinkWithLabel("arenalink", arenaUtbetalingUrl + fnr, new StringResourceModel("utbetaling.lamell.arena-link-tekst", this, null)) {
             @Override
-            public void onComponentTag(ComponentTag tag) {
+            protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
                 tag.put("target", "_blank");
             }
