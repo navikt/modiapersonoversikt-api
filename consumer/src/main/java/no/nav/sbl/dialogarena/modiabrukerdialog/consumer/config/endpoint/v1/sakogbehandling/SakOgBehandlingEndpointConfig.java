@@ -18,6 +18,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
@@ -26,8 +27,9 @@ public class SakOgBehandlingEndpointConfig {
 
     @Bean
     public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
-        final SakOgBehandling_v1PortType prod = createSakogbehandlingPortType(new UserSAMLOutInterceptor());
+        final SakOgBehandling_v1PortType prod = createMetricsProxy(createSakogbehandlingPortType(new UserSAMLOutInterceptor()), SakOgBehandling_v1PortType.class);
         final SakOgBehandling_v1PortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
+
         return createSwitcher(prod, mock, SAKOGBEHANDLING_KEY, SakOgBehandling_v1PortType.class);
     }
 

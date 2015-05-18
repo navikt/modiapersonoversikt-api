@@ -18,6 +18,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
 
 @Configuration
 public class HenvendelseSoknaderEndpointConfig {
@@ -26,8 +27,9 @@ public class HenvendelseSoknaderEndpointConfig {
 
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
+        final HenvendelseSoknaderPortType prod = createMetricsProxy(createHenvendelsePortType(new UserSAMLOutInterceptor()), HenvendelseSoknaderPortType.class);
         final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
-        final HenvendelseSoknaderPortType prod = createHenvendelsePortType(new UserSAMLOutInterceptor());
+
         return createSwitcher(prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
     }
 

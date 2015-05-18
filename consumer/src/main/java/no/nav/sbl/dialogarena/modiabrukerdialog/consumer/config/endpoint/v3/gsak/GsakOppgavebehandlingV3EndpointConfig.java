@@ -17,6 +17,7 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgavebehandlingV3PortTypeMock.createOppgavebehandlingPortTypeMock;
 
 @Configuration
@@ -24,7 +25,10 @@ public class GsakOppgavebehandlingV3EndpointConfig {
 
     @Bean
     public OppgavebehandlingV3 gsakOppgavebehandlingPortType() {
-        return createSwitcher(createOppgavebehandlingPortType(new UserSAMLOutInterceptor()), createOppgavebehandlingPortTypeMock(), GSAK_V3_KEY, OppgavebehandlingV3.class);
+        OppgavebehandlingV3 prod = createMetricsProxy(createOppgavebehandlingPortType(new UserSAMLOutInterceptor()), OppgavebehandlingV3.class);
+        OppgavebehandlingV3 mock = createOppgavebehandlingPortTypeMock();
+
+        return createSwitcher(prod, mock, GSAK_V3_KEY, OppgavebehandlingV3.class);
     }
 
     @Bean

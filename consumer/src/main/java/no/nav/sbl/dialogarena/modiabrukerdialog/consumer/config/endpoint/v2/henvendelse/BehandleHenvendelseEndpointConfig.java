@@ -18,6 +18,7 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock.createBehandleHenvendelsePortTypeMock;
 
 @Configuration
@@ -25,12 +26,10 @@ public class BehandleHenvendelseEndpointConfig {
 
     @Bean
     public BehandleHenvendelsePortType behandleHenvendelsePortType() {
-        return createSwitcher(
-                createBehandleHenvendelsePortType(new UserSAMLOutInterceptor()),
-                createBehandleHenvendelsePortTypeMock(),
-                HENVENDELSE_KEY,
-                BehandleHenvendelsePortType.class
-        );
+        final BehandleHenvendelsePortType prod = createMetricsProxy(createBehandleHenvendelsePortType(new UserSAMLOutInterceptor()), BehandleHenvendelsePortType.class);
+        final BehandleHenvendelsePortType mock = createBehandleHenvendelsePortTypeMock();
+
+        return createSwitcher(prod, mock, HENVENDELSE_KEY, BehandleHenvendelsePortType.class);
     }
 
     @Bean

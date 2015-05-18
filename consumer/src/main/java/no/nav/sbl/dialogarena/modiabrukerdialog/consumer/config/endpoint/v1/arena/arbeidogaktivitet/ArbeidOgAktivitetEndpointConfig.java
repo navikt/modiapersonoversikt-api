@@ -17,6 +17,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.ArbeidOgAktivitetEndpointMock.createArbeidOgAktivitetMock;
 
 @Configuration
@@ -26,7 +27,10 @@ public class ArbeidOgAktivitetEndpointConfig {
 
     @Bean
     public ArbeidOgAktivitet arbeidOgAktivitet() {
-        return createSwitcher(createArbeidOgAktivitet(), createArbeidOgAktivitetMock(), ARENA_ARBEIDOGATKIVITET_KEY, ArbeidOgAktivitet.class);
+        ArbeidOgAktivitet prod = createMetricsProxy(createArbeidOgAktivitet(), ArbeidOgAktivitet.class);
+        ArbeidOgAktivitet mock = createArbeidOgAktivitetMock();
+
+        return createSwitcher(prod, mock, ARENA_ARBEIDOGATKIVITET_KEY, ArbeidOgAktivitet.class);
     }
 
     private static ArbeidOgAktivitet createArbeidOgAktivitet() {
