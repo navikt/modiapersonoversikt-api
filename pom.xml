@@ -49,7 +49,6 @@
         <args4j.version>2.0.23</args4j.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
         <ws.security.version>1.6.10</ws.security.version>
         <mockito.version>1.9.5</mockito.version>
@@ -58,6 +57,16 @@
         <aspectj.version>1.7.2</aspectj.version>
         <lucene.version>4.10.2</lucene.version>
         <jersey.version>2.17</jersey.version>
+
+        <!-- Kan ikke uppes -->
+        <jetty.version>9.0.5.v20130815</jetty.version>
+        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.
+        Dette blir oppfylt fra Jetty 9.1. I SimpleLoginModule som vi bruker lokalt får man satt rollen DummyRole uansett.
+        Her overrides getName() og "*" returneres. Dette gjør at i sjekken isUserinRole i Jetty sin ConstraintSecurityHandler
+        feiler da den finner "*" som navn på rollen. For å fikse dette må rollenavnet som blir overridet i DummyRole endres
+        til f. eks dobbelstjerne "**" og SecurityConstrainten må bli overridet i override-web.xml og satt tilsvarende role-name
+        der som i DummyRole.  -->
+        <common-jetty.version>1.0.23</common-jetty.version> <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
         <personsok.version>1.0.82</personsok.version>
@@ -431,7 +440,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
-                <version>1.0.23</version>
+                <version>${common-jetty.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
