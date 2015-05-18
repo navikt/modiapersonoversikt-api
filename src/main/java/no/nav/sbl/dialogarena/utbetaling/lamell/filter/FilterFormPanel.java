@@ -233,8 +233,6 @@ public class FilterFormPanel extends Panel {
             }
         };
 
-        button.add(new AttributeModifier("alt", new StringResourceModel("utbetaling.lamell.filter.sok.alt", this, null)));
-
         return button;
     }
 
