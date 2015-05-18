@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class JournalfortTemaPipConfig {
 
     @Bean
-    public JournalfortTemaAttributeLocatorDelegate enhetAttributeLocatorDelegate() {
+    public JournalfortTemaAttributeLocatorDelegate journalfortTemaAttributeLocatorDelegate() {
         return new DefaultJournalfortTemaAttributeLocatorDelegate();
     }
 
