@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import static java.lang.reflect.Proxy.newProxyInstance;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.MetricsConfig.registry;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.MetricsConfigurator.registry;
 
 public class TimingMetricsProxy implements InvocationHandler {
     private final Object object;
