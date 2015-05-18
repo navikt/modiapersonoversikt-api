@@ -4,7 +4,7 @@
     <div class="main" wicket:id="oppsummeringsLinje">
         <span class="vekk"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></span>
         <div class="clearfix" wicket:id="printEkspander"></div>
-        <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.kortoppsummering.tabellbeskrivelse">
+        <table class="utbetaling-tabell">
             <thead>
             <tr>
                 <th colspan="2" style="border:0;" aria-label="Oppsummert periode" scope="col"><wicket:message key="utbetaling.lamell.oppsummering.periode"/></th>
@@ -37,7 +37,7 @@
     </div>
 
     <div wicket:id="oppsummeringDetalj" class="detaljpanel">
-        <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.langoppsummering.tabellbeskrivelse">
+        <table class="utbetaling-tabell">
             <thead>
                 <tr>
                     <th aria-label="detaljer"><wicket:message key="utbetaling.lamell.oppsummering.detaljer"/></th>
@@ -48,7 +48,7 @@
                 </tr>
             </thead>
         </table>
-        <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.langoppsummering.tabellbeskrivelse" wicket:id="hovedytelser">
+        <table class="utbetaling-tabell">
             <tbody>
                 <tr>
                     <td class="hovedytelse cap-1st" aria-label="ytelse">
