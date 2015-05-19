@@ -56,7 +56,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private VedleggResultat sjekkTilgang(String journalpostId, String fnr) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentSakSakIkkeFunnet, HentAktoerIdForIdentPersonIkkeFunnet {
         if (!harJournalpostId(journalpostId)) {
-            return new TilgangsKontrollResult(false, TilgangFeilmeldinger.IKKE_JOURNALFORT);
+            return new VedleggResultat(false, IKKE_JOURNALFORT);
         }
         
         Journalpost journalpost = hentJournalpost(journalpostId);
