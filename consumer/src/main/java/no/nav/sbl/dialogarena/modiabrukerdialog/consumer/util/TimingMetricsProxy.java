@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Timer;
@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import static java.lang.reflect.Proxy.newProxyInstance;
+import static no.nav.modig.modia.metrics.MetricsFactory.registry;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.MetricsConfigurator.registry;
 
 public class TimingMetricsProxy implements InvocationHandler {
     private final Object object;

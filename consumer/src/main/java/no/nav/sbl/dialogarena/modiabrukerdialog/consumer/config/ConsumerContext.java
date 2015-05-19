@@ -4,7 +4,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContex
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.ArtifactsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.EndpointsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.MetricsConfigurator;
+import no.nav.modig.modia.metrics.MetricsConfigurator;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.GeografiskPipConfig;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.config.JournalfortTemaPipConfig;
 import org.springframework.context.annotation.Bean;
