@@ -85,7 +85,7 @@ public class PdfUtils {
             this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.navIdent;
             this.typeBeskrivelse = lagTypeBeskrivelse(melding);
             this.temagruppeBeskrivelse = lagTemagruppeBeskrivelse(melding.temagruppe);
-            this.fritekst = melding.fritekst;
+            this.fritekst = escapeHtml(melding.fritekst);
             this.opprettetDato = melding.opprettetDato;
             this.journalFortDato = melding.journalfortDato;
             this.journalfortTema = melding.journalfortTema;
@@ -120,6 +120,10 @@ public class PdfUtils {
             }
             return "Temagruppe: " + TemagruppeMapping.valueOf(temagruppe).beskrivendeNavn;
         }
+    }
+
+    private static String escapeHtml(String s) {
+        return s == null ? null : s.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;");
     }
 
     private static MeldingsTypeMapping getMeldingsTypeMapping(Melding melding) {
