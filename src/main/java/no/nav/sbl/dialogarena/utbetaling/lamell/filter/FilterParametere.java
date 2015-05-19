@@ -26,6 +26,8 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     }
 
     public static final String FILTER_ENDRET = "filterParametere.endret";
+    public static final String FILTER_FEILET = "filter.validering.feil";
+    public static final String PERIODEVALG = "periodevalg.event";
     public static final String YTELSE_FILTER_KLIKKET = "ytelse.filterparametere.klikket";
     public static final String HOVEDYTELSER_ENDRET = "hovedytelser.endret";
 

@@ -14,7 +14,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
 
-public class FilterFormPanelTest extends AbstractWicketTest{
+public class FilterPanelTest extends AbstractWicketTest{
 
     private static final String DAGPENGER = "Dagpenger";
     private static final String ID = "id";
@@ -27,14 +27,14 @@ public class FilterFormPanelTest extends AbstractWicketTest{
 
         Set<String> hovedYtelser = new HashSet<>(asList(DAGPENGER));
         filterParametre = new FilterParametere(hovedYtelser);
-        FilterFormPanel filterFormPanel = new FilterFormPanel("filterFormPanel", filterParametre);
-        wicketTester.goToPageWith(filterFormPanel);
+        FilterPanel formPanel = new FilterPanel("filterPanel", filterParametre);
+        wicketTester.goToPageWith(formPanel);
     }
 
     @Test
     public void testFilterPanel() throws Exception {
-        wicketTester.should().containComponent(ofType(FilterFormPanel.class))
-                .should().inComponent(FilterFormPanel.class).containComponent(ofType(Form.class))
+        wicketTester.should().containComponent(ofType(FilterPanel.class))
+                .should().inComponent(FilterPanel.class).containComponent(ofType(Form.class))
                 .should().inComponent(Form.class).containComponents(4, ofType(AjaxCheckBox.class))
                 .should().inComponent(Form.class).containComponent(withId("visBruker"))
                 .should().inComponent(Form.class).containComponent(withId("visAnnenMottaker"))

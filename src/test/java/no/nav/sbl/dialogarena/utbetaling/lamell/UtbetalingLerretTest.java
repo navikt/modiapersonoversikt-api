@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
@@ -35,7 +35,7 @@ public class UtbetalingLerretTest extends AbstractWicketTest{
     @Test
     public void skalInneholdeKorrekteKomponenter() {
         wicketTester.should().containComponent(withId("arenalink"));
-        wicketTester.should().containComponent(ofType(FilterFormPanel.class));
+        wicketTester.should().containComponent(ofType(FilterPanel.class));
         wicketTester.should().containComponent(ofType(TotalOppsummeringPanel.class));
         wicketTester.should().containComponent(withId("utbetalingslisteContainer"));
         wicketTester.should().containComponent(ofType(UtbetalingerMessagePanel.class));
