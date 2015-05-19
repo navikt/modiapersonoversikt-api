@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.frontend.ConditionalCssResource;
+import no.nav.personsok.PersonsokPanel;
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -36,7 +37,9 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference MELDINGERLAMELL = new PackageResourceReference(Innboks.class, "innboks.less");
     public static final PackageResourceReference OPPFOLGING = new PackageResourceReference(BasePage.class, "less/komponenter/oppfolging.less");
     public static final PackageResourceReference OPPGAVEFORM = new PackageResourceReference(BasePage.class, "less/komponenter/oppgaveform.less");
-    public static final PackageResourceReference PERSONSOK = new PackageResourceReference(BasePage.class, "less/komponenter/personsok.less");
+    public static final PackageResourceReference PERSONSOK_GENERELL = new PackageResourceReference(PersonsokPanel.class, "personsok_generell.less");
+    public static final PackageResourceReference PERSONSOK_RESULT = new PackageResourceReference(PersonsokResultPanel.class, "personsok_result.less");
+    public static final PackageResourceReference PERSONSOK_SEARCH = new PackageResourceReference(PersonsokSearchPanel.class, "personsok_search.less");
     public static final PackageResourceReference SAKBEHANDLERINNSTILLINGER = new PackageResourceReference(BasePage.class, "less/komponenter/sakbehandlerinnstillinger.less");
     public static final PackageResourceReference LISTE = new PackageResourceReference(BasePage.class, "less/komponenter/liste.less");
     public static final PackageResourceReference JOURNALFORING = new PackageResourceReference(BasePage.class, "less/komponenter/journalforing.less");
