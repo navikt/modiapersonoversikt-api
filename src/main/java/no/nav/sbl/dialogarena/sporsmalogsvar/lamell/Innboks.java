@@ -126,12 +126,10 @@ public class Innboks extends Lerret {
         }
 
         String fortsettDialogModus = (String) getSession().getAttribute(FORTSETTDIALOGMODUS);
+        String traadBesvares = (String) getSession().getAttribute(BESVARMODUS_PARAM);
         if (isNotBlank(oppgaveIdParameter) && isNotBlank(traadIdParameter) && fortsettDialogModus != null && fortsettDialogModus.equals(TRUE.toString())) {
             innboksVM.traadBesvares = traadIdParameter;
-        }
-
-        String traadBesvares = (String) getSession().getAttribute(BESVARMODUS_PARAM);
-        if (isNotBlank(traadBesvares)) {
+        }else if (isNotBlank(traadBesvares)){
             innboksVM.traadBesvares = traadBesvares;
         }
     }
