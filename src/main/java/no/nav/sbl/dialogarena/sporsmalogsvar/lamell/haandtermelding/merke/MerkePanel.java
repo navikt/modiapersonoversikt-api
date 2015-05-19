@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
+import com.codahale.metrics.Timer;
+import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -13,9 +15,13 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Radio;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
@@ -23,9 +29,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.either;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.BIDRAG;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPGAVE_OPPRETTET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPRETT_OPPGAVE_TOGGLET;
 
@@ -127,16 +131,21 @@ public class MerkePanel extends AnimertPanel {
 
         @Override
         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-            switch (merkVM.getObject().getMerkType()) {
-                case FEILSENDT:
-                    haandterFeilsendt(target);
-                    break;
-                case BIDRAG:
-                    haandterBidrag(target);
-                    break;
-                case KONTORSPERRET:
-                    haandterKontorsperring(target, form);
-                    break;
+            Timer.Context timer = MetricsFactory.createTimer("hendelse.merk." + merkVM.getObject().getMerkType() + ".time").time();
+            try {
+                switch (merkVM.getObject().getMerkType()) {
+                    case FEILSENDT:
+                        haandterFeilsendt(target);
+                        break;
+                    case BIDRAG:
+                        haandterBidrag(target);
+                        break;
+                    case KONTORSPERRET:
+                        haandterKontorsperring(target, form);
+                        break;
+                }
+            } finally {
+                timer.stop();
             }
         }
 

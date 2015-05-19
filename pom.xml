@@ -366,6 +366,12 @@
 
         <!--Diverse-->
         <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>3.1.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
             <version>${handlebars.version}</version>
@@ -423,6 +429,12 @@
             <groupId>no.bekk.bekkopen</groupId>
             <artifactId>nocommons</artifactId>
             <version>0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-base</artifactId>
+            <version>r03</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--Testing-->
