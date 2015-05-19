@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import static java.lang.reflect.Proxy.newProxyInstance;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.MetricsConfigurator.registry;
 
 public class TimingMetricsProxy implements InvocationHandler {
@@ -66,6 +67,10 @@ public class TimingMetricsProxy implements InvocationHandler {
                 new Class[]{type},
                 new TimingMetricsProxy(object, type)
         );
+    }
+
+    public static <T> T createMetricsProxyWithInstanceSwitcher(T prod, T mock, String key, Class<T> type) {
+        return createMetricsProxy(createSwitcher(prod, mock, key, type), type);
     }
 
     private static <T> boolean alreadyRegistered(Class<T> type) {

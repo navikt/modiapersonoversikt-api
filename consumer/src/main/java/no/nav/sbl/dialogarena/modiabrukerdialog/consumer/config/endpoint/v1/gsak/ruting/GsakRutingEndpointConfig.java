@@ -17,6 +17,7 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakRutingPortTypeMock.createRutingPortTypeMock;
 
 @Configuration
@@ -27,10 +28,10 @@ public class GsakRutingEndpointConfig {
 
     @Bean
     public Ruting rutingPortType() {
-        Ruting prod = createMetricsProxy(createRutingPortType(), Ruting.class);
+        Ruting prod = createRutingPortType();
         Ruting mock = createRutingPortTypeMock();
 
-        return createSwitcher(prod, mock, GSAK_RUTING_KEY, Ruting.class);
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_RUTING_KEY, Ruting.class);
     }
 
     @Bean

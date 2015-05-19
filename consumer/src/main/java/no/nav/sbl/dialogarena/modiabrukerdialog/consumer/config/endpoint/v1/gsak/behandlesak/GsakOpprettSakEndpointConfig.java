@@ -16,16 +16,17 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakSakV1EndpointConfig.GSAK_SAK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOpprettSakEndpointMock.createGsakOpprettSakPortTypeMock;
 
 @Configuration
 public class GsakOpprettSakEndpointConfig {
     @Bean
     public BehandleSakV1 behandleSakV1() {
-        BehandleSakV1 prod = createMetricsProxy(createGsakOpprettSakPortType(), BehandleSakV1.class);
+        BehandleSakV1 prod = createGsakOpprettSakPortType();
         BehandleSakV1 mock = createGsakOpprettSakPortTypeMock();
 
-        return createSwitcher(prod, mock, GSAK_SAK_KEY, BehandleSakV1.class);
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_SAK_KEY, BehandleSakV1.class);
     }
 
     @Bean

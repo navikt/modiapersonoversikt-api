@@ -17,6 +17,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.getSecurityProps;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavAnsattPortTypeMock.createGosysNavAnsattPortTypeMock;
 
 @Configuration
@@ -24,10 +25,10 @@ public class NAVAnsattEndpointConfig {
 
     @Bean
     public GOSYSNAVansatt gosysNavAnsatt() {
-        GOSYSNAVansatt prod = createMetricsProxy(createGosysNavAnsattPortType(), GOSYSNAVansatt.class);
+        GOSYSNAVansatt prod = createGosysNavAnsattPortType();
         GOSYSNAVansatt mock = createGosysNavAnsattPortTypeMock();
 
-        return createSwitcher(prod, mock, NORG_KEY, GOSYSNAVansatt.class);
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, NORG_KEY, GOSYSNAVansatt.class);
     }
 
     private static GOSYSNAVansatt createGosysNavAnsattPortType() {

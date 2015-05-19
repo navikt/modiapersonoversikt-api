@@ -21,6 +21,7 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
 
 @Configuration
@@ -30,10 +31,10 @@ public class KodeverkV2EndpointConfig {
 
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {
-        KodeverkPortType prod = createMetricsProxy(lagKodeverkPortType(), KodeverkPortType.class);
+        KodeverkPortType prod = lagKodeverkPortType();
         KodeverkPortType mock = KodeverkV2PortTypeMock.kodeverkPortType();
         
-        return createSwitcher(prod, mock, KODEVERK_KEY, KodeverkPortType.class);
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, KODEVERK_KEY, KodeverkPortType.class);
     }
 
     @Bean

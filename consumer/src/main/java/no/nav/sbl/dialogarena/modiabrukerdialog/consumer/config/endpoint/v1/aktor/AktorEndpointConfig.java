@@ -17,8 +17,8 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.metrics.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 
 
 @Configuration
@@ -41,9 +41,9 @@ public class AktorEndpointConfig {
     @Bean
     public AktoerPortType aktoerPortType() {
         final AktoerPortType mock = new AktoerPortTypeMock().getAktoerPortTypeMock();
-        final AktoerPortType prod = createMetricsProxy(aktoerPort(), AktoerPortType.class);
+        final AktoerPortType prod = aktoerPort();
 
-        return createSwitcher(prod, mock, AKTOER_KEY, AktoerPortType.class);
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, AKTOER_KEY, AktoerPortType.class);
     }
 
 
