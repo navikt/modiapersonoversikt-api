@@ -33,5 +33,6 @@ public class FilterPanel extends Panel {
     @RunOnEvents(FILTER_FEILET)
     private void filterFeiletEvent(AjaxRequestTarget target) {
         target.add(valideringsfeil);
+        target.appendJavaScript("Utbetalinger.skjulSnurrepipp();");
     }
 }

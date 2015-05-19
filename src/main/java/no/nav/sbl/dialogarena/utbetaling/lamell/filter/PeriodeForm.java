@@ -133,11 +133,13 @@ public class PeriodeForm extends Panel {
 
     private AjaxButton createSokKnapp() {
         AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.periode.sok", this, null)) {
+
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 filterParametere.toggleAlleYtelser(true);
                 sendFilterEndretEvent();
                 target.add(datovelgerContainer);
+                target.appendJavaScript("Utbetalinger.skjulSnurrepipp();");
             }
 
             @Override

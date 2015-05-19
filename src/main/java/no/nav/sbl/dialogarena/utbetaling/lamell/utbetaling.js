@@ -117,13 +117,23 @@ var Utbetalinger = (function () {
         window.print();
     }
 
+    var visSnurrepipp = function() {
+        $('#ajax-indikator').css('display', 'block');
+    };
+
+    var skjulSnurrepipp = function() {
+        $('#ajax-indikator').css('display', 'none');
+    }
+
     return {
         init: init,
         addKeyNavigation: addKeyNavigation,
         haandterDetaljPanelVisning: haandterDetaljPanelVisning,
         toggleDetaljPanel: toggleDetaljPanel,
         toggleEkspandertHjelpetekst: toggleEkspandertHjelpetekst,
-        skrivUt: skrivUt
+        skrivUt: skrivUt,
+        visSnurrepipp: visSnurrepipp,
+        skjulSnurrepipp: skjulSnurrepipp
     };
 })();
 
