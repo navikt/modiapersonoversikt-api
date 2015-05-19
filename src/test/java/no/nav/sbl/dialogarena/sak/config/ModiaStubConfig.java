@@ -76,11 +76,11 @@ public class ModiaStubConfig {
         return mock(JoarkService.class);
     }
 
-
     @Bean
     public SakV1 sakEndpoint() {
         return mock(SakV1.class);
     }
+
     @Bean
     public CmsContentRetriever cmsContentRetriever() {
         CmsContentRetriever cmsMock = new CmsContentRetriever() {

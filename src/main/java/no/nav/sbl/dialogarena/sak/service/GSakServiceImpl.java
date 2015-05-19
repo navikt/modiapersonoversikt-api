@@ -5,7 +5,6 @@ import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakRequest;
-import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakResponse;
 
 import javax.inject.Inject;
 
