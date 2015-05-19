@@ -22,7 +22,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     @Inject
-    private GSakService gSakServiceImpl;
+    private GSakService gSakService;
 
     @Inject
     private AktoerPortType fodselnummerAktorService;
@@ -110,7 +110,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private WSSak hentSak(String sakId) throws HentSakSakIkkeFunnet {
         try {
-            return gSakServiceImpl.hentSak(sakId);
+            return gSakService.hentSak(sakId);
         } catch (HentSakSakIkkeFunnet hentSakSakIkkeFunnet) {
             logger.warn("Fant ikke sak hos GSak. SakId: {}", sakId);
             throw hentSakSakIkkeFunnet;
