@@ -9,7 +9,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.components.ExternalLinkWithLabel;
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPanel;
@@ -75,7 +75,7 @@ public final class UtbetalingLerret extends Lerret {
         instansierFelter(fnr);
 
         add(createArenaLenke(fnr),
-                createFilterFormPanel(),
+                createFilterPanel(),
                 totalOppsummeringPanel,
                 utbetalingslisteContainer,
                 ingenutbetalinger,
@@ -90,6 +90,10 @@ public final class UtbetalingLerret extends Lerret {
                 tag.put("target", "_blank");
             }
         };
+    }
+
+    private WebMarkupContainer createFilterPanel() {
+        return new FilterPanel("filterPanel", filterParametere);
     }
 
     private void instansierFelter(String fnr) {
@@ -128,10 +132,6 @@ public final class UtbetalingLerret extends Lerret {
             feilmelding.setVisibilityAllowed(true);
             return new ArrayList<>();
         }
-    }
-
-    private FilterFormPanel createFilterFormPanel() {
-        return (FilterFormPanel) new FilterFormPanel("filterFormPanel", filterParametere).setOutputMarkupId(true);
     }
 
     private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Record<Hovedytelse>> liste) {
@@ -234,7 +234,7 @@ public final class UtbetalingLerret extends Lerret {
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
         filterParametere = new FilterParametere(ytelserAsText(hentHovedytelseListe()));
-        addOrReplace(createFilterFormPanel());
+        addOrReplace(createFilterPanel());
         oppdaterUtbetalingsliste(target);
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('" + detaljPanelID + "');");

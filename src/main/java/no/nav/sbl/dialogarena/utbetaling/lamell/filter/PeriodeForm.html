@@ -1,0 +1,19 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <form wicket:id="periodeForm">
+        <div class="column">
+            <div class="filter-block-content dato-plukker-filter">
+                <h3 aria-label="Velg periode" class="filter-header">
+                    <wicket:message key="utbetaling.lamell.filter.datofilter"/>
+                </h3>
+
+                <div class="periodevelger" wicket:id="periodeVelger"></div>
+                <div wicket:id="datovelger" class="datovelger">
+                    <wicket:container wicket:id="datoFilter"/>
+                </div>
+                <input type="submit" role="butot" wicket:id="sok" class="knapp-hoved-liten"/>
+            </div>
+        </div>
+    </form>
+</wicket:panel>
+</html>
