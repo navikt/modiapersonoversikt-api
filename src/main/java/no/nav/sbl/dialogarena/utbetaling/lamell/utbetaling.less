@@ -54,6 +54,7 @@
     }
     .utbetaling {
       font-family: @sansFontFamily;
+      position: relative;
       p {
         margin: 0;
         display: inline-block;
@@ -61,13 +62,16 @@
       .ytelse {
         font-weight: bold;
         font-size: 16px;
-        max-width: 80%;
+        max-width: 77%;
+        word-wrap: break-word;
         &:first-letter {
           text-transform: capitalize;
         }
       }
       .belop {
-        float: right;
+        position: absolute;
+        top: 0;
+        right: 0;
         text-align: right;
         font-weight: bold;
         font-size: 16px;
@@ -616,8 +620,27 @@
   }
 }
 
+@media (max-width: 1600px) {
+  .utbetalinger {
+    .utbetaling-head {
+      .utbetaling {
+        .ytelse {
+          max-width: 72%;
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 1390px) {
   .utbetalinger {
+    .utbetaling-head {
+      .utbetaling {
+        .ytelse {
+          max-width: 65%;
+        }
+      }
+    }
     .kolonne-venstre {
       float: none;
       padding: 0;
