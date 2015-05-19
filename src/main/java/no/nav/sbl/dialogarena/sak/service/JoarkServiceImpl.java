@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service;
 
+import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
 import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
@@ -44,28 +45,28 @@ public class JoarkServiceImpl implements JoarkService {
         variant.setKodeverksRef("ARKIV");
         hentDokumentRequest.setVariantformat(variant);
 
-        Byte dokument;
         try {
-            dokument = joarkPortType.hentDokument(hentDokumentRequest).getDokument();
-        } catch (HentDokumentDokumentIkkeFunnet hentDokumentDokumentIkkeFunnet) {
+            Byte dokument = joarkPortType.hentDokument(hentDokumentRequest).getDokument();
+            return new VedleggResultat(true, new byte[]{dokument});
+        } catch (HentDokumentDokumentIkkeFunnet e) {
+            logger.warn("Dokumentet med dokumentid '{}' ble ikke funnet", dokumentId, e.getMessage());
             return new VedleggResultat(false, DOKUMENT_IKKE_FUNNET);
-        } catch (HentDokumentSikkerhetsbegrensning hentDokumentSikkerhetsbegrensning) {
+        } catch (HentDokumentSikkerhetsbegrensning e) {
+            logger.warn("Dokumentet med dokumentid '{}' kan ikke vises grunnet en sikkerhetsbegrensning", dokumentId, e.getMessage());
             return new VedleggResultat(false, SIKKERHETSBEGRENSNING);
-        } catch (HentDokumentDokumentErSlettet hentDokumentDokumentErSlettet) {
+        } catch (HentDokumentDokumentErSlettet e) {
+            logger.warn("Dokumentet med dokumentid '{}' er slettet", dokumentId, e.getMessage());
             return new VedleggResultat(false, DOKUMENT_SLETTET);
         }
-
-        return new VedleggResultat(true, new byte[]{dokument});
     }
 
-    public Journalpost hentJournalpost(String journalpostId) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
-        HentJournalpostRequest hentJournalpostRequest = new HentJournalpostRequest();
-        hentJournalpostRequest.setJournalpostId(journalpostId);
+    public Journalpost hentJournalpost(String journalpostId) {
         try {
+            HentJournalpostRequest hentJournalpostRequest = new HentJournalpostRequest();
+            hentJournalpostRequest.setJournalpostId(journalpostId);
             return joarkPortType.hentJournalpost(hentJournalpostRequest).getJournalpost();
         } catch (HentJournalpostJournalpostIkkeFunnet | HentJournalpostSikkerhetsbegrensning e) {
-            logger.warn("Kunne ikke hente Journalpost.", e);
-            throw e;
+            throw new SystemException("Kunne ikke hente journalpost med journalpostId: " + journalpostId, e);
         }
     }
 }

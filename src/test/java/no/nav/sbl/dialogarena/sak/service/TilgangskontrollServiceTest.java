@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 
+import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -64,6 +65,7 @@ public class TilgangskontrollServiceTest {
 
         VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
         assertTrue(vedleggResultat.harTilgang);
+        assertNull(vedleggResultat.feilmelding);
     }
 
     //TODO ignore fram til journalført er på plass på Journalpost-objektet.
@@ -75,7 +77,7 @@ public class TilgangskontrollServiceTest {
 
         VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
         assertFalse(vedleggResultat.harTilgang);
-        assertEquals(vedleggResultat.feilmelding, IKKE_SAKSPART);
+        assertEquals(IKKE_JOURNALFORT, vedleggResultat.feilmelding);
     }
 
     @Test
@@ -85,7 +87,7 @@ public class TilgangskontrollServiceTest {
 
         VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
         assertFalse(vedleggResultat.harTilgang);
-        assertEquals(vedleggResultat.feilmelding, IKKE_SAKSPART);
+        assertEquals(IKKE_SAKSPART, vedleggResultat.feilmelding);
     }
 
     @Test
@@ -95,77 +97,69 @@ public class TilgangskontrollServiceTest {
 
         VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
         assertFalse(vedleggResultat.harTilgang);
-        assertEquals(vedleggResultat.feilmelding, FEILREGISTRERT);
+        assertEquals(FEILREGISTRERT, vedleggResultat.feilmelding);
     }
 
-    @Test
+    @Test(expected = SystemException.class)
     public void harIkkeTilgangHvisJournalpostIkkeFunnet() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
         setGsakMedSakspart();
-        setJoarkThrows(HentJournalpostJournalpostIkkeFunnet.class);
+        setJoarkThrows(SystemException.class);
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertFalse(vedleggResultat.harTilgang);
-        assertEquals(vedleggResultat.feilmelding, JOURNALPOST_IKKE_FUNNET);
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
     }
 
-    @Test
+    @Test(expected = SystemException.class)
     public void harIkkeTilgangHvisJournalpostSikkerhetsbegrensning() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
         setGsakMedSakspart();
-        setJoarkThrows(HentJournalpostSikkerhetsbegrensning.class);
+        setJoarkThrows(SystemException.class);
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertFalse(vedleggResultat.harTilgang);
-        assertEquals(vedleggResultat.feilmelding, SIKKERHETSBEGRENSNING);
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
     }
 
-    @Test
+    @Test(expected = SystemException.class)
     public void harIkkeTilgangHvisGsakIkkeFinnerSak() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
-        setGsakThrows(HentSakSakIkkeFunnet.class);
+        setGsakThrows(SystemException.class);
         setJournalfortOgIkkeFeilRegistrert();
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertFalse(vedleggResultat.harTilgang);
-        assertEquals(vedleggResultat.feilmelding, SAK_IKKE_FUNNET);
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
     }
 
-    @Test
-    public void harIkkeTilgangHvisAtkorIdIkkeFunnet() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning, HentAktoerIdForIdentPersonIkkeFunnet {
+    @Test(expected = SystemException.class)
+    public void harIkkeTilgangHvisAtkorIdIkkeFunnet() throws HentAktoerIdForIdentPersonIkkeFunnet {
         setGsakMedSakspart();
         setJournalfortOgIkkeFeilRegistrert();
         settAktorIdTilAFeile();
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertFalse(vedleggResultat.harTilgang);
-        assertEquals(vedleggResultat.feilmelding, AKTOER_ID_IKKE_FUNNET);
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
     }
 
-    private void setIkkeJournalfortOgIkkeFeilRegistrert() throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+    private void setIkkeJournalfortOgIkkeFeilRegistrert() {
         when(joarkService.hentJournalpost(anyString())).thenReturn(createIkkeJournalfortJournalpost());
     }
 
-    private void setJournalfortOgIkkeFeilRegistrert() throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+    private void setJournalfortOgIkkeFeilRegistrert() {
         when(joarkService.hentJournalpost(anyString())).thenReturn(createOKJournalpost());
     }
 
-    private void setJournalfortOgFeilRegistrert() throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+    private void setJournalfortOgFeilRegistrert() {
         when(joarkService.hentJournalpost(anyString())).thenReturn(createFeilRegistrertJournalpost());
     }
 
-    private void setJoarkThrows(Class e) throws HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+    private void setJoarkThrows(Class e) {
         when(joarkService.hentJournalpost(anyString())).thenThrow(e);
     }
 
-    private void setGsakThrows(Class e) throws HentSakSakIkkeFunnet {
+    private void setGsakThrows(Class e) {
         when(gSakService.hentSak(anyString())).thenThrow(e);
     }
 
-    private void setGsakMedSakspart() throws HentSakSakIkkeFunnet {
+    private void setGsakMedSakspart() {
         WSAktoer aktoerKnyttetTilSaken = new WSPerson();
         aktoerKnyttetTilSaken.setIdent(BRUKERS_IDENT);
         when(gSakService.hentSak(anyString())).thenReturn(createSak("DAG", DateTime.now().minusDays(5), aktoerKnyttetTilSaken));
     }
 
-    private void setGsakUtenSakspart() throws HentSakSakIkkeFunnet {
+    private void setGsakUtenSakspart() {
         WSAktoer aktoerKnyttetTilSaken = new WSPerson();
         aktoerKnyttetTilSaken.setIdent(IKKE_BRUKERS_IDENT);
         when(gSakService.hentSak(anyString())).thenReturn(createSak("DAG", DateTime.now().minusDays(5), aktoerKnyttetTilSaken));
