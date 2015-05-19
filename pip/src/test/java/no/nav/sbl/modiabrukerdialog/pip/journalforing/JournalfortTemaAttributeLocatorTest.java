@@ -1,5 +1,7 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProviderConfig;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.jboss.security.xacml.sunxacml.EvaluationCtx;
 import org.jboss.security.xacml.sunxacml.attr.BagAttribute;
@@ -11,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.net.URI;
 
@@ -22,19 +26,21 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@ContextConfiguration(classes = {ApplicationContextProviderConfig.class})
 public class JournalfortTemaAttributeLocatorTest {
+    static {
+        ApplicationContextProvider.context = mock(ApplicationContext.class);
+    }
 
     @Mock
     private JournalfortTemaAttributeLocatorDelegate delegate;
 
     @Mock
     private EvaluationCtx context;
+
 
     @InjectMocks
     private JournalfortTemaAttributeLocator journalfortTemaAttributeLocator;
