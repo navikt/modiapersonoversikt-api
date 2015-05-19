@@ -10,8 +10,6 @@ import static org.mockito.Mockito.when;
 
 @Configuration
 public class CMSValueRetrieverMock {
-    public static final String CMS_KEY = "start.cms.withmock";
-
     @Bean
     public ValueRetriever getValueRetrieverMock() {
         ValueRetriever mock = mock(ValueRetriever.class);

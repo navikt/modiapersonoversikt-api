@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -36,22 +35,20 @@
         <!-- versjoner -->
         <wicket.version>6.17.0</wicket.version>
         <spring.version>3.2.9.RELEASE</spring.version>
-        <modig.frontend.version>1.1.110-SNAPSHOT</modig.frontend.version>
+        <modig.frontend.version>1.1.110</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>3.0.0-SNAPSHOT</modig.wicket.version>
+        <modig.wicket.version>3.0.0</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>2.0.3</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
-        <modig.log.version>1.1.2</modig.log.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.11</junit.version>
         <args4j.version>2.0.23</args4j.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
         <ws.security.version>1.6.10</ws.security.version>
         <mockito.version>1.9.5</mockito.version>
@@ -61,11 +58,21 @@
         <lucene.version>4.10.2</lucene.version>
         <jersey.version>2.17</jersey.version>
 
+        <!-- Kan ikke uppes -->
+        <jetty.version>9.0.5.v20130815</jetty.version>
+        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.
+        Dette blir oppfylt fra Jetty 9.1. I SimpleLoginModule som vi bruker lokalt får man satt rollen DummyRole uansett.
+        Her overrides getName() og "*" returneres. Dette gjør at i sjekken isUserinRole i Jetty sin ConstraintSecurityHandler
+        feiler da den finner "*" som navn på rollen. For å fikse dette må rollenavnet som blir overridet i DummyRole endres
+        til f. eks dobbelstjerne "**" og SecurityConstrainten må bli overridet i override-web.xml og satt tilsvarende role-name
+        der som i DummyRole.  -->
+        <common-jetty.version>1.0.23</common-jetty.version> <!-- Samme som Jetty -->
+
         <!-- Modia-komponenter-->
         <personsok.version>1.0.82</personsok.version>
         <kjerneinfo.versjon>1.1.0</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.1.1-SNAPSHOT</utbetaling.version>
+        <utbetaling.version>2.1.1</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -73,9 +80,9 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>2.0-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>3.0-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>3.1-SNAPSHOT</saksoversikt.version>
+        <modiabrukerdialog-api.version>2.0</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>3.0</sporsmalogsvar.version>
+        <saksoversikt.version>3.1</saksoversikt.version>
     </properties>
 
     <dependencyManagement>
@@ -365,7 +372,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -433,7 +440,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
-                <version>1.0.23</version>
+                <version>${common-jetty.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -474,7 +481,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>reactkomponenter</artifactId>
-                <version>0.15-SNAPSHOT</version>
+                <version>0.15</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>

@@ -3,6 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
+import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
+import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
@@ -18,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.createPersonResponse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -40,10 +43,19 @@ public class PlukkOppgaveServiceImplTest {
     @InjectMocks
     private PlukkOppgaveServiceImpl plukkOppgaveService;
 
+    private static HentKjerneinformasjonResponse personResponse = new HentKjerneinformasjonResponse();
+
+    static {
+        personResponse.setPerson(new Person.With()
+                .personfakta(new Personfakta.With()
+                        .harAnsvarligEnhet(new AnsvarligEnhet.With()
+                                .organisasjonsenhet(new Organisasjonsenhet.With()
+                                        .organisasjonselementId("1").done()).done()).done()).done());
+        personResponse.getPerson().getPersonfakta().setDiskresjonskode("7");
+    }
+
     @Before
     public void setUp() {
-        HentKjerneinformasjonResponse personResponse = createPersonResponse();
-        personResponse.getPerson().getPersonfakta().setDiskresjonskode("7");
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(personResponse);
     }
 
