@@ -34,14 +34,13 @@ public class GsakRutingEndpointConfig {
     }
 
     @Bean
-    public Pingable rutingPing() {
+    public Pingable rutingPing(final Ruting ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "GSAK_RUTING_V1";
                 try {
-                    Ruting ws = createRutingPortType();
                     ws.finnAnsvarligEnhetForSak(new WSFinnAnsvarligEnhetForSakRequest().withBrukersok(new WSBrukersok().withBrukerId("10108000398").withFagomradeKode("DAG")));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {

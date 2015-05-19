@@ -32,8 +32,7 @@ public class GsakOppgavebehandlingV3EndpointConfig {
     }
 
     @Bean
-    public Pingable gsakPing() {
-        final OppgavebehandlingV3 ws = createOppgavebehandlingPortType(new SystemSAMLOutInterceptor());
+    public Pingable gsakPing(final OppgavebehandlingV3 ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {

@@ -29,14 +29,14 @@ public class GsakOpprettSakEndpointConfig {
     }
 
     @Bean
-    public Pingable behandleSakPing(final BehandleSakV1 behandleSakV1) {
+    public Pingable behandleSakPing(final BehandleSakV1 ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "GSAK_BEHANDLESAK_V1";
                 try {
-                    behandleSakV1.ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));

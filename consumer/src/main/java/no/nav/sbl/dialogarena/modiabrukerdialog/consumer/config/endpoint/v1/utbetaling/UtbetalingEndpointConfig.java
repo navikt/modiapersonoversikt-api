@@ -35,14 +35,14 @@ public class UtbetalingEndpointConfig {
     }
 
     @Bean
-    public Pingable pingUtbetalingV1() {
+    public Pingable pingUtbetalingV1(final UtbetalingV1 ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = currentTimeMillis();
                 String name = "UTBETALING";
                 try {
-                    createUtbetalingPortType(new SystemSAMLOutInterceptor()).ping();
+                    ws.ping();
                     return Arrays.asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
                 } catch (Exception e) {
                     return Arrays.asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));

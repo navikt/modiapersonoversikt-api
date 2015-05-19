@@ -34,7 +34,7 @@ public class HenvendelseSoknaderEndpointConfig {
     }
 
     @Bean
-    public Pingable pingHenvendelseSoknader() {
+    public Pingable pingHenvendelseSoknader(final HenvendelseSoknaderPortType ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -42,7 +42,7 @@ public class HenvendelseSoknaderEndpointConfig {
                 long start = currentTimeMillis();
                 String name = "HENVENDELSE_SOKNADER";
                 try {
-                    createHenvendelsePortType(new SystemSAMLOutInterceptor()).ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));

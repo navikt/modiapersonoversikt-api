@@ -38,6 +38,7 @@ public class MetricsConfigurator extends MetricsServlet.ContextListener implemen
     private void startReporters() {
         Slf4jReporter slf4jReporter = Slf4jReporter.forRegistry(registry)
                 .outputTo(logger)
+                .withLoggingLevel(Slf4jReporter.LoggingLevel.DEBUG) //Slik at det ikke spammer console loggen
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();

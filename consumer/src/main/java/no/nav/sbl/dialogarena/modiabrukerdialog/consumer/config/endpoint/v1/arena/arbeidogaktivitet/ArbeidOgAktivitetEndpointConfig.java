@@ -41,14 +41,14 @@ public class ArbeidOgAktivitetEndpointConfig {
     }
 
     @Bean
-    public Pingable arbeidOgAktivitetPing(final ArbeidOgAktivitet arbeidOgAktivitet) {
+    public Pingable arbeidOgAktivitetPing(final ArbeidOgAktivitet ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "ARENA_ARBEIDOGAKTIVITET_V1";
                 try {
-                    arbeidOgAktivitet.hentSakListe(new WSHentSakListeRequest()
+                    ws.hentSakListe(new WSHentSakListeRequest()
                             .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker("10108000398"))
                             .withFom(LocalDate.now())
                             .withTom(LocalDate.now()));

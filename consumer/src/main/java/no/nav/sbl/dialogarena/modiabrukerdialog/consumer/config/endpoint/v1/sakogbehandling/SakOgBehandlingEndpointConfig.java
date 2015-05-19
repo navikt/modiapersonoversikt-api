@@ -34,7 +34,7 @@ public class SakOgBehandlingEndpointConfig {
     }
 
     @Bean
-    public Pingable pingSakOgBehandling() {
+    public Pingable pingSakOgBehandling(final SakOgBehandling_v1PortType ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -42,7 +42,7 @@ public class SakOgBehandlingEndpointConfig {
                 long start = currentTimeMillis();
                 String name = "SAKOGBEHANDLING";
                 try {
-                    createSakogbehandlingPortType(new SystemSAMLOutInterceptor()).ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));

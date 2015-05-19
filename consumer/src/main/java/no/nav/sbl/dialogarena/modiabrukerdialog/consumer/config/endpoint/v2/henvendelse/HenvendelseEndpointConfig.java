@@ -37,8 +37,7 @@ public class HenvendelseEndpointConfig {
     }
 
     @Bean
-    public Pingable henvendelsePing() {
-        final HenvendelsePortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
+    public Pingable henvendelsePing(final HenvendelsePortType ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {

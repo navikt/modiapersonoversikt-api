@@ -48,7 +48,7 @@ public class AktorEndpointConfig {
 
 
     @Bean
-    public Pingable pingAktoer() {
+    public Pingable pingAktoer(final AktoerPortType ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -56,7 +56,7 @@ public class AktorEndpointConfig {
                 long start = currentTimeMillis();
                 String name = "AKTOER";
                 try {
-                    aktoerPortType().ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));

@@ -33,8 +33,7 @@ public class BehandleHenvendelseEndpointConfig {
     }
 
     @Bean
-    public Pingable behandleHenvendelsePing() {
-        final BehandleHenvendelsePortType ws = createBehandleHenvendelsePortType(new SystemSAMLOutInterceptor());
+    public Pingable behandleHenvendelsePing(final BehandleHenvendelsePortType ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
