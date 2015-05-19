@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.JOURNALPOSTID;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,7 +49,7 @@ public class JoarkPortTypeMock {
 
     private static Journalpost createJournalpost() {
         Journalpost journalpost = new Journalpost();
-        journalpost.setJournalpostId("journalpostid");
+        journalpost.setJournalpostId(JOURNALPOSTID);
         journalpost.setGjelderSak(createSak());
         return journalpost;
     }

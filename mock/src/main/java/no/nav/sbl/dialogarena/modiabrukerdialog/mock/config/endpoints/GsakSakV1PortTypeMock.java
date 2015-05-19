@@ -97,6 +97,7 @@ public class GsakSakV1PortTypeMock {
                 .withGjelderBrukerListe(new WSPerson().withIdent(AKTOER_ID_MOCK))
                 .withFagsystemSakId("" + idGenerator.nextInt(100000000))
                 .withFagomraade(new WSFagomraader().withValue(tema))
+                .withGjelderBrukerListe(new WSPerson().withIdent(AKTOER_ID_MOCK))
                 .withOpprettelsetidspunkt(opprettet)
                 .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
                 .withFagsystem(new WSFagsystemer().withValue("FS22"));
