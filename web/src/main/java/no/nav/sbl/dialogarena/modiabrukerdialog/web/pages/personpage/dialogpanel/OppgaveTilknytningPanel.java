@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.modig.modia.aria.AriaHelpers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -28,18 +29,23 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
         super(id, model);
         setOutputMarkupPlaceholderTag(true);
 
+        final IModel<Boolean> isOpen = Model.of(false);
+
         final WebMarkupContainer oppgaveTilknytningPopup = new WebMarkupContainer("oppgaveTilknytningPopup");
         oppgaveTilknytningPopup.setOutputMarkupPlaceholderTag(true);
-        oppgaveTilknytningPopup.setVisibilityAllowed(false);
+        oppgaveTilknytningPopup.add(visibleIf(isOpen));
         Label oppgaveTilknytningTekst = new Label("oppgaveTilknytningTekst", new StringResourceModel("oppgavetilknytning.tekst.${oppgaveTilknytning}", getModel(), new Object[]{grunnInfo.saksbehandler.enhet}));
-        AjaxLink aapnePopup = new AjaxLink("aapnePopup") {
+        final AjaxLink aapnePopup = new AjaxLink("aapnePopup") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                oppgaveTilknytningPopup.setVisibilityAllowed(true);
-                target.add(oppgaveTilknytningPopup);
+                isOpen.setObject(true);
+                target.add(this, oppgaveTilknytningPopup);
             }
         };
         aapnePopup.add(visibleIf(kanEndres));
+
+        AriaHelpers.toggleButtonConnector(aapnePopup, oppgaveTilknytningPopup, isOpen);
+
         RadioChoice<OppgaveTilknytning> oppgaveTilknytningValg = new RadioChoice<>("oppgaveTilknytning", asList(OppgaveTilknytning.values()), new IChoiceRenderer<OppgaveTilknytning>() {
             @Override
             public Object getDisplayValue(OppgaveTilknytning object) {
@@ -64,8 +70,8 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
         AjaxLink lukkPopup = new AjaxLink("lukkPopup") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                oppgaveTilknytningPopup.setVisibilityAllowed(false);
-                target.add(oppgaveTilknytningPopup);
+                isOpen.setObject(false);
+                target.add(aapnePopup, oppgaveTilknytningPopup);
             }
         };
         oppgaveTilknytningPopup.add(oppgaveTilknytningValg, lukkPopup);
