@@ -1,11 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.brukerprofil.BrukerprofilPanel;
+import no.nav.kjerneinfo.Kjerneinfo;
+import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
+import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -19,7 +23,7 @@ public class BasePage extends WebPage {
 			new CssResourceReference(BasePage.class, "css/felles/layout-ie9.css"), "screen", "lt IE 10");
 
     public static final ConditionalCssResource KJERNEINFO_IE9_CSS = new ConditionalCssResource(
-            new CssResourceReference(BasePage.class, "css/komponenter/kjerneinfo_ie9.css"), "screen", "lt IE 10");
+            new CssResourceReference(Kjerneinfo.class, "kjerneinfo_ie9.css"), "screen", "lt IE 10");
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(PersonPage.class, "lokal.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
@@ -34,17 +38,17 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference HEADER = new PackageResourceReference(BasePage.class, "less/komponenter/header.less");
     public static final PackageResourceReference MELDINGERWIDGET = new PackageResourceReference(MeldingerWidget.class, "meldingerwidget.less");
     public static final PackageResourceReference MELDINGERLAMELL = new PackageResourceReference(Innboks.class, "innboks.less");
-    public static final PackageResourceReference OPPFOLGING = new PackageResourceReference(BasePage.class, "less/komponenter/oppfolging.less");
+    public static final PackageResourceReference OPPFOLGING = new PackageResourceReference(KontrakterPanel.class, "oppfolging.less");
     public static final PackageResourceReference OPPGAVEFORM = new PackageResourceReference(BasePage.class, "less/komponenter/oppgaveform.less");
     public static final PackageResourceReference PERSONSOK = new PackageResourceReference(BasePage.class, "less/komponenter/personsok.less");
     public static final PackageResourceReference SAKBEHANDLERINNSTILLINGER = new PackageResourceReference(BasePage.class, "less/komponenter/sakbehandlerinnstillinger.less");
     public static final PackageResourceReference LISTE = new PackageResourceReference(BasePage.class, "less/komponenter/liste.less");
     public static final PackageResourceReference JOURNALFORING = new PackageResourceReference(BasePage.class, "less/komponenter/journalforing.less");
-    public static final PackageResourceReference BRUKERPROFIL = new PackageResourceReference(BasePage.class, "less/komponenter/brukerprofil.less");
+    public static final PackageResourceReference BRUKERPROFIL = new PackageResourceReference(BrukerprofilPanel.class, "brukerprofil.less");
     public static final PackageResourceReference HENTPERSON = new PackageResourceReference(BasePage.class, "less/komponenter/hentperson.less");
-    public static final PackageResourceReference KJERNEINFO = new PackageResourceReference(BasePage.class, "less/komponenter/kjerneinfo.less");
+    public static final PackageResourceReference KJERNEINFO = new PackageResourceReference(Kjerneinfo.class, "kjerneinfo.less");
     public static final PackageResourceReference OVERSIKT = new PackageResourceReference(BasePage.class, "less/komponenter/oversikt.less");
-    public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(BasePage.class, "less/komponenter/sykepenger_foreldrepenger.less");
+    public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(SykmeldingsperiodePanel.class, "sykepenger_foreldrepenger.less");
 
     private final WebMarkupContainer body;
 
