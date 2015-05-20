@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
+import com.codahale.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
@@ -107,17 +109,22 @@ public class LeggTilbakePanel extends Panel {
         form.add(new IndicatingAjaxButtonWithImageUrl("leggtilbake", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                        oppgaveId,
-                        leggTilbakeVM.lagBeskrivelse(
-                                new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
-                        optional(leggTilbakeVM.nyTemagruppe)
-                );
-                oppgaveLagtTilbake.setObject(true);
-                send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
+                Timer.Context timer = MetricsFactory.createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak + ".time").time();
+                try {
+                    oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
+                            oppgaveId,
+                            leggTilbakeVM.lagBeskrivelse(
+                                    new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
+                            optional(leggTilbakeVM.nyTemagruppe)
+                    );
+                    oppgaveLagtTilbake.setObject(true);
+                    send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
 
-                target.add(form, feedbackPanelSuccess);
-                target.focusComponent(lukkKnapp);
+                    target.add(form, feedbackPanelSuccess);
+                    target.focusComponent(lukkKnapp);
+                } finally {
+                    timer.stop();
+                }
             }
 
             @Override
