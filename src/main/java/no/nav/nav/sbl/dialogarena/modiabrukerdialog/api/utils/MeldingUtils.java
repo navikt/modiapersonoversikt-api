@@ -50,7 +50,7 @@ public class MeldingUtils {
         }
     };
 
-    public static final Transformer<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver) {
+    public static Transformer<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver) {
         return new Transformer<XMLHenvendelse, Melding>() {
             @Override
             public Melding transform(XMLHenvendelse xmlHenvendelse) {
@@ -70,6 +70,7 @@ public class MeldingUtils {
                 melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
                 melding.eksternAktor = xmlHenvendelse.getEksternAktor();
                 melding.tilknyttetEnhet = xmlHenvendelse.getTilknyttetEnhet();
+                melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
 
                 XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
                 if (journalfortInformasjon != null) {
@@ -127,7 +128,7 @@ public class MeldingUtils {
         }
     }
 
-    public static final boolean innholdErKassert(XMLHenvendelse xmlHenvendelse) {
+    public static boolean innholdErKassert(XMLHenvendelse xmlHenvendelse) {
         return xmlHenvendelse.getMetadataListe() == null;
     }
 

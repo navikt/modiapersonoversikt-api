@@ -71,7 +71,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
-            <version>0.0.27</version>
+            <version>0.0.41</version>
             <scope>provided</scope>
         </dependency>
 

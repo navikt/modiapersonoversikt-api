@@ -15,6 +15,7 @@ public class Melding implements Serializable {
     public Meldingstype meldingstype;
     public Status status;
     public boolean kassert, ingenTilgangJournalfort;
+    public Boolean erTilknyttetAnsatt;
 
     public Melding() {
     }
@@ -112,6 +113,11 @@ public class Melding implements Serializable {
 
     public Melding withTilknyttetEnhet(String tilknyttetEnhet) {
         this.tilknyttetEnhet = tilknyttetEnhet;
+        return this;
+    }
+
+    public Melding withErTilknyttetAnsatt(Boolean erTilknyttetAnsatt) {
+        this.erTilknyttetAnsatt = erTilknyttetAnsatt;
         return this;
     }
 
