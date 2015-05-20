@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.Konto;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
@@ -44,7 +43,7 @@ public class UtbetalingWidgetPanelTest extends AbstractWicketTest{
                     .with(Hovedytelse.ytelsesperiode, new Interval(
                             new DateTime().withDate(2015,2,1),
                             new DateTime().withDate(2015,3,1)))
-                    .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "123"))
+                    .with(Hovedytelse.utbetaltTilKonto, "123")
                     .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.aktoerId, "***REMOVED***"))
         );
     }

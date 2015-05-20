@@ -97,17 +97,22 @@ public class TransformersTest {
     }
 
     @Test
-    public void createKontoFraWSObjekt() {
-        WSBankkonto wsKonto = new WSBankkonto().withKontonummer("1122334455").withKontotype("Bankkonto - Innland");
-        Record<Konto> konto = createKonto(wsKonto);
-        assertThat(konto.get(Konto.kontonummer), is("1122334455"));
-        assertThat(konto.get(Konto.kontotype), is("Bankkonto - Innland"));
+    public void kontoErKontonummerFraRespons() {
+        WSUtbetaling utbetaling = new WSUtbetaling().withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1122334455").withKontotype("Bankkonto - Innland")).withUtbetalingsmetode("Norsk bankkonto");
+        String konto = determineKontoUtbetaltTil(utbetaling);
+        assertThat(konto, is("1122334455"));
     }
 
     @Test
-    public void createKontoNaarKontoErNull() {
-        Record<Konto> konto = createKonto(null);
-        assertNull(konto);
+    public void kontoErUtbetalingsmetodeHvisKontoIkkeFinnesIRespons() {
+        String konto = determineKontoUtbetaltTil(new WSUtbetaling().withUtbetalingsmetode("Norsk utbetalingskort"));
+        assertThat(konto, is("Norsk utbetalingskort"));
+    }
+
+    @Test
+    public void kontoErUtbetalingsmetodeHvisKontoErTomIRespons() {
+        String konto = determineKontoUtbetaltTil(new WSUtbetaling().withUtbetaltTilKonto(new WSBankkonto()).withUtbetalingsmetode("Norsk utbetalingskort"));
+        assertThat(konto, is("Norsk utbetalingskort"));
     }
 
     @Test
@@ -334,7 +339,7 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.hovedytelsedato), is(new DateTime(2015, 1, 2, 3, 4)));
         assertThat(ytelse.get(Hovedytelse.utbetaltTil), is(new Record<Aktoer>().with(Aktoer.aktoerId, "123123123").with(Aktoer.navn, "Ola Normann").with(Aktoer.diskresjonskode, "5").with(Aktoer.aktoerType, AktoerType.PERSON)));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmelding), is("Dette er en melding"));
-        assertThat(ytelse.get(Hovedytelse.utbetaltTilKonto), is(new Record<Konto>().with(Konto.kontonummer, "***REMOVED***3").with(Konto.kontotype, "Bankkonto")));
+        assertThat(ytelse.get(Hovedytelse.utbetaltTilKonto), is("***REMOVED***3"));
         assertThat(ytelse.get(Hovedytelse.utbetalingsmetode), is("Overføring via bank"));
         assertThat(ytelse.get(Hovedytelse.utbetalingsstatus), is("Utbetalt"));
         assertThat(ytelse.get(Hovedytelse.forfallsdato), is(new DateTime(2000, 1, 1, 1, 1)));

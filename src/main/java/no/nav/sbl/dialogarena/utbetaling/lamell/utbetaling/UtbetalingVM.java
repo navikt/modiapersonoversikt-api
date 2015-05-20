@@ -44,10 +44,7 @@ public class UtbetalingVM {
     }
 
     public String getKontonr() {
-        if(ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer) != null) {
-            return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer);
-        }
-        return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontotype);
+        return ytelse.get(Hovedytelse.utbetaltTilKonto);
     }
 
     public List<Record<Underytelse>> getUnderytelser() {

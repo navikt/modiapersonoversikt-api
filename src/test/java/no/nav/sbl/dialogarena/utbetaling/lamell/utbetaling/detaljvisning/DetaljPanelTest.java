@@ -129,7 +129,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
         return new Record<Hovedytelse>()
                 .with(Hovedytelse.id, "id1")
                 .with(Hovedytelse.utbetaltTil, createUtbetaltTil())
-                .with(Hovedytelse.utbetaltTilKonto, createUtbetaltTilKonto())
+                .with(Hovedytelse.utbetaltTilKonto, "***REMOVED***")
                 .with(Hovedytelse.ytelse, "Dagpenger")
                 .with(Hovedytelse.utbetalingsmelding, "Dette er en testmelding")
                 .with(Hovedytelse.underytelseListe, createUnderytelser())
@@ -167,12 +167,6 @@ public class DetaljPanelTest extends AbstractWicketTest {
 
     private List<Double> createSkattListe() {
         return asList(-10D, -1D, -2D);
-    }
-
-    private Record<Konto> createUtbetaltTilKonto() {
-        return new Record<Konto>()
-                .with(Konto.kontotype, "Bankkonto")
-                .with(Konto.kontonummer, "***REMOVED***");
     }
 
     private Record<Aktoer> createUtbetaltTil() {
