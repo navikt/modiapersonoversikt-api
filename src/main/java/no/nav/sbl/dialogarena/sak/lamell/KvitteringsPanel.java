@@ -147,13 +147,7 @@ public class KvitteringsPanel extends Panel {
                     AjaxLink<Void> hentVedleggLenke = new AjaxLink<Void>("hent-vedlegg") {
                         @Override
                         public void onClick(AjaxRequestTarget target) {
-                            HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
-
-                            if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
-                                visVedlegg(target, hentetDokument.pdfSomBytes.get());
-                            } else {
-                                visFeilmeldingVindu(target, hentetDokument.feilmelding);
-                            }
+                            hentOgVisDokument(target, journalpostId, dokument);
                         }
                     };
 
@@ -161,6 +155,16 @@ public class KvitteringsPanel extends Panel {
                 }
             }
         };
+    }
+
+    private void hentOgVisDokument(AjaxRequestTarget target, String journalpostId, Dokument dokument) {
+        HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
+
+        if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
+            visVedlegg(target, hentetDokument.pdfSomBytes.get());
+        } else {
+            visFeilmeldingVindu(target, hentetDokument.feilmelding);
+        }
     }
 
     private void visVedlegg(AjaxRequestTarget target, byte[] pdfSomBytes) {
@@ -182,6 +186,11 @@ public class KvitteringsPanel extends Panel {
                     @Override
                     public void write(OutputStream output) throws IOException {
                         output.write(pdfSomBytes);
+                    }
+
+                    @Override
+                    public String getContentType() {
+                        return "application/pdf";
                     }
                 };
             }
