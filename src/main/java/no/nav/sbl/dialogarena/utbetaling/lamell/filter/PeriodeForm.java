@@ -59,7 +59,7 @@ public class PeriodeForm extends Panel {
     }
 
     private WebMarkupContainer createDatovelgerWrapper(String id) {
-        WebMarkupContainer container = new WebMarkupContainer("datovelger");
+        WebMarkupContainer container = new WebMarkupContainer(id);
         container.setOutputMarkupId(true);
         container.add(new AttributeModifier("style", "display: none;"));
         container.add(createDateRangePicker("datoFilter"));
