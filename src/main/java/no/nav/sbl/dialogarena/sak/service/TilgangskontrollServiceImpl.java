@@ -1,11 +1,12 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalposimport no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.apache.commons.collections15.Predicate;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat.Feilmelding.*;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
@@ -29,24 +30,24 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    public VedleggResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
+    public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
         return sjekkTilgang(journalpostId, fnr);
     }
 
-    private VedleggResultat sjekkTilgang(String journalpostId, String fnr) {
+    private HentDokumentResultat sjekkTilgang(String journalpostId, String fnr) {
         if (!harJournalpostId(journalpostId)) {
-            return new VedleggResultat(false, IKKE_JOURNALFORT);
+            return new HentDokumentResultat(false, IKKE_JOURNALFORT);
         }
         
         Journalpost journalpost = hentJournalpost(journalpostId);
         if (!erJournalfort(journalpost)) {
-            return new VedleggResultat(false, IKKE_JOURNALFORT);
+            return new HentDokumentResultat(false, IKKE_JOURNALFORT);
         } else if (erFeilregistrert(journalpost)) {
-            return new VedleggResultat(false, FEILREGISTRERT);
+            return new HentDokumentResultat(false, FEILREGISTRERT);
         } else if (!erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
-            return new VedleggResultat(false, IKKE_SAKSPART);
+            return new HentDokumentResultat(false, IKKE_SAKSPART);
         }
-        return new VedleggResultat(true);
+        return new HentDokumentResultat(true);
     }
 
     private boolean harJournalpostId(String journalpostid) {

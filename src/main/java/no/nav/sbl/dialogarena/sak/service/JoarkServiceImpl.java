@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Variantformater;
@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat.Feilmelding.*;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class JoarkServiceImpl implements JoarkService {
@@ -26,17 +26,17 @@ public class JoarkServiceImpl implements JoarkService {
     @Named("joarkPortType")
     private JournalV1 joarkPortType;
 
-    public VedleggResultat hentDokument(String journalpostId, String dokumentId, String fnr) {
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
+    public HentDokumentResultat hentDokument(String journalpostId, String dokumentId, String fnr) {
+        HentDokumentResultat resultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
 
-        if (vedleggResultat.harTilgang) {
+        if (resultat.harTilgang) {
             return hentDokument(journalpostId, dokumentId);
         } else {
-            return vedleggResultat;
+            return resultat;
         }
     }
 
-    private VedleggResultat hentDokument(String journalpostId, String dokumentId) {
+    private HentDokumentResultat hentDokument(String journalpostId, String dokumentId) {
         HentDokumentRequest hentDokumentRequest = new HentDokumentRequest();
         hentDokumentRequest.setJournalpostId(journalpostId);
         hentDokumentRequest.setDokumentId(dokumentId);
@@ -47,16 +47,16 @@ public class JoarkServiceImpl implements JoarkService {
 
         try {
             Byte dokument = joarkPortType.hentDokument(hentDokumentRequest).getDokument();
-            return new VedleggResultat(true, new byte[]{dokument});
+            return new HentDokumentResultat(true, new byte[]{dokument});
         } catch (HentDokumentDokumentIkkeFunnet e) {
             logger.warn("Dokumentet med dokumentid '{}' ble ikke funnet", dokumentId, e.getMessage());
-            return new VedleggResultat(false, DOKUMENT_IKKE_FUNNET);
+            return new HentDokumentResultat(false, DOKUMENT_IKKE_FUNNET);
         } catch (HentDokumentSikkerhetsbegrensning e) {
             logger.warn("Dokumentet med dokumentid '{}' kan ikke vises grunnet en sikkerhetsbegrensning", dokumentId, e.getMessage());
-            return new VedleggResultat(false, SIKKERHETSBEGRENSNING);
+            return new HentDokumentResultat(false, SIKKERHETSBEGRENSNING);
         } catch (HentDokumentDokumentErSlettet e) {
             logger.warn("Dokumentet med dokumentid '{}' er slettet", dokumentId, e.getMessage());
-            return new VedleggResultat(false, DOKUMENT_SLETTET);
+            return new HentDokumentResultat(false, DOKUMENT_SLETTET);
         }
     }
 

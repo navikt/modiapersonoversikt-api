@@ -1,6 +1,11 @@
 package no.nav.sbl.dialogarena.sak.viewdomain.lamell;
 
-public class VedleggResultat {
+import no.nav.modig.lang.option.Optional;
+
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
+
+public class HentDokumentResultat {
 
    public enum Feilmelding {
         SIKKERHETSBEGRENSNING("Sikkerhetsbegrensning", "Du har ikke tilgang til dette vedlegget."),
@@ -19,25 +24,22 @@ public class VedleggResultat {
         }
     }
 
-    public byte[] pdfSomBytes;
+    public Optional<byte[]> pdfSomBytes;
     public boolean harTilgang;
     public Feilmelding feilmelding;
 
-    public VedleggResultat(boolean harTilgang) {
+    public HentDokumentResultat(boolean harTilgang) {
         this.harTilgang = harTilgang;
     }
 
-    public VedleggResultat(boolean harTilgang, Feilmelding feilmelding) {
+    public HentDokumentResultat(boolean harTilgang, Feilmelding feilmelding) {
         this.harTilgang = harTilgang;
         this.feilmelding = feilmelding;
+        this.pdfSomBytes = none();
     }
 
-    public VedleggResultat(boolean harTilgang, byte[] pdfSomBytes) {
+    public HentDokumentResultat(boolean harTilgang, byte[] pdfSomBytes) {
         this.harTilgang = harTilgang;
-        this.pdfSomBytes = pdfSomBytes;
-    }
-
-    public boolean eksisterer() {
-        return pdfSomBytes.length > 0;
+        this.pdfSomBytes = optional(pdfSomBytes);
     }
 }

@@ -8,8 +8,8 @@ import no.nav.sbl.dialogarena.sak.service.JoarkService;
 import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat.Feilmelding;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -147,12 +147,12 @@ public class KvitteringsPanel extends Panel {
                     AjaxLink<Void> hentVedleggLenke = new AjaxLink<Void>("hent-vedlegg") {
                         @Override
                         public void onClick(AjaxRequestTarget target) {
-                            VedleggResultat vedleggResultat = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
+                            HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
 
-                            if (vedleggResultat.harTilgang && vedleggResultat.eksisterer()) {
-                                visVedlegg(target, vedleggResultat.pdfSomBytes);
+                            if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
+                                visVedlegg(target, hentetDokument.pdfSomBytes.get());
                             } else {
-                                visFeilmeldingVindu(target, vedleggResultat.feilmelding);
+                                visFeilmeldingVindu(target, hentetDokument.feilmelding);
                             }
                         }
                     };

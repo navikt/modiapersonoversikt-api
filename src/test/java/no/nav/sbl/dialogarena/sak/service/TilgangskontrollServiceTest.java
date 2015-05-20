@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sak.service;
 
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
@@ -24,7 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Random;
 
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.VedleggResultat.Feilmelding.*;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -63,9 +63,9 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJournalfortOgIkkeFeilRegistrert();
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertTrue(vedleggResultat.harTilgang);
-        assertNull(vedleggResultat.feilmelding);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertTrue(hentDokumentResultat.harTilgang);
+        assertNull(hentDokumentResultat.feilmelding);
     }
 
     //TODO ignore fram til journalført er på plass på Journalpost-objektet.
@@ -75,9 +75,9 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setIkkeJournalfortOgIkkeFeilRegistrert();
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertFalse(vedleggResultat.harTilgang);
-        assertEquals(IKKE_JOURNALFORT, vedleggResultat.feilmelding);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(hentDokumentResultat.harTilgang);
+        assertEquals(IKKE_JOURNALFORT, hentDokumentResultat.feilmelding);
     }
 
     @Test
@@ -85,9 +85,9 @@ public class TilgangskontrollServiceTest {
         setGsakUtenSakspart();
         setJournalfortOgIkkeFeilRegistrert();
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertFalse(vedleggResultat.harTilgang);
-        assertEquals(IKKE_SAKSPART, vedleggResultat.feilmelding);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(hentDokumentResultat.harTilgang);
+        assertEquals(IKKE_SAKSPART, hentDokumentResultat.feilmelding);
     }
 
     @Test
@@ -95,9 +95,9 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJournalfortOgFeilRegistrert();
 
-        VedleggResultat vedleggResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-        assertFalse(vedleggResultat.harTilgang);
-        assertEquals(FEILREGISTRERT, vedleggResultat.feilmelding);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        assertFalse(hentDokumentResultat.harTilgang);
+        assertEquals(FEILREGISTRERT, hentDokumentResultat.feilmelding);
     }
 
     @Test(expected = SystemException.class)
