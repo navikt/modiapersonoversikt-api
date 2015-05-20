@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
@@ -150,7 +151,6 @@ public class KvitteringsPanel extends Panel {
                             hentOgVisDokument(target, journalpostId, dokument);
                         }
                     };
-
                     item.add(hentVedleggLenke);
                 }
             }
@@ -174,7 +174,7 @@ public class KvitteringsPanel extends Panel {
     }
 
     private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding) {
-        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, feilmelding.heading, feilmelding.lead, "Lukk"));
+        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, new ResourceModel(feilmelding.heading), new ResourceModel(feilmelding.lead), new ResourceModel("modalvindu.advarsel.knapp")));
         modalWindow.show(target);
     }
 
