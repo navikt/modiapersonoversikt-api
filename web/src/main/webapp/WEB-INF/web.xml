@@ -69,7 +69,7 @@
     </security-role>
 
     <listener>
-        <listener-class>no.nav.modig.modia.metrics.MetricsConfigurator</listener-class>
+        <listener-class>no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MetricsConfigurator</listener-class>
     </listener>
     <servlet>
         <servlet-name>metrics</servlet-name>

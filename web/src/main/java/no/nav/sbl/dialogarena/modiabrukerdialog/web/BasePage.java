@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.frontend.ConditionalCssResource;
+import no.nav.modig.modia.metrics.TimingMetricsBehaviour;
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -51,6 +52,7 @@ public class BasePage extends WebPage {
     public BasePage() {
         body = (WebMarkupContainer) new TransparentWebMarkupContainer("body").setOutputMarkupId(true);
         add(body);
+        add(new TimingMetricsBehaviour().withPrefix("page."));
     }
 
     public WebMarkupContainer getBody() {

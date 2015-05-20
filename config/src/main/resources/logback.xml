@@ -87,7 +87,7 @@
         <appender-ref ref="sporinglog"/>
     </logger>
 
-    <logger name="no.nav.modig.modia.metrics.MetricsConfigurator" level="INFO">
+    <logger name="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MetricsConfigurator" level="INFO">
         <appender-ref ref="metricslog"/>
     </logger>
 
