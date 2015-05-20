@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.hen
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
@@ -32,7 +33,8 @@ public class HenvendelseSoknaderEndpointConfig {
     }
 
     @Bean
-    public Pingable pingHenvendelseSoknader(final HenvendelseSoknaderPortType ws) {
+    public Pingable pingHenvendelseSoknader() {
+        final HenvendelseSoknaderPortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utb
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
@@ -33,7 +34,8 @@ public class UtbetalingEndpointConfig {
     }
 
     @Bean
-    public Pingable pingUtbetalingV1(final UtbetalingV1 ws) {
+    public Pingable pingUtbetalingV1() {
+        final UtbetalingV1 ws = createUtbetalingPortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {

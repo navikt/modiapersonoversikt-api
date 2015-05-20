@@ -7,6 +7,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -34,7 +35,8 @@ public class SendUtHenvendelseEndpointConfig {
     }
 
     @Bean
-    public Pingable sendUtHenvendelsePing(final SendUtHenvendelsePortType ws) {
+    public Pingable sendUtHenvendelsePing() {
+        final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {

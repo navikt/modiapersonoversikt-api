@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsa
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -31,7 +32,8 @@ public class GsakOppgaveV3EndpointConfig {
     }
 
     @Bean
-    public Pingable gsakPing(final OppgaveV3 ws) {
+    public Pingable gsakPing() {
+        final OppgaveV3 ws = createOppgavePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {

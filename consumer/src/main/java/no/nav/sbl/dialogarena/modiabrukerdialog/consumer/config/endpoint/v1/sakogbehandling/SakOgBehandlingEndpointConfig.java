@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sak
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
@@ -32,7 +33,8 @@ public class SakOgBehandlingEndpointConfig {
     }
 
     @Bean
-    public Pingable pingSakOgBehandling(final SakOgBehandling_v1PortType ws) {
+    public Pingable pingSakOgBehandling() {
+        final SakOgBehandling_v1PortType ws = createSakogbehandlingPortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {

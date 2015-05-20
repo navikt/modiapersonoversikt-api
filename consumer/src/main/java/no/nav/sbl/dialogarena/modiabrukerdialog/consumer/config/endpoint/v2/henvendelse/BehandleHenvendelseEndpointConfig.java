@@ -4,6 +4,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfo
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -31,7 +32,8 @@ public class BehandleHenvendelseEndpointConfig {
     }
 
     @Bean
-    public Pingable behandleHenvendelsePing(final BehandleHenvendelsePortType ws) {
+    public Pingable behandleHenvendelsePing() {
+        final BehandleHenvendelsePortType ws = createBehandleHenvendelsePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
