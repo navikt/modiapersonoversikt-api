@@ -165,7 +165,7 @@ public class WSUtbetalingTestData {
                 .withUtbetalingsmelding("Sykepenger")
                 .withYtelseListe(
                         new WSYtelse()
-                                .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
+                                .withYtelsestype(new WSYtelsestyper().withValue("BARNETRYGD"))
                                 .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
                                 .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Plan- og bygningsetaten"))
                                 .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(2).minusDays(15)).withTom(now().minusMonths(1).minusDays(15)))
