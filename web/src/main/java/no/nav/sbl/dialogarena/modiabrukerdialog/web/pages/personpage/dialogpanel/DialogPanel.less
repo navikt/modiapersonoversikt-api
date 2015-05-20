@@ -88,6 +88,70 @@
       margin: 0;
     }
   }
+  .oppgavetilknytning {
+    margin: 0 @sideMargin;
+    p {
+      text-align: right;
+      font-weight: 600;
+      span {
+        display: inline-block;
+        vertical-align: bottom;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      a {
+        font-weight: normal;
+        cursor: pointer;
+        z-index: 2;
+      }
+    }
+    .popupContainer {
+      position: relative;
+    }
+    .popup {
+      position: absolute;
+      z-index: 1;
+      background-color: #ffffff;
+      border: 1px solid #cbcbcb;
+      top: 5px;
+      right: -@sideMargin / 2;
+      width: 350px;
+      padding: 8px 0 16px 0;
+      -webkit-box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
+      -moz-box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
+      box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
+      input[type=button] {
+        margin-top: 8px;
+      }
+      input[type=radio] + label {
+        margin: 8px 0 0 0;
+        text-align: left;
+        width: 20rem;
+        color: #3e3832;
+      }
+      &:after, &:before {
+        position: absolute;
+        content: " ";
+        bottom: 100%;
+        left: 90%;
+        border: solid transparent;
+        height: 0;
+        width: 0;
+      }
+      &:before {
+        border-width: 14px;
+        margin-left: -14px;
+        border-bottom-color: #cbcbcb;
+      }
+      &:after {
+        border-width: 13px;
+        margin-left: -13px;
+        border-bottom-color: #ffffff;
+      }
+    }
+  }
   .temagruppeoverskrift {
     margin: 0.8em 0 0;
     font-size: 14px;
@@ -265,7 +329,7 @@
       width: 12em;
       color: #3e3832;
     }
-    &:focus + label{
+    &:focus + label {
       border: 1px dashed #00a9e0;
       padding: 2px 2px 2px 32px;
       background-position: 2px 2px;

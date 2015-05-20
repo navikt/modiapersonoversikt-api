@@ -21,6 +21,7 @@ public class HenvendelseUtilsTest {
 
         assertThat(xmlHenvendelse.getHenvendelseType(), is(svartype.name()));
         assertThat(xmlHenvendelse.getFnr(), is(svar.fnrBruker));
+        assertThat(xmlHenvendelse.isErTilknyttetAnsatt(), is(svar.erTilknyttetAnsatt));
         assertNotNull(xmlHenvendelse.getOpprettetDato());
         assertNotNull(xmlHenvendelse.getAvsluttetDato());
 
@@ -41,6 +42,7 @@ public class HenvendelseUtilsTest {
                 .withTemagruppe("temagruppe")
                 .withKanal("kanal")
                 .withFritekst("fritekst")
-                .withNavIdent("navident");
+                .withNavIdent("navident")
+                .withErTilknyttetAnsatt(false);
     }
 }

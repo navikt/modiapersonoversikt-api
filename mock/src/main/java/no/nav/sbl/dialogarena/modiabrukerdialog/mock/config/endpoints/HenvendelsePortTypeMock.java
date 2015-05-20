@@ -2,14 +2,19 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.*;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import org.joda.time.DateTime;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
@@ -131,7 +136,8 @@ public class HenvendelsePortTypeMock {
                 .withFnr(FNR)
                 .withEksternAktor(NAVIDENT)
                 .withJournalfortInformasjon(journalfortInformasjon)
-                .withOppgaveIdGsak(oppgaveId);
+                .withOppgaveIdGsak(oppgaveId)
+                .withErTilknyttetAnsatt(false);
 
         return xmlHenvendelse.withMetadataListe(
                 metadata == null ? null : new XMLMetadataListe().withMetadata(metadata));
