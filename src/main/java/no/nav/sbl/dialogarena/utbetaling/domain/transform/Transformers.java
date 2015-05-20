@@ -2,10 +2,14 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.utbetaling.domain.*;
-import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.AktoerType;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.*;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Trekk;
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
@@ -18,12 +22,8 @@ import static java.util.Collections.reverseOrder;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.aktoerId;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.aktoerType;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.navn;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.*;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Konto.kontonummer;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Konto.kontotype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Trekk.kreditor;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.mottakertypeForAktoer;
 
@@ -77,7 +77,7 @@ public class Transformers {
                         .with(posteringsDato, wsUtbetaling.getPosteringsdato())
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
-                        .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
+                        .with(utbetaltTilKonto, determineKontoUtbetaltTil(wsUtbetaling))
                         .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode())
                         .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus())
                         .with(id, String.valueOf(createHovedytelseId(wsYtelse)))
@@ -185,13 +185,13 @@ public class Transformers {
         return new Interval(ytelsesperiode.getFom(), ytelsesperiode.getTom());
     }
 
-    protected static Record<Konto> createKonto(WSBankkonto utbetaltTilKonto) {
-        if (utbetaltTilKonto == null) {
-            return null;
+    protected static String determineKontoUtbetaltTil(WSUtbetaling wsUtbetaling) {
+        WSBankkonto wsKonto = wsUtbetaling.getUtbetaltTilKonto();
+
+        if (wsKonto == null || StringUtils.isEmpty(wsKonto.getKontonummer())) {
+            return wsUtbetaling.getUtbetalingsmetode();
         }
-        return new Record<Konto>()
-                .with(kontonummer, utbetaltTilKonto.getKontonummer())
-                .with(kontotype, utbetaltTilKonto.getKontotype());
+        return wsKonto.getKontonummer();
     }
 
     protected static Record<Aktoer> createAktoer(WSAktoer utbetaltTil) {

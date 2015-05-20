@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.Konto;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.junit.Before;
@@ -98,7 +97,7 @@ public class HovedytelseVMTest {
                     .with(Hovedytelse.id, ID)
                     .with(Hovedytelse.hovedytelsedato, utbetalingsDato)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "123"))
+                    .with(Hovedytelse.utbetaltTilKonto, "123")
                     .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.aktoerId, "12345678910"))
         );
     }

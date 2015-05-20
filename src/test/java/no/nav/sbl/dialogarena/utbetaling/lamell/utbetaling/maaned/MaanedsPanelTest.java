@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.Konto;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -41,7 +40,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                         .with(Hovedytelse.nettoUtbetalt, 0d)
                         .with(Hovedytelse.sumTrekk, 0d)
                         .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))
-                        .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "1112233"))
+                        .with(Hovedytelse.utbetaltTilKonto, "1112233")
                         .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
                                 .with(Underytelse.ytelsesType, "Tittel")
                                 .with(Underytelse.satsAntall, 3d)
@@ -53,7 +52,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                         .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
                         .with(Hovedytelse.nettoUtbetalt, 0d)
                         .with(Hovedytelse.sumTrekk, 0d)
-                        .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "1112233"))
+                        .with(Hovedytelse.utbetaltTilKonto, "1112233")
                         .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(10), now()))
                         .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
