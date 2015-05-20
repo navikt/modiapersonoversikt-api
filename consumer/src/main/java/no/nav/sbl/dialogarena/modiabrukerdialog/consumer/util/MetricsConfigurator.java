@@ -38,7 +38,6 @@ public class MetricsConfigurator extends MetricsServlet.ContextListener implemen
 
     private void lagJVMMetrics() {
         leggTilJMXGauges("java.lang", "ClassLoading", "LoadedClassCount", "TotalLoadedClassCount", "UnloadedClassCount");
-        leggTilJMXGauges("java.lang", "Memory", "HeapMemoryUsage");
         leggTilJMXGauges("java.lang", "OperatingSystem", "FreePhysicalMemorySize", "ProcessCpuLoad", "SystemCpuLoad");
         leggTilJMXGauges("java.lang", "Threading", "DaemonThreadCount", "PeakThreadCount", "ThreadCount", "TotalStartedThreadCount");
     }
