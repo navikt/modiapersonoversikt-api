@@ -5,7 +5,6 @@ import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.daterangepicker.StrictDateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -26,9 +25,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_FEILET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PERIODEVALG;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PeriodeVelger.*;
 import static org.joda.time.LocalDate.now;
 
@@ -43,27 +40,22 @@ public class PeriodeForm extends Panel {
         super(id);
         this.filterParametere = filterParametere;
         datovelgerContainer = createDatovelgerWrapper("datovelger");
-
         add(createForm("periodeForm"));
     }
 
     private Form createForm(String id) {
         Form form = new Form(id);
-
-        form.add(
-                createPeriodeVelger("periodeVelger"),
-                datovelgerContainer,
-                createSokKnapp()
-        );
+        form.add(createPeriodeVelger("periodeVelger"),
+            datovelgerContainer,
+            createSokKnapp());
         return form;
     }
 
     private WebMarkupContainer createDatovelgerWrapper(String id) {
         WebMarkupContainer container = new WebMarkupContainer(id);
-        container.setOutputMarkupId(true);
-        container.add(new AttributeModifier("style", "display: none;"));
+        container.setOutputMarkupPlaceholderTag(true);
+        container.setVisibilityAllowed(false);
         container.add(createDateRangePicker("datoFilter"));
-
         return container;
     }
 
@@ -86,10 +78,10 @@ public class PeriodeForm extends Panel {
             protected void onUpdate(AjaxRequestTarget target) {
                 FilterParametere.PeriodeVelger valgtPeriode = filterParametere.periodeVelgerValg;
                 if (valgtPeriode.equals(EGENDEFINERT)) {
-                    datovelgerContainer.add(new AttributeModifier("style", "display: block;"));
+                    datovelgerContainer.setVisibilityAllowed(true);
                     target.add(datovelgerContainer);
                 } else {
-                    datovelgerContainer.add(new AttributeModifier("style", "display: none;"));
+                    datovelgerContainer.setVisibilityAllowed(false);
                     target.add(datovelgerContainer);
                     LocalDate today = LocalDate.now();
                     if (valgtPeriode.equals(SISTE_3_MND)) {
@@ -128,11 +120,25 @@ public class PeriodeForm extends Panel {
                 new PropertyModel<LocalDate>(filterParametere, "startDato"),
                 new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
 
-        return new StrictDateRangePicker(id, dateRangeModel, datePickerConfigurator, minDato, maksDato);
+        return new StrictDateRangePicker(id, dateRangeModel, datePickerConfigurator, minDato, maksDato) {
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+//                if (filterParametere.periodeVelgerValg != EGENDEFINERT) {
+//                    startDate.getForm().clearInput();
+//                    endDate.getForm().clearInput();
+//                }
+            }
+        };
     }
 
     private AjaxButton createSokKnapp() {
         AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.periode.sok", this, null)) {
+
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+            }
 
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
