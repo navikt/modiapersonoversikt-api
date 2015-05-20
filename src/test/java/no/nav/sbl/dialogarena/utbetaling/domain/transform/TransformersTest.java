@@ -339,7 +339,7 @@ public class TransformersTest {
         assertThat(ytelse.get(Hovedytelse.utbetalingsstatus), is("Utbetalt"));
         assertThat(ytelse.get(Hovedytelse.forfallsdato), is(new DateTime(2000, 1, 1, 1, 1)));
         assertThat(ytelse.get(Hovedytelse.id), is(notNullValue()));
-        assertThat(ytelse.get(Hovedytelse.ytelse), is("Dagpenger"));
+        assertThat(ytelse.get(Hovedytelse.ytelse), is("dagpenger"));
         assertThat(ytelse.get(Hovedytelse.ytelsesperiode), is(new Interval(new DateTime(2000, 1, 1, 1, 2), new DateTime(2001, 1, 1, 1, 1))));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).size(), is(2));
         assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.ytelsesType), is("Særtillegg"));
