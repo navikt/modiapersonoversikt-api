@@ -81,7 +81,7 @@ public class Transformers {
                         .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode())
                         .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus())
                         .with(id, String.valueOf(createHovedytelseId(wsYtelse)))
-                        .with(ytelse, wsYtelse.getYtelsestype() != null ? wsYtelse.getYtelsestype().getValue() : "")
+                        .with(ytelse, wsYtelse.getYtelsestype() != null ? wsYtelse.getYtelsestype().getValue().toLowerCase() : "")
                         .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
                         .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
                         .with(trekkListe, createTrekkliste(wsYtelse.getTrekkListe()))
