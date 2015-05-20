@@ -59,7 +59,7 @@ public class TimingMetricsProxy implements InvocationHandler {
     public static <T> T createMetricsProxy(T object, Class<T> type) {
         //Metrics need unique names. Creating two proxies of same type will therefore create an exception
         if (alreadyRegistered(type)) {
-            return object;
+            throw new RuntimeException("Metrics allerede laget for " + type);
         }
 
         return (T) newProxyInstance(

@@ -333,6 +333,10 @@
         </dependency>
 
         <!--Diverse-->
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+        </dependency>
 
         <!-- Denne må være her på grunn av classloading på JBoss -->
         <dependency>
