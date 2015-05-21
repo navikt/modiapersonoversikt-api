@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
 
@@ -75,6 +75,30 @@ public class MeldingBuilderTest {
         assertThat(melding.temagruppe, is(eldsteMeldingITraad.temagruppe));
         assertThat(melding.traadId, is(eldsteMeldingITraad.id));
         assertThat(melding.kontorsperretEnhet, is(eldsteMeldingITraad.kontorsperretEnhet));
+    }
+
+    @Test
+    public void setterTilknyttetAnsattFlaggTilTrue() {
+        HenvendelseVM henvendelseVM = new HenvendelseVM();
+        henvendelseVM.kanal = Kanal.TEKST;
+        henvendelseVM.temagruppe = Temagruppe.ARBD;
+        henvendelseVM.oppgaveTilknytning = HenvendelseVM.OppgaveTilknytning.SAKSBEHANDLER;
+
+        Melding melding = new MeldingBuilder().withHenvendelseVM(henvendelseVM).build();
+
+        assertThat(melding.erTilknyttetAnsatt, is(true));
+    }
+
+    @Test
+    public void setterTilknyttetAnsattFlaggTilFalse() {
+        HenvendelseVM henvendelseVM = new HenvendelseVM();
+        henvendelseVM.kanal = Kanal.TEKST;
+        henvendelseVM.temagruppe = Temagruppe.ARBD;
+        henvendelseVM.oppgaveTilknytning = HenvendelseVM.OppgaveTilknytning.ENHET;
+
+        Melding melding = new MeldingBuilder().withHenvendelseVM(henvendelseVM).build();
+
+        assertThat(melding.erTilknyttetAnsatt, is(false));
     }
 
 }

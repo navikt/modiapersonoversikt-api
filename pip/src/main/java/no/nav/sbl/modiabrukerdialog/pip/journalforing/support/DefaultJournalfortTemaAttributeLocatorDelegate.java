@@ -9,6 +9,7 @@ import no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLo
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,10 +20,10 @@ public class DefaultJournalfortTemaAttributeLocatorDelegate implements Journalfo
 
     private static Logger logger = LoggerFactory.getLogger(JournalfortTemaAttributeLocator.class);
 
+    @Inject
     private GOSYSNAVansatt ansattService;
 
-    public DefaultJournalfortTemaAttributeLocatorDelegate(GOSYSNAVansatt ansattService) {
-        this.ansattService = ansattService;
+    public DefaultJournalfortTemaAttributeLocatorDelegate() {
     }
 
     @Override

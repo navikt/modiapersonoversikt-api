@@ -20,6 +20,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
 
 @Configuration
@@ -31,7 +32,8 @@ public class KodeverkV2EndpointConfig {
     public KodeverkPortType kodeverkPortType() {
         KodeverkPortType prod = lagKodeverkPortType();
         KodeverkPortType mock = KodeverkV2PortTypeMock.kodeverkPortType();
-        return createSwitcher(prod, mock, KODEVERK_KEY, KodeverkPortType.class);
+        
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, KODEVERK_KEY, KodeverkPortType.class);
     }
 
     @Bean
@@ -42,14 +44,14 @@ public class KodeverkV2EndpointConfig {
     }
 
     @Bean
-    public Pingable pingKodeverk() {
+    public Pingable pingKodeverk(final KodeverkPortType ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = currentTimeMillis();
                 String name = "KODEVERK_V2";
                 try {
-                    lagKodeverkPortType().ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));

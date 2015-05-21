@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>modiabrukerdialog</artifactId>
         <groupId>no.nav.sbl.dialogarena</groupId>
@@ -17,13 +18,6 @@
     </properties>
 
     <dependencies>
-        <!-- Interne -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-consumer</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!--Kjerneinfo-->
         <dependency>
             <groupId>no.nav</groupId>
@@ -37,17 +31,8 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
         </dependency>
 
         <dependency>

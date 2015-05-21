@@ -17,7 +17,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
@@ -28,11 +28,13 @@ public class SakOgBehandlingEndpointConfig {
     public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
         final SakOgBehandling_v1PortType prod = createSakogbehandlingPortType(new UserSAMLOutInterceptor());
         final SakOgBehandling_v1PortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
-        return createSwitcher(prod, mock, SAKOGBEHANDLING_KEY, SakOgBehandling_v1PortType.class);
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, SAKOGBEHANDLING_KEY, SakOgBehandling_v1PortType.class);
     }
 
     @Bean
     public Pingable pingSakOgBehandling() {
+        final SakOgBehandling_v1PortType ws = createSakogbehandlingPortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -40,7 +42,7 @@ public class SakOgBehandlingEndpointConfig {
                 long start = currentTimeMillis();
                 String name = "SAKOGBEHANDLING";
                 try {
-                    createSakogbehandlingPortType(new SystemSAMLOutInterceptor()).ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));

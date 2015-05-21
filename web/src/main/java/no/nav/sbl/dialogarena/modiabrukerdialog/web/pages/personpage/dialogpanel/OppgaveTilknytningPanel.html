@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="oppgavetilknytning">
+        <p>
+            <span wicket:id="oppgaveTilknytningTekst"></span>
+            <a role="button" wicket:id="aapnePopup">Endre</a>
+        </p>
+
+        <div class="popupContainer">
+            <div class="popup" wicket:id="oppgaveTilknytningPopup">
+                <div wicket:id="oppgaveTilknytning"></div>
+                <input type="button" wicket:id="lukkPopup" class="knapp-hoved-liten"
+                       wicket:message="value:oppgavetilknytning.lukk"/>
+            </div>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

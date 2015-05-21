@@ -20,7 +20,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendUtHenvendelsePortTypeMock.createSendUtHenvendelsePortTypeMock;
 
 @Configuration
@@ -28,12 +28,10 @@ public class SendUtHenvendelseEndpointConfig {
 
     @Bean
     public SendUtHenvendelsePortType sendUtHenvendelsePortType() {
-        return createSwitcher(
-                createSendUtHenvendelsePortType(new UserSAMLOutInterceptor()),
-                createSendUtHenvendelsePortTypeMock(),
-                HENVENDELSE_KEY,
-                SendUtHenvendelsePortType.class
-        );
+        SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType(new UserSAMLOutInterceptor());
+        SendUtHenvendelsePortType mock = createSendUtHenvendelsePortTypeMock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
     }
 
     @Bean

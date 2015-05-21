@@ -6,16 +6,17 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurat
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -97,6 +98,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
         modusKomponenter.add(journalforingsPanel);
         form.add(journalforingsPanel);
+
+        OppgaveTilknytningPanel oppgaveTilknytningPanel = new OppgaveTilknytningPanel("oppgaveTilknytningPanel", getModel(), grunnInfo);
+        oppgaveTilknytningPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
+        modusKomponenter.add(oppgaveTilknytningPanel);
+        form.add(oppgaveTilknytningPanel);
 
         Label tekstfeltOverskrift = new Label("tekstfeltOverskrift", new StringResourceModel("${modus}.tekstfelt", getModel()));
         tekstfeltOverskrift.setOutputMarkupId(true);
@@ -225,6 +231,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private void settOppModellMedDefaultVerdier() {
         getModelObject().modus = Modus.REFERAT;
+        getModelObject().oppgaveTilknytning = OppgaveTilknytning.SAKSBEHANDLER;
         getModelObject().kanal = null;
         getModelObject().valgtSak = null;
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {

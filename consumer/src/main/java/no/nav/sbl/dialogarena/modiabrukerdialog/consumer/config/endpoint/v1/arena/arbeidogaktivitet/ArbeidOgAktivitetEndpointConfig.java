@@ -16,7 +16,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.ArbeidOgAktivitetEndpointMock.createArbeidOgAktivitetMock;
 
 @Configuration
@@ -26,7 +26,10 @@ public class ArbeidOgAktivitetEndpointConfig {
 
     @Bean
     public ArbeidOgAktivitet arbeidOgAktivitet() {
-        return createSwitcher(createArbeidOgAktivitet(), createArbeidOgAktivitetMock(), ARENA_ARBEIDOGATKIVITET_KEY, ArbeidOgAktivitet.class);
+        ArbeidOgAktivitet prod = createArbeidOgAktivitet();
+        ArbeidOgAktivitet mock = createArbeidOgAktivitetMock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, ARENA_ARBEIDOGATKIVITET_KEY, ArbeidOgAktivitet.class);
     }
 
     private static ArbeidOgAktivitet createArbeidOgAktivitet() {
@@ -37,14 +40,14 @@ public class ArbeidOgAktivitetEndpointConfig {
     }
 
     @Bean
-    public Pingable arbeidOgAktivitetPing(final ArbeidOgAktivitet arbeidOgAktivitet) {
+    public Pingable arbeidOgAktivitetPing(final ArbeidOgAktivitet ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "ARENA_ARBEIDOGAKTIVITET_V1";
                 try {
-                    arbeidOgAktivitet.hentSakListe(new WSHentSakListeRequest()
+                    ws.hentSakListe(new WSHentSakListeRequest()
                             .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker("10108000398"))
                             .withFom(LocalDate.now())
                             .withTom(LocalDate.now()));

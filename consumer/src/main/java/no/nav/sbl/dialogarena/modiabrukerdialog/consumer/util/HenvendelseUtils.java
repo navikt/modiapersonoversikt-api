@@ -27,6 +27,7 @@ public class HenvendelseUtils {
                 .withKontorsperreEnhet(henvendelse.kontorsperretEnhet)
                 .withEksternAktor(henvendelse.eksternAktor)
                 .withTilknyttetEnhet(henvendelse.tilknyttetEnhet)
+                .withErTilknyttetAnsatt(henvendelse.erTilknyttetAnsatt)
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingTilBruker()
                                 .withTemagruppe(henvendelse.temagruppe)

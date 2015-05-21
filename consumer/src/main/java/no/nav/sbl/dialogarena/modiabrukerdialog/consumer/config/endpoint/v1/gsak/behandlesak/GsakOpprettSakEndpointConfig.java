@@ -14,25 +14,28 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakSakV1EndpointConfig.GSAK_SAK_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOpprettSakEndpointMock.createGsakOpprettSakPortTypeMock;
 
 @Configuration
 public class GsakOpprettSakEndpointConfig {
     @Bean
     public BehandleSakV1 behandleSakV1() {
-        return createSwitcher(createGsakOpprettSakPortType(), createGsakOpprettSakPortTypeMock(), GSAK_SAK_KEY, BehandleSakV1.class);
+        BehandleSakV1 prod = createGsakOpprettSakPortType();
+        BehandleSakV1 mock = createGsakOpprettSakPortTypeMock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_SAK_KEY, BehandleSakV1.class);
     }
 
     @Bean
-    public Pingable behandleSakPing(final BehandleSakV1 behandleSakV1) {
+    public Pingable behandleSakPing(final BehandleSakV1 ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "GSAK_BEHANDLESAK_V1";
                 try {
-                    behandleSakV1.ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));

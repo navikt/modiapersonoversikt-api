@@ -17,7 +17,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class HenvendelseSoknaderEndpointConfig {
@@ -26,13 +26,15 @@ public class HenvendelseSoknaderEndpointConfig {
 
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
-        final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
         final HenvendelseSoknaderPortType prod = createHenvendelsePortType(new UserSAMLOutInterceptor());
-        return createSwitcher(prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
+        final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
     }
 
     @Bean
     public Pingable pingHenvendelseSoknader() {
+        final HenvendelseSoknaderPortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -40,7 +42,7 @@ public class HenvendelseSoknaderEndpointConfig {
                 long start = currentTimeMillis();
                 String name = "HENVENDELSE_SOKNADER";
                 try {
-                    createHenvendelsePortType(new SystemSAMLOutInterceptor()).ping();
+                    ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
