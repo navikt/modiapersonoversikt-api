@@ -42,7 +42,6 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference OPPGAVEFORM = new PackageResourceReference(BasePage.class, "less/komponenter/oppgaveform.less");
     public static final PackageResourceReference PERSONSOK = new PackageResourceReference(BasePage.class, "less/komponenter/personsok.less");
     public static final PackageResourceReference SAKBEHANDLERINNSTILLINGER = new PackageResourceReference(BasePage.class, "less/komponenter/sakbehandlerinnstillinger.less");
-    public static final PackageResourceReference LISTE = new PackageResourceReference(BasePage.class, "less/komponenter/liste.less");
     public static final PackageResourceReference JOURNALFORING = new PackageResourceReference(BasePage.class, "less/komponenter/journalforing.less");
     public static final PackageResourceReference BRUKERPROFIL = new PackageResourceReference(BrukerprofilPanel.class, "brukerprofil.less");
     public static final PackageResourceReference HENTPERSON = new PackageResourceReference(BasePage.class, "less/komponenter/hentperson.less");

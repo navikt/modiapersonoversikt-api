@@ -167,7 +167,6 @@ public class WicketApplication extends WebApplication {
                         BasePage.MODIA_WIDGET_LESS,
                         BasePage.MODIA_LAMELL_LESS,
                         BasePage.MODIA_LAYOUT_LESS,
-                        BasePage.LISTE,
                         BasePage.HEADER,
                         BasePage.RESPONSIVE,
                         BasePage.PERSONINFO_LESS,
