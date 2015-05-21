@@ -15,7 +15,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakRutingPortTypeMock.createRutingPortTypeMock;
 
 @Configuration
@@ -26,18 +26,20 @@ public class GsakRutingEndpointConfig {
 
     @Bean
     public Ruting rutingPortType() {
-        return createSwitcher(createRutingPortType(), createRutingPortTypeMock(), GSAK_RUTING_KEY, Ruting.class);
+        Ruting prod = createRutingPortType();
+        Ruting mock = createRutingPortTypeMock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_RUTING_KEY, Ruting.class);
     }
 
     @Bean
-    public Pingable rutingPing() {
+    public Pingable rutingPing(final Ruting ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "GSAK_RUTING_V1";
                 try {
-                    Ruting ws = createRutingPortType();
                     ws.finnAnsvarligEnhetForSak(new WSFinnAnsvarligEnhetForSakRequest().withBrukersok(new WSBrukersok().withBrukerId("10108000398").withFagomradeKode("DAG")));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {

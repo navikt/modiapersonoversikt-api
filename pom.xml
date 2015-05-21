@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -49,7 +50,6 @@
         <args4j.version>2.0.23</args4j.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
         <ws.security.version>1.6.10</ws.security.version>
         <mockito.version>1.9.5</mockito.version>
@@ -59,9 +59,19 @@
         <lucene.version>4.10.2</lucene.version>
         <jersey.version>2.17</jersey.version>
 
+        <!-- Kan ikke uppes -->
+        <jetty.version>9.0.5.v20130815</jetty.version>
+        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.
+        Dette blir oppfylt fra Jetty 9.1. I SimpleLoginModule som vi bruker lokalt får man satt rollen DummyRole uansett.
+        Her overrides getName() og "*" returneres. Dette gjør at i sjekken isUserinRole i Jetty sin ConstraintSecurityHandler
+        feiler da den finner "*" som navn på rollen. For å fikse dette må rollenavnet som blir overridet i DummyRole endres
+        til f. eks dobbelstjerne "**" og SecurityConstrainten må bli overridet i override-web.xml og satt tilsvarende role-name
+        der som i DummyRole.  -->
+        <common-jetty.version>1.0.23</common-jetty.version> <!-- Samme som Jetty -->
+
         <!-- Modia-komponenter-->
         <personsok.version>1.0.82</personsok.version>
-        <kjerneinfo.versjon>1.1.0</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.1</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.1.1</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -70,9 +80,9 @@
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>2.0</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>3.0</sporsmalogsvar.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.41</dialogarena.behandlingsinformasjon.version>
+        <modiabrukerdialog-api.version>2.1-SNAPSHOT</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>3.1-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>3.1</saksoversikt.version>
     </properties>
 
@@ -363,7 +373,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -431,7 +441,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
-                <version>1.0.23</version>
+                <version>${common-jetty.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -450,7 +460,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-content</artifactId>
-                <version>2.0.8</version>
+                <version>2.0.10-SNAPSHOT</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -472,7 +482,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>reactkomponenter</artifactId>
-                <version>0.15</version>
+                <version>0.16-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -893,6 +903,16 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.4</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>3.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-servlets</artifactId>
+                <version>3.1.2</version>
             </dependency>
 
             <dependency>

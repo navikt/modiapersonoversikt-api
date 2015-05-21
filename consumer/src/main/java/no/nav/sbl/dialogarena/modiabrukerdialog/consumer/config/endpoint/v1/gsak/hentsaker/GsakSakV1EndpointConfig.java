@@ -13,7 +13,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakSakV1PortTypeMock.createGsakSakV1Mock;
 
 @Configuration
@@ -23,12 +23,10 @@ public class GsakSakV1EndpointConfig {
 
     @Bean
     public SakV1 sakEndpoint() {
-        return createSwitcher(
-                createEndpoint(),
-                createGsakSakV1Mock(),
-                GSAK_SAK_KEY,
-                SakV1.class
-        );
+        SakV1 prod = createEndpoint();
+        SakV1 mock = createGsakSakV1Mock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_SAK_KEY, SakV1.class);
     }
 
     @Bean

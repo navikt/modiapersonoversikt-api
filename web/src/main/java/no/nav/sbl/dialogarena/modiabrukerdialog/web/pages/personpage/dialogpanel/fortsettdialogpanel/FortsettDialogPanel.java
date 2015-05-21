@@ -1,18 +1,23 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
+import com.codahale.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,6 +47,8 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.SAKSBEHANDLER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
@@ -68,6 +75,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         this.oppgaveId = oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
+        getModelObject().oppgaveTilknytning = sporsmal.erTilknyttetAnsatt != null && sporsmal.erTilknyttetAnsatt ? SAKSBEHANDLER : ENHET;
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
 
@@ -155,10 +163,11 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
         private final FeedbackPanel feedbackPanel;
         private final AjaxButton sendKnapp;
+        private transient Timer.Context timer;
 
         public FortsettDialogForm(String id, final GrunnInfo grunnInfo, final IModel<HenvendelseVM> model) {
             super(id, model);
-
+            timer = MetricsFactory.createTimer("hendelse.besvar.time").time();
             final IModel<HenvendelseVM> henvendelseVM = getModel();
 
             add(new Label("navIdent", getSubjectHandler().getUid()));
@@ -214,6 +223,9 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             } catch (Exception e) {
                 error(getString("dialogpanel.feilmelding.send.henvendelse"));
                 target.add(feedbackPanel);
+            } finally {
+                timer.stop();
+                timer = null;
             }
         }
 
@@ -254,6 +266,13 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             throw new RuntimeException("Fant ikke passende meldingstype");
         }
 
+        @Override
+        protected void onRemove() {
+            super.onRemove();
+            if (timer != null) {
+                timer.stop();
+            }
+        }
     }
 
 }

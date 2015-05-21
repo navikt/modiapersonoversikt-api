@@ -15,7 +15,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.createOppgavePortTypeMock;
 
 @Configuration
@@ -25,7 +25,10 @@ public class GsakOppgaveV3EndpointConfig {
 
     @Bean
     public OppgaveV3 gsakOppgavePortType() {
-        return createSwitcher(createOppgavePortType(new UserSAMLOutInterceptor()), createOppgavePortTypeMock(), GSAK_V3_KEY, OppgaveV3.class);
+        OppgaveV3 prod = createOppgavePortType(new UserSAMLOutInterceptor());
+        OppgaveV3 mock = createOppgavePortTypeMock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_V3_KEY, OppgaveV3.class);
     }
 
     @Bean
