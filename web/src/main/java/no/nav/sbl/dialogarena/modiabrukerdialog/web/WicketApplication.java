@@ -174,6 +174,7 @@ public class WicketApplication extends WebApplication {
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
+                        BasePage.KJERNEINFO_FELLES_LISTE,
                         BasePage.OPPFOLGING,
                         BasePage.OPPGAVEFORM,
                         BasePage.PERSONSOK,

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.brukerprofil.BrukerprofilPanel;
+import no.nav.components.NOKAmountLabel;
 import no.nav.kjerneinfo.Kjerneinfo;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.frontend.ConditionalCssResource;
@@ -38,6 +39,7 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference HEADER = new PackageResourceReference(BasePage.class, "less/komponenter/header.less");
     public static final PackageResourceReference MELDINGERWIDGET = new PackageResourceReference(MeldingerWidget.class, "meldingerwidget.less");
     public static final PackageResourceReference MELDINGERLAMELL = new PackageResourceReference(Innboks.class, "innboks.less");
+    public static final PackageResourceReference KJERNEINFO_FELLES_LISTE = new PackageResourceReference(NOKAmountLabel.class, "felles-liste.less");
     public static final PackageResourceReference OPPFOLGING = new PackageResourceReference(KontrakterPanel.class, "oppfolging.less");
     public static final PackageResourceReference OPPGAVEFORM = new PackageResourceReference(BasePage.class, "less/komponenter/oppgaveform.less");
     public static final PackageResourceReference PERSONSOK = new PackageResourceReference(BasePage.class, "less/komponenter/personsok.less");
