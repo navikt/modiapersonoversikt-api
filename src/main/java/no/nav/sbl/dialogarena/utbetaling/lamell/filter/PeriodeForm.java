@@ -120,25 +120,11 @@ public class PeriodeForm extends Panel {
                 new PropertyModel<LocalDate>(filterParametere, "startDato"),
                 new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
 
-        return new StrictDateRangePicker(id, dateRangeModel, datePickerConfigurator, minDato, maksDato) {
-            @Override
-            protected void onInitialize() {
-                super.onInitialize();
-//                if (filterParametere.periodeVelgerValg != EGENDEFINERT) {
-//                    startDate.getForm().clearInput();
-//                    endDate.getForm().clearInput();
-//                }
-            }
-        };
+        return new StrictDateRangePicker(id, dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
     private AjaxButton createSokKnapp() {
         AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.periode.sok", this, null)) {
-
-            @Override
-            protected void onInitialize() {
-                super.onInitialize();
-            }
 
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
