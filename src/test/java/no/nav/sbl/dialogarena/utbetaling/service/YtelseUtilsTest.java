@@ -245,4 +245,20 @@ public class YtelseUtilsTest {
         assertThat(sortedYtelser.get(1).get(Hovedytelse.ytelse), is("Bytelse"));
         assertThat(sortedYtelser.get(2).get(Hovedytelse.ytelse), is("Cytelse"));
     }
+
+    @Test
+    public void korrektDefaultSluttDato() {
+        DateTime sluttDato = now();
+        assertThat(YtelseUtils.defaultSluttDato().getYear(), is(sluttDato.getYear()));
+        assertThat(YtelseUtils.defaultSluttDato().getMonthOfYear(), is(sluttDato.getMonthOfYear()));
+        assertThat(YtelseUtils.defaultSluttDato().getDayOfMonth(), is(sluttDato.getDayOfMonth()));
+    }
+
+    @Test
+    public void korrektDefaultStartDato() {
+        DateTime startDato = now().minusDays(90);
+        assertThat(YtelseUtils.defaultStartDato().getYear(), is(startDato.getYear()));
+        assertThat(YtelseUtils.defaultStartDato().getMonthOfYear(), is(startDato.getMonthOfYear()));
+        assertThat(YtelseUtils.defaultStartDato().getDayOfMonth(), is(startDato.getDayOfMonth()));
+    }
 }

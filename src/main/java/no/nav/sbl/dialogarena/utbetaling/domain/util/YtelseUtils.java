@@ -33,7 +33,7 @@ import static org.joda.time.LocalDate.now;
 public class YtelseUtils {
 
     public static LocalDate defaultStartDato() {
-        return now().minusMonths(3);
+        return now().minusDays(90);
     }
 
     public static LocalDate defaultSluttDato() {

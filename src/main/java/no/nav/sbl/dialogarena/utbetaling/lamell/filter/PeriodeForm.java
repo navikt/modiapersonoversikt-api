@@ -5,6 +5,7 @@ import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.daterangepicker.StrictDateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -85,8 +86,8 @@ public class PeriodeForm extends Panel {
                     target.add(datovelgerContainer);
                     LocalDate today = LocalDate.now();
                     if (valgtPeriode.equals(SISTE_3_MND)) {
-                        filterParametere.setSluttDato(today);
-                        filterParametere.setStartDato(today.minusMonths(3));
+                        filterParametere.setSluttDato(YtelseUtils.defaultSluttDato());
+                        filterParametere.setStartDato(YtelseUtils.defaultStartDato());
                     } else if (valgtPeriode.equals(INNEVAERENDE_AAR)) {
                         LocalDate firstDayOfTheYear = new LocalDate(today.getYear(), 1, 1);
                         filterParametere.setSluttDato(today);
