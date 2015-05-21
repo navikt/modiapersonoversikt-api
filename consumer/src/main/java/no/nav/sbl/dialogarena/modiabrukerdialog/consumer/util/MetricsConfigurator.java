@@ -31,8 +31,11 @@ public class MetricsConfigurator extends MetricsServlet.ContextListener implemen
 
     private void lagJMXMetricsForCache() {
         for (ObjectName objectName : getObjectNameForCaches()) {
-            registry.register(name("ehcache", objectName.getKeyPropertyList().get("name"), "CacheMisses"), new JmxAttributeGauge(objectName, "CacheMisses"));
-            registry.register(name("ehcache", objectName.getKeyPropertyList().get("name"), "CacheHits"), new JmxAttributeGauge(objectName, "CacheHits"));
+            final String name = objectName.getKeyPropertyList().get("name");
+            if(!name.isEmpty()) {
+                registry.register(name("ehcache", name, "CacheMisses"), new JmxAttributeGauge(objectName, "CacheMisses"));
+                registry.register(name("ehcache", name, "CacheHits"), new JmxAttributeGauge(objectName, "CacheHits"));
+            }
         }
     }
 
