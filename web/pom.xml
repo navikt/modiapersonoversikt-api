@@ -77,6 +77,10 @@
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>fellessystemer-components</artifactId>
+        </dependency>
 
         <!--Sykmeldingsperioder-->
         <dependency>
