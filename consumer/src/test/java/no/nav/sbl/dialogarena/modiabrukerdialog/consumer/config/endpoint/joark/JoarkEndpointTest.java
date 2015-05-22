@@ -53,18 +53,18 @@ public class JoarkEndpointTest extends CacheTest {
         req.setVariantformat(new Variantformater());
 
         HentDokumentResponse res1 = new HentDokumentResponse();
-        res1.setDokument(new Byte("1"));
+        res1.setDokument("%PDF-1".getBytes());
 
         HentDokumentResponse res2 = new HentDokumentResponse();
-        res2.setDokument(new Byte("2"));
+        res2.setDokument("%PDF-2".getBytes());
 
         when(joarkPortType.hentDokument(any(HentDokumentRequest.class))).thenReturn(
                 res1,
                 res2
         );
 
-        Byte resp1 = joarkPortType.hentDokument(req).getDokument();
-        Byte resp2 = joarkPortType.hentDokument(req).getDokument();
+        byte[] resp1 = joarkPortType.hentDokument(req).getDokument();
+        byte[] resp2 = joarkPortType.hentDokument(req).getDokument();
 
         //Her ender jeg opp med a sjekke at om man kaller hentDokument med samme input to ganger sa
         //far man resultatet fra det forste kallet uansett. Om man f. eks. gar inn i cacheconfig og kommenterer ut

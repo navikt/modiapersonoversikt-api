@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalstatuser;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Sak;
 import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentRequest;
 import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentResponse;
@@ -30,7 +31,7 @@ public class JoarkPortTypeMock {
             @Override
             public HentDokumentResponse answer(InvocationOnMock invocation) {
                 HentDokumentResponse response = new HentDokumentResponse();
-                response.setDokument(new Byte("1"));
+                response.setDokument(createDokument());
                 return response;
             }
         });
@@ -50,6 +51,7 @@ public class JoarkPortTypeMock {
     private static Journalpost createJournalpost() {
         Journalpost journalpost = new Journalpost();
         journalpost.setJournalpostId(JOURNALPOSTID);
+        journalpost.setJournalstatus(createJournalstatus("J"));
         journalpost.setGjelderSak(createSak());
         return journalpost;
     }
@@ -59,6 +61,12 @@ public class JoarkPortTypeMock {
         sak.setSakId("sakId");
         sak.setErFeilregistrert(false);
         return sak;
+    }
+
+    private static Journalstatuser createJournalstatus(String verdi) {
+        Journalstatuser journalstatus = new Journalstatuser();
+        journalstatus.setKodeverksRef(verdi);
+        return journalstatus;
     }
 
     private static byte[] createDokument() {

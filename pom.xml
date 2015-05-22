@@ -112,7 +112,7 @@
         <nav-fellessystemer-environment.version>4.4.32</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.24-SNAPSHOT</henvendelse-soknader-tjenestespesifikasjon.version>
-        <nav-fim-journal-v1-tjenestespesifikasjon.version>1.2.0</nav-fim-journal-v1-tjenestespesifikasjon.version>
+        <nav-fim-journal-v1-tjenestespesifikasjon.version>1.3.0</nav-fim-journal-v1-tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
