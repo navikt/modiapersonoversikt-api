@@ -10,12 +10,12 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRespon
 import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostJournalpostIkkeFunnet;
 import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalstatuser;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Sak;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -68,8 +68,6 @@ public class TilgangskontrollServiceTest {
         assertNull(hentDokumentResultat.feilmelding);
     }
 
-    //TODO ignore fram til journalført er på plass på Journalpost-objektet.
-    @Ignore
     @Test
     public void harIkkeTilgangHvisIkkeJournalfort() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
         setGsakMedSakspart();
@@ -181,30 +179,33 @@ public class TilgangskontrollServiceTest {
     }
 
     private Journalpost createOKJournalpost() {
-        //TODO sett journalført
-
         Journalpost journalpost = new Journalpost();
         journalpost.setJournalpostId("journalpostid");
+        journalpost.setJournalstatus(createJournalstatus("J"));
         journalpost.setGjelderSak(createSak(false));
         return journalpost;
     }
 
     private Journalpost createFeilRegistrertJournalpost() {
-        //TODO sett journalført
-
         Journalpost journalpost = new Journalpost();
         journalpost.setJournalpostId("journalpostid");
+        journalpost.setJournalstatus(createJournalstatus("J"));
         journalpost.setGjelderSak(createSak(true));
         return journalpost;
     }
 
     private Journalpost createIkkeJournalfortJournalpost() {
-        //TODO sett ikke journalført
-
         Journalpost journalpost = new Journalpost();
         journalpost.setJournalpostId("journalpostid");
+        journalpost.setJournalstatus(createJournalstatus("N"));
         journalpost.setGjelderSak(createSak(false));
         return journalpost;
+    }
+
+    private Journalstatuser createJournalstatus(String verdi) {
+        Journalstatuser journalstatus = new Journalstatuser();
+        journalstatus.setKodeverksRef(verdi);
+        return journalstatus;
     }
 
     private Sak createSak(boolean feilregistret) {

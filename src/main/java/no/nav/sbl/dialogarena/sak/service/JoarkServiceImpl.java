@@ -46,8 +46,8 @@ public class JoarkServiceImpl implements JoarkService {
         hentDokumentRequest.setVariantformat(variant);
 
         try {
-            Byte dokument = joarkPortType.hentDokument(hentDokumentRequest).getDokument();
-            return new HentDokumentResultat(true, new byte[]{dokument});
+            byte[] dokument = joarkPortType.hentDokument(hentDokumentRequest).getDokument();
+            return new HentDokumentResultat(true, dokument);
         } catch (HentDokumentDokumentIkkeFunnet e) {
             logger.warn("Dokumentet med dokumentid '{}' ble ikke funnet", dokumentId, e.getMessage());
             return new HentDokumentResultat(false, DOKUMENT_IKKE_FUNNET);

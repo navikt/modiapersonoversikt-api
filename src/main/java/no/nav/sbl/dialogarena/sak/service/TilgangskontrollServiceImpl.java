@@ -59,8 +59,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     private boolean erJournalfort(Journalpost journalPost) {
-//        boolean erJournalfort = journalPost.getJournalstatus().equalsIgnoreCase("J");
-        boolean erJournalfort = true; //Dette mangler også enn så lenge.
+        boolean erJournalfort = journalPost.getJournalstatus().getKodeverksRef().equalsIgnoreCase("J");
         if (!erJournalfort) {
             logger.warn("Journalposten med id '{}' er ikke journalført.", journalPost.getJournalpostId());
         }
