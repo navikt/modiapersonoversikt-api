@@ -12,7 +12,7 @@
     <description>Fellesbibliotek for React-komponenter</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>reactkomponenter</artifactId>
-    <version>0.17</version>
+    <version>0.18-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -211,6 +211,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/reactkomponenter.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/sbl/repos/reactkomponenter/</url>
-        <tag>reactkomponenter-0.17</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
