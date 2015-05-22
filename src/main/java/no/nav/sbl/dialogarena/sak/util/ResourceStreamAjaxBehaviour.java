@@ -9,7 +9,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 
 public abstract class ResourceStreamAjaxBehaviour extends AbstractAjaxBehavior {
 
-    public void init(AjaxRequestTarget target) {
+    public void openInSameWindow(AjaxRequestTarget target) {
         String url = getCallbackUrl().toString();
         // the timeout is needed to let Wicket release the channel
         target.appendJavaScript("setTimeout(\"window.location='" + url + "'\", 100);");

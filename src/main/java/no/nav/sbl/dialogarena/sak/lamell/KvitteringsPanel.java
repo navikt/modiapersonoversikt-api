@@ -20,7 +20,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
@@ -170,7 +169,7 @@ public class KvitteringsPanel extends Panel {
     private void visVedlegg(AjaxRequestTarget target, byte[] pdfSomBytes) {
         ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(pdfSomBytes);
         add(resourceStreamAjaxBehavoiur);
-        resourceStreamAjaxBehavoiur.init(target);
+        resourceStreamAjaxBehavoiur.openInSameWindow(target);
     }
 
     private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding) {
