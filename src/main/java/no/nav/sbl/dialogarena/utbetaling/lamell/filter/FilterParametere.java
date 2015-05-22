@@ -4,6 +4,8 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.apache.commons.collections15.Predicate;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -15,6 +17,7 @@ import java.util.Set;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static org.apache.commons.collections15.CollectionUtils.isEqualCollection;
+import static org.joda.time.DateTime.now;
 
 public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
 
@@ -54,7 +57,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     }
 
     public LocalDate getSluttDato() {
-        return sluttDato;
+        return intervalBasertPaaPeriodevalg(this.periodeVelgerValg).getEnd().toLocalDate();
     }
 
     public void setSluttDato(LocalDate sluttDato) {
@@ -64,7 +67,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     }
 
     public LocalDate getStartDato() {
-        return startDato;
+        return intervalBasertPaaPeriodevalg(this.periodeVelgerValg).getStart().toLocalDate();
     }
 
     public void setStartDato(LocalDate startDato) {
@@ -136,4 +139,27 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     private boolean filtrerPaaYtelser(Record<Hovedytelse> utbetaling) {
         return onskedeYtelser.contains(utbetaling.get(Hovedytelse.ytelse));
     }
+
+    protected Interval intervalBasertPaaPeriodevalg(PeriodeVelger valg) {
+        DateTime start, end;
+        switch(valg) {
+            case SISTE_3_MND:
+                start = now().minusDays(90);
+                end = now();
+                return new Interval(start, end);
+            case INNEVAERENDE_AAR:
+                start = new DateTime(now().getYear(), 1, 1, 1, 1);
+                end = now();
+                return new Interval(start, end);
+            case I_FJOR:
+                int year = now().getYear() -1;
+                start = new DateTime(year, 1, 1, 1, 1);
+                end = new DateTime(year, 12, 31, 1, 1);
+                return new Interval(start, end);
+            case EGENDEFINERT:
+            default:
+                return new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight());
+        }
+    }
+
 }

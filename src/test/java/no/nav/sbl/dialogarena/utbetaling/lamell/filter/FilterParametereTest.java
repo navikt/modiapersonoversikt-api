@@ -4,6 +4,8 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PeriodeVelger;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -104,6 +106,7 @@ public class FilterParametereTest {
 
     @Test
     public void skalSetteDatoer() {
+        filterparams.periodeVelgerValg = PeriodeVelger.EGENDEFINERT;
         LocalDate startDato = now().toLocalDate();
         filterparams.setStartDato(startDato);
         assertThat(filterparams.getStartDato(), is(startDato));
@@ -159,5 +162,36 @@ public class FilterParametereTest {
 
         params.toggleAlleYtelser(false);
         assertFalse(params.isAlleYtelserValgt());
+    }
+
+    @Test
+    public void intervallHvisSiste3Mnd() {
+        Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.SISTE_3_MND);
+        assertThat(LocalDate.now().minusDays(90), is(interval.getStart().toLocalDate()));
+        assertThat(LocalDate.now(), is(interval.getEnd().toLocalDate()));
+    }
+
+    @Test
+    public void intervalHvisInnevaerendeAar() {
+        Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.INNEVAERENDE_AAR);
+        assertThat(new LocalDate(now().getYear(), 1, 1), is(interval.getStart().toLocalDate()));
+        assertThat(LocalDate.now(), is(interval.getEnd().toLocalDate()));
+    }
+
+    @Test
+    public void intervalHvisIfjor() {
+        Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.I_FJOR);
+        assertThat(new LocalDate(now().getYear()-1, 1, 1), is(interval.getStart().toLocalDate()));
+        assertThat(new LocalDate(now().getYear()-1, 12, 31), is(interval.getEnd().toLocalDate()));
+    }
+
+    @Test
+    public void intervalHvisEgendefinert() {
+        filterparams.setStartDato(new LocalDate(2013, 1, 2));
+        filterparams.setSluttDato(new LocalDate(2013, 12, 31));
+
+        Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.EGENDEFINERT);
+        assertThat(new LocalDate(2013, 1, 2), is(interval.getStart().toLocalDate()));
+        assertThat(new LocalDate(2013, 12, 31), is(interval.getEnd().toLocalDate()));
     }
 }

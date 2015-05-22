@@ -5,7 +5,6 @@ import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.daterangepicker.StrictDateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -27,7 +26,7 @@ import org.joda.time.format.DateTimeFormatter;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PeriodeVelger.*;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PeriodeVelger.EGENDEFINERT;
 import static org.joda.time.LocalDate.now;
 
 public class PeriodeForm extends Panel {
@@ -84,19 +83,6 @@ public class PeriodeForm extends Panel {
                 } else {
                     datovelgerContainer.setVisibilityAllowed(false);
                     target.add(datovelgerContainer);
-                    LocalDate today = LocalDate.now();
-                    if (valgtPeriode.equals(SISTE_3_MND)) {
-                        filterParametere.setSluttDato(YtelseUtils.defaultSluttDato());
-                        filterParametere.setStartDato(YtelseUtils.defaultStartDato());
-                    } else if (valgtPeriode.equals(INNEVAERENDE_AAR)) {
-                        LocalDate firstDayOfTheYear = new LocalDate(today.getYear(), 1, 1);
-                        filterParametere.setSluttDato(today);
-                        filterParametere.setStartDato(firstDayOfTheYear);
-                    } else if (valgtPeriode.equals(I_FJOR)) {
-                        int lastYear = today.getYear() - 1;
-                        filterParametere.setSluttDato(new LocalDate(lastYear, 12, 31));
-                        filterParametere.setStartDato(new LocalDate(lastYear, 1, 1));
-                    }
                 }
             }
         });
