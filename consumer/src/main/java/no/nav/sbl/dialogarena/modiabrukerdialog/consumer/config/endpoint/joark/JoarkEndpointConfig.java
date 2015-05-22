@@ -6,7 +6,6 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,14 +21,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Joa
 @Configuration
 public class JoarkEndpointConfig {
 
-    @Value("${joark.ws.url}")
-    private String joarkEndpoint;
-
     public static final String JOARK_KEY = "start.joark.withmock";
 
     private CXFClient<JournalV1> createJoarkPortType() {
         return new CXFClient<>(JournalV1.class)
-                .address(joarkEndpoint)
+                .address(System.getProperty("joark.ws.url"))
                 .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .withHandler(new MDCOutHandler());
     }
