@@ -101,7 +101,6 @@
         <appender-ref ref="exceptionlog"/>
         <appender-ref ref="infolog"/>
         <appender-ref ref="SYSLOG"/>
-        <appender-ref ref="metricslog"/>
     </root>
 
 </configuration>
