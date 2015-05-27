@@ -165,8 +165,8 @@
 
     <cache name="joarkCache" maxElementsInMemory="200"
            eternal="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="600"
            overflowToDisk="false"
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
