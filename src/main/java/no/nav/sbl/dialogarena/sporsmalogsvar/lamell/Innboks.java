@@ -6,6 +6,7 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -42,7 +43,6 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference BESVAR_INDIKATOR_JS = new JavaScriptResourceReference(Innboks.class, "besvarIndikator.js");
     public static final ConditionalCssResource MELDINGER_IE_CSS = new ConditionalCssResource(new CssResourceReference(Innboks.class, "innboks-ie.css"), "screen", "IE");
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
-    public static final String BESVARMODUS_PARAM = "sos.innboks.modus.besvarer";
 
     @Inject
     private GsakService gsakService;
@@ -131,7 +131,7 @@ public class Innboks extends Lerret {
             innboksVM.traadBesvares = traadIdParameter;
         }
 
-        String traadBesvares = (String) getSession().getAttribute(BESVARMODUS_PARAM);
+        String traadBesvares = (String) getSession().getAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS);
         if (isNotBlank(traadBesvares)) {
             innboksVM.traadBesvares = traadBesvares;
         }
@@ -170,14 +170,14 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void setBesvarModus(AjaxRequestTarget target, String traadId) {
-        getSession().setAttribute(BESVARMODUS_PARAM, traadId);
+        getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, traadId);
         innboksVM.traadBesvares = traadId;
         target.add(this);
     }
 
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {
-        getSession().setAttribute(BESVARMODUS_PARAM, null);
+        getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, null);
         innboksVM.traadBesvares = null;
         target.add(this);
     }
