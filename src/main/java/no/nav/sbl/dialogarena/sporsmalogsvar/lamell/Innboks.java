@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
-import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -161,21 +161,21 @@ public class Innboks extends Lerret {
         }
     }
 
-    @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
+    @RunOnEvents(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER)
     public void oppdatertInnboks(AjaxRequestTarget target) {
         innboksVM.oppdaterMeldinger();
         send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
         target.add(this);
     }
 
-    @RunOnEvents(SVAR_PAA_MELDING)
+    @RunOnEvents(Events.SporsmalOgSvar.SVAR_PAA_MELDING)
     public void setBesvarModus(AjaxRequestTarget target, String traadId) {
         getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, traadId);
         innboksVM.traadBesvares = traadId;
         target.add(this);
     }
 
-    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, MELDING_SENDT_TIL_BRUKER})
+    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {
         getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, null);
         innboksVM.traadBesvares = null;

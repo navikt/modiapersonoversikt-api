@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.wicket.test.EventGenerator;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -13,7 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
@@ -41,7 +41,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 .sendEvent(new EventGenerator() {
                     @Override
                     public Object createEvent(AjaxRequestTarget target) {
-                        return MELDING_SENDT_TIL_BRUKER;
+                        return Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER;
                     }
                 })
                 .should().inAjaxResponse().haveComponents(ofType(MeldingerWidget.class));

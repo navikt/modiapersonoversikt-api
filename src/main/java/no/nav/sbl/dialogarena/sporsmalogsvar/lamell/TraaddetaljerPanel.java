@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -13,7 +14,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -54,7 +54,7 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
             add(new AjaxLink<InnboksVM>("besvar", TraaddetaljerPanel.this.getModel()) {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
-                    send(getPage(), BREADTH, new NamedEventPayload(SVAR_PAA_MELDING, getModelObject().getValgtTraad().getEldsteMelding().melding.id));
+                    send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, getModelObject().getValgtTraad().getEldsteMelding().melding.id));
                 }
 
                 @Override

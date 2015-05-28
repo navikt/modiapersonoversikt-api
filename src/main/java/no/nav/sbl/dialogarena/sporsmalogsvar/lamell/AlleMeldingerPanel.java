@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,7 +15,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
@@ -80,7 +80,7 @@ public class AlleMeldingerPanel extends Panel {
         };
     }
 
-    @RunOnEvents({MELDING_SENDT_TIL_BRUKER})
+    @RunOnEvents({Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void oppdaterMeldingerEtterNyMelding(AjaxRequestTarget target) {
         innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
         target.add(this);
