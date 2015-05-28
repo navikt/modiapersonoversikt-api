@@ -4,7 +4,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
-import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
@@ -22,7 +21,6 @@ import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.SaksbehandlerInnstillingerServiceImpl.saksbehandlerInnstillingerCookieId;
 
-@Controller
 @Path("/meldinger/{fnr}")
 @Produces(APPLICATION_JSON)
 public class MeldingerController {
