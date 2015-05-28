@@ -6,6 +6,7 @@ import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -41,7 +42,6 @@ import static java.lang.String.format;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
@@ -208,7 +208,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         private void sendOgVisKvittering(HenvendelseVM henvendelseVM, AjaxRequestTarget target) {
             try {
                 sendHenvendelse(henvendelseVM);
-                send(getPage(), BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+                send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
                 kvittering.visKvittering(target, getString(henvendelseVM.getKvitteringsTekstKeyBasertPaaBrukerKanSvare("fortsettdialogpanel")),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
@@ -217,7 +217,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 leggTilbakeKnapp.setVisibilityAllowed(false);
                 target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
             } catch (JournalforingFeilet e) {
-                send(getPage(), BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+                send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
                 kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (Exception e) {

@@ -14,6 +14,7 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -57,10 +58,7 @@ import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
@@ -113,7 +111,7 @@ public class PersonPage extends BasePage {
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
 
         add(
-                new HentPersonPanel("searchPanel",""),
+                new HentPersonPanel("searchPanel", ""),
                 new Button("toggle-sok"),
                 new NullstillLink("nullstill"),
                 lamellContainer,
@@ -255,7 +253,7 @@ public class PersonPage extends BasePage {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
-    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT})
+    @RunOnEvents({Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
     public void slettPlukketOppgaveFraSession() {
         getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
         getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
@@ -315,6 +313,7 @@ public class PersonPage extends BasePage {
 
     /**
      * Hente forskjellige teksten fra en payload (JSONobjekt).
+     *
      * @param query
      * @param JSONfield
      * @return

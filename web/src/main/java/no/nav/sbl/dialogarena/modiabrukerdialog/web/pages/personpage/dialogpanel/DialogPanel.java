@@ -39,8 +39,6 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
@@ -150,7 +148,7 @@ public class DialogPanel extends Panel {
         }
     }
 
-    @RunOnEvents(SVAR_PAA_MELDING)
+    @RunOnEvents(Events.SporsmalOgSvar.SVAR_PAA_MELDING)
     public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId);
         Optional<String> oppgaveId = none();
@@ -207,7 +205,7 @@ public class DialogPanel extends Panel {
         target.add(aktivtPanel);
     }
 
-    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, MELDING_SENDT_TIL_BRUKER})
+    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {
         getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, null);
     }

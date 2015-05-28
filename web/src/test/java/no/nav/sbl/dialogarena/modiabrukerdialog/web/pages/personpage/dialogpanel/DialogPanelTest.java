@@ -8,9 +8,9 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -30,11 +30,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_AVBRUTT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
@@ -100,7 +99,7 @@ public class DialogPanelTest extends WicketPageTest {
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventUtenParametereSatt() {
         wicket.goToPageWith(new DialogPanel(ID, FNR))
-                .sendEvent(createEvent(SVAR_PAA_MELDING))
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
@@ -115,7 +114,7 @@ public class DialogPanelTest extends WicketPageTest {
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goToPageWith(new DialogPanel(ID, FNR))
-                .sendEvent(createEvent(SVAR_PAA_MELDING))
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
@@ -128,7 +127,7 @@ public class DialogPanelTest extends WicketPageTest {
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventDersomOppgaveIdOgHenvendelseIdParametereErSatt() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, false);
         wicket.goToPageWith(new DialogPanel(ID, FNR))
-                .sendEvent(createEvent(SVAR_PAA_MELDING, HENVENDELSEID_VERDI))
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING, HENVENDELSEID_VERDI))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
@@ -141,7 +140,7 @@ public class DialogPanelTest extends WicketPageTest {
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventDersomOppgaveIdOgHenvendelseIdParametereErSattMenTraadIdIkkeErLik() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, false);
         wicket.goToPageWith(new DialogPanel(ID, FNR))
-                .sendEvent(createEvent(SVAR_PAA_MELDING, "ikkeSammeTraadIdSomMeldingen"))
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING, "ikkeSammeTraadIdSomMeldingen"))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
@@ -154,7 +153,7 @@ public class DialogPanelTest extends WicketPageTest {
         reset(oppgaveBehandlingService);
 
         wicket.goToPageWith(new DialogPanel(ID, FNR))
-                .sendEvent(createEvent(SVAR_PAA_MELDING));
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
         verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class));
     }
@@ -167,7 +166,7 @@ public class DialogPanelTest extends WicketPageTest {
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goToPageWith(new DialogPanel(ID, FNR))
-                .sendEvent(createEvent(SVAR_PAA_MELDING));
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
         verify(oppgaveBehandlingService).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD);
     }

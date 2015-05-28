@@ -6,6 +6,7 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurat
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -47,7 +48,6 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
@@ -299,10 +299,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                     sendSporsmal();
                     break;
             }
-            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
             kvittering.visKvittering(target, getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel")), form);
         } catch (JournalforingFeilet e) {
-            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
             kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form);
         } catch (Exception e) {
             error(getString("dialogpanel.feilmelding.send.henvendelse"));

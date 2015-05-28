@@ -33,7 +33,8 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -112,7 +113,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void sletterPlukketOppgaveFraSessionVedRiktigeEvents() {
-        assertSletterPlukketOppgaveFraSessionVedEvent(MELDING_SENDT_TIL_BRUKER);
+        assertSletterPlukketOppgaveFraSessionVedEvent(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER);
         assertSletterPlukketOppgaveFraSessionVedEvent(Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT);
     }
 
@@ -150,8 +151,8 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void vellykketGotoHentPersonPageErrortextAndWrongFnr() {
         wicket.goTo(PersonPage.class, with().param("soektfnr", "wrongFnr").param("error", "errorMessage"))
-        .should().containPatterns("wrongFnr")
-        .should().containPatterns("errorMessage");
+                .should().containPatterns("wrongFnr")
+                .should().containPatterns("errorMessage");
 
         wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}"));
     }
