@@ -1,10 +1,7 @@
 package no.nav.sbl.dialogarena.sak;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.service.BulletproofCmsServiceImpl;
-import no.nav.sbl.dialogarena.sak.service.Filter;
-import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.service.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
@@ -33,7 +30,7 @@ public class WicketTesterConfig {
     private ApplicationContext applicationContext;
 
     @Bean
-    public FluentWicketTester<? extends WebApplication> wicketTester() {
+    public FluentWicketTester wicketTester() {
         DummyApplication dummyApplication = new DummyApplication(applicationContext) {
             @Override
             protected void init() {
@@ -60,6 +57,11 @@ public class WicketTesterConfig {
     @Bean
     public SaksoversiktService saksoversiktService() {
         return mock(SaksoversiktService.class, RETURNS_MOCKS);
+    }
+
+    @Bean
+    public TilgangskontrollService tilgangskontrollService() {
+        return mock(TilgangskontrollServiceImpl.class, RETURNS_MOCKS);
     }
 
     @Bean

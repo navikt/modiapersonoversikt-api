@@ -15,6 +15,11 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
+    public TilgangskontrollService tilgangskontrollService() {
+        return new TilgangskontrollServiceImpl();
+    }
+
+    @Bean
     public BulletproofCmsService bulletproofCmsService() {
         return new BulletproofCmsServiceImpl();
     }
@@ -33,6 +38,17 @@ public class SaksoversiktServiceConfig {
     public HenvendelseService henvendelseService() {
         return new HenvendelseServiceImpl();
     }
+
+    @Bean
+    public GSakService gSakService() {
+        return new GSakServiceImpl();
+    }
+
+    @Bean
+    public JoarkService joarkService() {
+        return new JoarkServiceImpl();
+    }
+
 
     @Bean
     public DataFletter dataFletter() {

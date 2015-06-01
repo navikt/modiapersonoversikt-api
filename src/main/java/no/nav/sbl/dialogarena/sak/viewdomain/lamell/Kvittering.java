@@ -8,6 +8,7 @@ public class Kvittering extends GenerellBehandling {
     public List<Dokument> manglendeDokumenter;
     public String behandlingskjedeId;
     public String skjemanummerRef;
+    public String journalpostId;
     public boolean ettersending;
     public boolean avsluttet;
 
@@ -23,6 +24,11 @@ public class Kvittering extends GenerellBehandling {
 
     public Kvittering withBehandlingskjedeId(String id) {
         behandlingskjedeId = id;
+        return this;
+    }
+
+    public Kvittering withJournalPostId(String id) {
+        journalpostId = id;
         return this;
     }
 

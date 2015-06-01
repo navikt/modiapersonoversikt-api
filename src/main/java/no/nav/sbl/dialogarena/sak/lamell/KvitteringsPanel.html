@@ -16,6 +16,9 @@
                 <li class="mini" wicket:id="innsendteVedlegg">
                     <img class="hake" alt="Hake godkjent, svart" src="./img/hake_svart.svg">
                     <wicket:container wicket:id="dokument"/>
+                    <a class="vis-kvittering print-never" target="_blank" href="#" wicket:id="hent-vedlegg" aria-labelledby="dokument">
+                        <span wicket:id="saksoversikt.kvittering.visvedlegg">[]</span>
+                    </a>
                 </li>
             </ul>
         </section>
@@ -37,5 +40,7 @@
         <span class="skjul" wicket:id="skjul-kollapsbar"/>
         <span wicket:id="vis-kollapsbar"/>
     </a>
+    <div wicket:id="vedleggFeiletPopup"/>
+
 </wicket:panel>
 </html>
