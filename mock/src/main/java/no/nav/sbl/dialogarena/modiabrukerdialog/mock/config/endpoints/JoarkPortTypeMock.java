@@ -71,7 +71,7 @@ public class JoarkPortTypeMock {
 
     private static byte[] createDokument() {
         try {
-            return IOUtils.toByteArray(JoarkPortTypeMock.class.getResourceAsStream("/mock/mock.pdf"));
+            return IOUtils.toByteArray(JoarkPortTypeMock.class.getResourceAsStream("/mock/pdf-vedlegg-mock.pdf"));
         } catch (IOException e) {
             throw new RuntimeException("IOException ved henting av Mock PDFen", e);
         }
