@@ -150,6 +150,7 @@ public class KvitteringsPanel extends Panel {
                             hentOgVisDokument(target, journalpostId, dokument);
                         }
                     };
+                    hentVedleggLenke.add(new Label("saksoversikt.kvittering.visvedlegg", hentVisDokumentTekst(dokument.hovedskjema)));
                     item.add(hentVedleggLenke);
                 }
             }
@@ -194,6 +195,10 @@ public class KvitteringsPanel extends Panel {
                 };
             }
         };
+    }
+
+    private String hentVisDokumentTekst(boolean erHovedskjema) {
+        return erHovedskjema ? cms.hentTekst("saksoversikt.kvittering.vissoknad") : cms.hentTekst("saksoversikt.kvittering.visvedlegg");
     }
 
     @Override
