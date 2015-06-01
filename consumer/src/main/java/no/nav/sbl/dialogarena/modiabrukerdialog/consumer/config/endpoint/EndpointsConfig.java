@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.JoarkEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig;
@@ -32,6 +33,7 @@ import org.springframework.context.annotation.Import;
         SendUtHenvendelseEndpointConfig.class,
         BehandleHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,
+        JoarkEndpointConfig.class,
         GsakOppgaveV3EndpointConfig.class,
         GsakOppgavebehandlingV3EndpointConfig.class,
         GsakSakV1EndpointConfig.class,

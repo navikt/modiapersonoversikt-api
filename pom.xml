@@ -26,37 +26,59 @@
     </modules>
 
     <properties>
-        <!-- Sonaroppsett for å få med integrasjonstester på testdekning -->
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <!-- Lagrer IT-info til enhetstestfil -->
-        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
-        <sonar.language>java</sonar.language>
-        <!-- versjoner -->
-        <wicket.version>6.17.0</wicket.version>
-        <spring.version>3.2.9.RELEASE</spring.version>
-        <modig.frontend.version>1.1.110</modig.frontend.version>
-        <modig.security.version>1.0.24</modig.security.version>
-        <modig.log.version>1.1.2</modig.log.version>
-        <spring.security.version>3.1.0.RELEASE</spring.security.version>
-        <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>3.0.0</modig.wicket.version>
-        <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
-        <modig.lang.version>2.0.3</modig.lang.version>
-        <modig.core.version>1.0.1</modig.core.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.12</junit.version>
         <args4j.version>2.0.23</args4j.version>
-        <mockito.core.version>1.9.5</mockito.core.version>
-        <slf4j.version>1.7.5</slf4j.version>
         <cxf.version>2.7.6</cxf.version>
         <ws.security.version>1.6.10</ws.security.version>
-        <mockito.version>1.9.5</mockito.version>
-        <jodatime.version>2.2</jodatime.version>
+        <mockito.version>1.10.19</mockito.version>
+        <jodatime.version>2.7</jodatime.version>
         <org.apache.cxf.version>2.7.6</org.apache.cxf.version>
         <aspectj.version>1.7.2</aspectj.version>
         <lucene.version>4.10.2</lucene.version>
         <jersey.version>2.17</jersey.version>
+        <collections-generic.version>4.01</collections-generic.version>
+        <guava.version>r03</guava.version>
+        <ehcache.version>2.6.5</ehcache.version>
+        <wicket.version>6.19.0</wicket.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
+        <logback.version>1.1.3</logback.version>
+        <slf4j.version>1.7.12</slf4j.version>
+        <glassfish.inject.version>2.4.0-b06</glassfish.inject.version>
+        <jbossxacml.version>2.0.9.Final</jbossxacml.version>
+        <fluent-hc.version>4.2.4</fluent-hc.version>
+        <commons-io.version>2.4</commons-io.version>
+        <findbugs.version>3.0.0</findbugs.version>
+        <metrics.version>3.1.2</metrics.version>
+
+        <!-- egenlagde bibleoteker -->
+        <modig.frontend.version>1.1.108</modig.frontend.version>
+        <modig.security.version>1.0.24</modig.security.version>
+        <modig.log.version>1.1.2</modig.log.version>
+        <modig.wicket.version>3.0.1</modig.wicket.version>
+        <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
+        <modig.lang.version>2.0.4</modig.lang.version>
+        <modig.core.version>1.0.1</modig.core.version>
+        <modig.log.version>1.1.2</modig.log.version>
+        <modig-log-jaxws.version>1.1.3</modig-log-jaxws.version>
+        <modig-content.version>2.0.10</modig-content.version>
+        <modig-wicket-test.version>1.0.0</modig-wicket-test.version>
+        <modig-core-test.version>1.0.0</modig-core-test.version>
+        <commons-lang3.version>3.1</commons-lang3.version>
+        <common-time.version>2.5</common-time.version>
+        <common-collections.version>1.0</common-collections.version>
+        <common-integrasjonsutils.version>0.0.7</common-integrasjonsutils.version>
+        <common-cxf.version>1.1</common-cxf.version>
+        <common-kodeverk.version>1.0.0</common-kodeverk.version>
+        <common-test.version>1.2</common-test.version>
+        <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
+        <reactkomponenter.version>0.17</reactkomponenter.version>
+
+        <!-- java-avhengigheter -->
+        <javax.inject.version>1</javax.inject.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
+        <javax.annotation.version>1.2</javax.annotation.version>
+        <javax.ws.rs.version>2.0.1</javax.ws.rs.version>
 
         <!-- Kan ikke uppes -->
         <jetty.version>9.0.5.v20130815</jetty.version>
@@ -82,12 +104,19 @@
         <dialogarena.behandlingsinformasjon.version>0.0.41</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>2.2-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>3.2-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>3.1</saksoversikt.version>
+        <saksoversikt.version>3.2-SNAPSHOT</saksoversikt.version>
+        <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
+        <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
+        <modia-felleskomponenter.version>1.0.2-SNAPSHOT</modia-felleskomponenter.version>
+        <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
+        <nav-fellessystemer-environment.version>4.4.32</nav-fellessystemer-environment.version>
+        <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
+        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.24</henvendelse-soknader-tjenestespesifikasjon.version>
+        <nav-fim-journal-v1-tjenestespesifikasjon.version>1.3.0</nav-fim-journal-v1-tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
             <!-- Personsok -->
             <dependency>
                 <groupId>no.nav</groupId>
@@ -301,7 +330,7 @@
             <dependency>
                 <groupId>no.nav.fellessystemer</groupId>
                 <artifactId>nav-fellessystemer-environment</artifactId>
-                <version>4.4.32</version>
+                <version>${nav-fellessystemer-environment.version}</version>
                 <scope>runtime</scope>
                 <exclusions>
                     <exclusion>
@@ -342,17 +371,23 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>dial-nav-tjeneste-sak</artifactId>
-                <version>1.7</version>
+                <version>${dial-nav-tjeneste-sak.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>dial-nav-tjeneste-behandlesak</artifactId>
-                <version>1.1</version>
+                <version>${dial-nav-tjeneste-behandlesak.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-                <version>1.0.14</version>
+                <version>${sakogbehandling-tjenestespesifikasjon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.tjenester.fim</groupId>
+                <artifactId>nav-fim-journal-v1-tjenestespesifikasjon</artifactId>
+                <version>${nav-fim-journal-v1-tjenestespesifikasjon.version}</version>
+                <classifier>jaxws</classifier>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -377,12 +412,12 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>${modia-felleskomponenter.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>arena-arbeid-og-aktivitet</artifactId>
-                <version>1.0.6-alpha002</version>
+                <version>${arena-arbeid-og-aktivitet.version}</version>
             </dependency>
 
             <!--Dialogarena-->
@@ -414,33 +449,38 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-kodeverk</artifactId>
-                <version>1.0.0</version>
+                <version>${common-kodeverk.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>aktorid-jaxws</artifactId>
-                <version>1.3</version>
+                <version>${aktorid-jaxws.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
-                <version>0.0.23</version>
+                <version>${henvendelse-soknader-tjenestespesifikasjon.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-cxf</artifactId>
-                <version>1.1</version>
+                <version>${common-cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-collections</artifactId>
-                <version>1.0</version>
+                <version>${common-collections.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-time</artifactId>
-                <version>2.5</version>
+                <version>${common-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>common-integrasjonsutils</artifactId>
+                <version>${common-integrasjonsutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -449,9 +489,21 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jaas</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.orbit</groupId>
+                <artifactId>javax.servlet</artifactId>
+                <version>3.0.0.v201112011016</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-test</artifactId>
-                <version>1.2</version>
+                <version>${common-test.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -464,7 +516,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-content</artifactId>
-                <version>2.0.10</version>
+                <version>${modig-content.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -486,7 +538,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>reactkomponenter</artifactId>
-                <version>0.17</version>
+                <version>${reactkomponenter.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -553,7 +605,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-core-test</artifactId>
-                <version>1.0.0</version>
+                <version>${modig-core-test.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -578,7 +630,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket-test</artifactId>
-                <version>1.0.0</version>
+                <version>${modig-wicket-test.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -590,7 +642,7 @@
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>annotations</artifactId>
-                <version>3.0.0</version>
+                <version>${findbugs.version}</version>
             </dependency>
 
             <!--Wicket-->
@@ -705,7 +757,7 @@
             <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
-                <version>2.0.1</version>
+                <version>${javax.ws.rs.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
@@ -713,15 +765,11 @@
                 <version>${jersey.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>1.2</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.glassfish.hk2.external</groupId>
                 <artifactId>javax.inject</artifactId>
-                <version>2.4.0-b06</version>
+                <version>${glassfish.inject.version}</version>
             </dependency>
 
             <!--CXF-->
@@ -779,42 +827,22 @@
                 <version>${lucene.version}</version>
             </dependency>
 
-            <!--Jetty-->
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jaas</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-
             <!--Logging-->
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-log-jaxws</artifactId>
-                <version>1.1.3</version>
+                <version>${modig-log-jaxws.version}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
-                <version>1.0.13</version>
+                <version>${logback.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.0.13</version>
+                <version>${logback.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -825,8 +853,8 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
-                <scope>runtime</scope>
                 <version>${slf4j.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -836,30 +864,27 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.5</version>
+                <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <!--Diverse-->
 
             <dependency>
                 <groupId>net.sourceforge.collections</groupId>
                 <artifactId>collections-generic</artifactId>
-                <version>4.01</version>
+                <version>${collections-generic.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
+                <version>${javax.servlet.version}</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>javax.annotation</groupId>
-                <artifactId>jsr250-api</artifactId>
-                <version>1.0</version>
-                <scope>provided</scope>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${javax.annotation.version}</version>
             </dependency>
 
             <dependency>
@@ -871,19 +896,19 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava-collections</artifactId>
-                <version>r03</version>
+                <version>${guava.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
-                <version>1</version>
+                <version>${javax.inject.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-core</artifactId>
-                <version>2.6.5</version>
+                <version>${ehcache.version}</version>
             </dependency>
 
             <dependency>
@@ -901,28 +926,28 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.1</version>
+                <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
-                <version>3.1.2</version>
+                <version>${metrics.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-servlets</artifactId>
-                <version>3.1.2</version>
+                <version>${metrics.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>fluent-hc</artifactId>
-                <version>4.2.4</version>
+                <version>${fluent-hc.version}</version>
             </dependency>
 
             <dependency>
@@ -934,7 +959,7 @@
             <dependency>
                 <groupId>org.jboss.security</groupId>
                 <artifactId>jbossxacml</artifactId>
-                <version>2.0.9.Final</version>
+                <version>${jbossxacml.version}</version>
             </dependency>
 
             <!--Testing-->
@@ -968,45 +993,7 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>no.nav.maven.plugins</groupId>
-                    <artifactId>modig-scm-plugin</artifactId>
-                    <version>1.1.13</version>
-                </plugin>
-                <plugin>
-                    <groupId>no.nav.maven.plugins</groupId>
-                    <artifactId>aura-maven-plugin</artifactId>
-                    <version>3.6.4</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <argLine>${jacoco.agent.argLine}</argLine>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>maven-jetty-plugin</artifactId>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>no.nav.maven.plugins</groupId>
-                <artifactId>modig-scm-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>Check illegal or unwanted dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <!--<goal>failon-unwanted-dependencies</goal>-->
-                            <!--<goal>report-unapproved-dependencies</goal>-->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <!-- for å synke innhold mot Enonic kjør: mvn modig-content:sync -Denonic.username=XXX -Denonic.password=XXX -Denonic.url=http://<ip-adresse til admin-node>:8080   Se "Serveroversikt Enonic" på Confluence for IP-adresser -->
                 <groupId>no.nav.modig</groupId>

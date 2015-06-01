@@ -8,7 +8,6 @@ import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,19 +20,15 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mo
 public class KontrakterConsumerConfigResolver {
 
     @Inject
-    @Qualifier("ytelseskontraktService")
     private Wrapper<YtelseskontraktServiceBi> ytelseskontraktService;
 
     @Inject
-    @Qualifier("ytelseskontraktMock")
     private Wrapper<YtelseskontraktServiceBi> ytelseskontraktMock;
 
     @Inject
-    @Qualifier("oppfolgingskontraktService")
     private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktService;
 
     @Inject
-    @Qualifier("oppfolgingskontraktMock")
     private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktMock;
 
     @Bean

@@ -6,13 +6,11 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
-import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLEnkeltKodeverk;
-import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLKode;
-import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLKodeverk;
-import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLPeriode;
+import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,17 +28,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static javax.xml.bind.JAXBContext.newInstance;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.exists;
-import static no.nav.modig.lang.collections.PredicateUtils.fileExists;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.collections.TransformerUtils.appendPathname;
 import static no.nav.modig.lang.collections.TransformerUtils.makeDirs;
 import static no.nav.modig.lang.option.Optional.none;
@@ -99,7 +91,7 @@ public class StandardKodeverkImpl implements StandardKodeverk {
 
     @Override
     public String getArkivtemaNavn(String arkivtemaKode) {
-        return hentFoersteTermnavnFraKodeIKodeverk(arkivtemaKode, ARKIVTEMA_KODEVERKNAVN);
+        return hentFoersteGyldigeTermnavnFraGyldigKodeIKodeverk(arkivtemaKode, ARKIVTEMA_KODEVERKNAVN);
     }
 
     @Override
@@ -134,13 +126,28 @@ public class StandardKodeverkImpl implements StandardKodeverk {
         return kodeverk.get(kodeverknavn);
     }
 
-    private String hentFoersteTermnavnFraKodeIKodeverk(String kodenavn, String kodeverknavn) {
+    private String hentFoersteGyldigeTermnavnFraGyldigKodeIKodeverk(String kodenavn, String kodeverknavn) {
         for (XMLKode kode : kodeverkMedNavn(kodeverknavn).getKode()) {
-            if (kode.getNavn().equalsIgnoreCase(kodenavn)) {
-                return kode.getTerm().get(0).getNavn();
+            if (kode.getNavn().equalsIgnoreCase(kodenavn) && erGyldigPeriode(kode.getGyldighetsperiode())) {
+                for (XMLTerm term : kode.getTerm()) {
+                    if (erGyldigPeriode(term.getGyldighetsperiode())) {
+                        return term.getNavn();
+                    }
+                }
             }
         }
         return null;
+    }
+
+    private boolean erGyldigPeriode(List<XMLPeriode> gyldighetsperiode) {
+        if (gyldighetsperiode == null || gyldighetsperiode.isEmpty()) {
+            return true;
+        }
+        DateMidnight fom = gyldighetsperiode.get(0).getFom();
+        DateMidnight tom = gyldighetsperiode.get(0).getTom();
+        DateMidnight now = DateMidnight.now();
+
+        return now.isAfter(fom) && now.isBefore(tom);
     }
 
     private XMLEnkeltKodeverk hentKodeverk(String navn) {

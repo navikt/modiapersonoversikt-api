@@ -24,6 +24,7 @@
                     <username>admin</username>
                     <password>***REMOVED***</password>
                 </configuration>
+                <version>3.13.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

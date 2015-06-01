@@ -4,6 +4,8 @@ import no.nav.tjeneste.virksomhet.sak.v1.*;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
+import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakRequest;
+import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakResponse;
 import org.joda.time.DateTime;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -14,6 +16,7 @@ import java.util.*;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock.AKTOER_ID_MOCK;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -68,8 +71,14 @@ public class GsakSakV1PortTypeMock {
                     return new WSFinnSakResponse().withSakListe(sakerForBruker(bruker));
                 }
             });
+            when(sakV1.hentSak(any(WSHentSakRequest.class))).thenAnswer(new Answer<WSHentSakResponse>() {
+                @Override
+                public WSHentSakResponse answer(InvocationOnMock invocation) {
+                    return new WSHentSakResponse().withSak(createSak("DAG", DateTime.now().minusDays(5)));
+                }
+            });
             return sakV1;
-        } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
+        } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster | HentSakSakIkkeFunnet e) {
             throw new RuntimeException(e);
         }
     }
@@ -85,8 +94,10 @@ public class GsakSakV1PortTypeMock {
     private static WSSak createSak(String tema, DateTime opprettet) {
         return new WSSak()
                 .withSakId("" + idGenerator.nextInt(100000000))
+                .withGjelderBrukerListe(new WSPerson().withIdent(AKTOER_ID_MOCK))
                 .withFagsystemSakId("" + idGenerator.nextInt(100000000))
                 .withFagomraade(new WSFagomraader().withValue(tema))
+                .withGjelderBrukerListe(new WSPerson().withIdent(AKTOER_ID_MOCK))
                 .withOpprettelsetidspunkt(opprettet)
                 .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
                 .withFagsystem(new WSFagsystemer().withValue("FS22"));
