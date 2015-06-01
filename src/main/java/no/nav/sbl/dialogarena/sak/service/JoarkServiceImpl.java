@@ -29,12 +29,14 @@ public class JoarkServiceImpl implements JoarkService {
 
     public HentDokumentResultat hentDokument(String journalpostId, String dokumentId, String fnr) {
         boolean mockTilgangskontrollInnsyn = "true".equalsIgnoreCase(getProperty("mock.tilgangskontroll.innsyn"));
-        HentDokumentResultat resultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
 
-        if (mockTilgangskontrollInnsyn || resultat.harTilgang) {
-            if (mockTilgangskontrollInnsyn) {
-                logger.warn("Utfører ikke tilgangskontroll siden propertien 'mock.tilgangskontroll.innsyn' er satt til '{}'", mockTilgangskontrollInnsyn);
-            }
+        if (mockTilgangskontrollInnsyn) {
+            logger.warn("Utfører ikke tilgangskontroll siden propertien 'mock.tilgangskontroll.innsyn' er satt til '{}'", mockTilgangskontrollInnsyn);
+            return hentDokument(journalpostId, dokumentId);
+        }
+
+        HentDokumentResultat resultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
+        if (resultat.harTilgang) {
             return hentDokument(journalpostId, dokumentId);
         } else {
             return resultat;
