@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -27,9 +28,13 @@ public class JoarkServiceImpl implements JoarkService {
     private JournalV1 joarkPortType;
 
     public HentDokumentResultat hentDokument(String journalpostId, String dokumentId, String fnr) {
+        boolean mockTilgangskontrollInnsyn = "true".equalsIgnoreCase(getProperty("mock.tilgangskontroll.innsyn"));
         HentDokumentResultat resultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
 
-        if (resultat.harTilgang) {
+        if (mockTilgangskontrollInnsyn || resultat.harTilgang) {
+            if (mockTilgangskontrollInnsyn) {
+                logger.warn("Utfører ikke tilgangskontroll siden propertien 'mock.tilgangskontroll.innsyn' er satt til '{}'", mockTilgangskontrollInnsyn);
+            }
             return hentDokument(journalpostId, dokumentId);
         } else {
             return resultat;
