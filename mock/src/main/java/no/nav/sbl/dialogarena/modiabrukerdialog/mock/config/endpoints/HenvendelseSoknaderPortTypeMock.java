@@ -84,7 +84,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withInnsendtDato(new DateTime())
                 .withHovedskjemaKodeverkId("NAV 11-13.05")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
-                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel(TITTEL),
+                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 11-13.05").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel(TITTEL)
@@ -103,9 +103,9 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withInnsendtDato(new DateTime().minusDays(3))
                 .withHovedskjemaKodeverkId("NAV 04-01.03")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
-                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel(TITTEL),
+                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel(TITTEL),
-                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel(TITTEL),
+                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel(TITTEL)
                 ));
     }
@@ -122,7 +122,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withInnsendtDato(new DateTime().minusDays(3))
                 .withHovedskjemaKodeverkId("NAV 11-13.05")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
-                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel(TITTEL),
+                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 11-13.05").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("L7").withTilleggsTittel(TITTEL),
                         new WSDokumentforventning().withInnsendingsvalg(SENDES_IKKE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel(TITTEL),
