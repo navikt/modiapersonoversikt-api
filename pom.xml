@@ -26,15 +26,15 @@
 
         <!-- Egenlagde dependencies  -->
         <modig.frontend.version>1.1.75</modig.frontend.version>
-        <modig.wicket.version>3.0.1-SNAPSHOT</modig.wicket.version>
-        <modia-felleskomponenter.version>1.0.0</modia-felleskomponenter.version>
+        <modig.wicket.version>3.0.1</modig.wicket.version>
+        <modia-felleskomponenter.version>1.0.1</modia-felleskomponenter.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.4</modig-lang.version>
-        <modig-content.version>2.0.2</modig-content.version>
+        <modig-content.version>2.0.9</modig-content.version>
         <modig-core.version>1.0.1</modig-core.version>
 
         <!-- Tjenester  -->
-        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.24-SNAPSHOT</henvendelse-soknader-tjenestespesifikasjon.version>
+        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.24</henvendelse-soknader-tjenestespesifikasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <common-lokalt-kodeverk.version>1.1.4</common-lokalt-kodeverk.version>
@@ -47,7 +47,11 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
         <!-- Modig dep -->
         <dependency>
             <groupId>no.nav.modig</groupId>
