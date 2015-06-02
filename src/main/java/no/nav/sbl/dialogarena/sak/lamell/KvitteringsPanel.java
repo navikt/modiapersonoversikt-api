@@ -86,7 +86,6 @@ public class KvitteringsPanel extends Panel {
 
     private void leggTilBehandlingsTidInfo(Kvittering kvittering) {
         String temakode = kvittering.sakstema;
-
         String behandlingstidTekst = cms.hentTekst("soknader.normertbehandlingstid");
         String key = "soknader.normertbehandlingstid." + temakode;
 
@@ -97,8 +96,7 @@ public class KvitteringsPanel extends Panel {
             logger.warn("Behandlingstid er ikke satt for temakode " + temakode);
             behandlingstid = cms.hentTekst("soknader.normertbehandlingstid.default");
         }
-
-        add(new Label("behandlingstid", format(behandlingstidTekst, behandlingstid)));
+        add(new Label("behandlingstid", new Model<>(format(behandlingstidTekst, behandlingstid))).setEscapeModelStrings(false));
     }
 
     private void leggTilVedleggFeiletPoput() {
