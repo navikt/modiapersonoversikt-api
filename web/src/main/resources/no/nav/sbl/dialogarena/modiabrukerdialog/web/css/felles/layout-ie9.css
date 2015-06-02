@@ -10,6 +10,7 @@
 .flexbox .flex1 {
 	display: table-cell;
 	width: 25%;
+	vertical-align: top;
 }
 
 .flexbox .flex2 {
