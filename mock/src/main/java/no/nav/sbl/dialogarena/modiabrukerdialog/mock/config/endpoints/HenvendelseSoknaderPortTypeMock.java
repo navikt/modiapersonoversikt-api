@@ -27,11 +27,18 @@ public class HenvendelseSoknaderPortTypeMock {
     public static final String IKKE_KVITTERING = "ikke-kvittering";
     public static final String KVITTERING1 = "kvittering1";
     public static final String KVITTERING2 = "kvittering2";
-    public static final String JOURNALPOSTID = "journalpostid";
+    public static final String KVITTERING3 = "kvittering3";
+    public static final String JOURNALPOSTID_FEILREGISTRERT_SAK = "1";
+    public static final String JOURNALPOSTID_IKKE_JOURNALFORT = "2";
+    public static final String JOURNALPOSTID_IKKE_SAKSPART = "3";
+    public static final String JOURNALPOSTID_DOKUMENT_SLETTET = "4";
+    public static final String JOURNALPOSTID_DEFAULT = "journalpostId";
+
     public static final String KVITTERINGETTERSENDELSE1 = "kvitteringEttersendelse1";
     public static final String KVITTERINGETTERSENDELSE2 = "kvitteringEttersendelse2";
     public static final String BEHANDLINGSKJEDEID_1 = "behandlingskjedeid-1";
-    public static final String BEHANDLINGSKJEDEID_2 = "behandlingskjedeid-1";
+    public static final String BEHANDLINGSKJEDEID_2 = "behandlingskjedeid-2";
+    public static final String BEHANDLINGSKJEDEID_3 = "behandlingskjedeid-3";
     public static final DateTime MERGET_OPPRETTET = new DateTime().minusDays(110);
     public static final String TITTEL = "abc";
 
@@ -46,6 +53,7 @@ public class HenvendelseSoknaderPortTypeMock {
         return asList(
                 kvitteringAAP(),
                 kvitteringDAG(),
+                kvitteringForeldrepenger(),
                 kvitteringEttersendingAAP(),
                 kvitteringEttersendingDAG(),
                 new WSSoknad().withHenvendelseStatus(UNDER_ARBEID.value()).withBehandlingsId(IKKE_KVITTERING),
@@ -57,7 +65,7 @@ public class HenvendelseSoknaderPortTypeMock {
         return new WSSoknad()
                 .withBehandlingsId(KVITTERINGETTERSENDELSE2)
                 .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_2)
-                .withJournalpostId(JOURNALPOSTID)
+                .withJournalpostId(JOURNALPOSTID_DEFAULT)
                 .withEttersending(true)
                 .withHenvendelseType(SOKNADSINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
@@ -76,7 +84,7 @@ public class HenvendelseSoknaderPortTypeMock {
         return new WSSoknad()
                 .withBehandlingsId(KVITTERINGETTERSENDELSE1)
                 .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_1)
-                .withJournalpostId(JOURNALPOSTID)
+                .withJournalpostId(JOURNALPOSTID_FEILREGISTRERT_SAK)
                 .withEttersending(true)
                 .withHenvendelseType(DOKUMENTINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
@@ -95,7 +103,7 @@ public class HenvendelseSoknaderPortTypeMock {
         return new WSSoknad()
                 .withBehandlingsId(KVITTERING2)
                 .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_2)
-                .withJournalpostId(JOURNALPOSTID)
+                .withJournalpostId(JOURNALPOSTID_IKKE_JOURNALFORT)
                 .withEttersending(false)
                 .withHenvendelseType(SOKNADSINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
@@ -114,7 +122,7 @@ public class HenvendelseSoknaderPortTypeMock {
         return new WSSoknad()
                 .withBehandlingsId(KVITTERING1)
                 .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_1)
-                .withJournalpostId(JOURNALPOSTID)
+                .withJournalpostId(JOURNALPOSTID_IKKE_SAKSPART)
                 .withEttersending(false)
                 .withHenvendelseType(DOKUMENTINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
@@ -130,4 +138,21 @@ public class HenvendelseSoknaderPortTypeMock {
                 ));
     }
 
+
+    private static WSSoknad kvitteringForeldrepenger() {
+        return new WSSoknad()
+                .withBehandlingsId(KVITTERING3)
+                .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_3)
+                .withJournalpostId(JOURNALPOSTID_DOKUMENT_SLETTET)
+                .withEttersending(false)
+                .withHenvendelseType(SOKNADSINNSENDING.value())
+                .withHenvendelseStatus(FERDIG.value())
+                .withOpprettetDato(MERGET_OPPRETTET)
+                .withInnsendtDato(new DateTime().minusDays(2))
+                .withHovedskjemaKodeverkId("NAV 14-05.09")
+                .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
+                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 14-05.09").withTilleggsTittel(TITTEL),
+                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("L7").withTilleggsTittel(TITTEL)
+                ));
+    }
 }
