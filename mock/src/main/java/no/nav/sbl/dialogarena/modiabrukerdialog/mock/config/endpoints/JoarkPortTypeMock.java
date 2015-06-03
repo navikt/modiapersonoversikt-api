@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalstatuser;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Sak;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentRequest;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentResponse;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentJournalpostRequest;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentJournalpostResponse;
+import no.nav.tjeneste.virksomhet.journal.v1.*;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSSak;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentDokumentRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentDokumentResponse;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentJournalpostRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentJournalpostResponse;
 import org.apache.commons.io.IOUtils;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -25,48 +25,43 @@ import static org.mockito.Mockito.when;
 public class JoarkPortTypeMock {
 
     @Bean(name = "joarkPortType")
-    public static JournalV1 getJournalPortTypeMock() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet, HentDokumentURLDokumentIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
-        JournalV1 mock = mock(JournalV1.class);
-        when(mock.hentDokument(any(HentDokumentRequest.class))).thenAnswer(new Answer<HentDokumentResponse>() {
+    public static Journal_v1PortType getJournalPortTypeMock() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet, HentDokumentURLDokumentIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        Journal_v1PortType mock = mock(Journal_v1PortType.class);
+        when(mock.hentDokument(any(WSHentDokumentRequest.class))).thenAnswer(new Answer<WSHentDokumentResponse>() {
             @Override
-            public HentDokumentResponse answer(InvocationOnMock invocation) {
-                HentDokumentResponse response = new HentDokumentResponse();
-                response.setDokument(createDokument());
-                return response;
+            public WSHentDokumentResponse answer(InvocationOnMock invocation) {
+                return new WSHentDokumentResponse()
+                        .withDokument(createDokument());
             }
         });
 
-        when(mock.hentJournalpost(any(HentJournalpostRequest.class))).thenAnswer(new Answer<HentJournalpostResponse>() {
+        when(mock.hentJournalpost(any(WSHentJournalpostRequest.class))).thenAnswer(new Answer<WSHentJournalpostResponse>() {
             @Override
-            public HentJournalpostResponse answer(InvocationOnMock invocationOnMock) throws Throwable {
-                HentJournalpostResponse journalpostResponse = new HentJournalpostResponse();
-                journalpostResponse.setJournalpost(createJournalpost());
-                return journalpostResponse;
+            public WSHentJournalpostResponse answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return new WSHentJournalpostResponse()
+                        .withJournalpost(createJournalpost());
             }
         });
 
         return mock;
     }
 
-    private static Journalpost createJournalpost() {
-        Journalpost journalpost = new Journalpost();
-        journalpost.setJournalpostId(JOURNALPOSTID);
-        journalpost.setJournalstatus(createJournalstatus("J"));
-        journalpost.setGjelderSak(createSak());
-        return journalpost;
+    private static WSJournalpost createJournalpost() {
+        return new WSJournalpost()
+                .withJournalpostId(JOURNALPOSTID)
+                .withJournalstatus(createJournalstatus("J"))
+                .withGjelderSak(createSak());
     }
 
-    private static Sak createSak() {
-        Sak sak = new Sak();
-        sak.setSakId("sakId");
-        sak.setErFeilregistrert(false);
-        return sak;
+    private static WSSak createSak() {
+        return new WSSak()
+                .withSakId("sakId")
+                .withErFeilregistrert(false);
     }
 
-    private static Journalstatuser createJournalstatus(String verdi) {
-        Journalstatuser journalstatus = new Journalstatuser();
-        journalstatus.setKodeverksRef(verdi);
-        return journalstatus;
+    private static WSJournalstatuser createJournalstatus(String verdi) {
+        return new WSJournalstatuser()
+                .withValue(verdi);
     }
 
     private static byte[] createDokument() {

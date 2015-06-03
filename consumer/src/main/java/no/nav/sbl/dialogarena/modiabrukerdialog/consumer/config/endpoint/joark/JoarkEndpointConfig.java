@@ -5,7 +5,7 @@ import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.*;
+import no.nav.tjeneste.virksomhet.journal.v1.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,21 +23,22 @@ public class JoarkEndpointConfig {
 
     public static final String JOARK_KEY = "start.joark.withmock";
 
-    private CXFClient<JournalV1> createJoarkPortType() {
-        return new CXFClient<>(JournalV1.class)
+    private CXFClient<Journal_v1PortType> createJoarkPortType() {
+        return new CXFClient<>(Journal_v1PortType.class)
                 .address(System.getProperty("joark.ws.url"))
                 .withOutInterceptor(new SystemSAMLOutInterceptor())
-                .withHandler(new MDCOutHandler());
+                .withHandler(new MDCOutHandler())
+                .wsdl("classpath:joark/no/nav/tjeneste/virksomhet/journal/v1/journal.wsdl");
     }
 
     @Bean(name ="joarkPortType" )
-    public JournalV1 joarkPortType() throws HentJournalpostSikkerhetsbegrensning, HentJournalpostJournalpostIkkeFunnet, HentDokumentURLDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
-        final JournalV1 prod = createJoarkPortType().build();
+    public Journal_v1PortType joarkPortType() throws HentJournalpostSikkerhetsbegrensning, HentJournalpostJournalpostIkkeFunnet, HentDokumentURLDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
+        final Journal_v1PortType prod = createJoarkPortType().build();
         return createSwitcher(
                 prod,
                 getJournalPortTypeMock(),
                 JOARK_KEY,
-                JournalV1.class
+                Journal_v1PortType.class
         );
     }
 

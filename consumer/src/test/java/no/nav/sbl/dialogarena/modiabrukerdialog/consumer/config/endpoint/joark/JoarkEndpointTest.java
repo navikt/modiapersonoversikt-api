@@ -2,15 +2,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.JoarkPortTypeMock;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.HentDokumentDokumentErSlettet;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.HentDokumentDokumentIkkeFunnet;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.HentDokumentSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.JournalV1;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Variantformater;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentRequest;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.HentDokumentResponse;
+import no.nav.tjeneste.virksomhet.journal.v1.HentDokumentDokumentErSlettet;
+import no.nav.tjeneste.virksomhet.journal.v1.HentDokumentDokumentIkkeFunnet;
+import no.nav.tjeneste.virksomhet.journal.v1.HentDokumentSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.journal.v1.Journal_v1PortType;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSVariantformater;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentDokumentRequest;
+import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentDokumentResponse;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,7 +33,7 @@ public class JoarkEndpointTest extends CacheTest {
 
     @Inject
     @Named("joarkPortType")
-    private JournalV1 joarkPortType;
+    private Journal_v1PortType joarkPortType;
 
     public JoarkEndpointTest() {
         super("joarkCache");
@@ -47,29 +46,24 @@ public class JoarkEndpointTest extends CacheTest {
     }
 
     @Test
-    @Ignore("Ignoreres inntil HentDokumentRequest overrider hashcode.")
     public void kalletTilJoarkCaches() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
-        Variantformater variantformat1 = new Variantformater();
-        variantformat1.setKodeverksRef("ARKIV");
-        HentDokumentRequest req1 = new HentDokumentRequest();
-        req1.setDokumentId("dokumentId");
-        req1.setJournalpostId("journalpostId");
-        req1.setVariantformat(variantformat1);
+        WSHentDokumentRequest req1 = new WSHentDokumentRequest()
+                .withDokumentId("dokumentId")
+                .withJournalpostId("journalpostId")
+                .withVariantformat(new WSVariantformater().withValue("ARKIV"));
 
-        Variantformater variantformat2 = new Variantformater();
-        variantformat2.setKodeverksRef("ARKIV");
-        HentDokumentRequest req2 = new HentDokumentRequest();
-        req2.setDokumentId("dokumentId");
-        req2.setJournalpostId("journalpostId");
-        req2.setVariantformat(variantformat2);
+        WSHentDokumentRequest req2 = new WSHentDokumentRequest()
+                .withDokumentId("dokumentId")
+                .withJournalpostId("journalpostId")
+                .withVariantformat(new WSVariantformater().withValue("ARKIV"));
 
-        HentDokumentResponse res1 = new HentDokumentResponse();
-        res1.setDokument("%PDF-1".getBytes());
+        WSHentDokumentResponse res1 = new WSHentDokumentResponse()
+                .withDokument("%PDF-1".getBytes());
 
-        HentDokumentResponse res2 = new HentDokumentResponse();
-        res2.setDokument("%PDF-2".getBytes());
+        WSHentDokumentResponse res2 = new WSHentDokumentResponse()
+                .withDokument("%PDF-2".getBytes());
 
-        when(joarkPortType.hentDokument(any(HentDokumentRequest.class))).thenReturn(
+        when(joarkPortType.hentDokument(any(WSHentDokumentRequest.class))).thenReturn(
                 res1,
                 res2
         );
