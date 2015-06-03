@@ -52,6 +52,8 @@ public class JoarkEndpointConfig {
                 try {
                     joarkPortType().ping();
                     return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
+                } catch (RuntimeException e) {
+                    throw e;
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
                 }
