@@ -52,7 +52,7 @@ public class MetricsConfigurator extends MetricsServlet.ContextListener implemen
                 registry.register(name(domain, type, attributeName), new JmxAttributeGauge(objectName, attributeName));
             }
         } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
+                logger.error("Feil i leggTilJMXGauges", e);
         }
     }
 

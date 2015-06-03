@@ -315,12 +315,12 @@ public class PersonPage extends BasePage {
      * Hente forskjellige teksten fra en payload (JSONobjekt).
      *
      * @param query
-     * @param JSONfield
+     * @param jsonField
      * @return
      * @throws JSONException
      */
-    protected String getTextFromPayload(String query, String JSONfield) throws JSONException {
-        return getJsonField(query, JSONfield);
+    protected String getTextFromPayload(String query, String jsonField) throws JSONException {
+        return getJsonField(query, jsonField);
     }
 
     private String getJsonField(String query, String field) throws JSONException {

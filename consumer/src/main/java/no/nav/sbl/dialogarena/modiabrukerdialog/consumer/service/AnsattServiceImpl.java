@@ -9,7 +9,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattServi
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
