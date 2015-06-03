@@ -74,7 +74,7 @@
         <dialogarena.behandlingsinformasjon.version>0.0.33</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>1.14</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>2.23</sporsmalogsvar.version>
-        <saksoversikt.version>2.3</saksoversikt.version>
+        <saksoversikt.version>2.3.1</saksoversikt.version>
     </properties>
 
     <dependencyManagement>
