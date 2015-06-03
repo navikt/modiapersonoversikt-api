@@ -203,7 +203,7 @@ public class TilgangskontrollServiceTest {
 
     private WSJournalstatuser createJournalstatus(String verdi) {
         return new WSJournalstatuser()
-                .withKodeverksRef(verdi);
+                .withValue(verdi);
     }
 
     private no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSSak createSak(boolean feilregistret) {
