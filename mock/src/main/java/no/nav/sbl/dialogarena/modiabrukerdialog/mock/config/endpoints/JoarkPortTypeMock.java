@@ -37,7 +37,7 @@ public class JoarkPortTypeMock {
 
         when(mock.hentJournalpost(any(WSHentJournalpostRequest.class))).thenAnswer(new Answer<WSHentJournalpostResponse>() {
             @Override
-            public WSHentJournalpostResponse answer(InvocationOnMock invocationOnMock) throws Exception {
+            public WSHentJournalpostResponse answer(InvocationOnMock invocationOnMock) {
                 return new WSHentJournalpostResponse()
                         .withJournalpost(createJournalpost());
             }
