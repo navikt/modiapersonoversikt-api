@@ -7,13 +7,15 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostJournalpostIkkeFunnet;
-import no.nav.tjeneste.virksomhet.journal.v1.binding.HentJournalpostSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalstatuser;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Sak;
+import no.nav.tjeneste.virksomhet.journal.v1.HentJournalpostJournalpostIkkeFunnet;
+import no.nav.tjeneste.virksomhet.journal.v1.HentJournalpostSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson;
+import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -178,40 +180,35 @@ public class TilgangskontrollServiceTest {
                 .withFagsystem(new WSFagsystemer().withValue("FS22"));
     }
 
-    private Journalpost createOKJournalpost() {
-        Journalpost journalpost = new Journalpost();
-        journalpost.setJournalpostId("journalpostid");
-        journalpost.setJournalstatus(createJournalstatus("J"));
-        journalpost.setGjelderSak(createSak(false));
-        return journalpost;
+    private WSJournalpost createOKJournalpost() {
+        return new WSJournalpost()
+                .withJournalpostId("journalpostid")
+                .withJournalstatus(createJournalstatus("J"))
+                .withGjelderSak(createSak(false));
     }
 
-    private Journalpost createFeilRegistrertJournalpost() {
-        Journalpost journalpost = new Journalpost();
-        journalpost.setJournalpostId("journalpostid");
-        journalpost.setJournalstatus(createJournalstatus("J"));
-        journalpost.setGjelderSak(createSak(true));
-        return journalpost;
+    private WSJournalpost createFeilRegistrertJournalpost() {
+        return new WSJournalpost()
+                .withJournalpostId("journalpostid")
+                .withJournalstatus(createJournalstatus("J"))
+                .withGjelderSak(createSak(true));
     }
 
-    private Journalpost createIkkeJournalfortJournalpost() {
-        Journalpost journalpost = new Journalpost();
-        journalpost.setJournalpostId("journalpostid");
-        journalpost.setJournalstatus(createJournalstatus("N"));
-        journalpost.setGjelderSak(createSak(false));
-        return journalpost;
+    private WSJournalpost createIkkeJournalfortJournalpost() {
+        return new WSJournalpost()
+                .withJournalpostId("journalpostid")
+                .withJournalstatus(createJournalstatus("N"))
+                .withGjelderSak(createSak(false));
     }
 
-    private Journalstatuser createJournalstatus(String verdi) {
-        Journalstatuser journalstatus = new Journalstatuser();
-        journalstatus.setKodeverksRef(verdi);
-        return journalstatus;
+    private WSJournalstatuser createJournalstatus(String verdi) {
+        return new WSJournalstatuser()
+                .withKodeverksRef(verdi);
     }
 
-    private Sak createSak(boolean feilregistret) {
-        Sak sak = new Sak();
-        sak.setSakId("sakId");
-        sak.setErFeilregistrert(feilregistret);
-        return sak;
+    private no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSSak createSak(boolean feilregistret) {
+        return new no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSSak()
+                .withSakId("sakId")
+                .withErFeilregistrert(feilregistret);
     }
 }

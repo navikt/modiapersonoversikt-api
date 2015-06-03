@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.Journalpost;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.apache.commons.collections15.Predicate;
@@ -38,8 +38,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         if (!harJournalpostId(journalpostId)) {
             return new HentDokumentResultat(false, IKKE_JOURNALFORT);
         }
-        
-        Journalpost journalpost = hentJournalpost(journalpostId);
+
+        WSJournalpost journalpost = hentJournalpost(journalpostId);
         if (!erJournalfort(journalpost)) {
             return new HentDokumentResultat(false, IKKE_JOURNALFORT);
         } else if (erFeilregistrert(journalpost)) {
@@ -54,11 +54,11 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return journalpostid != null;
     }
 
-    private Journalpost hentJournalpost(String journalpostId) {
+    private WSJournalpost hentJournalpost(String journalpostId) {
         return joarkService.hentJournalpost(journalpostId);
     }
 
-    private boolean erJournalfort(Journalpost journalPost) {
+    private boolean erJournalfort(WSJournalpost journalPost) {
         boolean erJournalfort = journalPost.getJournalstatus().getKodeverksRef().equalsIgnoreCase("J");
         if (!erJournalfort) {
             logger.warn("Journalposten med id '{}' er ikke journalført.", journalPost.getJournalpostId());
@@ -66,8 +66,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return erJournalfort;
     }
 
-    private boolean erFeilregistrert(Journalpost journalPost) {
-        boolean feilregistrert = journalPost.getGjelderSak().getErFeilregistrert();
+    private boolean erFeilregistrert(WSJournalpost journalPost) {
+        boolean feilregistrert = journalPost.getGjelderSak().isErFeilregistrert();
 
         if (feilregistrert) {
             logger.warn("Journalposten med id '{}' er feilregistrert.", journalPost.getJournalpostId());
