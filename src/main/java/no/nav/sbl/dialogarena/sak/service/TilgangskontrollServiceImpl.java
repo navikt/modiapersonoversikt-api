@@ -59,7 +59,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     private boolean erJournalfort(WSJournalpost journalPost) {
-        boolean erJournalfort = journalPost.getJournalstatus().getKodeverksRef().equalsIgnoreCase("J");
+        boolean erJournalfort = ("J").equalsIgnoreCase(journalPost.getJournalstatus().getValue());
         if (!erJournalfort) {
             logger.warn("Journalposten med id '{}' er ikke journalført.", journalPost.getJournalpostId());
         }
@@ -68,11 +68,9 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private boolean erFeilregistrert(WSJournalpost journalPost) {
         boolean feilregistrert = journalPost.getGjelderSak().isErFeilregistrert();
-
         if (feilregistrert) {
             logger.warn("Journalposten med id '{}' er feilregistrert.", journalPost.getJournalpostId());
         }
-
         return feilregistrert;
     }
 
@@ -84,7 +82,6 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         if (!erInnsenderSakspart) {
             logger.warn("Innsender med aktoerId '{}' er ikke sakspart for sak med id '{}'.", aktoerId, sakId);
         }
-
         return erInnsenderSakspart;
     }
 
