@@ -135,6 +135,8 @@ public class KvitteringsPanel extends Panel {
                 if (kodeverk.isEgendefinert(dokument.kodeverkRef)) {
                     dokumentTittel += ": " + dokument.tilleggstittel;
                 }
+                dokumentTittel += ".";
+
                 if (visInnsendingsvalg) {
                     item.add(new Label("innsendingsvalg", cms.hentTekst("kvittering.innsendingsvalg." + dokument.innsendingsvalg)));
                 }
