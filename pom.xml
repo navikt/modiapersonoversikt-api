@@ -103,7 +103,7 @@
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.41</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>2.2-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>3.2-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>4.0-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>3.2-SNAPSHOT</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
