@@ -1,19 +1,6 @@
 (function ($) {
     var ENTER = 13;
 
-    //Brukes for å sendes oppdatering slik at wicket holder følge.
-    function wicketEvent(element, event) {
-        if (document.createEventObject) {
-            //For IE
-            var evt = document.createEventObject();
-            return element.fireEvent('on' + event, evt);
-        } else {
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent(event, true, true);
-            return !element.dispatchEvent(evt);
-        }
-    }
-
     //Overriding av autocomplete funksjonalitet
     $.widget("custom.autocomplete", $.ui.autocomplete, {
         _create: function () {
@@ -23,7 +10,6 @@
             this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
         },
         _renderMenu: function (ul, items) {
-            console.log('t', this);
             //Egen render metode for dropdownmenyen. NB bruk that._renderItemData for å underelementer
             var that = this;
             var currentCategory = undefined;
@@ -84,7 +70,7 @@
                             .css({top: 0, left: 0});
                     },
                     select: function (event, ui) {
-                        wicketEvent($(ui.item.option).closest('select')[0], 'change');
+                        $(ui.item.option).closest('select').trigger('change');
                     }
                 })
                 .click(function () {
