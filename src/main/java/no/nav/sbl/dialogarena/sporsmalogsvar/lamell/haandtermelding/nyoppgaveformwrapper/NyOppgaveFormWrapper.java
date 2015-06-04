@@ -147,7 +147,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 form.getModelObject().prioritet = null;
                 form.getModelObject().underkategori = null;
 
-                target.add(typeVelger, enhetVelger, prioritetVelger, underkategoriVelger);
+                target.add(typeVelger, enhetVelger, ansattVelger, prioritetVelger, underkategoriVelger);
             }
         };
         temaDropDown.setRequired(true).setOutputMarkupPlaceholderTag(true);
