@@ -7,8 +7,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import org.joda.time.DateTime;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,9 +18,6 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static org.joda.time.DateTime.now;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @Configuration
 public class HenvendelsePortTypeMock {
@@ -168,17 +163,20 @@ public class HenvendelsePortTypeMock {
     }
 
     public static HenvendelsePortType createHenvendelsePortTypeMock() {
-        HenvendelsePortType mockI = mock(HenvendelsePortType.class);
-        when(mockI.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenAnswer(new Answer<WSHentHenvendelseResponse>() {
+        return new HenvendelsePortType() {
             @Override
-            public WSHentHenvendelseResponse answer(InvocationOnMock invocation) {
-                WSHentHenvendelseRequest req = (WSHentHenvendelseRequest) invocation.getArguments()[0];
+            public void ping() {
+            }
+
+            @Override
+            public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest req) {
                 return new WSHentHenvendelseResponse().withAny(hentHenvendelseMedBehandlingsId(req));
             }
-        });
-        when(mockI.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
-                new WSHentHenvendelseListeResponse().withAny(HENVENDELSER.toArray())
-        );
-        return mockI;
+
+            @Override
+            public WSHentHenvendelseListeResponse hentHenvendelseListe(WSHentHenvendelseListeRequest wsHentHenvendelseListeRequest) {
+                return new WSHentHenvendelseListeResponse().withAny(HENVENDELSER.toArray());
+            }
+        };
     }
 }

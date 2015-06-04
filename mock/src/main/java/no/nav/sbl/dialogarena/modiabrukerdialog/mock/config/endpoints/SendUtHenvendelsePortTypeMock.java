@@ -27,6 +27,7 @@ public class SendUtHenvendelsePortTypeMock {
                 XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) request.getAny();
                 String behandlingsId = UUID.randomUUID().toString();
                 xmlHenvendelse.setBehandlingsId(behandlingsId);
+                xmlHenvendelse.setBehandlingskjedeId(behandlingsId);
                 HENVENDELSER.add(xmlHenvendelse);
                 return new WSSendUtHenvendelseResponse().withBehandlingsId(behandlingsId);
             }
