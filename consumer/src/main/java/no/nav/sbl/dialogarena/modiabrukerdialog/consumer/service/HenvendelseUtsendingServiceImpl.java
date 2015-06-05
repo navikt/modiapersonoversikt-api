@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modig.content.PropertyResolver;
@@ -7,11 +10,12 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
@@ -23,6 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
@@ -30,6 +35,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
@@ -45,6 +51,8 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     @Inject
     private SendUtHenvendelsePortType sendUtHenvendelsePortType;
     @Inject
+    private BehandleHenvendelsePortType behandleHenvendelsePortType;
+    @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
     private SakerService sakerService;
@@ -55,6 +63,8 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private PropertyResolver propertyResolver;
+    @Inject
+    private PersonKjerneinfoServiceBi kjerneinfo;
 
     @Override
     public void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception {
@@ -70,6 +80,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                 .withAny(xmlHenvendelse));
 
         melding.id = wsSendUtHenvendelseResponse.getBehandlingsId();
+        Temagruppe temagruppe = Temagruppe.valueOf(melding.temagruppe);
         if (melding.traadId == null) {
             melding.traadId = melding.id;
         }
@@ -77,7 +88,11 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get());
         }
         if (oppgaveId.isSome()) {
-            oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId.get(), Temagruppe.valueOf(melding.temagruppe));
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId.get(), temagruppe);
+        }
+        if (temagruppe == ANSOS) {
+            String enhet = getEnhet(melding.fnrBruker);
+            behandleHenvendelsePortType.oppdaterKontorsperre(enhet, singletonList(melding.id));
         }
     }
 
@@ -140,5 +155,12 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             return melding;
         }
     };
+
+    private String getEnhet(String fnr) {
+        HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
+        kjerneinfoRequest.setBegrunnet(true);
+        Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
+        return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+    }
 
 }
