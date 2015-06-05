@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 
 import java.io.Serializable;
@@ -73,6 +74,11 @@ public class TraadVM implements Serializable {
                 !getEldsteMelding().melding.kassert
                 && !getEldsteMelding().erKontorsperret()
                 && !getEldsteMelding().erFeilsendt();
+    }
+
+    public boolean erTemagruppeSosialeTjenester() {
+        String nyesteTemagruppe = getNyesteMeldingsTemagruppe();
+        return Temagruppe.OKSOS.name().equals(nyesteTemagruppe) || Temagruppe.ANSOS.name().equals(nyesteTemagruppe);
     }
 
 }

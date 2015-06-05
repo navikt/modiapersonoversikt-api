@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
@@ -75,6 +76,23 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         melding.kontorsperretEnhet = "kontorsperretEnhet";
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 melding));
+
+        wicket.goToPageWith(new HaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
+                .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
+    }
+
+    @Test
+    public void skalIkkeKunneJournalforeHvisTraadHarTemagruppeForSosialeTjenester() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.OKSOS.name(), "melding1"),
+                createMelding("melding2", SVAR_SKRIFTLIG, now(), Temagruppe.OKSOS.name(), "melding1")));
+
+        wicket.goToPageWith(new HaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
+                .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
+
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ANSOS.name(), "melding1"),
+                createMelding("melding2", SVAR_SKRIFTLIG, now(), Temagruppe.ANSOS.name(), "melding1")));
 
         wicket.goToPageWith(new HaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));

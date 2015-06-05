@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
@@ -17,9 +18,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettMeldingEksempel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -140,6 +139,23 @@ public class MerkePanelTest extends WicketPageTest {
                 .should().containComponent(thatIsInvisible().withId("bidragRadio"))
                 .should().containComponent(thatIsInvisible().withId("kontorsperretRadioValg"))
                 .should().containComponent(thatIsInvisible().withId("kontorsperretRadio"));
+    }
+
+    @Test
+    public void skjulerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withTemagruppe(Temagruppe.OKSOS.name()))).setVisibilityAllowed(true))
+                .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
+                .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
+                .should().containComponent(thatIsInvisible().withId("bidragRadio"))
+                .should().containComponent(thatIsVisible().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsVisible().withId("kontorsperretRadio"));
+
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withTemagruppe(Temagruppe.ANSOS.name()))).setVisibilityAllowed(true))
+                .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
+                .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
+                .should().containComponent(thatIsInvisible().withId("bidragRadio"))
+                .should().containComponent(thatIsVisible().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsVisible().withId("kontorsperretRadio"));
     }
 
     @Test

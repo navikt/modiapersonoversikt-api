@@ -28,10 +28,17 @@ public class HaandterMeldingPanel extends Panel {
         IModel<Boolean> nyesteMeldingErJournalfort = new PropertyModel<>(getDefaultModel(), "nyesteMelding.journalfort");
         IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(getDefaultModel(), "eldsteMelding.journalfort");
         IModel<Boolean> erBehandlet = new PropertyModel<>(getDefaultModel(), "erBehandlet()");
+        IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(getDefaultModel(), "erTemagruppeSosialeTjenester()");
 
         AnimertJournalforingsPanel journalforingsPanel = new AnimertJournalforingsPanel("journalforPanel", innboksVM);
         add(journalforingsPanel);
-        add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(erFeilsendt)).and(not(nyesteMeldingErJournalfort)).and(erBehandlet), journalforingsPanel));
+        add(new MeldingValgPanel("journalforingValg",
+                both(not(erKontorsperret))
+                        .and(not(erFeilsendt))
+                        .and(not(nyesteMeldingErJournalfort))
+                        .and(erBehandlet)
+                        .and(not(erTemagruppeSosialeTjenester)),
+                journalforingsPanel));
 
         OppgavePanel oppgavePanel = new OppgavePanel("nyoppgavePanel", innboksVM);
         add(oppgavePanel);

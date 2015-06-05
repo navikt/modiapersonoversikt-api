@@ -20,14 +20,14 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.either;
-import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.modig.wicket.model.ModelUtils.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPGAVE_OPPRETTET;
@@ -61,12 +61,14 @@ public class MerkePanel extends AnimertPanel {
         merkForm.add(feedbackPanel);
 
         PropertyModel<Boolean> valgtTraadErKontorsperret = new PropertyModel<>(innboksVM, "valgtTraad.erKontorsperret()");
+        IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(innboksVM, "valgtTraad.erTemagruppeSosialeTjenester()");
+
 
         merkRadioGroup.setRequired(true);
         merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
         merkRadioGroup.add(new WebMarkupContainer("bidragRadioValg")
                 .add(new Radio<>("bidragRadio", Model.of(BIDRAG)))
-                .add(visibleIf(not(valgtTraadErKontorsperret))));
+                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erTemagruppeSosialeTjenester)))));
         merkRadioGroup.add(new WebMarkupContainer("kontorsperretRadioValg")
                 .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
                 .add(visibleIf(not(valgtTraadErKontorsperret))));
