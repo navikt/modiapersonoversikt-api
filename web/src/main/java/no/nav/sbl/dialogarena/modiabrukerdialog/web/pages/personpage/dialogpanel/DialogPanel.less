@@ -90,9 +90,9 @@
   }
   .oppgavetilknytning {
     margin: 0 @sideMargin;
-    p {
-      text-align: right;
-      font-weight: 600;
+    section {
+      margin: 8px 0;
+      text-align: left;
       width: 100%;
       span {
         display: inline-block;
@@ -109,6 +109,7 @@
       }
     }
     .popupContainer {
+      display: inline-block;
       position: relative;
     }
     .popup {
@@ -116,21 +117,34 @@
       z-index: 1;
       background-color: #ffffff;
       border: 1px solid #cbcbcb;
-      top: 5px;
-      right: -@sideMargin / 2;
-      width: 350px;
-      padding: 8px 0 16px 0;
+      top: 35px;
+      right: -1.5rem;
+      width: 375px;
+      padding: 24px 32px 32px 32px;
       -webkit-box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
       -moz-box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
       box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
-      input[type=button] {
-        margin-top: 8px;
+      text-align: left;
+      h4 {
+        margin: 0 0 16px 0;
       }
       input[type=radio] + label {
-        margin: 8px 0 0 0;
+        margin: 0;
         text-align: left;
-        width: 20rem;
+        width: 100%;
         color: #3e3832;
+        padding-right: 1rem;
+      }
+      input[type=button] {
+        margin-right: 16px;
+      }
+      a {
+        cursor: pointer;
+      }
+      .skiller {
+        height: 1px;
+        background-color: #cbcbcb;
+        margin: 16px 0;
       }
       &:after, &:before {
         position: absolute;
