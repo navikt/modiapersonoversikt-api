@@ -59,6 +59,7 @@ public class HenvendelsePortTypeMock {
     public static final String BEHANDLINGS_ID4 = randomId();
     public static final String BEHANDLINGS_ID5 = randomId();
     public static final String BEHANDLINGS_ID6 = randomId();
+    public static final String BEHANDLINGS_ID7 = randomId();
 
     private static String randomId() {
         return valueOf(idGenerator.nextInt());
@@ -109,7 +110,18 @@ public class HenvendelsePortTypeMock {
                     .withKontorsperreEnhet("0122"),
 
             createXMLHenvendelse(BEHANDLINGS_ID6, BEHANDLINGS_ID6, now().minusDays(2), null,
-                    null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name())
+                    null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name()),
+
+            createXMLHenvendelse(BEHANDLINGS_ID7, BEHANDLINGS_ID7, now().minusDays(4), null,
+                    createXMLMeldingFraBruker("OKSOS", LANG_TEKST),
+                    valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
+
+            createXMLHenvendelse(randomId(), BEHANDLINGS_ID7, now().minusHours(12), null,
+                    createXMLMeldingTilBruker("OKSOS", "TEKST", KORT_TEKST),
+                    null, createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name())
+
     ));
 
     private static XMLJournalfortInformasjon createXMLJourfortInformasjon(DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
