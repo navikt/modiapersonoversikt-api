@@ -29,6 +29,11 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
+            public void oppdaterTemagruppe(String s, String s1) {
+
+            }
+
+            @Override
             public void knyttBehandlingskjedeTilSak(String behandlingskjedeId, String saksId, String temakode, String journalforendeEnhet) {
 
             }
@@ -47,7 +52,7 @@ public class BehandleHenvendelsePortTypeMock {
 
             @Override
             public void knyttBehandlingskjedeTilTema(String s, String s1) {
-                
+
             }
 
             @Override

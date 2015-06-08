@@ -24,9 +24,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
-import java.util.List;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
@@ -50,7 +49,7 @@ public class LeggTilbakePanel extends Panel {
 
     private final Radio<Aarsak> feiltema;
     private final Optional<String> oppgaveId;
-    private final List<Melding> traad;
+    private final Melding sporsmal;
     private final IModel<Boolean> oppgaveLagtTilbake = Model.of(false);
     private final RadioGroup<Aarsak> aarsaker;
     private final LeggTilbakeVM leggTilbakeVM;
@@ -58,10 +57,10 @@ public class LeggTilbakePanel extends Panel {
     private final FeedbackPanel feedbackPanel;
     private final AjaxLink lukkKnapp;
 
-    public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId, final List<Melding> traad) {
+    public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId, Melding sporsmal) {
         super(id);
         this.oppgaveId = oppgaveId;
-        this.traad = traad;
+        this.sporsmal = sporsmal;
         setOutputMarkupPlaceholderTag(true);
 
         leggTilbakeVM = new LeggTilbakeVM();
@@ -149,12 +148,15 @@ public class LeggTilbakePanel extends Panel {
                     );
                     oppgaveLagtTilbake.setObject(true);
 
+                    if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE) {
+                        henvendelseUtsendingService.oppdaterTemagruppe(sporsmal.id, leggTilbakeVM.nyTemagruppe.name());
+                        if (leggTilbakeVM.nyTemagruppe == ANSOS) {
+                            henvendelseUtsendingService.merkSomKontorsperret(sporsmal.fnrBruker, asList(sporsmal.id));
+                        }
+                    }
+
                     target.add(form, feedbackPanelSuccess);
                     target.focusComponent(lukkKnapp);
-
-                    if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE && leggTilbakeVM.nyTemagruppe == ANSOS) {
-                        henvendelseUtsendingService.merkSomKontorsperret(traad.get(0).fnrBruker, on(traad).map(Melding.ID).collect());
-                    }
                     send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
                 } finally {
                     timer.stop();

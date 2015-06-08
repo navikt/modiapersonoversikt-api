@@ -138,6 +138,11 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, meldingsIDer);
     }
 
+    @Override
+    public void oppdaterTemagruppe(String behandlingsId, String temagruppe) {
+        behandleHenvendelsePortType.oppdaterTemagruppe(behandlingsId, temagruppe);
+    }
+
     private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = new Transformer<XMLHenvendelse, String>() {
         @Override
         public String transform(XMLHenvendelse xmlHenvendelse) {

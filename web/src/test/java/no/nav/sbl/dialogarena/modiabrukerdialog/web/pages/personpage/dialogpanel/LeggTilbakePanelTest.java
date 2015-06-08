@@ -23,7 +23,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.CoreMatchers.is;
@@ -38,16 +37,17 @@ import static org.mockito.Matchers.eq;
 public class LeggTilbakePanelTest extends WicketPageTest {
 
     private static final String MELDING_FNR = "11111111111";
+    private static final String MELDING_ID = "123";
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
 
     @Before
     public void setUpTest() {
-        Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId("123").withOpprettetDato(now());
+        Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId(MELDING_ID).withOpprettetDato(now());
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, Optional.<String>none(), asList(sporsmal)));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, Optional.<String>none(), sporsmal));
     }
 
     @Test
@@ -74,6 +74,8 @@ public class LeggTilbakePanelTest extends WicketPageTest {
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages.isEmpty(), is(true));
+
+        Mockito.verify(henvendelseUtsendingService, Mockito.times(1)).oppdaterTemagruppe(eq(MELDING_ID), any(String.class));
     }
 
     @Test

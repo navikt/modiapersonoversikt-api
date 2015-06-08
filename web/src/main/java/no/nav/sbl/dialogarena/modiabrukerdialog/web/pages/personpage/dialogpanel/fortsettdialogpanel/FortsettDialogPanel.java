@@ -82,7 +82,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
-        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, oppgaveId, traad);
+        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, oppgaveId, sporsmal);
         kvittering = new KvitteringsPanel("kvittering");
 
         visTraadContainer.setOutputMarkupPlaceholderTag(true);
