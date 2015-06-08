@@ -32,7 +32,7 @@
         <modig.security.version>1.0.23</modig.security.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.4</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
+        <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
     </properties>
 
