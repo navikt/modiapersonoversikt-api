@@ -5,6 +5,8 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,12 +23,15 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak.*;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -39,12 +44,14 @@ public class LeggTilbakePanel extends Panel {
     private final Radio<Aarsak> feiltema;
 
     @Inject
-    protected OppgaveBehandlingService oppgaveBehandlingService;
+    private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private HenvendelseUtsendingService henvendelseUtsendingService;
 
     private IModel<Boolean> oppgaveLagtTilbake = Model.of(false);
     private final RadioGroup<Aarsak> aarsaker;
 
-    public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId) {
+    public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId, final List<Melding> traad) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
@@ -118,10 +125,14 @@ public class LeggTilbakePanel extends Panel {
                             optional(leggTilbakeVM.nyTemagruppe)
                     );
                     oppgaveLagtTilbake.setObject(true);
-                    send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
 
                     target.add(form, feedbackPanelSuccess);
                     target.focusComponent(lukkKnapp);
+
+                    if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE && leggTilbakeVM.nyTemagruppe == ANSOS) {
+                        henvendelseUtsendingService.merkSomKontorsperret(traad.get(0).fnrBruker, on(traad).map(Melding.ID).collect());
+                    }
+                    send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
                 } finally {
                     timer.stop();
                 }

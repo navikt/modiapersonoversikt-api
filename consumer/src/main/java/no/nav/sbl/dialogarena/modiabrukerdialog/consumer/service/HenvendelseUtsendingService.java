@@ -11,6 +11,8 @@ public interface HenvendelseUtsendingService {
 
     List<Melding> hentTraad(String fnr, String traadId);
 
+    void merkSomKontorsperret(String fnr, List<String> meldingsIDer);
+
     class OppgaveErFerdigstilt extends Exception {
     }
 }

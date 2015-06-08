@@ -91,8 +91,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId.get(), temagruppe);
         }
         if (temagruppe == ANSOS) {
-            String enhet = getEnhet(melding.fnrBruker);
-            behandleHenvendelsePortType.oppdaterKontorsperre(enhet, singletonList(melding.id));
+            merkSomKontorsperret(melding.fnrBruker, singletonList(melding.id));
         }
     }
 
@@ -131,6 +130,12 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         }
 
         return meldinger;
+    }
+
+    @Override
+    public void merkSomKontorsperret(String fnr, List<String> meldingsIDer) {
+        String enhet = getEnhet(fnr);
+        behandleHenvendelsePortType.oppdaterKontorsperre(enhet, meldingsIDer);
     }
 
     private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = new Transformer<XMLHenvendelse, String>() {
