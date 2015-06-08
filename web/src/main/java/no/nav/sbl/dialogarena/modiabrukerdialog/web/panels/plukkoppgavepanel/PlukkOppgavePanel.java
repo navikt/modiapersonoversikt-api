@@ -69,7 +69,7 @@ public class PlukkOppgavePanel extends Panel {
         radioGroup.setRequired(true);
         radioGroup.setOutputMarkupPlaceholderTag(true);
 
-        radioGroup.add(new ListView<Temagruppe>("temagrupper", Temagruppe.INNGAAENDE) {
+        radioGroup.add(new ListView<Temagruppe>("temagrupper", Temagruppe.PLUKKBARE) {
             @Override
             protected void populateItem(ListItem<Temagruppe> item) {
                 item.add(new Radio<>("temagruppevalg", item.getModel()));

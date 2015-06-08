@@ -143,7 +143,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         });
         form.add(radioGroup);
 
-        DropDownChoice<Temagruppe> temagruppeVelger = new DropDownChoice<>("temagruppe", Temagruppe.UTGAAENDE, new ChoiceRenderer<Temagruppe>() {
+        DropDownChoice<Temagruppe> temagruppeVelger = new DropDownChoice<>("temagruppe", Temagruppe.SAMTALEREFERAT, new ChoiceRenderer<Temagruppe>() {
             @Override
             public Object getDisplayValue(Temagruppe object) {
                 return getString(object.name());

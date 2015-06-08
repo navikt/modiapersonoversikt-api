@@ -146,7 +146,7 @@ public class LeggTilbakePanel extends Panel {
 
     private DropDownChoice<Temagruppe> lagFeiltemagruppeKomponenter(PropertyModel<Aarsak> valgtAarsak) {
         WebMarkupContainer nyTemagruppeSkjuler = new WebMarkupContainer("nyTemagruppeSkjuler");
-        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", Temagruppe.INNGAAENDE, new ChoiceRenderer<Temagruppe>() {
+        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", Temagruppe.LEGG_TILBAKE, new ChoiceRenderer<Temagruppe>() {
             @Override
             public Object getDisplayValue(Temagruppe object) {
                 return getString(object.name());
