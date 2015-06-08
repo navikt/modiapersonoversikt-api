@@ -35,20 +35,8 @@ public class UtbetalingEndpointConfig {
     }
 
     @Bean
-    public Pingable pingUtbetalingV1() {
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = currentTimeMillis();
-                String name = "UTBETALING";
-                try {
-                    createUtbetalingPortType(new SystemSAMLOutInterceptor()).ping();
-                    return Arrays.asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return Arrays.asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
-                }
-            }
-        };
+    public UtbetalingPing pingUtbetalingV1() {
+        return new UtbetalingPing();
     }
 
     private UtbetalingV1 createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
@@ -62,5 +50,20 @@ public class UtbetalingEndpointConfig {
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
         return proxyFactoryBean.create(UtbetalingV1.class);
+    }
+
+    public class UtbetalingPing implements Pingable {
+
+        @Override
+        public List<PingResult> ping() {
+            long start = currentTimeMillis();
+            String name = "UTBETALING";
+            try {
+                createUtbetalingPortType(new SystemSAMLOutInterceptor()).ping();
+                return Arrays.asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
+            } catch (Exception e) {
+                return Arrays.asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
+            }
+        }
     }
 }
