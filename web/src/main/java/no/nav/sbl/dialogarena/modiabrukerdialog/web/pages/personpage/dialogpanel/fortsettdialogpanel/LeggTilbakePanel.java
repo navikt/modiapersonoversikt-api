@@ -12,6 +12,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -41,21 +42,29 @@ public class LeggTilbakePanel extends Panel {
 
     public static final String LEGG_TILBAKE_AVBRUTT = "leggtilbake.avbrutt";
     public static final String LEGG_TILBAKE_FERDIG = "leggtilbake.ferdig";
-    private final Radio<Aarsak> feiltema;
 
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
 
-    private IModel<Boolean> oppgaveLagtTilbake = Model.of(false);
+    private final Radio<Aarsak> feiltema;
+    private final Optional<String> oppgaveId;
+    private final List<Melding> traad;
+    private final IModel<Boolean> oppgaveLagtTilbake = Model.of(false);
     private final RadioGroup<Aarsak> aarsaker;
+    private final LeggTilbakeVM leggTilbakeVM;
+    private final WebMarkupContainer feedbackPanelSuccess;
+    private final FeedbackPanel feedbackPanel;
+    private final AjaxLink lukkKnapp;
 
     public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId, final List<Melding> traad) {
         super(id);
+        this.oppgaveId = oppgaveId;
+        this.traad = traad;
         setOutputMarkupPlaceholderTag(true);
 
-        final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM();
+        leggTilbakeVM = new LeggTilbakeVM();
         PropertyModel<Aarsak> valgtAarsak = new PropertyModel<>(leggTilbakeVM, "valgtAarsak");
 
         add(new Label("temagruppe", new ResourceModel(temagruppe, "")));
@@ -99,12 +108,12 @@ public class LeggTilbakePanel extends Panel {
                 target.add(LeggTilbakePanel.this);
             }
         });
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+        feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         form.add(feedbackPanel.setOutputMarkupPlaceholderTag(true));
 
-        final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
+        feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true).add(visibleIf(oppgaveLagtTilbake));
-        final AjaxLink lukkKnapp = new AjaxLink("lukkKnapp") {
+        lukkKnapp = new AjaxLink("lukkKnapp") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_FERDIG);
@@ -113,7 +122,21 @@ public class LeggTilbakePanel extends Panel {
         feedbackPanelSuccess.add(lukkKnapp);
         add(feedbackPanelSuccess);
 
-        form.add(new IndicatingAjaxButtonWithImageUrl("leggtilbake", "../img/ajaxloader/svart/loader_svart_48.gif") {
+        form.add(lagSubmitKnapp());
+
+        form.add(new AjaxLink<Void>("avbryt") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                aarsaker.getModel().setObject(null);
+                target.add(LeggTilbakePanel.this);
+                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_AVBRUTT);
+            }
+        });
+        add(form);
+    }
+
+    private AjaxButton lagSubmitKnapp() {
+        return new IndicatingAjaxButtonWithImageUrl("leggtilbake", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 Timer.Context timer = MetricsFactory.createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak + ".time").time();
@@ -142,17 +165,7 @@ public class LeggTilbakePanel extends Panel {
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
             }
-        });
-
-        form.add(new AjaxLink<Void>("avbryt") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                aarsaker.getModel().setObject(null);
-                target.add(LeggTilbakePanel.this);
-                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_AVBRUTT);
-            }
-        });
-        add(form);
+        };
     }
 
     private DropDownChoice<Temagruppe> lagFeiltemagruppeKomponenter(PropertyModel<Aarsak> valgtAarsak) {
