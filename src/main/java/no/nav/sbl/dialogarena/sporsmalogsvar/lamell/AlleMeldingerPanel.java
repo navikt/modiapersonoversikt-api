@@ -86,7 +86,7 @@ public class AlleMeldingerPanel extends Panel {
         target.add(this);
     }
 
-    @RunOnEvents({TRAAD_MERKET, TRAAD_JOURNALFORT})
+    @RunOnEvents({TRAAD_MERKET, TRAAD_JOURNALFORT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
     public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target) {
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
