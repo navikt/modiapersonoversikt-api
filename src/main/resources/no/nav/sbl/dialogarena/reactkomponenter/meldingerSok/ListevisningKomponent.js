@@ -33,7 +33,7 @@ var ListevisningKomponent = React.createClass({
                     <p className="vekk">{statusIkonTekst}</p>
                     <p dangerouslySetInnerHTML={{__html: dato}}></p>
                     <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
-                    <p className="fritekst" dangerouslySetInnerHTML={{__html: innhold}} aria-hidden="true"></p>
+                    <p className="fritekst" dangerouslySetInnerHTML={{__html: innhold}}></p>
                 </label>
             </div>
         );
