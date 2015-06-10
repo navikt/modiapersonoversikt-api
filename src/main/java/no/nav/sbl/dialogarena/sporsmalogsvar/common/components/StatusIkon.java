@@ -28,7 +28,7 @@ public class StatusIkon extends Panel {
                 meldingVM.traadlengde == 1 ? "melding" : "meldinger"
         );
 
-        Label statusIkonTekst = new Label("statusIkonTekst", format("%s%s%s, %s ",
+        Label statusIkonTekst = new Label("statusIkonTekst", format("%s%s%s, %s, ",
                 erValgt ? "Valgt, " : "",
                 underBehandling ? "Under behandling, " : "",
                 besvartStatus,
