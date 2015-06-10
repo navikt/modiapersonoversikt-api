@@ -49,6 +49,7 @@
             this.input = $('<input type="text">')
                 .appendTo(this.wrapper)
                 .attr('placeholder', this.options.placeholder)
+                .attr('aria-label', this.options.arialabel)
                 .val(value)
                 .autocomplete({
                     delay: 0,

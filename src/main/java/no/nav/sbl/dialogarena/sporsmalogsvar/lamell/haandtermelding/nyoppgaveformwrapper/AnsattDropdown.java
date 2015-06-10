@@ -32,7 +32,8 @@ public class AnsattDropdown extends DropDownChoice<Ansatt> {
     @Override
     public void renderHead(IHeaderResponse response) {
         String placeholder = getString("ansattdropdown.null");
-        response.render(OnDomReadyHeaderItem.forScript(format("$('#%s').combobox({placeholder: '%s'})", this.getMarkupId(), placeholder)));
+        String arialabel = getString("nyoppgave.form.label.tilansatt");
+        response.render(OnDomReadyHeaderItem.forScript(format("$('#%s').combobox({placeholder: '%s', arialabel: '%s'})", this.getMarkupId(), placeholder, arialabel + ", " + placeholder)));
         super.renderHead(response);
     }
 }
