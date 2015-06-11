@@ -7,7 +7,7 @@
     <h4 wicket:id="temagruppe"></h4>
     <form wicket:id="leggtilbakeform">
         <div wicket:id="valgtAarsak" class="valgtAarsak" role="radiogroup" tabindex="-1" wicket:message="aria-label:aria.radiogroup.tekst">
-            <div class="aarsak feiltema">
+            <div wicket:id="temagruppeWrapper" class="aarsak feiltema">
                 <input wicket:id="feiltema" type="radio" wicket:message="aria-label:leggtilbake.feiltema"/>
                 <label wicket:for="feiltema"><wicket:message key="leggtilbake.feiltema"/></label>
                 <div wicket:id="nyTemagruppeSkjuler" class="nyTemagruppeSkjuler">

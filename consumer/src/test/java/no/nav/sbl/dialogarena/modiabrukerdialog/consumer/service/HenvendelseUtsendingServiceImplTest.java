@@ -284,6 +284,7 @@ public class HenvendelseUtsendingServiceImplTest {
                         .withBehandlingskjedeId(TRAAD_ID)
                         .withOpprettetDato(now())
                         .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
+                        .withGjeldendeTemagruppe("ARBD")
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingFraBruker().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
         );
@@ -294,6 +295,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 .withOppgaveIdGsak("")
                 .withBehandlingskjedeId(TRAAD_ID)
                 .withOpprettetDato(now().minusDays(2))
+                .withGjeldendeTemagruppe("ARBD")
                 .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.value())
                 .withMetadataListe(new XMLMetadataListe()
                         .withMetadata(new XMLMeldingFraBruker()
@@ -306,6 +308,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 .withBehandlingskjedeId(sporsmalId)
                 .withOpprettetDato(now())
                 .withHenvendelseType(XMLHenvendelseType.SVAR_SKRIFTLIG.name())
+                .withGjeldendeTemagruppe("ARBD")
                 .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withNavident("")));
     }
 
@@ -317,6 +320,7 @@ public class HenvendelseUtsendingServiceImplTest {
                         .withBehandlingskjedeId(sporsmalId)
                         .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
                         .withOpprettetDato(now().minusDays(1))
+                        .withGjeldendeTemagruppe("ARBD")
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingFraBruker().withFritekst("").withTemagruppe(""))),
                 new XMLHenvendelse()
@@ -324,6 +328,7 @@ public class HenvendelseUtsendingServiceImplTest {
                         .withBehandlingsId(ELDSTE_HENVENDELSE)
                         .withBehandlingskjedeId(sporsmalId)
                         .withOpprettetDato(now())
+                        .withGjeldendeTemagruppe("FMLI")
                         .withHenvendelseType(XMLHenvendelseType.SVAR_TELEFON.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingTilBruker().withNavident("")))

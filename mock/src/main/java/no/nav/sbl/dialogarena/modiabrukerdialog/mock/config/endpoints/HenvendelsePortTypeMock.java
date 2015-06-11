@@ -60,6 +60,7 @@ public class HenvendelsePortTypeMock {
     public static final String BEHANDLINGS_ID5 = randomId();
     public static final String BEHANDLINGS_ID6 = randomId();
     public static final String BEHANDLINGS_ID7 = randomId();
+    public static final String BEHANDLINGS_ID8 = randomId();
 
     private static String randomId() {
         return valueOf(idGenerator.nextInt());
@@ -120,9 +121,17 @@ public class HenvendelsePortTypeMock {
             createXMLHenvendelse(randomId(), BEHANDLINGS_ID7, now().minusHours(12), null,
                     createXMLMeldingTilBruker("OKSOS", "TEKST", KORT_TEKST),
                     null, createXMLJourfortInformasjon(null, "", "", ""))
-                    .withHenvendelseType(SVAR_SKRIFTLIG.name())
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name()),
+
+            henvendelseMedGjeldendeTemagruppe(BEHANDLINGS_ID8, "ANSOS")
 
     ));
+
+    private static XMLHenvendelse henvendelseMedGjeldendeTemagruppe(String behandlingsId, String gjeldendeTemagruppe) {
+        return createXMLHenvendelse(behandlingsId, behandlingsId, DateTime.now().minusDays(3), null, createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), createXMLJourfortInformasjon(null, null, null, null))
+                .withHenvendelseType(SPORSMAL_SKRIFTLIG.toString())
+                .withGjeldendeTemagruppe(gjeldendeTemagruppe);
+    }
 
     private static XMLJournalfortInformasjon createXMLJourfortInformasjon(DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
         return new XMLJournalfortInformasjon()
@@ -144,7 +153,8 @@ public class HenvendelsePortTypeMock {
                 .withEksternAktor(NAVIDENT)
                 .withJournalfortInformasjon(journalfortInformasjon)
                 .withOppgaveIdGsak(oppgaveId)
-                .withErTilknyttetAnsatt(false);
+                .withErTilknyttetAnsatt(false)
+                .withGjeldendeTemagruppe("ARBD");
 
         return xmlHenvendelse.withMetadataListe(
                 metadata == null ? null : new XMLMetadataListe().withMetadata(metadata));

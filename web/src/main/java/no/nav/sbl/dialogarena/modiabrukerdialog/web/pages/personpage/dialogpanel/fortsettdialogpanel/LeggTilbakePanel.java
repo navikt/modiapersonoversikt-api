@@ -57,7 +57,7 @@ public class LeggTilbakePanel extends Panel {
     private final FeedbackPanel feedbackPanel;
     private final AjaxLink lukkKnapp;
 
-    public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId, Melding sporsmal) {
+    public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal) {
         super(id);
         this.oppgaveId = oppgaveId;
         this.sporsmal = sporsmal;
@@ -76,12 +76,15 @@ public class LeggTilbakePanel extends Panel {
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
         annenAarsak.add(visibleIf(isEqualTo(valgtAarsak, ANNEN)));
+        WebMarkupContainer temagruppeWrapper = new WebMarkupContainer("temagruppeWrapper");
+        temagruppeWrapper.setVisibilityAllowed(gjeldendeTemagruppe != ANSOS);
         feiltema = new Radio<>("feiltema", Model.of(FEIL_TEMAGRUPPE));
+        temagruppeWrapper.add(feiltema, temagruppevelger.getParent());
 
         aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
-        aarsaker.add(feiltema,
-                temagruppevelger.getParent(),
+        aarsaker.add(
+                temagruppeWrapper,
                 new Radio<>("inhabil", Model.of(INHABIL)),
                 new Radio<>("annen", Model.of(ANNEN)),
                 annenAarsak);
