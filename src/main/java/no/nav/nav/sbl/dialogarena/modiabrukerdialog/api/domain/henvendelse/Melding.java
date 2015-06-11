@@ -1,5 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -13,6 +14,7 @@ public class Melding implements Serializable {
             lestStatus, opprettetDatoTekst;
     public DateTime lestDato, opprettetDato, journalfortDato;
     public Meldingstype meldingstype;
+    public Temagruppe gjeldendeTemagruppe;
     public Status status;
     public boolean kassert, ingenTilgangJournalfort;
     public Boolean erTilknyttetAnsatt;
@@ -118,6 +120,11 @@ public class Melding implements Serializable {
 
     public Melding withErTilknyttetAnsatt(Boolean erTilknyttetAnsatt) {
         this.erTilknyttetAnsatt = erTilknyttetAnsatt;
+        return this;
+    }
+
+    public Melding withGjeldendeTemagruppe(Temagruppe gjeldendeTemagruppe) {
+        this.gjeldendeTemagruppe = gjeldendeTemagruppe;
         return this;
     }
 

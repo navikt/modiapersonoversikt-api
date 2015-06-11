@@ -2,6 +2,7 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
@@ -71,6 +72,7 @@ public class MeldingUtils {
                 melding.eksternAktor = xmlHenvendelse.getEksternAktor();
                 melding.tilknyttetEnhet = xmlHenvendelse.getTilknyttetEnhet();
                 melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
+                melding.gjeldendeTemagruppe = Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe());
 
                 XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
                 if (journalfortInformasjon != null) {

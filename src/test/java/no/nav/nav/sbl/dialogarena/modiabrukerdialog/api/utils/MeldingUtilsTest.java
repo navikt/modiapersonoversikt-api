@@ -13,6 +13,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.*;
@@ -272,6 +273,7 @@ public class MeldingUtilsTest {
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(DateTime.now())
                 .withBehandlingskjedeId("behandlingskjedeId")
+                .withGjeldendeTemagruppe(ARBD.toString())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingTilBruker()
                                 .withTemagruppe("temagruppe")
@@ -287,6 +289,7 @@ public class MeldingUtilsTest {
                 .withHenvendelseType(SPORSMAL_SKRIFTLIG.name())
                 .withOpprettetDato(DateTime.now())
                 .withOppgaveIdGsak("oppgaveidgsak")
+                .withGjeldendeTemagruppe(ARBD.toString())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingFraBruker()
                                 .withTemagruppe("temagruppe")
@@ -299,6 +302,7 @@ public class MeldingUtilsTest {
                 .withBehandlingsId("behandlingsid")
                 .withHenvendelseType(SPORSMAL_SKRIFTLIG.name())
                 .withOpprettetDato(DateTime.now())
+                .withGjeldendeTemagruppe(ARBD.toString())
                 .withOppgaveIdGsak("oppgaveidgsak")
                 .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLUkjentType()));
     }
@@ -321,6 +325,7 @@ public class MeldingUtilsTest {
                 .withOpprettetDato(opprettetDato)
                 .withLestDato(lestDato)
                 .withHenvendelseType(henvendelseType)
+                .withGjeldendeTemagruppe(ARBD.toString())
                 .withEksternAktor(eksternAktor)
                 .withJournalfortInformasjon(
                         new XMLJournalfortInformasjon()
