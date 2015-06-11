@@ -1,11 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,22 +20,25 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
+@ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     private final static String FODSELSNR = "52765236723";
 
     @Inject
-    private JoarkJournalforingService joarkJournalforingService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
+    @Inject
+    private SakerService sakerService;
 
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
-        innboksVM = new InnboksVM(FODSELSNR);
+        innboksVM = new InnboksVM(FODSELSNR, henvendelseBehandlingService);
     }
 
     @Test
@@ -45,7 +49,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     }
 
     @Test
-    public void skalJournalforeVedSubmit() {
+    public void skalJournalforeVedSubmit() throws JournalforingFeilet {
         JournalforingsPanelVelgSak panel = new JournalforingsPanelVelgSak("panel", innboksVM);
         panel.oppdater();
         wicket
@@ -54,7 +58,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
 
-        verify(joarkJournalforingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), any(Sak.class));
     }
 
     @Test

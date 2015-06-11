@@ -1,76 +1,83 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettMeldingEksempel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MerkePanelTest extends WicketPageTest {
 
-    public static final String PANEL_MERK_FORM_ID = "panel:merkForm";
-    public static final String MERK_TYPE_RADIOGROUP_ID = "merkType";
+    private static final String PANEL_MERK_FORM_ID = "panel:merkForm";
+    private static final String MERK_TYPE_RADIOGROUP_ID = "merkType";
     private static final String FNR = "fnr";
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
-    private MerkePanel merkePanel;
+    private InnboksVM innboksVM;
 
-    @Before
-    public void setUp() {
-        InnboksVM innboksVM = new InnboksVM(FNR);
-        merkePanel = new MerkePanel("panel", innboksVM);
-        merkePanel.setVisibilityAllowed(true);
+    @Test
+    public void paneletViserAlleRadioknappene() {
+        wicket.goToPageWith(getStandardMerkePanel())
+                .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
+                .should().containComponent(thatIsVisible().withId("bidragRadioValg"))
+                .should().containComponent(thatIsVisible().withId("bidragRadio"))
+                .should().containComponent(thatIsVisible().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsVisible().withId("kontorsperretRadio"));
     }
 
     @Test
-    public void skalGiFeilmeldingDersomManProverAaMarkereUtenAaVelgeKontorsperretEllerFeilsendt() {
-        wicket.goToPageWith(merkePanel).should().containComponent(thatIsInvisible().withId("merk"));
+    public void paneletViserIkkeMerkValgFoerManHarValgtEnRadioknapp() {
+        wicket.goToPageWith(getStandardMerkePanel()).should().containComponent(thatIsInvisible().withId("merk"));
     }
 
     @Test
-    public void skalSkjuleOpprettOppgavePanelHvisIngenAvRadiovalgeneErSatt() {
-        wicket.goToPageWith(merkePanel)
+    public void skjulerOpprettOppgavePanelHvisIngenAvRadiovalgeneErSatt() {
+        wicket.goToPageWith(getStandardMerkePanel())
                 .should().containComponent(thatIsInvisible().withId("kontorsperrePanel"));
     }
 
     @Test
-    public void skalViseOpprettOppgavePanelHvisKontorsperreErValgt() {
-        wicket.goToPageWith(merkePanel)
+    public void viserOpprettOppgavePanelHvisKontorsperreErValgt() {
+        wicket.goToPageWith(getStandardMerkePanel())
                 .inForm(PANEL_MERK_FORM_ID)
-                .select(MERK_TYPE_RADIOGROUP_ID, 1)
+                .select(MERK_TYPE_RADIOGROUP_ID, 2)
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
                 .should().containComponent(thatIsVisible().withId("kontorsperrePanel"));
     }
 
     @Test
-    public void skalMerkeTraadSomKontorsperret() {
+    public void merkerTraadSomKontorsperret() {
+        MerkePanel merkePanel = getStandardMerkePanel();
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
-                .select(MERK_TYPE_RADIOGROUP_ID, 1)
+                .select(MERK_TYPE_RADIOGROUP_ID, 2)
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class));
 
@@ -78,11 +85,12 @@ public class MerkePanelTest extends WicketPageTest {
 
         wicket.inForm(PANEL_MERK_FORM_ID).submitWithAjaxButton(withId("merk"));
 
-        verify(henvendelseBehandlingService).merkSomKontorsperret(eq(FNR), any(TraadVM.class));
+        verify(henvendelseBehandlingService).merkSomKontorsperret(FNR, innboksVM.getValgtTraad());
     }
 
     @Test
-    public void skalMerkeTraadSomFeilsendt() {
+    public void merkerTraadSomFeilsendt() {
+        MerkePanel merkePanel = getStandardMerkePanel();
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
                 .select(MERK_TYPE_RADIOGROUP_ID, 0)
@@ -91,11 +99,12 @@ public class MerkePanelTest extends WicketPageTest {
                 .inForm(PANEL_MERK_FORM_ID)
                 .submitWithAjaxButton(withId("merk"));
 
-        verify(henvendelseBehandlingService).merkSomFeilsendt(any(TraadVM.class));
+        verify(henvendelseBehandlingService).merkSomFeilsendt(innboksVM.getValgtTraad());
     }
 
     @Test
-    public void skalResetteMerkVMIdetManMarkererSomFeilsenddt() {
+    public void resetterMerkVMIdetManMarkererSomFeilsendt() {
+        MerkePanel merkePanel = getStandardMerkePanel();
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
                 .select(MERK_TYPE_RADIOGROUP_ID, 0)
@@ -109,7 +118,8 @@ public class MerkePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalSkjuleMerkPaneletIdetManTrykkerAvbryt() {
+    public void skjulerMerkPaneletIdetManTrykkerAvbryt() {
+        MerkePanel merkePanel = getStandardMerkePanel();
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
                 .select(MERK_TYPE_RADIOGROUP_ID, 0)
@@ -117,6 +127,54 @@ public class MerkePanelTest extends WicketPageTest {
                 .click().link(withId("avbryt"));
 
         assertThat(merkePanel.isVisibilityAllowed(), is(false));
+    }
+
+    @Test
+    public void skjulerBidragOgKontorsperretvalgDersomValgtTraadErKontorsperret() {
+        MerkePanel merkePanelForKontorsperretTraad = getMerkPanelMedKontorsperretValgtMelding();
+        merkePanelForKontorsperretTraad.setVisibilityAllowed(true);
+
+        wicket.goToPageWith(merkePanelForKontorsperretTraad)
+                .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
+                .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
+                .should().containComponent(thatIsInvisible().withId("bidragRadio"))
+                .should().containComponent(thatIsInvisible().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsInvisible().withId("kontorsperretRadio"));
+    }
+
+    @Test
+    public void erMuligAaMerkeSomFeilsendtDersomValgtTraadErKontorsperret() {
+        MerkePanel merkePanelForKontorsperretTraad = getMerkPanelMedKontorsperretValgtMelding();
+        merkePanelForKontorsperretTraad.setVisibilityAllowed(true);
+
+        assertThat(innboksVM.getValgtTraad().erFeilsendt(), is(false));
+
+        wicket.goToPageWith(merkePanelForKontorsperretTraad)
+                .inForm(PANEL_MERK_FORM_ID)
+                .select(MERK_TYPE_RADIOGROUP_ID, 0)
+                .andReturn()
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
+                .inForm(PANEL_MERK_FORM_ID)
+                .submitWithAjaxButton(withId("merk"));
+
+        verify(henvendelseBehandlingService).merkSomFeilsendt(innboksVM.getValgtTraad());
+    }
+
+    private MerkePanel getStandardMerkePanel() {
+        return getMerkePanel(asList(opprettMeldingEksempel()));
+    }
+
+    private MerkePanel getMerkPanelMedKontorsperretValgtMelding() {
+        Melding melding = TestUtils.opprettMeldingEksempel().withKontorsperretEnhet("kontorsperretEnhet");
+        return getMerkePanel(asList(melding));
+    }
+
+    private MerkePanel getMerkePanel(List<Melding> meldinger) {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(meldinger);
+        innboksVM = new InnboksVM(FNR, henvendelseBehandlingService);
+        MerkePanel merkePanel = new MerkePanel("panel", innboksVM);
+        merkePanel.setVisibilityAllowed(true);
+        return merkePanel;
     }
 
 }

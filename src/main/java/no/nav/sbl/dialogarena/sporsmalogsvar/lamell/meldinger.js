@@ -4,20 +4,20 @@ var Meldinger = (function () {
     var TAB = 9;
 
     var addKeyNavigation = function () {
-        $('.meldinglamell').on('keydown', '.melding', function (e) {
+        $('.meldinglamell').on('keydown', '.meldingsforhandsvisning', function (e) {
             var eventHandled = true;
             if (e.keyCode === PIL_OPP) {
                 $(e.currentTarget).prev().click();
             } else if (e.keyCode === PIL_NED) {
                 $(e.currentTarget).next().click();
             } else if (e.keyCode === TAB && e.shiftKey) {
-                $('.meldinger .lamellhode ~ .close').focus();
+                $('.meldinglamell .innboksSokToggle button').focus();
             } else if (e.keyCode === TAB) {
                 $('.haandter-meldinger a').first().focus();
             } else {
                 eventHandled = false;
             }
-            
+
             if (eventHandled) {
                 e.preventDefault();
             }
@@ -25,7 +25,9 @@ var Meldinger = (function () {
     };
 
     var focusOnSelectedElement = function () {
-        setTimeout(function(){$('.melding.valgt').focus()},0);
+        setTimeout(function(){
+            $('.melding.valgt').focus();
+        },0);
     };
 
     return {

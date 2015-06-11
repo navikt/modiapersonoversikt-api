@@ -8,23 +8,39 @@
         <wicket:message key="merke.overskrift"/>
     </h2>
     <div class="robust-strek"></div>
-    <form  wicket:id="merkForm">
+    <form wicket:id="merkForm">
         <div wicket:id="merkType">
-            <div>
-                <input wicket:id="feilsendtRadio" type="radio" />
-                <label wicket:for="feilsendtRadio" class="medium"><wicket:message key="merke.feilsendt"/></label>
-            </div>
-            <div>
-                <input wicket:id="kontorsperretRadio" type="radio" />
-                <label wicket:for="kontorsperretRadio" class="medium"><wicket:message key="merke.kontorsperret"/></label>
-                <div wicket:id="kontorsperrePanel"></div>
-            </div>
+            <fieldset class="wcag">
+                <legend>Velg merking</legend>
+                <span>
+                    <input wicket:id="feilsendtRadio" type="radio"/>
+                    <label wicket:for="feilsendtRadio" class="medium">
+                        <wicket:message key="merke.feilsendt"/>
+                    </label>
+                    <br/>
+                </span>
+                <span wicket:id="bidragRadioValg">
+                    <input wicket:id="bidragRadio" type="radio"/>
+                    <label wicket:for="bidragRadio" class="medium">
+                        <wicket:message key="merke.bidrag"/>
+                    </label>
+                    <br/>
+                </span>
+                <span wicket:id="kontorsperretRadioValg">
+                    <input wicket:id="kontorsperretRadio" type="radio"/>
+                    <label wicket:for="kontorsperretRadio" class="medium">
+                        <wicket:message key="merke.kontorsperret"/>
+                    </label>
+                </span>
+            </fieldset>
+
+            <div wicket:id="kontorsperrePanel"></div>
         </div>
         <div wicket:id="feedbackMerkPanel" role="alert" aria-live="assertive" aria-atomic="true"></div>
         <input type="submit"
                class="knapp-hoved-stor"
                wicket:id="merk"
-               wicket:message="value:merk.sendknapp" />
+               wicket:message="value:merk.sendknapp, title:merk.sendknapp"/>
     </form>
     <a href="#" wicket:id="avbryt" class="avbryt-knapp">Avbryt</a>
 </wicket:panel>

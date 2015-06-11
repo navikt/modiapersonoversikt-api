@@ -1,30 +1,25 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.wicket.injection.Injector;
 
-import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
 
 public class JournalfortSakVM implements Serializable {
 
     private Sak sak;
-
     private InnboksVM innboksVM;
+    private SakerService sakerService;
 
-    @Inject
-    private GsakService gsakService;
-
-    public JournalfortSakVM(InnboksVM innboksVM) {
+    public JournalfortSakVM(InnboksVM innboksVM, SakerService sakerService) {
         this.innboksVM = innboksVM;
-        Injector.get().inject(this);
+        this.sakerService = sakerService;
     }
 
     public final void oppdater() {
-        List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
+        List<Sak> sakerForBruker = sakerService.hentListeAvSaker(innboksVM.getFnr());
         String journalfortSaksId = innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId;
 
         sak = finnJournalfortSakHvisDenEksisterer(sakerForBruker, journalfortSaksId);
@@ -32,7 +27,7 @@ public class JournalfortSakVM implements Serializable {
 
     private Sak finnJournalfortSakHvisDenEksisterer(List<Sak> sakerForBruker, String journalfortSaksId) {
         for (Sak sakForBruker : sakerForBruker) {
-            if (sakForBruker.saksId.equals(journalfortSaksId)) {
+            if (sakForBruker.saksId.isSome() && sakForBruker.saksId.get().equals(journalfortSaksId)) {
                 return sakForBruker;
             }
         }

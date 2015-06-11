@@ -1,19 +1,50 @@
 @skilleMargin: 0 0 3px;
 
 .widget-navigasjon.widget-meldinger {
-  .meldingstatus {
-    display: block;
-    margin: @skilleMargin;
-  }
+  position: relative;
   .opprettet {
-    margin: @skilleMargin;
     display: block;
-    font-size: 0.85rem;
+    margin: 0;
   }
-  .temagruppe {
-    display: block;
+  .traadlengde {
+    position: absolute;
+    right: 10px;
+    padding-right: 10px;
+    line-height: 16px;
     font-weight: bold;
-    font-size: 1.2rem;
-    font-family: Modus, arial, sans-serif
+    background: url(../img/melding_flere_innlegg.svg) no-repeat right;
+    background-size: 8px;
+  }
+  li a:focus {
+    .statusIkon {
+      &.ubesvart {
+        background: url(../img/melding_ny_hvit.svg) no-repeat;
+      }
+    }
+    .traadlengde {
+      background: url(../img/melding_flere_innlegg_hvit.svg) no-repeat right;
+      background-size: 8px;
+    }
+  }
+  .statusIkon {
+    position: absolute;
+    height: 14px;
+    width: 18px;
+    left: 8px;
+    top: 54px;
+    &.besvart {
+      background: url(../img/melding_besvart.svg) no-repeat;
+    }
+    &.ubesvart {
+      background: url(../img/melding_ny.svg) no-repeat;
+    }
+  }
+  .widget-meldingstatus {
+    margin-top: 16px;
+    display: block;
+    font-weight: 600;
+    span {
+      display: inline-block;
+    }
   }
 }

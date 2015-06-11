@@ -1,101 +1,140 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
-import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.ukedagerFraDato;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class GsakService {
 
     private static final Logger logger = LoggerFactory.getLogger(GsakService.class);
+
     public static final int DEFAULT_OPPRETTET_AV_ENHET_ID = 2820;
     public static final String HENVENDELSESTYPE_KODE = "BESVAR_KNA";
+    public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
+    public static final String KODE_KONTAKT_NAV = "KNA";
 
     @Inject
-    private OppgavebehandlingV3 oppgavebehandling;
+    private OppgaveV3 oppgaveWS;
     @Inject
-    private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
+    private OppgavebehandlingV3 oppgavebehandlingWS;
     @Inject
     private Ruting ruting;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
-    private GOSYSNAVansatt ansattWS;
+    private AnsattService ansattWS;
 
-    public List<Sak> hentSakerForBruker(String fnr) {
-        WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
-        return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<Sak>());
-    }
-
-    public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema, String type) {
+    public List<AnsattEnhet> hentForeslatteEnheter(String fnr, String tema, String type, Optional<GsakKodeTema.Underkategori> underkategori) {
         try {
-            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(
-                    new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                            .withAlleEnheter(true)
-                            .withBrukerId(fnr)
-                            .withFagomradeKode(tema)
-                            .withOppgaveKode(type));
+            WSFinnAnsvarligEnhetForOppgavetypeRequest request = new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                    .withAlleEnheter(true)
+                    .withBrukerId(fnr)
+                    .withFagomradeKode(tema)
+                    .withOppgaveKode(type);
 
-            WSEnhet wsEnhet = enhetForOppgaveResponse.getEnhetListe().get(0);
-            return optional(new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()));
+            if (underkategori.isSome() && !isBlank(underkategori.get().kode)) {
+                request.withGjelderKode(underkategori.get().kode);
+            }
+
+            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(request);
+
+            List<WSEnhet> wsEnheter = enhetForOppgaveResponse.getEnhetListe();
+
+            return on(wsEnheter).map(new Transformer<WSEnhet, AnsattEnhet>() {
+                @Override
+                public AnsattEnhet transform(WSEnhet wsEnhet) {
+                    return new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn());
+                }
+            }).collect();
         } catch (Exception e) {
-            return none();
+            return emptyList();
         }
     }
 
-    public static final Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {
-        @Override
-        public Sak transform(WSGenerellSak wsGenerellSak) {
-            Sak sak = new Sak();
-            sak.opprettetDato = wsGenerellSak.getEndringsinfo().getOpprettetDato();
-            sak.saksId = wsGenerellSak.getSakId();
-            sak.temaKode = wsGenerellSak.getFagomradeKode();
-            sak.sakstype = wsGenerellSak.getSakstypeKode();
-            sak.fagsystemKode = wsGenerellSak.getFagsystemKode();
-            return sak;
+    public boolean oppgaveKanManuelltAvsluttes(String oppgaveId) {
+        WSOppgave wsOppgave = hentOppgave(oppgaveId);
+
+        boolean kontaktNav = equalsIgnoreCase(wsOppgave.getFagomrade().getKode(), KODE_KONTAKT_NAV);
+        boolean ferdigstilt = oppgaveErFerdigstilt(wsOppgave);
+
+        return !kontaktNav && !ferdigstilt;
+    }
+
+    private boolean oppgaveErFerdigstilt(WSOppgave wsOppgave) {
+        return equalsIgnoreCase(wsOppgave.getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
+    }
+
+    public WSOppgave hentOppgave(String oppgaveId) {
+        try {
+            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
+        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
+            throw new RuntimeException("Fant ikke oppgave med id: " + oppgaveId, hentOppgaveOppgaveIkkeFunnet);
         }
-    };
+    }
+
+    public void ferdigstillGsakOppgave(WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
+        String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        int valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
+        try {
+            String nyBeskrivelse = "Oppgaven er ferdigstilt i Modia med beskrivelse:\n" + beskrivelse;
+            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
+            lagreGsakOppgave(oppgave, valgtEnhetId);
+        } catch (LagreOppgaveOptimistiskLasing e) {
+            if (oppgaveErFerdigstilt(hentOppgave(oppgave.getOppgaveId()))) {
+                throw new OppgaveErFerdigstilt(e);
+            }
+            throw e;
+        }
+        oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgave.getOppgaveId()).withFerdigstiltAvEnhetId(valgtEnhetId));
+    }
 
     public void opprettGsakOppgave(NyOppgave nyOppgave) {
         int valgtEnhetId;
+        String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
         try {
-            valgtEnhetId = Integer.parseInt(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
         } catch (NumberFormatException e) {
-            logger.error(String.format("EnhetId %s kunne ikke gjøres om til Integer", saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
+            logger.error(String.format("EnhetId %s kunne ikke gjøres om til Integer", valgtEnhetIdString));
             valgtEnhetId = DEFAULT_OPPRETTET_AV_ENHET_ID;
         }
-        oppgavebehandling.opprettOppgave(
+
+        String beskrivelse = "Fra Modia:\n" + nyOppgave.beskrivelse;
+
+        GsakKodeTema.Underkategori underkategori = optional(nyOppgave.underkategori).getOrElse(new GsakKodeTema.Underkategori(null, null));
+
+        oppgavebehandlingWS.opprettOppgave(
                 new WSOpprettOppgaveRequest()
                         .withOpprettetAvEnhetId(valgtEnhetId)
                         .withHenvendelsetypeKode(HENVENDELSESTYPE_KODE)
@@ -105,8 +144,9 @@ public class GsakService {
                                         .withAktivFra(LocalDate.now())
                                         .withAktivTil(ukedagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
-                                        .withBeskrivelse(lagBeskrivelse(nyOppgave.beskrivelse, valgtEnhetId))
+                                        .withBeskrivelse(leggTilBeskrivelse(beskrivelse, valgtEnhetIdString))
                                         .withFagomradeKode(nyOppgave.tema.kode)
+                                        .withUnderkategoriKode(underkategori.kode)
                                         .withBrukerId(nyOppgave.brukerId)
                                         .withOppgavetypeKode(nyOppgave.type.kode)
                                         .withPrioritetKode(nyOppgave.prioritet.kode)
@@ -115,24 +155,59 @@ public class GsakService {
         );
     }
 
-    private String lagBeskrivelse(String beskrivelse, int valgtEnhetId) {
+    private String leggTilBeskrivelse(String beskrivelse, String valgtEnhetId) {
+        return leggTilBeskrivelse("", beskrivelse, valgtEnhetId);
+    }
+
+    private String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil, String valgtEnhetId) {
         String ident = getSubjectHandler().getUid();
-        String header = String.format("--- %s %s (%s, %s) ---\nOppgave opprettet fra Modia med beskrivelse:\n",
+        String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
-                hentAnsattNavn(ident),
+                ansattWS.hentAnsattNavn(ident),
                 ident,
                 valgtEnhetId);
 
-        return header + beskrivelse;
+        String nyBeskrivelse = header + leggTil;
+        return isBlank(gammelBeskrivelse) ? nyBeskrivelse : gammelBeskrivelse + "\n\n" + nyBeskrivelse;
     }
 
-    private String hentAnsattNavn(String ident) {
+    private void lagreGsakOppgave(WSOppgave wsOppgave, int endretAvEnhetId) throws LagreOppgaveOptimistiskLasing {
         try {
-            ASBOGOSYSNAVAnsatt ansattRequest = new ASBOGOSYSNAVAnsatt();
-            ansattRequest.setAnsattId(ident);
-            return ansattWS.hentNAVAnsatt(ansattRequest).getAnsattNavn();
-        } catch (HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattFaultGOSYSGeneriskfMsg e) {
-            throw new RuntimeException("Noe gikk galt ved henting av ansatt med ident " + ident, e);
+            oppgavebehandlingWS.lagreOppgave(
+                    new WSLagreOppgaveRequest()
+                            .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
+                            .withEndretAvEnhetId(endretAvEnhetId));
+
+        } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
+            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
+        }
+    }
+
+    public static WSEndreOppgave tilWSEndreOppgave(WSOppgave wsOppgave) {
+        return new WSEndreOppgave()
+                .withOppgaveId(wsOppgave.getOppgaveId())
+                .withAnsvarligId(wsOppgave.getAnsvarligId())
+                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                .withDokumentId(wsOppgave.getDokumentId())
+                .withKravId(wsOppgave.getKravId())
+                .withAnsvarligEnhetId(wsOppgave.getAnsvarligEnhetId())
+
+                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                .withOppgavetypeKode(wsOppgave.getOppgavetype().getKode())
+                .withPrioritetKode(wsOppgave.getPrioritet().getKode())
+                .withBrukertypeKode(wsOppgave.getGjelder().getBrukertypeKode())
+                .withUnderkategoriKode(wsOppgave.getUnderkategori().getKode())
+
+                .withAktivFra(wsOppgave.getAktivFra())
+                .withBeskrivelse(wsOppgave.getBeskrivelse())
+                .withVersjon(wsOppgave.getVersjon())
+                .withSaksnummer(wsOppgave.getSaksnummer())
+                .withLest(wsOppgave.isLest());
+    }
+
+    public static class OppgaveErFerdigstilt extends Exception {
+        public OppgaveErFerdigstilt(Throwable cause) {
+            super("Oppgaven er allerede ferdigstilt", cause);
         }
     }
 }

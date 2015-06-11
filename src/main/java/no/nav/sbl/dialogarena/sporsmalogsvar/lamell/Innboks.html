@@ -6,8 +6,19 @@
 <body>
 <wicket:panel>
     <div class="meldinglamell flexbox flex1">
-        <section wicket:id="meldinger" class="meldingsliste flex2" role="tablist"></section>
-        <section wicket:id="detaljpanel" class="meldingsdetaljer flex3" role="tabpanel" aria-atomic="true" aria-live="polite"></section>
+        <section class="meldingsliste flex2">
+            <div wicket:id="meldingerSokToggleContainer" class="clearfix innboksSokToggle">
+                <button wicket:id="meldingerSokToggle" class="knapp-liten" wicket:message="title:innboks.sok.knapp.title">
+                    <wicket:message key="innboks.sok.knapp.tekst"/>
+                </button>
+                <img src="img/ajaxloader/graa/loader_graa_32.gif" alt="Snurrepipp" />
+            </div>
+            <wicket:container wicket:id="meldingerSokContainer"></wicket:container>
+            <section wicket:id="meldinger" role="tablist"></section>
+        </section>
+
+        <section wicket:id="detaljpanel" class="traadDetaljer flex3" role="tabpanel" aria-atomic="true"
+                 aria-live="polite"></section>
         <div wicket:id="feilmeldingpanel" class="feilmelding">
             <div class="robust-ikon-feil-gra"></div>
             <span wicket:id="feilmelding" class="stor"></span>

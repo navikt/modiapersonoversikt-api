@@ -3,6 +3,7 @@
 @rammefarge: #d1d1d1;
 @modiagraaskrift: #b7b1a9;
 @sidemargin: 30px;
+@grayDark: #3e3832;
 
 .lamell.meldinger .lerret {
   padding: 0;
@@ -17,157 +18,56 @@
   }
   position: relative;
   border-top: 1px solid @rammefarge;
+
   .meldingsliste {
     background-color: @graabakgrunn;
     border-right: 1px solid @rammefarge;
-    .melding {
-      padding: 1em @sidemargin 1.2em @sidemargin;
-      border-bottom: solid 1px @rammefarge;
-      overflow: hidden;
-      header {
-        .opprettet {
-          font-family: arial, sans-serif;
-          font-size: 0.85rem;
-          margin: 0.2em 0;
-        }
-        h1 {
-          font-weight: bold;
-          margin: 0;
-          font-size: 1.2em;
-          text-overflow: ellipsis;
-          -o-text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-        }
+
+    .innboksSokToggle {
+      border-bottom: solid 1px #d1d1d1;
+      > * {
+        margin: 0.5rem;
+        float: right;
       }
-      >p {
-        width: 100%;
-        margin: 0;
-        text-overflow: ellipsis;
-        -o-text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        &.tom {
-          display: none;
-        }
-      }
-      &.valgt {
-        background-color: #fff;
-      }
-      &:not(.valgt) {
-        cursor: pointer;
+      img {
+        margin-right: 1.5rem;
+        display: none;
       }
     }
   }
 
-  .meldingsdetaljer {
+  .traadDetaljer {
     padding: 22px @sidemargin 0 @sidemargin;
-    .avsenderbilde-ramme {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      border: 1px solid @rammefarge;
-      background-color: #fff;
-      &.lite {
-        width: 55px;
-        height: 55px;
-      }
-      img {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 90%;
-        height: 90%;
-        margin: auto;
-      }
-    }
-
-    .header {
-      line-height: 1.2em;
-      margin-bottom: 1em;
-
-      p {
-        line-height: 22px;
-      }
-    }
-
-    .dato {
+    h2 {
       margin: 0;
-      font-family: Arial, sans-serif;
-      font-size: 0.85rem;
-      font-weight: normal;
     }
-
-    .temagruppe {
-      margin: 0;
-      text-transform: capitalize;
-    }
-
-    .venstre-kolonne {
-      float: left;
-      width: 10%;
-    }
-
-    .hoyre-kolonne {
-      float: right;
-      width: 82%;
-    }
-
-    p {
-      line-height: 1.4em;
-      a {
-        text-decoration: underline;
-      }
-    }
-    .nyeste-melding {
-      margin-bottom: 2em;
-      overflow: hidden;
-      .header {
-        .temagruppe {
-          display: inline-block;
-          vertical-align: middle;
+    .nyMelding {
+      text-align: right;
+      margin-bottom: 30px;
+      &.besvares {
+        .besvarBoble {
+          background: url(../img/loading_dots_stor.gif) no-repeat;
         }
       }
+      .besvarBoble {
+        background: url(../img/loading_dots_stor_bakgrunn.png) no-repeat;
+        display: inline-block;
+        min-width: 95px;
+        height: 36px;
+        margin-right: 20px;
+        padding-left: 6px;
+        line-height: 36px;
+        vertical-align: middle;
+        text-align: left;
+        a {
+          color: #f5f5f5;
+        }
+      }
+      img {
+        width: 10%;
+      }
     }
 
-    .tidligere-melding {
-      position: relative;
-      background-color: #ffffff;
-      border: 1px solid @rammefarge;
-      padding: 20px;
-      margin-top: -1px;
-      p:last-child {
-        margin-bottom: 0;
-      }
-      &:before, &:after {
-        position: absolute;
-        bottom: 100%;
-        left: 5%;
-        border: solid transparent;
-        content: " ";
-        height: 0;
-        width: 0;
-      }
-      &:after {
-        border-bottom-color: #ffffff;
-        border-width: 13px;
-        margin-left: -13px;
-      }
-      &:before {
-        border-bottom-color: @rammefarge;
-        border-width: 14px;
-        margin-left: -14px;
-      }
-      .venstre-kolonne {
-        width: 15%;
-      }
-      .hoyre-kolonne {
-        width: 85%;
-        overflow: hidden;
-      }
-    }
     .traad-info {
       background-color: #333333;
       margin-bottom: 16px;
@@ -177,32 +77,12 @@
       .ikon {
         padding-right: 1.4rem;
       }
-      &.journalfort-skiller {
-        margin-top: 15px;
-        .ikon {
-          background: url(../img/journalfore_graa.svg) no-repeat;
-        }
-        .skillestrek {
-          margin: 0 5px;
-        }
-        &.nyeste {
-          margin-top: 0;
-        }
-      }
       &.kontorsperret-info, &.feilsendt-info {
         .ikon {
           background: url(../img/merk_ikon_graa.svg) no-repeat;
         }
       }
     }
-  }
-
-  .traadlengde {
-    float: right;
-    padding-right: 2em;
-    line-height: 21px;
-    font-weight: bold;
-    background: url(../img/melding_flere.svg) no-repeat right;
   }
 
   .haandter-meldinger {
@@ -214,9 +94,6 @@
       display: inline-block;
       &:not(:last-child) {
         margin-right: 1.5em;
-      }
-      &.besvar span {
-        background-image: url(../img/besvar_inaktiv.svg);
       }
       &.journalfor span {
         background-image: url(../img/journalfore_inaktiv.svg);
@@ -236,9 +113,6 @@
         em {
           font-style: normal;
         }
-      }
-      &.besvar a {
-        background-image: url(../img/besvar.svg);
       }
       &.journalfor a {
         background-image: url(../img/journalfore_blaa.svg);
@@ -279,88 +153,13 @@
       color: #b7b1a9;
       margin: 0 0 15px;
     }
+    form input + label {
+      margin: 0;
+    }
     .avbryt-knapp {
       color: #20a9e1;
       display: block;
       margin-top: 1em;
-    }
-    &.journalforing {
-      .robust-strek {
-        padding-bottom: 4px !important;
-      }
-      .temaoverskrift {
-        display: block;
-        color: #ffffff;
-        margin-bottom: 5px;
-      }
-      .sakliste {
-        margin-top: 20px;
-        text-align: left;
-        .sakstype {
-          text-align: center;
-          cursor: pointer;
-          color: white;
-          display: block;
-
-          &:hover,&:focus {
-            outline: none;
-            text-decoration: underline;
-          }
-        }
-        .pil {
-          display: inline-block;
-          margin-bottom: 1px;
-          .pil(8px, @blue); // definisjon i komponenter.less
-        }
-        .saklisteelement > label > span {
-          display: inline-block;
-          margin: 0;
-        }
-        &.last {
-          .sakswrapper {
-            hr:only-child {
-              display: none;
-            }
-          }
-        }
-      }
-      label {
-        color: @modiagraaskrift;
-        width: 100%;
-        margin-top: 6px;
-        margin-bottom: 10px;
-        div {
-          display: inline-block;
-        }
-        span {
-          display: block;
-          margin: 0 3rem 0 0;
-        }
-        .saksTekst {
-          text-transform: uppercase;
-        }
-        &:focus, &:hover {
-          color: white;
-        }
-      }
-      form {
-        text-align: center;
-        input[type="radio"] + label {
-          background: url(../img/radio_svart_bg.svg) 0 0 no-repeat;
-        }
-        input[type="radio"]:checked + label {
-          background: url(../img/radio_svart_valgt.svg) 0 0 no-repeat;
-          font-weight: normal;
-          color: #ffffff;
-        }
-        input[type="radio"]:focus + label {
-          color: white;
-        }
-      }
-      .send {
-        color: #fff;
-        margin-top: 20px;
-      }
     }
     &.nyoppgave {
       .ny-oppgave-form;
@@ -395,7 +194,7 @@
         label {
           text-align: left;
           &:last-of-type {
-            margin-bottom: 0px;
+            margin-bottom: 0;
           }
         }
         textarea {
@@ -439,30 +238,227 @@
     text-align: center;
     color: #b7b1a9;
   }
+  .hidden {
+    display: none !important;
+  }
 }
 
-.meldingstatus {
-  margin: 0 0 1em;
-  padding-left: 2.5em;
-  font-weight: normal;
-  line-height: 22px;
-  background-repeat: no-repeat;
-  &.sporsmal {
-    background-image: url(../img/melding_sporsmaal_hoyre.svg);
+.meldingsforhandsvisning {
+  position: relative;
+  padding: 16px @sidemargin 16px 32px;
+  border-bottom: solid 1px @rammefarge;
+  overflow: hidden;
+  p {
+    margin: 0;
   }
-  &.svar-ikke-lest-av-bruker {
-    background-image: url(../img/melding_svar_sendt.svg)
+  &.valgt {
+    color: #f5f5f5;
+    background-color: #226aa4;
+    .statusIkon {
+      &.ubesvart {
+        background: url(../img/melding_ny_hvit.svg) no-repeat;
+      }
+    }
+    .traadlengde {
+      background: url(../img/melding_flere_innlegg_hvit.svg) no-repeat right;
+      background-size: 8px;
+    }
+    .besvarIndikator {
+      background: url(../img/loading_dots_liten_hvit.gif) no-repeat;
+    }
   }
-  &.svar-lest-av-bruker {
-    background-image: url(../img/melding_svar_lest.svg)
+  &:not(.valgt) {
+    cursor: pointer;
   }
-  &.samtalereferat-ikke-lest-av-bruker {
-    background-image: url(../img/melding_referat_sendt.svg)
+  .meldingstatus {
+    font-weight: 600;
+    span {
+      display: inline-block;
+    }
   }
-  &.samtalereferat-lest-av-bruker {
-    background-image: url(../img/melding_referat_lest.svg)
+  .fritekst {
+    width: 100%;
+    margin: 0;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 294px;
+    &.tom {
+      display: none;
+    }
+  }
+  .meldingstatus, .fritekst {
+    margin-top: 16px;
+  }
+  .statusIkon {
+    position: absolute;
+    height: 14px;
+    width: 18px;
+    left: 8px;
+    top: 50px;
+    &.besvart {
+      background: url(../img/melding_besvart.svg) no-repeat;
+    }
+    &.ubesvart {
+      background: url(../img/melding_ny.svg) no-repeat;
+    }
+  }
+  .besvarIndikator {
+    background: url(../img/loading_dots_liten_rod.gif) no-repeat;
+    float: right;
+    width: 34px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  .traadlengde {
+    position: absolute;
+    right: 10px;
+    padding-right: 10px;
+    line-height: 20px;
+    font-weight: bold;
+    background: url(../img/melding_flere_innlegg.svg) no-repeat right;
+    background-size: 8px;
   }
 }
+
+.melding {
+  p, h3 {
+    line-height: 1.35rem;
+  }
+  margin-bottom: 30px;
+  .avsenderBilde {
+    margin-top: 22px;
+    width: 10%;
+    height: 34px;
+    &.inngaaende {
+      float: left;
+    }
+    &.utgaaende {
+      float: right;
+    }
+  }
+  .meldingData {
+    width: 86%;
+    position: relative;
+    padding: 20px 25px;
+    &:before, &:after {
+      position: absolute;
+      top: 40px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+    }
+    &:after {
+      border-width: 13px;
+      margin-top: -13px;
+    }
+    &:before {
+      border-width: 14px;
+      margin-top: -14px;
+    }
+    p:first-of-type {
+      margin-top: 0;
+    }
+    .meldingstatus {
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      span {
+        display: inline-block;
+      }
+    }
+    .fritekst {
+      margin-top: 20px;
+      word-wrap: break-word;
+      max-width: 480px;
+      a {
+        -ms-word-break: break-all;
+        word-break: break-all;
+      }
+      p:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+  &.inngaaende {
+    .meldingData {
+      float: right;
+      background-color: #e6e6dd;
+      &:before, &:after {
+        right: 100%;
+      }
+      &:after {
+        border-right-color: #e5e5dc;
+      }
+      &:before {
+        border-right-color: #e5e5dc;
+      }
+    }
+  }
+  &.utgaaende {
+    .meldingData {
+      float: left;
+      background-color: #ffffff;
+      border: 1px solid @rammefarge;
+      &:before, &:after {
+        left: 100%;
+      }
+      &:after {
+        border-left-color: #ffffff;
+      }
+      &:before {
+        border-left-color: @rammefarge;
+      }
+    }
+  }
+  &.inngaaende .journalpost-element {
+    float: right;
+    background-color: #e6e6dd;
+    border-top: 1px solid @rammefarge;
+  }
+  &.utgaaende .journalpost-element {
+    float: left;
+    background-color: #ffffff;
+    border-bottom: 1px solid @rammefarge;
+    border-left: 1px solid @rammefarge;
+    border-right: 1px solid @rammefarge;
+  }
+  .journalpost-element {
+    clear: both;
+    width: 86%;
+    padding: 16px 25px;
+    color: @grayDark;
+    text-decoration: none;
+    span {
+      text-align: center;
+    }
+    .ikon {
+      text-align: left;
+      padding-right: 1.4rem;
+      background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
+    }
+    .pil {
+      float: right;
+      width: 20%;
+      margin-top: 4px;
+      .pil(8px, @grayDark); // definisjon i common.less
+    }
+  }
+  a.journalpost-link {
+    &:focus .journalpost-element {
+      span.status {
+        text-decoration: underline;
+      }
+    }
+  }
+  .journalpostinformasjon {
+    display: none;
+    margin: 12px 0 5px 0;
+  }
+}
+
 hr.linje {
   width: 100%;
   height: 1px;
@@ -473,11 +469,27 @@ hr.linje {
 
 @media print {
   .meldinger {
-    height: 0px !important;
+    height: 0 !important;
     display: inline-block;
   }
+
   .meldinger .lerret {
-    height: 0px !important;
+    height: 0 !important;
     display: inline-block;
+  }
+}
+
+.midtstilt {
+  text-align: center;
+}
+
+.select2-drop.select2-with-searchbox.select2-drop-active ul li.select2-result-unselectable.select2-disabled {
+  &:first-of-type {
+    min-height: 23px;
+  }
+  &:not(:first-of-type) {
+    background-color: #999;
+    height: 1px;
+    overflow: hidden;
   }
 }

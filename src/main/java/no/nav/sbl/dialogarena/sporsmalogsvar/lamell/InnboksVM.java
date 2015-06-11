@@ -1,15 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.apache.commons.collections15.Transformer;
-import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +17,9 @@ import java.util.Map;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -30,17 +29,18 @@ public class InnboksVM implements Serializable {
 
     private static final Logger log = getLogger(InnboksVM.class);
 
-    @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     private Map<String, TraadVM> traader = new HashMap<>();
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
     private Optional<MeldingVM> valgtMelding;
     private String fnr, feilmeldingKey;
+    private Optional<String> sessionOppgaveId = none(), sessionHenvendelseId = none();
+    public String traadBesvares;
 
-    public InnboksVM(String fnr) {
-        Injector.get().inject(this);
+    public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService) {
         this.fnr = fnr;
+        this.henvendelseBehandlingService = henvendelseBehandlingService;
         oppdaterMeldinger();
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
     }
@@ -114,6 +114,8 @@ public class InnboksVM implements Serializable {
         return nyesteMeldingerITraad.get(0);
     }
 
+    public List<MeldingVM> getNyesteMeldingerITraad() { return nyesteMeldingerITraad; }
+
     public Map<String, TraadVM> getTraader() {
         return traader;
     }
@@ -143,4 +145,19 @@ public class InnboksVM implements Serializable {
         }
     };
 
+    public Optional<String> getSessionOppgaveId() {
+        return sessionOppgaveId;
+    }
+
+    public void setSessionOppgaveId(String sessionOppgaveId) {
+        this.sessionOppgaveId = optional(sessionOppgaveId);
+    }
+
+    public Optional<String> getSessionHenvendelseId() {
+        return sessionHenvendelseId;
+    }
+
+    public void setSessionHenvendelseId(String sessionHenvendelseId) {
+        this.sessionHenvendelseId = optional(sessionHenvendelseId);
+    }
 }

@@ -1,6 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
+import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -23,7 +27,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 public class JournalforingsPanelVelgSak extends Panel {
 
     @Inject
-    private JoarkJournalforingService joarkJournalforingService;
+    private SakerService sakerService;
 
     private SakerVM sakerVM;
 
@@ -33,7 +37,8 @@ public class JournalforingsPanelVelgSak extends Panel {
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        sakerVM = new SakerVM(innboksVM);
+
+        sakerVM = new SakerVM(innboksVM, sakerService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(innboksVM));
         form.add(
                 feedbackPanel,
@@ -45,12 +50,20 @@ public class JournalforingsPanelVelgSak extends Panel {
     }
 
     private AjaxButton getSubmitLenke(final InnboksVM innboksVM, final FeedbackPanel feedbackPanel) {
-        return new AjaxButton("journalforTraad") {
+        return new IndicatingAjaxButtonWithImageUrl("journalforTraad", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
-                joarkJournalforingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
-                send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
+                Melding melding = valgtTraadVM.getEldsteMelding().melding;
+                Sak sak = valgtTraadVM.journalfortSak;
+
+                try {
+                    sakerService.knyttBehandlingskjedeTilSak(innboksVM.getFnr(), melding.traadId, sak);
+                    send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
+                } catch (JournalforingFeilet e) {
+                    error(getString("journalfor.feilmelding.baksystem"));
+                    onError(target, form);
+                }
             }
 
             @Override

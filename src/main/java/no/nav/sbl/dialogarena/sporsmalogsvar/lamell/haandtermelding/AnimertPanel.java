@@ -4,12 +4,15 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
+import static java.lang.String.format;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_LUKKET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_TOGGLET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public abstract class AnimertPanel extends Panel {
+
+    public static final String DEFAULT_SLIDE_DURATION = "400";
 
     public AnimertPanel(String id) {
         super(id);
@@ -18,15 +21,18 @@ public abstract class AnimertPanel extends Panel {
     }
 
     public void togglePanel(AjaxRequestTarget target) {
+        togglePanel(target, DEFAULT_SLIDE_DURATION);
+    }
+
+    public void togglePanel(AjaxRequestTarget target, String duration) {
         if (isVisibilityAllowed()) {
-            target.prependJavaScript("lukket|$('#" + this.getMarkupId() + "').slideUp(lukket)");
+            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + duration + ", lukket)", this.getMarkupId()));
             this.setVisibilityAllowed(false);
-            target.add(this);
         } else {
-            target.appendJavaScript("$('#" + this.getMarkupId() + "').slideDown()");
+            target.appendJavaScript(format("$('#%s').slideDown(" + duration + ")", this.getMarkupId()));
             this.setVisibilityAllowed(true);
-            target.add(this);
         }
+        target.add(this);
     }
 
     @RunOnEvents(PANEL_TOGGLET)
@@ -38,12 +44,12 @@ public abstract class AnimertPanel extends Panel {
         }
     }
 
-    @RunOnEvents(VALGT_MELDING_EVENT)
+    @RunOnEvents(MELDING_VALGT)
     public void lukkPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
             send(getParent(), BREADTH, PANEL_LUKKET);
-            target.prependJavaScript("lukket|$('#" + this.getMarkupId() + "').slideUp(lukket)");
+            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
             target.add(this);
         }
     }

@@ -1,33 +1,22 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
-import org.joda.time.DateTime;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM.grupperMeldingerPaaJournalfortdato;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_2;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_3;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_4;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_2;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_3;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_4;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.TEMAGRUPPE_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.TRAAD_LENGDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingMedJournalfortDato;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingVMer;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.DATE_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.ID_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.TEMAGRUPPE_1;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.TRAAD_LENGDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMeldingVMer;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class TraadVMTest {
 
@@ -81,41 +70,87 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittMeldingstypeIkkeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerFalse() {
-        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_4), 4);
-        traadVM.getMeldinger().add(eldsteMeldingVM);
+    public void dersomEldsteMeldingITraadErEtSporsmalOgIkkeKassertSkalBrukerKunneBesvare() {
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(TEMAGRUPPE_1), 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
 
-        assertFalse(traadVM.bleInitiertAvBruker());
+        assertThat(traadVM.traadKanBesvares(), is(true));
     }
 
     @Test
-    public void gittMeldingstypeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerTrue() {
-        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4), 4);
-        traadVM.getMeldinger().add(eldsteMeldingVM);
+    public void dersomEldsteMeldingITraadIkkeErEtSporsmalOgIkkeKassertSkalBrukerIkkeKunneBesvare() {
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4).withTemagruppe(TEMAGRUPPE_1), 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
 
-        assertTrue(traadVM.bleInitiertAvBruker());
+        assertThat(traadVM.traadKanBesvares(), is(false));
     }
 
     @Test
-    public void settFlaggPaaDenNyesteMeldingenInneforEnJournalfortgruppe() {
-        Melding melding1 = createMeldingMedJournalfortDato(ID_1, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_1, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding2 = createMeldingMedJournalfortDato(ID_2, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding3 = createMeldingMedJournalfortDato(ID_3, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_3, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
-        Melding melding4 = createMeldingMedJournalfortDato(ID_4, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_4, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
-        List<MeldingVM> meldinger = new ArrayList<>(Arrays.asList(
-                new MeldingVM(melding1, 4),
-                new MeldingVM(melding2, 4),
-                new MeldingVM(melding3, 4),
-                new MeldingVM(melding4, 4)));
+    public void dersomEldsteMeldingITraadErEtSporsmalMenKassertSkalBrukerIkkeKunneBesvare() {
+        Melding melding = new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(null);
+        melding.kassert = true;
 
-        for (MeldingVM meldingVM : grupperMeldingerPaaJournalfortdato(meldinger)) {
-            if (meldingVM.melding.id.equals(ID_1) || meldingVM.melding.id.equals(ID_3)) {
-                assertTrue(meldingVM.nyesteMeldingISinJournalfortgruppe);
-            } else {
-                assertFalse(meldingVM.nyesteMeldingISinJournalfortgruppe);
-            }
-        }
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(melding, 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
 
+        assertThat(traadVM.traadKanBesvares(), is(false));
+    }
+
+    @Test
+    public void erBehandletDersomTraadenHarFlereMeldinger() {
+        assertThat(traadVM.erBehandlet(), is(true));
+    }
+
+    @Test
+    public void erBehandletDersomTraadensMeldingErFraNav() {
+        MeldingVM meldingFraNav = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4), 4);
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingFraNav);
+
+        assertThat(traadVM.erBehandlet(), is(true));
+    }
+
+    @Test
+    public void erIkkeBehandletDersomTraadensMeldingErFraBruker() {
+        MeldingVM meldingTilNav = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingTilNav);
+
+        assertThat(traadVM.erBehandlet(), is(false));
+    }
+
+    @Test
+    public void traadenErIkkeKontorsperretDersomEldsteMeldingIkkeErKontorsperret() {
+        MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingVM);
+
+        assertThat(traadVM.erKontorsperret(), is(false));
+    }
+
+    @Test
+    public void traadenErKontorsperretDersomEldsteMeldingErKontorsperret() {
+        MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        meldingVM.melding.kontorsperretEnhet = "enhetId";
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingVM);
+
+        assertThat(traadVM.erKontorsperret(), is(true));
+    }
+
+    @Test
+    public void erIkkeFeilsendtDersomIngenAvMeldingeneErFeilsendt() {
+        assertThat(traadVM.erFeilsendt(), is(false));
+    }
+
+    @Test
+    public void erFeilsendtDersomEnAvMeldingeneErFeilsendt() {
+        MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        meldingVM.melding.markertSomFeilsendtAv = "feilSendtAv";
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingVM);
+
+        assertThat(traadVM.erFeilsendt(), is(true));
     }
 
 }

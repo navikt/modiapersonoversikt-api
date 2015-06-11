@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
+import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -27,19 +28,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.apache.wicket.util.tester.WicketTesterHelper.findBehavior;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @ContextConfiguration(classes = {ServiceTestContext.class})
@@ -49,7 +46,8 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     public static final List<GsakKodeTema.Tema> TEMALISTE_MOCK =
             new ArrayList<>(Arrays.asList(new GsakKodeTema.Tema("kode", "tekst",
                     new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("oppgKode", "oppgTekst", 1))),
-                    new ArrayList<>(Arrays.asList(new GsakKodeTema.Prioritet("priKode", "priTekst"))))));
+                    new ArrayList<>(Arrays.asList(new GsakKodeTema.Prioritet("priKode", "priTekst"))),
+                    new ArrayList<>(Arrays.asList(new GsakKodeTema.Underkategori("underkategoriKode", "underkategoriTekst"))))));
 
     @Inject
     private GsakService gsakService;
@@ -73,9 +71,9 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         wicket.goToPageWith(nyOppgaveWrapper)
                 .inForm("panel:nyoppgaveform")
                 .submit()
-                .should().containComponent(thatIsInvisible().withId("enhetContainer"))
-                .should().containComponent(thatIsInvisible().withId("typeContainer"))
-                .should().containComponent(thatIsInvisible().withId("prioritetContainer"));
+                .should().containComponent(withId("enhetContainer"))
+                .should().containComponent(withId("typeContainer"))
+                .should().containComponent(withId("prioritetContainer"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertTrue(errorMessages.contains(nyOppgaveWrapper.getString("nyoppgaveform.tema.Required")));
@@ -83,8 +81,9 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void oppretterOppgave() {
-        when(gsakService.hentForeslattEnhet(anyString(), anyString(), anyString())).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
+        when(gsakService.hentForeslatteEnheter(anyString(), anyString(), anyString(), any(Optional.class))).thenReturn(asList(new AnsattEnhet("1231", "Sinsen")));
 
         wicket.goToPageWith(new NyOppgaveFormWrapper("panel", innboksVM));
 
@@ -108,5 +107,4 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
         verify(gsakService).opprettGsakOppgave(any(NyOppgave.class));
     }
-
 }

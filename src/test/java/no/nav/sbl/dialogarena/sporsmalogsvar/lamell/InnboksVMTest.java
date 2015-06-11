@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,25 +18,16 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_2;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_3;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_4;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.TEMAGRUPPE_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.TEMAGRUPPE_2;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksVMTest {
 
@@ -55,7 +45,7 @@ public class InnboksVMTest {
     public void setUp() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIToTraader());
 
-        innboksVM = new InnboksVM("fnr");
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
     }
 
     @Test
@@ -122,7 +112,7 @@ public class InnboksVMTest {
     @Test
     public void skalFungereUtenMeldinger() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
-        innboksVM = new InnboksVM("fnr");
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
 
         assertThat(innboksVM.getTraader().size(), is(0));
         assertThat(innboksVM.getValgtTraad().getMeldinger().size(), is(0));
@@ -134,7 +124,7 @@ public class InnboksVMTest {
         String traadId = "traadId";
 
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), "temagruppe", traadId)));
-        innboksVM = new InnboksVM(fnr);
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad(traadId);
         assertTrue(nyesteMeldingITraad.isSome());
@@ -143,7 +133,7 @@ public class InnboksVMTest {
     @Test
     public void henterNyesteMeldingITraadMedUkjentTraadId() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
-        innboksVM = new InnboksVM("fnr");
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad("traadId");
         assertFalse(nyesteMeldingITraad.isSome());

@@ -2,44 +2,48 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SVAR;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
+public class MeldingVM implements Serializable {
 
-public class    MeldingVM implements Serializable {
-
+    public static final String NAV_LOGO_SVG = "nav-logo.svg";
+    public static final String BRUKER_LOGO_SVG = "personikon.svg";
+    public static final String NAV_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.nav";
+    public static final String BRUKER_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.bruker";
     public final Melding melding;
 
     public final int traadlengde;
-    public boolean nyesteMeldingISinJournalfortgruppe;
 
     public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
         this.traadlengde = traadLengde;
     }
 
+    public String getAvsenderDato() {
+        return DateUtils.dateTime(melding.opprettetDato);
+    }
+
     public String getAvsenderTekst() {
-        return WidgetDateFormatter.dateTime(melding.opprettetDato)
+        return DateUtils.dateTime(melding.opprettetDato)
                 + (melding.navIdent != null ? " - " + melding.navIdent : "");
     }
 
+
     public String getMeldingStatusTekstKey() {
         return lagMeldingStatusTekstKey(melding);
-    }
-
-    public String getStatusIkonKlasse() {
-        return lagStatusIkonKlasse(melding);
     }
 
     public String getJournalfortDatoFormatert() {
@@ -50,12 +54,21 @@ public class    MeldingVM implements Serializable {
         return melding.journalfortDato != null;
     }
 
-    public String getTemagruppeKey() {
-        return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";
-    }
-
     public Boolean erFeilsendt() {
         return getMarkertSomFeilsendtAv().isSome();
+    }
+
+    public boolean erKontorsperret() {
+        return melding.kontorsperretEnhet != null;
+    }
+
+    public IModel<Boolean> erBesvart() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return melding.status != Status.IKKE_BESVART;
+            }
+        };
     }
 
     public Optional<String> getMarkertSomFeilsendtAv() {
@@ -64,17 +77,17 @@ public class    MeldingVM implements Serializable {
 
     public String getAvsenderBildeUrl() {
         String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
-        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
-            return imgUrl + "nav-logo.svg";
+        if (FRA_NAV.contains(melding.meldingstype)) {
+            return imgUrl + NAV_LOGO_SVG;
         }
-        return imgUrl + "siluett.svg";
+        return imgUrl + BRUKER_LOGO_SVG;
     }
 
     public String getAvsenderBildeAltKey() {
-        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
-            return "innboks.avsender.nav";
+        if (FRA_NAV.contains(melding.meldingstype)) {
+            return NAV_AVSENDER_BILDE_ALT_KEY;
         }
-        return "innboks.avsender.bruker";
+        return BRUKER_AVSENDER_BILDE_ALT_KEY;
     }
 
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
@@ -116,15 +129,4 @@ public class    MeldingVM implements Serializable {
         result = 31 * result + traadlengde;
         return result;
     }
-
-    public static final Transformer<MeldingVM, LocalDate> JOURNALFORT_DATO = new Transformer<MeldingVM, LocalDate>() {
-        @Override
-        public LocalDate transform(MeldingVM meldingVM) {
-            if (meldingVM.melding.journalfortDato != null) {
-                return meldingVM.melding.journalfortDato.toLocalDate();
-            }
-            return null;
-        }
-    };
-
 }

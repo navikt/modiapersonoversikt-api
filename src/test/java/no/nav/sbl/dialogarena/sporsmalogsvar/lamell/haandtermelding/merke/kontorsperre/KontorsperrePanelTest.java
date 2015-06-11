@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper;
 import org.apache.wicket.markup.html.WebMarkupContainer;

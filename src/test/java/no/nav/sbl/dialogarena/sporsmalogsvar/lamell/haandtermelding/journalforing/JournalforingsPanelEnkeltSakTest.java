@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,32 +19,34 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import java.util.List;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
+@ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     private final static String FODSELSNR = "52765236723";
-    private final static String JOURNALFORT_SAKSID = "123123123";
+    private final static String JOURNALFORT_SAKSID = "journalfort saksid";
 
     @Inject
-    private GsakService gsakService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
-    private JoarkJournalforingService joarkJournalforingService;
+    private SakerService sakerService;
 
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
-        innboksVM = new InnboksVM(FODSELSNR);
-        List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
+        innboksVM = new InnboksVM(FODSELSNR, henvendelseBehandlingService);
+        List<Sak> sakerForBruker = TestUtils.createMockSaksliste();
         sakerForBruker.get(0).opprettetDato = DateTime.now();
-        sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;
+        sakerForBruker.get(0).saksId = optional(JOURNALFORT_SAKSID);
         innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId = JOURNALFORT_SAKSID;
     }
 
@@ -53,12 +56,14 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     }
 
     @Test
-    public void skalJournalforeVedSubmit() {
+    public void skalJournalforeVedSubmit() throws JournalforingFeilet {
+        JournalforingsPanelEnkeltSak journalforingsPanel = new JournalforingsPanelEnkeltSak("panel", innboksVM);
+        journalforingsPanel.oppdater();
         wicket
-                .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVM))
-                .click().link(withId("journalforTraad"));
+                .goToPageWith(journalforingsPanel)
+                .click().ajaxButton(withId("journalforTraad"));
 
-        verify(joarkJournalforingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), any(Sak.class));
     }
 
 }
