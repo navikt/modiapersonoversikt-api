@@ -16,7 +16,7 @@ import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
@@ -139,7 +139,7 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
 
-        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", temaModel, gsakKodeChoiceRenderer) {
+        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new AjaxDropDownChoice<GsakKodeTema.Tema>("tema", temaModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 form.getModelObject().type = null;
@@ -148,6 +148,12 @@ public class NyOppgaveFormWrapper extends Panel {
                 form.getModelObject().underkategori = null;
 
                 target.add(typeVelger, enhetVelger, ansattVelger, prioritetVelger, underkategoriVelger);
+            }
+
+            @Override
+            protected void onerror(AjaxRequestTarget target) {
+                form.getModelObject().tema = null;
+                onchange(target);
             }
         };
         temaDropDown.setRequired(true).setOutputMarkupPlaceholderTag(true);
@@ -174,7 +180,6 @@ public class NyOppgaveFormWrapper extends Panel {
 
         WebMarkupContainer underkategoriContainer = new WebMarkupContainer("underkategoriContainer");
         underkategoriContainer.setOutputMarkupPlaceholderTag(true);
-        underkategoriContainer.add(new AttributeAppender("for", underkategoriDropdown.getMarkupId()));
         underkategoriContainer.add(underkategoriDropdown);
 
         IModel<Boolean> visUnderkategoriValg = both(
@@ -194,19 +199,24 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
 
-        DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer) {
+        DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new AjaxDropDownChoice<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslatteEnheter();
                 oppdaterAnsatteListe();
                 target.add(enhetVelger, ansattVelger);
             }
+
+            @Override
+            protected void onerror(AjaxRequestTarget target) {
+                form.getModelObject().type = null;
+                onchange(target);
+            }
         };
         typeDropdown.setRequired(true);
 
         WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
         typeContainer.setOutputMarkupPlaceholderTag(true);
-        typeContainer.add(new AttributeAppender("for", typeDropdown.getMarkupId()));
 
         typeContainer.add(typeDropdown);
         typeContainer.add(hasCssClassIf("hidden", isEmptyList(typeModel)));
@@ -225,6 +235,13 @@ public class NyOppgaveFormWrapper extends Panel {
                 oppdaterAnsatteListe();
                 target.add(ansattVelger);
             }
+
+            @Override
+            protected void onError(AjaxRequestTarget target, RuntimeException e) {
+                super.onError(target, e);
+                form.getModelObject().enhet = null;
+                onUpdate(target);
+            }
         });
 
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
@@ -235,7 +252,6 @@ public class NyOppgaveFormWrapper extends Panel {
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema"))))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.OppgaveType>(form.getModel(), "type"))));
         enhetContainer.add(hasCssClassIf("hidden", not(visEnhetsValg)));
-        enhetContainer.add(new AttributeAppender("for", enhetDropdown.getMarkupId()));
 
         return enhetContainer;
     }
@@ -278,7 +294,6 @@ public class NyOppgaveFormWrapper extends Panel {
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
         prioritetContainer.add(hasCssClassIf("hidden", not(visPrioritetsValg)));
-        prioritetContainer.add(new AttributeAppender("for", prioritetDropdown.getMarkupId()));
 
         return prioritetContainer;
     }
@@ -326,23 +341,31 @@ public class NyOppgaveFormWrapper extends Panel {
         protected abstract List<T> oppdater(GsakKodeTema.Tema tema);
     }
 
-    private abstract static class DropDownChoiceMedFjerningAvDefault<T> extends DropDownChoice<T> {
-        protected DropDownChoiceMedFjerningAvDefault(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
+    private abstract static class AjaxDropDownChoice<T> extends DropDownChoice<T> {
+        protected AjaxDropDownChoice(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
             super(id, choices, renderer);
             add(changeListener());
         }
 
         private AjaxFormComponentUpdatingBehavior changeListener() {
-            return new AjaxFormComponentUpdatingBehavior("onchange") {
+            return new OnChangeAjaxBehavior() {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                     onchange(target);
-                    target.add(DropDownChoiceMedFjerningAvDefault.this);
+                }
+
+                @Override
+                protected void onError(AjaxRequestTarget target, RuntimeException e) {
+                    onerror(target);
                 }
             };
         }
 
         protected abstract void onchange(AjaxRequestTarget target);
+
+        protected void onerror(AjaxRequestTarget target) {
+
+        }
     }
 
     private static final Predicate<AnsattEnhet> GYLDIG_ENHET = new Predicate<AnsattEnhet>() {

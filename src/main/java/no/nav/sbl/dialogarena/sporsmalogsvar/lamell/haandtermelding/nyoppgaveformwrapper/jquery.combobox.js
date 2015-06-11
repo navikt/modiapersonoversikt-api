@@ -180,7 +180,8 @@
             this.input
                 .val("")
                 .attr("title", value + " didn't match any item");
-            this.element.val("");
+            this.element.children('option').attr('selected', 'selected')
+            this.element.trigger('change');
             this.input.autocomplete("instance").term = "";
         },
 
