@@ -23,17 +23,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class PdfUtils {
 
-    public static byte[] genererPdf(Melding melding) {
-        Map<String, Helper<?>> helpers = generateHelpers();
-        try {
-            PDFMelding innhold = new PDFMelding(melding);
-            String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(innhold, "html/melding", helpers);
-            return PDFFabrikk.lagPdfFil(html);
-        } catch (IOException e) {
-            throw new ApplicationException("Kunne ikke lage markup av melding", e);
-        }
-    }
-
     public static byte[] genererPdfForPrint(List<MeldingVM> meldinger) {
         Map<String, Helper<?>> helpers = generateHelpers();
         List<PDFMelding> pdfMeldinger = new ArrayList<>();
@@ -96,7 +85,7 @@ public class PdfUtils {
             this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.navIdent;
             this.typeBeskrivelse = lagTypeBeskrivelse(melding);
             this.temagruppeBeskrivelse = lagTemagruppeBeskrivelse(melding.temagruppe);
-            this.fritekst = melding.fritekst;
+            this.fritekst = escapeHtml(melding.fritekst);
             this.opprettetDato = melding.opprettetDato;
             this.journalFortDato = melding.journalfortDato;
             this.journalfortTema = melding.journalfortTema;
@@ -131,6 +120,10 @@ public class PdfUtils {
             }
             return "Temagruppe: " + TemagruppeMapping.valueOf(temagruppe).beskrivendeNavn;
         }
+    }
+
+    private static String escapeHtml(String s) {
+        return s == null ? null : s.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;");
     }
 
     private static MeldingsTypeMapping getMeldingsTypeMapping(Melding melding) {

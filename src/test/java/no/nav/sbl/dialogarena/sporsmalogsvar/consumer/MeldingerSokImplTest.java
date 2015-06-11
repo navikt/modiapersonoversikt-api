@@ -47,7 +47,7 @@ public class MeldingerSokImplTest {
     public void sletterCacheEtterEnGittStund() {
         assertThat(meldingerSok.cache.entrySet(), hasSize(1));
 
-        setCurrentMillisOffset(Integer.valueOf(DEFAULT_TIME_TO_LIVE_MINUTES) * 60 * 1000);
+        setCurrentMillisOffset((Integer.valueOf(DEFAULT_TIME_TO_LIVE_MINUTES) * 60 * 1000) + 1);
         meldingerSok.ryddOppCache();
 
         assertThat(meldingerSok.cache.entrySet(), hasSize(0));
