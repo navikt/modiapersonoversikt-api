@@ -35,10 +35,10 @@ public class SelfTestPage extends SelfTestBase {
         List<AvhengighetStatus> serviceStatuses = new ArrayList<>();
         for (Pingable pingable : pingables) {
             try {
-                List<PingResult> pingResults = pingable.ping();
-                for (PingResult pingResult : pingResults) {
-                    String serviceName = pingResult.getServiceName().toUpperCase();
-                    if(shouldServiceBeIncluded(serviceName)) {
+                if(shouldServiceBeIncluded(pingable)) {
+                    List<PingResult> pingResults = pingable.ping();
+                    for (PingResult pingResult : pingResults) {
+                        String serviceName = pingResult.getServiceName().toUpperCase();
                         String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
                         serviceStatuses.add(new AvhengighetStatus(serviceName + "_PING", status, pingResult.getElapsedTime()));
                     }
@@ -52,27 +52,27 @@ public class SelfTestPage extends SelfTestBase {
 
     /**
      * True hvis tjenesten skal inkluderes i selftesten
-     * @param serviceName
      * @return
      */
-    private boolean shouldServiceBeIncluded(String serviceName) {
-        Map<String, String> services = possibleServicesToBeExcluded();
-        if(services.containsKey(serviceName)) {
-            return Boolean.valueOf(System.getProperty(services.get(serviceName), "false"));
+    private boolean shouldServiceBeIncluded(Pingable pingable) {
+        Map<Class, String> services = possibleServicesToBeExcluded();
+        if(services.containsKey(pingable.getClass())) {
+            return Boolean.valueOf(System.getProperty(services.get(pingable.getClass()), "true"));
         }
         return true;
     }
 
     /**
-     * Map av properties hvor key er serviceName og value er systemProperty som styrer
+     * Map av properties hvor key er Pingable class og value er systemProperty som styrer
      * om tjenesten skal legges til i selftesten eller ikke.
      *
      * @return
      */
-    private Map<String, String> possibleServicesToBeExcluded() {
-        Map<String, String> serviceMap = new HashMap<String, String>();
-        serviceMap.put("UTBETALING", "visUtbetalinger");
-        return serviceMap;
+    private Map<Class, String> possibleServicesToBeExcluded() {
+//        Map<Class, String> serviceMap = new HashMap<Class, String>();
+//        serviceMap.put(UtbetalingEndpointConfig.UtbetalingPing.class, "visUtbetalinger");
+//        return serviceMap;
+        return new HashMap<>();
     }
 
 }
