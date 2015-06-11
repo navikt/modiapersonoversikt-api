@@ -1,19 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import no.nav.modig.wicket.services.HealthCheckService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultEnhetService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.LokaltKodeverkImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -24,6 +17,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 public class ServiceConfig {
+
+    @Bean
+    public LDAPService ldapService() {
+        return new LDAPServiceImpl();
+    }
 
     @Bean
     public HenvendelseUtsendingService henvendelseUtsendingService() {
@@ -37,7 +35,7 @@ public class ServiceConfig {
 
     @Bean
     public AnsattService ansattService() {
-        return new AnsattService();
+        return new AnsattServiceImpl();
     }
 
     @Bean
@@ -66,8 +64,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public LokaltKodeverk lokaltKodeverk() {
-        return new LokaltKodeverkImpl();
+    public SakerService sakerService() {
+        return new SakerServiceImpl();
     }
 
 }

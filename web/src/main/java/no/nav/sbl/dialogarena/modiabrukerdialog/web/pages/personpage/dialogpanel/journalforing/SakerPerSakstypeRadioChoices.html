@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <a wicket:id="link" class="medium sakstype" tabindex="0" role="role">
+        <span><wicket:container wicket:id="sakstype"/></span>
+        <i wicket:id="pilSaker" class="pil"></i>
+    </a>
+    <div wicket:id="sakswrapper" class="sakswrapper">
+        <hr class="linje"/>
+        <wicket:container wicket:id="saksgruppeliste">
+            <div class="saklisteelement">
+                <span wicket:id="temaNavn" class="temaoverskrift"></span>
+                <wicket:container wicket:id="saksliste">
+                    <input wicket:id="sak" type="radio">
+                    <label wicket:for="sak">
+                        <table>
+                            <tr>
+                                <td class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></td>
+                                <td class="saksTekst"><wicket:message key="journalfor.sak.opprettetDatoTekst"/></td>
+                                <td class="saksTekst"><wicket:message key="journalfor.sak.fagsystemTekst"/></td>
+                            </tr>
+                            <tr>
+                                <td wicket:id="saksIdVisning"></td>
+                                <td wicket:id="opprettetDatoFormatert"></td>
+                                <td wicket:id="fagsystemNavn"></td>
+                            </tr>
+                        </table>
+                    </label>
+                </wicket:container>
+            </div>
+        </wicket:container>
+    </div>
+</wicket:panel>
+</body>
+</html>

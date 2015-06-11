@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -12,27 +12,24 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 import java.io.Serializable;
 
-import static java.util.Arrays.asList;
+import static java.lang.Boolean.TRUE;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.HENVENDELSEID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
@@ -53,11 +50,11 @@ public class PlukkOppgavePanel extends Panel {
     public PlukkOppgavePanel(String id) {
         super(id);
 
+        add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));
+
         valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
         Form<Temagruppe> form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
         form.setOutputMarkupId(true);
-
-        add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));
 
         feedbackPanel = new AriaFeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
@@ -70,7 +67,7 @@ public class PlukkOppgavePanel extends Panel {
         radioGroup.setRequired(true);
         radioGroup.setOutputMarkupPlaceholderTag(true);
 
-        radioGroup.add(new ListView<Temagruppe>("temagrupper", asList(Temagruppe.values())) {
+        radioGroup.add(new ListView<Temagruppe>("temagrupper", Temagruppe.INNGAAENDE) {
             @Override
             protected void populateItem(ListItem<Temagruppe> item) {
                 item.add(new Radio<>("temagruppevalg", item.getModel()));
@@ -94,6 +91,7 @@ public class PlukkOppgavePanel extends Panel {
     private class PlukkOppgaveKnapp extends AjaxButton {
         public PlukkOppgaveKnapp(String id) {
             super(id);
+            setMarkupId(id);
         }
 
         @Override
@@ -107,7 +105,7 @@ public class PlukkOppgavePanel extends Panel {
                 return;
             }
 
-            Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject().name());
+            Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject());
             if (oppgave.isSome()) {
                 lagrePlukketOppgavePaaSession(oppgave.get());
                 lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());
@@ -130,6 +128,7 @@ public class PlukkOppgavePanel extends Panel {
                             .set("fnr", fnr)
                             .set(HENVENDELSEID, henvendelseid)
                             .set(OPPGAVEID, oppgaveid)
+                            .set(FORTSETTDIALOGMODUS, TRUE.toString())
             );
         }
 

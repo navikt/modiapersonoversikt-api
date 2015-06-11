@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>3.28</version>
+        <version>4.28.2</version>
     </parent>
 
     <artifactId>modiabrukerdialog-web</artifactId>
@@ -20,15 +20,6 @@
     </properties>
 
     <dependencies>
-
-        <!-- BUGFIX! -->
-
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.2.7</version>
-            <scope>runtime</scope>
-        </dependency>
 
         <!--Interne-->
         <dependency>
@@ -111,6 +102,10 @@
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-domain</artifactId>
+        </dependency>
 
         <!--Dialogarena-->
         <dependency>
@@ -162,6 +157,10 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>reactkomponenter</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -246,10 +245,6 @@
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-ioc</artifactId>
-        </dependency>
 
         <!-- Spring -->
         <dependency>
@@ -280,6 +275,32 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!--Jersey-->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-spring3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>javax.inject</artifactId>
         </dependency>
 
         <!--Jetty-->
@@ -314,16 +335,18 @@
 
         <!--Diverse-->
 
+        <!-- Denne må være her på grunn av classloading på JBoss -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.7</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -334,6 +357,23 @@
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -353,17 +393,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
         <!--Testing-->
         <dependency>
             <groupId>junit</groupId>
@@ -379,6 +408,7 @@
             <artifactId>hamcrest-library</artifactId>
         </dependency>
         <dependency>
+            <!-- Må være compile scope grunnet avhengighet til mock-modul -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>

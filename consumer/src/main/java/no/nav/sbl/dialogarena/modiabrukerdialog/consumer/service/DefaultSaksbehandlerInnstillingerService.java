@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
@@ -8,13 +9,17 @@ import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet.ENHET_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet.ENHET_ID;
 
 
 public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerInnstillingerService {
 
     @Inject
     private AnsattService ansattService;
+
+    public static String saksbehandlerInnstillingerCookieId() {
+        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
+    }
 
     public String getSaksbehandlerValgtEnhet() {
         List<String> ansattEnhetsIdListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
@@ -29,6 +34,7 @@ public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerIn
     }
 
     private String hentEnhetFraCookie(List<String> ansattEnhetsIdListe, String enhetId) {
+
         String cookieEnhetId = new CookieUtils().load(saksbehandlerInnstillingerCookieId());
         boolean saksbehanderHarTilgangTilEnhet = ansattEnhetsIdListe.contains(cookieEnhetId);
         return saksbehanderHarTilgangTilEnhet ? cookieEnhetId : enhetId;
@@ -62,10 +68,6 @@ public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerIn
 
     private String saksbehandlerInnstillingerTimeoutCookieId() {
         return "saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid();
-    }
-
-    private String saksbehandlerInnstillingerCookieId() {
-        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
     }
 }
 

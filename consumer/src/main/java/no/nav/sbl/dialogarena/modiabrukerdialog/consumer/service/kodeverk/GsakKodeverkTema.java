@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
+import no.nav.modig.lang.collections.ComparatorUtils;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.w3c.dom.Document;
@@ -36,16 +37,24 @@ public class GsakKodeverkTema implements Serializable {
                 return new GsakKodeTema.Prioritet(getParentNodeValue(node, KODE), getNodeValue(node, DEKODE));
             }
         };
+        private static final Transformer<Node, GsakKodeTema.Underkategori> NODE_TIL_UNDERKATEGORI = new Transformer<Node, GsakKodeTema.Underkategori>() {
+            @Override
+            public GsakKodeTema.Underkategori transform(Node node) {
+                return new GsakKodeTema.Underkategori(getParentNodeValue(node, KODE), getParentNodeValue(node, DEKODE));
+            }
+        };
 
         public static List<GsakKodeTema.Tema> parse() {
             try (
                     InputStream isFagomrade = GsakKodeTema.class.getResourceAsStream("/xml/fagomrade.xml");
                     InputStream isOppgavetype = GsakKodeTema.class.getResourceAsStream("/xml/oppgaveT.xml");
-                    InputStream isPrioritet = GsakKodeTema.class.getResourceAsStream("/xml/prioritetT.xml")
+                    InputStream isPrioritet = GsakKodeTema.class.getResourceAsStream("/xml/prioritetT.xml");
+                    InputStream isUnderkategori = GsakKodeTema.class.getResourceAsStream("/xml/underkategori.xml")
             ) {
                 Document gsakKoder = parseDocument(isFagomrade);
                 List<Node> temaNodes = compileAndEvaluate(gsakKoder, "//fagomradeListe/fagomrade/gosys[@person='true' and not(@erGyldig = 'false')]");
-                return on(temaNodes).map(new NodeTemaTransformer(isOppgavetype, isPrioritet)).collect();
+                return on(temaNodes).map(new NodeTemaTransformer(isOppgavetype, isPrioritet, isUnderkategori))
+                        .collect(ComparatorUtils.compareWith(GsakKodeTema.TEKST));
             } catch (Exception e) {
                 throw new ApplicationException("Kunne ikke laste inn gsak kodeverk", e);
             }
@@ -57,17 +66,19 @@ public class GsakKodeverkTema implements Serializable {
                 return new Predicate<GsakKodeTema.OppgaveType>() {
                     @Override
                     public boolean evaluate(GsakKodeTema.OppgaveType oppgaveType) {
-                        return GODKJENTE_OPPGAVETYPER.contains(oppgaveType.kode.replace("_" + fagomrade, ""));
+                        return GODKJENTE_OPPGAVETYPER.contains(oppgaveType.kode.replaceAll("_" + fagomrade + "$", ""));
                     }
                 };
             }
 
             private final Document oppgaveDokument;
             private final Document prioritetDokument;
+            private final Document underkategoriDokument;
 
-            public NodeTemaTransformer(InputStream isOppgavetype, InputStream isPrioritet) {
+            public NodeTemaTransformer(InputStream isOppgavetype, InputStream isPrioritet, InputStream isUnderkategori) {
                 oppgaveDokument = parseDocument(isOppgavetype);
                 prioritetDokument = parseDocument(isPrioritet);
+                underkategoriDokument = parseDocument(isUnderkategori);
             }
 
             @Override
@@ -76,10 +87,15 @@ public class GsakKodeverkTema implements Serializable {
                 String dekode = getNodeValue(node, DEKODE);
                 List<Node> oppgaveNoder = compileAndEvaluate(oppgaveDokument, "//oppgaveTListe/oppgaveT[@fagomrade='" + temaKode + "']/gosys[@person='true' and not(erGyldig='false')]");
                 List<Node> prioritetNoder = compileAndEvaluate(prioritetDokument, "//prioritetTListe/prioritetT[@fagomrade='" + temaKode + "']/gosys");
-                return new GsakKodeTema.Tema(temaKode,
+                List<Node> underkategoriNoder = compileAndEvaluate(underkategoriDokument, "//underkategoriListe/underkategori[@fagomrade='" + temaKode + "' and not(@erGyldig = 'false')]/gosys");
+
+                return new GsakKodeTema.Tema(
+                        temaKode,
                         dekode,
                         on(oppgaveNoder).map(NODE_OPPGAVE_TYPE_TRANSFORMER).filter(godkjenteKoder(temaKode)).collect(),
-                        on(prioritetNoder).map(NODE_TIL_PRIORITET).collect());
+                        on(prioritetNoder).map(NODE_TIL_PRIORITET).collect(),
+                        on(underkategoriNoder).map(NODE_TIL_UNDERKATEGORI).collect()
+                );
             }
         }
 

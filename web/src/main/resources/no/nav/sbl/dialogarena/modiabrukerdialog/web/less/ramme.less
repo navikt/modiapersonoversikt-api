@@ -431,11 +431,16 @@
 	-webkit-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
 	-moz-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
 	box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
-    .opplaeringslenke {
+    .lenke-container {
         float: left;
         margin-left: 3em;
         top: 20px;
         position: relative;
+	  	a {
+		  display: block;
+		  text-align: left;
+		  margin-bottom: 10px;
+		}
     }
 	.enhetsform {
 		max-width: 23%;
@@ -663,12 +668,12 @@
 					color: @blueDark;
 				}
 			}
-			> A:focus {
-				outline: none;
-				H1 {
-					color: @blueDark;
-				}
-			}
+          > A:focus {
+            H1 {
+              color: @blueDark;
+              text-decoration: underline;
+            }
+          }
 		}
 		&.selected > HEADER {
 			height: 84px;
@@ -993,4 +998,7 @@ fieldset.wcag {
     width: 0px;
     height: 0px;
   }
+}
+.wicket-ajax-indicator {
+  display: block;
 }

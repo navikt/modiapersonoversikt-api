@@ -3,14 +3,21 @@
 <body>
 <wicket:panel>
     <div class="saksbehandlerinnstillinger">
-        <a href="#" wicket:id="opplaeringslenke" class="opplaeringslenke">[...]</a>
+        <div class="lenke-container">
+        <a href="#" wicket:id="opplaeringslenke" class="opplaeringslenke" target="_blank">
+            <wicket:message key="opplaeringslenke.tekst"/>
+        </a>
+        <a href="#" wicket:id="skrivestotteForslagLenke" class="opplaeringslenke" target="_blank">
+            <wicket:message key="saksbehandlerinnstillinger.skrivestotte.forslag.lenketekst"/>
+        </a>
+        </div>
         <form wicket:id="enhetsform" class="centered enhetsform">
             <h1 class="_H2">
-                <wicket:message key="enhetsvalg.overskrift"/>
+                <wicket:message key="saksbehandlerinnstillinger.enhetsvalg.overskrift"/>
             </h1>
             <div class="robust-strek"></div>
             <fieldset class="wcag">
-                <legend><wicket:message key="enhetsvalg.overskrift"/></legend>
+                <legend><wicket:message key="saksbehandlerinnstillinger.enhetsvalg.overskrift"/></legend>
                 <wicket:container wicket:id="enhet">
                     <div wicket:id="enhetsvalg" class="enhetsvalg">
                         <input wicket:id="enhetId" type="radio"/>
@@ -26,7 +33,7 @@
                        type="submit"
                        class="send knapp-hoved-stor"
                        tabindex="0"
-                       wicket:message="value:velg.knapp.tekst,aria-label:velg.knapp.aria" />
+                       wicket:message="value:saksbehandlerinnstillinger.velg.knapp.tekst,aria-label:saksbehandlerinnstillinger.velg.knapp.aria" />
             </div>
         </form>
     </div>

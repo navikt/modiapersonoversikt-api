@@ -1,13 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
-import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
-import org.apache.commons.lang3.StringEscapeUtils;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -15,15 +12,19 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
+import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLERINNSTILLINGER_TOGGLET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
 
 public class SaksbehandlerInnstillingerPanel extends Panel {
 
@@ -31,12 +32,8 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
     @Inject
     private AnsattService ansattService;
-
-    @Inject
-    private CmsContentRetriever cms;
 
     public String valgtEnhet;
 
@@ -72,17 +69,22 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             }
         });
 
-        String href = StringEscapeUtils.unescapeHtml3(cms.hentTekst("opplaeringslenke.href"));
-
-        Component opplaeringslenke = new Label("opplaeringslenke", cms.hentTekst("opplaeringslenke.tekst"))
-                .add(new AttributeModifier("href", href));
-
         oppdaterAriaLabel();
-        add(form, opplaeringslenke);
+
+        add(form);
+        add(new ExternalLink("opplaeringslenke", new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                return unescapeHtml3(getString("opplaeringslenke.href"));
+            }
+        }));
+        add(new ExternalLink("skrivestotteForslagLenke", getProperty("modiabrukerdialog.standardtekster.tilbakemelding.url")));
     }
+
     public final void oppdaterAriaLabel() {
         add(AttributeModifier.replace("aria-expanded", isVisibilityAllowed()));
     }
+
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target) {
         animertVisningToggle(target, this);

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.visUtbetalinger;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
@@ -51,10 +54,19 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String PANEL = "panel";
 
     private String fnrFromRequest;
+    private Optional<String> startLamell = none();
 
     public LamellContainer(String id, String fnrFromRequest) {
         super(id, createLamellFactories(fnrFromRequest));
         this.fnrFromRequest = fnrFromRequest;
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        if (startLamell.isSome()) {
+            goToLamell(startLamell.get());
+        }
     }
 
     public void handleLamellLinkClicked(LamellPayload lamellPayload) {
@@ -116,6 +128,21 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
                 return new GenericLerret(id, panel);
             }
         });
+    }
+
+    private void gotoAndSendToLamell(String lamellId, Object payload) {
+        if (hasFactory(lamellId)) {
+            goToLamell(lamellId);
+            sendToLamell(lamellId, payload);
+        } else {
+            ApplicationException exc = new ApplicationException("Ukjent lamellId <" + lamellId + "> klikket");
+            logger.warn("ukjent lamellId: {}", lamellId, exc);
+            throw exc;
+        }
+    }
+
+    public void setStartLamell(String startLamell) {
+        this.startLamell = optional(startLamell);
     }
 
     private static boolean canHaveMoreThanOneLamell(String type) {
@@ -197,16 +224,4 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             return lamell.isModified();
         }
     };
-
-    private void gotoAndSendToLamell(String lamellId, Object payload) {
-        if (hasFactory(lamellId)) {
-            goToLamell(lamellId);
-            sendToLamell(lamellId, payload);
-        } else {
-            ApplicationException exc = new ApplicationException("Ukjent lamellId <" + lamellId + "> klikket");
-            logger.warn("ukjent lamellId: {}", lamellId, exc);
-            throw exc;
-        }
-    }
-
 }

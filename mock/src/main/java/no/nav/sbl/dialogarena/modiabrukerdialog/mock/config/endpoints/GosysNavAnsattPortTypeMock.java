@@ -7,21 +7,14 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsattListe;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.FinnArenaNAVAnsattListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.FinnArenaNAVAnsattListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static java.util.Arrays.asList;
 
@@ -29,15 +22,27 @@ import static java.util.Arrays.asList;
 public class GosysNavAnsattPortTypeMock {
 
     public static final String ANSATT_ID = "u1241";
-    public static final List<ASBOGOSYSNavEnhet> NAV_ENHET_LISTE = asList(
-            lagNavEnhet("0122", "NAV Trøgstad"),
-            lagNavEnhet("0100", "NAV Østfold"),
-            lagNavEnhet("2960", "NAV Drift og Utvikling - Anskaffelse og økonomi"),
-            lagNavEnhet("4303", "NAV Id og fordeling"),
-            lagNavEnhet("4403", "NAV Forvaltning Oslo og Akershus"),
-            lagNavEnhet("4100", "NAV Kontaktsenter Test"),
-            lagNavEnhet("1234", "NAV Mockbrukers Enhet")
-    );
+    public static final List<ASBOGOSYSNavEnhet> NAV_ENHET_LISTE;
+    public static final int ANTALL_MOCK_ENHETER = 7;
+
+    static {
+        List<ASBOGOSYSNavEnhet> liste = new ArrayList<>();
+        liste.addAll(asList(
+                lagNavEnhet("0122", "NAV Trøgstad"),
+                lagNavEnhet("0100", "NAV Østfold"),
+                lagNavEnhet("2960", "NAV Drift og Utvikling - Anskaffelse og økonomi"),
+                lagNavEnhet("4303", "NAV Id og fordeling"),
+                lagNavEnhet("4403", "NAV Forvaltning Oslo og Akershus"),
+                lagNavEnhet("4100", "NAV Kontaktsenter Test"),
+                lagNavEnhet("1234", "NAV Mockbrukers Enhet")
+        ));
+
+        for (int i = 0,manglende = ANTALL_MOCK_ENHETER - liste.size(); i < manglende; i++) {
+            liste.add(lagNavEnhet(lagEnhetId(i), lagEnhetNavn()));
+        }
+
+        NAV_ENHET_LISTE = Collections.unmodifiableList(liste);
+    }
 
     @Bean
     public GOSYSNAVansatt navAnsatt() {
@@ -94,5 +99,38 @@ public class GosysNavAnsattPortTypeMock {
         navEnhet.setEnhetsId(enhetId);
         navEnhet.setEnhetsNavn(enhetNavn);
         return navEnhet;
+    }
+
+    private static String lagEnhetId(int id) {
+        String base = String.valueOf(id);
+        while (base.length() < 4) {
+            base = "0"+base;
+        }
+        return base;
+    }
+    public static String lagEnhetNavn() {
+        String[] type = new String[]{
+                "Drift og Utvikling",
+                "Id og fordeling",
+                "Kontaktsenter",
+                "Vanlig-senter",
+                "IKT",
+                "DevOps",
+                "Testing"
+        };
+        String[] place = new String[]{
+                "Trøgstad",
+                "Østfold",
+                "Anskaffelse og økonomi",
+                "Oslo",
+                "Akershus",
+                "Hedmark",
+                "Oppland"
+        };
+        Random r = new Random();
+        String t = type[r.nextInt(type.length)];
+        String p = place[r.nextInt(place.length)];
+
+        return "NAV "+t+" - "+p;
     }
 }

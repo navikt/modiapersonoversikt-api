@@ -1,17 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
-import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeResponse;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkkeTilgjengelig;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
-import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
-import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.WSUtbetalingTestData.getWsUtbetalinger;
 
@@ -19,13 +13,19 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.WSU
 public class UtbetalingPortTypeMock {
 
     @Bean
-    public UtbetalingPortType utbetalingPortType() {
-        return new UtbetalingPortType() {
+    public UtbetalingV1 utbetalingPortType() {
+        return new UtbetalingV1() {
             @Override
-            public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request) throws
-                    HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
-                List<WSUtbetaling> utbetalinger = getWsUtbetalinger(request.getMottaker(), request.getPeriode().getFom(), request.getPeriode().getTom());
-                return new WSHentUtbetalingListeResponse().withUtbetalingListe(utbetalinger);
+            public void ping() {
+            }
+
+            @Override
+            public WSHentUtbetalingsinformasjonResponse hentUtbetalingsinformasjon(WSHentUtbetalingsinformasjonRequest request) throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
+                return new WSHentUtbetalingsinformasjonResponse()
+                        .withUtbetalingListe(getWsUtbetalinger(
+                                request.getId().getIdent(),
+                                request.getPeriode().getFom(),
+                                request.getPeriode().getTom()));
             }
         };
     }

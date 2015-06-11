@@ -9,5 +9,5 @@ public interface JournalfortTemaAttributeLocatorDelegate {
      *
      * @return Set med temagrupper
      */
-    Set<String> getTemagrupperForAnsattesValgteEnhet(String ansattId);
+    Set<String> getTemagrupperForAnsattesValgteEnhet(String ansattId, String valgtEnhet);
 }

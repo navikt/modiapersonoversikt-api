@@ -47,12 +47,12 @@ public class JournalfortTemaAttributeLocatorTest {
 
     @Test
     public void bagMedTemagrupperVedVellykketKallTilDelegate() {
-        when(delegate.getTemagrupperForAnsattesValgteEnhet(anyString())).thenReturn(asSet("ARBD", "FAML"));
+        when(delegate.getTemagrupperForAnsattesValgteEnhet(anyString(), anyString())).thenReturn(asSet("ARBD", "FAML"));
         EvaluationResult evaluationResult =
                 journalfortTemaAttributeLocator.findAttribute(STRING_TYPE, ATTRIBUTEID_TEMA, null, null, context, 0);
 
         assertThat(((BagAttribute) evaluationResult.getAttributeValue()).size(), is(2));
-        verify(delegate, only()).getTemagrupperForAnsattesValgteEnhet(anyString());
+        verify(delegate, only()).getTemagrupperForAnsattesValgteEnhet(anyString(), anyString());
     }
 
     @Test

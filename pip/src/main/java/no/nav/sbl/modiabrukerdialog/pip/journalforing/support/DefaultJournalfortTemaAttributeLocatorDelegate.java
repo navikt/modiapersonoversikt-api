@@ -5,7 +5,6 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFa
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,21 +20,17 @@ public class DefaultJournalfortTemaAttributeLocatorDelegate implements Journalfo
     private static Logger logger = LoggerFactory.getLogger(JournalfortTemaAttributeLocator.class);
 
     private GOSYSNAVansatt ansattService;
-    private SaksbehandlerInnstillingerService saksbehandlerService;
 
-    public DefaultJournalfortTemaAttributeLocatorDelegate(GOSYSNAVansatt ansattService, SaksbehandlerInnstillingerService saksbehandlerService) {
+    public DefaultJournalfortTemaAttributeLocatorDelegate(GOSYSNAVansatt ansattService) {
         this.ansattService = ansattService;
-        this.saksbehandlerService = saksbehandlerService;
     }
 
     @Override
-    public Set<String> getTemagrupperForAnsattesValgteEnhet(String ansattId) {
-        String saksbehandlerValgtEnhet = saksbehandlerService.getSaksbehandlerValgtEnhet();
-
+    public Set<String> getTemagrupperForAnsattesValgteEnhet(String ansattId, String valgtEnhet) {
         try {
             ASBOGOSYSHentNAVAnsattFagomradeListeRequest ansattFagomraderRequest = new ASBOGOSYSHentNAVAnsattFagomradeListeRequest();
             ansattFagomraderRequest.setAnsattId(ansattId);
-            ansattFagomraderRequest.setEnhetsId(saksbehandlerValgtEnhet);
+            ansattFagomraderRequest.setEnhetsId(valgtEnhet);
 
             List<ASBOGOSYSFagomrade> fagomrader = ansattService.hentNAVAnsattFagomradeListe(ansattFagomraderRequest).getFagomrader();
 
@@ -46,7 +41,7 @@ public class DefaultJournalfortTemaAttributeLocatorDelegate implements Journalfo
 
             return temaSet;
         } catch (HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg e) {
-            logger.warn("Feil oppsto under henting av ansatt fagområdeliste for enhet med enhetsId {}.", saksbehandlerValgtEnhet, e);
+            logger.warn("Feil oppsto under henting av ansatt fagområdeliste for enhet med enhetsId {}.", valgtEnhet, e);
             return emptySet();
         } catch (HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg e) {
             logger.warn("Fant ikke ansatt med ident {}.", ansattId, e);

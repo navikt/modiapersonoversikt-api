@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://appconfig.aura.nav.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://appconfig.aura.nav.no http://maven.adeo.no/xsd/appconfig.xsd">
+
     <name>modiabrukerdialog</name>
+
     <selftestPagePath>/modiabrukerdialog/internal/selftest</selftestPagePath>
+
     <artifacts>
         <ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee"/>
     </artifacts>
+
     <security serviceUserResourceAlias="srvModiabrukerdialog">
         <logins>
             <spnego/>
         </logins>
     </security>
+
+    <loadBalancer>
+        <contextRoot>modiabrukerdialog</contextRoot>
+        <lbHealthMonitor type="HTTPS" isAliveUrl="internal/isAlive" interval="5" timeout="16"/>
+        <lbPool slowRampTime="30" loadBalancingMethod="LEAST_CONNECTIONS" connectionLimit="500"/>
+    </loadBalancer>
+
     <resources>
         <!-- Felles -->
         <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint"/>
@@ -21,31 +32,35 @@
         <localFiles name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
+        <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
-        <webservice alias="BehandleJournal_v2" mapToProperty="behandlejournal.v2"/>
-        <webservice alias="virksomhet:Sak_v1" mapToProperty="gsak.saksliste.v1"/>
+        <webservice alias="virksomhet:Sak_v1" mapToProperty="gsak.sak.v1"/>
+        <webservice alias="virksomhet:BehandleSak_v1" mapToProperty="gsak.behandlesak.v1"/>
+        <webservice alias="virksomhet:ArbeidOgAktivitet_v1" mapToProperty="arena.arbeidogaktivitet.v1"/>
         <webservice alias="virksomhet:Ruting_v1" mapToProperty="gsak.ruting.v1"/>
         <webservice alias="virksomhet:Person_v2" mapToProperty="kjerneinfoendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>
         <webservice alias="virksomhet:Brukerprofil_v1" mapToProperty="brukerprofilendpoint"/>
         <webservice alias="virksomhet:BehandleBrukerprofil_v1" mapToProperty="behandlebrukerprofilendpoint"/>
-        <webservice alias="virksomhet:Ytelseskontrakt_v1" mapToProperty="ytelseskontraktendpoint"/>
+        <webservice alias="virksomhet:Ytelseskontrakt_v2" mapToProperty="ytelseskontraktendpoint"/>
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
-        <webservice alias="virksomhet:utbetaling_v2" mapToProperty="utbetalingendpoint.v2"/>
+        <webservice alias="Utbetaling_v1" mapToProperty="utbetalingendpoint"/>
         <webservice alias="domene.Brukerdialog:Henvendelse_v2" mapToProperty="henvendelse.v2"/>
         <webservice alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
         <webservice alias="domene.Brukerdialog:HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
-        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws" />
+        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
+        <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
     </resources>
+
 </application>

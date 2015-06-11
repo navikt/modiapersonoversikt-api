@@ -29,6 +29,11 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
+            public void knyttBehandlingskjedeTilSak(String behandlingskjedeId, String saksId, String temakode, String journalforendeEnhet) {
+
+            }
+
+            @Override
             public void oppdaterOppgaveOpprettetInformasjon(XMLOppgaveOpprettetInformasjon oppdaterOppgaveOpprettetInformasjon) {
             }
 
@@ -38,6 +43,11 @@ public class BehandleHenvendelsePortTypeMock {
                     XMLHenvendelse xmlHenvendelse = hentHenvendelse(id);
                     xmlHenvendelse.setMarkertSomFeilsendtAv(getSubjectHandler().getUid());
                 }
+            }
+
+            @Override
+            public void knyttBehandlingskjedeTilTema(String s, String s1) {
+                
             }
 
             @Override

@@ -6,25 +6,21 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,41 +30,26 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
-import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.HENVENDELSEID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -82,22 +63,18 @@ public class PersonPageTest extends WicketPageTest {
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
-    @Inject
     private GsakKodeverk gsakKodeverk;
 
     private final static String testFnr = "12037649749";
 
     @Before
     public void setUp() {
-        Sporsmal sporsmal = new Sporsmal("id", DateTime.now());
-        sporsmal.temagruppe = ARBD.name();
-        sporsmal.oppgaveId = "id";
-        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(optional(sporsmal));
-        when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(Arrays.asList(
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding()));
+        when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(asList(
                 new GsakKodeTema.Tema("kode", "tekst",
-                        new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
-                        new ArrayList<>(Arrays.asList(new GsakKodeTema.Prioritet("kode", "tekst")))))));
+                        new ArrayList<>(asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
+                        new ArrayList<>(asList(new GsakKodeTema.Prioritet("kode", "tekst"))),
+                        new ArrayList<>(asList(new GsakKodeTema.Underkategori("kode", "tekst")))))));
     }
 
     @Test
@@ -145,82 +122,9 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void gittIngenUrlParamVisesReferatPanelOgOversiktLamell() {
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
-    }
-
-    @Test
-    public void gittBareHenvendelseUrlParamVisesMeldingsLamell() {
-        String henvendelsesId = "id 1";
-        wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
-
-        PersonPage page = wicket.tester.startPage(PersonPage.class);
-
-        assertThat(page.startLamell, is(LAMELL_MELDINGER));
-    }
-
-    @Test
-    public void medHenvendelseOgOppgaveUrlParamVisesSvarPanelOgMeldingLamell() {
-        String henvendelsesId = "id 1";
-        String oppgaveId = "oppg1";
-        wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
-        wicket.tester.getSession().setAttribute(OPPGAVEID, oppgaveId);
-
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
-
-        assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
-        verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
-        verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
-    }
-
-    @Test
-    public void erstatterReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
-
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .sendEvent(createEvent(SVAR_PAA_MELDING))
-                .should().inAjaxResponse().haveComponents(ofType(SvarPanel.class));
-    }
-
-    @Test
-    public void tilordnerIkkeOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
-
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .sendEvent(createEvent(SVAR_PAA_MELDING));
-
-        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString());
-    }
-
-    @Test
-    public void tilordnerOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<SvarEllerReferat>());
-
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .sendEvent(createEvent(SVAR_PAA_MELDING));
-
-        verify(oppgaveBehandlingService).tilordneOppgaveIGsak(anyString());
-    }
-
-    @Test
-    public void erstatterSvarOgReferatPanelMedReferatPanelVedRiktigeEvents() {
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(KVITTERING_VIST);
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_FERDIG);
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(SVAR_AVBRUTT);
-    }
-
-    private void assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(String event) {
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .sendEvent(createEvent(event))
-                .should().inAjaxResponse().haveComponents(ofType(ReferatPanel.class));
-    }
-
-    @Test
     public void sletterPlukketOppgaveFraSessionVedRiktigeEvents() {
         assertSletterPlukketOppgaveFraSessionVedEvent(MELDING_SENDT_TIL_BRUKER);
-        assertSletterPlukketOppgaveFraSessionVedEvent(LEGG_TILBAKE_UTFORT);
+        assertSletterPlukketOppgaveFraSessionVedEvent(Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT);
     }
 
     private void assertSletterPlukketOppgaveFraSessionVedEvent(String event) {
@@ -249,7 +153,6 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void vellykketGotoHentPersonPageBeggeError() {
-
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
 
         wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}"));
@@ -301,6 +204,10 @@ public class PersonPageTest extends WicketPageTest {
                 return new NamedEventPayload(eventNavn, payload);
             }
         };
+    }
+
+    private Melding lagMelding() {
+        return new Melding().withId("id").withOpprettetDato(now()).withTemagruppe(ARBD.name()).withOppgaveId("id");
     }
 
 }

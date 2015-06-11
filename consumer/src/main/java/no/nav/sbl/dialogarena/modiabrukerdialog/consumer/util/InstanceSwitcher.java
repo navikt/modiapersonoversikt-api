@@ -36,17 +36,20 @@ public final class InstanceSwitcher implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         method.setAccessible(true);
         try {
             if (getProperty(key, "false").equalsIgnoreCase("true")) {
                 return method.invoke(alternative, args);
             }
             return method.invoke(defaultInstance, args);
-        } catch (IllegalAccessException | InvocationTargetException exception) {
+        } catch (IllegalAccessException exception) {
             throw new ApplicationException("Problemer med invokering av metode", exception);
+        } catch (InvocationTargetException e) {
+            throw (Exception) e.getCause();
         }
     }
+
     public String getTargetClassName() {
         return alternative.getClass().getName().split("\\$")[0];
     }

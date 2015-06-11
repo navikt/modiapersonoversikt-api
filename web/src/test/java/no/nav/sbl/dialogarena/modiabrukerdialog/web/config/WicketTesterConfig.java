@@ -36,6 +36,7 @@ public class WicketTesterConfig {
     @Bean
     public CmsContentRetriever cmsContentRetriever() {
         CmsContentRetriever mock = mock(CmsContentRetriever.class);
+        when(mock.getDefaultLocale()).thenReturn("nb");
         when(mock.hentTekst(anyString())).thenReturn("Tekst fra mock-cms");
         return mock;
     }

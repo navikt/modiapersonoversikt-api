@@ -8,6 +8,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,19 +51,19 @@ public class PlukkOppgaveServiceTest {
 
     @Test
     public void girNoneHvisIngenOppgaveFraTjenesten() {
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(Optional.<Oppgave>none());
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI)).thenReturn(Optional.<Oppgave>none());
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
+        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(Optional.<Oppgave>none())));
     }
 
     @Test
     public void girOppgaveHvisSaksbehandlerHarTilgang() {
         Optional<Oppgave> oppgave = optional(new Oppgave("oppgaveId", "fnr", "henvendelseId"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave);
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI)).thenReturn(oppgave);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave)));
+        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(oppgave)));
     }
 
     @Test
@@ -71,32 +71,32 @@ public class PlukkOppgaveServiceTest {
         Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "1"));
         Optional<Oppgave> oppgave2 = optional(new Oppgave("2", "fnr", "2"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, oppgave2);
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI)).thenReturn(oppgave1, oppgave2);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave2)));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
+        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(oppgave2)));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI));
     }
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangTilSamtligePep() {
         Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "henvendelseId"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, Optional.<Oppgave>none());
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI)).thenReturn(oppgave1, Optional.<Oppgave>none());
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
+        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(Optional.<Oppgave>none())));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI));
     }
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangFraKjerneinfo() {
         Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "henvendelseId"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, Optional.<Oppgave>none());
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI)).thenReturn(oppgave1, Optional.<Oppgave>none());
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenThrow(new AuthorizationException(""));
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
+        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI), is(equalTo(Optional.<Oppgave>none())));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI));
     }
 }

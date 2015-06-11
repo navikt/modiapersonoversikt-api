@@ -8,6 +8,8 @@
           class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.AutentisertBrukerKeyGenerator"/>
     <bean id="asbogosyskeygenerator"
           class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.ASBOGOSYSNAVKeyGenerator"/>
+    <bean id="defaultkeygenerator"
+          class="org.springframework.cache.interceptor.DefaultKeyGenerator"/>
 
     <cache:advice id="shortlivedAdvice" key-generator="userkeygenerator">
         <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
@@ -41,7 +43,17 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
-    <!--kodeverkCache-->
+    <cache:advice id="ldapServiceAdvice" key-generator="defaultkeygenerator">
+        <cache:caching cache="ldap">
+            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="finn*"/>
+        </cache:caching>
+    </cache:advice>
+    <cache:advice id="utbetalingService" key-generator="userkeygenerator">
+        <cache:caching cache="utbetalingCache">
+            <cache:cacheable method="hent*"/>
+        </cache:caching>
+    </cache:advice>
 
     <aop:config>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
@@ -49,11 +61,12 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
         <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortTypeV2)"/>
-        <!--aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkClient   )"/-->
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(rutingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
         <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
         <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
+        <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
+        <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
     </aop:config>
 
 </beans>

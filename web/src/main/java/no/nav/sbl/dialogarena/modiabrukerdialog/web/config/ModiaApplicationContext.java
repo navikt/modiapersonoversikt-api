@@ -10,5 +10,4 @@ import org.springframework.context.annotation.Import;
         ModulesApplicationContext.class
 })
 public class ModiaApplicationContext {
-
 }

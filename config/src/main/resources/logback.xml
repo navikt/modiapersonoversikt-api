@@ -60,6 +60,16 @@
         </encoder>
     </appender>
 
+    <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${syslog.filter.level:-INFO}</level>
+        </filter>
+        <syslogHost>localhost</syslogHost>
+        <facility>LOCAL1</facility>
+        <suffixPattern>${MAIN_APPLICATION} %mdc %logger{30} %m %n%rEx</suffixPattern>
+        <throwableExcluded>true</throwableExcluded>
+    </appender>
+
     <logger name="no.nav.modig.common.SporingsLogger" level="INFO">
         <appender-ref ref="sporinglog"/>
     </logger>
@@ -71,6 +81,7 @@
     <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="exceptionlog"/>
         <appender-ref ref="infolog"/>
+        <appender-ref ref="SYSLOG" />
     </root>
 
 </configuration>

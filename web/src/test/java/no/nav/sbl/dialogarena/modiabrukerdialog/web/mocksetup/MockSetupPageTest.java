@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
@@ -18,7 +19,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {
         EndpointMockContext.class,
         HentPersonPanelMockContext.class,
-        SaksbehandlerInnstillingerPanelMockContext.class
+        SaksbehandlerInnstillingerPanelMockContext.class,
+        CmsSkrivestotteConfig.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MockSetupPageTest extends WicketPageTest {

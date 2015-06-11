@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>3.28</version>
+        <version>4.28.2</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -26,13 +26,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-mock</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-config</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-            <type>test-jar</type>
         </dependency>
 
         <!--Personsok-->
@@ -110,13 +103,6 @@
             <artifactId>nav-fellessystemer-environment</artifactId>
         </dependency>
 
-        <!--Tjenestespesifikasjon fim-->
-        <dependency>
-            <groupId>no.nav.tjenester.fim</groupId>
-            <artifactId>nav-fim-behandleJournal-v2-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
-        </dependency>
-
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -140,6 +126,10 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dial-nav-tjeneste-behandlesak</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
@@ -153,6 +143,10 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>behandle-henvendelse</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>arena-arbeid-og-aktivitet</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -283,6 +277,24 @@
             <artifactId>cxf-rt-ws-security</artifactId>
         </dependency>
 
+        <!--Lucene-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+        </dependency>
+
         <!--Logging-->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -294,7 +306,6 @@
         </dependency>
 
         <!--Diverse-->
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
@@ -340,6 +351,21 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!--Testing-->
         <dependency>
@@ -348,6 +374,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- Må være compile scope grunnet avhengighet til mock-modul -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
