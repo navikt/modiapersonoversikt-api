@@ -135,6 +135,7 @@ public class TestUtils {
                 .withLestDato(lestDato)
                 .withHenvendelseType(henvendelseType)
                 .withEksternAktor(eksternAktor)
+                .withGjeldendeTemagruppe("ARBD")
                 .withJournalfortInformasjon(
                         new XMLJournalfortInformasjon()
                                 .withJournalfortDato(JOURNALFORT_DATO)
