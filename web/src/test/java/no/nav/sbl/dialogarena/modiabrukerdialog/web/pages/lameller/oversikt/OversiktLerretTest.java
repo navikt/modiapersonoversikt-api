@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.UtbetalingerMockContext;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
-import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,6 @@ public class OversiktLerretTest extends WicketPageTest {
         wicket.goToPageWith(new OversiktLerret("oversiktId", "fnr"))
                 .should().containComponent(withId("lenker").and(ofType(LenkeWidget.class)))
                 .should().containComponent(withId("sykepenger").and(ofType(SykepengerWidget.class)))
-                .should().containComponent(withId("utbetalinger").and(ofType(UtbetalingWidget.class)))
                 .should().containComponent(withId("meldinger").and(ofType(MeldingerWidget.class)))
                 .should().containComponent(withId("saksoversikt").and(ofType(SaksoversiktWidget.class)));
     }
