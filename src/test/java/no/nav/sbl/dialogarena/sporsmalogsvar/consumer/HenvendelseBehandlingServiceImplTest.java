@@ -7,10 +7,7 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
@@ -41,8 +38,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -229,6 +228,21 @@ public class HenvendelseBehandlingServiceImplTest {
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
         assertNull(meldinger.get(0).journalfortTemanavn);
+    }
+
+    @Test
+    public void skalFiltrereBortOkonomiskSosialhjelpDersomManIkkeHarTilgang() {
+        XMLHenvendelse okonomiskSosialhjelp = lagXMLHenvendelse("1234", "1234", DateTime.now(), DateTime.now(), SPORSMAL_SKRIFTLIG.toString(), null,
+                new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker().withFritekst("Hallo").withTemagruppe(OKSOS.toString())))
+                .withTilknyttetEnhet("9999")
+                .withGjeldendeTemagruppe(OKSOS.toString());
+
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(okonomiskSosialhjelp));
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
+
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
+
+        assertThat(meldinger, hasSize(0));
     }
 
 }

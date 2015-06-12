@@ -9,6 +9,7 @@ import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -88,6 +89,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .map(tilMelding(propertyResolver))
                 .map(journalfortTemaTilTemanavn)
                 .filter(kontorsperreTilgang(valgtEnhet))
+                .filter(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect();
 
@@ -133,6 +135,21 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                         resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
 
                 return isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest);
+            }
+        };
+    }
+
+    private Predicate<Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
+        return new Predicate<Melding>() {
+            @Override
+            public boolean evaluate(Melding melding) {
+                PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(
+                        actionId("oksos"),
+                        resourceId(""),
+                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tilknyttet-enhet", defaultString(melding.tilknyttetEnhet)));
+
+                return !Temagruppe.OKSOS.toString().equals(melding.temagruppe) || pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
             }
         };
     }
