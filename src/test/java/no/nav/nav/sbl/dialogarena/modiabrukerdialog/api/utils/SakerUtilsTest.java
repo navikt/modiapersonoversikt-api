@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
@@ -22,6 +23,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -229,6 +231,14 @@ public class SakerUtilsTest {
         SakerUtils.leggTilFagsystemnavnOgTemanavn(sakerForBruker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
 
         assertThat(sak.temaNavn, is(temaKodeSomIkkeFinnesIMapping));
+    }
+
+    @Test
+    public void filtrererBortKlageAnkeSaker() {
+        List<Sak> sakerForBruker = singletonList(createSak("2309824", TEMAKODE_KLAGE_ANKE, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_FAG, DateTime.now()));
+        Saker saker = SakerUtils.hentGenerelleOgIkkeGenerelleSaker(sakerForBruker);
+
+        assertTrue(saker.getSakerListeFagsak().isEmpty());
     }
 
     private ArrayList<String> getAlleEksisterendeTemaer() {

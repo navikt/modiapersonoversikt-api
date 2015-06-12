@@ -22,6 +22,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public Boolean finnesIGsak;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
+    public static final String TEMAKODE_KLAGE_ANKE = "KLA";
     public static final String SAKSTYPE_GENERELL = "GEN";
     public static final String SAKSTYPE_MED_FAGSAK = "MFS";
     public static final String FAGSYSTEMKODE_ARENA = "AO01";
@@ -68,6 +69,15 @@ public class Sak implements Serializable, Comparable<Sak> {
             return GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode);
         }
     };
+
+    public static Predicate<Sak> harTemaKode(final String temaKode) {
+        return new Predicate<Sak>() {
+            @Override
+            public boolean evaluate(Sak sak) {
+                return temaKode.equals(sak.temaKode);
+            }
+        };
+    }
 
     public static final Predicate<Sak> IS_ARENA_OPPFOLGING = new Predicate<Sak>() {
         @Override
