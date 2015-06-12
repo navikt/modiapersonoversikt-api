@@ -228,7 +228,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
                         optional((String) session.getAttribute(HENVENDELSEID)),
                         optional((String) session.getAttribute(OPPGAVEID)),
                         optional((String) session.getAttribute(BESVARMODUS)),
-                        optional(Boolean.valueOf((String) session.getAttribute(FORTSETTDIALOGMODUS))));
+                        optional(Boolean.valueOf((String) session.getAttribute(BESVARES))));
                 return new AjaxLazyLoadLerret(id, name) {
                     @Override
                     public Lerret getLazyLoadComponent(String markupId) {

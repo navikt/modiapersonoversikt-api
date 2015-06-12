@@ -29,7 +29,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 import java.io.Serializable;
 
-import static java.lang.Boolean.TRUE;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
@@ -135,7 +134,7 @@ public class PlukkOppgavePanel extends Panel {
                             .set("fnr", fnr)
                             .set(HENVENDELSEID, henvendelseid)
                             .set(OPPGAVEID, oppgaveid)
-                            .set(FORTSETTDIALOGMODUS, TRUE.toString())
+                            .set(BESVARES, true)
             );
         }
 

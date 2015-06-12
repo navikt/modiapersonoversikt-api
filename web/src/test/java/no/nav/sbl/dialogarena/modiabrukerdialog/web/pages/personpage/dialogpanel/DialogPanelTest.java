@@ -188,7 +188,7 @@ public class DialogPanelTest extends WicketPageTest {
     private void settSessionVerdier(String oppgaveIdVerdi, String henvendelseIdVerdi, Boolean fortsettDialogModusVerdi) {
         wicket.tester.getSession().setAttribute(OPPGAVEID, oppgaveIdVerdi);
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelseIdVerdi);
-        wicket.tester.getSession().setAttribute(FORTSETTDIALOGMODUS, fortsettDialogModusVerdi.toString());
+        wicket.tester.getSession().setAttribute(BESVARES, fortsettDialogModusVerdi.toString());
     }
 
     private Melding lagMelding() {

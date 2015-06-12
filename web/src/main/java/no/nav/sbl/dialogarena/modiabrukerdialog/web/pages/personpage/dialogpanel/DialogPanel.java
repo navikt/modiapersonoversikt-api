@@ -75,7 +75,7 @@ public class DialogPanel extends Panel {
     private GrunnInfo grunnInfo;
     private Optional<String> oppgaveIdFraParametere = none();
     private Optional<String> henvendelsesIdFraParametere = none();
-    private Boolean fortsettDialogModusFraParametere = false;
+    private Boolean besvaresFraParametere = false;
 
     public DialogPanel(String id, String fnr) {
         super(id);
@@ -95,10 +95,8 @@ public class DialogPanel extends Panel {
         henvendelsesIdFraParametere = optional(ER_SATT, (String) getSession().getAttribute(HENVENDELSEID));
         oppgaveIdFraParametere = optional(ER_SATT, (String) getSession().getAttribute(OPPGAVEID));
 
-        String fortsettDialogModus = (String) getSession().getAttribute(FORTSETTDIALOGMODUS);
-        if (!isBlank(fortsettDialogModus) && Boolean.valueOf(fortsettDialogModus)) {
-            fortsettDialogModusFraParametere = true;
-        }
+        String besvares = (String) getSession().getAttribute(BESVARES);
+        besvaresFraParametere = !isBlank(besvares) && Boolean.valueOf(besvares);
     }
 
     private Bruker hentBrukerInfo(String fnr) {
@@ -136,7 +134,7 @@ public class DialogPanel extends Panel {
 
     private void settOppRiktigMeldingPanel() {
         if (henvendelsesIdFraParametere.isSome() && oppgaveIdFraParametere.isSome()) {
-            if (fortsettDialogModusFraParametere) {
+            if (besvaresFraParametere) {
                 List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere.get());
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
                     erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveIdFraParametere);
@@ -191,7 +189,7 @@ public class DialogPanel extends Panel {
     private void clearLokaleParameterVerdier() {
         oppgaveIdFraParametere = none();
         henvendelsesIdFraParametere = none();
-        fortsettDialogModusFraParametere = false;
+        besvaresFraParametere = false;
     }
 
     @RunOnEvents({NY_DIALOG_LENKE_VALGT})
