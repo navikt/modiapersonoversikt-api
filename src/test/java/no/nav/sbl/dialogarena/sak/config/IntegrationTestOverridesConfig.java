@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
@@ -41,12 +42,17 @@ public class IntegrationTestOverridesConfig {
         return mock(SakOgBehandling_v1PortType.class);
     }
 
+    @Bean(name = "pep")
+    public EnforcementPoint pep() {
+        return mock(EnforcementPoint.class);
+    }
+
     @Bean
     public CmsContentRetriever cmsContentRetriever() {
         CmsContentRetriever cmsMock = new CmsContentRetriever() {
             @Override
             public String hentTekst(String key) {
-                switch(key) {
+                switch (key) {
                     case "mange.saker":
                         return "Vis alle {0} saker";
                     case "ingen.saker":
@@ -61,9 +67,10 @@ public class IntegrationTestOverridesConfig {
                         return "default tekst fra CMS-mock";
                 }
             }
+
             @Override
             public String hentArtikkel(String key) {
-                switch(key) {
+                switch (key) {
                     default:
                         return "default tekst fra CMS-mock";
                 }

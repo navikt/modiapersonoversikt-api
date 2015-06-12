@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -12,9 +14,14 @@ import org.apache.commons.collections15.Predicate;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding.*;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
@@ -27,6 +34,11 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     @Inject
     private JoarkService joarkService;
+
+
+    @Inject
+    @Named("pep")
+    private EnforcementPoint pep;
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
@@ -46,6 +58,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             return new HentDokumentResultat(false, FEILREGISTRERT);
         } else if (!erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
             return new HentDokumentResultat(false, IKKE_SAKSPART);
+        } else if (!harEnhetTilgangTilTema(journalpost)) {
+            return new HentDokumentResultat(false, INGEN_TILGANG);
         }
         return new HentDokumentResultat(true);
     }
@@ -84,7 +98,19 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         }
         return erInnsenderSakspart;
     }
-
+    
+    private boolean harEnhetTilgangTilTema(WSJournalpost journalpost) {
+        PolicyRequest temagruppePolicyRequest = forRequest(
+                actionId("temagruppe"),
+                resourceId(""),
+                resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(journalpost.getArkivtema().getValue()))
+        );
+        if (isNotBlank(journalpost.getArkivtema().getValue()) && !pep.hasAccess(temagruppePolicyRequest)) {
+            return false;
+        }
+        return true;
+    }
+    
     private WSSak hentSak(String sakId) {
         return gSakService.hentSak(sakId);
     }

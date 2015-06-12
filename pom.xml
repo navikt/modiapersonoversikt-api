@@ -32,6 +32,7 @@
         <modig-lang.version>2.0.4</modig-lang.version>
         <modig-content.version>2.0.9</modig-content.version>
         <modig-core.version>1.0.1</modig-core.version>
+        <modig.security.version>1.0.24</modig.security.version>
 
         <!-- Tjenester  -->
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.24</henvendelse-soknader-tjenestespesifikasjon.version>
@@ -44,6 +45,7 @@
 
         <!-- Java  -->
         <javax.inject.version>1</javax.inject.version>
+        <commons-lang3.version>3.3.2</commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -223,7 +225,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-authorization</artifactId>
+            <version>${modig.security.version}</version>
+        </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket-test</artifactId>
@@ -248,7 +254,11 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -12,6 +12,7 @@ public class HentDokumentResultat {
         IKKE_JOURNALFORT("vedlegg.feilmelding.joark.ikkejournalfort.head", "vedlegg.feilmelding.joark.ikkejournalfort.lead"),
         FEILREGISTRERT("vedlegg.feilmelding.joark.feilregistrert.head", "vedlegg.feilmelding.joark.feilregistrert.lead"),
         IKKE_SAKSPART("vedlegg.feilmelding.ikkesakspart.head", "vedlegg.feilmelding.ikkesakspart.lead"),
+        INGEN_TILGANG("vedlegg.feilmelding.ikketilgang.head", "vedlegg.feilmelding.ikketilgang.lead"),
         DOKUMENT_IKKE_FUNNET("vedlegg.feilmelding.joark.dokumentikkefunnet.head", "vedlegg.feilmelding.joark.dokumentikkefunnet.lead"),
         DOKUMENT_SLETTET("vedlegg.feilmelding.joark.dokumentslettet.head", "vedlegg.feilmelding.joark.dokumentslettet.lead");
 
