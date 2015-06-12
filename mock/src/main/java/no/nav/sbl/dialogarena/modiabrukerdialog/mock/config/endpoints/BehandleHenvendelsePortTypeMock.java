@@ -29,8 +29,8 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
-            public void oppdaterTemagruppe(String s, String s1) {
-
+            public void oppdaterTemagruppe(String behandlingsId, String temagruppe) {
+                hentHenvendelse(behandlingsId).setGjeldendeTemagruppe(temagruppe);
             }
 
             @Override
