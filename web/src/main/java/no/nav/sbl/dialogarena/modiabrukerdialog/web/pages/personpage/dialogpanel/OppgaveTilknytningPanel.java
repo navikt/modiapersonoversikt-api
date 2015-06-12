@@ -3,10 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.modia.aria.AriaHelpers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -31,10 +32,11 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
 
         final IModel<Boolean> isOpen = Model.of(false);
 
+        Label oppgaveTilknytningTekst = new Label("oppgaveTilknytningTekst", new StringResourceModel("oppgavetilknytning.tekst.${oppgaveTilknytning}", getModel(), new Object[]{grunnInfo.saksbehandler.enhet}));
+
         final WebMarkupContainer oppgaveTilknytningPopup = new WebMarkupContainer("oppgaveTilknytningPopup");
         oppgaveTilknytningPopup.setOutputMarkupPlaceholderTag(true);
         oppgaveTilknytningPopup.add(visibleIf(isOpen));
-        Label oppgaveTilknytningTekst = new Label("oppgaveTilknytningTekst", new StringResourceModel("oppgavetilknytning.tekst.${oppgaveTilknytning}", getModel(), new Object[]{grunnInfo.saksbehandler.enhet}));
         final AjaxLink aapnePopup = new AjaxLink("aapnePopup") {
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -61,12 +63,13 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
                 return object.name();
             }
         });
-        oppgaveTilknytningValg.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+        AjaxButton ok = new AjaxButton("ok") {
             @Override
-            protected void onUpdate(AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                isOpen.setObject(false);
                 target.add(OppgaveTilknytningPanel.this);
             }
-        });
+        };
         AjaxLink lukkPopup = new AjaxLink("lukkPopup") {
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -74,8 +77,10 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
                 target.add(aapnePopup, oppgaveTilknytningPopup);
             }
         };
-        oppgaveTilknytningPopup.add(oppgaveTilknytningValg, lukkPopup);
+        oppgaveTilknytningPopup.add(oppgaveTilknytningValg, ok, lukkPopup);
 
-        add(oppgaveTilknytningTekst, aapnePopup, oppgaveTilknytningPopup);
+        Form form = new Form("form");
+        form.add(oppgaveTilknytningTekst, aapnePopup, oppgaveTilknytningPopup);
+        add(form);
     }
 }

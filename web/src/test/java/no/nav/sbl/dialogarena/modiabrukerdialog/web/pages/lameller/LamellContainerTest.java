@@ -28,7 +28,7 @@ public class LamellContainerTest extends WicketPageTest {
 
     @Before
     public void setup() {
-        lamellContainer = new LamellContainer("lameller", "22222222222");
+        lamellContainer = new LamellContainer("lameller", "22222222222", wicket.tester.getSession());
     }
 
     @Test(expected = ApplicationException.class)

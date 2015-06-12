@@ -171,6 +171,7 @@ public class DialogPanel extends Panel {
             }
         }
         erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveId);
+        getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, traadId);
         target.add(aktivtPanel);
     }
 
@@ -206,7 +207,7 @@ public class DialogPanel extends Panel {
     }
 
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
-    public void unsetBesvartModus(AjaxRequestTarget target) {
+    public void unsetBesvartModus() {
         getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, null);
     }
 }

@@ -29,12 +29,16 @@
 
                     <wicket:container wicket:id="skrivestotteContainer"/>
 
-                    <h2 class="medium kanaloverskrift">
-                        <button wicket:id="skrivestotteToggler" class="skrivestotteToggle" wicket:message="title:skrivestotte.title">
+                    <div class="kanaloverskrift">
+                        <h2 class="medium">
+                            <span wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</span>
+                        </h2>
+                        <button wicket:id="skrivestotteToggler" class="skrivestotteToggle"
+                                wicket:message="title:skrivestotte.title">
                             <span class="vekk"><wicket:message key="skrivestotte.arialabel"/></span>
                         </button>
-                        <span wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</span>
-                    </h2>
+                    </div>
+                    
                     <section wicket:id="tekstfelt" class="tekstfelt"></section>
                     <div class="kanalvelger clearfix">
                         <div wicket:id="kanal">
