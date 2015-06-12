@@ -6,10 +6,10 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -28,14 +28,11 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class Innboks extends Lerret {
 
@@ -51,14 +48,14 @@ public class Innboks extends Lerret {
 
     private InnboksVM innboksVM;
 
-    public Innboks(String id, final String fnr) {
+    public Innboks(String id, final String fnr, InnboksProps props) {
         super(id);
         setOutputMarkupId(true);
 
         this.innboksVM = new InnboksVM(fnr, henvendelseBehandlingService);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
-        haandterSessionParametere();
+        haandterProps(props);
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
 
@@ -112,28 +109,21 @@ public class Innboks extends Lerret {
         return traadRefs;
     }
 
-    private void haandterSessionParametere() {
-        String traadIdParameter = (String) getSession().getAttribute(HENVENDELSEID);
-        if (isNotBlank(traadIdParameter)) {
-            innboksVM.setSessionHenvendelseId(traadIdParameter);
-            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(traadIdParameter);
+    private void haandterProps(InnboksProps props) {
+        if (props.henvendelseId.isSome()) {
+            innboksVM.setSessionHenvendelseId(props.henvendelseId.get());
+            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(props.henvendelseId.get());
             if (meldingITraad.isSome()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
             }
         }
-        String oppgaveIdParameter = (String) getSession().getAttribute(OPPGAVEID);
-        if (isNotBlank(oppgaveIdParameter) && gsakService.oppgaveKanManuelltAvsluttes(oppgaveIdParameter)) {
-            innboksVM.setSessionOppgaveId(oppgaveIdParameter);
+        if (props.oppgaveId.isSome() && gsakService.oppgaveKanManuelltAvsluttes(props.oppgaveId.get())) {
+            innboksVM.setSessionOppgaveId(props.oppgaveId.get());
         }
-
-        String fortsettDialogModus = (String) getSession().getAttribute(FORTSETTDIALOGMODUS);
-        if (isNotBlank(oppgaveIdParameter) && isNotBlank(traadIdParameter) && fortsettDialogModus != null && fortsettDialogModus.equals(TRUE.toString())) {
-            innboksVM.traadBesvares = traadIdParameter;
-        }
-
-        String traadBesvares = (String) getSession().getAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS);
-        if (isNotBlank(traadBesvares)) {
-            innboksVM.traadBesvares = traadBesvares;
+        if (props.oppgaveId.isSome() && props.henvendelseId.isSome() && props.fortsettModus.getOrElse(false)) {
+            innboksVM.traadBesvares = props.henvendelseId.get();
+        } else if (props.besvarModus.isSome()) {
+            innboksVM.traadBesvares = props.besvarModus.get();
         }
     }
 
@@ -170,14 +160,12 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(Events.SporsmalOgSvar.SVAR_PAA_MELDING)
     public void setBesvarModus(AjaxRequestTarget target, String traadId) {
-        getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, traadId);
         innboksVM.traadBesvares = traadId;
         target.add(this);
     }
 
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {
-        getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, null);
         innboksVM.traadBesvares = null;
         target.add(this);
     }

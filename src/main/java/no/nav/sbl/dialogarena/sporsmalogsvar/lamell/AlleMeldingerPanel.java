@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.modia.model.StringFormatModel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
@@ -47,8 +48,10 @@ public class AlleMeldingerPanel extends Panel {
                                 innboksVM.erValgtMelding(meldingVM).getObject(),
                                 meldingVM)
                 );
-                item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
-                item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
+                item.add(new Label("meldingstatus", new StringFormatModel("%s - %s",
+                        new PropertyModel<String>(item.getModel(), "melding.statusTekst"),
+                        new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")
+                )));
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));

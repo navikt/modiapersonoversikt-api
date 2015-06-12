@@ -1,11 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,10 +19,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
@@ -28,9 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -55,14 +55,14 @@ public class InnboksTest extends WicketPageTest {
 
     @Test
     public void inneholderRiktigeKomponenter() {
-        wicket.goToPageWith(new Innboks("innboks", "fnr"))
+        wicket.goToPageWith(new Innboks("innboks", "fnr", tomInnboksProps()))
                 .should().containComponent(ofType(AlleMeldingerPanel.class))
                 .should().containComponent(ofType(TraaddetaljerPanel.class));
     }
 
     @Test
     public void velgerTraadMedNyesteMeldingSomDefault() {
-        Innboks testInnboks = new Innboks("innboks", "fnr");
+        Innboks testInnboks = new Innboks("innboks", "fnr", tomInnboksProps());
         wicket.goToPageWith(testInnboks);
 
         assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(NYESTE_MELDING_ID_TRAAD1));
@@ -70,7 +70,7 @@ public class InnboksTest extends WicketPageTest {
 
     @Test
     public void setterValgtMeldingVedEvent() {
-        Innboks testInnboks = new Innboks("innboks", "fnr");
+        Innboks testInnboks = new Innboks("innboks", "fnr", tomInnboksProps());
         wicket.goToPageWith(testInnboks);
 
         wicket.sendEvent(new EventGenerator() {
@@ -86,7 +86,7 @@ public class InnboksTest extends WicketPageTest {
     @Test
     public void oppdatererMeldingeneVedKlikkPaaSok() {
         String fnr = "fnr";
-        Innboks testInnboks = new Innboks("innboks", fnr);
+        Innboks testInnboks = new Innboks("innboks", fnr, tomInnboksProps());
         wicket.goToPageWith(testInnboks)
                 .click().link(withId("meldingerSokToggle"));
 
@@ -95,9 +95,7 @@ public class InnboksTest extends WicketPageTest {
 
     @Test
     public void setterTraadSomErReferertISessionTilValgtTraadIInnboks() {
-        wicket.tester.getSession().setAttribute(HENVENDELSEID, ENESTE_MELDING_ID_TRAAD2);
-
-        Innboks testInnboks = new Innboks("innboks", "fnr");
+        Innboks testInnboks = new Innboks("innboks", "fnr", new InnboksProps(optional(ENESTE_MELDING_ID_TRAAD2), Optional.<String>none(), Optional.<String>none(), Optional.<Boolean>none()));
         wicket.goToPageWith(testInnboks);
 
         assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
@@ -105,6 +103,10 @@ public class InnboksTest extends WicketPageTest {
 
     private TraadVM getValgtTraad(Innboks testInnboks) {
         return ((InnboksVM) testInnboks.getDefaultModelObject()).getValgtTraad();
+    }
+
+    private InnboksProps tomInnboksProps() {
+        return new InnboksProps(Optional.<String>none(), Optional.<String>none(), Optional.<String>none(), Optional.<Boolean>none());
     }
 
 }

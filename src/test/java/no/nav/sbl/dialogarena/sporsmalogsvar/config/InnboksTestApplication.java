@@ -26,7 +26,7 @@ public class InnboksTestApplication extends WebApplication {
 
     @Override
     public Class<? extends Page> getHomePage() {
-        return InnboksTestPage.class;
+        return Page.class;
     }
 
     @Override

@@ -60,10 +60,10 @@ public class TestUtils {
 
     public static ArrayList<Sak> createMockSaksliste() {
         return new ArrayList<>(asList(
-                createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                createSak(SAKS_ID_2, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
-                createSak(SAKS_ID_3, TEMA_3, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
-                createSak(SAKS_ID_4, TEMA_1, FAGSYSTEMKODE_ARENA, "UGEN", DateTime.now().minusDays(2))));
+            createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+            createSak(SAKS_ID_2, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
+            createSak(SAKS_ID_3, TEMA_3, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
+            createSak(SAKS_ID_4, TEMA_1, FAGSYSTEMKODE_ARENA, "UGEN", DateTime.now().minusDays(2))));
     }
 
     public static Sak createSak(String saksId, String temaKode, String fagsystemKode, String sakstype, DateTime opprettet) {
@@ -84,13 +84,13 @@ public class TestUtils {
 
     public static Saker createMockSaker() {
         List<Sak> generelleSakerTema1 = new ArrayList<>(asList(
-                createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                createSak(SAKS_ID_2, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4))));
+            createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+            createSak(SAKS_ID_2, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4))));
         SakerForTema sakerforTemaGenerelle = new SakerForTema(TEMA_1, "navn", generelleSakerTema1);
         SakerListe sakerListeGenerelle = new SakerListe(asList(sakerforTemaGenerelle));
 
         List<Sak> fagSakerTema2 = new ArrayList<>(asList(
-                createSak(SAKS_ID_3, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_FAG, DateTime.now().minusDays(4))));
+            createSak(SAKS_ID_3, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_FAG, DateTime.now().minusDays(4))));
         SakerForTema sakerforTemaFagsaker = new SakerForTema(TEMA_2, "navn", fagSakerTema2);
         SakerListe sakerListeFagsaker = new SakerListe(asList(sakerforTemaFagsaker));
 
@@ -115,6 +115,15 @@ public class TestUtils {
         melding.journalfortDato = journalfortDato;
         return melding;
     }
+
+    public static Melding createMeldingSomErMarkertSomFeilsendt(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId, String markertSomFeilsendtAv) {
+        Melding melding = new Melding(id, type, opprettetDato);
+        melding.temagruppe = temagruppe;
+        melding.traadId = traadId;
+        melding.markertSomFeilsendtAv = markertSomFeilsendtAv;
+        return melding;
+    }
+
 
     public static Melding opprettMeldingEksempel() {
         return createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMA_1, ID_1);

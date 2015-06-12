@@ -29,7 +29,8 @@ public class EnhetDropdown extends Select<AnsattEnhet> {
     @Override
     public void renderHead(IHeaderResponse response) {
         String placeholder = getString("ansattenhetdropdown.null");
-        response.render(OnDomReadyHeaderItem.forScript(format("$('#%s').combobox({placeholder: '%s'})", this.getMarkupId(), placeholder)));
+        String arialabel = getString("nyoppgave.form.label.tilenhet");
+        response.render(OnDomReadyHeaderItem.forScript(format("$('#%s').combobox({placeholder: '%s', arialabel: '%s'})", this.getMarkupId(), placeholder, arialabel + ", " + placeholder)));
         super.renderHead(response);
     }
 
