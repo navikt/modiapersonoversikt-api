@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 
@@ -46,6 +47,7 @@ public class SakerUtils {
     private static SakerListe getFagsaker(Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker) {
         List<Sak> fagsakerFraGodkjenteFagsystemer = on(generelleOgIkkeGenerelleSaker.get(false))
                 .filter(IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK)
+                .filter(not(harTemaKode(TEMAKODE_KLAGE_ANKE)))
                 .collect();
         return new SakerListe(grupperSakerPaaTema(fagsakerFraGodkjenteFagsystemer));
     }
