@@ -210,7 +210,6 @@ public class WicketApplication extends WebApplication {
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
                         UtbetalingLerret.UTBETALING_LAMELL_JS,
-                        PersonPage.SELECTMENU_JS,
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS,

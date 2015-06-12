@@ -39,10 +39,8 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -86,7 +84,6 @@ public class PersonPage extends BasePage {
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
-    public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(HenvendelseVM.class, "jquery-ui-selectmenu.min.js");
 
     private final String fnr;
 
