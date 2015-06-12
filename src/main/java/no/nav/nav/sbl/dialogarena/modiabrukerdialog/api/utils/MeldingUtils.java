@@ -72,7 +72,7 @@ public class MeldingUtils {
                 melding.eksternAktor = xmlHenvendelse.getEksternAktor();
                 melding.tilknyttetEnhet = xmlHenvendelse.getTilknyttetEnhet();
                 melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
-                melding.gjeldendeTemagruppe = Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe());
+                melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
 
                 XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
                 if (journalfortInformasjon != null) {
