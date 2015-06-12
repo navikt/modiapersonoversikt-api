@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
+import no.nav.modig.modia.model.StringFormatModel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -17,8 +18,10 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
                 new StatusIkon("statusIkon", getModelObject()),
                 new Label("traadlengde").setVisibilityAllowed(getModelObject().traadlengde > 2),
                 new Label("opprettetDato"),
-                new Label("meldingstatus", new PropertyModel<String>(getModel(), "melding.statusTekst")),
-                new Label("temagruppe", new PropertyModel<String>(getModel(), "melding.temagruppeNavn"))
+                new Label("meldingsstatus", new StringFormatModel("%s - %s",
+                        new PropertyModel<String>(getModel(), "melding.statusTekst"),
+                        new PropertyModel<String>(getModel(), "melding.temagruppeNavn")
+                ))
         );
     }
 }
