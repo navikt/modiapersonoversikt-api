@@ -3,5 +3,5 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants;
 public class URLParametere {
     public static final String OPPGAVEID = "oppgaveid";
     public static final String HENVENDELSEID = "henvendelseid";
-    public static final String FORTSETTDIALOGMODUS= "fortsettdialogmodus";
+    public static final String BESVARES = "besvares";
 }
