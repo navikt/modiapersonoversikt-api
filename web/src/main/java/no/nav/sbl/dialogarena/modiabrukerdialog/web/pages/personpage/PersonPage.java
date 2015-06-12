@@ -106,7 +106,7 @@ public class PersonPage extends BasePage {
         }
 
         redirectPopup = createRedirectModalWindow("redirectModal");
-        lamellContainer = new LamellContainer("lameller", fnr);
+        lamellContainer = new LamellContainer("lameller", fnr, getSession());
 
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
 
