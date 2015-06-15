@@ -145,7 +145,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                         actionId("oksos"),
                         resourceId(""),
                         subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.tilknyttetEnhet)));
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.brukersEnhet)));
 
                 return !Temagruppe.OKSOS.toString().equals(melding.temagruppe) || pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
             }
