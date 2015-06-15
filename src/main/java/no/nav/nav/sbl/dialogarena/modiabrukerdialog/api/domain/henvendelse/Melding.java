@@ -10,7 +10,7 @@ import java.util.Comparator;
 public class Melding implements Serializable {
 
     public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, fritekst, kontorsperretEnhet, journalfortTema,
-            journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
+            journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, brukersEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
             lestStatus, opprettetDatoTekst;
     public DateTime lestDato, opprettetDato, journalfortDato;
     public Meldingstype meldingstype;
@@ -115,6 +115,11 @@ public class Melding implements Serializable {
 
     public Melding withTilknyttetEnhet(String tilknyttetEnhet) {
         this.tilknyttetEnhet = tilknyttetEnhet;
+        return this;
+    }
+
+    public Melding withBrukersEnhet(String brukersEnhet) {
+        this.brukersEnhet = brukersEnhet;
         return this;
     }
 

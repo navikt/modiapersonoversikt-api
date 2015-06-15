@@ -71,6 +71,7 @@ public class MeldingUtils {
                 melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
                 melding.eksternAktor = xmlHenvendelse.getEksternAktor();
                 melding.tilknyttetEnhet = xmlHenvendelse.getTilknyttetEnhet();
+                melding.brukersEnhet = xmlHenvendelse.getBrukersEnhet();
                 melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
                 melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
 
