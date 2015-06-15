@@ -51,7 +51,7 @@ public class OkonomiskSosialhjelpPolicyTest extends AbstractPDPTest {
         assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
     }
 
-    private RequestContext createRequest(String saksbehandlerEnhet, String tilknyttetEnhet) {
+    private RequestContext createRequest(String saksbehandlerEnhet, String brukersEnhet) {
         XACMLRequestBuilder req = XACMLRequestBuilder.create();
 
         req.withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID);
@@ -61,8 +61,8 @@ public class OkonomiskSosialhjelpPolicyTest extends AbstractPDPTest {
         if (saksbehandlerEnhet != null && !saksbehandlerEnhet.isEmpty()) {
             req.withSubjectAttr(ATTRIBUTEID_LOCAL_ENHET, saksbehandlerEnhet);
         }
-        if (tilknyttetEnhet != null && !tilknyttetEnhet.isEmpty()) {
-            req.withResourceAttr(ATTRIBUTEID_TILKNYTTET_ENHET, tilknyttetEnhet);
+        if (brukersEnhet != null && !brukersEnhet.isEmpty()) {
+            req.withResourceAttr(ATTRIBUTEID_BRUKER_ENHET, brukersEnhet);
         }
 
         return req.build();

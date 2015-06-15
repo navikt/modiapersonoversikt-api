@@ -30,12 +30,12 @@
         </Condition>
     </Rule>
     <Rule RuleId="ident-har-samme-lokal-enhet" Effect="Permit">
-        <Description>Gi tilgang hvis saksbehandler.lokaleenhet lik bruker.tilknyttet-enhet</Description>
+        <Description>Gi tilgang hvis saksbehandler.lokaleenhet lik bruker.enhet</Description>
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
                     <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
-                                                 AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:tilknyttet-enhet"/>
+                                                 AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet"/>
                 </Apply>
                 <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
                                             AttributeId="urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet"/>
