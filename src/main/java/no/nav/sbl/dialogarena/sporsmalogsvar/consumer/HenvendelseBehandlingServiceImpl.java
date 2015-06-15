@@ -84,7 +84,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             sporingsLogger.logg(wsMeldinger.get(0), SporingsAksjon.Les);
         }
 
-        List<Melding> meldinger = on(wsMeldinger)
+        return on(wsMeldinger)
                 .map(castTo(XMLHenvendelse.class))
                 .map(tilMelding(propertyResolver))
                 .map(journalfortTemaTilTemanavn)
@@ -92,8 +92,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .filter(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect();
-
-        return meldinger;
     }
 
     @Override
@@ -147,7 +145,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                         actionId("oksos"),
                         resourceId(""),
                         subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tilknyttet-enhet", defaultString(melding.tilknyttetEnhet)));
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.tilknyttetEnhet)));
 
                 return !Temagruppe.OKSOS.toString().equals(melding.temagruppe) || pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
             }
