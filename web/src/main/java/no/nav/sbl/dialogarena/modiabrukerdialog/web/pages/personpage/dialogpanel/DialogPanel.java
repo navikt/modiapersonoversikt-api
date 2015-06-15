@@ -137,7 +137,12 @@ public class DialogPanel extends Panel {
             if (besvaresFraParametere) {
                 List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere.get());
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
-                    erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveIdFraParametere);
+                    try {
+                        oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere.get(), Temagruppe.valueOf(traad.get(0).temagruppe));
+                        erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveIdFraParametere);
+                    } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
+                        throw new RuntimeException(fikkIkkeTilordnet);
+                    }
                     clearLokaleParameterVerdier();
                 }
             } else {
