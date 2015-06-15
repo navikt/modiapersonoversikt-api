@@ -27,7 +27,7 @@
         <modig.frontend.version>1.1.110</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
         <kjerneinfo.versjon>1.0.106</kjerneinfo.versjon>
-        <dialogarena.behandlingsinformasjon.version>0.0.42</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.23</modig.security.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
