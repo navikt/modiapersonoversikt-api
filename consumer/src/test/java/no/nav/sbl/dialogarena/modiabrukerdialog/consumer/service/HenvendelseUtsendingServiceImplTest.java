@@ -277,6 +277,16 @@ public class HenvendelseUtsendingServiceImplTest {
         verify(behandleHenvendelsePortType, never()).oppdaterKontorsperre(anyString(), anyList());
     }
 
+    @Test
+    public void knyttetHenvendelsenTilBrukersEnhet() throws Exception {
+        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+
+        verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
+        XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
+    }
+
     private WSHentHenvendelseListeResponse mockWSHentHenvendelseResponse() {
         return new WSHentHenvendelseListeResponse().withAny(
                 new XMLHenvendelse()
