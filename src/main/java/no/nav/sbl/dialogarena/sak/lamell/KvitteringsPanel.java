@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -130,7 +131,6 @@ public class KvitteringsPanel extends Panel {
             @Override
             protected void populateItem(ListItem<Dokument> item) {
                 final Dokument dokument = item.getModelObject();
-
                 String dokumentTittel = kodeverk.getSkjematittelForSkjemanummer(dokument.kodeverkRef);
                 if (kodeverk.isEgendefinert(dokument.kodeverkRef)) {
                     dokumentTittel += ": " + dokument.tilleggstittel;
@@ -149,12 +149,15 @@ public class KvitteringsPanel extends Panel {
                             hentOgVisDokument(target, journalpostId, dokument);
                         }
                     };
-                    hentVedleggLenke.add(new Label("saksoversikt.kvittering.visvedlegg", hentVisDokumentTekst(dokument.hovedskjema)));
+                    String lenkeVisningsTekst = hentVisDokumentTekst(dokument.hovedskjema);
+                    hentVedleggLenke.add(new Label("saksoversikt.kvittering.visvedlegg", lenkeVisningsTekst));
+                    hentVedleggLenke.add(new AttributeAppender("aria-label", lenkeVisningsTekst + ": " + dokumentTittel));
                     item.add(hentVedleggLenke);
                 }
             }
         };
     }
+
     private void hentOgVisDokument(AjaxRequestTarget target, String journalpostId, Dokument dokument) {
         HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
 
