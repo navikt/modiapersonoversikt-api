@@ -88,11 +88,22 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void initialisererMedFortsettDialogPanelDersomOppgaveIdOgHenvendelseIdOgFortsettDialogModusParametereErSatt() {
+    public void initialisererMedFortsettDialogPanelDersomOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, true);
 
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .should().containComponent(ofType(FortsettDialogPanel.class));
+    }
+
+    @Test
+    public void tilordnerOppgaveHvisOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() throws OppgaveBehandlingService.FikkIkkeTilordnet {
+        settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, true);
+        reset(oppgaveBehandlingService);
+
+        wicket.goToPageWith(new DialogPanel(ID, FNR))
+                .should().containComponent(ofType(FortsettDialogPanel.class));
+
+        verify(oppgaveBehandlingService, times(1)).tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class));
     }
 
     @Test
