@@ -101,7 +101,7 @@
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.42</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>3.0-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>4.0-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>3.2-SNAPSHOT</saksoversikt.version>
