@@ -10,14 +10,16 @@ import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.modig.lang.collections.PredicateUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.modig.security.tilgangskontroll.policy.request.attributes.ActionId;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -41,6 +43,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static org.hamcrest.Matchers.*;
@@ -285,6 +289,32 @@ public class HenvendelseUtsendingServiceImplTest {
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
         assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
+    }
+
+    @Test
+    public void sjekkerTilgangPaaOkonomiskSosialhjelp() {
+        String valgtEnhet = "1234";
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtEnhet);
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(
+                new XMLHenvendelse()
+                        .withBehandlingsId(TRAAD_ID)
+                        .withBehandlingskjedeId(TRAAD_ID)
+                        .withOpprettetDato(now())
+                        .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
+                        .withBrukersEnhet("5678")
+                        .withGjeldendeTemagruppe("OKSOS")
+                        .withMetadataListe(new XMLMetadataListe().withMetadata(
+                                new XMLMeldingFraBruker().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
+        ));
+
+        henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
+        ArgumentCaptor<PolicyRequest> captor = ArgumentCaptor.forClass(PolicyRequest.class);
+        verify(pep).assertAccess(captor.capture());
+
+        PolicyRequest policyRequest = captor.getValue();
+        ActionId actionId = on(policyRequest.getAttributes()).filter(PredicateUtils.isA(ActionId.class)).map(castTo(ActionId.class)).head().get();
+
+        assertThat((String) actionId.getAttributeValue().getValue(), is("oksos"));
     }
 
     private WSHentHenvendelseListeResponse mockWSHentHenvendelseResponse() {
