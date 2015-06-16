@@ -10,6 +10,7 @@ import java.util.List;
 public class SakerRadioGroup extends RadioGroup<Sak> {
     private static final String FAGSAK_PROPERTY_NAVN = "journalfor.sakstype.tekst.fagsak";
     private static final String GENERELL_PROPERTY_NAVN = "journalfor.sakstype.tekst.generell";
+    private static final String SOSIALE_PROPERTY_NAVN = "journalfor.sakstype.tekst.sosiale";
 
     public SakerRadioGroup(String id, SakerVM sakerVM) {
         super(id);
@@ -27,7 +28,11 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
                         new PropertyModel<List<SakerForTema>>(sakerVM, "generelleSakerGruppertPaaTema"),
                         GENERELL_PROPERTY_NAVN,
                         sakerVM.visGenerelleSaker
-                )
+                ),
+                new SosialeTjenesterRadioChoices(
+                        "sakstypePanelSosialeTjenester",
+                        SOSIALE_PROPERTY_NAVN,
+                        sakerVM.visSosialeTjenester)
         );
     }
 

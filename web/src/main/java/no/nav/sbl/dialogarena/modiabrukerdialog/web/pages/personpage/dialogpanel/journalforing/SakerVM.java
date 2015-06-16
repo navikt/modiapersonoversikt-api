@@ -14,6 +14,7 @@ public class SakerVM implements Serializable {
 
     public final IModel<Boolean> visFagsaker = Model.of(true);
     public final IModel<Boolean> visGenerelleSaker = Model.of(false);
+    public final IModel<Boolean> visSosialeTjenester = Model.of(false);
     public final IModel<Boolean> tekniskFeil = Model.of(false);
 
     private SakerService sakerService;

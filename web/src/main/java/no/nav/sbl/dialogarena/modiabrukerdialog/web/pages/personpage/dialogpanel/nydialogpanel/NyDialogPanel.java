@@ -320,7 +320,12 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private void sendSporsmal() throws Exception {
         HenvendelseVM henvendelseVM = getModelObject();
-        henvendelseVM.temagruppe = Temagruppe.valueOf(hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode));
+        if ("OKSOS".equals(henvendelseVM.valgtSak.temaKode)) {
+            henvendelseVM.temagruppe = Temagruppe.valueOf(henvendelseVM.valgtSak.temaKode);
+            henvendelseVM.valgtSak = null;
+        } else {
+            henvendelseVM.temagruppe = Temagruppe.valueOf(hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode));
+        }
         henvendelseVM.kanal = Kanal.TEKST;
         sendHenvendelse(henvendelseVM, SPORSMAL_MODIA_UTGAAENDE, Optional.<Melding>none());
     }
