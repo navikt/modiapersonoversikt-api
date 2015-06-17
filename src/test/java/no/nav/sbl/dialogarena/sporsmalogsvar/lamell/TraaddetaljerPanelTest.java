@@ -62,11 +62,23 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     @Test
     public void skalIkkeKunneBesvareTraadSomErMarkertSomKontorsperret() {
         Melding melding = createStandardMelding();
+        melding.meldingstype = SPORSMAL_MODIA_UTGAAENDE;
         melding.kontorsperretEnhet = "kontorsperretEnhet";
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
+    }
+
+    @Test
+    public void skalKunneBesvareTraadSomErKontorsperretDersomDetErEnkeltstaaendeSporsmalFraBruker() {
+        Melding melding = createStandardMelding();
+        melding.meldingstype = SPORSMAL_SKRIFTLIG;
+        melding.kontorsperretEnhet = "kontorsperretEnhet";
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
+
+        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+                .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
     }
 
     @Test

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,13 +73,17 @@ public class TraadVM implements Serializable {
     public boolean traadKanBesvares() {
         return SPORSMAL.contains(getEldsteMelding().melding.meldingstype) &&
                 !getEldsteMelding().melding.kassert
-                && !getEldsteMelding().erKontorsperret()
+                && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
                 && !getEldsteMelding().erFeilsendt();
     }
 
     public boolean erTemagruppeSosialeTjenester() {
         String nyesteTemagruppe = getNyesteMeldingsTemagruppe();
         return Temagruppe.OKSOS.name().equals(nyesteTemagruppe) || Temagruppe.ANSOS.name().equals(nyesteTemagruppe);
+    }
+
+    private boolean erEnkeltstaaendeSpsmFraBruker() {
+        return meldinger.size() == 1 && getEldsteMelding().melding.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG;
     }
 
 }
