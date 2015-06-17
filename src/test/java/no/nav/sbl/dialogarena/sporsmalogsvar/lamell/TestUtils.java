@@ -8,6 +8,7 @@ import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.SubjectHandlerUtils;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
@@ -41,9 +42,9 @@ public class TestUtils {
     public final static DateTime DATE_3 = new DateTime().minusDays(3);
     public final static DateTime DATE_4 = new DateTime().minusDays(4);
 
-    public final static String TEMAGRUPPE_1 = "Arbeidssøker";
-    public final static String TEMAGRUPPE_2 = "Barnebidrag";
-    public final static String TEMAGRUPPE_3 = "Familie og barn";
+    public final static Temagruppe TEMAGRUPPE_1 = Temagruppe.ARBD;
+    public final static Temagruppe TEMAGRUPPE_2 = Temagruppe.FMLI;
+    public final static Temagruppe TEMAGRUPPE_3 = Temagruppe.HJLPM;
 
     private static final String SAKSTYPE_FAG = "Fag";
 
@@ -97,9 +98,10 @@ public class TestUtils {
         return new Saker(sakerListeFagsaker, sakerListeGenerelle);
     }
 
-    public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId) {
+    public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, Temagruppe temagruppe, String traadId) {
         Melding melding = new Melding(id, type, opprettetDato);
-        melding.temagruppe = temagruppe;
+        melding.temagruppe = temagruppe.toString();
+        melding.gjeldendeTemagruppe = temagruppe;
         melding.traadId = traadId;
         melding.status = Status.IKKE_BESVART;
         if (type != Meldingstype.SPORSMAL_SKRIFTLIG) {
@@ -126,7 +128,7 @@ public class TestUtils {
 
 
     public static Melding opprettMeldingEksempel() {
-        return createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMA_1, ID_1);
+        return createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMAGRUPPE_1, ID_1);
     }
 
     public static List<MeldingVM> createMeldingVMer() {

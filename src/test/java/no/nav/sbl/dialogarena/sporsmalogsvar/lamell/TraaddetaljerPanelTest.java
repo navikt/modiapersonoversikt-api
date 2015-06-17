@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
@@ -43,7 +44,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     @Test
     public void skalIkkeKunneBesvareTraadInitiertAvSaksbehandler() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), "TEMA", "melding1")));
+                createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1")));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
@@ -53,7 +54,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     public void skalKunneBesvareTraadInitiertAvBrukerMedTidligereSvar() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createStandardMelding(),
-                createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
+                createMelding("melding2", SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, "melding1")));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
@@ -103,7 +104,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     }
 
     private Melding createStandardMelding() {
-        return createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1");
+        return createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1");
     }
 
     @Test

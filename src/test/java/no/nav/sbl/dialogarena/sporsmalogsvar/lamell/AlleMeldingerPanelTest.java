@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -35,8 +36,8 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
     @Before
     public void setUp() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("id1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "id1"),
-                createMelding("id2", SPORSMAL_SKRIFTLIG, now().minusDays(2), "TEMA", "id2")));
+                createMelding("id1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "id1"),
+                createMelding("id2", SPORSMAL_SKRIFTLIG, now().minusDays(2), Temagruppe.ARBD, "id2")));
     }
 
     @Test

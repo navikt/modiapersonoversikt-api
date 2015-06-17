@@ -71,7 +71,7 @@ public class TraadVMTest {
 
     @Test
     public void dersomEldsteMeldingITraadErEtSporsmalOgIkkeKassertSkalBrukerKunneBesvare() {
-        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(TEMAGRUPPE_1), 4);
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4).withTemagruppe(TEMAGRUPPE_1.toString()), 4);
         traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
 
         assertThat(traadVM.traadKanBesvares(), is(true));
@@ -79,7 +79,7 @@ public class TraadVMTest {
 
     @Test
     public void dersomEldsteMeldingITraadIkkeErEtSporsmalOgIkkeKassertSkalBrukerIkkeKunneBesvare() {
-        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4).withTemagruppe(TEMAGRUPPE_1), 4);
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4).withTemagruppe(TEMAGRUPPE_1.toString()), 4);
         traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
 
         assertThat(traadVM.traadKanBesvares(), is(false));

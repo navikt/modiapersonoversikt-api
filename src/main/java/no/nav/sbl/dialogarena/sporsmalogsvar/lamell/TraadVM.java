@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -78,8 +79,8 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erTemagruppeSosialeTjenester() {
-        String nyesteTemagruppe = getNyesteMeldingsTemagruppe();
-        return Temagruppe.OKSOS.name().equals(nyesteTemagruppe) || Temagruppe.ANSOS.name().equals(nyesteTemagruppe);
+        Temagruppe gjeldendeTemagruppe = getEldsteMelding().melding.gjeldendeTemagruppe;
+        return asList(Temagruppe.OKSOS, Temagruppe.ANSOS).contains(gjeldendeTemagruppe);
     }
 
     private boolean erEnkeltstaaendeSpsmFraBruker() {

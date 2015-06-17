@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
@@ -43,7 +44,7 @@ public class OppgavePanelTest extends WicketPageTest {
     public void setUp() {
         TraadVM traadVM = mock(TraadVM.class);
         String eldsteMeldingId = "id";
-        melding = createMelding(eldsteMeldingId, SPORSMAL_SKRIFTLIG, now(), "temagruppe", eldsteMeldingId);
+        melding = createMelding(eldsteMeldingId, SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, eldsteMeldingId);
         MeldingVM meldingVM = new MeldingVM(melding, 1);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         when(innboksVM.getSessionHenvendelseId()).thenReturn(Optional.<String>none());

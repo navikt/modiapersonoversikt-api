@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
@@ -30,7 +31,7 @@ public class JournalpostTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        melding = createMelding("id", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), "temagruppe", "id");
+        melding = createMelding("id", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), Temagruppe.ARBD, "id");
         meldingVMModel = new Model<>(new MeldingVM(melding, 1));
     }
 

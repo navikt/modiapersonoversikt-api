@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -30,13 +31,13 @@ public class MeldingerWidgetTest extends WicketPageTest {
 
     @Test
     public void konstrueresRiktig() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1")));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "id1")));
         wicket.goToPageWith(new MeldingerWidget("meldinger", "M", "fnr"));
     }
 
     @Test
     public void reagererPaaEvent() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1")));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "id1")));
         wicket.goToPageWith(new MeldingerWidget("meldinger", "M", "fnr"))
                 .sendEvent(new EventGenerator() {
                     @Override

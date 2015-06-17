@@ -143,14 +143,14 @@ public class MerkePanelTest extends WicketPageTest {
 
     @Test
     public void skjulerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
-        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withTemagruppe(Temagruppe.OKSOS.name()))).setVisibilityAllowed(true))
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
                 .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
                 .should().containComponent(thatIsInvisible().withId("bidragRadio"))
                 .should().containComponent(thatIsVisible().withId("kontorsperretRadioValg"))
                 .should().containComponent(thatIsVisible().withId("kontorsperretRadio"));
 
-        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withTemagruppe(Temagruppe.ANSOS.name()))).setVisibilityAllowed(true))
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
                 .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
                 .should().containComponent(thatIsInvisible().withId("bidragRadio"))

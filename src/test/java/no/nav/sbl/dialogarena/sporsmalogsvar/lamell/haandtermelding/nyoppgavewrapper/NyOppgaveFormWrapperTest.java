@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -60,7 +61,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     public void setUp() {
         initMocks(this);
         innboksVM = mock(InnboksVM.class);
-        Melding melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), "temagruppe", "id");
+        Melding melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "id");
         when(innboksVM.getValgtTraad()).thenReturn(new TraadVM(asList(new MeldingVM(melding, 1))));
         when(gsakKodeverk.hentTemaListe()).thenReturn(TEMALISTE_MOCK);
     }

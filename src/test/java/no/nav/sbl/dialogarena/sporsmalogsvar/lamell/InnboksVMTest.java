@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -123,7 +124,7 @@ public class InnboksVMTest {
         String fnr = "fnr";
         String traadId = "traadId";
 
-        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), "temagruppe", traadId)));
+        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), Temagruppe.ARBD, traadId)));
         innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad(traadId);
