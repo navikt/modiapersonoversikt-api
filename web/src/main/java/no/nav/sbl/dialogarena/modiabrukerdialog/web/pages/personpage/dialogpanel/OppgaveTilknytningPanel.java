@@ -26,9 +26,11 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
         this(id, model, grunnInfo, Model.of(true));
     }
 
-    public OppgaveTilknytningPanel(String id, IModel<HenvendelseVM> model, final GrunnInfo grunnInfo, IModel<Boolean> kanEndres) {
+    public OppgaveTilknytningPanel(String id, IModel<HenvendelseVM> model, final GrunnInfo grunnInfo, IModel<Boolean> skalVises) {
         super(id, model);
         setOutputMarkupPlaceholderTag(true);
+
+        add(visibleIf(skalVises));
 
         final IModel<Boolean> isOpen = Model.of(false);
 
@@ -44,7 +46,6 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
                 target.add(this, oppgaveTilknytningPopup);
             }
         };
-        aapnePopup.add(visibleIf(kanEndres));
 
         AriaHelpers.toggleButtonConnector(aapnePopup, oppgaveTilknytningPopup, isOpen);
 
