@@ -46,8 +46,7 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
                 target.add(this, oppgaveTilknytningPopup);
             }
         };
-
-        AriaHelpers.toggleButtonConnector(aapnePopup, oppgaveTilknytningPopup, isOpen);
+        AriaHelpers.ToggleButton.button(aapnePopup, oppgaveTilknytningPopup, isOpen);
 
         RadioChoice<OppgaveTilknytning> oppgaveTilknytningValg = new RadioChoice<>("oppgaveTilknytning", asList(OppgaveTilknytning.values()), new IChoiceRenderer<OppgaveTilknytning>() {
             @Override
@@ -69,6 +68,7 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 isOpen.setObject(false);
                 target.add(OppgaveTilknytningPanel.this);
+                target.focusComponent(aapnePopup);
             }
         };
         AjaxLink lukkPopup = new AjaxLink("lukkPopup") {
