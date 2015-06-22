@@ -4,6 +4,7 @@
 @modiagraaskrift: #b7b1a9;
 @sidemargin: 30px;
 @grayDark: #3e3832;
+@inaktivFarge: #7F756C;
 
 .lamell.meldinger .lerret {
   padding: 0;
@@ -108,11 +109,11 @@
         background-image: url(../img/merk_ikon_inaktiv.svg);
       }
       &.inaktiv .pil {
-        .pil(6px, darkgray);
+        .pil(6px, @inaktivFarge);
         cursor: default;
       }
       span {
-        color: darkgray;
+        color: @inaktivFarge;
         em {
           font-style: normal;
         }
