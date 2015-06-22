@@ -5,19 +5,15 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
-import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import no.nav.tjeneste.virksomhet.journal.v1.HentJournalpostJournalpostIkkeFunnet;
 import no.nav.tjeneste.virksomhet.journal.v1.HentJournalpostSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.*;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSArkivtemaer;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +36,6 @@ public class TilgangskontrollServiceTest {
     @Mock
     private GSakService gSakService;
     @Mock
-    private AktoerPortType fodselnummerAktorService;
-    @Mock
     private JoarkService joarkService;
     @Mock
     private EnforcementPoint pep;
@@ -59,7 +53,6 @@ public class TilgangskontrollServiceTest {
     public void setup() throws HentAktoerIdForIdentPersonIkkeFunnet {
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
-        when(fodselnummerAktorService.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenReturn(hentAktoerIdForIdentResponse);        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
     }
 
@@ -68,7 +61,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJournalfortOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
         assertTrue(hentDokumentResultat.harTilgang);
         assertNull(hentDokumentResultat.feilmelding);
     }
@@ -78,7 +71,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setIkkeJournalfortOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(IKKE_JOURNALFORT, hentDokumentResultat.feilmelding);
     }
@@ -88,7 +81,7 @@ public class TilgangskontrollServiceTest {
         setGsakUtenSakspart();
         setJournalfortOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(IKKE_SAKSPART, hentDokumentResultat.feilmelding);
     }
@@ -98,7 +91,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJournalfortOgFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(FEILREGISTRERT, hentDokumentResultat.feilmelding);
     }
@@ -108,7 +101,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJoarkThrows(SystemException.class);
 
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
     }
 
     @Test(expected = SystemException.class)
@@ -116,7 +109,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJoarkThrows(SystemException.class);
 
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
     }
 
     @Test(expected = SystemException.class)
@@ -124,16 +117,7 @@ public class TilgangskontrollServiceTest {
         setGsakThrows(SystemException.class);
         setJournalfortOgIkkeFeilRegistrert();
 
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
-    }
-
-    @Test(expected = SystemException.class)
-    public void harIkkeTilgangHvisAtkorIdIkkeFunnet() throws HentAktoerIdForIdentPersonIkkeFunnet {
-        setGsakMedSakspart();
-        setJournalfortOgIkkeFeilRegistrert();
-        settAktorIdTilAFeile();
-
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
     }
 
     @Test
@@ -142,7 +126,7 @@ public class TilgangskontrollServiceTest {
         setJournalfortOgIkkeFeilRegistrert();
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", "fnr");
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(INGEN_TILGANG, hentDokumentResultat.feilmelding);
     }
@@ -177,10 +161,6 @@ public class TilgangskontrollServiceTest {
         WSAktoer aktoerKnyttetTilSaken = new WSPerson();
         aktoerKnyttetTilSaken.setIdent(IKKE_BRUKERS_IDENT);
         when(gSakService.hentSak(anyString())).thenReturn(createSak("DAG", DateTime.now().minusDays(5), aktoerKnyttetTilSaken));
-    }
-
-    private void settAktorIdTilAFeile() throws HentAktoerIdForIdentPersonIkkeFunnet {
-        when(fodselnummerAktorService.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenThrow(HentAktoerIdForIdentPersonIkkeFunnet.class);
     }
 
     private static WSSak createSak(String tema, DateTime opprettet, WSAktoer... brukere) {

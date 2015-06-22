@@ -1,13 +1,10 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
-import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.apache.commons.collections15.Predicate;
@@ -30,17 +27,15 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     private GSakService gSakService;
 
     @Inject
-    private AktoerPortType fodselnummerAktorService;
-
-    @Inject
     private JoarkService joarkService;
-
 
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
+
+    private final String STATUS_JOURNALFORT = "J";
 
     public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
         return sjekkTilgang(journalpostId, fnr);
@@ -56,7 +51,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             return new HentDokumentResultat(false, IKKE_JOURNALFORT);
         } else if (erFeilregistrert(journalpost)) {
             return new HentDokumentResultat(false, FEILREGISTRERT);
-        } else if (!erInnsenderSakspart(journalpost.getGjelderSak().getSakId(), fnr)) {
+        } else if (!erInnsenderSakspart(journalpost, fnr)) {
             return new HentDokumentResultat(false, IKKE_SAKSPART);
         } else if (!harEnhetTilgangTilTema(journalpost)) {
             return new HentDokumentResultat(false, INGEN_TILGANG);
@@ -73,32 +68,44 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     private boolean erJournalfort(WSJournalpost journalPost) {
-        boolean erJournalfort = ("J").equalsIgnoreCase(journalPost.getJournalstatus().getValue());
+        WSJournalstatuser journalstatus = journalPost.getJournalstatus();
+        boolean erJournalfort = journalstatus != null && STATUS_JOURNALFORT.equalsIgnoreCase(journalstatus.getValue());
+
         if (!erJournalfort) {
             logger.warn("Journalposten med id '{}' er ikke journalført.", journalPost.getJournalpostId());
         }
         return erJournalfort;
     }
 
-    private boolean erFeilregistrert(WSJournalpost journalPost) {
-        boolean feilregistrert = journalPost.getGjelderSak().isErFeilregistrert();
+    private boolean erFeilregistrert(WSJournalpost journalpost) {
+        if (journalpost.getGjelderSak() == null) {
+            logger.warn("Det eksisterer ingen sak knyttet til journalpost med id {}", journalpost.getJournalpostId());
+            return false;
+        }
+
+        boolean feilregistrert = journalpost.getGjelderSak().isErFeilregistrert();
         if (feilregistrert) {
-            logger.warn("Journalposten med id '{}' er feilregistrert.", journalPost.getJournalpostId());
+            logger.warn("Journalposten med id '{}' er feilregistrert.", journalpost.getJournalpostId());
         }
         return feilregistrert;
     }
 
-    private boolean erInnsenderSakspart(String sakId, String fnr) {
+    private boolean erInnsenderSakspart(WSJournalpost journalpost, String fnr) {
+        if (journalpost.getGjelderSak() == null) {
+            logger.warn("Det eksisterer ingen sak knyttet til journalpost med id {}", journalpost.getJournalpostId());
+            return false;
+        }
+
+        String sakId = journalpost.getGjelderSak().getSakId();
         WSSak gSak = hentSak(sakId);
-        String aktoerId = hentAktoerIdForIdent(fnr);
-        boolean erInnsenderSakspart = on(gSak.getGjelderBrukerListe()).exists(aktoerMedAktoerId(aktoerId));
+        boolean erInnsenderSakspart = on(gSak.getGjelderBrukerListe()).exists(aktoerMedFnr(fnr));
 
         if (!erInnsenderSakspart) {
-            logger.warn("Innsender med aktoerId '{}' er ikke sakspart for sak med id '{}'.", aktoerId, sakId);
+            logger.warn("Innsender med fnr '{}' er ikke sakspart for sak med id '{}'.", fnr, sakId);
         }
         return erInnsenderSakspart;
     }
-    
+
     private boolean harEnhetTilgangTilTema(WSJournalpost journalpost) {
         PolicyRequest temagruppePolicyRequest = forRequest(
                 actionId("temagruppe"),
@@ -110,24 +117,16 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         }
         return true;
     }
-    
+
     private WSSak hentSak(String sakId) {
         return gSakService.hentSak(sakId);
     }
 
-    private String hentAktoerIdForIdent(String fnr) {
-        try {
-            return fodselnummerAktorService.hentAktoerIdForIdent(new HentAktoerIdForIdentRequest(fnr)).getAktoerId();
-        } catch (HentAktoerIdForIdentPersonIkkeFunnet e) {
-            throw new SystemException("Fant ikke aktørId for fnr: " + fnr, e);
-        }
-    }
-
-    private static Predicate<WSAktoer> aktoerMedAktoerId(final String aktoerId) {
+    private static Predicate<WSAktoer> aktoerMedFnr(final String fnr) {
         return new Predicate<WSAktoer>() {
             @Override
             public boolean evaluate(WSAktoer wsAktoer) {
-                return wsAktoer.getIdent().equals(aktoerId);
+                return wsAktoer.getIdent().equals(fnr);
             }
         };
     }
