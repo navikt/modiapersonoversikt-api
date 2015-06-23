@@ -6,6 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -55,6 +56,8 @@ public class SakerServiceImpl implements SakerService {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private ArbeidOgAktivitet arbeidOgAktivitet;
+    @Inject
+    private PsakService psakService;
 
 
     @Override
@@ -68,6 +71,7 @@ public class SakerServiceImpl implements SakerService {
     public List<Sak> hentListeAvSaker(String fnr) {
         List<Sak> saker = hentSakerFraGsak(fnr);
         leggTilFraArena(fnr, saker);
+        leggTilSakerFraPsak(fnr, saker);
         leggTilManglendeGenerelleSaker(saker);
         behandleOppfolgingsSaker(saker);
         return saker;
@@ -121,6 +125,10 @@ public class SakerServiceImpl implements SakerService {
                 saker.add(oppfolging.get());
             }
         }
+    }
+
+    private void leggTilSakerFraPsak(String fnr, List<Sak> saker) {
+        saker.addAll(psakService.hentSakerFor(fnr));
     }
 
     private void leggTilManglendeGenerelleSaker(List<Sak> saker) {
