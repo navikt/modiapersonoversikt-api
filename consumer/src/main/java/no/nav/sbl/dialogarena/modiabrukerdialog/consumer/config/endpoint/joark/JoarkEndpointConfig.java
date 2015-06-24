@@ -28,6 +28,7 @@ public class JoarkEndpointConfig {
         return new CXFClient<>(Journal_v1PortType.class)
                 .address(getProperty("joark.ws.url"))
                 .withHandler(new MDCOutHandler())
+                .enableMtom()
                 .wsdl("classpath:joark/no/nav/tjeneste/virksomhet/journal/v1/journal.wsdl");
     }
 
