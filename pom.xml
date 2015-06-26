@@ -102,7 +102,7 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.41</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>2.2</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>2.3-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>3.3-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>3.3-SNAPSHOT</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
