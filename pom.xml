@@ -426,7 +426,7 @@
                 <version>${utbetaling.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
+                <groupId>no.nav.sbl</groupId>
                 <artifactId>modia-saksoversikt</artifactId>
                 <version>${saksoversikt.version}</version>
             </dependency>
