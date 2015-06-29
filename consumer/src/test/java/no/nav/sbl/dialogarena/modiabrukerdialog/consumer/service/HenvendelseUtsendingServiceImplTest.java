@@ -29,6 +29,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,9 +54,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HenvendelseUtsendingServiceImplTest {
@@ -233,7 +232,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.REFERAT_TELEFON.name(),
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),
                 XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name()));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(Matchers.contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
     }
 
     @Test
@@ -282,13 +281,32 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void knyttetHenvendelsenTilBrukersEnhet() throws Exception {
+    public void knyttetHenvendelsenTilBrukersEnhetFraTPS() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
+        verify(kjerneinfo, times(1)).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
         assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
+    }
+
+    @Test
+    public void knyttetHenvendelsenTilBrukersEnhetFraMelding() throws Exception {
+        String brukersEnhet = "0123";
+
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(FRITEKST)
+                .withType(SAMTALEREFERAT_OPPMOTE)
+                .withTemagruppe(Temagruppe.ARBD.toString())
+                .withBrukersEnhet(brukersEnhet);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+
+        verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
+        verify(kjerneinfo, never()).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
+        XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(brukersEnhet));
     }
 
     @Test

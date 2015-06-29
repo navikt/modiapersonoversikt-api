@@ -75,7 +75,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
         XMLHenvendelseType type = getXMLHenvendelseTypeBasertPaaMeldingstype(melding.meldingstype);
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(melding, type);
-        String enhet = getEnhet(melding.fnrBruker);
+        String enhet = isNotBlank(melding.brukersEnhet) ? melding.brukersEnhet : getEnhet(melding.fnrBruker);
         xmlHenvendelse.setBrukersEnhet(enhet);
 
         WSSendUtHenvendelseResponse wsSendUtHenvendelseResponse = sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()

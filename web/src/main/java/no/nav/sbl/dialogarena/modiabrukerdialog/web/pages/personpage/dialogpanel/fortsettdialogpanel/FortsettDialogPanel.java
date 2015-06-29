@@ -238,7 +238,8 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     .withFnr(grunnInfo.bruker.fnr)
                     .withNavident(getSubjectHandler().getUid())
                     .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
-                    .build();
+                    .build()
+                    .withBrukersEnhet(sporsmal.brukersEnhet);
 
             Optional<Sak> sak = none();
             if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {

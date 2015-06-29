@@ -4,12 +4,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -65,6 +65,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     private static final String FRITEKST = "fritekst";
     private static final String TEMAGRUPPE = Temagruppe.FMLI.name();
     private static final String VALGT_ENHET = "valgtEnhet";
+    private static final String BRUKERS_ENHET = "1234";
 
     @Captor
     private ArgumentCaptor<Melding> meldingArgumentCaptor;
@@ -133,6 +134,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         assertThat(melding.kanal, is(Kanal.TEKST.name()));
         assertThat(melding.fritekst, is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
+        assertThat(melding.brukersEnhet, is(BRUKERS_ENHET));
     }
 
     @Test
@@ -394,7 +396,11 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     }
 
     private Melding lagSporsmalFraBruker() {
-        Melding sporsmal = new Melding().withType(SPORSMAL_SKRIFTLIG).withId(SPORSMAL_ID).withOpprettetDato(now());
+        Melding sporsmal = new Melding()
+                .withType(SPORSMAL_SKRIFTLIG)
+                .withId(SPORSMAL_ID)
+                .withOpprettetDato(now())
+                .withBrukersEnhet(BRUKERS_ENHET);
         sporsmal.temagruppe = TEMAGRUPPE;
         return sporsmal;
     }
