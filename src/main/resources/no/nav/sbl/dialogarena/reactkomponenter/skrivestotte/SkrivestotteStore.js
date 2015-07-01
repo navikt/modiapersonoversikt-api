@@ -152,7 +152,11 @@ function autofullfor(tekst, autofullforMap) {
     };
 
     return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
-        return nokler[resultat] || '[ukjent nøkkel]';
+        var verdi = nokler[resultat];
+        if (typeof verdi === 'undefined') {
+            return '[ukjent nøkkel]';
+        }
+        return nokler[resultat] || '[fant ingen verdi]';
     });
 }
 
