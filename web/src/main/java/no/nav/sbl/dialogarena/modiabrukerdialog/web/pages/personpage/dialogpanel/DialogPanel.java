@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
@@ -103,12 +102,24 @@ public class DialogPanel extends Panel {
 
     private Bruker hentBrukerInfo(String fnr) {
         try {
-            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr)).getPerson().getPersonfakta();
-            Personnavn personnavn = personfakta.getPersonnavn();
-            AnsattEnhet enhet = enhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
-            return new Bruker(fnr, personnavn.getFornavn(), personnavn.getEtternavn(), enhet.enhetNavn);
+            HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
+            request.setBegrunnet(true);
+            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(request).getPerson().getPersonfakta();
+
+            return new Bruker(fnr)
+                    .withPersonnavn(personfakta.getPersonnavn())
+                    .withEnhet(hentEnhet(personfakta));
         } catch (Exception e) {
             return new Bruker(fnr, "", "", "");
+        }
+    }
+
+    private String hentEnhet(Personfakta personfakta) {
+        try {
+            AnsattEnhet enhet = enhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
+            return enhet.enhetNavn;
+        } catch (Exception e) {
+            return "";
         }
     }
 
