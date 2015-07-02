@@ -104,7 +104,7 @@
         <dialogarena.behandlingsinformasjon.version>0.0.41</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>2.3</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>3.4</sporsmalogsvar.version>
-        <saksoversikt.version>3.4</saksoversikt.version>
+        <saksoversikt.version>3.5</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>1.0.3</modia-felleskomponenter.version>
@@ -426,7 +426,7 @@
                 <version>${utbetaling.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.sbl</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-saksoversikt</artifactId>
                 <version>${saksoversikt.version}</version>
             </dependency>
