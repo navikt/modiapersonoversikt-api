@@ -8,15 +8,16 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
@@ -29,10 +30,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -111,25 +108,14 @@ public class DialogPanel extends Panel {
     }
 
     private Saksbehandler hentSaksbehandlerInfo() {
-        Optional<Attributes> attributes = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
+        Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
-        if (!attributes.isSome()) {
-            return new Saksbehandler(optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""), "", "");
-        }
-
-        try {
-            Optional<Attribute> givenname = optional(attributes.get().get("givenname"));
-            Optional<Attribute> surname = optional(attributes.get().get("sn"));
-            BasicAttribute nullAttribute = new BasicAttribute("", "");
-            return new Saksbehandler(
-                    optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
-                    (String) givenname.getOrElse(nullAttribute).get(),
-                    (String) surname.getOrElse(nullAttribute).get()
-            );
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
+        return new Saksbehandler(
+                optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
+                saksbehandler.fornavn,
+                saksbehandler.etternavn
+        );
     }
 
     private void settOppRiktigMeldingPanel() {

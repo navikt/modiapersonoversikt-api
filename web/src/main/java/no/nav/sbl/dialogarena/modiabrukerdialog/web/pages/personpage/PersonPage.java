@@ -26,6 +26,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.Sjekk
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import org.apache.commons.lang3.StringUtils;
@@ -116,6 +117,7 @@ public class PersonPage extends BasePage {
                 saksbehandlerInnstillingerPanel,
                 new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
+                new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr),

@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+import javax.naming.directory.*;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 import java.util.Hashtable;
@@ -29,7 +29,7 @@ public class LDAPServiceImpl implements LDAPService {
     }
 
     @Override
-    public Optional<Attributes> hentSaksbehandler(String ident) {
+    public Person hentSaksbehandler(String ident) {
         try {
             String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + getProperty("ldap.basedn");
             SearchControls searchCtrl = new SearchControls();
@@ -37,7 +37,15 @@ public class LDAPServiceImpl implements LDAPService {
 
             NamingEnumeration<SearchResult> result = ldapContext().search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
 
-            return optional(result.next().getAttributes());
+            Attributes attributes = result.next().getAttributes();
+
+            Optional<Attribute> givenname = optional(attributes.get("givenname"));
+            Optional<Attribute> surname = optional(attributes.get("sn"));
+            BasicAttribute nullAttribute = new BasicAttribute("", "");
+            return new Person(
+                    (String) givenname.getOrElse(nullAttribute).get(),
+                    (String) surname.getOrElse(nullAttribute).get()
+            );
 
         } catch (NamingException e) {
             throw new RuntimeException(e);

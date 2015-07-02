@@ -12,7 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PsakServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

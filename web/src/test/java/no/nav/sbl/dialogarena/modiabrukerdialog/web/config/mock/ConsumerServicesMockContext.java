@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
@@ -9,7 +10,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetServic
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -45,7 +46,7 @@ public class ConsumerServicesMockContext {
     @Bean
     public LDAPService ldapService() {
         LDAPService mock = mock(LDAPService.class);
-        when(mock.hentSaksbehandler(anyString())).thenReturn(Optional.<Attributes>none());
+        when(mock.hentSaksbehandler(anyString())).thenReturn(new Person("Daniel", "Franck"));
         return mock;
     }
 
