@@ -90,6 +90,10 @@ public class MeldingVM implements Serializable {
         return BRUKER_AVSENDER_BILDE_ALT_KEY;
     }
 
+    public boolean erFraSaksbehandler() {
+        return FRA_NAV.contains(melding.meldingstype);
+    }
+
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {

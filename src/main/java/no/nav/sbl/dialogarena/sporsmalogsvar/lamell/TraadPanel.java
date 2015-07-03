@@ -1,12 +1,17 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
+
+import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -17,6 +22,10 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendels
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
 
 public class TraadPanel extends Panel {
+
+    @Inject
+    private LDAPService ldapService;
+
     public TraadPanel(String id, InnboksVM innboksVM) {
         super(id, new CompoundPropertyModel<>(innboksVM));
         add(new PropertyListView<MeldingVM>("valgtTraad.meldinger") {
@@ -36,6 +45,15 @@ public class TraadPanel extends Panel {
                 item.add(new Label("avsenderTekst"));
                 item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
                 item.add(new Journalpost("journalpost", item.getModel()));
+
+
+                String navIdent = item.getModelObject().melding.navIdent;
+                String skrevetAvNavn = ldapService.hentSaksbehandler(navIdent).navn;
+                WebMarkupContainer skrevetAvContainer = new WebMarkupContainer("skrevetAvContainer");
+                skrevetAvContainer.add(visibleIf(new PropertyModel<Boolean>(item.getModel(), "erFraSaksbehandler()")));
+                skrevetAvContainer.add(new Label("skrevetAvLabel", new ResourceModel("melding.skrevet-av")));
+                skrevetAvContainer.add(new Label("skrevetAv", String.format("%s (%s)", skrevetAvNavn, navIdent)));
+                item.add(skrevetAvContainer);
             }
         });
     }

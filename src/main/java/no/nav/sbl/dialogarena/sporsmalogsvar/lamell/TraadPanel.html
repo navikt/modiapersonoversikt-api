@@ -10,13 +10,21 @@
         <img wicket:id="avsenderBilde" class="avsenderBilde"/>
 
         <div class="meldingData">
-            <p wicket:id="avsenderTekst"></p>
+            <article class="meldingHeader">
+                <p class="meldingstatus">
+                    <span wicket:id="meldingstatus"></span> –
+                    <span wicket:id="lestStatus"></span>
+                    <span wicket:id="temagruppe"></span>
+                </p>
 
-            <p class="meldingstatus">
-                <span wicket:id="meldingstatus"></span> –
-                <span wicket:id="lestStatus"></span>
-                <span wicket:id="temagruppe"></span>
-            </p>
+                <p wicket:id="avsenderTekst"></p>
+
+                <p wicket:id="skrevetAvContainer">
+                    <span wicket:id="skrevetAvLabel"></span>
+                    <span wicket:id="skrevetAv"></span>
+                </p>
+            </article>
+
             <article wicket:id="fritekst" class="fritekst"></article>
         </div>
         <wicket:container wicket:id="journalpost"/>
