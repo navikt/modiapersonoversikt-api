@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
@@ -148,6 +149,7 @@ public class Innboks extends Lerret {
             innboksVM.setValgtMelding(itemId);
             send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
             target.add(this);
+            target.appendJavaScript(format("$('#%s').find('.meldingsforhandsvisning.valgt').focus();", this.getMarkupId()));
         }
     }
 

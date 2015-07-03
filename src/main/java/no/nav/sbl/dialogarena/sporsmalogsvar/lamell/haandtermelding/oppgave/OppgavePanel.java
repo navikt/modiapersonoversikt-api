@@ -20,13 +20,15 @@ import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel.OppgaveValg.AVSLUTT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel.OppgaveValg.OPPRETT;
+import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public class OppgavePanel extends AnimertPanel {
 
-    public static enum OppgaveValg {OPPRETT, AVSLUTT}
+    public enum OppgaveValg {OPPRETT, AVSLUTT}
 
     private NyOppgaveFormWrapper nyOppgaveFormWrapper;
     private AvsluttOppgavePanel avsluttOppgavePanel;
@@ -115,6 +117,8 @@ public class OppgavePanel extends AnimertPanel {
 
             nyOppgaveFormWrapper.nullstillSkjema();
             lukkPanel(target);
+
+            send(getPage(), BREADTH, OPPGAVE_OPPRETTET_FERDIG);
         }
     }
 
