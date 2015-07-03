@@ -113,10 +113,6 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
                 .should().containPatterns(melding.journalfortTemanavn);
     }
 
-    private Melding createStandardMelding() {
-        return createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1");
-    }
-
     @Test
     public void skalIkkeKunneBesvareTraadSomErMarkertSomFeilsendt() {
         Melding melding = createStandardMelding();
@@ -126,5 +122,32 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM(fnr, henvendelseBehandlingService)))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
+    }
+
+    @Test
+    public void skalIkkeViseSaksbehandlersNavnHvisMeldingFraBruker() {
+        String fnr = "13245679810";
+        Melding melding = createStandardMelding();
+        melding.meldingstype = SPORSMAL_SKRIFTLIG;
+        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
+
+        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM(fnr, henvendelseBehandlingService)))
+                .should().containComponent(thatIsInvisible().and(withId("skrevetAvContainer")));
+    }
+
+    @Test
+    public void skalViseSaksbehandlersNavnHvisMeldingFraNAV() {
+        String fnr = "13245679810";
+        Melding melding = createStandardMelding();
+        melding.meldingstype = SAMTALEREFERAT_OPPMOTE;
+        melding.navIdent = "ident";
+        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
+
+        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM(fnr, henvendelseBehandlingService)))
+                .should().containComponent(thatIsVisible().and(withId("skrevetAvContainer")));
+    }
+
+    private Melding createStandardMelding() {
+        return createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1");
     }
 }
