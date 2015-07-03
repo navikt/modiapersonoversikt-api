@@ -13,6 +13,7 @@ import javax.naming.ldap.LdapContext;
 import java.util.Hashtable;
 
 import static java.lang.System.getProperty;
+import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 
 public class LDAPServiceImpl implements LDAPService {
@@ -37,10 +38,15 @@ public class LDAPServiceImpl implements LDAPService {
 
             NamingEnumeration<SearchResult> result = ldapContext().search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
 
-            Attributes attributes = result.next().getAttributes();
 
-            Optional<Attribute> givenname = optional(attributes.get("givenname"));
-            Optional<Attribute> surname = optional(attributes.get("sn"));
+            Optional<Attribute> givenname = none();
+            Optional<Attribute> surname = none();
+            if (result.hasMore()) {
+                Attributes attributes = result.next().getAttributes();
+                givenname = optional(attributes.get("givenname"));
+                surname = optional(attributes.get("sn"));
+            }
+
             BasicAttribute nullAttribute = new BasicAttribute("", "");
             return new Person(
                     (String) givenname.getOrElse(nullAttribute).get(),
