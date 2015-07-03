@@ -25,7 +25,10 @@ import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 
+import java.util.Collections;
+
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
@@ -34,8 +37,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak.*;
-import static org.apache.wicket.event.Broadcast.BREADTH;
-import static org.apache.wicket.event.Broadcast.BUBBLE;
+import static org.apache.wicket.event.Broadcast.*;
 
 public class LeggTilbakePanel extends Panel {
 
@@ -118,7 +120,7 @@ public class LeggTilbakePanel extends Panel {
         lukkKnapp = new AjaxLink("lukkKnapp") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_FERDIG);
+                send(getPage(), DEPTH, LEGG_TILBAKE_FERDIG);
             }
         };
         feedbackPanelSuccess.add(lukkKnapp);
@@ -154,7 +156,7 @@ public class LeggTilbakePanel extends Panel {
                     if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE) {
                         henvendelseUtsendingService.oppdaterTemagruppe(sporsmal.id, leggTilbakeVM.nyTemagruppe.name());
                         if (leggTilbakeVM.nyTemagruppe == ANSOS) {
-                            henvendelseUtsendingService.merkSomKontorsperret(sporsmal.fnrBruker, asList(sporsmal.id));
+                            henvendelseUtsendingService.merkSomKontorsperret(sporsmal.fnrBruker, singletonList(sporsmal.id));
                         }
                     }
 

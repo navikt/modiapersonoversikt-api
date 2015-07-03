@@ -13,6 +13,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -22,8 +25,10 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class BasePage extends WebPage {
 
-	public static final ConditionalCssResource MODIA_LAYOUT_IE_CSS = new ConditionalCssResource(
-			new CssResourceReference(BasePage.class, "css/felles/layout-ie9.css"), "screen", "lt IE 10");
+    public static final String SIDE_LASTET = "basepage.lastet";
+
+    public static final ConditionalCssResource MODIA_LAYOUT_IE_CSS = new ConditionalCssResource(
+            new CssResourceReference(BasePage.class, "css/felles/layout-ie9.css"), "screen", "lt IE 10");
 
     public static final ConditionalCssResource KJERNEINFO_IE9_CSS = new ConditionalCssResource(
             new CssResourceReference(Kjerneinfo.class, "kjerneinfo_ie9.css"), "screen", "lt IE 10");
@@ -56,14 +61,24 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(SykmeldingsperiodePanel.class, "sykepenger_foreldrepenger.less");
 
     private final WebMarkupContainer body;
+    private final FocusHandler focusHandler;
 
     public BasePage() {
         body = (WebMarkupContainer) new TransparentWebMarkupContainer("body").setOutputMarkupId(true);
-        add(body);
+        focusHandler = new FocusHandler("focus-handler");
+
+        add(body, focusHandler);
         add(new TimingMetricsBehaviour().withPrefix("page."));
+        add(new AjaxEventBehavior("onload") {
+            @Override
+            protected void onEvent(AjaxRequestTarget ajaxRequestTarget) {
+                send(getPage(), Broadcast.DEPTH, SIDE_LASTET);
+            }
+        });
     }
 
     public WebMarkupContainer getBody() {
         return body;
     }
+
 }
