@@ -4,7 +4,9 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -45,6 +47,8 @@ public class InnboksTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
+    @Inject
+    private LDAPService ldapService;
 
     @Before
     public void setUp() {
@@ -52,6 +56,7 @@ public class InnboksTest extends WicketPageTest {
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(ENESTE_MELDING_ID_TRAAD2, SPORSMAL_SKRIFTLIG, now().minusDays(2), Temagruppe.ARBD, ENESTE_MELDING_ID_TRAAD2)));
+        when(ldapService.hentSaksbehandler(anyString())).thenReturn(new Person("", ""));
     }
 
     @Test

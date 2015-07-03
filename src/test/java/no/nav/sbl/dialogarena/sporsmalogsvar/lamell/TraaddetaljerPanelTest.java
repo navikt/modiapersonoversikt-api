@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -32,6 +35,13 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
+    @Inject
+    private LDAPService ldapService;
+
+    @Before
+    public void before() {
+        when(ldapService.hentSaksbehandler(anyString())).thenReturn(new Person("", ""));
+    }
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBruker() {
