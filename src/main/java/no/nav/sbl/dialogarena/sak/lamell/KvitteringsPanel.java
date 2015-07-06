@@ -171,7 +171,7 @@ public class KvitteringsPanel extends Panel {
     private void visVedlegg(AjaxRequestTarget target, byte[] pdfSomBytes) {
         ResourceStreamAjaxBehaviour resourceStreamAjaxBehavoiur = lagHentPdfAjaxBehaviour(pdfSomBytes);
         add(resourceStreamAjaxBehavoiur);
-        resourceStreamAjaxBehavoiur.openInSameWindow(target);
+        resourceStreamAjaxBehavoiur.open(target);
     }
 
     private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding) {
