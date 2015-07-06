@@ -61,11 +61,10 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(SykmeldingsperiodePanel.class, "sykepenger_foreldrepenger.less");
 
     private final WebMarkupContainer body;
-    private final FocusHandler focusHandler;
 
     public BasePage() {
         body = (WebMarkupContainer) new TransparentWebMarkupContainer("body").setOutputMarkupId(true);
-        focusHandler = new FocusHandler("focus-handler");
+        FocusHandler focusHandler = new FocusHandler("focus-handler");
 
         add(body, focusHandler);
         add(new TimingMetricsBehaviour().withPrefix("page."));

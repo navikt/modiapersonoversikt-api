@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import org.apache.wicket.Component;
@@ -43,7 +42,7 @@ public class FocusHandler extends TransparentWebMarkupContainer {
 //        }
     }
 
-    static class ComponentFinder {
+    static final class ComponentFinder {
         private final Page page;
 
         private ComponentFinder(Page page) {

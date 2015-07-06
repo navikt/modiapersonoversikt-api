@@ -25,9 +25,6 @@ import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 
-import java.util.Collections;
-
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
