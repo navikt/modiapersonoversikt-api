@@ -1,5 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -18,6 +19,7 @@ public class Melding implements Serializable {
     public Status status;
     public boolean kassert, ingenTilgangJournalfort;
     public Boolean erTilknyttetAnsatt;
+    public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
 
     public Melding() {
     }

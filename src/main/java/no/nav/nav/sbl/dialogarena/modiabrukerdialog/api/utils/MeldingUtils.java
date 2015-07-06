@@ -6,6 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -51,7 +52,7 @@ public class MeldingUtils {
         }
     };
 
-    public static Transformer<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver) {
+    public static Transformer<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver, final LDAPService ldapService) {
         return new Transformer<XMLHenvendelse, Melding>() {
             @Override
             public Melding transform(XMLHenvendelse xmlHenvendelse) {
@@ -81,6 +82,7 @@ public class MeldingUtils {
                     melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
                     melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
                     melding.journalfortAvNavIdent = journalfortInformasjon.getJournalforerNavIdent();
+                    melding.journalfortAv = ldapService.hentSaksbehandler(journalfortInformasjon.getJournalforerNavIdent());
                 }
 
                 if (innholdErKassert(xmlHenvendelse)) {
@@ -103,6 +105,7 @@ public class MeldingUtils {
                     melding.fritekst = meldingTilBruker.getFritekst();
                     melding.kanal = meldingTilBruker.getKanal();
                     melding.navIdent = meldingTilBruker.getNavident();
+                    melding.skrevetAv = ldapService.hentSaksbehandler(meldingTilBruker.getNavident());
                 } else {
                     throw new RuntimeException("XMLMetadata er av en ukjent type: " + xmlMetadata);
                 }
