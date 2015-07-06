@@ -124,7 +124,7 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
