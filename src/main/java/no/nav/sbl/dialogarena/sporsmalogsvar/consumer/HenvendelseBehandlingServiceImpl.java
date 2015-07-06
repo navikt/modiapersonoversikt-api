@@ -12,6 +12,7 @@ import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -58,6 +59,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private PropertyResolver propertyResolver;
     @Inject
     private SporingsLogger sporingsLogger;
+    @Inject
+    private LDAPService ldapService;
 
     @Override
     public List<Melding> hentMeldinger(String fnr) {
@@ -86,7 +89,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
         return on(wsMeldinger)
                 .map(castTo(XMLHenvendelse.class))
-                .map(tilMelding(propertyResolver))
+                .map(tilMelding(propertyResolver, ldapService))
                 .map(journalfortTemaTilTemanavn)
                 .filter(kontorsperreTilgang(valgtEnhet))
                 .filter(okonomiskSosialhjelpTilgang(valgtEnhet))

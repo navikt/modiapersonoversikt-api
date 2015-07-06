@@ -14,9 +14,10 @@ public class JournalpostInformasjon extends AnimertPanel {
         setDefaultModel(model);
         setOutputMarkupPlaceholderTag(true);
         add(
+                new Label("melding.journalfortAv.navn"),
+                new Label("melding.journalfortAvNavIdent"),
                 new Label("journalfortDatoFormatert"),
                 new Label("melding.journalfortTemanavn"),
-                new Label("melding.journalfortAvNavIdent"),
                 new WebMarkupContainer("saksIdContainer")
                         .add(new Label("melding.journalfortSaksId"))
                         .add(visibleIf(meldingHarSaksId(model)))
