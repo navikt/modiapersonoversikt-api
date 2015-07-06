@@ -17,8 +17,7 @@ public abstract class ResourceStreamAjaxBehaviour extends AbstractAjaxBehavior {
 
 
     public void onRequest() {
-        //TODO Her må man hente ut navnet til PDF'en. Må avvente tjenesten for å se hvordan det kan løses.
-        ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler(getResourceStream(), "vedlegg.pdf");
+        ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler(getResourceStream());
         handler.setContentDisposition(ContentDisposition.INLINE);
         getComponent().getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
     }
