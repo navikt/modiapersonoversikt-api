@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.modig.lang.collections.TransformerUtils;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
@@ -69,7 +70,10 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static final String NAVIDENT = "navident";
     private static final String STATUSTEKST = "statustekst";
     private static final String KANAL = "kanal";
-    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO, NAVIDENT, STATUSTEKST, KANAL};
+    private static final String SKREVET_AV_NAVN = "skrevetavnavn";
+    private static final String JOURNALFORT_AV_NAVN = "journalfortavnavn";
+    private static final String JOURNALFORT_AV_IDENT = "journalfortavident";
+    private static final String[] FIELDS = new String[]{FRITEKST, TEMAGRUPPE, ARKIVTEMA, DATO, NAVIDENT, STATUSTEKST, KANAL, SKREVET_AV_NAVN, JOURNALFORT_AV_NAVN, JOURNALFORT_AV_IDENT};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
     private static final Transformer<DateTime, String> DATO_TIL_STRING = new Transformer<DateTime, String>() {
         @Override
@@ -215,6 +219,9 @@ public class MeldingerSokImpl implements MeldingerSok {
         document.add(new TextField(NAVIDENT, optional(melding.navIdent).getOrElse(""), YES));
         document.add(new TextField(STATUSTEKST, optional(melding.statusTekst).getOrElse(""), YES));
         document.add(new TextField(KANAL, optional(melding.kanal).getOrElse(""), YES));
+        document.add(new TextField(SKREVET_AV_NAVN, optional(melding.skrevetAv.navn).getOrElse(""), YES));
+        document.add(new TextField(JOURNALFORT_AV_NAVN, optional(melding.journalfortAv.navn).getOrElse(""), YES));
+        document.add(new TextField(JOURNALFORT_AV_IDENT, optional(melding.journalfortAvNavIdent).getOrElse(""), YES));
 
         return document;
     }
@@ -243,8 +250,21 @@ public class MeldingerSokImpl implements MeldingerSok {
                 String navIdent = hentTekstResultat(NAVIDENT, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String statusTekst = hentTekstResultat(STATUSTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String kanal = hentTekstResultat(KANAL, doc, searcher, analyzer, highlighter, gjorHighlighting);
-                resultat.put(behandlingsId, new MeldingerSokResultat().withFritekst(fritekst).withTemagruppe(temagruppe).withArkivtema(arkivtema)
-                        .withDato(dato).withNavident(navIdent).withStatustekst(statusTekst).withKanal(kanal));
+                String skrevetAvNavn = hentTekstResultat(SKREVET_AV_NAVN, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String journalfortAvNavn = hentTekstResultat(JOURNALFORT_AV_NAVN, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String journalfortAvIdent = hentTekstResultat(JOURNALFORT_AV_IDENT, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                resultat.put(behandlingsId,
+                        new MeldingerSokResultat()
+                                .withFritekst(fritekst)
+                                .withTemagruppe(temagruppe)
+                                .withArkivtema(arkivtema)
+                                .withDato(dato)
+                                .withNavident(navIdent)
+                                .withStatustekst(statusTekst)
+                                .withKanal(kanal)
+                                .withSkrevetAvNavn(skrevetAvNavn)
+                                .withJournalfortAvNavn(journalfortAvNavn)
+                                .withJournalfortAvIdent(journalfortAvIdent));
             }
             return resultat;
         } catch (IOException e) {
@@ -285,13 +305,16 @@ public class MeldingerSokImpl implements MeldingerSok {
                 melding.navIdent = meldingerSokResultat.navIdent;
                 melding.kanal = meldingerSokResultat.kanal;
                 melding.statusTekst = meldingerSokResultat.statustekst;
+                melding.skrevetAv = new Person(meldingerSokResultat.skrevetAvNavn, "");
+                melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "");
+                melding.journalfortAvNavIdent = meldingerSokResultat.journalfortAvIdent;
                 return melding;
             }
         };
     }
 
     public static class MeldingerSokResultat {
-        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal;
+        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal, skrevetAvNavn, journalfortAvNavn, journalfortAvIdent;
 
         public MeldingerSokResultat() {
         }
@@ -328,6 +351,21 @@ public class MeldingerSokImpl implements MeldingerSok {
 
         public MeldingerSokResultat withKanal(String kanal) {
             this.kanal = kanal;
+            return this;
+        }
+
+        public MeldingerSokResultat withSkrevetAvNavn(String skrevetAvNavn) {
+            this.skrevetAvNavn = skrevetAvNavn;
+            return this;
+        }
+
+        public MeldingerSokResultat withJournalfortAvNavn(String journalfortAvNavn) {
+            this.journalfortAvNavn = journalfortAvNavn;
+            return this;
+        }
+
+        public MeldingerSokResultat withJournalfortAvIdent(String journalfortAvIdent) {
+            this.journalfortAvIdent = journalfortAvIdent;
             return this;
         }
     }
