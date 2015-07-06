@@ -19,6 +19,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -102,6 +103,8 @@ public class HenvendelseUtsendingServiceImplTest {
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Mock
     private PersonKjerneinfoServiceBi kjerneinfo;
+    @Mock
+    private LDAPService ldapService;
 
     @InjectMocks
     private HenvendelseUtsendingServiceImpl henvendelseUtsendingService;

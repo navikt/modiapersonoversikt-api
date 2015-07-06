@@ -14,6 +14,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -66,6 +67,8 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private PropertyResolver propertyResolver;
     @Inject
     private PersonKjerneinfoServiceBi kjerneinfo;
+    @Inject
+    private LDAPService ldapService;
 
     @Override
     public void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception {
@@ -116,7 +119,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
                         .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
-                        .map(tilMelding(propertyResolver))
+                        .map(tilMelding(propertyResolver, ldapService))
                         .map(journalfortTemaTilgang)
                         .collect(ELDSTE_FORST);
 
