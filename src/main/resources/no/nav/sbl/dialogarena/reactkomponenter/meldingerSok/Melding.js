@@ -2,7 +2,7 @@ var React = require('react/addons');
 var Utils = require('./../utils');
 var sanitize = require('sanitize-html');
 
-var Melding =  React.createClass({
+var Melding = React.createClass({
     render: function () {
         var melding = this.props.melding;
         var clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
@@ -16,7 +16,7 @@ var Melding =  React.createClass({
         meldingsStatusTekst += melding.temagruppeNavn;
 
         var erJournalfort = melding.journalfortTemanavn ? true : false;
-        var journalfortMelding = 'Journalført: ' + melding.journalfortTemanavn;
+        var journalfortMelding = 'Journalført av: ' + melding.journalfortAv.navn + ' (' + melding.journalfortAvNavIdent + ') | ' + melding.journalfortTemanavn;
         var journalfortVisning = !erJournalfort ? null : <div className="journalpost-element ikon">
             <span className="ikon"></span>
             <span dangerouslySetInnerHTML={{__html: journalfortMelding}}></span>
@@ -31,18 +31,24 @@ var Melding =  React.createClass({
         });
 
         var dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
-        var datoOgBruker = dato + ' - ' + melding.fraBruker;
         return (
             <div className={cls}>
-                <img className={'avsenderBilde ' + clsExt} src={src} alt={altTekst} />
+                <img className={'avsenderBilde ' + clsExt} src={src} alt={altTekst}/>
+
                 <div className="meldingData">
-                    <p dangerouslySetInnerHTML={{__html: datoOgBruker}}></p>
-                    <p className="meldingstatus">
-                        <span dangerouslySetInnerHTML={{__html: meldingsStatusTekst}}></span>
-                    </p>
-                    <div className="fritekst">{paragrafer}</div>
+                    <article className="melding-header">
+                        <p className="meldingstatus" dangerouslySetInnerHTML={{__html: meldingsStatusTekst}}></p>
+
+                        <p dangerouslySetInnerHTML={{__html: dato}}></p>
+
+                        <p>
+                            <span>Skrevet av: </span>
+                            <span dangerouslySetInnerHTML={{__html: melding.fraBruker}}></span>
+                        </p>
+                    </article>
+                    <article className="fritekst">{paragrafer}</article>
                 </div>
-            {journalfortVisning}
+                {journalfortVisning}
             </div>
         );
     }
