@@ -4,13 +4,17 @@
   }
   .knagger {
     border: 1px solid #ccc;
+    border-radius: 2px;
     white-space: nowrap;
     overflow: hidden;
     padding-right: 46px;
     position: relative;
 
     &.focus {
-      border: 1px solid rgba(82, 168, 236, 0.8);
+      .focus-sammensatt-mixin;
+    }
+    input:focus {
+      box-shadow: none !important;
     }
 
     > span {
