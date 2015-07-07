@@ -36,7 +36,7 @@ public class TraadPanel extends Panel {
                         .add(visibleIf(not(isEqualTo(lestStatusModel, "")))));
 
                 item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
-                item.add(new Label("avsenderTekst"));
+                item.add(new Label("avsenderDato"));
                 item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
                 item.add(new Journalpost("journalpost", item.getModel()));
 

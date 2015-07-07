@@ -33,15 +33,10 @@ public class MeldingVMTest extends WicketPageTest {
     }
 
     @Test
-    public void henterAvsenderTekstBasertPaaDatoOgNavident() {
-        String avsenderTekst = meldingVM.getAvsenderTekst();
+    public void henterAvsenderDatoBasertPaaDato() {
+        String avsenderTekst = meldingVM.getAvsenderDato();
 
         assertThat(avsenderTekst, is(DateUtils.dateTime(OPPRETTET_DATO)));
-
-        meldingVM.melding.navIdent = NAV_IDENT;
-        avsenderTekst = meldingVM.getAvsenderTekst();
-
-        assertThat(avsenderTekst.contains(" - " + NAV_IDENT), is(true));
     }
 
     @Test

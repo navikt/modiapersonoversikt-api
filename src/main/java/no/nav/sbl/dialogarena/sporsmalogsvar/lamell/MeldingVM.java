@@ -36,12 +36,6 @@ public class MeldingVM implements Serializable {
         return DateUtils.dateTime(melding.opprettetDato);
     }
 
-    public String getAvsenderTekst() {
-        return DateUtils.dateTime(melding.opprettetDato)
-                + (melding.navIdent != null ? " - " + melding.navIdent : "");
-    }
-
-
     public String getMeldingStatusTekstKey() {
         return lagMeldingStatusTekstKey(melding);
     }
