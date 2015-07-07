@@ -171,7 +171,6 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             timer = MetricsFactory.createTimer("hendelse.besvar.time").time();
             final IModel<HenvendelseVM> henvendelseVM = getModel();
 
-            add(new Label("navIdent", getSubjectHandler().getUid()));
             add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo, henvendelseVM));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));

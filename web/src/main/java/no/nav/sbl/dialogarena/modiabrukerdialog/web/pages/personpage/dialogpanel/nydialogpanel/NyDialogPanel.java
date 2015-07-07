@@ -92,8 +92,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         modusKomponenter.add(epostVarselPanel);
         form.add(epostVarselPanel);
 
-        form.add(new Label("navIdent", getSubjectHandler().getUid()));
-
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel());
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
         modusKomponenter.add(journalforingsPanel);
