@@ -17,10 +17,13 @@ var Melding = React.createClass({
 
         var erJournalfort = melding.journalfortTemanavn ? true : false;
         var journalfortMelding = 'Journalført av: ' + melding.journalfortAv.navn + ' (' + melding.journalfortAvNavIdent + ') | ' + melding.journalfortTemanavn;
-        var journalfortVisning = !erJournalfort ? null : <div className="journalpost-element ikon">
-            <span className="ikon"></span>
-            <span dangerouslySetInnerHTML={{__html: journalfortMelding}}></span>
-        </div>;
+        var journalfortVisning = !erJournalfort ? null :
+            <div className="journalpost-link">
+                <div className="journalpost-element ikon">
+                    <span className="ikon"></span>
+                    <span dangerouslySetInnerHTML={{__html: journalfortMelding}}></span>
+                </div>
+            </div>;
 
         var paragrafer = melding.fritekst.split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
