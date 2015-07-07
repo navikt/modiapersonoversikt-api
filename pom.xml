@@ -52,7 +52,7 @@
         <metrics.version>3.1.2</metrics.version>
 
         <!-- egenlagde bibleoteker -->
-        <modig.frontend.version>1.1.113</modig.frontend.version>
+        <modig.frontend.version>1.1.114</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig.wicket.version>3.0.2</modig.wicket.version>
@@ -94,7 +94,7 @@
         <personsok.version>1.1.1</personsok.version>
         <kjerneinfo.versjon>1.1.6</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.1.1</utbetaling.version>
+        <utbetaling.version>2.1.3</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>

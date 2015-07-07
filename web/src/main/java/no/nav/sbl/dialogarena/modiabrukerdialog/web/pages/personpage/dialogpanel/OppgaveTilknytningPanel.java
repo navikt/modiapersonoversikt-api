@@ -26,9 +26,11 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
         this(id, model, grunnInfo, Model.of(true));
     }
 
-    public OppgaveTilknytningPanel(String id, IModel<HenvendelseVM> model, final GrunnInfo grunnInfo, IModel<Boolean> kanEndres) {
+    public OppgaveTilknytningPanel(String id, IModel<HenvendelseVM> model, final GrunnInfo grunnInfo, IModel<Boolean> skalVises) {
         super(id, model);
         setOutputMarkupPlaceholderTag(true);
+
+        add(visibleIf(skalVises));
 
         final IModel<Boolean> isOpen = Model.of(false);
 
@@ -44,9 +46,7 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
                 target.add(this, oppgaveTilknytningPopup);
             }
         };
-        aapnePopup.add(visibleIf(kanEndres));
-
-        AriaHelpers.toggleButtonConnector(aapnePopup, oppgaveTilknytningPopup, isOpen);
+        AriaHelpers.ToggleButton.button(aapnePopup, oppgaveTilknytningPopup, isOpen);
 
         RadioChoice<OppgaveTilknytning> oppgaveTilknytningValg = new RadioChoice<>("oppgaveTilknytning", asList(OppgaveTilknytning.values()), new IChoiceRenderer<OppgaveTilknytning>() {
             @Override
@@ -68,6 +68,7 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 isOpen.setObject(false);
                 target.add(OppgaveTilknytningPanel.this);
+                target.focusComponent(aapnePopup);
             }
         };
         AjaxLink lukkPopup = new AjaxLink("lukkPopup") {
