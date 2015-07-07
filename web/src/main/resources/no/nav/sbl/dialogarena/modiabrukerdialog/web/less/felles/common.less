@@ -1,6 +1,7 @@
 /* Generelle mixins, variabler, typografi og stiler som bruker av andre stilregler */
 @mainContentWidth: 50%;
 @sidebarYtrePadding: 15px;
+@focusfarge: #ffbd66;
 
 /* Mixins */
 .kolonne {
@@ -26,6 +27,27 @@
 
 .pil(@size, @color) {
   .generell-pil(@size, @size, @color);
+}
+
+.focus-sammensatt-mixin {
+  outline: none !important;
+  box-shadow: 0 0 0 3px @focusfarge !important;
+}
+
+.focus-sammensatt-inset-mixin(@size: 3px) {
+  outline: none !important;
+  box-shadow: inset 0 0 0 @size @focusfarge !important;
+}
+
+.focus-enkel-mixin {
+  outline: none;
+  background-color: @focusfarge !important;
+  color: #333;
+}
+
+.focus-ontop-mixin {
+  position: relative;
+  z-index: 9999;
 }
 
 /* Generelle elementer */
@@ -208,5 +230,20 @@ fieldset.wcag {
         margin-bottom: 15px;
       }
     }
+  }
+}
+
+input, textarea, button, select, a[role=button], [tabindex] {
+  &:focus {
+    .focus-sammensatt-mixin;
+    & + label {
+      .focus-sammensatt-mixin;
+    }
+  }
+}
+
+a:not([role=button]):not(.focus-outline):not([tabindex]), .focus-fyll {
+  &:focus {
+    .focus-enkel-mixin;
   }
 }

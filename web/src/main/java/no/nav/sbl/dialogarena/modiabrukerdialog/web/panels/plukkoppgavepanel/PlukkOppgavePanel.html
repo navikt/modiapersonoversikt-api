@@ -4,8 +4,8 @@
         <span wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></span>
 
         <div class="oppgavepanel">
-            <a class="velg-temagruppe" wicket:message="title:plukkoppgave.temavelger.mouseover" tabindex="0"
-               wicket:id="velg-temagruppe-knapp"></a>
+            <a class="velg-temagruppe" href="javascript:void(0)" wicket:message="title:plukkoppgave.temavelger.mouseover"
+               wicket:id="velg-temagruppe-knapp" role="button"></a>
             <input type="submit"
                    class="plukk-oppgave plukk-knapp"
                    wicket:id="plukkOppgave"
@@ -25,8 +25,8 @@
                     </fieldset>
                 </div>
 
-                <a wicket:id="PlukkOppgaveFraTemaliste" class="knapp-hoved-liten plukk-knapp"
-                   wicket:message="title:plukkoppgave.plukkoppgavefratemaliste.mouseover" tabindex="0" role="button">
+                <a href="javascript:void(0)" wicket:id="PlukkOppgaveFraTemaliste" class="knapp-hoved-liten plukk-knapp"
+                   wicket:message="title:plukkoppgave.plukkoppgavefratemaliste.mouseover" role="button">
                     <wicket:message key="plukkoppgave.plukkoppgavefratemaliste"/>
                 </a>
             </div>

@@ -145,8 +145,10 @@
         color: @modiaBackground;
       }
       A, A:hover {
+        display: inherit;
         text-decoration: none;
         color: #111;
+        height: 100%;
       }
       &:hover {
         background-image: none;
@@ -157,6 +159,9 @@
         }
       }
       > A:focus {
+        .focus-sammensatt-inset-mixin;
+        .focus-ontop-mixin;
+
         H1 {
           color: @blueDark;
           text-decoration: underline;

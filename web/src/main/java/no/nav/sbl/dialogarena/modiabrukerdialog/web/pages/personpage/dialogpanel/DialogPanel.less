@@ -34,7 +34,6 @@
       line-height: 22px;
       min-height: 22px;
       background-position: 5px;
-      border: 1px dashed transparent;
       width: 11rem;
     }
     input[type=radio]:focus + label {
@@ -227,9 +226,6 @@
           background-image: url(../img/personligoppmote_valgt.svg);
         }
       }
-      input[type="radio"]:focus + label {
-        border: 1px dashed #00a9e0;
-      }
     }
   }
   .navident {
@@ -258,6 +254,7 @@
 
     button.skrivestotteToggle {
       border: 0;
+      border-radius: 1rem;
       position: absolute;
       left: 5px;
       top: 5px;
@@ -274,6 +271,9 @@
   }
   .tekstfelt {
     margin: 0 @sideMargin;
+    textarea:focus {
+      .focus-ontop-mixin;
+    }
   }
   .temagruppevelger-wrapper, .nyTemagruppeSkjuler {
     margin: 0 @sideMargin;
@@ -350,7 +350,6 @@
       color: #3e3832;
     }
     &:focus + label {
-      border: 1px dashed #00a9e0;
       padding: 2px 2px 2px 32px;
       background-position: 2px 2px;
       line-height: 1.7rem;
@@ -474,7 +473,7 @@
       background-position: 5px;
     }
     input[type=radio]:focus + label {
-      border: 1px dashed #00a9e0;
+      .focus-ontop-mixin;
     }
     &.feiltema label {
       margin-bottom: 0px;
@@ -522,7 +521,8 @@
   .sak-info-link:focus {
     outline: none;
     .sak-info {
-      border: 1px solid rgba(82, 168, 236, 0.8);
+      .focus-sammensatt-mixin;
+      .focus-ontop-mixin;
     }
   }
   .sak-info, .velg-sak {
