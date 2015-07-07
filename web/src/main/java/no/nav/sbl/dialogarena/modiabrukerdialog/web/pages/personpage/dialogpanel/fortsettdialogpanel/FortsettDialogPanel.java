@@ -148,6 +148,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {
         henvendelseVM.kanal = TEKST;
         henvendelseVM.temagruppe = Temagruppe.valueOf(sporsmal.temagruppe);
+        henvendelseVM.gjeldendeTemagruppe = sporsmal.gjeldendeTemagruppe;
         henvendelseVM.setTraadJournalfort(sporsmal.journalfortDato);
     }
 
@@ -180,7 +181,8 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             sendKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    if (henvendelseVM.getObject().brukerKanSvareSkalEnables().getObject()
+                    if (henvendelseVM.getObject().gjeldendeTemagruppe != Temagruppe.OKSOS
+                            && henvendelseVM.getObject().brukerKanSvareSkalEnables().getObject()
                             && henvendelseVM.getObject().brukerKanSvare
                             && henvendelseVM.getObject().valgtSak == null
                             && !henvendelseVM.getObject().traadJournalfort) {

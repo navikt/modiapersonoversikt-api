@@ -16,7 +16,7 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
     public static final String SPORSMAL_KVITTERING_BEKREFTELSE = ".SPORSMAL.kvittering.bekreftelse";
 
     public Kanal kanal;
-    public Temagruppe temagruppe;
+    public Temagruppe temagruppe, gjeldendeTemagruppe;
     public Modus modus;
     public OppgaveTilknytning oppgaveTilknytning;
     public Sak valgtSak;
