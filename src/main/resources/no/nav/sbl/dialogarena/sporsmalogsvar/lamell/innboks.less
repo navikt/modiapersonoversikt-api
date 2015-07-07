@@ -64,6 +64,7 @@
         text-align: left;
         a {
           color: #f5f5f5;
+          display: inherit;
         }
       }
       img {
@@ -117,6 +118,9 @@
           font-style: normal;
         }
       }
+      .melding-valg:focus {
+        .focus-enkel-mixin;
+      }
       &.journalfor a {
         background-image: url(../img/journalfore_blaa.svg);
       }
@@ -128,6 +132,9 @@
       }
       &.print a {
         background-image: url(../img/print_blaa.svg);
+        &:focus {
+          .focus-enkel-mixin;
+        }
       }
       a, span {
         background-repeat: no-repeat;
@@ -251,6 +258,11 @@
   padding: 16px @sidemargin 16px 32px;
   border-bottom: solid 1px @rammefarge;
   overflow: hidden;
+
+  &:focus {
+    .focus-sammensatt-inset-mixin;
+  }
+
   p {
     margin: 0;
   }
@@ -422,21 +434,30 @@
       }
     }
   }
-  &.inngaaende .journalpost-element {
+  &.inngaaende .journalpost-link {
     float: right;
+    width: 86%;
+  }
+
+  &.utgaaende .journalpost-link {
+    float: left;
+    width: 86%;
+  }
+  .journalpost-link {
+    clear: both;
+  }
+
+  &.inngaaende .journalpost-element {
     background-color: #e6e6dd;
     border-top: 1px solid @rammefarge;
   }
   &.utgaaende .journalpost-element {
-    float: left;
     background-color: #ffffff;
     border-bottom: 1px solid @rammefarge;
     border-left: 1px solid @rammefarge;
     border-right: 1px solid @rammefarge;
   }
   .journalpost-element {
-    clear: both;
-    width: 86%;
     padding: 16px 25px;
     color: @grayDark;
     text-decoration: none;
@@ -456,8 +477,9 @@
     }
   }
   a.journalpost-link {
-    &:focus .journalpost-element {
-      span.status {
+    &:focus {
+      .focus-ontop-mixin;
+      .journalpost-element span.status {
         text-decoration: underline;
       }
     }
