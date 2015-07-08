@@ -208,7 +208,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();
-        if (asList(ARBD, FMLI, ORT_HJE).contains(temagruppe)) {
+        if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT).contains(temagruppe)) {
             return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
