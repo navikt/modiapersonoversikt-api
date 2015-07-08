@@ -204,6 +204,7 @@
         }
         label {
           text-align: left;
+          background-position: 0px -2px !important;
           &:last-of-type {
             margin-bottom: 0;
           }
@@ -259,10 +260,6 @@
   padding: 16px @sidemargin 16px 32px;
   border-bottom: solid 1px @rammefarge;
   overflow: hidden;
-
-  &:focus {
-    .focus-sammensatt-inset-mixin;
-  }
 
   p {
     margin: 0;
@@ -479,9 +476,12 @@
   }
   a.journalpost-link {
     &:focus {
-      .focus-ontop-mixin;
-      .journalpost-element span.status {
-        text-decoration: underline;
+      box-shadow: none;
+      .journalpost-element {
+        .focus-sammensatt-inset-mixin;
+        span.status {
+          text-decoration: underline;
+        }
       }
     }
   }
