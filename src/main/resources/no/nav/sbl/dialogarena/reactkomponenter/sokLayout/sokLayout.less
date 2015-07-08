@@ -69,9 +69,11 @@
           }
         }
         input[type=radio]:focus + label {
+          outline: none;
+          border: 1px solid #4d90fe;
+          -webkit-box-shadow: 0 0 4px 0 #4d90fe;
+          box-shadow: 0 0 4px 0 #4d90fe;
           text-decoration: underline;
-          .focus-sammensatt-inset-mixin(2px);
-          border: 1px solid @focusfarge;
         }
       }
     }
