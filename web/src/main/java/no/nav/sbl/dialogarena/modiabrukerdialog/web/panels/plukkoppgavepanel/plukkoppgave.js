@@ -7,8 +7,17 @@ $(document).on('click', '.temagruppe-liste', function (e) {
 });
 
 $(document).on('click', '.velg-temagruppe', function (e) {
-    $('.temagruppe-liste').toggle()
-        .find('.radiogroup').focus();
+    var $temagruppeliste = $('.temagruppe-liste');
+    $temagruppeliste.toggle();
+
+    var $valgtTemagruppe = $temagruppeliste.find('.radiogroup input:checked');
+
+    if ($valgtTemagruppe.length > 0) {
+        $valgtTemagruppe.focus();
+    } else {
+        $temagruppeliste.find('.radiogroup input:first').focus();
+    }
+
     e.stopPropagation();
 });
 

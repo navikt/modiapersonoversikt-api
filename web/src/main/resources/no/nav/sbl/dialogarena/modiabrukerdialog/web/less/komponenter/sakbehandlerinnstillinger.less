@@ -5,6 +5,8 @@
   left: 0;
   right: 0;
   margin: 0 auto;
+  border-radius: 2px;
+  padding: 0.2rem;
   :hover {
     cursor: pointer;
   }
@@ -48,8 +50,8 @@
       min-height: 22px;
       line-height: 22px;
     }
-    input[type=radio] + label {
-      background-position: 5px;
+    input[type=radio][name] + label {
+      background-position: 5px !important;
       border: 1px solid transparent;
     }
   }

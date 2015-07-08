@@ -52,7 +52,7 @@
         <metrics.version>3.1.2</metrics.version>
 
         <!-- egenlagde bibleoteker -->
-        <modig.frontend.version>1.1.114</modig.frontend.version>
+        <modig.frontend.version>1.1.115-SNAPSHOT</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig.wicket.version>3.0.2</modig.wicket.version>

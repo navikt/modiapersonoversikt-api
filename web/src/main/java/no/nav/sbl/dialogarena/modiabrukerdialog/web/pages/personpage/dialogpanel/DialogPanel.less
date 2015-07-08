@@ -37,7 +37,7 @@
       padding: 5px 5px 5px 37px;
       line-height: 22px;
       min-height: 22px;
-      background-position: 5px;
+      background-position: 5px !important;
       width: 11rem;
     }
     input[type=radio]:focus + label {
@@ -199,7 +199,7 @@
         width: auto;
         margin: 0.5rem 0;
         border: 1px solid transparent;
-        background-position: 0;
+        background-position: 0 !important;
         > * {
           width: 32px;
           height: 32px;
@@ -272,7 +272,7 @@
   .tekstfelt {
     margin: 0 @sideMargin;
     textarea:focus {
-      .focus-ontop-mixin;
+      .ontop-mixin;
     }
   }
   .temagruppevelger-wrapper, .nyTemagruppeSkjuler {
@@ -473,7 +473,7 @@
       background-position: 5px;
     }
     input[type=radio]:focus + label {
-      .focus-ontop-mixin;
+      .ontop-mixin;
     }
     &.feiltema label {
       margin-bottom: 0px;
@@ -522,7 +522,12 @@
     outline: none;
     .sak-info {
       .focus-sammensatt-mixin;
-      .focus-ontop-mixin;
+      .ontop-mixin;
+    }
+  }
+  .sak-info-link:hover {
+    .sak-info {
+      .mouseover-sammensatt-mixin;
     }
   }
   .sak-info, .velg-sak {

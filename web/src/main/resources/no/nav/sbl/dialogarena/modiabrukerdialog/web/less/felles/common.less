@@ -2,6 +2,7 @@
 @mainContentWidth: 50%;
 @sidebarYtrePadding: 15px;
 @focusfarge: #ffbd66;
+@mouseoverfarge: #0067C5;
 
 /* Mixins */
 .kolonne {
@@ -45,7 +46,12 @@
   color: #333;
 }
 
-.focus-ontop-mixin {
+.mouseover-sammensatt-mixin {
+  outline: none;
+  border: 1px solid rgb(0, 103, 197) !important;
+}
+
+.ontop-mixin {
   position: relative;
   z-index: 9999;
 }
@@ -233,7 +239,7 @@ fieldset.wcag {
   }
 }
 
-input, textarea, button, select, a[role=button], [tabindex] {
+input:not([type=radio]):not([type=checkbox]), textarea, button, select, a[role=button], .ui-selectmenu-button {
   &:focus {
     .focus-sammensatt-mixin;
     & + label {
@@ -245,5 +251,55 @@ input, textarea, button, select, a[role=button], [tabindex] {
 a:not([role=button]):not(.focus-outline):not([tabindex]), .focus-fyll {
   &:focus {
     .focus-enkel-mixin;
+  }
+}
+
+input[type=text], textarea, .ui-state-hover, .saksbehandlerinnstillinger-toggle {
+  &:hover {
+    .mouseover-sammensatt-mixin;
+    & + label {
+      .mouseover-sammensatt-mixin;
+    }
+  }
+}
+
+input[type=radio] {
+  .mf3-override('radio');
+}
+input[type=checkbox] {
+  .mf3-override('check');
+}
+
+
+.mf3-override(@type) {
+  & + label {
+    background: url('../img/mf3/@{type}.svg') 0 0 no-repeat !important;
+  }
+  &:checked + label {
+    background: url('../img/mf3/@{type}_valgt.svg') 0 0 no-repeat !important;
+  }
+  &:hover + label {
+    background: url('../img/mf3/@{type}_hover.svg') 0 0 no-repeat !important;
+  }
+  &:focus + label {
+    background: url('../img/mf3/@{type}_focus.svg') 0 0 no-repeat !important;
+  }
+  &:checked:hover + label {
+    background: url('../img/mf3/@{type}_valgt_hover.svg') 0 0 no-repeat !important;
+  }
+  &:checked:focus + label {
+    background: url('../img/mf3/@{type}_valgt_focus.svg') 0 0 no-repeat !important;
+  }
+  &:hover:focus + label {
+    background: url('../img/mf3/@{type}_hover_focus.svg') 0 0 no-repeat !important;
+  }
+  &:checked:hover:focus + label {
+    background: url('../img/mf3/@{type}_valgt_hover_focus.svg') 0 0 no-repeat !important;
+  }
+  &:checked:disabled + label {
+    background: url('../img/mf3/@{type}_inactive_valgt.svg') 0 0 no-repeat !important;
+  }
+  &:disabled + label {
+    background: url('../img/mf3/@{type}_inactive.svg') 0 0 no-repeat !important;
   }
 }

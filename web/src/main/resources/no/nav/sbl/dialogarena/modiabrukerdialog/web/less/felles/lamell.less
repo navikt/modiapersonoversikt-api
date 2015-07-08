@@ -96,7 +96,7 @@
         background-image: -moz-linear-gradient(top, #e5e5e3 1px, #F1F1EF 14px);
         -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e3', endColorstr='#F1F1EF')"; /* IE8+ */
         H1 {
-          line-height: 59px;
+          line-height: 27px;
           font-size: 1.8rem;
         }
       }
@@ -137,12 +137,15 @@
       -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F1F1EF', endColorstr='#e5e5e3')"; /* IE8+ */
       background-color: @bodyBackground;
       H1 {
-        margin: 0 auto auto 30px;
-        line-height: 59px;
+        margin: 15px auto auto 30px;
+        line-height: 27px;
         font-size: 1.8rem;
+        padding: 0.3rem;
+        border-radius: 2px;
       }
       A H1, A:visited H1 {
         color: @modiaBackground;
+        display: inline-block;
       }
       A, A:hover {
         display: inherit;
@@ -159,11 +162,10 @@
         }
       }
       > A:focus {
-        .focus-sammensatt-inset-mixin;
-
+        outline: none;
         H1 {
+          .focus-sammensatt-mixin;
           color: @blueDark;
-          text-decoration: underline;
         }
       }
     }
@@ -175,7 +177,8 @@
       -ms-filter: "";
       H1 {
         font-size: 2.5rem;
-        line-height: 79px;
+        line-height: 37px;
+        margin-top: 20px;
       }
     }
     .lerret {
