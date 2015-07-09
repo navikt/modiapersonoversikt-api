@@ -16,6 +16,7 @@ import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -64,9 +65,8 @@ public class BasePage extends WebPage {
 
     public BasePage() {
         body = (WebMarkupContainer) new TransparentWebMarkupContainer("body").setOutputMarkupId(true);
-        FocusHandler focusHandler = new FocusHandler("focus-handler");
 
-        add(body, focusHandler);
+        add(body);
         add(new TimingMetricsBehaviour().withPrefix("page."));
         add(new AjaxEventBehavior("onload") {
             @Override
@@ -80,4 +80,9 @@ public class BasePage extends WebPage {
         return body;
     }
 
+    @Override
+    public void onEvent(IEvent<?> event) {
+        super.onEvent(event);
+        FocusHandler.handleEvent(getPage(), event);
+    }
 }
