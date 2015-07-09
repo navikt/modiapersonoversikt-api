@@ -40,7 +40,7 @@ public class OppgavePanel extends AnimertPanel {
     private IModel<Boolean> oppgaveBehandlet = Model.of(false);
 
     public OppgavePanel(String id, final InnboksVM innboksVM) {
-        super(id);
+        super(id, true);
 
         add(new Label("temagruppe", new PropertyModel<String>(innboksVM, "valgtTraad.eldsteMelding.melding.temagruppeNavn")));
 

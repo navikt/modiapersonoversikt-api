@@ -10,6 +10,8 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 
+import static java.lang.String.format;
+
 public class AnimertJournalforingsPanel extends AnimertPanel {
 
     public static final String TRAAD_JOURNALFORT = "sos.journalforingspanel.traadJournalfort";
@@ -45,6 +47,7 @@ public class AnimertJournalforingsPanel extends AnimertPanel {
                     AnimertJournalforingsPanel.this.replace(journalforingsPanel);
                     state = State.LOADED;
                     target.add(AnimertJournalforingsPanel.this.get(LAZY_LOAD_COMPONENT_ID));
+                    target.appendJavaScript(format("$('#%s').find(':focusable:first').focus();", AnimertJournalforingsPanel.this.getMarkupId()));
                 }
             }
         });

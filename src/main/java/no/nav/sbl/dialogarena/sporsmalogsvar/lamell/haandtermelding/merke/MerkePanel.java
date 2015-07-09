@@ -46,7 +46,7 @@ public class MerkePanel extends AnimertPanel {
     private final AjaxButton merkKnapp;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
-        super(id);
+        super(id, true);
 
         this.innboksVM = innboksVM;
 

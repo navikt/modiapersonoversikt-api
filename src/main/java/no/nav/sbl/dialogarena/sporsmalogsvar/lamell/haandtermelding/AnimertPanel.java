@@ -13,11 +13,17 @@ import static org.apache.wicket.event.Broadcast.BREADTH;
 public abstract class AnimertPanel extends Panel {
 
     public static final String DEFAULT_SLIDE_DURATION = "400";
+    private final boolean focusFirstElementOnOpen;
 
     public AnimertPanel(String id) {
+        this(id, false);
+    }
+
+    public AnimertPanel(String id, boolean focusFirstElementOnOpen) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
         setVisibilityAllowed(false);
+        this.focusFirstElementOnOpen = focusFirstElementOnOpen;
     }
 
     public void togglePanel(AjaxRequestTarget target) {
@@ -26,13 +32,25 @@ public abstract class AnimertPanel extends Panel {
 
     public void togglePanel(AjaxRequestTarget target, String duration) {
         if (isVisibilityAllowed()) {
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + duration + ", lukket)", this.getMarkupId()));
+            target.prependJavaScript(closeScript(duration));
             this.setVisibilityAllowed(false);
         } else {
-            target.appendJavaScript(format("$('#%s').slideDown(" + duration + ")", this.getMarkupId()));
+            target.appendJavaScript(openScript(duration));
             this.setVisibilityAllowed(true);
         }
         target.add(this);
+    }
+
+    private String openScript(String duration) {
+        if (focusFirstElementOnOpen) {
+            return format("$('#%s').slideDown(%s, function(){$(this).find(':focusable:first').focus();});", this.getMarkupId(), duration);
+        } else {
+            return format("$('#%s').slideDown(%s);", this.getMarkupId(), duration);
+        }
+    }
+
+    private String closeScript(String duration) {
+        return format("lukket|$('#%s').slideUp(%s, lukket);", this.getMarkupId(), duration);
     }
 
     @RunOnEvents(PANEL_TOGGLET)
