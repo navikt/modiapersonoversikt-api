@@ -102,6 +102,7 @@ public class KvitteringsPanel extends Panel {
 
     private void leggTilVedleggFeiletPoput() {
         modalWindow = new ModigModalWindow("vedleggFeiletPopup");
+        modalWindow.setInitialHeight(250);
         add(modalWindow);
     }
 
