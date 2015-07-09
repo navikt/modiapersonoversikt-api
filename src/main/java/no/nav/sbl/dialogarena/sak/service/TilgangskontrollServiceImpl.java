@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
@@ -113,6 +114,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
                 resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(journalpost.getArkivtema().getValue()))
         );
         if (isNotBlank(journalpost.getArkivtema().getValue()) && !pep.hasAccess(temagruppePolicyRequest)) {
+            logger.warn("Saksbehandler med ident '{}' har ikke tilgang til tema '{}'", getSubjectHandler().getUid(), journalpost.getArkivtema().getValue());
             return false;
         }
         return true;
