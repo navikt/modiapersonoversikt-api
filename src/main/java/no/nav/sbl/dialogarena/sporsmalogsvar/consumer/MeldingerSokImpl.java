@@ -69,6 +69,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static final String DATO = "dato";
     private static final String NAVIDENT = "navident";
     private static final String STATUSTEKST = "statustekst";
+    private static final String LEST_STATUS = "leststatus";
     private static final String KANAL = "kanal";
     private static final String SKREVET_AV_NAVN = "skrevetavnavn";
     private static final String JOURNALFORT_AV_NAVN = "journalfortavnavn";
@@ -82,6 +83,7 @@ public class MeldingerSokImpl implements MeldingerSok {
             DATO,
             NAVIDENT,
             STATUSTEKST,
+            LEST_STATUS,
             KANAL,
             SKREVET_AV_NAVN,
             JOURNALFORT_AV_NAVN,
@@ -233,6 +235,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         document.add(new TextField(DATO, optional(melding.opprettetDatoTekst).getOrElse(""), YES));
         document.add(new TextField(NAVIDENT, optional(melding.navIdent).getOrElse(""), YES));
         document.add(new TextField(STATUSTEKST, optional(melding.statusTekst).getOrElse(""), YES));
+        document.add(new TextField(LEST_STATUS, optional(melding.lestStatus).getOrElse(""), YES));
         document.add(new TextField(KANAL, optional(melding.kanal).getOrElse(""), YES));
         document.add(new TextField(SKREVET_AV_NAVN, optional(melding.skrevetAv.navn).getOrElse(""), YES));
         document.add(new TextField(JOURNALFORT_AV_NAVN, optional(melding.journalfortAv.navn).getOrElse(""), YES));
@@ -266,6 +269,7 @@ public class MeldingerSokImpl implements MeldingerSok {
                 String dato = hentTekstResultat(DATO, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String navIdent = hentTekstResultat(NAVIDENT, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String statusTekst = hentTekstResultat(STATUSTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String lestStatus = hentTekstResultat(LEST_STATUS, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String kanal = hentTekstResultat(KANAL, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String skrevetAvNavn = hentTekstResultat(SKREVET_AV_NAVN, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String journalfortAvNavn = hentTekstResultat(JOURNALFORT_AV_NAVN, doc, searcher, analyzer, highlighter, gjorHighlighting);
@@ -280,6 +284,7 @@ public class MeldingerSokImpl implements MeldingerSok {
                                 .withDato(dato)
                                 .withNavident(navIdent)
                                 .withStatustekst(statusTekst)
+                                .withLestStatus(lestStatus)
                                 .withKanal(kanal)
                                 .withSkrevetAvNavn(skrevetAvNavn)
                                 .withJournalfortAvNavn(journalfortAvNavn)
@@ -326,6 +331,7 @@ public class MeldingerSokImpl implements MeldingerSok {
                 melding.navIdent = meldingerSokResultat.navIdent;
                 melding.kanal = meldingerSokResultat.kanal;
                 melding.statusTekst = meldingerSokResultat.statustekst;
+                melding.lestStatus = meldingerSokResultat.lestStatus;
                 melding.skrevetAv = new Person(meldingerSokResultat.skrevetAvNavn, "");
                 melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "");
                 melding.journalfortAvNavIdent = meldingerSokResultat.journalfortAvIdent;
@@ -337,7 +343,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     }
 
     public static class MeldingerSokResultat {
-        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, kanal, skrevetAvNavn,
+        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, lestStatus, kanal, skrevetAvNavn,
                 journalfortAvNavn, journalfortAvIdent, journalfortDato, journalfortSaksId;
 
         public MeldingerSokResultat() {
@@ -370,6 +376,11 @@ public class MeldingerSokImpl implements MeldingerSok {
 
         public MeldingerSokResultat withStatustekst(String statustekst) {
             this.statustekst = statustekst;
+            return this;
+        }
+
+        public MeldingerSokResultat withLestStatus(String lestStatus) {
+            this.lestStatus = lestStatus;
             return this;
         }
 
