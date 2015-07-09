@@ -180,8 +180,11 @@
     margin: 0 @sideMargin;
     text-align: left;
     line-height: 1.4em;
+    word-wrap: break-word;
+    max-width: 410px;
     a {
-      text-decoration: underline;
+      -ms-word-break: break-all;
+      word-break: break-all;
     }
   }
   .dato {
