@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.sak.service.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
@@ -85,6 +86,11 @@ public class ModiaStubConfig {
     @Bean(name = "pep")
     public EnforcementPoint pep() {
         return mock(EnforcementPoint.class);
+    }
+
+    @Bean
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
+        return mock(SaksbehandlerInnstillingerService.class);
     }
 
     @Bean

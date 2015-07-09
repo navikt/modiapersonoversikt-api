@@ -5,6 +5,7 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
@@ -40,6 +41,8 @@ public class TilgangskontrollServiceTest {
     private JoarkService joarkService;
     @Mock
     private EnforcementPoint pep;
+    @Mock
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @InjectMocks
     private TilgangskontrollService tilgangskontrollService = new TilgangskontrollServiceImpl();
@@ -55,6 +58,7 @@ public class TilgangskontrollServiceTest {
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("0219");
 
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }

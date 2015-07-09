@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
@@ -33,6 +34,9 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
@@ -139,10 +143,14 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         PolicyRequest temagruppePolicyRequest = forRequest(
                 actionId("temagruppe"),
                 resourceId(""),
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
                 resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(journalpost.getArkivtema().getValue()))
         );
         if (isNotBlank(journalpost.getArkivtema().getValue()) && !pep.hasAccess(temagruppePolicyRequest)) {
-            logger.warn("Saksbehandler med ident '{}' har ikke tilgang til tema '{}'", getSubjectHandler().getUid(), journalpost.getArkivtema().getValue());
+            logger.warn("Saksbehandler med ident '{}' og valgt enhet '{}' har ikke tilgang til tema '{}'",
+                    getSubjectHandler().getUid(),
+                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(),
+                    journalpost.getArkivtema().getValue());
             return false;
         }
         return true;

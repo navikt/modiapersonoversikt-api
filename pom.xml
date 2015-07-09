@@ -30,6 +30,7 @@
         <modig.frontend.version>1.1.75</modig.frontend.version>
         <modig.wicket.version>3.0.2</modig.wicket.version>
         <modia-felleskomponenter.version>1.0.0</modia-felleskomponenter.version>
+        <modiabrukerdialog-api.version>2.3</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.4</modig-lang.version>
         <modig-content.version>2.0.9</modig-content.version>
@@ -114,6 +115,11 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
             <version>${modia-felleskomponenter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-api</artifactId>
+            <version>${modiabrukerdialog-api.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
