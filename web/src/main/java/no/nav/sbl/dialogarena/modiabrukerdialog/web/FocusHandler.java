@@ -5,6 +5,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -26,7 +27,8 @@ public class FocusHandler extends TransparentWebMarkupContainer {
     @RunOnEvents({
             SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT,
             LeggTilbakePanel.LEGG_TILBAKE_FERDIG,
-            Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG
+            Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG,
+            MerkePanel.TRAAD_MERKET
     })
     public void sakbehandlerValgteEnhet(AjaxRequestTarget target) {
         TextField input = ComponentFinder.in(getPage()).findWithId(TextField.class, "foedselsnummerInput");
