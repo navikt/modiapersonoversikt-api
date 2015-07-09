@@ -5,6 +5,7 @@ import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
@@ -16,12 +17,31 @@ import java.io.IOException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableMap;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.MeldingsTypeMapping.SAMTALEREFERAT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class PdfUtils {
+
+    public static final Map<Temagruppe, String> temagruppeMap;
+
+    static {
+        HashMap<Temagruppe, String> map = new HashMap<>();
+        map.put(ARBD, "Arbeid");
+        map.put(FMLI, "Familie");
+        map.put(HJLPM, "Hjelpemidler");
+        map.put(BIL, "Hjelpemidler Bil");
+        map.put(ORT_HJE, "Helsetjenester og ortopediske hjelpemidler");
+        map.put(OVRG, "Øvrig");
+        map.put(PENS, "Pensjon");
+        map.put(UFRT, "Uføretrygd");
+        map.put(OKSOS, "Økonomisk sosialhjelp");
+        map.put(ANSOS, "Andre sosiale tjenester");
+        temagruppeMap = unmodifiableMap(map);
+    }
 
     public static byte[] genererPdfForPrint(List<MeldingVM> meldinger) {
         Map<String, Helper<?>> helpers = generateHelpers();
@@ -118,7 +138,7 @@ public class PdfUtils {
             if (isBlank(temagruppe)) {
                 return "";
             }
-            return "Temagruppe: " + TemagruppeMapping.valueOf(temagruppe).beskrivendeNavn;
+            return "Temagruppe: " + temagruppeMap.get(Temagruppe.valueOf(temagruppe));
         }
     }
 
@@ -141,22 +161,7 @@ public class PdfUtils {
         }
     }
 
-    static enum TemagruppeMapping {
-        ARBD("Arbeid"),
-        FMLI("Familie"),
-        HJLPM("Hjelpemidler"),
-        BIL("Hjelpemidler Bil"),
-        ORT_HJE("Helsetjenester og ortopediske hjelpemidler"),
-        OVRG("Øvrig");
-
-        public final String beskrivendeNavn;
-
-        TemagruppeMapping(String beskrivendeNavn) {
-            this.beskrivendeNavn = beskrivendeNavn;
-        }
-    }
-
-    static enum MeldingsTypeMapping {
+    enum MeldingsTypeMapping {
         SAMTALEREFERAT("Samtalereferat"),
         SPORSMAL("Spørsmål"),
         SVAR("Svar");

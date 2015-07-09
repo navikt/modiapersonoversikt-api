@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.PDFMelding;
@@ -8,6 +9,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PdfUtilsTest {
     @Test
@@ -65,5 +67,12 @@ public class PdfUtilsTest {
         assertThat(pdfmelding1.temagruppeBeskrivelse, is("Temagruppe: Arbeid"));
         assertThat(pdfmelding2.temagruppeBeskrivelse, is("Temagruppe: Familie"));
         assertThat(pdfmelding3.temagruppeBeskrivelse, is(""));
+    }
+
+    @Test
+    public void harMappingForSamtligeTemagrupper() {
+        for (Temagruppe temagruppe : Temagruppe.values()) {
+            assertTrue(PdfUtils.temagruppeMap.containsKey(temagruppe));
+        }
     }
 }
