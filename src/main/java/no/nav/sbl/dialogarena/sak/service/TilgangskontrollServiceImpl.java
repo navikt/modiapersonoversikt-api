@@ -36,7 +36,9 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    private final String STATUS_JOURNALFORT = "J";
+    private final String JOURNALPOST_STATUS_JOURNALFORT = "J";
+    private final String JOURNALPOST_STATUS_UTGAAR = "U";
+    private final String JOURNALPOST_STATUS_UKJENT_BRUKER = "UB";
 
     public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
         return sjekkTilgang(journalpostId, fnr);
@@ -49,7 +51,13 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
         WSJournalpost journalpost = hentJournalpost(journalpostId);
         if (!erJournalfort(journalpost)) {
-            return new HentDokumentResultat(false, IKKE_JOURNALFORT);
+            if (harStatusUtgaar(journalpost)) {
+                return new HentDokumentResultat(false, STATUS_UTGAAR);
+            } else if (harUkjentBruker(journalpost)) {
+                return new HentDokumentResultat(false, UKJENT_BRUKER);
+            } else {
+                return new HentDokumentResultat(false, IKKE_JOURNALFORT);
+            }
         } else if (erFeilregistrert(journalpost)) {
             return new HentDokumentResultat(false, FEILREGISTRERT);
         } else if (!erInnsenderSakspart(journalpost, fnr)) {
@@ -68,14 +76,34 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return joarkService.hentJournalpost(journalpostId);
     }
 
-    private boolean erJournalfort(WSJournalpost journalPost) {
-        WSJournalstatuser journalstatus = journalPost.getJournalstatus();
-        boolean erJournalfort = journalstatus != null && STATUS_JOURNALFORT.equalsIgnoreCase(journalstatus.getValue());
+    private boolean erJournalfort(WSJournalpost journalpost) {
+        WSJournalstatuser journalstatus = journalpost.getJournalstatus();
+        boolean erJournalfort = journalstatus != null && JOURNALPOST_STATUS_JOURNALFORT.equalsIgnoreCase(journalstatus.getValue());
 
         if (!erJournalfort) {
-            logger.warn("Journalposten med id '{}' er ikke journalført.", journalPost.getJournalpostId());
+            logger.warn("Journalposten med id '{}' er ikke journalført.", journalpost.getJournalpostId());
         }
         return erJournalfort;
+    }
+
+    private boolean harStatusUtgaar(WSJournalpost journalpost) {
+        WSJournalstatuser journalstatus = journalpost.getJournalstatus();
+        boolean harStatusUtgaar = journalstatus != null && JOURNALPOST_STATUS_UTGAAR.equalsIgnoreCase(journalstatus.getValue());
+
+        if (harStatusUtgaar) {
+            logger.warn("Journalposten med id '{}' har status utgår (status på journalpost: '').", journalpost.getJournalpostId(), journalstatus);
+        }
+        return harStatusUtgaar;
+    }
+
+    private boolean harUkjentBruker(WSJournalpost journalpost) {
+        WSJournalstatuser journalstatus = journalpost.getJournalstatus();
+        boolean harUkjentBruker = journalstatus != null && JOURNALPOST_STATUS_UKJENT_BRUKER.equalsIgnoreCase(journalstatus.getValue());
+
+        if (harUkjentBruker) {
+            logger.warn("Journalposten med id '{}' har ukjent bruker (status på journalpost: '').", journalpost.getJournalpostId(), journalstatus);
+        }
+        return harUkjentBruker;
     }
 
     private boolean erFeilregistrert(WSJournalpost journalpost) {

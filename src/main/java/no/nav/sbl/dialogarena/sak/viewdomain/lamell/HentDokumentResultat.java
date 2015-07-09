@@ -10,6 +10,8 @@ public class HentDokumentResultat {
     public enum Feilmelding {
         SIKKERHETSBEGRENSNING("vedlegg.feilmelding.joark.sikkerhetsbegrensning.head", "vedlegg.feilmelding.joark.sikkerhetsbegrensning.lead"),
         IKKE_JOURNALFORT("vedlegg.feilmelding.joark.ikkejournalfort.head", "vedlegg.feilmelding.joark.ikkejournalfort.lead"),
+        STATUS_UTGAAR("vedlegg.feilmelding.joark.statusutgaar.head", "vedlegg.feilmelding.joark.statusutgaar.lead"),
+        UKJENT_BRUKER("vedlegg.feilmelding.joark.ukjentbruker.head", "vedlegg.feilmelding.joark.ukjentbruker.lead"),
         FEILREGISTRERT("vedlegg.feilmelding.joark.feilregistrert.head", "vedlegg.feilmelding.joark.feilregistrert.lead"),
         IKKE_SAKSPART("vedlegg.feilmelding.ikkesakspart.head", "vedlegg.feilmelding.ikkesakspart.lead"),
         INGEN_TILGANG("vedlegg.feilmelding.ikketilgang.head", "vedlegg.feilmelding.ikketilgang.lead"),

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
@@ -54,6 +55,8 @@ public class TilgangskontrollServiceTest {
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
+
+        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
     @Test
@@ -74,6 +77,26 @@ public class TilgangskontrollServiceTest {
         HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(IKKE_JOURNALFORT, hentDokumentResultat.feilmelding);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisJournalpostHarStatusUtgaar() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakMedSakspart();
+        setStatusUtgaarOgIkkeFeilRegistrert();
+
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        assertFalse(hentDokumentResultat.harTilgang);
+        assertEquals(STATUS_UTGAAR, hentDokumentResultat.feilmelding);
+    }
+
+    @Test
+    public void harIkkeTilgangHvisJournalpostHarStatusUkjentBruker() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
+        setGsakMedSakspart();
+        setStatusUkjentBrukerOgIkkeFeilRegistrert();
+
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        assertFalse(hentDokumentResultat.harTilgang);
+        assertEquals(UKJENT_BRUKER, hentDokumentResultat.feilmelding);
     }
 
     @Test
@@ -135,6 +158,14 @@ public class TilgangskontrollServiceTest {
         when(joarkService.hentJournalpost(anyString())).thenReturn(createIkkeJournalfortJournalpost());
     }
 
+    private void setStatusUtgaarOgIkkeFeilRegistrert() {
+        when(joarkService.hentJournalpost(anyString())).thenReturn(createStatusUtgaarJournalpost());
+    }
+
+    private void setStatusUkjentBrukerOgIkkeFeilRegistrert() {
+        when(joarkService.hentJournalpost(anyString())).thenReturn(createUkjentBrukerJournalpost());
+    }
+
     private void setJournalfortOgIkkeFeilRegistrert() {
         when(joarkService.hentJournalpost(anyString())).thenReturn(createOKJournalpost());
     }
@@ -194,6 +225,22 @@ public class TilgangskontrollServiceTest {
         return new WSJournalpost()
                 .withJournalpostId("journalpostid")
                 .withJournalstatus(createJournalstatus("N"))
+                .withArkivtema(new WSArkivtemaer().withValue("arkivtema"))
+                .withGjelderSak(createSak(false));
+    }
+
+    private WSJournalpost createStatusUtgaarJournalpost() {
+        return new WSJournalpost()
+                .withJournalpostId("journalpostid")
+                .withJournalstatus(createJournalstatus("U"))
+                .withArkivtema(new WSArkivtemaer().withValue("arkivtema"))
+                .withGjelderSak(createSak(false));
+    }
+
+    private WSJournalpost createUkjentBrukerJournalpost() {
+        return new WSJournalpost()
+                .withJournalpostId("journalpostid")
+                .withJournalstatus(createJournalstatus("UB"))
                 .withArkivtema(new WSArkivtemaer().withValue("arkivtema"))
                 .withGjelderSak(createSak(false));
     }
