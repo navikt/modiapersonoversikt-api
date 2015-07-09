@@ -1,6 +1,7 @@
 var React = require('react/addons');
 var Utils = require('./../utils');
 var sanitize = require('sanitize-html');
+var format = require('string-format');
 
 var Melding = React.createClass({
     render: function () {
@@ -16,7 +17,12 @@ var Melding = React.createClass({
         meldingsStatusTekst += melding.temagruppeNavn;
 
         var erJournalfort = melding.journalfortTemanavn ? true : false;
-        var journalfortMelding = 'Journalført av: ' + melding.journalfortAv.navn + ' (' + melding.journalfortAvNavIdent + ') | ' + melding.journalfortTemanavn;
+        var journalfortMelding = format('Journalført av: {} ({}) | {} | {} | Saksid {}',
+            melding.journalfortAv.navn,
+            melding.journalfortAvNavIdent,
+            melding.journalfortDatoTekst,
+            melding.journalfortTemanavn,
+            melding.journalfortSaksId);
         var journalfortVisning = !erJournalfort ? null :
             <div className="journalpost-link">
                 <div className="journalpost-element ikon">
