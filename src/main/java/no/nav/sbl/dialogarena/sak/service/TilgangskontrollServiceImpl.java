@@ -40,9 +40,9 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    private final String JOURNALPOST_STATUS_JOURNALFORT = "J";
-    private final String JOURNALPOST_STATUS_UTGAAR = "U";
-    private final String JOURNALPOST_STATUS_UKJENT_BRUKER = "UB";
+    private static final String JOURNALPOST_STATUS_JOURNALFORT = "J";
+    private static final String JOURNALPOST_STATUS_UTGAAR = "U";
+    private static final String JOURNALPOST_STATUS_UKJENT_BRUKER = "UB";
 
     public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
         return sjekkTilgang(journalpostId, fnr);
