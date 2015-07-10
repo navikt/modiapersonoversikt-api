@@ -4,7 +4,6 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.OppgaveTilknytningPanel;
@@ -38,6 +37,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class FortsettDialogFormElementer extends WebMarkupContainer {
@@ -114,7 +114,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         journalforingsPanel.add(visibleIf(
                 both(brukerKanSvare.getModel())
                         .and(not(model.getObject().traadJournalfort()))
-                        .and(not(Model.of(model.getObject().gjeldendeTemagruppe == Temagruppe.OKSOS)))));
+                        .and(not(Model.of(KOMMUNALE_TJENESTER.contains(model.getObject().gjeldendeTemagruppe))))));
         add(journalforingsPanel);
 
         avhengerAvKanlOgDelMedBrukerValg.add(kanalbeskrivelse);

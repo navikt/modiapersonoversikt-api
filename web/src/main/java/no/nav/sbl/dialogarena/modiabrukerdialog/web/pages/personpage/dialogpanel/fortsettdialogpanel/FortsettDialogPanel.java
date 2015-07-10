@@ -45,6 +45,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
@@ -180,7 +181,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             sendKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    if (henvendelseVM.getObject().gjeldendeTemagruppe != Temagruppe.OKSOS
+                    if (!KOMMUNALE_TJENESTER.contains(henvendelseVM.getObject().gjeldendeTemagruppe)
                             && henvendelseVM.getObject().brukerKanSvareSkalEnables().getObject()
                             && henvendelseVM.getObject().brukerKanSvare
                             && henvendelseVM.getObject().valgtSak == null
