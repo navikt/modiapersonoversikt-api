@@ -20,7 +20,7 @@ public class FocusHandler {
     public static void handleEvent(Page page, IEvent<?> event) {
         if (event.getPayload().getClass() == String.class) {
             String payload = ((String) event.getPayload());
-            Closure<Page> handler = eventHandlers.get(payload);
+            Closure<Page> handler = EVENT_HANDLERS.get(payload);
             if (handler != null) {
                 handler.execute(page);
             }
@@ -47,7 +47,7 @@ public class FocusHandler {
         }
     };
 
-    private static final Map<String, Closure<Page>> eventHandlers = new HashMap<String, Closure<Page>>() {{
+    private static final Map<String, Closure<Page>> EVENT_HANDLERS = new HashMap<String, Closure<Page>>() {{
         put(SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT, FOKUS_SOK_FELT);
         put(LeggTilbakePanel.LEGG_TILBAKE_FERDIG, FOKUS_SOK_FELT);
         put(Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG, FOKUS_SOK_FELT);

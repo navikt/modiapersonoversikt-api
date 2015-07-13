@@ -47,7 +47,6 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
 
     public FortsettDialogFormElementer(String id, GrunnInfo grunnInfo, final IModel<HenvendelseVM> model) {
         super(id, model);
-
         final List<Component> avhengerAvKanlOgDelMedBrukerValg = new ArrayList<>();
 
         EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", model,
@@ -137,10 +136,8 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
             }
         });
 
-        List<FeedbackLabel> feedbackLabels = asList(
-                FeedbackLabel.create(tekstfelt),
-                FeedbackLabel.create(kanalRadioGroup),
-                FeedbackLabel.create(journalforingsPanel)
+        List<FeedbackLabel> feedbackLabels = asList( FeedbackLabel.create(tekstfelt),
+                FeedbackLabel.create(kanalRadioGroup), FeedbackLabel.create(journalforingsPanel)
         );
         avhengerAvKanlOgDelMedBrukerValg.addAll(feedbackLabels);
 

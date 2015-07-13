@@ -20,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -47,6 +48,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
@@ -114,13 +116,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         kanalbeskrivelse.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
         form.add(kanalbeskrivelse);
 
-        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
-                new EnhancedTextAreaConfigurator()
-                        .withMaxCharCount(5000)
-                        .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
-        );
-        tekstfelt.setOutputMarkupId(true);
+        EnhancedTextArea tekstfelt = lagTekstFelt(form);
 
         Label tekstfeltLabel = new Label("tekstfelt-label", new StringResourceModel("${modus}.overskrift", getModel()));
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
@@ -172,17 +168,32 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         kvittering = new KvitteringsPanel("kvittering");
 
-        List<FeedbackLabel> feedbackLabels = asList(
-                FeedbackLabel.create(tekstfelt),
-                FeedbackLabel.create(temagruppeVelger),
-                FeedbackLabel.create(journalforingsPanel),
-                FeedbackLabel.create(radioGroup)
-        );
+        List<FeedbackLabel> feedbackLabels = leggTilFeedbackLabels(journalforingsPanel, tekstfelt, radioGroup, temagruppeVelger);
 
         modusKomponenter.addAll(feedbackLabels);
         form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
 
         add(form, kvittering);
+    }
+
+    private List<FeedbackLabel> leggTilFeedbackLabels(Component... components) {
+        return on(components).map(new Transformer<Component, FeedbackLabel>() {
+            @Override
+            public FeedbackLabel transform(Component component) {
+                return FeedbackLabel.create(component);
+            }
+        }).collect();
+    }
+
+    private EnhancedTextArea lagTekstFelt(Form<HenvendelseVM> form) {
+        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
+                new EnhancedTextAreaConfigurator()
+                        .withMaxCharCount(5000)
+                        .withMinTextAreaHeight(250)
+                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
+        );
+        tekstfelt.setOutputMarkupId(true);
+        return tekstfelt;
     }
 
     private AjaxButton getSubmitKnapp(final PropertyModel<Modus> modusModel, final Form<HenvendelseVM> form) {
