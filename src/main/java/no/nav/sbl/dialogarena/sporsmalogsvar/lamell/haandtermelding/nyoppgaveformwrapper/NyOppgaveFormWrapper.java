@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
 import com.codahale.metrics.Timer;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
@@ -31,7 +32,6 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 
@@ -70,6 +70,8 @@ public class NyOppgaveFormWrapper extends Panel {
         this.ansattVelger = lagAnsattVelger();
         this.prioritetVelger = lagPrioritetVelger();
         this.underkategoriVelger = lagUnderkategoriVelger();
+        MarkupContainer temaVelger = lagTemaVelger();
+        TextArea<String> beskrivelse = new TextArea<>("beskrivelse");
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
@@ -81,14 +83,22 @@ public class NyOppgaveFormWrapper extends Panel {
         form.setOutputMarkupId(true);
         form.add(visibleIf(not(oppgaveOpprettet)));
         form.add(
-                lagTemaVelger(),
+                temaVelger,
                 typeVelger,
                 enhetVelger,
                 ansattVelger,
                 prioritetVelger,
                 underkategoriVelger,
-                new TextArea<String>("beskrivelse").setRequired(true),
-                feedbackPanelError);
+                beskrivelse.setRequired(true),
+                feedbackPanelError,
+                FeedbackLabel.create(temaVelger),
+                FeedbackLabel.create(typeVelger),
+                FeedbackLabel.create(enhetVelger),
+                FeedbackLabel.create(prioritetVelger),
+                FeedbackLabel.create(beskrivelse)
+        );
+
+
         form.add(new IndicatingAjaxButtonWithImageUrl("opprettoppgave", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
@@ -111,6 +121,7 @@ public class NyOppgaveFormWrapper extends Panel {
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanelError);
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
         });
 
@@ -186,7 +197,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 not(isEmptyList(underkategoriModel)))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
-        underkategoriContainer.add(hasCssClassIf("hidden", not(visUnderkategoriValg)));
+        underkategoriContainer.add(visibleIf(visUnderkategoriValg));
 
         return underkategoriContainer;
     }
@@ -219,7 +230,7 @@ public class NyOppgaveFormWrapper extends Panel {
         typeContainer.setOutputMarkupPlaceholderTag(true);
 
         typeContainer.add(typeDropdown);
-        typeContainer.add(hasCssClassIf("hidden", isEmptyList(typeModel)));
+        typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
 
         return typeContainer;
     }
@@ -251,7 +262,7 @@ public class NyOppgaveFormWrapper extends Panel {
         IModel<Boolean> visEnhetsValg = both(not(isEmptyList(enhetModel)))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema"))))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.OppgaveType>(form.getModel(), "type"))));
-        enhetContainer.add(hasCssClassIf("hidden", not(visEnhetsValg)));
+        enhetContainer.add(visibleIf(visEnhetsValg));
 
         return enhetContainer;
     }
@@ -293,7 +304,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 not(isEmptyList(prioritetModel)))
                 .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
-        prioritetContainer.add(hasCssClassIf("hidden", not(visPrioritetsValg)));
+        prioritetContainer.add(visibleIf(visPrioritetsValg));
 
         return prioritetContainer;
     }

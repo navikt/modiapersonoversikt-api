@@ -5,10 +5,12 @@
 <body>
 <wicket:panel>
     <form wicket:id="nyoppgaveform">
+        <div wicket:id="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
         <label>
             <wicket:message key="nyoppgave.form.label.tema"/>
             <select wicket:id="tema"></select>
         </label>
+        <span wicket:id="tema_feedback"></span>
         <label wicket:id="underkategoriContainer">
             <wicket:message key="nyoppgave.form.label.underkategori"/>
             <select wicket:id="underkategori"></select>
@@ -17,6 +19,7 @@
             <wicket:message key="nyoppgave.form.label.oppgavetype"/>
             <select wicket:id="type"></select>
         </label>
+        <span wicket:id="typeContainer_feedback"></span>
         <label wicket:id="enhetContainer">
             <wicket:message key="nyoppgave.form.label.tilenhet"/>
             <select wicket:id="enhet">
@@ -33,6 +36,7 @@
                 </optgroup>
             </select>
         </label>
+        <span wicket:id="enhetContainer_feedback"></span>
         <label wicket:id="ansattContainer">
             <wicket:message key="nyoppgave.form.label.tilansatt"/>
             <select wicket:id="ansatte"></select>
@@ -41,13 +45,14 @@
             <wicket:message key="nyoppgave.form.label.prioritet"/>
             <select wicket:id="prioritet"></select>
         </label>
+        <span wicket:id="prioritetContainer_feedback"></span>
         <label>
             <wicket:message key="nyoppgave.form.label.beskrivelse"/>
             <textarea wicket:id="beskrivelse"></textarea>
         </label>
+        <span wicket:id="beskrivelse_feedback"></span>
 
         <hr class="linje"/>
-        <div wicket:id="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
         <input type="submit"
                class="knapp-hoved-stor"
                wicket:id="opprettoppgave"
