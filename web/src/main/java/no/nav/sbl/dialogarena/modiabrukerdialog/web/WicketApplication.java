@@ -5,6 +5,7 @@ import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.errorhandling.ModiaApplicationConfigurator;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.modia.lamell.LamellPanel;
 import no.nav.modig.modia.lamell.ModalErrorPanel;
 import no.nav.modig.modia.liste.EkspanderingsListe;
@@ -214,7 +215,8 @@ public class WicketApplication extends WebApplication {
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS,
                         Innboks.BESVAR_INDIKATOR_JS,
-                        FancySelect.JS
+                        FancySelect.JS,
+                        FeedbackLabel.JS
                 )
                 .withModules(ReactResources.REACT_KOMPONENTER)
                 .withResourcePacking(this.usesDeploymentConfig())
