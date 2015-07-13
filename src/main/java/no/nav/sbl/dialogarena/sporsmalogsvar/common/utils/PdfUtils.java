@@ -26,7 +26,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class PdfUtils {
 
-    public static final Map<Temagruppe, String> temagruppeMap;
+    public static final Map<Temagruppe, String> TEMAGRUPPE_MAP;
 
     static {
         HashMap<Temagruppe, String> map = new HashMap<>();
@@ -40,7 +40,7 @@ public class PdfUtils {
         map.put(UFRT, "Uføretrygd");
         map.put(OKSOS, "Økonomisk sosialhjelp");
         map.put(ANSOS, "Andre sosiale tjenester");
-        temagruppeMap = unmodifiableMap(map);
+        TEMAGRUPPE_MAP = unmodifiableMap(map);
     }
 
     public static byte[] genererPdfForPrint(List<MeldingVM> meldinger) {
@@ -138,7 +138,7 @@ public class PdfUtils {
             if (isBlank(temagruppe)) {
                 return "";
             }
-            return "Temagruppe: " + temagruppeMap.get(Temagruppe.valueOf(temagruppe));
+            return "Temagruppe: " + TEMAGRUPPE_MAP.get(Temagruppe.valueOf(temagruppe));
         }
     }
 

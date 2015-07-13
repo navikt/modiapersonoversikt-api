@@ -72,7 +72,7 @@ public class PdfUtilsTest {
     @Test
     public void harMappingForSamtligeTemagrupper() {
         for (Temagruppe temagruppe : Temagruppe.values()) {
-            assertTrue(PdfUtils.temagruppeMap.containsKey(temagruppe));
+            assertTrue(PdfUtils.TEMAGRUPPE_MAP.containsKey(temagruppe));
         }
     }
 }
