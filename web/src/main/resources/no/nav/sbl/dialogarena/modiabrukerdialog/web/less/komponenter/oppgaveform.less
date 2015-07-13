@@ -4,7 +4,7 @@
     position: relative;
     float: right;
     width: 16rem;
-    > a,input {
+    > a, input {
       height: 56px;
       line-height: 56px;
       float: right;
@@ -24,11 +24,11 @@
         float: left;
         &:hover {
           background-color: @blue;
-          outline:none;
+          outline: none;
 
           &:after {
             border-top-color: @blue;
-            outline:none;
+            outline: none;
           }
         }
         &.plukket {
@@ -93,16 +93,17 @@
     }
   }
   .feedback .feedbackPanel {
-    position: absolute;
-    top: -1.3rem;
-    right: 0;
-    color: @errorTextLight;
-    font-size: @fontSizeMini;
+    color: #BA3A26;
     background: transparent;
     padding: 0;
     margin: 0;
+    margin-bottom: 0.5rem;
+    list-style-type: none;
     li:before {
       content: " ";
+    }
+    li {
+      font-style: normal;
     }
   }
 }

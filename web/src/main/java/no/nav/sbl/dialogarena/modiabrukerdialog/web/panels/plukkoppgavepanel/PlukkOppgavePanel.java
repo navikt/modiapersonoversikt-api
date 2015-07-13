@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import com.codahale.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -12,6 +13,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -57,13 +59,11 @@ public class PlukkOppgavePanel extends Panel {
         Form<Temagruppe> form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
         form.setOutputMarkupId(true);
 
-        feedbackPanel = new AriaFeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-        feedbackPanel.setOutputMarkupPlaceholderTag(true);
 
         velgtemagruppeKnapp = new Label("velg-temagruppe-knapp");
         velgtemagruppeKnapp.setOutputMarkupId(true);
 
-        RadioGroup radioGroup = new RadioGroup<>("temagruppe", valgtTemagruppe);
+        final RadioGroup radioGroup = new RadioGroup<>("temagruppe", valgtTemagruppe);
         radioGroup.setRenderBodyOnly(false);
         radioGroup.setRequired(true);
         radioGroup.setOutputMarkupPlaceholderTag(true);
@@ -76,10 +76,19 @@ public class PlukkOppgavePanel extends Panel {
             }
         });
 
+        feedbackPanel = new AriaFeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this) {
+            @Override
+            public boolean accept(FeedbackMessage message) {
+                return super.accept(message) && message.getReporter() != radioGroup;
+            }
+        });
+        feedbackPanel.setOutputMarkupPlaceholderTag(true);
+
         form.add(velgtemagruppeKnapp, new PlukkOppgaveKnapp("plukkOppgave"),
                 radioGroup,
                 new PlukkOppgaveKnapp("PlukkOppgaveFraTemaliste"),
-                feedbackPanel);
+                feedbackPanel,
+                FeedbackLabel.create(radioGroup));
 
         add(form);
     }
@@ -115,7 +124,9 @@ public class PlukkOppgavePanel extends Panel {
                     redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().henvendelseId, oppgave.get().oppgaveId);
                 } else {
                     error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
+                    target.prependJavaScript("fokusPlukkOppgaveTemagruppe();");
                     target.add(feedbackPanel, PlukkOppgavePanel.this.velgtemagruppeKnapp);
+                    FeedbackLabel.addFormLabelsToTarget(target, submitForm);
                 }
             } finally {
                 timer.stop();
@@ -126,6 +137,7 @@ public class PlukkOppgavePanel extends Panel {
         protected void onError(AjaxRequestTarget target, Form<?> form) {
             target.add(feedbackPanel, PlukkOppgavePanel.this.velgtemagruppeKnapp);
             target.prependJavaScript("fokusPlukkOppgaveTemagruppe();");
+            FeedbackLabel.addFormLabelsToTarget(target, form);
         }
 
         private void redirectForAaBesvareOppgave(Serializable fnr, Serializable henvendelseid, Serializable oppgaveid) {
