@@ -35,14 +35,14 @@ public class JournalforingsPanel extends Panel {
         sakValgt.add(new Label("valgtSaksDatoFormatert"));
         sakValgt.add(new Label("valgtSak.temaNavn"));
         sakValgt.add(new Label("valgtSak.saksIdVisning"));
+        velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM);
 
         hiddenField = new HiddenField<>("sak-validering", Model.of(""));
-
+        oppdaterHiddenFelt();
         hiddenField.setOutputMarkupId(true);
         hiddenField.setRequired(true);
         add(hiddenField);
 
-        velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM);
 
         AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
             @Override

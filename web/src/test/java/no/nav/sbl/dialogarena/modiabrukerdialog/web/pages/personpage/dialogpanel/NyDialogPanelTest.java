@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Before;
 import org.junit.Test;
@@ -153,6 +154,8 @@ public class NyDialogPanelTest extends WicketPageTest {
 
         Sak sak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
         testNyDialogPanel.getModelObject().valgtSak = sak;
+        testNyDialogPanel.get("nydialogform:journalforing:sak-validering").setDefaultModel(Model.of("OK"));
+
 
         wicket.goToPageWith(testNyDialogPanel)
                 .inForm(withId("nydialogform"))
