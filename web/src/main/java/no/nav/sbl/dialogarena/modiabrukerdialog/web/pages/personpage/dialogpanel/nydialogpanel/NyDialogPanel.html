@@ -13,7 +13,10 @@
 
             <div wicket:id="epostVarsel"></div>
 
+            <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
             <div wicket:id="journalforing" class="journalforingSporsmal"></div>
+            <span wicket:id="journalforing_feedback" class="journalforing-feedback"></span>
 
             <div wicket:id="oppgaveTilknytningPanel"></div>
 
@@ -32,27 +35,33 @@
             </div>
             <label wicket:id="tekstfelt-label" class="hidden"></label>
             <section wicket:id="tekstfelt" class="tekstfelt"></section>
+            <span wicket:id="tekstfelt_feedback" class="tekstfelt-feedback"></span>
+
             <section class="kanalvelger clearfix">
                 <fieldset class="wcag">
                     <legend>
                         <wicket:message key="nydialogpanel.kanal.legend"/>
                     </legend>
-                    <div wicket:id="kanal">
-                        <div wicket:id="kanalvalg" class="kanalvalg">
-                            <input wicket:id="kanalknapp" type="radio"/>
-                            <label wicket:id="kanalknapp-label">
-                                <span wicket:id="kanalikon"></span>
-                                <span wicket:id="kanalknapp-label-tekst" class="hidden"></span>
-                            </label>
+                    <div wicket:id="kanal" class="radioknapper-blokk clearfix">
+                        <div class="radioknapper">
+                            <div wicket:id="kanalvalg" class="kanalvalg">
+                                <input wicket:id="kanalknapp" type="radio"/>
+                                <label wicket:id="kanalknapp-label">
+                                    <span wicket:id="kanalikon"></span>
+                                    <span wicket:id="kanalknapp-label-tekst" class="hidden"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
+                    <span wicket:id="kanal_feedback" class="kanal-feedback"></span>
                 </fieldset>
             </section>
-            <div class="temagruppevelger-wrapper">
+            <div class="temagruppevelger-wrapper clearfix">
                 <label class="hidden" wicket:for="temagruppe">
                     <wicket:message key="nydialogform.temagruppe.null"></wicket:message>
                 </label>
                 <select wicket:id="temagruppe" class="temagruppevelger"></select>
+                <span wicket:id="temagruppe_feedback" class="temagruppe-feedback"></span>
             </div>
             <div wicket:id="brukerKanSvareContainer" class="brukerkansvar">
                 <input type="checkbox" id="brukerKanSvare" checked="checked" disabled="disabled"/>
@@ -60,7 +69,6 @@
                     <wicket:message key="dialogpanel.brukerKanSvare"/>
                 </label>
             </div>
-            <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
             <input type="submit" wicket:id="send" class="send knapp-hoved lang-tekst"/>
 
             <div>

@@ -31,7 +31,7 @@
     }
   }
   .modusVelger, .popupContainer {
-    input[type=radio] + label {
+    input[type=radio][name] + label {
       margin: 0 auto;
       color: #3e3832;
       padding: 5px 5px 5px 37px;
@@ -40,7 +40,7 @@
       background-position: 5px !important;
       width: 11rem;
     }
-    input[type=radio]:focus + label {
+    input[type=radio][name]:focus + label {
       border-color: #0067c5;
     }
   }
@@ -192,7 +192,7 @@
     text-transform: uppercase;
   }
   .kanalvelger {
-    margin: 1em auto;
+    margin: 1rem 2rem;
     text-align: center;
     .kanalvalg {
       display: inline;
@@ -345,6 +345,9 @@
           white-space: nowrap;
         }
       }
+      &.invalid span.ui-selectmenu-text {
+        color: black !important;
+      }
     }
   }
   input[type=checkbox] {
@@ -365,6 +368,26 @@
 
   .feedback {
     margin: 0 @sideMargin;
+  }
+
+  .feedbacklabel {
+    &.kanal-feedback {
+      float: left;
+    }
+    &.temagruppe-feedback {
+      float: left;
+    }
+    &.tekstfelt-feedback {
+      display: block;
+      margin-left: 2rem;
+    }
+    &.journalforing-feedback {
+      float: left;
+      position: relative;
+      margin-left: 2rem;
+      width: 100%;
+      top: -1rem;
+    }
   }
 }
 
@@ -462,6 +485,7 @@
       span.ui-icon {
         border-top-color: #00a9e0;
       }
+
     }
   }
   .aarsak {

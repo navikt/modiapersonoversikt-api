@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
@@ -169,6 +170,16 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         kvittering = new KvitteringsPanel("kvittering");
 
+        List<FeedbackLabel> feedbackLabels = asList(
+                FeedbackLabel.create(tekstfelt),
+                FeedbackLabel.create(temagruppeVelger),
+                FeedbackLabel.create(journalforingsPanel),
+                FeedbackLabel.create(radioGroup)
+        );
+
+        modusKomponenter.addAll(feedbackLabels);
+        form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
+
         add(form, kvittering);
     }
 
@@ -185,8 +196,9 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
+            protected void onError(final AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
 
         };
@@ -238,12 +250,14 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private RadioGroup<Kanal> lagKanalVelger(IModel<Modus> modusModel) {
-        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
+        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal", new PropertyModel<Kanal>(getModel(), "kanal"));
         modusKomponenter.add(radioGroup);
+
+
         radioGroup.setOutputMarkupPlaceholderTag(true);
         radioGroup.setRequired(true);
         radioGroup.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
-        radioGroup.add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
+        ListView<Kanal> kanalvalg = new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
             @Override
             protected void populateItem(ListItem<Kanal> item) {
                 String kanalType = item.getModelObject().name();
@@ -263,7 +277,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 kanalknappLabel.add(kanalknappLabelTekst, kanalIkon);
                 item.add(kanalKnapp, kanalknappLabel);
             }
-        });
+        };
+        radioGroup.add(kanalvalg);
 
         return radioGroup;
     }

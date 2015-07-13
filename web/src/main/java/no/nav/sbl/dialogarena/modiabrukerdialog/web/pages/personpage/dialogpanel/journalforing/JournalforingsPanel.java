@@ -7,6 +7,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -17,8 +18,9 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 public class JournalforingsPanel extends Panel {
 
     public static final String SAK_VALGT = "events.local.journalforing.sak.valgt";
+    private final HiddenField hiddenField;
 
-    public JournalforingsPanel(String id, String fnr, IModel<HenvendelseVM> henvendelseVM) {
+    public JournalforingsPanel(String id, String fnr, final IModel<HenvendelseVM> henvendelseVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
@@ -30,6 +32,12 @@ public class JournalforingsPanel extends Panel {
         sakValgt.add(new Label("valgtSaksDatoFormatert"));
         sakValgt.add(new Label("valgtSak.temaNavn"));
         sakValgt.add(new Label("valgtSak.saksIdVisning"));
+
+        hiddenField = new HiddenField<>("sak-validering", Model.of(""));
+
+        hiddenField.setOutputMarkupId(true);
+        hiddenField.setRequired(true);
+        add(hiddenField);
 
         final AjaxLazyLoadVelgSakPanel velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM);
 
@@ -50,6 +58,7 @@ public class JournalforingsPanel extends Panel {
         valgtSakLenke.add(ingenSakValgt, sakValgt);
         valgtSakLenke.add(new PilOppNed("pilVelgSaker", velgSakPanelOpen));
 
+
         AriaHelpers.toggleButtonConnector(valgtSakLenke, velgSakPanel, velgSakPanelOpen);
 
         add(valgtSakLenke, velgSakPanel);
@@ -57,6 +66,7 @@ public class JournalforingsPanel extends Panel {
 
     @RunOnEvents(SAK_VALGT)
     public void oppdaterPanel(AjaxRequestTarget target) {
+        hiddenField.setModel(Model.of("valgt"));
         target.add(this);
     }
 

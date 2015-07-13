@@ -4,20 +4,22 @@
 <head></head>
 <body>
 <wicket:panel>
+    <input wicket:id="sak-validering" type="hidden" name="sak-validering" class="hidden" aria-hidden="true"/>
     <a href="#" wicket:id="valgtSakLenke" class="sak-info-link" role="button">
         <div class="sak-info">
             <div wicket:id="ingenSakValgt" class="venstrestilt">Velg sak</div>
             <div wicket:id="sakValgt" class="venstrestilt">
                 <span wicket:id="valgtSaksDatoFormatert"></span>
-                <span class = "skillestrek">|</span>
+                <span class="skillestrek">|</span>
                 <span wicket:id="valgtSak.temaNavn"></span>
-                <span class = "skillestrek">|</span>
+                <span class="skillestrek">|</span>
                 <span wicket:id="valgtSak.saksIdVisning"></span>
             </div>
             <div class="hoyrestilt"><i wicket:id="pilVelgSaker" class="pil"></i></div>
             <div class="clear"></div>
         </div>
     </a>
+
     <div wicket:id="velgSak" class="journalforingpanel"></div>
 </wicket:panel>
 </body>
