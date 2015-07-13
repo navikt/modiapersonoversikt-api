@@ -47,7 +47,6 @@ public class VelgSakPanel extends Panel {
         form.add(
                 feedbackPanel,
                 sakerRadioGroup,
-                FeedbackLabel.create(sakerRadioGroup),
                 getSubmitLenke(feedbackPanel));
         add(
                 form,
@@ -77,7 +76,6 @@ public class VelgSakPanel extends Panel {
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
-                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
         };
     }
