@@ -72,6 +72,7 @@ public class NyOppgaveFormWrapper extends Panel {
         this.underkategoriVelger = lagUnderkategoriVelger();
         MarkupContainer temaVelger = lagTemaVelger();
         TextArea<String> beskrivelse = new TextArea<>("beskrivelse");
+        beskrivelse.setOutputMarkupId(true);
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
@@ -159,6 +160,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 form.getModelObject().underkategori = null;
 
                 target.add(typeVelger, enhetVelger, ansattVelger, prioritetVelger, underkategoriVelger);
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
 
             @Override
