@@ -55,7 +55,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
         wicket
                 .goToPageWith(panel)
                 .inForm("panel:plukkSakForm")
-                .select("valgtTraad.journalfortSak", 0)
+                .select("sakerwrapper:valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
 
         verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), any(Sak.class));
@@ -72,7 +72,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
                 .submitWithAjaxButton(withId("journalforTraad"));
 
         List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, contains(journalforingsPanel.get("plukkSakForm:valgtTraad.journalfortSak").getString("valgtTraad.journalfortSak.Required")));
+        assertThat(errorMessages, contains(journalforingsPanel.get("plukkSakForm:sakerwrapper:valgtTraad.journalfortSak").getString("valgtTraad.journalfortSak.Required")));
     }
 
 }
