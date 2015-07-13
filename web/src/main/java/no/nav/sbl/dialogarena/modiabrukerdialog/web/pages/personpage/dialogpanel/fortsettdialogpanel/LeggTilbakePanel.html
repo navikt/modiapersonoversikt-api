@@ -6,6 +6,7 @@
     <div class="robust-strek"></div>
     <h4 wicket:id="temagruppe"></h4>
     <form wicket:id="leggtilbakeform">
+        <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
         <div wicket:id="valgtAarsak" class="valgtAarsak" role="radiogroup" tabindex="-1" wicket:message="aria-label:aria.radiogroup.tekst">
             <div wicket:id="temagruppeWrapper" class="aarsak feiltema">
                 <input wicket:id="feiltema" type="radio" wicket:message="aria-label:leggtilbake.feiltema"/>
@@ -25,7 +26,6 @@
             <textarea wicket:id="annenAarsakTekst"></textarea>
         </div>
         <div wicket:id="temagruppewrapper-dropdown" class="temagruppevelger-wrapper"></div>
-        <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
         <hr class="linje" />
 
