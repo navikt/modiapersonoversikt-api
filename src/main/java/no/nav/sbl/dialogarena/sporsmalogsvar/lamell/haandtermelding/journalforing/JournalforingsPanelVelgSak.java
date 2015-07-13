@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -11,6 +12,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -40,10 +42,16 @@ public class JournalforingsPanelVelgSak extends Panel {
 
         sakerVM = new SakerVM(innboksVM, sakerService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(innboksVM));
+        SakerRadioGroup sakerRadioGroup = new SakerRadioGroup("valgtTraad.journalfortSak", sakerVM);
+        WebMarkupContainer sakerwrapper = new WebMarkupContainer("sakerwrapper");
+        sakerwrapper.setOutputMarkupId(true);
+
+        sakerwrapper.add(sakerRadioGroup);
         form.add(
                 feedbackPanel,
-                new SakerRadioGroup("valgtTraad.journalfortSak", sakerVM),
-                getSubmitLenke(innboksVM, feedbackPanel));
+                sakerwrapper,
+                getSubmitLenke(innboksVM, feedbackPanel),
+                FeedbackLabel.create(sakerwrapper));
         form.add(visibleIf(sakerVM.sakerFinnes()));
         add(form);
         add(new Label("ingenSaker", new ResourceModel("journalfor.ingensaker")).add(visibleIf(not(sakerVM.sakerFinnes()))));
@@ -69,6 +77,7 @@ public class JournalforingsPanelVelgSak extends Panel {
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
         };
     }
