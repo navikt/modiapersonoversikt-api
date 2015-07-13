@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -135,6 +136,15 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
                 oppdaterAlleElementerSomAvhengerAvKanalOgDelMedBrukerValg(target, avhengerAvKanlOgDelMedBrukerValg);
             }
         });
+
+        List<FeedbackLabel> feedbackLabels = asList(
+                FeedbackLabel.create(tekstfelt),
+                FeedbackLabel.create(kanalRadioGroup),
+                FeedbackLabel.create(journalforingsPanel)
+        );
+        avhengerAvKanlOgDelMedBrukerValg.addAll(feedbackLabels);
+
+        add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
     }
 
     private void oppdaterAlleElementerSomAvhengerAvKanalOgDelMedBrukerValg(AjaxRequestTarget target, List<Component> avhengerAvKanlOgDelMedBrukerValg) {

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import com.codahale.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -196,6 +197,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 @Override
                 protected void onError(AjaxRequestTarget target, Form<?> form) {
                     target.add(feedbackPanel);
+                    FeedbackLabel.addFormLabelsToTarget(target, form);
                 }
             };
             sendKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
