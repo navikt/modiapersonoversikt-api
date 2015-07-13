@@ -19,9 +19,12 @@ public class JournalforingsPanel extends Panel {
 
     public static final String SAK_VALGT = "events.local.journalforing.sak.valgt";
     private final HiddenField hiddenField;
+    private final IModel<HenvendelseVM> henvendelseVM;
+    private final AjaxLazyLoadVelgSakPanel velgSakPanel;
 
     public JournalforingsPanel(String id, String fnr, final IModel<HenvendelseVM> henvendelseVM) {
         super(id);
+        this.henvendelseVM = henvendelseVM;
         setOutputMarkupPlaceholderTag(true);
 
         WebMarkupContainer ingenSakValgt = new WebMarkupContainer("ingenSakValgt");
@@ -39,12 +42,14 @@ public class JournalforingsPanel extends Panel {
         hiddenField.setRequired(true);
         add(hiddenField);
 
-        final AjaxLazyLoadVelgSakPanel velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM);
+        velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM);
 
         AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 velgSakPanel.togglePanel(target);
+                oppdaterHiddenFelt();
+                target.add(hiddenField);
                 target.add(this);
             }
         };
@@ -64,9 +69,17 @@ public class JournalforingsPanel extends Panel {
         add(valgtSakLenke, velgSakPanel);
     }
 
+    private void oppdaterHiddenFelt() {
+        if (henvendelseVM.getObject().valgtSak != null || velgSakPanel.isVisibilityAllowed()) {
+            hiddenField.setModel(Model.of("valgt"));
+        } else {
+            hiddenField.setModel(Model.of(""));
+        }
+    }
+
     @RunOnEvents(SAK_VALGT)
     public void oppdaterPanel(AjaxRequestTarget target) {
-        hiddenField.setModel(Model.of("valgt"));
+        oppdaterHiddenFelt();
         target.add(this);
     }
 

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing;
 
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
@@ -42,9 +43,11 @@ public class VelgSakPanel extends Panel {
         sakerVM = new SakerVM(sakerService, fnr);
         Form<HenvendelseVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(henvendelseVM));
         form.add(visibleIf(sakerVM.sakerFinnes()));
+        SakerRadioGroup sakerRadioGroup = new SakerRadioGroup("valgtSak", sakerVM);
         form.add(
                 feedbackPanel,
-                new SakerRadioGroup("valgtSak", sakerVM),
+                sakerRadioGroup,
+                FeedbackLabel.create(sakerRadioGroup),
                 getSubmitLenke(feedbackPanel));
         add(
                 form,
@@ -74,6 +77,7 @@ public class VelgSakPanel extends Panel {
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
         };
     }

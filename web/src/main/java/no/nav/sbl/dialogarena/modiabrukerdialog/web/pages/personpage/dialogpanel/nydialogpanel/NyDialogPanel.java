@@ -120,6 +120,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                         .withMinTextAreaHeight(250)
                         .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
         );
+        tekstfelt.setOutputMarkupId(true);
+
         Label tekstfeltLabel = new Label("tekstfelt-label", new StringResourceModel("${modus}.overskrift", getModel()));
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
         form.add(tekstfelt, tekstfeltLabel);
