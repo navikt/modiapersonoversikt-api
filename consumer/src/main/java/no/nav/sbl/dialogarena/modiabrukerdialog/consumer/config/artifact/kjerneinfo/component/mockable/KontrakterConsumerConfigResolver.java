@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable;
 
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
+import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
+import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
 import no.nav.modig.modia.ping.PingResult;
@@ -20,13 +22,13 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mo
 public class KontrakterConsumerConfigResolver {
 
     @Inject
-    private Wrapper<YtelseskontraktServiceBi> ytelseskontraktService;
+    private Wrapper<DefaultYtelseskontraktService> ytelseskontraktService;
 
     @Inject
     private Wrapper<YtelseskontraktServiceBi> ytelseskontraktMock;
 
     @Inject
-    private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktService;
+    private Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService;
 
     @Inject
     private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktMock;
