@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
@@ -46,8 +47,10 @@ public class PeriodeForm extends Panel {
     private Form createForm(String id) {
         Form form = new Form(id);
         form.add(createPeriodeVelger("periodeVelger"),
-            datovelgerContainer,
-            createSokKnapp());
+                datovelgerContainer,
+                FeedbackLabel.create(datovelgerContainer.get("datoFilter:startDate")),
+                FeedbackLabel.create(datovelgerContainer.get("datoFilter:endDate")),
+                createSokKnapp());
         return form;
     }
 
@@ -124,6 +127,7 @@ public class PeriodeForm extends Panel {
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 sendFilterFeilEvent();
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
         };
 
