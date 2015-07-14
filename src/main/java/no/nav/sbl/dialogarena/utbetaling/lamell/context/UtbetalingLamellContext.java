@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.context;
 
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 
+import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ public class UtbetalingLamellContext {
 
     @Bean
     public UtbetalingService utbetalingsService() {
-        return new UtbetalingService();
+        return new UtbetalingServiceImpl();
     }
 
 }
