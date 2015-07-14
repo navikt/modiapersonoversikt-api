@@ -25,13 +25,13 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UtbetalingServiceTest {
+public class UtbetalingServiceImplTest {
 
     @Mock
     private UtbetalingV1 utbetalingV1;
 
     @InjectMocks
-    private UtbetalingService utbetalingService = new UtbetalingService();
+    private UtbetalingServiceImpl utbetalingService = new UtbetalingServiceImpl();
 
     @Test
     public void generererKorrektPeriode() {
@@ -50,7 +50,7 @@ public class UtbetalingServiceTest {
 
     @Test
     public void hentUtbetalingerReturnererKorrekteHovedytelser() {
-        UtbetalingService spyService = spy(utbetalingService);
+        UtbetalingServiceImpl spyService = spy(utbetalingService);
         String fnr = "11223312345";
         LocalDate fom = new LocalDate(2015, 1, 1);
         LocalDate tom = new LocalDate(2015, 1, 2);
@@ -62,7 +62,7 @@ public class UtbetalingServiceTest {
 
     @Test(expected = ApplicationException.class)
     public void haandtererIkkeGyldigPeriodeFeilFraTjenesten() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig, HentUtbetalingsinformasjonPersonIkkeFunnet, HentUtbetalingsinformasjonIkkeTilgang {
-        UtbetalingService spyService = spy(utbetalingService);
+        UtbetalingServiceImpl spyService = spy(utbetalingService);
         String fnr = "11223312345";
         LocalDate fom = new LocalDate(2015, 1, 1);
         LocalDate tom = new LocalDate(2015, 1, 2);
