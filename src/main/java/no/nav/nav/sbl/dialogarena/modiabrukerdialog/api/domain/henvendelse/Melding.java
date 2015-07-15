@@ -1,10 +1,14 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
+import no.nav.modig.lang.option.Optional;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.List;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class Melding implements Serializable {
 
@@ -149,5 +153,17 @@ public class Melding implements Serializable {
             return melding.traadId;
         }
     };
+
+    public static final Transformer<Melding, Meldingstype> TYPE = new Transformer<Melding, Meldingstype>() {
+        @Override
+        public Meldingstype transform(Melding melding) {
+            return melding.meldingstype;
+        }
+    };
+
+    public static Optional<Melding> siste(List<Melding> traad) {
+        List<Melding> sortert = on(traad).collect(NYESTE_FORST);
+        return sortert.isEmpty() ? Optional.<Melding>none() : Optional.optional(sortert.get(0));
+    }
 
 }
