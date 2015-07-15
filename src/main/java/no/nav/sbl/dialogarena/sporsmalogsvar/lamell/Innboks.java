@@ -6,6 +6,7 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -79,10 +80,19 @@ public class Innboks extends Lerret {
             public void onClick(AjaxRequestTarget target) {
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
-                meldingerSok.callFunction(target, "vis", getMeldingerSokProps());
+                meldingerSok.call("vis", getMeldingerSokProps());
                 target.add(meldingerSokToggleContainer);
             }
         };
+        meldingerSok.addCallback("reindekser", Void.class, new ReactComponentCallback<Void>() {
+            @Override
+            public void onCallback(AjaxRequestTarget target, Void data) {
+                innboksVM.oppdaterMeldinger();
+                target.add(alleMeldingerPanel, traaddetaljerPanel);
+                meldingerSok.call("vis", getMeldingerSokProps());
+                target.add(meldingerSokToggleContainer);
+            }
+        });
         meldingerSokToggleButton.add(visibleIf(not(innboksVM.harFeilmelding())));
         meldingerSokToggleContainer.add(meldingerSokToggleButton);
 
