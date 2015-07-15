@@ -1,5 +1,6 @@
 var Utils = require('./../utils');
 var Store = require('./../Store');
+var WicketSender = require('./../reactwicketmixin/wicketsender.js');
 
 var MeldingerSokStore = function () {
     Store.apply(this, arguments);
@@ -8,6 +9,7 @@ var MeldingerSokStore = function () {
     }
     this.state.initialisert = false;
     this.state.feilet = false;
+    this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
 };
 MeldingerSokStore.prototype = $.extend({}, Store.prototype, MeldingerSokStore.prototype);
 
@@ -99,7 +101,7 @@ var hentSokeresultater =
             }.bind(this))
             .fail(function (jqXHR) {
                 if (jqXHR.status == 403) {
-                    $('.innboksSokToggle').click();
+                    this.sendToWicket('reindekser');
                 } else {
                     this.state.feilet = true;
                     this.fireUpdate(this.listeners);

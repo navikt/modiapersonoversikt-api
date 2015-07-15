@@ -8,6 +8,7 @@
   "navReact": "React",
   "components": [
     "utils",
+    "reactwicketmixin",
     "skrivestotte",
     "knagginput",
     "modal",

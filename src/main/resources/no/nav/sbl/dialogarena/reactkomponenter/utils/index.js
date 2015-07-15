@@ -30,7 +30,6 @@ var Utils = {
         };
     },
     adjustScroll: function ($parent, $element) {
-        console.log('scroll', $parent, $element);
         if ($element.length === 0) {
             debugger;
             return;
@@ -38,7 +37,7 @@ var Utils = {
 
         var elementTop = $element.position().top;
         var elementBottom = elementTop + $element.outerHeight();
-        console.log('position', elementTop, elementBottom);
+
         if (elementTop < 0) {
             $parent.scrollTop($parent.scrollTop() + elementTop);
         } else if (elementBottom > $parent.outerHeight()) {
