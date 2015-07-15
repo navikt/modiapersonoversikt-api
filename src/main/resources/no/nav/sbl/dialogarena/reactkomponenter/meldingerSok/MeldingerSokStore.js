@@ -99,7 +99,8 @@ var hentSokeresultater =
             }.bind(this))
             .fail(function (jqXHR) {
                 if (jqXHR.status == 403) {
-                    $('.innboksSokToggle').click();
+                    var $toggle = $('.innboksSokToggle');
+                    ($toggle.is('button') ? $toggle : $toggle.find('button')).click();
                 } else {
                     this.state.feilet = true;
                     this.fireUpdate(this.listeners);
