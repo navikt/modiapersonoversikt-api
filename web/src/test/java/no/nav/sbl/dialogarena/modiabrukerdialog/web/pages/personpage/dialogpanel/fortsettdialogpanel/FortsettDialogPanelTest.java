@@ -1,32 +1,33 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Saksbehandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.TidligereMeldingPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,12 +42,16 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.SAKSBEHANDLER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.TestUtils.createMockSaker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel.erTilknyttetAnsatt;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -379,7 +384,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserIkkeLeggTilbakeDersomSporsmalIkkeErEtSporsmalFraBruker() {
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV()), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), Optional.<String>none()))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")));
@@ -393,14 +398,54 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .should().containPatterns(FORNAVN);
     }
 
+    @Test
+    public void tilknyttetAnsattBlirSattTilSaksbehandlerForEnkeltstaaendeSporsmalFraBruker() {
+        OppgaveTilknytning oppgaveTilknytning = erTilknyttetAnsatt(singletonList(lagSporsmalFraBruker()));
+
+        assertThat(oppgaveTilknytning, is(SAKSBEHANDLER));
+    }
+
+    @Test
+    public void tilknyttetAnsattArverEnhet() {
+        Melding sporsmalFraBruker = lagSporsmalFraBruker();
+        sporsmalFraBruker.opprettetDato = DateTime.now().minusDays(2);
+
+        Melding sporsmalFraNAV = lagSporsmalFraNAV();
+        sporsmalFraNAV.opprettetDato = DateTime.now();
+        sporsmalFraNAV.erTilknyttetAnsatt = false;
+        OppgaveTilknytning oppgaveTilknytning = erTilknyttetAnsatt(asList(sporsmalFraBruker, sporsmalFraNAV));
+
+        assertThat(oppgaveTilknytning, is(ENHET));
+    }
+
+    @Test
+    public void tilknyttetAnsattArverSaksbehandler() {
+        Melding sporsmalFraBruker = lagSporsmalFraBruker();
+        sporsmalFraBruker.opprettetDato = DateTime.now().minusDays(2);
+
+        Melding sporsmalFraNAV = lagSporsmalFraNAV();
+        sporsmalFraNAV.opprettetDato = DateTime.now();
+        sporsmalFraNAV.erTilknyttetAnsatt = true;
+        OppgaveTilknytning oppgaveTilknytning = erTilknyttetAnsatt(asList(sporsmalFraBruker, sporsmalFraNAV));
+
+        assertThat(oppgaveTilknytning, is(SAKSBEHANDLER));
+    }
+
     private Melding lagSporsmalFraBruker() {
-        Melding sporsmal = new Melding().withType(SPORSMAL_SKRIFTLIG).withId(SPORSMAL_ID).withOpprettetDato(now());
+        Melding sporsmal = new Melding()
+                .withType(SPORSMAL_SKRIFTLIG)
+                .withId(SPORSMAL_ID)
+                .withOpprettetDato(now())
+                .withErTilknyttetAnsatt(false);
         sporsmal.temagruppe = TEMAGRUPPE;
         return sporsmal;
     }
 
     private Melding lagSporsmalFraNAV() {
-        Melding sporsmal = new Melding().withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE).withId(SPORSMAL_ID).withOpprettetDato(now());
+        Melding sporsmal = new Melding()
+                .withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE)
+                .withId(SPORSMAL_ID)
+                .withOpprettetDato(now());
         sporsmal.temagruppe = TEMAGRUPPE;
         return sporsmal;
     }
