@@ -1,9 +1,5 @@
 /* Lameller */
 .lamell {
-  &.selected {
-    .flexbox;
-    .col;
-  }
 
   overflow: visible;
   .oppsummering {
@@ -87,8 +83,7 @@
     position: relative;
     &.bunn {
       box-shadow: 0px 3px 25px #999;
-      position: fixed;
-      width: @mainContentWidth;
+
       > HEADER {
         height: 64px;
         background-image: -webkit-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
@@ -114,6 +109,7 @@
       color: transparent;
       background: url(../img/kryss.svg) no-repeat center center;
       background-size: contain;
+      z-index: 150;
     }
     .close:focus, .close:hover {
       background: url(../img/kryss_hover.svg) no-repeat center center;
@@ -170,10 +166,13 @@
       }
     }
     &.selected > HEADER {
+      position: relative;
+      z-index: 100;
       height: 84px;
       background: none;
       cursor: default;
       border-bottom: none;
+      box-shadow: 0 10px 17px -7px #d1d1d1;
       -ms-filter: "";
       H1 {
         font-size: 2.5rem;
@@ -182,9 +181,13 @@
       }
     }
     .lerret {
+      position: absolute;
+      top: 84px;
+      bottom: 0;
+      left: 0;
+      right: 0;
       padding: 2rem 30px 30px 30px;
-      width: 100%;
-      min-height: 30px;
+      overflow-y: auto;
       .dobbeldato-container {
         width: 100%;
         margin-bottom: 1rem;

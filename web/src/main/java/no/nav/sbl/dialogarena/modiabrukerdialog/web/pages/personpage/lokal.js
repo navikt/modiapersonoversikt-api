@@ -3,10 +3,6 @@ jQuery(document).ready(function ($) {
 
     createTabHandler("modiabrukerdialog");
 
-    if ($('.main-content .lamell').length === 1) {
-        $('.main-content .lamell').first().find('.lamellhode').hide();
-    }
-
     $('#toggle-personsok').on('click', toggleAvansertSok);
     Modig.shortcutListener.on({key: 'A'}, toggleAvansertSok);
 
