@@ -1,3 +1,10 @@
+//FIXME
+.kjerneinfo .tab-row .tomDiv {
+  min-height: 0 !important;
+}
+
+
+
 @headerHeight: 140px;
 .flexbox {
   // 2009 spec
@@ -149,18 +156,25 @@
     position: relative;
   }
   .app-content {
-    min-height: 100%;
+    height: 100%;
+    width: 100%;
     position: absolute;
     top: 0;
     padding-top: @headerHeight;
+
     .main-content, .sidebar-venstre, .sidebar-hoyre {
       position: relative;
-    }
-    .main-content, .sidebar-venstre {
-      overflow: hidden;
+      float: left;
+      height: 100%;
     }
     .sidebar-venstre, .sidebar-hoyre {
       z-index: 500;
+      width: 25%;
+      overflow: auto;
+    }
+    .main-content {
+      width: 50%;
+      overflow: hidden;
     }
   }
   .personpanel {
