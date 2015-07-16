@@ -13,8 +13,8 @@
     <section class="feilmelding" wicket:id="feilmelding" aria-atomic="true" aria-live="assertive" role="alert">
         <span wicket:id="feil"></span>
     </section>
-    <div class="saker flexbox row flex1">
-        <article tabindex="0" class="sak-navigering flex2" wicket:id="sakerContainer">
+    <div class="saker clearfix">
+        <article tabindex="0" class="sak-navigering" wicket:id="sakerContainer">
             <ul>
                 <li wicket:id="saker">
                     <a href="#" wicket:id="temalenke" tabindex="-1">
@@ -24,7 +24,7 @@
                 </li>
             </ul>
         </article>
-        <div class="sak-informasjon flex3" wicket:id="detaljerContainer">
+        <div class="sak-informasjon" wicket:id="detaljerContainer">
             <ul>
                 <li wicket:id="behandling-sak" class="sakdetaljer">
                     <h2 wicket:id="sakstema-print" class="print-only"/>
