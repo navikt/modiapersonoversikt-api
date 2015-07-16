@@ -5,8 +5,8 @@
 </head>
 <body>
 <wicket:panel>
-    <div class="meldinglamell flexbox flex1">
-        <section class="meldingsliste flex2">
+    <div class="meldinglamell clearfix">
+        <section class="meldingsliste">
             <div wicket:id="meldingerSokToggleContainer" class="clearfix innboksSokToggle">
                 <button wicket:id="meldingerSokToggle" class="knapp-liten" wicket:message="title:innboks.sok.knapp.title">
                     <wicket:message key="innboks.sok.knapp.tekst"/>
@@ -17,7 +17,7 @@
             <section wicket:id="meldinger" role="tablist"></section>
         </section>
 
-        <section wicket:id="detaljpanel" class="traadDetaljer flex3" role="tabpanel"></section>
+        <section wicket:id="detaljpanel" class="traadDetaljer" role="tabpanel"></section>
         <div wicket:id="feilmeldingpanel" class="feilmelding">
             <div class="robust-ikon-feil-gra"></div>
             <span wicket:id="feilmelding" class="stor"></span>

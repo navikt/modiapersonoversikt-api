@@ -8,9 +8,28 @@
 
 .lamell.meldinger .lerret {
   padding: 0;
+  overflow-y: visible;
+}
+.lamell.meldinger .ajax-content {
+  height: 100%;
 }
 
+
 .meldinglamell {
+  height: 100%;
+  .meldingsliste {
+    width: 40%;
+  }
+  .traadDetaljer {
+    width: 60%;
+  }
+  .meldingsliste, .traadDetaljer {
+    float: left;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+
   a.knapp-hoved-stor {
     color: white;
   }
@@ -92,6 +111,7 @@
     top: -30px;
     right: 0;
     margin-right: @sidemargin;
+    z-index: 200;
     .meldingsvalg {
       display: inline-block;
       &:not(:last-child) {
