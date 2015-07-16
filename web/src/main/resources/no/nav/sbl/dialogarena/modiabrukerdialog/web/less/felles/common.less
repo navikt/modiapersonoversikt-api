@@ -318,33 +318,63 @@ input[type=checkbox] {
 
 .mf3-override(@type) {
   & + label {
-    background: url('../img/mf3/@{type}.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}.svg')  !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:checked + label {
-    background: url('../img/mf3/@{type}_valgt.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_valgt.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:hover + label {
-    background: url('../img/mf3/@{type}_hover.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_hover.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:focus + label {
-    background: url('../img/mf3/@{type}_focus.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:checked:hover + label {
-    background: url('../img/mf3/@{type}_valgt_hover.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_valgt_hover.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:checked:focus + label {
-    background: url('../img/mf3/@{type}_valgt_focus.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_valgt_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:hover:focus + label {
-    background: url('../img/mf3/@{type}_hover_focus.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_hover_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:checked:hover:focus + label {
-    background: url('../img/mf3/@{type}_valgt_hover_focus.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_valgt_hover_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:checked:disabled + label {
-    background: url('../img/mf3/@{type}_inactive_valgt.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_inactive_valgt.svg');
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
   }
   &:disabled + label {
-    background: url('../img/mf3/@{type}_inactive.svg') 0 0 no-repeat !important;
+    background-image: url('../img/mf3/@{type}_inactive.svg');
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat;
   }
 }
