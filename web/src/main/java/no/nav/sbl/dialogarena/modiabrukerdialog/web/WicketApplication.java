@@ -149,7 +149,7 @@ public class WicketApplication extends WebApplication {
 
     private void configureFrontend() {
         new FrontendConfigurator()
-                .withModules(MODIA)
+                .withModules(MODIA, BasePage.SCROLL)
                 .addMetas(
                         MetaTag.XUA_IE_EDGE,
                         MetaTag.CHARSET_UTF8,
@@ -157,10 +157,8 @@ public class WicketApplication extends WebApplication {
                 )
                 .addConditionalCss(
                         PersonPage.INTERN_IE,
-                        SaksoversiktLerret.SAKSOVERSIKT_IE_CSS,
                         BasePage.MODIA_LAYOUT_IE_CSS,
                         BasePage.KJERNEINFO_IE9_CSS,
-                        Innboks.MELDINGER_IE_CSS,
                         FancySelect.IECSS
                 )
                 .addLess(
