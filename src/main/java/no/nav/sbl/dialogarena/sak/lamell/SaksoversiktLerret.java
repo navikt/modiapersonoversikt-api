@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.navigation.KeyNavigationDependentResourceReference;
@@ -21,7 +20,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.slf4j.Logger;
@@ -39,7 +37,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class SaksoversiktLerret extends Lerret {
     // Brukes av Modia (containeren):
     public static final PackageResourceReference SAKSOVERSIKT_LESS = new PackageResourceReference(SaksoversiktLerret.class, "saksoversikt.less");
-    public static final ConditionalCssResource SAKSOVERSIKT_IE_CSS = new ConditionalCssResource(new CssResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.css"), "screen", "IE");
     public static final JavaScriptResourceReference SAKSOVERSIKT_JS = new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt.js");
     public static final KeyNavigationDependentResourceReference NAVIGATION_JS = new KeyNavigationDependentResourceReference(SaksoversiktLerret.class, "saksoversikt-navigation.js");
     private static final String INITIAL = "S";
@@ -63,7 +60,7 @@ public class SaksoversiktLerret extends Lerret {
         super(id);
         this.fnr = fnr;
         add(new Label("se-saker-label", cms.hentTekst("detaljer.tittel")),
-            new Label("viktig-aa-vite-label", cms.hentTekst("saksinformasjon.tittel")));
+                new Label("viktig-aa-vite-label", cms.hentTekst("saksinformasjon.tittel")));
         instansierFeilmeldingContainer();
     }
 
@@ -74,10 +71,10 @@ public class SaksoversiktLerret extends Lerret {
         temaContainer = lagTemaContainer();
 
         addOrReplace(
-            lagDetaljerContainer(fnr),
-            temaContainer,
-            lagOppdaterLenke(this),
-            feilmelding
+                lagDetaljerContainer(fnr),
+                temaContainer,
+                lagOppdaterLenke(this),
+                feilmelding
         );
 
         if (getAktivtTema().getObject() == null) {
