@@ -19,14 +19,20 @@
   height: 100%;
   .meldingsliste {
     width: 40%;
+    overflow-y: visible;
+    padding-right: 1rem;
   }
   .traadDetaljer {
     width: 60%;
+    overflow-y: visible;
+    .traadvisning {
+      height: 100%;
+      overflow-y: visible;
+    }
   }
   .meldingsliste, .traadDetaljer {
     float: left;
     height: 100%;
-    overflow-y: auto;
   }
 
 
@@ -54,7 +60,10 @@
   }
 
   .traadDetaljer {
-    padding: 22px @sidemargin 0 @sidemargin;
+    padding: 0;
+    .traadvisning {
+      padding: 22px @sidemargin 0 @sidemargin;
+    }
     h2 {
       margin: 0;
     }

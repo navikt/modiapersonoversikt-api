@@ -5,19 +5,21 @@
 <body>
 <wicket:panel>
     <wicket:container wicket:id="haandterMelding"/>
-    <wicket:container wicket:id="kontorsperretInfo"/>
-    <div wicket:id="journalfortTemaContainer">
-        <h2 wicket:id="valgtTraad.eldsteMelding.melding.journalfortTemanavn" class="midtstilt"></h2>
+    <div class="traadvisning">
+        <wicket:container wicket:id="kontorsperretInfo"/>
+        <div wicket:id="journalfortTemaContainer">
+            <h2 wicket:id="valgtTraad.eldsteMelding.melding.journalfortTemanavn" class="midtstilt"></h2>
 
-        <div class="robust-strek"></div>
-    </div>
-    <div wicket:id="nyMelding" class="nyMelding">
-        <div class="besvarBoble">
-            <a href="#" wicket:id="besvar" role="button">Ny Melding</a>
+            <div class="robust-strek"></div>
         </div>
-        <img src="img/nav-logo.svg" aria-hidden="true" alt="Ny melding fra NAV"/>
+        <div wicket:id="nyMelding" class="nyMelding">
+            <div class="besvarBoble">
+                <a href="#" wicket:id="besvar" role="button">Ny Melding</a>
+            </div>
+            <img src="img/nav-logo.svg" aria-hidden="true" alt="Ny melding fra NAV"/>
+        </div>
+        <wicket:container wicket:id="traad"/>
     </div>
-    <wicket:container wicket:id="traad"/>
 </wicket:panel>
 </body>
 </html>
