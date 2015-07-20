@@ -229,7 +229,6 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 target.add(feedbackPanel);
             } finally {
                 timer.stop();
-                timer = null;
             }
         }
 
