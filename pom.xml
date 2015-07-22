@@ -250,17 +250,6 @@
             <version>${modig.security.version}</version>
             <type>test-jar</type>
         </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-frontend-wicket</artifactId>
-            <version>${modig.frontend.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
