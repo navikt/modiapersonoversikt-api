@@ -15,4 +15,6 @@ public interface HenvendelseBehandlingService {
     void merkSomFeilsendt(TraadVM valgtTraad);
 
     void merkSomBidrag(TraadVM valgtTraad);
+
+    String getEnhet(String fnr);
 }

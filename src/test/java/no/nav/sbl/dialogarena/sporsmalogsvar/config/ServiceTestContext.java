@@ -66,6 +66,7 @@ public class ServiceTestContext {
     public HenvendelseBehandlingService henvendelseBehandlingService() {
         HenvendelseBehandlingService henvendelseBehandlingService = mock(HenvendelseBehandlingService.class);
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(opprettMeldingEksempel()));
+        when(henvendelseBehandlingService.getEnhet(anyString())).thenReturn("1234");
         return henvendelseBehandlingService;
     }
 

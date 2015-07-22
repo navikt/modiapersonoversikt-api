@@ -37,7 +37,7 @@ public class KontorsperrePanelTest extends WicketPageTest {
     }
 
     private KontorsperrePanel lagOpprettOppgavePanel() {
-        return new KontorsperrePanel("id", mock(InnboksVM.class));
+        return new KontorsperrePanel("id", mock(InnboksVM.class), "1234");
     }
 
 }

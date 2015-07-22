@@ -13,6 +13,7 @@ import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
@@ -50,6 +51,8 @@ public class MerkePanel extends AnimertPanel {
 
         this.innboksVM = innboksVM;
 
+        String enhet = henvendelseService.getEnhet(innboksVM.getFnr());
+
         merkVM = new CompoundPropertyModel<>(new MerkVM());
         Form<MerkVM> merkForm = new Form<>("merkForm", merkVM);
 
@@ -72,7 +75,7 @@ public class MerkePanel extends AnimertPanel {
                 .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
                 .add(visibleIf(not(valgtTraadErKontorsperret))));
 
-        kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM);
+        kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<Boolean>(merkVM, "erKontorsperret()")));
 
         merkKnapp = new MerkKnapp("merk");

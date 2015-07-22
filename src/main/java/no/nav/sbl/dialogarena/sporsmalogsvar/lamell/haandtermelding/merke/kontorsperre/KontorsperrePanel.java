@@ -12,7 +12,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class KontorsperrePanel extends Panel {
 
@@ -20,13 +22,16 @@ public class KontorsperrePanel extends Panel {
     public static final String OPPRETT_OPPGAVE_TOGGLET = "sos.oppgave.skalopprette";
 
     public final IModel<Boolean> skalOppretteOppgave = Model.of(true);
+    private final IModel<Boolean> harEnhet;
 
     private final NyOppgaveFormWrapper nyOppgaveForm;
     private final CheckBox opprettOppgaveCheckbox;
 
-    public KontorsperrePanel(String id, InnboksVM innboksVM) {
+    public KontorsperrePanel(String id, InnboksVM innboksVM, String enhet) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
+
+        harEnhet = Model.of(isNotBlank(enhet));
 
         final WebMarkupContainer opprettOppgaveCheckboxWrapper = new WebMarkupContainer("opprettOppgaveCheckboxWrapper");
         opprettOppgaveCheckboxWrapper.setOutputMarkupId(true);
@@ -38,7 +43,7 @@ public class KontorsperrePanel extends Panel {
                 target.add(opprettOppgaveCheckboxWrapper);
             }
         };
-        nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
+        nyOppgaveForm.add(visibleIf(both(harEnhet).and(skalOppretteOppgave)));
 
         opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override
@@ -49,13 +54,17 @@ public class KontorsperrePanel extends Panel {
             }
         };
         opprettOppgaveCheckboxWrapper.add(opprettOppgaveCheckbox);
-        opprettOppgaveCheckboxWrapper.add(visibleIf(not(nyOppgaveForm.oppgaveOpprettet)));
+        opprettOppgaveCheckboxWrapper.add(
+                visibleIf(
+                        both(harEnhet)
+                                .and(not(nyOppgaveForm.oppgaveOpprettet))));
 
+        add(new WebMarkupContainer("ingenEnhet").add(visibleIf(not(harEnhet))));
         add(opprettOppgaveCheckboxWrapper, nyOppgaveForm);
     }
 
     public boolean kanMerkeSomKontorsperret() {
-        return !skalOppretteOppgave.getObject() || nyOppgaveForm.oppgaveOpprettet.getObject();
+        return harEnhet.getObject() && (!skalOppretteOppgave.getObject() || nyOppgaveForm.oppgaveOpprettet.getObject());
     }
 
     public void reset() {

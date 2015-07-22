@@ -118,7 +118,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(valgtTraad.getEldsteMelding().melding.traadId, "BID");
     }
 
-    private String getEnhet(String fnr) {
+    @Override
+    public String getEnhet(String fnr) {
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
         kjerneinfoRequest.setBegrunnet(true);
         Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
