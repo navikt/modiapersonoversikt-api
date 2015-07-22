@@ -16,8 +16,8 @@ import static no.nav.modig.modia.aria.AriaHelpers.toggleButtonConnector;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_LUKKET;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_TOGGLET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel.PANEL_LUKKET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel.PANEL_TOGGLET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
 @RefreshOnEvents({PANEL_LUKKET, MELDING_VALGT})
@@ -60,7 +60,7 @@ public class MeldingValgPanel extends Panel {
     }
 
     private void onclick(AjaxRequestTarget target) {
-        send(MeldingValgPanel.this.getParent(), BREADTH, new NamedEventPayload(PANEL_TOGGLET, tilknyttetPanel.getClass()));
+        send(getPage(), BREADTH, new NamedEventPayload(PANEL_TOGGLET, tilknyttetPanel.getClass()));
         target.add(MeldingValgPanel.this);
     }
 }
