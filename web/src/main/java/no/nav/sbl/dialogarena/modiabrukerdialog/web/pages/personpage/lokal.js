@@ -1,22 +1,29 @@
 jQuery(document).ready(function ($) {
     'use strict';
-    Wicket.Event.subscribe('/dom/node/added', function () {
-        console.log('args', arguments);
-    });
 
     //Scrollbars
     var options = {
         theme: '3d',
         scrollbarPosition: 'outside',
-        alwaysShowScrollbar: 2,
-        live: 'true'
+        alwaysShowScrollbar: 0,
+        live: 'true',
+        scrollInertia: 500
     };
 
-    $('.lamell:not(.meldinger):not(.saksoversikt) .lerret').mCustomScrollbar(options);
     $('.sidebar-venstre').mCustomScrollbar(options);
     $('.sidebar-hoyre').mCustomScrollbar(options);
+
+    //Alle lerret med unntak av meldinger og saksoversikt
+    $('.lamell:not(.meldinger):not(.saksoversikt) .lerret').mCustomScrollbar(options);
+
+    //For meldinger lamell
     $('.lamell.meldinger .meldingsliste').mCustomScrollbar(options);
     $('.lamell.meldinger .traadvisning').mCustomScrollbar(options);
+
+    //For saksoversikt lamell
+    $('.lamell.saksoversikt .sak-navigering').mCustomScrollbar(options);
+    $('.lamell.saksoversikt .sak-informasjon').mCustomScrollbar(options);
+
 
     createTabHandler("modiabrukerdialog");
 
