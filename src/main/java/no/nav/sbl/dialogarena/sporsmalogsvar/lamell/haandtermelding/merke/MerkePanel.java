@@ -55,7 +55,7 @@ public class MerkePanel extends AnimertPanel {
 
         final RadioGroup<MerkType> merkRadioGroup = new RadioGroup<>("merkType");
 
-        feedbackPanel = new FeedbackPanel("feedbackMerkPanel");
+        feedbackPanel = new FeedbackPanel("feedbackMerkPanel", new ComponentFeedbackMessageFilter(merkRadioGroup));
         feedbackPanel.setOutputMarkupId(true);
         merkForm.add(feedbackPanel);
 
@@ -164,14 +164,9 @@ public class MerkePanel extends AnimertPanel {
 
         private void haandterKontorsperring(AjaxRequestTarget target, Form<?> form) {
             if (kontorsperrePanel.kanMerkeSomKontorsperret()) {
-                try {
-                    henvendelseService.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
-                    send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
-                    lukkPanel(target);
-                } catch (HenvendelseBehandlingService.IngenEnhet e) {
-                    error(getString("kontorsperre.bruker.ingen.enhet"));
-                    onError(target, form);
-                }
+                henvendelseService.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
+                send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+                lukkPanel(target);
             } else {
                 onError(target, form);
             }

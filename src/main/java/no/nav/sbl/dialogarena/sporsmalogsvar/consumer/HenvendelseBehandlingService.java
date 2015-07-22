@@ -15,10 +15,4 @@ public interface HenvendelseBehandlingService {
     void merkSomFeilsendt(TraadVM valgtTraad);
 
     void merkSomBidrag(TraadVM valgtTraad);
-
-    class IngenEnhet extends RuntimeException {
-        public IngenEnhet() {
-            super("Bruker er ikke tilknyttet en enhet.");
-        }
-    }
 }
