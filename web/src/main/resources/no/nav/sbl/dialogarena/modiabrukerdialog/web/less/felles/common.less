@@ -58,9 +58,9 @@
   color: #BA3A26 !important;
 }
 
-.ontop-mixin {
+.ontop-mixin(@z-index: 9999) {
   position: relative;
-  z-index: 9999;
+  z-index: @z-index;
 }
 
 /* Generelle elementer */

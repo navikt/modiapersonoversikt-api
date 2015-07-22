@@ -7,7 +7,7 @@ jQuery(document).ready(function ($) {
         scrollbarPosition: 'outside',
         alwaysShowScrollbar: 0,
         live: 'true',
-        scrollInertia: 500
+        scrollInertia: 100
     };
 
     $('.sidebar-venstre').mCustomScrollbar(options);
