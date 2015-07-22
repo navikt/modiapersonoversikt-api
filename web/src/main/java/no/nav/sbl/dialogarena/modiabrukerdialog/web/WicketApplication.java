@@ -157,6 +157,7 @@ public class WicketApplication extends WebApplication {
                 )
                 .addConditionalCss(
                         PersonPage.INTERN_IE,
+                        PersonPage.DIALOGPANEL_IE,
                         BasePage.MODIA_LAYOUT_IE_CSS,
                         BasePage.KJERNEINFO_IE9_CSS,
                         FancySelect.IECSS
