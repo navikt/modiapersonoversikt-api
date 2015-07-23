@@ -133,7 +133,7 @@ public class SaksoversiktLerret extends Lerret {
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
         settAktivtTema(payload.getItemId());
-        target.appendJavaScript("$(\".sak-navigering > UL > LI.aktiv > A\").focus();");
+        target.appendJavaScript("$('.sak-navigering ul > li.aktiv > a').focus();");
     }
 
     private void aapneForsteItem() {
