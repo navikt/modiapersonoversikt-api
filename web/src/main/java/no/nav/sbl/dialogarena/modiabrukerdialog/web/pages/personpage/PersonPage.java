@@ -42,6 +42,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -86,6 +87,7 @@ public class PersonPage extends BasePage {
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
+    public static final JavaScriptResourceReference SCROLL_JS = new JavaScriptResourceReference(PersonPage.class, "scrollbars.js");
 
     private final String fnr;
 
