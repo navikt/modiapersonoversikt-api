@@ -123,6 +123,7 @@ public class Innboks extends Lerret {
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(props.henvendelseId.get());
             if (meldingITraad.isSome()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
+                innboksVM.focusValgtTraadOnOpen = true;
             }
         }
         if (props.oppgaveId.isSome() && gsakService.oppgaveKanManuelltAvsluttes(props.oppgaveId.get())) {
@@ -146,6 +147,9 @@ public class Innboks extends Lerret {
     public void onOpening(AjaxRequestTarget target) {
         if (target != null) {
             target.appendJavaScript("Meldinger.addKeyNavigation();");
+            if (innboksVM.focusValgtTraadOnOpen) {
+                target.appendJavaScript(format("$('#%s').find('.meldingsforhandsvisning.valgt').focus();", this.getMarkupId()));
+            }
         }
     }
 
@@ -157,7 +161,7 @@ public class Innboks extends Lerret {
             send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
             target.add(this);
         }
-        target.appendJavaScript(format("$('#%s').find('.meldingsforhandsvisning.valgt').focus();", this.getMarkupId()));
+        innboksVM.focusValgtTraadOnOpen = true;
     }
 
     @RunOnEvents(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER)
