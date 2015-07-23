@@ -156,8 +156,8 @@ public class Innboks extends Lerret {
             innboksVM.setValgtMelding(itemId);
             send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
             target.add(this);
-            target.appendJavaScript(format("$('#%s').find('.meldingsforhandsvisning.valgt').focus();", this.getMarkupId()));
         }
+        target.appendJavaScript(format("$('#%s').find('.meldingsforhandsvisning.valgt').focus();", this.getMarkupId()));
     }
 
     @RunOnEvents(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER)
