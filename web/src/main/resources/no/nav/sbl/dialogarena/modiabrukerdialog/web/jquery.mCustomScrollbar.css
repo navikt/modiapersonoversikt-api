@@ -55,7 +55,7 @@ y-axis
 */
 
 .mCSB_inside > .mCSB_container {
-    margin-right: 30px;
+    margin-right: 1rem;
 }
 
 .mCSB_container.mCS_no_scrollbar_y.mCS_y_hidden {
