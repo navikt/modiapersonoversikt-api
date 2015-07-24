@@ -8,6 +8,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -24,6 +25,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static no.nav.modig.lang.option.Optional.optional;
@@ -34,6 +37,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.*;
 
 public class LeggTilbakePanel extends Panel {
@@ -56,7 +60,7 @@ public class LeggTilbakePanel extends Panel {
     private final FeedbackPanel feedbackPanel;
     private final AjaxLink lukkKnapp;
 
-    public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal) {
+    public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal, GrunnInfo grunnInfo) {
         super(id);
         this.oppgaveId = oppgaveId;
         this.sporsmal = sporsmal;
@@ -70,7 +74,7 @@ public class LeggTilbakePanel extends Panel {
         Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
         form.add(visibleIf(not(oppgaveLagtTilbake)));
 
-        final DropDownChoice<Temagruppe> temagruppevelger = lagFeiltemagruppeKomponenter(valgtAarsak);
+        final DropDownChoice<Temagruppe> temagruppevelger = lagFeiltemagruppeKomponenter(valgtAarsak, grunnInfo);
         final WebMarkupContainer temagruppevelgerDropdown = new WebMarkupContainer("temagruppewrapper-dropdown");
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
@@ -172,9 +176,15 @@ public class LeggTilbakePanel extends Panel {
         };
     }
 
-    private DropDownChoice<Temagruppe> lagFeiltemagruppeKomponenter(PropertyModel<Aarsak> valgtAarsak) {
+    private DropDownChoice<Temagruppe> lagFeiltemagruppeKomponenter(PropertyModel<Aarsak> valgtAarsak, GrunnInfo grunnInfo) {
         WebMarkupContainer nyTemagruppeSkjuler = new WebMarkupContainer("nyTemagruppeSkjuler");
-        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", Temagruppe.LEGG_TILBAKE, new ChoiceRenderer<Temagruppe>() {
+
+        List<Temagruppe> temagrupper = new ArrayList<>(Temagruppe.LEGG_TILBAKE);
+        if (isBlank(grunnInfo.bruker.navkontor)) {
+            temagrupper.removeAll(Temagruppe.KOMMUNALE_TJENESTER);
+        }
+
+        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", temagrupper, new ChoiceRenderer<Temagruppe>() {
             @Override
             public Object getDisplayValue(Temagruppe object) {
                 return getString(object.name());

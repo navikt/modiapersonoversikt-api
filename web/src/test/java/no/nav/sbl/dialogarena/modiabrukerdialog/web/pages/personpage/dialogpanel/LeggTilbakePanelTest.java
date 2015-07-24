@@ -40,16 +40,22 @@ public class LeggTilbakePanelTest extends WicketPageTest {
     private static final String MELDING_FNR = "11111111111";
     private static final String MELDING_ID = "123";
 
+    private static final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("").withEnhet("1234"), null);
+
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
 
     @Before
     public void setUpTest() {
+        gotoPage(grunnInfo);
+    }
+
+    private void gotoPage(GrunnInfo info) {
         Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId(MELDING_ID).withOpprettetDato(now());
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ARBD;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, info));
     }
 
     @Test
@@ -93,6 +99,17 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages.isEmpty(), is(true));
         Mockito.verify(henvendelseUtsendingService, Mockito.times(1)).merkSomKontorsperret(eq(MELDING_FNR), any(List.class));
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)//Prøver å velge OKSOS
+    public void fjernetANSOSogOKSOSHvisBrukersEnhetIkkeErSatt() {
+        gotoPage(new GrunnInfo(new GrunnInfo.Bruker(""), null));
+        wicket.inForm(ofType(Form.class))
+                .select("valgtAarsak", 0)
+                .andReturn()
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
+                .inForm(ofType(Form.class))
+                .select("valgtAarsak:temagruppeWrapper:nyTemagruppeSkjuler:nyTemagruppe", 7);
     }
 
     @Test
@@ -163,7 +180,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ANSOS;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, grunnInfo));
 
         wicket.should().containComponent(both(withId("temagruppeWrapper")).and(thatIsInvisible()));
     }
