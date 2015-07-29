@@ -28,6 +28,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.purgeoppgaver.PurgeOppgaverPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
@@ -51,6 +52,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.util.Locale;
 
+import static java.lang.Boolean.getBoolean;
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
 import static no.nav.sbl.dialogarena.time.Datoformat.brukLocaleFra;
@@ -230,6 +232,9 @@ public class WicketApplication extends WebApplication {
         mountResource("internal/selftest.json", new JsonResourceReference(SelfTestPage.class));
         if (mockSetupErTillatt()) {
             mountPage("internal/mocksetup", MockSetupPage.class);
+        }
+        if (getBoolean("kan.purge.oppgaver")) {
+            mountPage("internal/purgeoppgaver", PurgeOppgaverPage.class);
         }
     }
 
