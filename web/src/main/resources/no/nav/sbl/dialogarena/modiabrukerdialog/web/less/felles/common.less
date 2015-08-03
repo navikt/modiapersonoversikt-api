@@ -51,9 +51,9 @@
   border: 1px solid rgb(0, 103, 197) !important;
 }
 
-.invalid-sammensatt-mixin {
+.invalid-sammensatt-mixin(@border-size: 1px) {
   outline: none;
-  border: 1px solid #BA3A26 !important;
+  border: @border-size solid #BA3A26 !important;
   background-color: #FBF5F4 !important;
 }
 
@@ -281,20 +281,28 @@ select,
   }
 }
 
-input[type=text],
-input.hasDatepicker,
-textarea,
-select,
-.ui-selectmenu-button,
-.saksbehandlerinnstillinger-toggle,
-.radioknapper-blokk,
-.journalforingSporsmal {
-  &.invalid {
-    .invalid-sammensatt-mixin;
-    & + label {
-      .invalid-sammensatt-mixin;
+.invalid-sammensatt-mixin-selector(@border-size: 1px) {
+  input[type=text],
+  input.hasDatepicker,
+  textarea,
+  select,
+  .ui-selectmenu-button,
+  .saksbehandlerinnstillinger-toggle,
+  .radioknapper-blokk,
+  .journalforingSporsmal {
+    &.invalid {
+      .invalid-sammensatt-mixin(@border-size);
+      & + label {
+        .invalid-sammensatt-mixin(@border-size);
+      }
     }
   }
+}
+
+.invalid-sammensatt-mixin-selector(1px);
+
+.mork-bakgrunn {
+  .invalid-sammensatt-mixin-selector(2px);
 }
 
 .feedbacklabel {
@@ -315,7 +323,7 @@ input[type=checkbox] {
 
 .mf3-override(@type) {
   & + label {
-    background-image: url('../img/mf3/@{type}.svg')  !important;
+    background-image: url('../img/mf3/@{type}.svg') !important;
     background-position-x: 0;
     background-position-y: 0;
     background-repeat: no-repeat !important;
