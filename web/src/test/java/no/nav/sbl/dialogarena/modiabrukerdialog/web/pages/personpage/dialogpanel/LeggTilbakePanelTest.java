@@ -47,15 +47,16 @@ public class LeggTilbakePanelTest extends WicketPageTest {
 
     @Before
     public void setUpTest() {
-        gotoPage(grunnInfo);
+        setup("Enhet");
     }
 
-    private void gotoPage(GrunnInfo info) {
+    public void setup(String enhet) {
         Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId(MELDING_ID).withOpprettetDato(now());
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ARBD;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, info));
+        sporsmal.tilknyttetEnhet = enhet;
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal));
     }
 
     @Test
@@ -103,7 +104,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
 
     @Test(expected = IndexOutOfBoundsException.class)//Prøver å velge OKSOS
     public void fjernetANSOSogOKSOSHvisBrukersEnhetIkkeErSatt() {
-        gotoPage(new GrunnInfo(new GrunnInfo.Bruker(""), null));
+        setup(null);
         wicket.inForm(ofType(Form.class))
                 .select("valgtAarsak", 0)
                 .andReturn()
@@ -180,7 +181,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ANSOS;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, grunnInfo));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal));
 
         wicket.should().containComponent(both(withId("temagruppeWrapper")).and(thatIsInvisible()));
     }

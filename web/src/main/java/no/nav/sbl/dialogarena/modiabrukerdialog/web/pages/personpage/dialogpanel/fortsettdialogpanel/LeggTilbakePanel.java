@@ -60,7 +60,7 @@ public class LeggTilbakePanel extends Panel {
     private final FeedbackPanel feedbackPanel;
     private final AjaxLink lukkKnapp;
 
-    public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal, GrunnInfo grunnInfo) {
+    public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal) {
         super(id);
         this.oppgaveId = oppgaveId;
         this.sporsmal = sporsmal;
@@ -74,7 +74,7 @@ public class LeggTilbakePanel extends Panel {
         Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
         form.add(visibleIf(not(oppgaveLagtTilbake)));
 
-        final DropDownChoice<Temagruppe> temagruppevelger = lagFeiltemagruppeKomponenter(valgtAarsak, grunnInfo);
+        final DropDownChoice<Temagruppe> temagruppevelger = lagFeiltemagruppeKomponenter(valgtAarsak, sporsmal);
         final WebMarkupContainer temagruppevelgerDropdown = new WebMarkupContainer("temagruppewrapper-dropdown");
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
@@ -176,11 +176,11 @@ public class LeggTilbakePanel extends Panel {
         };
     }
 
-    private DropDownChoice<Temagruppe> lagFeiltemagruppeKomponenter(PropertyModel<Aarsak> valgtAarsak, GrunnInfo grunnInfo) {
+    private DropDownChoice<Temagruppe> lagFeiltemagruppeKomponenter(PropertyModel<Aarsak> valgtAarsak, Melding melding) {
         WebMarkupContainer nyTemagruppeSkjuler = new WebMarkupContainer("nyTemagruppeSkjuler");
 
         List<Temagruppe> temagrupper = new ArrayList<>(Temagruppe.LEGG_TILBAKE);
-        if (isBlank(grunnInfo.bruker.navkontor)) {
+        if (isBlank(melding.tilknyttetEnhet)) {
             temagrupper.removeAll(Temagruppe.KOMMUNALE_TJENESTER);
         }
 
