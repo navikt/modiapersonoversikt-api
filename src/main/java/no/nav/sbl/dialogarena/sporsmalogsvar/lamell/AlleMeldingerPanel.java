@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -90,7 +91,9 @@ public class AlleMeldingerPanel extends Panel {
     }
 
     @RunOnEvents({TRAAD_MERKET, TRAAD_JOURNALFORT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
-    public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target) {
+    public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target, IEvent<?> event, Object payload) {
+        //Object payload må være med i metodesignaturen for å tvinge modig-wicket til å populere IEvent med noe annet enn null.
+
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
             if (innboksVM.harTraader()) {
@@ -99,7 +102,9 @@ public class AlleMeldingerPanel extends Panel {
                     send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
                 }
                 target.appendJavaScript("Meldinger.addKeyNavigation();");
-                settFokusPaaValgtMelding(target);
+                if (!Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT.equals(event.getPayload())) {
+                    settFokusPaaValgtMelding(target);
+                }
             }
             send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
             target.add(this);
