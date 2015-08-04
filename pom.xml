@@ -102,7 +102,7 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>3.1</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>3.2-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>4.2</sporsmalogsvar.version>
         <saksoversikt.version>4.3</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
@@ -417,6 +417,11 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>arena-arbeid-og-aktivitet</artifactId>
                 <version>${arena-arbeid-og-aktivitet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl</groupId>
+                <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+                <version>1.0.3</version>
             </dependency>
 
             <!--Dialogarena-->
