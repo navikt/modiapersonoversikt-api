@@ -37,7 +37,6 @@ import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
@@ -104,6 +103,8 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
     @Override
     public List<Melding> hentTraad(String fnr, String traadId) {
+        String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+
         List<Melding> meldinger =
                 on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
                         .withTyper(
@@ -120,6 +121,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .map(castTo(XMLHenvendelse.class))
                         .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
                         .map(tilMelding(propertyResolver, ldapService))
+                        .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                         .map(journalfortTemaTilgang)
                         .collect(ELDSTE_FORST);
 
@@ -128,20 +130,12 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         }
 
         Melding sporsmal = meldinger.get(0);
-        String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         if (sporsmal.kontorsperretEnhet != null) {
             pep.assertAccess(forRequest(
                     actionId("kontorsperre"),
                     resourceId(""),
                     subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(sporsmal.kontorsperretEnhet))));
-        }
-        if (sporsmal.gjeldendeTemagruppe == OKSOS) {
-            pep.assertAccess(forRequest(
-                    actionId("oksos"),
-                    resourceId(""),
-                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(sporsmal.brukersEnhet))));
         }
 
         return meldinger;
@@ -164,6 +158,25 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             return xmlHenvendelse.getBehandlingskjedeId();
         }
     };
+
+    private Transformer<Melding, Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
+        return new Transformer<Melding, Melding>() {
+            @Override
+            public Melding transform(Melding melding) {
+                PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(
+                        actionId("oksos"),
+                        resourceId(""),
+                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.brukersEnhet)));
+
+                if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
+                    melding.fritekst = "";
+                }
+
+                return melding;
+            }
+        };
+    }
 
     private final Transformer<Melding, Melding> journalfortTemaTilgang = new Transformer<Melding, Melding>() {
         @Override

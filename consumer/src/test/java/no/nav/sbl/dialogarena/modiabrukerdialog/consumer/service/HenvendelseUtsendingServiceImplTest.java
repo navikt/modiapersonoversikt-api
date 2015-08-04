@@ -330,7 +330,7 @@ public class HenvendelseUtsendingServiceImplTest {
 
         henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
         ArgumentCaptor<PolicyRequest> captor = ArgumentCaptor.forClass(PolicyRequest.class);
-        verify(pep).assertAccess(captor.capture());
+        verify(pep).hasAccess(captor.capture());
 
         PolicyRequest policyRequest = captor.getValue();
         ActionId actionId = on(policyRequest.getAttributes()).filter(PredicateUtils.isA(ActionId.class)).map(castTo(ActionId.class)).head().get();
