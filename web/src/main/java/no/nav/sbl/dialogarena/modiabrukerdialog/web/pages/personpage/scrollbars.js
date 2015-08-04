@@ -26,7 +26,4 @@ Modig.lagScrollbars = function () {
     //For saksoversikt lamell
     $('.lamell.saksoversikt .sak-navigering').mCustomScrollbar(Modig.scrollOptions);
     $('.lamell.saksoversikt .sak-informasjon').mCustomScrollbar(Modig.scrollOptions);
-
-    //Modalvinduer
-    $('.sok-layout .sok-liste').mCustomScrollbar($.extend({},Modig.scrollOptions, {scrollbarPosition: 'inside'}));
 };
