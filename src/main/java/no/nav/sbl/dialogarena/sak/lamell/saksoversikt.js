@@ -49,19 +49,19 @@ function oppdaterSaksinformasjonSynlighet() {
 
 function addLamellTemaOnClickListeners() {
     function visBehandling(sakstema) {
-        $(".sak-informasjon > ul > li").removeClass("aktiv");
+        $(".sak-informasjon ul.sak-informasjon-liste > li").removeClass("aktiv");
         if(sakstema !== undefined) {
             $("#behandling_"+sakstema).addClass("aktiv");
         }
         oppdaterSaksinformasjonSynlighet();
     }
 
-    $(".sak-navigering > ul > li > a").click(function(event) {
+    $(".sak-navigering ul.sak-navigering-liste > li > a").click(function(event) {
         event.preventDefault();
         event.stopPropagation();
         var $el = $(event.currentTarget);
 
-        $(".sak-navigering > UL > LI.aktiv").removeClass("aktiv");
+        $(".sak-navigering ul.sak-navigering-liste > li.aktiv").removeClass("aktiv");
         $el.parent("li").addClass("aktiv");
         $el.trigger("updateaktivttema");
 
