@@ -6,6 +6,7 @@ var TekstForhandsvisning = require('./TekstForhandsvisning');
 var TekstListeKomponent = require('./TekstListeKomponent');
 var KnaggInput = require('./../knagginput');
 var SkrivestotteStore = require('./SkrivestotteStore');
+var Sokliste = require('./Sokliste.js');
 
 var modalConfig = {
     title: {
@@ -64,9 +65,7 @@ var Skrivestotte = React.createClass({
         var erTom = this.state.tekster.length === 0;
         var sokVisning = (
             <div className={"sok-visning " + (erTom ? 'hidden' : '')}>
-                <div tabIndex="-1" className="sok-liste" role="tablist" id={this.state.listePanelId} aria-live="assertive" aria-atomic="true" aria-controls={this.state.forhandsvisningsPanelId}>
-                    {tekstlistekomponenter}
-                </div>
+                <Sokliste listePanelId={this.state.listePanelId} forhandsvisningsPanelId={this.state.forhandsvisningsPanelId}>{tekstlistekomponenter}</Sokliste>
                 <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
                     <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
                 </div>
