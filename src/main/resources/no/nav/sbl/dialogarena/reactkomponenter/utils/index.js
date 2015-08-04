@@ -37,17 +37,15 @@ var Utils = {
 
         var elementTop = $element.position().top;
         var elementBottom = elementTop + $element.outerHeight();
-        var scrollContainer = $parent.find('.mCSB_container');
-        var scrollPos = parseInt(scrollContainer.css('top'));
 
-        if (elementTop + scrollPos < 0) {
-            $parent.mCustomScrollbar('scrollTo', $element);
-        } else if (elementBottom + scrollPos > $parent.outerHeight()) {
-            $parent.mCustomScrollbar('scrollTo', $element);
+        if (elementTop < 0) {
+            $parent.scrollTop($parent.scrollTop() + elementTop);
+        } else if (elementBottom > $parent.outerHeight()) {
+            $parent.scrollTop($parent.scrollTop() + (elementBottom - $parent.outerHeight()));
         }
     },
     generateId: function (prefix) {
-        return prefix + (new Date().getTime()) + '-' + ('' + Math.random()).slice(2);
+        return prefix + (new Date().getTime()) + '-' + (''+Math.random()).slice(2);
     },
     sanitize: function (tekst) {
         return sanitize(tekst);
