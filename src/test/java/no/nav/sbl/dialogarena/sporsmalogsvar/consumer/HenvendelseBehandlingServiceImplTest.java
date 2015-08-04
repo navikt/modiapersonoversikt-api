@@ -42,7 +42,7 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -234,9 +234,11 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalFiltrereBortOkonomiskSosialhjelpDersomManIkkeHarTilgang() {
+    public void skalFjerneFritekstForOkonomiskSosialhjelpDersomManIkkeHarTilgang() {
+        String fritekst = "fritekst";
+
         XMLHenvendelse okonomiskSosialhjelp = lagXMLHenvendelse("1234", "1234", DateTime.now(), DateTime.now(), SPORSMAL_SKRIFTLIG.toString(), null,
-                new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker().withFritekst("Hallo").withTemagruppe(OKSOS.toString())))
+                new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker().withFritekst(fritekst).withTemagruppe(OKSOS.toString())))
                 .withTilknyttetEnhet("9999")
                 .withGjeldendeTemagruppe(OKSOS.toString());
 
@@ -245,7 +247,7 @@ public class HenvendelseBehandlingServiceImplTest {
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger, hasSize(0));
+        assertThat(meldinger.get(0).fritekst, is(not(fritekst)));
     }
 
 }
