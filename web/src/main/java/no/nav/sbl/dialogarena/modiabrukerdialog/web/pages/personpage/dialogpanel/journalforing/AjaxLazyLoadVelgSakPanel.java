@@ -21,7 +21,7 @@ public class AjaxLazyLoadVelgSakPanel extends AnimertPanel {
     private State state = State.INITIALIZE;
     private String fokusEtterLukking;
 
-    public AjaxLazyLoadVelgSakPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM) {
+    public AjaxLazyLoadVelgSakPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM, final boolean visSosialeTjenester) {
         super(id);
         setOutputMarkupId(true);
         add(getLoadingComponent(LAZY_LOAD_COMPONENT_ID));
@@ -39,7 +39,7 @@ public class AjaxLazyLoadVelgSakPanel extends AnimertPanel {
             @Override
             protected void respond(AjaxRequestTarget target) {
                 if (state == State.LOADING) {
-                    VelgSakPanel velgSakPanel = new VelgSakPanel(LAZY_LOAD_COMPONENT_ID, fnr, henvendelseVM);
+                    VelgSakPanel velgSakPanel = new VelgSakPanel(LAZY_LOAD_COMPONENT_ID, fnr, henvendelseVM, visSosialeTjenester);
                     velgSakPanel.oppdaterSaker();
                     velgSakPanel.settFokusEtterLukking(fokusEtterLukking);
                     velgSakPanel.setOutputMarkupId(true);

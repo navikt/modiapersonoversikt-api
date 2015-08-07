@@ -22,7 +22,7 @@ public class JournalforingsPanel extends Panel {
     private final IModel<HenvendelseVM> henvendelseVM;
     private final AjaxLazyLoadVelgSakPanel velgSakPanel;
 
-    public JournalforingsPanel(String id, String fnr, final IModel<HenvendelseVM> henvendelseVM) {
+    public JournalforingsPanel(String id, String fnr, final IModel<HenvendelseVM> henvendelseVM, boolean visSosialeTjenester) {
         super(id);
         this.henvendelseVM = henvendelseVM;
         setOutputMarkupPlaceholderTag(true);
@@ -35,7 +35,7 @@ public class JournalforingsPanel extends Panel {
         sakValgt.add(new Label("valgtSaksDatoFormatert"));
         sakValgt.add(new Label("valgtSak.temaNavn"));
         sakValgt.add(new Label("valgtSak.saksIdVisning"));
-        velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM);
+        velgSakPanel = new AjaxLazyLoadVelgSakPanel("velgSak", fnr, henvendelseVM, visSosialeTjenester);
 
         hiddenField = new HiddenField<>("sak-validering", Model.of(""));
         oppdaterHiddenFelt();

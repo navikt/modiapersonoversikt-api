@@ -33,7 +33,7 @@ public class JournalforingsPanelTest extends WicketPageTest {
     @Before
     public void setUp() {
         henvendelseVM = new CompoundPropertyModel<>(new HenvendelseVM());
-        wicket.goToPageWith(new JournalforingsPanel("id", "fnr", henvendelseVM));
+        wicket.goToPageWith(new JournalforingsPanel("id", "fnr", henvendelseVM, true));
         when(sakerService.hentSaker(anyString())).thenReturn(TestUtils.createMockSaker());
     }
 
@@ -48,7 +48,7 @@ public class JournalforingsPanelTest extends WicketPageTest {
     @Test
     public void viserValgtSakDersomSakErValgt() {
         henvendelseVM.getObject().valgtSak = TestUtils.createSak("id", "temakode", "fagsystemkode", "sakstype", DateTime.now());
-        wicket.goToPageWith(new JournalforingsPanel("id", "fnr", henvendelseVM))
+        wicket.goToPageWith(new JournalforingsPanel("id", "fnr", henvendelseVM, true))
                 .should().containComponent(thatIsInvisible().and(withId("ingenSakValgt")))
                 .should().containComponent(thatIsVisible().and(withId("sakValgt")))
                 .should().containComponent(thatIsInvisible().and(ofType(AjaxLazyLoadVelgSakPanel.class)));

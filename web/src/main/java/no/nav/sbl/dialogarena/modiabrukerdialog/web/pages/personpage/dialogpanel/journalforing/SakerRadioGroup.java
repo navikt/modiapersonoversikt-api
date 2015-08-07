@@ -12,7 +12,7 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
     private static final String GENERELL_PROPERTY_NAVN = "journalfor.sakstype.tekst.generell";
     private static final String SOSIALE_PROPERTY_NAVN = "journalfor.sakstype.tekst.sosiale";
 
-    public SakerRadioGroup(String id, SakerVM sakerVM) {
+    public SakerRadioGroup(String id, SakerVM sakerVM, boolean visSosialeTjenester) {
         super(id);
         setRequired(true);
 
@@ -32,7 +32,7 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
                 new SosialeTjenesterRadioChoices(
                         "sakstypePanelSosialeTjenester",
                         SOSIALE_PROPERTY_NAVN,
-                        sakerVM.visSosialeTjenester)
+                        sakerVM.visSosialeTjenester).setVisibilityAllowed(visSosialeTjenester)
         );
     }
 

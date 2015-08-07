@@ -28,7 +28,7 @@ public class VelgSakPanelTest extends WicketPageTest {
     public void viserTekniskFeilHvisSakerServiceTryner() {
         doThrow(Exception.class).when(sakerService).hentSaker(anyString());
 
-        VelgSakPanel velgSakPanel = new VelgSakPanel("id", "", new CompoundPropertyModel<>(new HenvendelseVM()));
+        VelgSakPanel velgSakPanel = new VelgSakPanel("id", "", new CompoundPropertyModel<>(new HenvendelseVM()), true);
         velgSakPanel.oppdaterSaker();
 
         wicket.goToPageWith(velgSakPanel)

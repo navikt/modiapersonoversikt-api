@@ -33,7 +33,7 @@ public class VelgSakPanel extends Panel {
     private SakerVM sakerVM;
     private String fokusEtterLukking;
 
-    public VelgSakPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM) {
+    public VelgSakPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM, boolean visSosialeTjenester) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
@@ -42,7 +42,7 @@ public class VelgSakPanel extends Panel {
         sakerVM = new SakerVM(sakerService, fnr);
         Form<HenvendelseVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(henvendelseVM));
         form.add(visibleIf(sakerVM.sakerFinnes()));
-        SakerRadioGroup sakerRadioGroup = new SakerRadioGroup("valgtSak", sakerVM);
+        SakerRadioGroup sakerRadioGroup = new SakerRadioGroup("valgtSak", sakerVM, visSosialeTjenester);
         form.add(
                 feedbackPanel,
                 sakerRadioGroup,

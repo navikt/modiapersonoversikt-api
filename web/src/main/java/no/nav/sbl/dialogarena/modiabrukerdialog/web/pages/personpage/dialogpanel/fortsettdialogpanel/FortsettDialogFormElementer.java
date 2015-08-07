@@ -110,7 +110,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         kanalbeskrivelse.setOutputMarkupId(true);
         add(kanalbeskrivelse);
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model);
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model, false);
         journalforingsPanel.add(visibleIf(
                 both(brukerKanSvare.getModel())
                         .and(not(model.getObject().traadJournalfort()))
@@ -136,7 +136,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
             }
         });
 
-        List<FeedbackLabel> feedbackLabels = asList( FeedbackLabel.create(tekstfelt),
+        List<FeedbackLabel> feedbackLabels = asList(FeedbackLabel.create(tekstfelt),
                 FeedbackLabel.create(kanalRadioGroup), FeedbackLabel.create(journalforingsPanel)
         );
         avhengerAvKanlOgDelMedBrukerValg.addAll(feedbackLabels);
