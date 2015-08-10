@@ -16,7 +16,8 @@ public class HentDokumentResultat {
         IKKE_SAKSPART("vedlegg.feilmelding.ikkesakspart.head", "vedlegg.feilmelding.ikkesakspart.lead"),
         INGEN_TILGANG("vedlegg.feilmelding.ikketilgang.head", "vedlegg.feilmelding.ikketilgang.lead"),
         DOKUMENT_IKKE_FUNNET("vedlegg.feilmelding.joark.dokumentikkefunnet.head", "vedlegg.feilmelding.joark.dokumentikkefunnet.lead"),
-        DOKUMENT_SLETTET("vedlegg.feilmelding.joark.dokumentslettet.head", "vedlegg.feilmelding.joark.dokumentslettet.lead");
+        DOKUMENT_SLETTET("vedlegg.feilmelding.joark.dokumentslettet.head", "vedlegg.feilmelding.joark.dokumentslettet.lead"),
+        GENERELL_FEIL("vedlegg.feilmelding.joark.generell.head", "vedlegg.feilmelding.joark.generell.lead");
 
         public final String heading;
         public final String lead;

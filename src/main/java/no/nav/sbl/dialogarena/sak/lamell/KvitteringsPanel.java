@@ -160,12 +160,19 @@ public class KvitteringsPanel extends Panel {
     }
 
     private void hentOgVisDokument(AjaxRequestTarget target, String journalpostId, Dokument dokument) {
-        HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
+        try {
+            HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
+            if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
+                visVedlegg(target, hentetDokument.pdfSomBytes.get());
+            } else {
+                visFeilmeldingVindu(target, hentetDokument.feilmelding);
+            }
+        } catch (Exception e) {
+            logger.error("Det skjedde en uventet feil i hentDokument-kallet mot Joark. " +
+                    "Dette kan skyldes at tjenesten er nede eller at det skjer en feil i f. eks. datapower. " +
+                    "Brukeren vil vises en generell feilmelding");
 
-        if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
-            visVedlegg(target, hentetDokument.pdfSomBytes.get());
-        } else {
-            visFeilmeldingVindu(target, hentetDokument.feilmelding);
+            visFeilmeldingVindu(target, Feilmelding.GENERELL_FEIL);
         }
     }
 
