@@ -55,7 +55,7 @@
         <modig.frontend.version>1.1.114</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.0.2</modig.wicket.version>
+        <modig.wicket.version>3.0.3</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.4</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -104,10 +104,10 @@
         <dialogarena.behandlingsinformasjon.version>0.0.41</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>2.4</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>3.8</sporsmalogsvar.version>
-        <saksoversikt.version>3.8</saksoversikt.version>
+        <saksoversikt.version>3.10</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>1.0.5</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>1.0.6</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.39</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
