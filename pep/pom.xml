@@ -3,7 +3,7 @@
     <parent>
         <artifactId>modiabrukerdialog</artifactId>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <version>5.13-SNAPSHOT</version>
+        <version>5.13</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
