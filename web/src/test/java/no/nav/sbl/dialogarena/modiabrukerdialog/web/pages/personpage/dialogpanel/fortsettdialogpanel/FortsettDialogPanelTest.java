@@ -406,6 +406,11 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     }
 
     @Test
+    public void tilknyttetAnsattHvisIngenUtgaaendeSporsmal() {
+        assertThat(erTilknyttetAnsatt(asList(lagSporsmalFraBruker(), lagSvar(), lagSvar())), is(SAKSBEHANDLER));
+    }
+
+    @Test
     public void tilknyttetAnsattArverEnhet() {
         Melding sporsmalFraBruker = lagSporsmalFraBruker();
         sporsmalFraBruker.opprettetDato = DateTime.now().minusDays(2);

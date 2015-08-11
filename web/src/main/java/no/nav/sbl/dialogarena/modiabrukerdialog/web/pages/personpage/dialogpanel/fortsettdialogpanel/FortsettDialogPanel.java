@@ -147,13 +147,16 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
     static HenvendelseVM.OppgaveTilknytning erTilknyttetAnsatt(List<Melding> traad) {
         boolean tilknyttetAnsatt;
-        // casen med et enkeltstående spørsmål fra bruker -> må overstyre
-        if (traad.size() == 1 && traad.get(0).meldingstype == SPORSMAL_SKRIFTLIG) {
-            tilknyttetAnsatt = true;
-        } else {
+        if (harUtgaaendeSporsmal(traad)) {
             tilknyttetAnsatt = siste(traad).get().erTilknyttetAnsatt;
+        } else {
+            tilknyttetAnsatt = true;
         }
         return tilknyttetAnsatt ? SAKSBEHANDLER : ENHET;
+    }
+
+    private static boolean harUtgaaendeSporsmal(List<Melding> traad) {
+        return on(traad).exists(where(Melding.TYPE, equalTo(SPORSMAL_MODIA_UTGAAENDE)));
     }
 
     private static boolean ingenAvType(List<Melding> svar, Meldingstype type) {
