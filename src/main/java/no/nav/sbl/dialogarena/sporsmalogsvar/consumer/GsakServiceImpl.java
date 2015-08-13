@@ -41,7 +41,7 @@ public class GsakServiceImpl implements GsakService {
     private static final Logger logger = LoggerFactory.getLogger(GsakServiceImpl.class);
 
     public static final int DEFAULT_OPPRETTET_AV_ENHET_ID = 2820;
-    public static final String HENVENDELSESTYPE_KODE = "BESVAR_KNA";
+    public static final String HENVENDELSESTYPE_KODE = "DIALOG";
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
     public static final String KODE_KONTAKT_NAV = "KNA";
 
