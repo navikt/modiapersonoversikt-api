@@ -211,13 +211,14 @@ public class NyOppgaveFormWrapper extends Panel {
                 return tema.oppgaveTyper;
             }
         };
-
+        final WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
         DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new AjaxDropDownChoice<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslatteEnheter();
                 oppdaterAnsatteListe();
                 target.add(enhetVelger, ansattVelger);
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
 
             @Override
@@ -228,7 +229,7 @@ public class NyOppgaveFormWrapper extends Panel {
         };
         typeDropdown.setRequired(true);
 
-        WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
+
         typeContainer.setOutputMarkupPlaceholderTag(true);
 
         typeContainer.add(typeDropdown);
