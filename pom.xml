@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog-api</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog-api</artifactId>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.1</version>
 
     <properties>
         <spring.version>3.2.9.RELEASE</spring.version>
@@ -105,7 +105,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog-api.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog-api/browse</url>
-        <tag>HEAD</tag>
+        <tag>modiabrukerdialog-api-3.1</tag>
     </scm>
 
 </project>
