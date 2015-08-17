@@ -1,3 +1,6 @@
 .dialogpanel .popupContainer a {
     box-shadow: none !important;
 }
+.dialogpanel .journalforingSporsmal .sak-info-link:focus {
+    box-shadow: none;
+}
