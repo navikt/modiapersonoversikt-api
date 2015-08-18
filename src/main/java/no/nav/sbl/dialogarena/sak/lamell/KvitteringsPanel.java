@@ -183,7 +183,10 @@ public class KvitteringsPanel extends Panel {
     }
 
     private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding, String... argumenter) {
-        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, cms.hentTekst(feilmelding.heading), format(cms.hentTekst(feilmelding.lead), argumenter), cms.hentTekst("modalvindu.advarsel.knapp")));
+        modalWindow.setContent(new ModalAdvarselPanel(modalWindow,
+                cms.hentTekst(feilmelding.heading),
+                format(cms.hentTekst(feilmelding.lead), argumenter),
+                cms.hentTekst("modalvindu.advarsel.knapp")));
         modalWindow.show(target);
     }
 
