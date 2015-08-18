@@ -9,6 +9,7 @@ import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -65,7 +66,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         } else if (erFeilregistrert(journalpost)) {
             return new HentDokumentResultat(false, FEILREGISTRERT);
         } else if (!erInnsenderSakspart(journalpost, fnr)) {
-            return new HentDokumentResultat(false, IKKE_SAKSPART);
+            return new HentDokumentResultat(false, IKKE_SAKSPART, hentSakspart(journalpost));
         } else if (!harEnhetTilgangTilTema(journalpost)) {
             return new HentDokumentResultat(false, INGEN_TILGANG);
         }
@@ -139,6 +140,31 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return erInnsenderSakspart;
     }
 
+    private WSSak hentSak(String sakId) {
+        return gSakService.hentSak(sakId);
+    }
+
+    private static Predicate<WSAktoer> aktoerMedFnr(final String fnr) {
+        return new Predicate<WSAktoer>() {
+            @Override
+            public boolean evaluate(WSAktoer wsAktoer) {
+                return wsAktoer.getIdent().equals(fnr);
+            }
+        };
+    }
+
+    private String hentSakspart(WSJournalpost journalpost) {
+        WSSak sak = hentSak(journalpost.getGjelderSak().getSakId());
+        return on(sak.getGjelderBrukerListe()).map(AKTOER_TIL_IDENT).head().getOrElse("");
+    }
+
+    private static Transformer<WSAktoer, String> AKTOER_TIL_IDENT = new Transformer<WSAktoer, String>() {
+        @Override
+        public String transform(WSAktoer wsAktoer) {
+            return wsAktoer.getIdent();
+        }
+    };
+
     private boolean harEnhetTilgangTilTema(WSJournalpost journalpost) {
         PolicyRequest temagruppePolicyRequest = forRequest(
                 actionId("temagruppe"),
@@ -156,16 +182,4 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return true;
     }
 
-    private WSSak hentSak(String sakId) {
-        return gSakService.hentSak(sakId);
-    }
-
-    private static Predicate<WSAktoer> aktoerMedFnr(final String fnr) {
-        return new Predicate<WSAktoer>() {
-            @Override
-            public boolean evaluate(WSAktoer wsAktoer) {
-                return wsAktoer.getIdent().equals(fnr);
-            }
-        };
-    }
 }

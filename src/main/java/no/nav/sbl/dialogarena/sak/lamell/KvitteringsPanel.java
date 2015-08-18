@@ -102,7 +102,7 @@ public class KvitteringsPanel extends Panel {
 
     private void leggTilVedleggFeiletPoput() {
         modalWindow = new ModigModalWindow("vedleggFeiletPopup");
-        modalWindow.setInitialHeight(250);
+        modalWindow.setInitialHeight(300);
         add(modalWindow);
     }
 
@@ -165,7 +165,7 @@ public class KvitteringsPanel extends Panel {
             if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
                 visVedlegg(target, hentetDokument.pdfSomBytes.get());
             } else {
-                visFeilmeldingVindu(target, hentetDokument.feilmelding);
+                visFeilmeldingVindu(target, hentetDokument.feilmelding, hentetDokument.argumenterTilFeilmelding);
             }
         } catch (Exception e) {
             logger.error("Det skjedde en uventet feil i hentDokument-kallet mot Joark. " +
@@ -182,8 +182,8 @@ public class KvitteringsPanel extends Panel {
         resourceStreamAjaxBehavoiur.open(target);
     }
 
-    private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding) {
-        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, feilmelding.heading, feilmelding.lead, "modalvindu.advarsel.knapp"));
+    private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding, String... argumenter) {
+        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, cms.hentTekst(feilmelding.heading), format(cms.hentTekst(feilmelding.lead), argumenter), cms.hentTekst("modalvindu.advarsel.knapp")));
         modalWindow.show(target);
     }
 

@@ -29,7 +29,7 @@
 
         <!-- Egenlagde dependencies  -->
         <modig.frontend.version>1.1.75</modig.frontend.version>
-        <modig.wicket.version>3.0.3</modig.wicket.version>
+        <modig.wicket.version>3.0.4</modig.wicket.version>
         <modia-felleskomponenter.version>1.0.6</modia-felleskomponenter.version>
         <modiabrukerdialog-api.version>2.3</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>

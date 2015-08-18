@@ -31,6 +31,7 @@ public class HentDokumentResultat {
     public Optional<byte[]> pdfSomBytes;
     public boolean harTilgang;
     public Feilmelding feilmelding;
+    public String[] argumenterTilFeilmelding;
 
     public HentDokumentResultat(boolean harTilgang) {
         this.harTilgang = harTilgang;
@@ -45,5 +46,10 @@ public class HentDokumentResultat {
     public HentDokumentResultat(boolean harTilgang, byte[] pdfSomBytes) {
         this.harTilgang = harTilgang;
         this.pdfSomBytes = optional(pdfSomBytes);
+    }
+
+    public HentDokumentResultat(boolean harTilgang, Feilmelding feilmelding, String... argumenterTilFeilmelding) {
+        this(harTilgang, feilmelding);
+        this.argumenterTilFeilmelding = argumenterTilFeilmelding;
     }
 }

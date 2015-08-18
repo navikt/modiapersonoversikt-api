@@ -28,8 +28,7 @@ import java.util.Random;
 
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -111,6 +110,7 @@ public class TilgangskontrollServiceTest {
         HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(IKKE_SAKSPART, hentDokumentResultat.feilmelding);
+        assertNotNull(hentDokumentResultat.argumenterTilFeilmelding);
     }
 
     @Test
