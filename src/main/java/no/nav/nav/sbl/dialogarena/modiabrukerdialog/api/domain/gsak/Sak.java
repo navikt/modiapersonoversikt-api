@@ -19,17 +19,18 @@ public class Sak implements Serializable, Comparable<Sak> {
     public Optional<String> fagsystemSaksId = none();
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
     public DateTime opprettetDato;
-    public Boolean finnesIGsak;
+    public Boolean finnesIGsak = false, finnesIPsak = false;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
     public static final String TEMAKODE_KLAGE_ANKE = "KLA";
     public static final String SAKSTYPE_GENERELL = "GEN";
     public static final String SAKSTYPE_MED_FAGSAK = "MFS";
     public static final String FAGSYSTEMKODE_ARENA = "AO01";
+    public static final String FAGSYSTEMKODE_PSAK = "PSAK";
 
     public static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
     public static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = unmodifiableList(asList("AGR", "FUL", "GEN", "KTR", "STO", "SER", "SYM", "TRK", "TRY", "VEN", "UFM", TEMAKODE_OPPFOLGING));
-    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList(FAGSYSTEMKODE_ARENA, "IT01", "OEBS", "V2", "AO11"));
+    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList(FAGSYSTEMKODE_ARENA, FAGSYSTEMKODE_PSAK, "IT01", "OEBS", "V2", "AO11"));
 
     public boolean isSakstypeForVisningGenerell() {
         return SAKSTYPE_GENERELL.equals(sakstype);
@@ -89,7 +90,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     };
 
     public String getOpprettetDatoFormatert() {
-        return Datoformat.langUtenLiteral(opprettetDato);
+        return opprettetDato == null ? "" : Datoformat.langUtenLiteral(opprettetDato);
     }
 
     public String getSaksIdVisning() {
