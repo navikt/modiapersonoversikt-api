@@ -17,4 +17,5 @@
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:diskresjon-familiemedlem</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:aareg-tilgang</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:okonomisk-sosialhjelp</PolicyIdReference>
+	<PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:pesys-tilgang</PolicyIdReference>
 </PolicySet>

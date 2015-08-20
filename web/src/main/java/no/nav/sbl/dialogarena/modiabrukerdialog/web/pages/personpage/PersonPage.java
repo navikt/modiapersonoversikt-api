@@ -74,7 +74,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
-    private static final Logger logger = getLogger(PersonPage.class);
+	private static final Logger logger = getLogger(PersonPage.class);
 
     private static final List<String> URL_TIL_SESSION_PARAMETERE = asList(HENVENDELSEID, OPPGAVEID, BESVARES);
 
@@ -88,8 +88,9 @@ public class PersonPage extends BasePage {
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
     public static final JavaScriptResourceReference SCROLL_JS = new JavaScriptResourceReference(PersonPage.class, "scrollbars.js");
+	public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
 
-    private final String fnr;
+	private final String fnr;
 
     private LamellContainer lamellContainer;
     private RedirectModalWindow redirectPopup;
@@ -110,7 +111,7 @@ public class PersonPage extends BasePage {
         lamellContainer = new LamellContainer("lameller", fnr, getSession());
 
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
-
+		final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
         add(
                 new HentPersonPanel("searchPanel", ""),
                 new Button("toggle-sok"),
@@ -123,7 +124,7 @@ public class PersonPage extends BasePage {
                 new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
-                new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr),
+                new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
                 new DialogPanel("dialogPanel", fnr),
                 new TimeoutBoks("timeoutBoks", fnr)
         );
@@ -152,7 +153,8 @@ public class PersonPage extends BasePage {
             public WebMarkupContainer getPanel(String panelId) {
 
                 boolean hasAaregTilgang = pep.hasAccess(forRequest(actionId("aaregles"), resourceId("")));
-                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang);
+                boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
+                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang, hasPesysTilgang);
             }
         });
 
