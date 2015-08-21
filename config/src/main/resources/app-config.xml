@@ -35,6 +35,7 @@
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss"/>
         <localFiles name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
+        <baseUrl alias="server.pesys" mapToProperty="server.pesys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
