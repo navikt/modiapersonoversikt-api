@@ -111,7 +111,7 @@
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.39</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
-        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.24</henvendelse-soknader-tjenestespesifikasjon.version>
+        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>1.0.0</joark-tjenestespesifikasjon.version>
     </properties>
 
