@@ -7,6 +7,8 @@
 @blueLight: #0ca9e1;
 @blueDark: #0067cf;
 @black: #000;
+@blueMedium: #226aa4;
+@offwhite: #f5f5f5;
 @focusBackground: @white;
 @focusColor: @grayDark;
 
@@ -170,8 +172,13 @@
             padding: 0 0 2rem;
 
             li {
-                &.aktiv{
-                    background: @white;
+                &.aktiv a {
+                    background: @blueMedium;
+                    color: @offwhite;
+
+                    &:hover {
+                      background-color: darken(@blueMedium, 5);
+                    }
                 }
 
                 a {
@@ -186,11 +193,6 @@
 
                     &:hover {
                         background: @grayMediumDark;
-                    }
-
-                    &:active,&:focus {
-                        background: @focusBackground;
-                        color: @focusColor;
                     }
                 }
             }
