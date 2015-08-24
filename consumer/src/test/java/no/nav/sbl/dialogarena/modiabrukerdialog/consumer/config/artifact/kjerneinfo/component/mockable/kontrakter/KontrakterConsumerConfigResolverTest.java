@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.kontrakter;
 
-import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
+import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
-import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
+import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.KontrakterConsumerConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
@@ -32,10 +32,10 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 public class KontrakterConsumerConfigResolverTest {
 
     @Inject
-    private Wrapper<YtelseskontraktServiceBi> ytelseskontraktService;
+    private Wrapper<DefaultYtelseskontraktService> ytelseskontraktService;
 
     @Inject
-    private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktService;
+    private Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService;
 
     @Inject
     private KontrakterConsumerConfigResolver resolver;
