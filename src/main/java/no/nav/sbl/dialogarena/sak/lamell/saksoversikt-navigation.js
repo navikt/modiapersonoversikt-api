@@ -20,10 +20,10 @@
      * @constructor
      */
     var SaksoversiktView = function SaksoversiktView(selector, shortcut) {
-        this.el = $(selector);
-        var itemSelector = '> UL > LI > A';
+        this.$el = $(selector);
+        var itemSelector = 'UL.sak-navigering-liste > LI > A';
 
-        this.el.addKeyNavigation({
+        this.$el.addKeyNavigation({
             itemsSelector: itemSelector,
             numberNavigation: true
         });
@@ -33,15 +33,17 @@
         window.SaksoversiktViews = window.SaksoversiktViews || [];
         window.SaksoversiktViews[selector] = this;
 
-        this.el.find(itemSelector).focus(function(event) {
-            if($(event.currentTarget).closest("LI").is(":not(.aktiv)")) {
-                $(event.currentTarget).trigger("click");
-            }
-        });
+        this.$el.find(itemSelector).focus(this.keynavigationFocusHandler);
     };
 
     SaksoversiktView.prototype.onShortcut = function onShortcut() {
-        this.el.focus();
+        this.$el.focus();
+    };
+
+    SaksoversiktView.prototype.keynavigationFocusHandler = function(event) {
+        if($(event.currentTarget).closest("LI").is(":not(.aktiv)")) {
+            $(event.currentTarget).trigger("click");
+        }
     };
 
     window.Modig.Modia.SaksoversiktView = SaksoversiktView;
