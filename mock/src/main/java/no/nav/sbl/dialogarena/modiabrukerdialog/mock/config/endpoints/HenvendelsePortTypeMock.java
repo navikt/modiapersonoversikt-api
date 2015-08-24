@@ -108,7 +108,8 @@ public class HenvendelsePortTypeMock {
             createXMLHenvendelse(BEHANDLINGS_ID5, BEHANDLINGS_ID5, now().minusDays(1), null,
                     createXMLMeldingTilBruker("ARBD", "TEKST", KORT_TEKST), valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
                     .withHenvendelseType(SPORSMAL_SKRIFTLIG.name())
-                    .withKontorsperreEnhet("0122"),
+                    .withKontorsperreEnhet("0122")
+                    .withBrukersEnhet("1234"),
 
             createXMLHenvendelse(BEHANDLINGS_ID6, BEHANDLINGS_ID6, now().minusDays(2), null,
                     null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name()),

@@ -56,6 +56,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ARBD;
         sporsmal.tilknyttetEnhet = enhet;
+        sporsmal.brukersEnhet = enhet;
         wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal));
     }
 

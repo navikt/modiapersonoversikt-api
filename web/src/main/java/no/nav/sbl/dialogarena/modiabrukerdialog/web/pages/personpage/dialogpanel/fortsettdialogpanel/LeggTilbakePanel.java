@@ -179,7 +179,7 @@ public class LeggTilbakePanel extends Panel {
         WebMarkupContainer nyTemagruppeSkjuler = new WebMarkupContainer("nyTemagruppeSkjuler");
 
         List<Temagruppe> temagrupper = new ArrayList<>(Temagruppe.LEGG_TILBAKE);
-        if (isBlank(melding.tilknyttetEnhet)) {
+        if (isBlank(melding.brukersEnhet)) {
             temagrupper.removeAll(Temagruppe.KOMMUNALE_TJENESTER);
         }
 
