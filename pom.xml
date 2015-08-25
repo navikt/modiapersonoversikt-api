@@ -92,7 +92,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.1</personsok.version>
-        <kjerneinfo.versjon>1.1.15</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.16</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.0</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
