@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ public class KvitteringsPanel extends Panel {
     private Logger logger = LoggerFactory.getLogger(KvitteringsPanel.class);
     private ModigModalWindow modalWindow;
     private String fnr;
+    private static final DateTime HL4_2015_DATO = new DateTime(2014, 12, 9, 0, 0);
 
     public KvitteringsPanel(String id, String tittel, Model<Kvittering> kvitteringsModel, String fnr) {
         super(id, kvitteringsModel);
@@ -60,7 +62,7 @@ public class KvitteringsPanel extends Panel {
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
 
-        String dato = dateTime((kvittering.behandlingDato));
+        String dato = dateTime(kvittering.behandlingDato);
         String sendtAvString = cms.hentTekst("kvittering.sendt.av");
 
         String sendtInnTekst;
@@ -111,7 +113,7 @@ public class KvitteringsPanel extends Panel {
         innsendteVedlegg.add(visibleIf(of(!kvittering.innsendteDokumenter.isEmpty())));
         innsendteVedlegg.add(
                 new Label("innsendteDokumenterHeader", cms.hentTekst("behandling.innsendte.dokumenter.header")),
-                getDokumenterView("innsendteVedlegg", kvittering.journalpostId, kvittering.innsendteDokumenter, false)
+                getDokumenterView("innsendteVedlegg", kvittering.journalpostId, kvittering.innsendteDokumenter, false, kvittering.behandlingDato)
         );
         add(innsendteVedlegg);
     }
@@ -121,12 +123,12 @@ public class KvitteringsPanel extends Panel {
         manglendeVedlegg.add(visibleIf(of(!kvittering.manglendeDokumenter.isEmpty() && !kvittering.ettersending)));
         manglendeVedlegg.add(
                 new Label("manglendeVedleggHeader", cms.hentTekst("behandling.manglende.dokumenter.header")),
-                getDokumenterView("manglendeVedlegg", kvittering.journalpostId, kvittering.manglendeDokumenter, true)
+                getDokumenterView("manglendeVedlegg", kvittering.journalpostId, kvittering.manglendeDokumenter, true, kvittering.behandlingDato)
         );
         add(manglendeVedlegg);
     }
 
-    private PropertyListView<Dokument> getDokumenterView(String listViewId, final String journalpostId, List<Dokument> dokumenter, final boolean visInnsendingsvalg) {
+    private PropertyListView<Dokument> getDokumenterView(String listViewId, final String journalpostId, List<Dokument> dokumenter, final boolean visInnsendingsvalg, final DateTime opprettetDato) {
         return new PropertyListView<Dokument>(listViewId, dokumenter) {
 
             @Override
@@ -153,6 +155,7 @@ public class KvitteringsPanel extends Panel {
                     String lenkeVisningsTekst = hentVisDokumentTekst(dokument.hovedskjema);
                     hentVedleggLenke.add(new Label("saksoversikt.kvittering.visvedlegg", lenkeVisningsTekst));
                     hentVedleggLenke.add(new AttributeAppender("aria-label", lenkeVisningsTekst + ": " + dokumentTittel));
+                    hentVedleggLenke.add(visibleIf(new Model<>(bleSendtInnEtter2014HL4(opprettetDato))));
                     item.add(hentVedleggLenke);
                 }
             }
@@ -211,6 +214,13 @@ public class KvitteringsPanel extends Panel {
 
     private String hentVisDokumentTekst(boolean erHovedskjema) {
         return erHovedskjema ? cms.hentTekst("saksoversikt.kvittering.vissoknad") : cms.hentTekst("saksoversikt.kvittering.visvedlegg");
+    }
+
+    private boolean bleSendtInnEtter2014HL4(DateTime opprettetDato) {
+        if (opprettetDato.isAfter(HL4_2015_DATO)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
