@@ -224,14 +224,14 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_MELDINGER, "M", new LerretFactory() {
             @Override
             public Lerret createLerret(String id, String name) {
-                final InnboksProps innboksProps = new InnboksProps(
-                        optional((String) session.getAttribute(HENVENDELSEID)),
-                        optional((String) session.getAttribute(OPPGAVEID)),
-                        optional((String) session.getAttribute(BESVARMODUS)),
-                        optional(Boolean.valueOf((String) session.getAttribute(FORTSETTDIALOGMODUS))));
                 return new AjaxLazyLoadLerret(id, name) {
                     @Override
                     public Lerret getLazyLoadComponent(String markupId) {
+                        InnboksProps innboksProps = new InnboksProps(
+                                optional((String) session.getAttribute(HENVENDELSEID)),
+                                optional((String) session.getAttribute(OPPGAVEID)),
+                                optional((String) session.getAttribute(BESVARMODUS)),
+                                optional(Boolean.valueOf((String) session.getAttribute(FORTSETTDIALOGMODUS))));
                         return new Innboks(markupId, fnrFromRequest, innboksProps);
                     }
                 };
