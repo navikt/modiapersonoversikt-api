@@ -20,7 +20,17 @@
   .meldingsliste {
     width: 40%;
     overflow-y: visible;
-    padding-right: 1rem;
+    position: relative;
+  }
+  .traad-liste-scroll {
+    width: 100%;
+    height: 100%;
+    padding-top: 3.39rem;
+  }
+  .traad-liste-visning {
+    height: 100%;
+    padding: 0 1rem 2rem 0;
+    overflow: visible;
   }
   .traadDetaljer {
     width: 60%;
@@ -30,7 +40,7 @@
       overflow-y: visible;
     }
   }
-  .meldingsliste, .traadDetaljer {
+  .meldingsliste, .traadDetaljer, .traad-liste-traad-liste-scroll {
     float: left;
     height: 100%;
   }
@@ -45,8 +55,12 @@
   .meldingsliste {
     background-color: @graabakgrunn;
     border-right: 1px solid @rammefarge;
+    padding: 0;
 
     .innboksSokToggle {
+      position: absolute;
+      width: 100%;
+      background-color: @graabakgrunn;
       border-bottom: solid 1px #d1d1d1;
       > * {
         margin: 0.5rem;
