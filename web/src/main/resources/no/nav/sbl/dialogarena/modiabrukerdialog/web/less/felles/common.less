@@ -107,17 +107,12 @@ LABEL, .label {
   font-size: 0.857rem;
 }
 
-INPUT.errorJS, SELECT.errorJS {
-  background-color: @errorBackgroundLight;
-  border: 1px solid @errorTextLight;
-}
-
-LABEL.errorJS {
+SPAN.errorJS {
+  .feedbacklabel;
   position: absolute;
   left: 0;
   bottom: -2.9rem;
   white-space: nowrap;
-  color: @errorTextLight;
   text-transform: none;
 }
 
