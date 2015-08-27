@@ -94,14 +94,17 @@
     position: absolute;
   }
   SPAN.feedbackPanelERROR, UL.feedbackPanel, LI:before {
-    color: @errorTextLight;
-    font-size: @fontSizeMini;
+    .mork-bakgrunn .feedbacklabel;
     background: transparent;
     white-space: nowrap;
     content: "" !important;
     position: absolute;
     left: 0;
-    bottom: -0.6em;
+    bottom: -0.8em;
+  }
+  SPAN.feedbackPanelERRORJS {
+    bottom: -1.6em !important;
+    text-transform: italic;
   }
   UL.feedbackPanel {
     list-style-type: none;
