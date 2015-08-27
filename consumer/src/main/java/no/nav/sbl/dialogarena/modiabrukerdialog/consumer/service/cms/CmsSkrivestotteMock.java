@@ -16,6 +16,17 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
         List<SkrivestotteTekst> tekster = new ArrayList<>();
 
         tekster.addAll(asList(
+                skrivestotteTekst("Lang tekst",
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?\n" +
+                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi corporis, ipsum nemo nesciunt non provident quis rem soluta temporibus ut vel vitae voluptas voluptatem voluptatibus. Ipsam minima nobis voluptatum?",
+                        "lang", "scroll"),
                 skrivestotteTekst(
                         "Taushetsbelagt eller sensitiv informasjon",
                         "Takk for din henvendelse.\n" +
