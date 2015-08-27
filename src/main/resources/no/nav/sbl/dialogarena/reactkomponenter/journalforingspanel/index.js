@@ -1,12 +1,19 @@
-var React = require('react/addons');
-var chunk = require('lodash/array/chunk');
+import {chunk} from 'lodash/array';
+import React from 'react';
 
-var JournalforingsPanel = React.createClass({
-    render: function(){
+class JournalforingsPanel extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
         return (
-            <h2>Test</h2>
+            <div className="journalforings_panel">
+
+            </div>
         );
     }
-});
+}
 
-module.exports = JournalforingsPanel;
+export default JournalforingsPanel;
+
