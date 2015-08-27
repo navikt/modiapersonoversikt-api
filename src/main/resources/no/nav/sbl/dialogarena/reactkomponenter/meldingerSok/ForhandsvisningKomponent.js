@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var Melding = require('./Melding');
+var ScrollPortal = require('./../utils/ScrollPortal.js');
 var format = require('string-format');
 
 var ForhandsvisningKomponent = React.createClass({
@@ -23,12 +24,12 @@ var ForhandsvisningKomponent = React.createClass({
 
         return (
             <div>
-                <div className="traadPanel">
+                <ScrollPortal className="traadPanel" innerClassName="traad-panel-wrapper">
                     <div className="traadinfo">
                         <span dangerouslySetInnerHTML={{__html: antallInformasjon}}></span>
                     </div>
                     <div>{meldingElementer}</div>
-                </div>
+                </ScrollPortal>
                 <div className="velgPanel">
                     <input type="submit" value="Vis dialog" className="knapp-hoved-liten" />
                 </div>

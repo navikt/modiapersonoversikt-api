@@ -64,6 +64,18 @@ var Utils = {
     tilParagraf: function (avsnitt) {
         avsnitt = sanitize(avsnitt, {allowedTags: ['a', 'em']});
         return <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>;
+    },
+    omit: function(obj, filterkeys) {
+        var nObj = Object.create(null);
+        var filters = filterkeys.hasOwnProperty('length') ? filterkeys : [filterkeys];
+
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key) && filters.indexOf(key) < 0) {
+                nObj[key] = obj[key];
+            }
+        }
+        return nObj;
     }
+
 };
 module.exports = Utils;

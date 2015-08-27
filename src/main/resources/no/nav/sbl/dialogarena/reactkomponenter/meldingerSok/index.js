@@ -4,7 +4,7 @@ var ListevisningKomponent = require('./ListevisningKomponent');
 var ForhandsvisningKomponent = require('./ForhandsvisningKomponent');
 var Utils = require('./../utils');
 var MeldingerSokStore = require('./MeldingerSokStore');
-var Sokliste = require('./Sokliste.js');
+var ScrollPortal = require('./../utils/ScrollPortal.js');
 
 var modalConfig = {
     title: {
@@ -68,7 +68,15 @@ var MeldingerSok = React.createClass({
         var erTom = this.state.traader.length === 0;
         var sokVisning = (
             <div className={"sok-visning " + (erTom ? 'hidden' : '')}>
-                <Sokliste listePanelId={this.state.listePanelId} forhandsvisningsPanelId={this.state.forhandsvisningsPanelId}>{tekstlistekomponenter}</Sokliste>
+                <ScrollPortal id={this.state.listePanelId}
+                              className="sok-liste"
+                              role="tablist"
+                              tabIndex="-1"
+                              aria-live="assertive"
+                              aria-atomic="true"
+                              aria-controls={this.state.forhandsvisningsPanelId}>
+                    {tekstlistekomponenter}
+                </ScrollPortal>
                 <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel"
                      id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
                     <ForhandsvisningKomponent traad={this.state.valgtTraad}/>

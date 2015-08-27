@@ -1,8 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react/addons');
-
 var Utils = require('./../utils');
-
+var ScrollPortal = require('./../utils/ScrollPortal.js');
 var LocaleSelect = require('./LocaleSelect');
 
 
@@ -29,10 +28,10 @@ var TekstForhandsvisning = React.createClass({
 
         return (
             <div>
-                <div className="tekstPanel">
+                <ScrollPortal className="tekstPanel" innerClassName="tekst-panel-wrapper">
                 {paragrafer}
                 {knagger}
-                </div>
+                </ScrollPortal>
                 <div className="velgPanel">
                     <LocaleSelect tekst={tekst} locale={this.props.locale} store={this.props.store}/>
                     <input type="submit" value="Velg tekst" className="knapp-hoved-liten" />
