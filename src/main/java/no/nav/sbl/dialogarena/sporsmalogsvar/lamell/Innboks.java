@@ -58,16 +58,16 @@ public class Innboks extends Lerret {
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
 
+        WebMarkupContainer meldingsliste = new WebMarkupContainer("meldingsliste");
+        meldingsliste.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
+
         final TraaddetaljerPanel traaddetaljerPanel = new TraaddetaljerPanel("detaljpanel", innboksVM);
         traaddetaljerPanel.setOutputMarkupId(true);
         traaddetaljerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
 
         final AlleMeldingerPanel alleMeldingerPanel = new AlleMeldingerPanel("meldinger", innboksVM, traaddetaljerPanel.getMarkupId());
-        alleMeldingerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
-
         final ReactComponentPanel meldingerSok = new ReactComponentPanel("meldingerSokContainer", "MeldingerSok", getMeldingerSokProps());
-        meldingerSok.add(visibleIf(not(innboksVM.harFeilmelding())));
 
 
         final WebMarkupContainer meldingerSokToggleContainer = new WebMarkupContainer("meldingerSokToggleContainer");
@@ -90,14 +90,14 @@ public class Innboks extends Lerret {
                 target.add(meldingerSokToggleContainer);
             }
         });
-        meldingerSokToggleButton.add(visibleIf(not(innboksVM.harFeilmelding())));
         meldingerSokToggleContainer.add(meldingerSokToggleButton);
 
         WebMarkupContainer feilmeldingPanel = new WebMarkupContainer("feilmeldingpanel");
         feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
         feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
 
-        add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
+        meldingsliste.add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel);
+        add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
     }
 
     private Map<String, Object> getMeldingerSokProps() {
