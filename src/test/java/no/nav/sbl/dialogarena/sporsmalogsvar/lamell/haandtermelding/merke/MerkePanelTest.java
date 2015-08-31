@@ -172,6 +172,8 @@ public class MerkePanelTest extends WicketPageTest {
     private MerkePanel getMerkePanel(List<Melding> meldinger) {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(meldinger);
         innboksVM = new InnboksVM(FNR, henvendelseBehandlingService);
+        innboksVM.oppdaterMeldinger();
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
         MerkePanel merkePanel = new MerkePanel("panel", innboksVM);
         merkePanel.setVisibilityAllowed(true);
         return merkePanel;

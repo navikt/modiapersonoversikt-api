@@ -39,6 +39,8 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     @Before
     public void setUp() {
         innboksVM = new InnboksVM(FODSELSNR, henvendelseBehandlingService);
+        innboksVM.oppdaterMeldinger();
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
     }
 
     @Test

@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -55,14 +54,14 @@ public class InnboksTest extends WicketPageTest {
 
     @Test
     public void inneholderRiktigeKomponenter() {
-        wicket.goToPageWith(new Innboks("innboks", "fnr", tomInnboksProps()))
+        wicket.goToPageWith(new Innboks("innboks", innboksVM()))
                 .should().containComponent(ofType(AlleMeldingerPanel.class))
                 .should().containComponent(ofType(TraaddetaljerPanel.class));
     }
 
     @Test
     public void velgerTraadMedNyesteMeldingSomDefault() {
-        Innboks testInnboks = new Innboks("innboks", "fnr", tomInnboksProps());
+        Innboks testInnboks = new Innboks("innboks", innboksVM());
         wicket.goToPageWith(testInnboks);
 
         assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(NYESTE_MELDING_ID_TRAAD1));
@@ -70,7 +69,7 @@ public class InnboksTest extends WicketPageTest {
 
     @Test
     public void setterValgtMeldingVedEvent() {
-        Innboks testInnboks = new Innboks("innboks", "fnr", tomInnboksProps());
+        Innboks testInnboks = new Innboks("innboks", innboksVM());
         wicket.goToPageWith(testInnboks);
 
         wicket.sendEvent(new EventGenerator() {
@@ -86,19 +85,19 @@ public class InnboksTest extends WicketPageTest {
     @Test
     public void oppdatererMeldingeneVedKlikkPaaSok() {
         String fnr = "fnr";
-        Innboks testInnboks = new Innboks("innboks", fnr, tomInnboksProps());
+        Innboks testInnboks = new Innboks("innboks", innboksVM(fnr));
         wicket.goToPageWith(testInnboks)
                 .click().link(withId("meldingerSokToggle"));
 
         verify(henvendelseBehandlingService, atLeast(2)).hentMeldinger(fnr);
     }
 
-    @Test
-    public void setterTraadSomErReferertISessionTilValgtTraadIInnboks() {
-        Innboks testInnboks = new Innboks("innboks", "fnr", new InnboksProps(optional(ENESTE_MELDING_ID_TRAAD2), Optional.<String>none(), Optional.<String>none(), Optional.<Boolean>none()));
-        wicket.goToPageWith(testInnboks);
+    private InnboksVM innboksVM() {
+        return innboksVM("1234578910");
+    }
 
-        assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
+    private InnboksVM innboksVM(String fnr) {
+        return new InnboksVM(fnr, henvendelseBehandlingService);
     }
 
     private TraadVM getValgtTraad(Innboks testInnboks) {
