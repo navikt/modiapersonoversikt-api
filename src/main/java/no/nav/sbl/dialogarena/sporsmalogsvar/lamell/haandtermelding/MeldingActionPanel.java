@@ -15,7 +15,7 @@ public class MeldingActionPanel extends Panel {
 
     public MeldingActionPanel(String id, InnboksVM innboksVM) {
         super(id);
-        journalforPanel2 = new ReactJournalforingsPanel("reactjournalforPanel");
+        journalforPanel2 = new ReactJournalforingsPanel("reactjournalforPanel", innboksVM);
         journalforPanel = new AnimertJournalforingsPanel("journalforPanel", innboksVM);
         oppgavePanel = new OppgavePanel("nyoppgavePanel", innboksVM);
         merkePanel = new MerkePanel("merkePanel", innboksVM);
