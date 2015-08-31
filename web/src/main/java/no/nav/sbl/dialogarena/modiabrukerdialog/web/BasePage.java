@@ -68,7 +68,7 @@ public class BasePage extends WebPage {
             .scripts(
                     new JavaScriptResourceReference(BasePage.class, "jquery.mousewheel.js"),
                     new JavaScriptResourceReference(BasePage.class, "jquery.mousewheel-3.0.6.js"),
-                    new JavaScriptResourceReference(BasePage.class, "jquery.mCustomScrollbar.js")
+                    new JavaScriptResourceReference(BasePage.class, "jquery.mCustomScrollbar.HACK.js")
             )
             .done();
 

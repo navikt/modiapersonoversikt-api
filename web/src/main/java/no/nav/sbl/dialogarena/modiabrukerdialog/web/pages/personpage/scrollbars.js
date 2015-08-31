@@ -14,7 +14,11 @@ Modig.scrollOptions = {
 
 Modig.lagScrollbars = function () {
     $('.sidebar-venstre').mCustomScrollbar(Modig.scrollOptions);
-    $('.sidebar-hoyre').mCustomScrollbar(Modig.scrollOptions);
+    $('.sidebar-hoyre').mCustomScrollbar($.extend({}, Modig.scrollOptions, {
+        advanced: {
+            autoScrollOnFocus: "input,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true'],article[tabindex]"
+        }
+    }));
 
     //Alle lerret med unntak av meldinger og saksoversikt
     $('.lamell:not(.meldinger):not(.saksoversikt) .lerret').mCustomScrollbar(Modig.scrollOptions);
