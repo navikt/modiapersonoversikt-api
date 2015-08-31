@@ -9,11 +9,13 @@ class JournalforingsPanel extends React.Component {
     }
 
     render() {
+        console.log('saker', this.props.saker);
         return (
             <div className="journalforings-panel">
                 <h2 className="header">Journalføring</h2>
                 <TypeValg></TypeValg>
-                <SakerListe></SakerListe>
+
+                <SakerListe saker={this.props.saker}></SakerListe>
                 <LukkKnapp></LukkKnapp>
             </div>
         );
