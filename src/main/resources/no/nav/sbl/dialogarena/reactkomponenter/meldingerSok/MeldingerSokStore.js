@@ -97,6 +97,7 @@ var hentSokeresultater =
                 this.state.traader = traader;
                 this.state.valgtTraad = traader[0] || {};
                 this.state.initialisert = true;
+                updateScroll($(this.container).find('.sok-liste'), 0);
                 this.fireUpdate(this.listeners);
             }.bind(this))
             .fail(function (jqXHR) {

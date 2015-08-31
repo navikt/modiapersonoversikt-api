@@ -46,6 +46,7 @@ var Skrivestotte = React.createClass({
         return this.store.getState();
     },
     componentDidMount: function () {
+        this.store.setContainerElement(this.refs.modal.portalElement);
         this.store.addListener(this.storeChanged);
         this.store.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
     },

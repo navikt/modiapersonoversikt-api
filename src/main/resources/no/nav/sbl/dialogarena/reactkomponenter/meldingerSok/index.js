@@ -46,6 +46,7 @@ var MeldingerSok = React.createClass({
         return this.store.getState();
     },
     componentDidMount: function () {
+        this.store.setContainerElement(this.refs.modal.portalElement);
         this.store.addListener(this.storeChanged);
     },
     componentDidUnmount: function () {

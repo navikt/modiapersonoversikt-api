@@ -31,7 +31,6 @@ var Utils = {
     },
     adjustScroll: function ($parent, $element) {
         if ($element.length === 0) {
-            debugger;
             return;
         }
 

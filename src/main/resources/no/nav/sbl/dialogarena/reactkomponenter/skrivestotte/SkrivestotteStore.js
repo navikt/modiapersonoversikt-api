@@ -116,6 +116,7 @@ var hentSokeresultater =
         sok(fritekst, knagger).done(function (resultat) {
             this.state.tekster = resultat;
             this.state.valgtTekst = resultat[0] || {};
+            updateScroll($(this.container).find('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
         }.bind(this))
     }, 150);

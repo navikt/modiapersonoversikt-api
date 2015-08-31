@@ -1,6 +1,7 @@
 var Store = function (state) {
     this.listeners = [];
     this.state = state;
+    this.container = undefined;
 };
 
 Store.prototype.addListener = function (listener) {
@@ -20,6 +21,10 @@ Store.prototype.fireUpdate = function(){
     this.listeners.forEach(function(listener){
         listener();
     });
+};
+
+Store.prototype.setContainerElement = function(container){
+    this.container = container;
 };
 
 module.exports = Store;
