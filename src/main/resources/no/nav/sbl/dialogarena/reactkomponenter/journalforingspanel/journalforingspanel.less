@@ -6,8 +6,16 @@
   border: 1px solid rgb(153, 153, 153);
 
   .saker-tema {
+    button {
+      border: none;
+      background-color: transparent;
+      width: 100%;
+      padding: 0;
+      text-align: left;
+    }
     .tema-bar {
       display: block;
+      border-top: 1px solid rgb(153, 153, 153);
       .ekspanderingspil {
         float: right;
         margin-right: 1rem;
@@ -51,7 +59,7 @@
   }
   .text-row-list a {
     display: block;
-    color: #3e3832 !important;
+    color: #3e3832;
     &:hover {
       color: #f5f5f5;
       background-color: #226aa4;
@@ -60,5 +68,10 @@
   .text-row-list a, .info-bar {
     padding: 0.5rem 2rem;
   }
-
+  .info-bar{
+    border-bottom: 1px solid rgb(153, 153, 153);
+  }
+  //.alla-saker{
+  //  border-top: 1px solid rgb(153, 153, 153);
+  //}
 }

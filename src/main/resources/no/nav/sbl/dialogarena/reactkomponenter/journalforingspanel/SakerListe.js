@@ -52,18 +52,20 @@ class SakerForTema extends React.Component {
         if (this.state.ekspandert) {
             return (
                 <div className="saker-tema">
-                    <a className="tema-bar" href="#" onClick={this.toggleEkspandering}>
-                        <h3 className="tema-overskrift">{this.props.tema}</h3>
+                    <button onClick={this.toggleEkspandering}>
+                        <div className="tema-bar">
+                            <h3 className="tema-overskrift">{this.props.tema}</h3>
 
-                        <div className="ekspanderingspil opp"></div>
-                    </a>
+                            <div className="ekspanderingspil opp"></div>
+                        </div>
 
-                    <div className="info-bar">
-                        <span className="text-cell">SAKSID</span>
+                        <div className="info-bar">
+                            <span className="text-cell">SAKSID</span>
 
-                        <span className="text-cell">OPPRETTET</span>
-                        <span className="text-cell">FAGSYSTEM</span>
-                    </div>
+                            <span className="text-cell">OPPRETTET</span>
+                            <span className="text-cell">FAGSYSTEM</span>
+                        </div>
+                    </button>
                     <ul className="list-saker">
                         {this.props.saker}
                     </ul>
@@ -72,11 +74,11 @@ class SakerForTema extends React.Component {
         } else {
             return (
                 <div className="saker-tema">
-                    <a className="tema-bar" href="#" onClick={this.toggleEkspandering}>
+                    <button className="tema-bar" onClick={this.toggleEkspandering}>
                         <h3 className="tema-overskrift">{this.props.tema}</h3>
 
                         <div className="ekspanderingspil ned"></div>
-                    </a>
+                    </button>
                 </div>
             );
         }
