@@ -170,6 +170,10 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
 
         <!--Dialogarena-->
         <dependency>

@@ -3,7 +3,8 @@
     <form wicket:id="plukkOppgaveForm" class="oppgaveform">
 
         <div class="oppgavepanel">
-            <a class="velg-temagruppe" href="javascript:void(0)" wicket:message="title:plukkoppgave.temavelger.mouseover"
+            <a class="velg-temagruppe" href="javascript:void(0)"
+               wicket:message="title:plukkoppgave.temavelger.mouseover"
                wicket:id="velg-temagruppe-knapp" role="button"></a>
             <input type="submit"
                    class="plukk-oppgave plukk-knapp"
@@ -16,21 +17,26 @@
                 <div wicket:id="temagruppe" role="radiogroup" class="radiogroup" tabindex="-1"
                      wicket:message="aria-label:plukkoppgave.temavelger.mouseover">
                     <fieldset class="wcag">
-                        <legend><wicket:message key="plukkoppgave.temavelger.legend"/></legend>
+                        <legend>
+                            <wicket:message key="plukkoppgave.temavelger.legend"/>
+                        </legend>
                         <wicket:container wicket:id="temagrupper">
                             <input wicket:id="temagruppevalg" type="radio">
                             <label wicket:for="temagruppevalg"><span wicket:id="temagruppenavn"></span></label>
                         </wicket:container>
                     </fieldset>
                 </div>
-                <span wicket:id="temagruppe_feedback"></span>
-                <span wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></span>
-
 
                 <a href="javascript:void(0)" wicket:id="PlukkOppgaveFraTemaliste" class="knapp-hoved-liten plukk-knapp"
                    wicket:message="title:plukkoppgave.plukkoppgavefratemaliste.mouseover" role="button">
                     <wicket:message key="plukkoppgave.plukkoppgavefratemaliste"/>
                 </a>
+
+                <div class="plukk-feedback">
+                    <span wicket:id="temagruppe_feedback"></span>
+                    <span wicket:id="feedback" class="feedback" role="alert" aria-live="assertive"
+                          aria-atomic="true"></span>
+                </div>
             </div>
         </div>
     </form>

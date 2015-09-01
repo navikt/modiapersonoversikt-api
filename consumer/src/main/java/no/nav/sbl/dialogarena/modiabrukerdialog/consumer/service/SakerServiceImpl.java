@@ -79,7 +79,7 @@ public class SakerServiceImpl implements SakerService {
 
     @Override
     public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws JournalforingFeilet {
-        if (!sak.finnesIGsak) {
+        if (!sak.finnesIPsak && !sak.finnesIGsak) {
             sak.saksId = optional(opprettSak(fnr, sak));
         }
         try {

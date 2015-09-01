@@ -117,14 +117,19 @@ SPAN.errorJS {
 }
 
 UL.feedbackPanel {
-  padding: 1rem 1rem 1rem 2rem;
+  padding: 20px 20px 32px 40px;
   color: #FBF5F4;
   background-color: #BA3A26;
-  font: 1rem Arial, sans-serif;
+  font: 14px Arial, sans-serif;
+  line-height: 14px;
   text-align: left;
 
   LI {
     font-style: italic;
+    text-decoration: underline;
+    &:not(:last-of-type) {
+      margin-bottom: 9px;
+    }
   }
   A, A:visited {
     color: @white;
