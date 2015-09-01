@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react/addons');
+var Utils = require('./../utils');
 
 var TekstListeKomponent = React.createClass({
     render: function () {
@@ -9,6 +10,7 @@ var TekstListeKomponent = React.createClass({
                        readOnly checked={erValgtTekst(this.props.tekst, this.props.valgtTekst)}/>
                 <label htmlFor={"tekstElementRadio" + this.props.tekst.key}>
                     <span dangerouslySetInnerHTML={{__html: this.props.tekst.tittel}}></span>
+                    <span className="vekk">{' | ' + Utils.getInnhold(this.props.tekst, this.props.locale)}</span>
                 </label>
             </div>
         );

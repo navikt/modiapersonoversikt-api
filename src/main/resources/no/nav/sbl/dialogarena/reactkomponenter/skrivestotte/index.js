@@ -60,7 +60,7 @@ var Skrivestotte = React.createClass({
     },
     render: function () {
         var tekstlistekomponenter = this.state.tekster.map(function (tekst) {
-            return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} store={this.store}/>
+            return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
         }.bind(this));
 
         var erTom = this.state.tekster.length === 0;
