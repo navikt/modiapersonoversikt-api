@@ -6,6 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,6 +23,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.AnimertJournalforingsPanel.TRAAD_JOURNALFORT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
+import static org.apache.wicket.AttributeModifier.append;
 
 public class AlleMeldingerPanel extends Panel {
 
@@ -49,15 +51,21 @@ public class AlleMeldingerPanel extends Panel {
                                 innboksVM.erValgtMelding(meldingVM).getObject(),
                                 meldingVM)
                 );
-                item.add(new Label("meldingstatus", new StringFormatModel("%s - %s",
+
+                Label meldingstatus = new Label("meldingstatus", new StringFormatModel("%s - %s",
                         new PropertyModel<String>(item.getModel(), "melding.statusTekst"),
                         new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")
-                )));
+                ));
+                meldingstatus.setOutputMarkupId(true);
+
+
+                item.add(meldingstatus);
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(attributeIf("aria-selected", "true", innboksVM.erValgtMelding(meldingVM), true));
                 item.add(attributeIf("aria-controls", traadDetaljerMarkupId, innboksVM.erValgtMelding(meldingVM), true));
+                item.add(append("aria-labelledby", meldingstatus.getMarkupId()));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
