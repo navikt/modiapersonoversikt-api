@@ -94,11 +94,12 @@ public class YtelseskontraktServiceBiMock {
                 .withTom(convertDateToXmlGregorianCalendar(tom));
     }
 
-    @SuppressWarnings("checkstyle")
+    //CHECKSTYLE:OFF
     private static FimYtelseskontrakt createYtelsesKontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, String vedtaksstatus, String vedtakstype, Integer bortfallProsentDagerIgjen) {
         return createYtelsesKontrakt(datoKravMottat, fom, tom, status, ytelsestype, bortfallProsentDagerIgjen)
                 .withIhtVedtak(createVedtakWithRandomDates(vedtaksstatus, vedtakstype));
     }
+    //CHECKSTYLE:ON
 
     private static FimYtelseskontrakt createYtelsesKontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, Integer bortfallProsentDagerIgjen) {
         return populateYtelsesKontrakt(new FimYtelseskontrakt(), datoKravMottat, fom, tom, status, ytelsestype, bortfallProsentDagerIgjen);

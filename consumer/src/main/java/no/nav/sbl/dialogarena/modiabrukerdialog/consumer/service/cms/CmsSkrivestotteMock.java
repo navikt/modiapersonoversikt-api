@@ -6,12 +6,15 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-@SuppressWarnings("checkstyle")
 public class CmsSkrivestotteMock implements CmsSkrivestotte {
 
     private static int key = 0;
     private static final int RANDOM_TEKSTER = 20;
 
+
+
+
+    //CHECKSTYLE:OFF
     @Override
     public List<SkrivestotteTekst> hentSkrivestotteTekster() {
         List<SkrivestotteTekst> tekster = new ArrayList<>();
@@ -430,6 +433,7 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
 
         return tekster;
     }
+    //CHECKSTYLE:ON
 
     private static SkrivestotteTekst skrivestotteTekst(String tittel, String norsk, String... tags) {
         HashMap<String, String> innhold = new HashMap<>();
