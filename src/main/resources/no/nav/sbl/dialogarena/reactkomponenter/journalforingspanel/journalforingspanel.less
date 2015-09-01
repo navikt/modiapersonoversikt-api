@@ -5,6 +5,23 @@
   padding: 2rem 0 1rem;
   border: 1px solid rgb(153, 153, 153);
 
+  .saker-tema {
+    .tema-bar {
+      display: block;
+      .ekspanderingspil {
+        float: right;
+        margin-right: 1rem;
+        margin-top: 6px;
+        .pil(10px, #226aa4)
+      }
+      .tema-overskrift {
+        padding-left: 2rem;
+        margin: 0;
+        display: inline;
+      }
+    }
+  }
+
   .header {
     text-align: center;
     font-size: 1.4rem;
@@ -22,19 +39,15 @@
       color: #333;
     }
   }
-  .list-saker{
+  .list-saker {
     background-color: white;
     list-style-type: none;
     margin: 0;
     padding: 0;
   }
-  .text-cell{
-    display:inline-block;
+  .text-cell {
+    display: inline-block;
     width: 33%;
-  }
-  .tema-overskrift {
-    padding-left: 2rem;
-    margin: 0;
   }
   .text-row-list a {
     display: block;

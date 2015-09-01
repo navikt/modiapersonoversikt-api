@@ -16,26 +16,6 @@ const TIL_SAK_ELEMENT = (sak) => {
     );
 };
 
-const TIL_SAK_GROUPED = (group) => {
-    console.log('group', group);
-    const sakerElementer = group.map(TIL_SAK_ELEMENT);
-    return (
-        <div className="saker-tema">
-            <h3 className="tema-overskrift">{group[0].temaKode}</h3>
-
-            <div className="info-bar">
-                <span className="text-cell">SAKSID</span>
-                <span className="text-cell">OPPRETTET</span>
-                <span className="text-cell">FAGSYSTEM</span>
-            </div>
-            <ul className="list-saker">
-                {sakerElementer}
-            </ul>
-        </div>
-    );
-};
-
-
 class SakerListe extends React.Component {
     constructor(props) {
         super(props);
@@ -43,14 +23,63 @@ class SakerListe extends React.Component {
 
     render() {
         const grouped = groupBy(this.props.saker, sak => sak.temaKode);
-        console.log('groups', grouped);
-        const sakerGruppert = mapValues(grouped, TIL_SAK_GROUPED);
+        const sakerGruppert = mapValues(grouped, (group) => {
+            return <SakerForTema tema={group[0].temaKode} saker={group.map(TIL_SAK_ELEMENT)}/>
+        });
 
         return (
             <div className="alla-saker">
                 {sakerGruppert}
             </div>
         );
+    }
+}
+
+class SakerForTema extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            ekspandert: true
+        };
+        this.toggleEkspandering = this.toggleEkspandering.bind(this);
+    }
+
+    toggleEkspandering() {
+        this.setState({ekspandert: !this.state.ekspandert});
+    }
+
+    render() {
+        if (this.state.ekspandert) {
+            return (
+                <div className="saker-tema">
+                    <a className="tema-bar" href="#" onClick={this.toggleEkspandering}>
+                        <h3 className="tema-overskrift">{this.props.tema}</h3>
+
+                        <div className="ekspanderingspil opp"></div>
+                    </a>
+
+                    <div className="info-bar">
+                        <span className="text-cell">SAKSID</span>
+
+                        <span className="text-cell">OPPRETTET</span>
+                        <span className="text-cell">FAGSYSTEM</span>
+                    </div>
+                    <ul className="list-saker">
+                        {this.props.saker}
+                    </ul>
+                </div>
+            );
+        } else {
+            return (
+                <div className="saker-tema">
+                    <a className="tema-bar" href="#" onClick={this.toggleEkspandering}>
+                        <h3 className="tema-overskrift">{this.props.tema}</h3>
+
+                        <div className="ekspanderingspil ned"></div>
+                    </a>
+                </div>
+            );
+        }
     }
 }
 
