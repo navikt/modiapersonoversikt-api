@@ -5,9 +5,13 @@ import { mapValues } from 'lodash';
 const TIL_SAK_ELEMENT = (sak) => {
     return (
         <li className="text-row-list">
-            <span className="text-cell">{sak.saksIdVisning}</span>
-            <span className="text-cell">{sak.opprettetDatoFormatert}</span>
-            <span className="text-cell">{sak.fagsystemKode}</span>
+            <a href="#">
+                <div>
+                    <span className="text-cell">{sak.saksIdVisning}</span>
+                    <span className="text-cell">{sak.opprettetDatoFormatert}</span>
+                    <span className="text-cell">{sak.fagsystemKode}</span>
+                </div>
+            </a>
         </li>
     );
 };
@@ -17,7 +21,8 @@ const TIL_SAK_GROUPED = (group) => {
     const sakerElementer = group.map(TIL_SAK_ELEMENT);
     return (
         <div className="saker-tema">
-            <h3> {group[0].temaKode} </h3>
+            <h3 className="tema-overskrift">{group[0].temaKode}</h3>
+
             <div className="info-bar">
                 <span className="text-cell">SAKSID</span>
                 <span className="text-cell">OPPRETTET</span>

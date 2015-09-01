@@ -3,6 +3,7 @@
   background-color: #EBEBEB;
   box-shadow: 0 1px 3px 0 #333;
   padding: 2rem 0 1rem;
+  border: 1px solid rgb(153, 153, 153);
 
   .header {
     text-align: center;
@@ -31,11 +32,20 @@
     display:inline-block;
     width: 33%;
   }
-  .text-row-list{
-    padding-left: 1em;
+  .tema-overskrift {
+    padding-left: 2rem;
+    margin: 0;
+  }
+  .text-row-list a {
+    display: block;
+    color: #3e3832;
+    &:hover {
+      color: #f5f5f5;
+      background-color: #226aa4;
+    }
+  }
+  .text-row-list a, .info-bar {
+    padding: 0.5rem 2rem;
   }
 
-  .info-bar{
-    padding-left: 1em;
-  }
 }
