@@ -6,10 +6,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-@SuppressWarnings({
-        "checkstyle:com.puppycrawl.tools.checkstyle.checks.sizes.MethodLengthCheck",
-        "checkstyle:com.puppycrawl.tools.checkstyle.checks.coding.MultipleStringLiteralsCheck"
-})
+@SuppressWarnings("checkstyle")
 public class CmsSkrivestotteMock implements CmsSkrivestotte {
 
     private static int key = 0;

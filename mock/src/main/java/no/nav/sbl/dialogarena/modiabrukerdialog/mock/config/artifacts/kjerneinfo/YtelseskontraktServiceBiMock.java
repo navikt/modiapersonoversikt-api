@@ -94,7 +94,7 @@ public class YtelseskontraktServiceBiMock {
                 .withTom(convertDateToXmlGregorianCalendar(tom));
     }
 
-    @SuppressWarnings("checkstyle:com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck")
+    @SuppressWarnings("checkstyle")
     private static FimYtelseskontrakt createYtelsesKontrakt(Date datoKravMottat, Date fom, Date tom, String status, String ytelsestype, String vedtaksstatus, String vedtakstype, Integer bortfallProsentDagerIgjen) {
         return createYtelsesKontrakt(datoKravMottat, fom, tom, status, ytelsestype, bortfallProsentDagerIgjen)
                 .withIhtVedtak(createVedtakWithRandomDates(vedtaksstatus, vedtakstype));
