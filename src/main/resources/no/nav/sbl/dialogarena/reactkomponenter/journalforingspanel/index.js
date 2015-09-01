@@ -1,35 +1,47 @@
 import React from 'react';
-import TypeValg from './typevalg';
-import SakerListe from './sakerliste';
+import VelgSak from './velgsak';
+import JournalforSak from './journalforsak';
 import LukkKnapp from './lukkknapp';
-import { partition } from 'lodash';
+
+const VELG_SAK = 'VELG_SAK';
+const JOURNALFOR = 'JOURNALFOR';
 
 class JournalforingsPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            valgtKategori: 'FAG'
+            aktivtVindu: VELG_SAK,
+            valgtSak: null
         };
-        this.endreKategori = this.endreKategori.bind(this);
+        this.velgSak = this.velgSak.bind(this);
+        this.tilbake = this.tilbake.bind(this);
     }
 
-    endreKategori(kategori) {
-        this.setState({valgtKategori: kategori});
+    velgSak(sak) {
+        this.setState({
+            aktivtVindu: JOURNALFOR,
+            valgtSak: sak
+        })
+    }
+
+    tilbake() {
+        this.setState({
+            aktivtVindu: VELG_SAK,
+            valgtSak: null
+        })
     }
 
     render() {
-        const kategorier = partition(this.props.saker, sak => sak.sakstype === 'GEN');
-        const generelle = kategorier[0];
-        const fagsaker = kategorier[1];
-
-        const saker = this.state.valgtKategori === 'FAG' ? fagsaker : generelle;
-
+        let aktivtVindu;
+        if (this.state.aktivtVindu === VELG_SAK) {
+            aktivtVindu = <VelgSak saker={this.props.saker} velgSak={this.velgSak}/>;
+        } else {
+            aktivtVindu = <JournalforSak sak={this.state.valgtSak} tilbake={this.tilbake}/>
+        }
         return (
             <div className="journalforings-panel">
                 <h2 className="header">Journalføring</h2>
-                <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori}/>
-
-                <SakerListe saker={saker}></SakerListe>
+                {aktivtVindu}
                 <LukkKnapp></LukkKnapp>
             </div>
         );

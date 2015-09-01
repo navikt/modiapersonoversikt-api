@@ -2,20 +2,6 @@ import React from 'react';
 import { groupBy } from 'lodash';
 import { mapValues } from 'lodash';
 
-const TIL_SAK_ELEMENT = (sak) => {
-    return (
-        <li className="text-row-list">
-            <a href="#">
-                <div>
-                    <span className="text-cell">{sak.saksIdVisning}</span>
-                    <span className="text-cell">{sak.opprettetDatoFormatert}</span>
-                    <span className="text-cell">{sak.fagsystemKode}</span>
-                </div>
-            </a>
-        </li>
-    );
-};
-
 class SakerListe extends React.Component {
     constructor(props) {
         super(props);
@@ -23,8 +9,22 @@ class SakerListe extends React.Component {
 
     render() {
         const grouped = groupBy(this.props.saker, sak => sak.temaKode);
+        const velgSak = this.props.velgSak;
         const sakerGruppert = mapValues(grouped, (group) => {
-            return <SakerForTema tema={group[0].temaKode} saker={group.map(TIL_SAK_ELEMENT)}/>
+            const saker = group.map((sak) => {
+                return (
+                    <li className="text-row-list">
+                        <a href="#" onClick={() => velgSak(sak)}>
+                            <div>
+                                <span className="text-cell">{sak.saksIdVisning}</span>
+                                <span className="text-cell">{sak.opprettetDatoFormatert}</span>
+                                <span className="text-cell">{sak.fagsystemKode}</span>
+                            </div>
+                        </a>
+                    </li>
+                );
+            });
+            return <SakerForTema tema={group[0].temaKode} saker={saker}/>
         });
 
         return (
