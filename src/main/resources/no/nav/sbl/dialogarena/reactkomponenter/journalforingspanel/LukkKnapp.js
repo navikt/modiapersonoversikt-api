@@ -7,7 +7,7 @@ class LukkKnapp extends React.Component {
 
     render() {
         return (
-            <div className="lukk_knapp"></div>
+            <button className="lukk-knapp"></button>
         );
     }
 }
