@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.frontend.ConditionalCssResource;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -45,6 +46,13 @@ public class Innboks extends Lerret {
         this.innboksVM = innboksVM;
         innboksVM.oppdaterMeldinger();
         innboksVM.settForsteSomValgtHvisIkkeSatt();
+
+        if (innboksVM.getSessionHenvendelseId().isSome()) {
+            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(innboksVM.getSessionHenvendelseId().get());
+            if (meldingITraad.isSome()) {
+                innboksVM.setValgtMelding(meldingITraad.get());
+            }
+        }
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
 
