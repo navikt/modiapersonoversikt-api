@@ -117,13 +117,11 @@ public class HenvendelsePortTypeMock {
             createXMLHenvendelse(BEHANDLINGS_ID7, BEHANDLINGS_ID7, now().minusDays(4), null,
                     createXMLMeldingFraBruker("OKSOS", LANG_TEKST),
                     valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
-                    .withGjeldendeTemagruppe("OKSOS")
                     .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
 
             createXMLHenvendelse(randomId(), BEHANDLINGS_ID7, now().minusHours(12), null,
                     createXMLMeldingTilBruker("OKSOS", "TEKST", KORT_TEKST),
                     null, createXMLJourfortInformasjon(null, "", "", ""))
-                    .withGjeldendeTemagruppe("OKSOS")
                     .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
             henvendelseMedGjeldendeTemagruppe(BEHANDLINGS_ID8, "ANSOS")
