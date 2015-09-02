@@ -17,6 +17,7 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static org.apache.wicket.AttributeModifier.append;
 
 public class TraadPanel extends Panel {
 
@@ -31,14 +32,19 @@ public class TraadPanel extends Panel {
 
                 item.add(new FeilsendtInfoPanel("feilsendtInfo", item.getModel()));
                 item.add(new AvsenderBilde("avsenderBilde", item.getModel()).add(cssClass(meldingTypeKlasse)));
-                item.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
-                item.add(new Label("lestStatus", lestStatusModel)
-                        .add(visibleIf(not(isEqualTo(lestStatusModel, "")))));
 
-                item.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
+                WebMarkupContainer meldingstatusContainer = new WebMarkupContainer("meldingstatusContainer");
+                meldingstatusContainer.setOutputMarkupId(true);
+
+                meldingstatusContainer.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
+                meldingstatusContainer.add(new Label("lestStatus", lestStatusModel).add(visibleIf(not(isEqualTo(lestStatusModel, "")))));
+                meldingstatusContainer.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
+
+                item.add(meldingstatusContainer);
                 item.add(new Label("avsenderDato"));
                 item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
                 item.add(new Journalpost("journalpost", item.getModel()));
+                item.add(append("aria-labelledby", meldingstatusContainer.getMarkupId()));
 
 
                 String navIdent = item.getModelObject().melding.navIdent;
