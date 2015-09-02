@@ -12,7 +12,8 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
     @Override
     public List<SkrivestotteTekst> hentSkrivestotteTekster() {
         URL skrivestotteteksterUrl = getClass().getResource("/mocktekster.json");
-        TypeReference<List<SkrivestotteTekst>> type = new TypeReference<List<SkrivestotteTekst>>() {};
+        TypeReference<List<SkrivestotteTekst>> type = new TypeReference<List<SkrivestotteTekst>>() {
+        };
 
         return fromJSON(type, skrivestotteteksterUrl);
     }
@@ -22,7 +23,7 @@ public class CmsSkrivestotteMock implements CmsSkrivestotte {
         try {
             data = new ObjectMapper().readValue(jsonfile, type);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return data;
     }
