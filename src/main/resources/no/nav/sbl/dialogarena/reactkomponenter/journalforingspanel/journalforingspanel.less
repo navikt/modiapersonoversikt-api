@@ -2,10 +2,12 @@
   position: relative;
   margin: 0;
   background-color: #EBEBEB;
-  box-shadow: 0 1px 3px 0 #333;
-  padding: 2rem 0 0;
-  border: 1px solid rgb(153, 153, 153);
-
+  padding: 2rem 0 1rem 0;
+  //border: 1px solid rgb(153, 153, 153);
+  &.shadow {
+    box-shadow: 1px 2px 5px #999999;
+    margin: 3px;
+  }
   .saker-tema {
     &:first-of-type {
       border-top: 1px solid rgb(153, 153, 153);
@@ -37,6 +39,10 @@
         font-weight: bold;
       }
     }
+    .text-cell {
+      display: inline-block;
+      width: 33%;
+    }
   }
 
   .header {
@@ -52,7 +58,7 @@
       font-size: 1.2rem;
       font-weight: 600;
       margin-top: 2rem;
-
+      text-transform: none;
     }
     .header-detaljer{
       border-top: 1px solid rgb(153, 153, 153);
@@ -69,10 +75,12 @@
 
     .info-bar{
       padding: 0rem 2rem;
+      font-size: 12px;
     }
     .text-cell {
       display: inline-block;
-      width: 28%;
+width: 33%;
+
     }
     .tilbake-knapp {
       width: 26px;
@@ -111,10 +119,7 @@
     padding: 0;
     border-top: 1px solid rgb(153, 153, 153);
   }
-  .text-cell {
-    display: inline-block;
-    width: 33%;
-  }
+
   .text-row-list a {
     display: block;
     &:visited, &:active {
@@ -137,7 +142,16 @@
     top: 13px;
     right: 13px;
     border: 1px solid #333;
+    &:hover {
+      background: url(../img/kryss_hover.svg) no-repeat center center;
+      background-size: contain;
+    }
   }
-
-
 }
+
+/*TODO:
+- Fiksa lukk-knapp grå bakgrund, blå med vitt kryss vid hover
+- Fiksa kant på ruta
+- Fiksa avstånd mellan elementer i detaljer
+- Fiksa tillbake-pil
+ */

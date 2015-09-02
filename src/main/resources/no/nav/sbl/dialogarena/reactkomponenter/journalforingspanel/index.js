@@ -25,7 +25,6 @@ class JournalforingsPanel extends React.Component {
     }
 
     tilbake() {
-        debugger;
         this.setState({
             aktivtVindu: VELG_SAK,
             valgtSak: null
@@ -40,7 +39,7 @@ class JournalforingsPanel extends React.Component {
             aktivtVindu = <JournalforSak sak={this.state.valgtSak} tilbake={this.tilbake}/>
         }
         return (
-            <div className="journalforings-panel">
+            <div className="journalforings-panel shadow">
                 <h2 className="header">Journalføring</h2>
                 {aktivtVindu}
                 <LukkKnapp></LukkKnapp>

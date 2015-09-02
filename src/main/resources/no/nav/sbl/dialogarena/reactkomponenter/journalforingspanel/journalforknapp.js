@@ -7,7 +7,7 @@ class JournalforKnapp extends React.Component {
 
     render() {
         return (
-            <button className="journalfor-knapp">JOURNALFØR</button>
+            <button className="journalfor-knapp knapp-hoved-stor">JOURNALFØR</button>
         );
     }
 }

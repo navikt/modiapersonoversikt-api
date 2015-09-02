@@ -24,7 +24,7 @@ class JournalforSak extends React.Component {
                         <span className="text-cell">{sak.fagsystemKode}</span>
                     </div>
                 </div>
-                <TilbakeKnapp></TilbakeKnapp>
+                <TilbakeKnapp tilbake={this.props.tilbake}></TilbakeKnapp>
                 <JournalforKnapp></JournalforKnapp>
                 </div>
         );

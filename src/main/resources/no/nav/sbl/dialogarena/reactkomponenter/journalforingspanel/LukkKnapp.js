@@ -13,3 +13,4 @@ class LukkKnapp extends React.Component {
 }
 
 export default LukkKnapp;
+
