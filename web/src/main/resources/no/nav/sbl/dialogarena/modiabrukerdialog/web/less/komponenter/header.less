@@ -94,21 +94,18 @@
     position: absolute;
   }
   SPAN.feedbackPanelERROR, UL.feedbackPanel, LI:before {
-    color: @errorTextLight;
-    font-size: @fontSizeMini;
+    .mork-bakgrunn .feedbacklabel;
     background: transparent;
     white-space: nowrap;
     content: "" !important;
     position: absolute;
     left: 0;
-    bottom: -0.6em;
-  }
-  INPUT.errorJS {
-    background-color: @errorBackgroundLight;
-    border: 1px solid @errorTextLight;
-    color: @black;
+    bottom: -1.6em;
   }
   UL.feedbackPanel {
+    LI {
+      text-decoration: none !important;
+    }
     list-style-type: none;
     padding: 0;
     margin: 0;
