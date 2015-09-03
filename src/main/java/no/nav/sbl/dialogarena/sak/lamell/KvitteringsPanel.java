@@ -7,9 +7,9 @@ import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.JoarkService;
 import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -53,11 +53,14 @@ public class KvitteringsPanel extends Panel {
     private ModigModalWindow modalWindow;
     private String fnr;
     private static final DateTime HL4_2015_DATO = new DateTime(2014, 12, 9, 0, 0);
+    private static final String ARKIVTEMA_BIDRAG = "BID";
+    private final Kvittering kvittering;
+
 
     public KvitteringsPanel(String id, String tittel, Model<Kvittering> kvitteringsModel, String fnr) {
         super(id, kvitteringsModel);
         this.fnr = fnr;
-        Kvittering kvittering = kvitteringsModel.getObject();
+        kvittering = kvitteringsModel.getObject();
 
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
@@ -155,7 +158,7 @@ public class KvitteringsPanel extends Panel {
                     String lenkeVisningsTekst = hentVisDokumentTekst(dokument.hovedskjema);
                     hentVedleggLenke.add(new Label("saksoversikt.kvittering.visvedlegg", lenkeVisningsTekst));
                     hentVedleggLenke.add(new AttributeAppender("aria-label", lenkeVisningsTekst + ": " + dokumentTittel));
-                    hentVedleggLenke.add(visibleIf(new Model<>(bleSendtInnEtter2014HL4(opprettetDato))));
+                    hentVedleggLenke.add(visibleIf(new Model<>(bleSendtInnEtter2014HL4(opprettetDato) && !erTemaBidrag())));
                     item.add(hentVedleggLenke);
                 }
             }
@@ -221,6 +224,10 @@ public class KvitteringsPanel extends Panel {
             return true;
         }
         return false;
+    }
+
+    private boolean erTemaBidrag() {
+        return ARKIVTEMA_BIDRAG.equalsIgnoreCase(kvittering.behandlingstema);
     }
 
     @Override
