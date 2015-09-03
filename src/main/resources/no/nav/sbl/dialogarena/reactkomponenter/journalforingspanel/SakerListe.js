@@ -17,7 +17,9 @@ class SakerListe extends React.Component {
                         <a href="#" onClick={() => velgSak(sak)}>
                             <div>
                                 <span className="text-cell">{sak.saksIdVisning}</span>
+                                <span className="vekk">'|'</span>
                                 <span className="text-cell">{sak.opprettetDatoFormatert}</span>
+                                <span className="vekk">'|'</span>
                                 <span className="text-cell">{sak.fagsystemKode}</span>
                             </div>
                         </a>
@@ -52,7 +54,7 @@ class SakerForTema extends React.Component {
         if (this.state.ekspandert) {
             return (
                 <div className="saker-tema">
-                    <button onClick={this.toggleEkspandering}>
+                    <button onClick={this.toggleEkspandering} aria-expanded="true">
                         <div className="tema-bar">
                             <h3 className="tema-overskrift">{this.props.tema}</h3>
 
@@ -61,8 +63,9 @@ class SakerForTema extends React.Component {
 
                         <div className="info-bar">
                             <span className="text-cell">SAKSID</span>
-
+                            <span className="vekk">'|'</span>
                             <span className="text-cell">OPPRETTET</span>
+                            <span className="vekk">'|'</span>
                             <span className="text-cell">FAGSYSTEM</span>
                         </div>
                     </button>
@@ -74,7 +77,7 @@ class SakerForTema extends React.Component {
         } else {
             return (
                 <div className="saker-tema">
-                    <button className="tema-bar" onClick={this.toggleEkspandering}>
+                    <button className="tema-bar" onClick={this.toggleEkspandering} aria-expanded="false">
                         <h3 className="tema-overskrift">{this.props.tema}</h3>
 
                         <div className="ekspanderingspil ned"></div>

@@ -14,13 +14,16 @@ class JournalforSak extends React.Component {
                     <h3 className="header-detaljer">{sak.temaKode}</h3>
                     <div className="info-bar">
                         <span className="text-cell">Saksid</span>
-
+                        <span className="vekk">'|'</span>
                         <span className="text-cell">Opprettet</span>
+                        <span className="vekk">'|'</span>
                         <span className="text-cell">Fagsystem</span>
                     </div>
                     <div className="info-sak">
                         <span className="text-cell">{sak.saksIdVisning}</span>
+                        <span className="vekk">'|'</span>
                         <span className="text-cell">{sak.opprettetDatoFormatert}</span>
+                        <span className="vekk">'|'</span>
                         <span className="text-cell">{sak.fagsystemKode}</span>
                     </div>
                 </div>
