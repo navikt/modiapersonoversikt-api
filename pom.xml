@@ -72,7 +72,7 @@
         <common-kodeverk.version>1.0.0</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>1.2-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>1.2</reactkomponenter.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -94,7 +94,7 @@
         <personsok.version>1.1.10</personsok.version>
         <kjerneinfo.versjon>1.1.17</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>3.0.1-SNAPSHOT</utbetaling.version>
+        <utbetaling.version>3.0.1</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -102,12 +102,12 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>3.2-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>4.3-SNAPSHOT</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>3.2</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>4.3</sporsmalogsvar.version>
         <saksoversikt.version>4.3</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>2.0.2-SNAPSHOT</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>2.0.2</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.39</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
