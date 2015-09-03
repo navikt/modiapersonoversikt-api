@@ -199,7 +199,7 @@ public final class UtbetalingLerret extends Lerret {
     private void oppdaterUtbetalingsliste(AjaxRequestTarget target) {
         feilmelding.setVisibilityAllowed(false);
         DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
+        DateTime filterSlutt = filterParametere.getSluttDato().plusDays(1).toDateTimeAtStartOfDay();
 
 
         List<Record<Hovedytelse>> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
@@ -217,7 +217,7 @@ public final class UtbetalingLerret extends Lerret {
     private void oppdaterUtbetalingslisteFraYtelsesvalg(AjaxRequestTarget target) {
         feilmelding.setVisibilityAllowed(false);
         DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
+        DateTime filterSlutt = filterParametere.getSluttDato().plusDays(1).toDateTimeAtStartOfDay();
 
 
         List<Record<Hovedytelse>> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
