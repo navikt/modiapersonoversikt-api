@@ -42,6 +42,15 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
                         return innboksVM.getValgtTraad().getEldsteMelding().isJournalfort();
                     }
                 })));
+
+        add(new WebMarkupContainer("ikkeJournalfortTemaContainer")
+                .add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
+                    @Override
+                    public Boolean getObject() {
+                        return !innboksVM.getValgtTraad().getEldsteMelding().isJournalfort();
+                    }
+                })));
+
         add(new NyMeldingContainer("nyMelding"));
         add(new TraadPanel("traad", innboksVM));
     }
