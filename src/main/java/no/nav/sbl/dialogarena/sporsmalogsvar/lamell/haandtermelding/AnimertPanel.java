@@ -34,9 +34,11 @@ public abstract class AnimertPanel extends Panel {
         if (isVisibilityAllowed()) {
             target.prependJavaScript(closeScript(duration));
             this.setVisibilityAllowed(false);
+            onClose();
         } else {
             target.appendJavaScript(openScript(duration));
             this.setVisibilityAllowed(true);
+            onOpen();
         }
         target.add(this);
     }
@@ -70,5 +72,11 @@ public abstract class AnimertPanel extends Panel {
             target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
             target.add(this);
         }
+    }
+
+    protected void onOpen () {
+    }
+
+    protected void onClose() {
     }
 }
