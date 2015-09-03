@@ -7,9 +7,11 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.Journalforing
 import java.util.List;
 
 public interface SakerService {
-    public Saker hentSaker(String fnr);
+    Saker hentSaker(String fnr);
 
-    public List<Sak> hentListeAvSaker(String fnr);
+    List<Sak> hentListeAvSaker(String fnr);
+
+    List<Sak> hentRelevanteSaker(String fnr);
 
     void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws JournalforingFeilet;
 }
