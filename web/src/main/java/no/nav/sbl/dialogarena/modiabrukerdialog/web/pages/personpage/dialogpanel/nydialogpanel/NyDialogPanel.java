@@ -55,7 +55,6 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.Brukerprofil.BRUKERPROFIL_OPPDATERT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema;
@@ -73,7 +72,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final GrunnInfo grunnInfo;
     private final KvitteringsPanel kvittering;
     private final List<Component> modusKomponenter = new ArrayList<>();
-    private final EpostVarselPanel epostVarselPanel;
     private final FeedbackPanel feedbackPanel;
     private final SkrivestottePanel skrivestottePanel;
 
@@ -89,11 +87,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(lagModusVelger(modusModel));
-
-        epostVarselPanel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.bruker.fnr);
-        epostVarselPanel.setOutputMarkupPlaceholderTag(true);
-        modusKomponenter.add(epostVarselPanel);
-        form.add(epostVarselPanel);
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel(), true);
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
@@ -187,10 +180,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private EnhancedTextArea lagTekstFelt(Form<HenvendelseVM> form) {
         EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
-                new EnhancedTextAreaConfigurator()
-                        .withMaxCharCount(5000)
-                        .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
+            new EnhancedTextAreaConfigurator()
+                .withMaxCharCount(5000)
+                .withMinTextAreaHeight(250)
+                .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
         );
         tekstfelt.setOutputMarkupId(true);
         return tekstfelt;
@@ -245,11 +238,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         settOppModellMedDefaultVerdier();
         skrivestottePanel.oppdater(target);
         target.add(this);
-    }
-
-    @RunOnEvents(BRUKERPROFIL_OPPDATERT)
-    public void oppdaterEpostVarsel(AjaxRequestTarget target) {
-        target.add(epostVarselPanel);
     }
 
     private void settOppModellMedDefaultVerdier() {
@@ -358,13 +346,13 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private void sendHenvendelse(HenvendelseVM henvendelseVM, Meldingstype meldingstype, Optional<Melding> eldsteMeldingITraad) throws Exception {
         Melding melding = new MeldingBuilder()
-                .withHenvendelseVM(henvendelseVM)
-                .withEldsteMeldingITraad(eldsteMeldingITraad)
-                .withMeldingstype(meldingstype)
-                .withFnr(grunnInfo.bruker.fnr)
-                .withNavident(getSubjectHandler().getUid())
-                .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
-                .build();
+            .withHenvendelseVM(henvendelseVM)
+            .withEldsteMeldingITraad(eldsteMeldingITraad)
+            .withMeldingstype(meldingstype)
+            .withFnr(grunnInfo.bruker.fnr)
+            .withNavident(getSubjectHandler().getUid())
+            .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+            .build();
 
         Optional<Sak> sak = none();
         if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
