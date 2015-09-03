@@ -199,6 +199,7 @@ public class WicketApplication extends WebApplication {
                 .addScripts(SPIResources.getScripts())
                 .addScripts(
                         BasePage.JS_RESOURCE,
+                        BasePage.JS_TAB_POPUP_RESOURCE,
                         PersonPage.SCROLL_JS,
                         ShortcutListenerResourceReference.get(),
                         KeyNavigationResourceReference.get(),
