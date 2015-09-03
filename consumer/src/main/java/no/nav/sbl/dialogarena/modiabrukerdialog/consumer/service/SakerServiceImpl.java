@@ -23,6 +23,7 @@ import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
+import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.either;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.none;
@@ -75,6 +77,13 @@ public class SakerServiceImpl implements SakerService {
         leggTilManglendeGenerelleSaker(saker);
         behandleOppfolgingsSaker(saker);
         return saker;
+    }
+
+    @Override
+    public List<Sak> hentRelevanteSaker(String fnr) {
+        List<Sak> saker = hentListeAvSaker(fnr);
+        leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        return on(saker).filter(either(GODSKJENT_FAGSAK).or(GODSKJENT_GENERELL)).collect();
     }
 
     @Override
@@ -214,6 +223,24 @@ public class SakerServiceImpl implements SakerService {
             sak.fagsystemKode = wsSak.getFagsystem().getValue();
             sak.finnesIGsak = true;
             return sak;
+        }
+    };
+
+    private static final Predicate<Sak> GODSKJENT_FAGSAK = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return !sak.isSakstypeForVisningGenerell() &&
+                    GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
+                    !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
+        }
+    };
+
+    private static final Predicate<Sak> GODSKJENT_GENERELL = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return sak.isSakstypeForVisningGenerell() &&
+                    GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode) &&
+                    GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
         }
     };
 
