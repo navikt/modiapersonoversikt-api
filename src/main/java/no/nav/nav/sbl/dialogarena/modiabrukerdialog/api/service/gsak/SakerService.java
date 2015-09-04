@@ -14,4 +14,6 @@ public interface SakerService {
     List<Sak> hentRelevanteSaker(String fnr);
 
     void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws JournalforingFeilet;
+
+    void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak, String enhet) throws JournalforingFeilet;
 }
