@@ -1,5 +1,4 @@
 import React from 'react';
-import { pick, contains } from 'lodash';
 
 class JournalforKnapp extends React.Component {
     constructor(props) {
@@ -13,20 +12,11 @@ class JournalforKnapp extends React.Component {
     }
 
     journalfor() {
-        let sak = pick(this.props.sak, (property) => {
-            return contains([
-                'saksId',
-                'temakode',
-                'finnesIGsak',
-                'finnesIPsak',
-            ], property);
-        });
-
         $.ajax({
             type: 'POST',
             url: '/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/' + this.props.traadId,
             contentType: 'application/json',
-            data: JSON.stringify(sak)
+            data: JSON.stringify(this.props.sak)
         })
             .done(function (response, status, xhr) {
                 this.setState({sender: false, sendt: true});

@@ -45,7 +45,7 @@ class JournalforingsPanel extends React.Component {
         } else {
             aktivtVindu = <JournalforSak
                                 fnr={this.props.fnr}
-                                traadId={this.props.traadId}
+                                traadId={this.state.traadId}
                                 sak={this.state.valgtSak}
                                 tilbake={this.tilbake}/>
         }
