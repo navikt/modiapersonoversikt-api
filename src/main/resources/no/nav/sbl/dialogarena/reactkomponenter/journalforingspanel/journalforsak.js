@@ -5,13 +5,12 @@ import JournalforKnapp from './journalforknapp';
 class JournalforSak extends React.Component {
     render() {
         var sak = this.props.sak;
-        console.log('sak', sak);
-        var header2 = sak.sakstype === 'GEN'? "Generelle saker":"Fagsaker";
+        var header = sak.sakstype === 'GEN'? "Generelle saker" : "Fagsaker";
         return(
             <div className="detaljer-sak">
-                <h3 className="sub-header">{header2}</h3>
+                <h3 className="sub-header">{header}</h3>
                 <div>
-                    <h3 className="header-detaljer">{sak.temaKode}</h3>
+                    <h3 className="header-detaljer">{sak.temaNavn}</h3>
                     <div className="info-bar">
                         <span className="text-cell">Saksid</span>
                         <span className="vekk">'|'</span>
@@ -24,11 +23,11 @@ class JournalforSak extends React.Component {
                         <span className="vekk">'|'</span>
                         <span className="text-cell">{sak.opprettetDatoFormatert}</span>
                         <span className="vekk">'|'</span>
-                        <span className="text-cell">{sak.fagsystemKode}</span>
+                        <span className="text-cell">{sak.fagsystemNavn}</span>
                     </div>
                 </div>
                 <TilbakeKnapp tilbake={this.props.tilbake}></TilbakeKnapp>
-                <JournalforKnapp></JournalforKnapp>
+                <JournalforKnapp fnr={this.props.fnr} traadId={this.props.traadId} sak={sak}/>
                 </div>
         );
     }

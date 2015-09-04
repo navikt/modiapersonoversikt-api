@@ -20,13 +20,13 @@ class SakerListe extends React.Component {
                                 <span className="vekk">'|'</span>
                                 <span className="text-cell">{sak.opprettetDatoFormatert}</span>
                                 <span className="vekk">'|'</span>
-                                <span className="text-cell">{sak.fagsystemKode}</span>
+                                <span className="text-cell">{sak.fagsystemNavn}</span>
                             </div>
                         </a>
                     </li>
                 );
             });
-            return <SakerForTema tema={group[0].temaKode} saker={saker}/>
+            return <SakerForTema tema={group[0].temaNavn} saker={saker}/>
         });
 
         return (

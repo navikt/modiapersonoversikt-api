@@ -10,11 +10,18 @@ class JournalforingsPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            saker: [],
             aktivtVindu: VELG_SAK,
             valgtSak: null
         };
         this.velgSak = this.velgSak.bind(this);
         this.tilbake = this.tilbake.bind(this);
+    }
+
+    componentDidMount() {
+        $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker').then(
+            okCallback.bind(this),
+            feiletCallback.bind(this));
     }
 
     velgSak(sak) {
@@ -34,9 +41,13 @@ class JournalforingsPanel extends React.Component {
     render() {
         let aktivtVindu;
         if (this.state.aktivtVindu === VELG_SAK) {
-            aktivtVindu = <VelgSak saker={this.props.saker} velgSak={this.velgSak}/>;
+            aktivtVindu = <VelgSak saker={this.state.saker} velgSak={this.velgSak}/>;
         } else {
-            aktivtVindu = <JournalforSak sak={this.state.valgtSak} tilbake={this.tilbake}/>
+            aktivtVindu = <JournalforSak
+                                fnr={this.props.fnr}
+                                traadId={this.props.traadId}
+                                sak={this.state.valgtSak}
+                                tilbake={this.tilbake}/>
         }
         return (
             <div className="journalforings-panel shadow">
@@ -47,6 +58,18 @@ class JournalforingsPanel extends React.Component {
         );
     }
 }
+
+function okCallback(data) {
+    this.setState({
+        saker: data
+    });
+}
+function feiletCallback() {
+    this.setState({
+        feilet: true
+    });
+}
+
 
 export default JournalforingsPanel;
 
