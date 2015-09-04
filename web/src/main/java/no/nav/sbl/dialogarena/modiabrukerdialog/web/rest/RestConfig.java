@@ -5,6 +5,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class RestConfig extends ResourceConfig {
 
     public RestConfig() {
-        super(SkrivestotteController.class, MeldingerController.class);
+        super(SkrivestotteController.class, MeldingerController.class, JournalforingController.class);
     }
 }
