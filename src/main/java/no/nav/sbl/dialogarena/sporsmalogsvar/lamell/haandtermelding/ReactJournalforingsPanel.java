@@ -9,12 +9,15 @@ import java.util.HashMap;
 
 public class ReactJournalforingsPanel extends AnimertPanel {
 
+    private final ReactComponentPanel reactComponentPanel;
+    private final InnboksVM innboksVM;
+
     public ReactJournalforingsPanel(String id, final InnboksVM innboksVM) {
         super(id, true);
-        ReactComponentPanel reactComponentPanel = new ReactComponentPanel("reactjournalforing", "JournalforingsPanel", new HashMap<String, Object>() {
+        this.innboksVM = innboksVM;
+        reactComponentPanel = new ReactComponentPanel("reactjournalforing", "JournalforingsPanel", new HashMap<String, Object>() {
             {
                 put("fnr", innboksVM.getFnr());
-                put("traadId", innboksVM.getValgtTraad().getEldsteMelding().melding.traadId);
             }
         });
         reactComponentPanel.addCallback("lukkPanel", Void.class, new ReactComponentCallback<Void>() {
@@ -26,4 +29,12 @@ public class ReactJournalforingsPanel extends AnimertPanel {
         add(reactComponentPanel);
     }
 
+    @Override
+    protected void onOpen() {
+        reactComponentPanel.updateState(new HashMap<String, Object>() {
+            {
+                put("traadId", innboksVM.getValgtTraad().getEldsteMelding().melding.traadId);
+            }
+        });
+    }
 }
