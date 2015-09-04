@@ -8,7 +8,7 @@ Modig.scrollOptions = {
     scrollInertia: 100,
     keyboard: false,
     advanced: {
-        autoScrollOnFocus: "input,textarea,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true'],article[tabindex], ul[tabindex]"
+        autoScrollOnFocus: "input,textarea,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true'],article[tabindex], ul[tabindex], div[tabindex]"
     }
 };
 
