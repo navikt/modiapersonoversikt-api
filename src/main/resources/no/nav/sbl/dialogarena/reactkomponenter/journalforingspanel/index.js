@@ -53,7 +53,7 @@ class JournalforingsPanel extends React.Component {
             <div className="journalforings-panel shadow">
                 <h2 className="header">Journalføring</h2>
                 {aktivtVindu}
-                <LukkKnapp></LukkKnapp>
+                <LukkKnapp wicketurl={this.props.wicketurl} wicketcomponent={this.props.wicketcomponent}/>
             </div>
         );
     }
