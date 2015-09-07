@@ -146,9 +146,8 @@ public class Innboks extends Lerret {
     @Override
     public void onOpening(AjaxRequestTarget target) {
         if (target != null) {
-            target.appendJavaScript("Meldinger.addKeyNavigation();");
             if (innboksVM.focusValgtTraadOnOpen) {
-                target.appendJavaScript(format("$('#%s').find('.meldingsforhandsvisning.valgt').focus();", this.getMarkupId()));
+                target.appendJavaScript("Meldinger.focusOnSelectedElement()");
             }
         }
     }

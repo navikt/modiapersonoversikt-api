@@ -82,7 +82,6 @@ public class AlleMeldingerPanel extends Panel {
                         if (!meldingVM.melding.id.equals(innboksVM.getValgtTraad().getNyesteMelding().melding.id)) {
                             AlleMeldingerPanel.this.innboksVM.setValgtMelding(meldingVM);
                             send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
-                            settFokusPaaValgtMelding(target);
                             target.add(AlleMeldingerPanel.this);
                             target.appendJavaScript("Modig.lagScrollbars()");
                         }
@@ -115,22 +114,18 @@ public class AlleMeldingerPanel extends Panel {
 
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
+            target.appendJavaScript("Modig.lagScrollbars()");
             if (innboksVM.harTraader()) {
                 if (innboksVM.getValgtTraad() == null) {
                     innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
                     send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
                 }
-                target.appendJavaScript("Meldinger.addKeyNavigation();");
                 if (!Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT.equals(event.getPayload())) {
-                    settFokusPaaValgtMelding(target);
+                    target.appendJavaScript("Meldinger.focusOnSelectedElement();");
                 }
             }
             send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
             target.add(this);
         }
-    }
-
-    private void settFokusPaaValgtMelding(AjaxRequestTarget target) {
-        target.appendJavaScript("Meldinger.focusOnSelectedElement();");
     }
 }
