@@ -10,6 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.OppgaveTilknytningPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.SkrivestottePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.ReactJournalforingsPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -115,7 +116,9 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
                 both(brukerKanSvare.getModel())
                         .and(not(model.getObject().traadJournalfort()))
                         .and(not(Model.of(KOMMUNALE_TJENESTER.contains(model.getObject().gjeldendeTemagruppe))))));
-        add(journalforingsPanel);
+//        add(journalforingsPanel);
+
+        add(new ReactJournalforingsPanel("velgsak", grunnInfo.bruker.fnr, model));
 
         avhengerAvKanlOgDelMedBrukerValg.add(kanalbeskrivelse);
         avhengerAvKanlOgDelMedBrukerValg.add(brukerKanSvare);

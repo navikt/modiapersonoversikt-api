@@ -19,7 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.ReactJournalforingsPanel;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -88,10 +88,15 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         form.add(lagModusVelger(modusModel));
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel(), true);
-        journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
-        modusKomponenter.add(journalforingsPanel);
-        form.add(journalforingsPanel);
+//        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel(), true);
+//        journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
+//        modusKomponenter.add(journalforingsPanel);
+//        form.add(journalforingsPanel);
+
+        ReactJournalforingsPanel velgSak = new ReactJournalforingsPanel("velgSak", grunnInfo.bruker.fnr, getModel());
+        velgSak.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
+        modusKomponenter.add(velgSak);
+        form.add(velgSak);
 
         OppgaveTilknytningPanel oppgaveTilknytningPanel = new OppgaveTilknytningPanel("oppgaveTilknytningPanel", getModel(), grunnInfo);
         oppgaveTilknytningPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
@@ -161,7 +166,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         kvittering = new KvitteringsPanel("kvittering");
 
-        List<FeedbackLabel> feedbackLabels = leggTilFeedbackLabels(journalforingsPanel, tekstfelt, radioGroup, temagruppeVelger);
+        List<FeedbackLabel> feedbackLabels = leggTilFeedbackLabels(tekstfelt, radioGroup, temagruppeVelger);
 
         modusKomponenter.addAll(feedbackLabels);
         form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
