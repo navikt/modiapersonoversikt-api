@@ -152,12 +152,6 @@ public class Sak implements Serializable, Comparable<Sak> {
         }
     }
 
-//    Optional<String> saksId = none();
-//    Optional<String> fagsystemSaksId = none();
-//    String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
-//    DateTime opprettetDato;
-//    Boolean finnesIGsak = false, finnesIPsak = false;
-
     static class SakDeserializer extends JsonDeserializer<Sak> {
 
         @Override
