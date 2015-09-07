@@ -12,12 +12,12 @@ class TypeValg extends React.Component {
 
     render() {
         return (
-            <form className="type-valg" onChange={this.endre}>
+            <div className="type-valg">
                 <input name="typeVelger" id="t1" type="radio" checked={this.props.valgtKategori === 'FAG'} value="FAG" onChange={this.endre}/>
                 <label className="label" htmlFor="t1">Fagsaker</label>
                 <input name="typeVelger" id="t2" type="radio" checked={this.props.valgtKategori === 'GEN'} value="GEN" onChange={this.endre}/>
                 <label className="label" htmlFor="t2">Generelle saker</label>
-            </form>
+            </div>
         );
     }
 }

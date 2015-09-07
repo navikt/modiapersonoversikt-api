@@ -2,7 +2,8 @@ window.ModiaJS = {
     Components: {
         MeldingerSok: require('./meldingerSok'),
         Skrivestotte: require('./skrivestotte'),
-        JournalforingsPanel: require('./journalforingspanel')
+        JournalforingsPanel: require('./journalforingspanel'),
+        VelgSakPanel: require('./velgsakpanel')
     },
     InitializedComponents: {},
     React: require('./nav-react')
