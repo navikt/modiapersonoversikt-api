@@ -7,7 +7,8 @@ class LukkKnapp extends React.Component {
         this.lukk = this.lukk.bind(this);
     }
 
-    lukk() {
+    lukk(event) {
+        event.preventDefault();
         WicketSender(this.props.wicketurl, this.props.wicketcomponent, 'lukkPanel');
     }
 

@@ -46,7 +46,8 @@ class SakerForTema extends React.Component {
         this.toggleEkspandering = this.toggleEkspandering.bind(this);
     }
 
-    toggleEkspandering() {
+    toggleEkspandering(event) {
+        event.preventDefault();
         this.setState({ekspandert: !this.state.ekspandert});
     }
 

@@ -31,7 +31,8 @@ class JournalforingsPanel extends React.Component {
         })
     }
 
-    tilbake() {
+    tilbake(event) {
+        event.preventDefault();
         this.setState({
             aktivtVindu: VELG_SAK,
             valgtSak: null
