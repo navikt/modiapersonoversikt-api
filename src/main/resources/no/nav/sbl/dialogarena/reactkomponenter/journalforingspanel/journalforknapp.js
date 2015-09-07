@@ -20,6 +20,7 @@ class JournalforKnapp extends React.Component {
         })
             .done(function (response, status, xhr) {
                 this.setState({sender: false, sendt: true});
+                this.props.traadJournalfort();
             }.bind(this))
             .fail(function () {
                 this.setState({feilet: true, sender: false})

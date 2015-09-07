@@ -47,7 +47,9 @@ class JournalforingsPanel extends React.Component {
                                 fnr={this.props.fnr}
                                 traadId={this.state.traadId}
                                 sak={this.state.valgtSak}
-                                tilbake={this.tilbake}/>
+                                tilbake={this.tilbake}
+                                wicketurl={this.props.wicketurl}
+                                wicketcomponent={this.props.wicketcomponent}/>
         }
         return (
             <div className="journalforings-panel shadow">
