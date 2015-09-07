@@ -66,7 +66,7 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         container.add(new Label("behandlingsid", behandling.behandlingsId)); // Veldig nyttig for feilsøking
         if (behandling instanceof Kvittering) {
             container.add(new AttributeAppender("class", " kvitteringbehandling"));
-            container.add(new KvitteringsPanel("behandling", getTittel(behandling), of((Kvittering)behandling), fnr));
+            container.add(new KvitteringsPanel("behandling", getTittel(behandling), of((Kvittering)behandling), fnr, sakstemakode));
         } else { //Behandling er GenerellBehandling
             container.add(hasCssClassIf("avsluttet", erAvsluttet));
             container.add(new BehandlingsPanel("behandling", getTittel(behandling), of(behandling), sakstemakode));

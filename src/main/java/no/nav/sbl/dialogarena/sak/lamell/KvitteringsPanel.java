@@ -55,11 +55,12 @@ public class KvitteringsPanel extends Panel {
     private static final DateTime HL4_2015_DATO = new DateTime(2014, 12, 9, 0, 0);
     private static final String ARKIVTEMA_BIDRAG = "BID";
     private final Kvittering kvittering;
+    private String sakstemakode;
 
-
-    public KvitteringsPanel(String id, String tittel, Model<Kvittering> kvitteringsModel, String fnr) {
+    public KvitteringsPanel(String id, String tittel, Model<Kvittering> kvitteringsModel, String fnr, String sakstemakode) {
         super(id, kvitteringsModel);
         this.fnr = fnr;
+        this.sakstemakode = sakstemakode;
         kvittering = kvitteringsModel.getObject();
 
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
@@ -227,7 +228,7 @@ public class KvitteringsPanel extends Panel {
     }
 
     private boolean erTemaBidrag() {
-        return ARKIVTEMA_BIDRAG.equalsIgnoreCase(kvittering.behandlingstema);
+        return ARKIVTEMA_BIDRAG.equalsIgnoreCase(sakstemakode);
     }
 
     @Override
