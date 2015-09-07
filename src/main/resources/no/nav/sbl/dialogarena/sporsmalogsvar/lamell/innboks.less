@@ -10,10 +10,10 @@
   padding: 0;
   overflow-y: visible;
 }
+
 .lamell.meldinger .ajax-content {
   height: 100%;
 }
-
 
 .meldinglamell {
   height: 100%;
@@ -31,6 +31,24 @@
     height: 100%;
     padding: 0 1rem 2rem 0;
     overflow: visible;
+    input[type=radio] {
+      &:focus, &:hover, &:active {
+        & + label{
+          background-image: none !important;
+        }
+      }
+    }
+    input + label {
+      position: initial;
+      width: 100%;
+      color: @grayDark;
+      text-transform: none;
+      background-image: none !important;
+      font-size: 1rem;
+      line-height: 1rem;
+      margin: 0;
+    }
+
   }
   .traadDetaljer {
     width: 60%;
@@ -44,7 +62,6 @@
     float: left;
     height: 100%;
   }
-
 
   a.knapp-hoved-stor {
     color: white;
@@ -220,7 +237,7 @@
     }
     &.nyoppgave {
       .ny-oppgave-form;
-      
+
       input[type=submit] {
         margin: 0 auto;
         display: block;
@@ -326,8 +343,11 @@
     margin: 0;
   }
   &.valgt {
-    color: #f5f5f5;
     background-color: #226aa4;
+
+    p {
+      color: #f5f5f5;
+    }
     .statusIkon {
       &.ubesvart {
         background: url(../img/melding_ny_hvit.svg) no-repeat;
@@ -370,7 +390,7 @@
     height: 14px;
     width: 18px;
     left: 8px;
-    top: 50px;
+    top: 47px;
     &.besvart {
       background: url(../img/melding_besvart.svg) no-repeat;
     }

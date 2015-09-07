@@ -5,10 +5,10 @@
 <body>
 <wicket:panel>
     <div wicket:id="alletraader" class="alletraader">
-        <div wicket:id="nyesteMeldingerITraad">
-            <input wicket:id="meldingslistetraad" type="radio" name="traadlisteradio" readonly/>
-            <label wicket:for="meldingslistetraad" class="meldingsforhandsvisning">
-                <div wicket:id="traadlengde" class="traadlengde" aria-hidden="true"></div>
+        <div wicket:id="nyesteMeldingerITraad" class="meldingsforhandsvisning">
+            <input wicket:id="meldingslistetraad" type="radio" name="traadlisteradio"  class="vekk" readonly/>
+            <label wicket:for="meldingslistetraad">
+                <p wicket:id="traadlengde" class="traadlengde" aria-hidden="true"></p>
                 <div wicket:id="besvarIndikator" class="besvarIndikator" aria-hidden="true"></div>
                 <wicket:container wicket:id="statusIkon"/>
                 <p wicket:id="avsenderDato"></p>

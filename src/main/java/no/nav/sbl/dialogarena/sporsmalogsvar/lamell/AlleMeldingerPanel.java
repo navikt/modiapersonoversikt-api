@@ -85,8 +85,8 @@ public class AlleMeldingerPanel extends Panel {
                             settFokusPaaValgtMelding(target);
                             target.add(AlleMeldingerPanel.this);
                             target.appendJavaScript("Modig.lagScrollbars()");
-                            target.focusComponent(radio);
                         }
+                        target.focusComponent(radio);
                     }
                 });
             }
