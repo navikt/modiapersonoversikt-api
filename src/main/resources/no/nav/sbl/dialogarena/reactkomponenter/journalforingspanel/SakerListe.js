@@ -14,7 +14,7 @@ class SakerListe extends React.Component {
             const saker = group.map((sak) => {
                 return (
                     <li className="text-row-list">
-                        <a onClick={() => velgSak(sak)}>
+                        <a className= "content-row-list" onClick={() => velgSak(sak)}>
                             <div>
                                 <span className="text-cell">{sak.saksIdVisning}</span>
                                 <span className="vekk">'|'</span>

@@ -8,7 +8,7 @@ class TilbakeKnapp extends React.Component {
     render() {
         var tilbake = this.props.tilbake;
         return (
-            <button className="tilbake-knapp" aria-label="tilbake" onClick={tilbake}></button>
+            <button className="tilbake-knapp knapp-liten" aria-label="tilbake" onClick={tilbake}>Tilbake</button>
         );
     }
 }
