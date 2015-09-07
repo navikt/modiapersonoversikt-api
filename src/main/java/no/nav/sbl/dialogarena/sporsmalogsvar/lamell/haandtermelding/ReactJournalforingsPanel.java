@@ -4,8 +4,11 @@ import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallba
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 
 import java.util.HashMap;
+
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.AnimertJournalforingsPanel.TRAAD_JOURNALFORT;
 
 public class ReactJournalforingsPanel extends AnimertPanel {
 
@@ -24,6 +27,13 @@ public class ReactJournalforingsPanel extends AnimertPanel {
             @Override
             public void onCallback(AjaxRequestTarget target, Void data) {
                 lukkPanel(target);
+            }
+        });
+        reactComponentPanel.addCallback("traadJournalfort", Void.class, new ReactComponentCallback<Void>() {
+            @Override
+            public void onCallback(AjaxRequestTarget target, Void data) {
+                lukkPanel(target);
+                send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
             }
         });
         add(reactComponentPanel);
