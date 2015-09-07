@@ -20,7 +20,6 @@ class VelgSakPanel extends React.Component {
     }
 
     render() {
-        console.log('render');
         return (
             <VelgSak saker={this.state.saker} velgSak={this.velgSak}/>
         );
@@ -28,7 +27,6 @@ class VelgSakPanel extends React.Component {
 }
 
 function okCallback(data) {
-    console.log('ok', data);
     this.setState({
         saker: data
     });

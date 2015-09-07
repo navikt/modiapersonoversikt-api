@@ -52,11 +52,11 @@ class JournalforingsPanel extends React.Component {
                                 wicketcomponent={this.props.wicketcomponent}/>
         }
         return (
-            <div className="journalforings-panel shadow">
+            <form className="journalforings-panel shadow">
                 <h2 className="header">Journalføring</h2>
                 {aktivtVindu}
                 <LukkKnapp wicketurl={this.props.wicketurl} wicketcomponent={this.props.wicketcomponent}/>
-            </div>
+            </form>
         );
     }
 }
