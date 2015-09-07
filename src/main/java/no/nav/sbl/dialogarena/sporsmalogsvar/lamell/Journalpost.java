@@ -48,8 +48,8 @@ public class Journalpost extends Panel {
                         hasCssClassIf("opp", journalpostInformasjonErSynlig),
                         hasCssClassIf("ned", not(journalpostInformasjonErSynlig))));
         journalpostLenke.add(
-                attributeIf("aria-pressed", "true", journalpostInformasjonErSynlig, true),
-                attributeIf("aria-pressed", "false", not(journalpostInformasjonErSynlig), true));
+                attributeIf("aria-expanded", "true", journalpostInformasjonErSynlig, true),
+                attributeIf("aria-expanded", "false", not(journalpostInformasjonErSynlig), true));
         add(journalpostLenke);
     }
 
