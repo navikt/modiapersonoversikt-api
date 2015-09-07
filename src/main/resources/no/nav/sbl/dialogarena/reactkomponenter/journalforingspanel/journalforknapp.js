@@ -11,7 +11,8 @@ class JournalforKnapp extends React.Component {
         }
     }
 
-    journalfor() {
+    journalfor(event) {
+        event.preventDefault();
         $.ajax({
             type: 'POST',
             url: '/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/' + this.props.traadId,
