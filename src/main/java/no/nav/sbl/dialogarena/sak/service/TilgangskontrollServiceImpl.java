@@ -55,7 +55,9 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         }
 
         WSJournalpost journalpost = hentJournalpost(journalpostId);
-        if (!erJournalfort(journalpost)) {
+        if (erFeilregistrert(journalpost)) {
+            return new HentDokumentResultat(false, FEILREGISTRERT);
+        } else if (!erJournalfort(journalpost)) {
             if (harStatusUtgaar(journalpost)) {
                 return new HentDokumentResultat(false, STATUS_UTGAAR);
             } else if (harUkjentBruker(journalpost)) {
@@ -63,8 +65,6 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             } else {
                 return new HentDokumentResultat(false, IKKE_JOURNALFORT);
             }
-        } else if (erFeilregistrert(journalpost)) {
-            return new HentDokumentResultat(false, FEILREGISTRERT);
         } else if (!erInnsenderSakspart(journalpost, fnr)) {
             return new HentDokumentResultat(false, IKKE_SAKSPART, hentSakspart(journalpost));
         } else if (!harEnhetTilgangTilTema(journalpost)) {
