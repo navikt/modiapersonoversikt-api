@@ -26,7 +26,11 @@ class VelgSak extends React.Component {
         return (
             <div>
                 <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori}/>
-                <SakerListe saker={saker} velgSak={this.props.velgSak}></SakerListe>
+                <SakerListe
+                    saker={saker}
+                    temagruppe={this.props.temagruppe}
+                    velgSak={this.props.velgSak}
+                    temagruppeTemaMapping={this.props.temagruppeTemaMapping}/>
             </div>
         );
     }

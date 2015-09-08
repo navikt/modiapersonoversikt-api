@@ -1,6 +1,5 @@
 import React from 'react';
-import { groupBy } from 'lodash';
-import { mapValues } from 'lodash';
+import { chain, mapValues, contains, partition, flatten } from 'lodash';
 
 class SakerListe extends React.Component {
     constructor(props) {
@@ -8,13 +7,13 @@ class SakerListe extends React.Component {
     }
 
     render() {
-        const grouped = groupBy(this.props.saker, sak => sak.temaKode);
+        const grouped = grupperSaker.apply(this);
         const velgSak = this.props.velgSak;
         const sakerGruppert = mapValues(grouped, (group) => {
             const saker = group.map((sak) => {
                 return (
                     <li className="text-row-list">
-                        <a className= "content-row-list" onClick={() => velgSak(sak)}>
+                        <a className="content-row-list" onClick={() => velgSak(sak)}>
                             <div>
                                 <span className="text-cell">{sak.saksIdVisning}</span>
                                 <span className="vekk">'|'</span>
@@ -36,6 +35,29 @@ class SakerListe extends React.Component {
         );
     }
 }
+
+function grupperSaker() {
+    const saker = this.props.saker;
+    const temagruppe = this.props.temagruppe;
+    if (temagruppe) {
+        const gruppert = skillUtPrioriterteSaker(saker, temagruppe, this.props.temagruppeTemaMapping).map(grupperPaaTemakodeOgSorter);
+        return flatten(gruppert);
+    } else {
+        return grupperPaaTemakodeOgSorter(saker);
+    }
+}
+
+function skillUtPrioriterteSaker(saker, temagruppe, temagruppeTemaMapping) {
+    return partition(saker, sak => contains(temagruppeTemaMapping[temagruppe], sak.temaKode));
+}
+
+function grupperPaaTemakodeOgSorter(saker) {
+    return chain(saker)
+        .groupBy(sak => sak.temaKode)
+        .sortBy(group => group[0].temaNavn)
+        .value();
+}
+
 
 class SakerForTema extends React.Component {
     constructor(props) {

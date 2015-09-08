@@ -42,7 +42,11 @@ class JournalforingsPanel extends React.Component {
     render() {
         let aktivtVindu;
         if (this.state.aktivtVindu === VELG_SAK) {
-            aktivtVindu = <VelgSak saker={this.state.saker} velgSak={this.velgSak}/>;
+            aktivtVindu = <VelgSak
+                                saker={this.state.saker}
+                                temagruppe={this.state.temagruppe}
+                                velgSak={this.velgSak}
+                                temagruppeTemaMapping={this.props.temagruppeTemaMapping}/>;
         } else {
             aktivtVindu = <JournalforSak
                                 fnr={this.props.fnr}
