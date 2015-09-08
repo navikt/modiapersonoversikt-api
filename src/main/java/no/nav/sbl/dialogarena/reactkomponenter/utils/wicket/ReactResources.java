@@ -13,6 +13,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/sokLayout.less"),
                     new PackageResourceReference(ResourceReference.class, "build/meldingerSok.less"),
                     new PackageResourceReference(ResourceReference.class, "build/knagginput.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less")
+                    new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/journalforingspanel.less")
             ).done();
 }

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 var React = require('react/addons');
 var Utils = require('./../utils');
 var ScrollPortal = require('./../utils/ScrollPortal.js');

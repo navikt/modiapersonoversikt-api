@@ -3,7 +3,8 @@ var rename = require('gulp-rename');
 var source = require('vinyl-source-stream'); // Used to stream bundle for further handling
 var browserify = require('browserify');
 var watchify = require('watchify');
-var reactify = require('reactify');
+var babelify = require('babelify');
+var karma = require('karma').server;
 var notify = require('gulp-notify');
 
 var config = require('./buildConfig.json');
@@ -19,7 +20,7 @@ var browserifyTask = function (isDev) {
     props.fullPaths = isDev;
 
     var bundler = isDev ? watchify(browserify(props)) : browserify(props);
-    bundler.transform(reactify);
+    bundler.transform(babelify);
 
     function rebundle() {
         var stream = bundler.bundle();
@@ -56,6 +57,13 @@ var lessTask = function (options) {
     }
 };
 
+function test() {
+    karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        isSingleRun: true
+    });
+}
+
 gulp.task('dev', function () {
     browserifyTask(true);
 
@@ -76,5 +84,5 @@ gulp.task('default', function () {
 });
 
 gulp.task('test', function () {
-    //test();
+    test();
 });

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 var React = require('react/addons');
 var Modal = require('./../modal');
 var Utils = require('./../utils');
