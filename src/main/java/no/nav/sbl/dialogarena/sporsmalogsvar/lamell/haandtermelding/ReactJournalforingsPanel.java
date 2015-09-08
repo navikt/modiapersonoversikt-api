@@ -47,7 +47,7 @@ public class ReactJournalforingsPanel extends AnimertPanel {
         reactComponentPanel.updateState(new HashMap<String, Object>() {
             {
                 put("traadId", innboksVM.getValgtTraad().getEldsteMelding().melding.traadId);
-                put("temagruppe", innboksVM.getValgtTraad().getEldsteMelding().melding.temagruppe);
+                put("temagruppe", innboksVM.getValgtTraad().getEldsteMelding().melding.gjeldendeTemagruppe);
             }
         });
     }
