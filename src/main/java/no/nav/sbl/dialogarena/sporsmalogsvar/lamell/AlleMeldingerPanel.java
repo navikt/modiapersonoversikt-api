@@ -59,7 +59,6 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("avsenderDato"));
                 item.add(new StatusIkon("statusIkon",
                                 blirBesvart(meldingVM.melding.traadId).getObject(),
-                                innboksVM.erValgtMelding(meldingVM).getObject(),
                                 meldingVM)
                 );
                 item.add(radio);
