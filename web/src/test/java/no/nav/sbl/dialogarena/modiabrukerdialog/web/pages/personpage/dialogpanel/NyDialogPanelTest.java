@@ -3,8 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -15,10 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.AjaxLazyLoadVelgSakPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.VelgSakPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -26,7 +21,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -196,46 +190,6 @@ public class NyDialogPanelTest extends WicketPageTest {
                 .should().containComponent(thatIsInvisible().ofType(KvitteringsPanel.class));
 
         verify(henvendelseUtsendingService, never()).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
-    }
-
-    @Test
-    public void viserVelgSakPanelForSporsmalDersomManKlikkerValgtSakLenke() {
-        settISporsmalsModus();
-
-        FluentWicketTester<? extends WebApplication> tester = wicket.goToPageWith(testNyDialogPanel);
-
-        tester.should().containComponent(thatIsInvisible().and(ofType(AjaxLazyLoadVelgSakPanel.class)))
-                .click().link(withId("valgtSakLenke"));
-        tester.onComponent(ofType(AjaxLazyLoadVelgSakPanel.class)).executeAjaxBehaviors(BehaviorMatchers.ofType(AbstractDefaultAjaxBehavior.class));
-        tester.should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
-                .should().containComponent(thatIsVisible().and(ofType(VelgSakPanel.class)));
-    }
-
-    @Test
-    public void skjulerVelgSakPanelForSporsmalDersomManKlikkerAvbryt() {
-        settISporsmalsModus();
-
-        FluentWicketTester<? extends WebApplication> tester = wicket.goToPageWith(testNyDialogPanel);
-        tester.click().link(withId("valgtSakLenke"));
-        tester.onComponent(ofType(AjaxLazyLoadVelgSakPanel.class)).executeAjaxBehaviors(BehaviorMatchers.ofType(AbstractDefaultAjaxBehavior.class));
-        tester.click().link(withId("avbrytJournalforing"))
-                .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
-                .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)));
-    }
-
-    @Test
-    public void skjulerVelgSakPanelForSporsmalDersomManKlikkerVelgerSak() {
-        settISporsmalsModus();
-
-        FluentWicketTester<? extends WebApplication> tester = wicket.goToPageWith(testNyDialogPanel);
-        tester.click().link(withId("valgtSakLenke"));
-        tester.onComponent(ofType(AjaxLazyLoadVelgSakPanel.class)).executeAjaxBehaviors(BehaviorMatchers.ofType(AbstractDefaultAjaxBehavior.class));
-        tester
-                .inForm(withId("plukkSakForm"))
-                .select("valgtSak", 0)
-                .submitWithAjaxButton(withId("velgSak"))
-                .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
-                .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)));
     }
 
     @Test

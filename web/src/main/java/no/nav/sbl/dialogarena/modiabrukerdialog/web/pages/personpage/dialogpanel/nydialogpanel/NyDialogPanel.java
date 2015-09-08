@@ -88,15 +88,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         form.add(lagModusVelger(modusModel));
 
-//        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel(), true);
-//        journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
-//        modusKomponenter.add(journalforingsPanel);
-//        form.add(journalforingsPanel);
+        ReactJournalforingsPanel journalforingsPanel = new ReactJournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel());
+        journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
+        modusKomponenter.add(journalforingsPanel);
+        form.add(journalforingsPanel);
 
-        ReactJournalforingsPanel velgSak = new ReactJournalforingsPanel("velgSak", grunnInfo.bruker.fnr, getModel());
-        velgSak.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
-        modusKomponenter.add(velgSak);
-        form.add(velgSak);
 
         OppgaveTilknytningPanel oppgaveTilknytningPanel = new OppgaveTilknytningPanel("oppgaveTilknytningPanel", getModel(), grunnInfo);
         oppgaveTilknytningPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
@@ -166,7 +162,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         kvittering = new KvitteringsPanel("kvittering");
 
-        List<FeedbackLabel> feedbackLabels = leggTilFeedbackLabels(tekstfelt, radioGroup, temagruppeVelger);
+        List<FeedbackLabel> feedbackLabels = leggTilFeedbackLabels(journalforingsPanel, tekstfelt, radioGroup, temagruppeVelger);
 
         modusKomponenter.addAll(feedbackLabels);
         form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
@@ -185,10 +181,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private EnhancedTextArea lagTekstFelt(Form<HenvendelseVM> form) {
         EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
-            new EnhancedTextAreaConfigurator()
-                .withMaxCharCount(5000)
-                .withMinTextAreaHeight(250)
-                .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
+                new EnhancedTextAreaConfigurator()
+                        .withMaxCharCount(5000)
+                        .withMinTextAreaHeight(250)
+                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
         );
         tekstfelt.setOutputMarkupId(true);
         return tekstfelt;
@@ -351,13 +347,13 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private void sendHenvendelse(HenvendelseVM henvendelseVM, Meldingstype meldingstype, Optional<Melding> eldsteMeldingITraad) throws Exception {
         Melding melding = new MeldingBuilder()
-            .withHenvendelseVM(henvendelseVM)
-            .withEldsteMeldingITraad(eldsteMeldingITraad)
-            .withMeldingstype(meldingstype)
-            .withFnr(grunnInfo.bruker.fnr)
-            .withNavident(getSubjectHandler().getUid())
-            .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
-            .build();
+                .withHenvendelseVM(henvendelseVM)
+                .withEldsteMeldingITraad(eldsteMeldingITraad)
+                .withMeldingstype(meldingstype)
+                .withFnr(grunnInfo.bruker.fnr)
+                .withNavident(getSubjectHandler().getUid())
+                .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+                .build();
 
         Optional<Sak> sak = none();
         if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
