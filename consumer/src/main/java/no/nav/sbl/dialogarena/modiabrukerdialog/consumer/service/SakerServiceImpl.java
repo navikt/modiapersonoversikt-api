@@ -6,9 +6,9 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
@@ -23,6 +23,7 @@ import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
+import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
@@ -30,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
@@ -78,7 +78,20 @@ public class SakerServiceImpl implements SakerService {
     }
 
     @Override
+    public List<Sak> hentRelevanteSaker(String fnr) {
+        List<Sak> saker = hentListeAvSaker(fnr);
+        leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        return on(saker).filter(either(GODSKJENT_FAGSAK).or(GODSKJENT_GENERELL)).collect();
+    }
+
+    @Override
     public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws JournalforingFeilet {
+        String enhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        knyttBehandlingskjedeTilSak(fnr, behandlingskjede, sak, enhet);
+    }
+
+    @Override
+    public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak, String enhet) throws JournalforingFeilet {
         if (!sak.finnesIPsak && !sak.finnesIGsak) {
             sak.saksId = optional(opprettSak(fnr, sak));
         }
@@ -87,7 +100,7 @@ public class SakerServiceImpl implements SakerService {
                     behandlingskjede,
                     sak.saksId.get(),
                     sak.temaKode,
-                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+                    enhet);
         } catch (Exception e) {
             throw new JournalforingFeilet(e);
         }
@@ -214,6 +227,24 @@ public class SakerServiceImpl implements SakerService {
             sak.fagsystemKode = wsSak.getFagsystem().getValue();
             sak.finnesIGsak = true;
             return sak;
+        }
+    };
+
+    private static final Predicate<Sak> GODSKJENT_FAGSAK = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return !sak.isSakstypeForVisningGenerell() &&
+                    GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
+                    !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
+        }
+    };
+
+    private static final Predicate<Sak> GODSKJENT_GENERELL = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return sak.isSakstypeForVisningGenerell() &&
+                    GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode) &&
+                    GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
         }
     };
 

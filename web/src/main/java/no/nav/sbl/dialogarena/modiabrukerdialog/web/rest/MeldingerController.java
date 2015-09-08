@@ -20,6 +20,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.SaksbehandlerInnstillingerServiceImpl.saksbehandlerInnstillingerCookieId;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.RestUtils.hentValgtEnhet;
 
 @Path("/meldinger/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -60,13 +61,4 @@ public class MeldingerController {
         return Response.status(Response.Status.OK).build();
     }
 
-    private static String hentValgtEnhet(HttpServletRequest request) {
-        String key = saksbehandlerInnstillingerCookieId();
-        for (Cookie cookie : request.getCookies()) {
-            if (key.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-        throw new RuntimeException(String.format("Finner ikke cookie med key %s på session", key));
-    }
 }
