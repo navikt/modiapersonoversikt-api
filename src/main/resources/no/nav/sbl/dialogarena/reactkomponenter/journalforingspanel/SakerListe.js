@@ -25,7 +25,10 @@ class SakerListe extends React.Component {
                     </li>
                 );
             });
-            return <SakerForTema tema={group[0].temaNavn} saker={saker}/>
+            var temagruppe = this.props.temagruppe;
+            var temaKode = group[0].temaKode;
+            const erEkspandert = !temagruppe || contains(this.props.temagruppeTemaMapping[temagruppe], temaKode);
+            return <SakerForTema tema={group[0].temaNavn} saker={saker} erEkspandert={erEkspandert}/>
         });
 
         return (
@@ -63,9 +66,15 @@ class SakerForTema extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            ekspandert: true
+            ekspandert: props.erEkspandert
         };
         this.toggleEkspandering = this.toggleEkspandering.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            ekspandert: nextProps.erEkspandert
+        })
     }
 
     toggleEkspandering(event) {
