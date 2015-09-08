@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.print.PrintLenke;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.List;
@@ -28,7 +27,6 @@ public class HaandterMeldingValgPanel extends Panel {
         IModel<Boolean> erBehandlet = new PropertyModel<>(getDefaultModel(), "erBehandlet()");
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(getDefaultModel(), "erTemagruppeSosialeTjenester()");
 
-        add(new MeldingValgPanel("reactJournalforingValg", Model.of(true), meldingActionPanel.journalforPanel2));
         add(new MeldingValgPanel("journalforingValg",
                 both(not(erKontorsperret))
                         .and(not(erFeilsendt))
