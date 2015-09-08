@@ -1,4 +1,5 @@
 import React from 'react';
+import AsyncLoader from './../utils/AsyncLoader.js';
 import VelgSak from '../journalforingspanel/velgsak.js';
 import WicketSender from './../reactwicketmixin/wicketsender.js';
 
@@ -8,6 +9,7 @@ class VelgSakPanel extends React.Component {
         this.state = {
             saker: []
         };
+        this.promise = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker');
         this.velgSak = this.velgSak.bind(this);
         this.velgOkonomiskSosialhelp = this.velgOkonomiskSosialhelp.bind(this);
     }
@@ -32,33 +34,17 @@ class VelgSakPanel extends React.Component {
         this.velgSak(sak);
     }
 
-    componentDidMount() {
-        $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker').then(
-            okCallback.bind(this),
-            feiletCallback.bind(this));
-    }
-
     render() {
         return (
-            <div>
-                <VelgSak saker={this.state.saker} velgSak={this.velgSak}/>
-                <button className="sosialhjelp-knapp knapp-advarsel-stor" onClick={this.velgOkonomiskSosialhelp}>Økonomisk sosialhjelp</button>
-            </div>
+            <AsyncLoader promises={this.promise} toProp="saker">
+                <VelgSak velgSak={this.velgSak}/>
+                <button className="sosialhjelp-knapp knapp-advarsel-stor" onClick={this.velgOkonomiskSosialhelp}>
+                    Økonomisk sosialhjelp
+                </button>
+            </AsyncLoader>
         );
     }
 }
-
-function okCallback(data) {
-    this.setState({
-        saker: data
-    });
-}
-function feiletCallback() {
-    this.setState({
-        feilet: true
-    });
-}
-
 
 export default VelgSakPanel;
 
