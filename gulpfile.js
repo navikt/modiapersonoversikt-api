@@ -4,6 +4,7 @@ var source = require('vinyl-source-stream'); // Used to stream bundle for furthe
 var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
+var karma = require('karma').server;
 var notify = require('gulp-notify');
 
 var config = require('./buildConfig.json');
@@ -56,6 +57,13 @@ var lessTask = function (options) {
     }
 };
 
+function test() {
+    karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        isSingleRun: true
+    });
+}
+
 gulp.task('dev', function () {
     browserifyTask(true);
 
@@ -76,5 +84,5 @@ gulp.task('default', function () {
 });
 
 gulp.task('test', function () {
-    //test();
+    test();
 });
