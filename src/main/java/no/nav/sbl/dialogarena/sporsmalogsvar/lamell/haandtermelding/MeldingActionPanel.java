@@ -9,16 +9,17 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class MeldingActionPanel extends Panel {
 
     public final AnimertJournalforingsPanel journalforPanel;
+    public final ReactJournalforingsPanel journalforPanel2;
     public final OppgavePanel oppgavePanel;
     public final MerkePanel merkePanel;
 
     public MeldingActionPanel(String id, InnboksVM innboksVM) {
         super(id);
+        journalforPanel2 = new ReactJournalforingsPanel("reactjournalforPanel");
         journalforPanel = new AnimertJournalforingsPanel("journalforPanel", innboksVM);
         oppgavePanel = new OppgavePanel("nyoppgavePanel", innboksVM);
         merkePanel = new MerkePanel("merkePanel", innboksVM);
 
-        add(journalforPanel, oppgavePanel, merkePanel);
+        add(journalforPanel, journalforPanel2, oppgavePanel, merkePanel);
     }
-
 }

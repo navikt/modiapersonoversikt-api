@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -23,9 +24,9 @@ import static org.apache.wicket.event.Broadcast.BREADTH;
 @RefreshOnEvents({PANEL_LUKKET, MELDING_VALGT})
 public class MeldingValgPanel extends Panel {
 
-    private final AnimertPanel tilknyttetPanel;
+    private final MarkupContainer tilknyttetPanel;
 
-    public MeldingValgPanel(String id, IModel<Boolean> enabled, final AnimertPanel tilknyttetPanel) {
+    public MeldingValgPanel(String id, IModel<Boolean> enabled, final MarkupContainer tilknyttetPanel) {
         super(id);
         setOutputMarkupId(true);
 
