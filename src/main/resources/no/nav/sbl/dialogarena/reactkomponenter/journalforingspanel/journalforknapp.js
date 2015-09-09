@@ -1,4 +1,5 @@
-import React from 'react';
+//import React from 'react';
+var React = require('react');
 
 class JournalforKnapp extends React.Component {
     constructor(props) {
@@ -35,4 +36,5 @@ class JournalforKnapp extends React.Component {
     }
 }
 
-export default JournalforKnapp;
+//export default JournalforKnapp;
+module.exports='JournalforKnapp';

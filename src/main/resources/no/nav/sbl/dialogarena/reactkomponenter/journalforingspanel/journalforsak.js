@@ -1,7 +1,12 @@
-import React from 'react';
-import TilbakeKnapp from './tilbakeknapp';
-import JournalforKnapp from './journalforknapp';
-import WicketSender from './../reactwicketmixin/wicketsender.js';
+//import React from 'react';
+//import TilbakeKnapp from './tilbakeknapp';
+//import JournalforKnapp from './journalforknapp';
+//import WicketSender from './../reactwicketmixin/wicketsender.js';
+
+var React = require('react');
+var TilbakeKnapp= require('./tilbakeknapp');
+var JournalforKnapp = require('./journalforknapp');
+var WicketSender = require('./../reactwicketmixin/wicketsender.js');
 
 class JournalforSak extends React.Component {
     constructor(props) {
@@ -42,5 +47,6 @@ class JournalforSak extends React.Component {
     }
 }
 
-export default JournalforSak;
+//export default JournalforSak;
+module.exports='Journalforsak';
 

@@ -1,5 +1,12 @@
-import React from 'react';
-import { chain, mapValues, contains, partition, flatten } from 'lodash';
+//import React from 'react';
+//import { chain, mapValues, contains, partition, flatten } from 'lodash';
+
+var React = require('react');
+var chain = require('lodash');
+var mapValues = require('lodash');
+var contains = require('lodash');
+var partition = require('lodash');
+var flatten = require('lodash');
 
 class SakerListe extends React.Component {
     constructor(props) {
@@ -120,4 +127,6 @@ class SakerForTema extends React.Component {
     }
 }
 
-export default SakerListe;
+//export default SakerListe;
+
+module.exports='SakerListe';

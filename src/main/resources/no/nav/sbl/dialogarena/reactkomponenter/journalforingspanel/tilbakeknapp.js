@@ -1,4 +1,5 @@
-import React from 'react';
+//import React from 'react';
+var React = require('react');
 
 class TilbakeKnapp extends React.Component {
     constructor(props) {
@@ -13,4 +14,5 @@ class TilbakeKnapp extends React.Component {
     }
 }
 
-export default TilbakeKnapp;
+//export default TilbakeKnapp;
+module.export='TilbakeKnapp';
