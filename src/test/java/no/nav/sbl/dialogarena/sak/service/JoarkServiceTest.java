@@ -41,19 +41,20 @@ public class JoarkServiceTest {
     private final String journalpostId = "journalpostid";
     private final String dokumentId = "dokumentid";
     private final String fnr = "12345";
+    private final String sakstemakode = "FOR";
 
     private final byte[] pdfSomBytes = StringUtils.getBytesUtf8("%PDF-1.5");
 
     @Before
     public void setup() {
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(anyString(), anyString())).thenReturn(new HentDokumentResultat(true));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(anyString(), anyString(), anyString())).thenReturn(new HentDokumentResultat(true));
     }
 
     @Test
     public void skalReturnerePdfSomBytesOgIngenFeilmelding() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
         when(joarkPortType.hentDokument(any(WSHentDokumentRequest.class))).thenReturn(new WSHentDokumentResponse().withDokument(pdfSomBytes));
 
-        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr);
+        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr, sakstemakode);
 
         assertThat(resultat.pdfSomBytes.isSome(), is(true));
         assertThat(resultat.feilmelding, is(nullValue()));
@@ -63,7 +64,7 @@ public class JoarkServiceTest {
     public void skalReturnereKorrektFeilmeldingForSikkerhetsbegrensning() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
         when(joarkPortType.hentDokument(any(WSHentDokumentRequest.class))).thenThrow(new HentDokumentSikkerhetsbegrensning("", new WSSikkerhetsbegrensning()));
 
-        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr);
+        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr, sakstemakode);
 
         assertThat(resultat.pdfSomBytes.isSome(), is(false));
         assertThat(resultat.feilmelding, is(SIKKERHETSBEGRENSNING));
@@ -73,7 +74,7 @@ public class JoarkServiceTest {
     public void skalReturnereKorrektFeilmeldingForDokumentIkkeFunnet() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
         when(joarkPortType.hentDokument(any(WSHentDokumentRequest.class))).thenThrow(new HentDokumentDokumentIkkeFunnet("", new WSDokumentIkkeFunnet()));
 
-        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr);
+        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr, sakstemakode);
 
         assertThat(resultat.pdfSomBytes.isSome(), is(false));
         assertThat(resultat.feilmelding, is(DOKUMENT_IKKE_FUNNET));
@@ -83,7 +84,7 @@ public class JoarkServiceTest {
     public void skalReturnereKorrektFeilmeldingForDokumentErSlettet() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
         when(joarkPortType.hentDokument(any(WSHentDokumentRequest.class))).thenThrow(new HentDokumentDokumentErSlettet("", new WSDokumentErSlettet()));
 
-        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr);
+        HentDokumentResultat resultat = joarkService.hentDokument(journalpostId, dokumentId, fnr, sakstemakode);
 
         assertThat(resultat.pdfSomBytes.isSome(), is(false));
         assertThat(resultat.feilmelding, is(DOKUMENT_SLETTET));

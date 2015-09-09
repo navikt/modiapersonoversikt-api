@@ -26,8 +26,8 @@ public class JoarkServiceImpl implements JoarkService {
     @Named("joarkPortType")
     private Journal_v1PortType joarkPortType;
 
-    public HentDokumentResultat hentDokument(String journalpostId, String dokumentId, String fnr) {
-        HentDokumentResultat resultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr);
+    public HentDokumentResultat hentDokument(String journalpostId, String dokumentId, String fnr, String sakstemakode) {
+        HentDokumentResultat resultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(journalpostId, fnr, sakstemakode);
         
         if (resultat.harTilgang) {
             return hentDokument(journalpostId, dokumentId);

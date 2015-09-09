@@ -44,14 +44,20 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     private static final String JOURNALPOST_STATUS_JOURNALFORT = "J";
     private static final String JOURNALPOST_STATUS_UTGAAR = "U";
     private static final String JOURNALPOST_STATUS_UKJENT_BRUKER = "UB";
+    private static final String SAKSTEMAKODE_PENSJON = "PEN";
+    private static final String SAKSTEMAKODE_UFORETRYD = "UFO";
 
-    public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
-        return sjekkTilgang(journalpostId, fnr);
+    public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode) {
+        return sjekkTilgang(journalpostId, fnr, sakstemakode);
     }
 
-    private HentDokumentResultat sjekkTilgang(String journalpostId, String fnr) {
+    private HentDokumentResultat sjekkTilgang(String journalpostId, String fnr, String sakstemakode) {
         if (!harJournalpostId(journalpostId)) {
             return new HentDokumentResultat(false, IKKE_JOURNALFORT);
+        }
+
+        if (erSaksTemaKodeSomIkkeHarVedleggIJoark(sakstemakode)) {
+            return new HentDokumentResultat(false, UGYLDIG_SAKSTEMA);
         }
 
         WSJournalpost journalpost = hentJournalpost(journalpostId);
@@ -71,6 +77,10 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             return new HentDokumentResultat(false, INGEN_TILGANG);
         }
         return new HentDokumentResultat(true);
+    }
+
+    private boolean erSaksTemaKodeSomIkkeHarVedleggIJoark(String sakstemakode) {
+        return SAKSTEMAKODE_PENSJON.equalsIgnoreCase(sakstemakode) || SAKSTEMAKODE_UFORETRYD.equalsIgnoreCase(sakstemakode);
     }
 
     private boolean harJournalpostId(String journalpostid) {

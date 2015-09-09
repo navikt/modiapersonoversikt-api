@@ -168,7 +168,7 @@ public class KvitteringsPanel extends Panel {
 
     private void hentOgVisDokument(AjaxRequestTarget target, String journalpostId, Dokument dokument) {
         try {
-            HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
+            HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr, sakstemakode);
             if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
                 visVedlegg(target, hentetDokument.pdfSomBytes.get());
             } else {
