@@ -1,12 +1,12 @@
-//import React from 'react';
-//import VelgSak from './velgsak.js';
-//import JournalforSak from './journalforsak.js';
-//import LukkKnapp from './lukkknapp.js';
+import React from 'react';
+import VelgSak from './velgsak.js';
+import JournalforSak from './journalforsak.js';
+import LukkKnapp from './lukkknapp.js';
 
-var React = require('react');
-var VelgSak= require('./velgsak');
-var JournalforSak = require('./journalforsak');
-var LukkKnapp = require('./lukkknapp');
+//var React = require('react');
+//var VelgSak= require('./velgsak');
+//var JournalforSak = require('./journalforsak');
+//var LukkKnapp = require('./lukkknapp');
 
 const VELG_SAK = 'VELG_SAK';
 const JOURNALFOR = 'JOURNALFOR';
@@ -83,6 +83,6 @@ function feiletCallback() {
 }
 
 
-//export default JournalforingsPanel;
-module.exports= JournalforingsPanel;
+export default JournalforingsPanel;
+//module.exports= JournalforingsPanel;
 
