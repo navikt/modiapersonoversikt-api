@@ -1,5 +1,4 @@
 import React from 'react';
-//var React = require('react');
 
 class TilbakeKnapp extends React.Component {
     constructor(props) {
@@ -9,10 +8,9 @@ class TilbakeKnapp extends React.Component {
     render() {
         var tilbake = this.props.tilbake;
         return (
-            <button className="tilbake-knapp" aria-label="tilbake" onClick={tilbake}></button>
+            <a href="javascript:void(0)" className="tilbake-knapp" aria-label="tilbake" role="button" onClick={tilbake}>Tilbake</a>
         );
     }
 }
 
 export default TilbakeKnapp;
-//module.exports='TilbakeKnapp';
