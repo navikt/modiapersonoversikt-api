@@ -35,6 +35,7 @@ public class CmsEndpointConfig {
     private static final String INNHOLDSTEKSTER_NB_NO_MODIA_REMOTE = "/app/modiabrukerdialog/nb/tekster";
     private static final String ARTIKLER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/saksinformasjon";
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.innholdstekster";
+    private static final String MODIABRUKERDIALOG_NB_NO_LOCAL = "content.modiabrukerdialog";
 
     @Value("${appres.cms.url}")
     private String appresUrl;
@@ -93,12 +94,21 @@ public class CmsEndpointConfig {
                 new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_MODIA_REMOTE),
                 new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE)
         ));
-        return new ValuesFromContentWithResourceBundleFallback(singletonList(INNHOLDSTEKSTER_NB_NO_LOCAL), contentRetriever(), uris, DEFAULT_LOCALE);
+        return new ValuesFromContentWithResourceBundleFallback(asList(
+                INNHOLDSTEKSTER_NB_NO_LOCAL,
+                MODIABRUKERDIALOG_NB_NO_LOCAL),
+                contentRetriever(),
+                uris,
+                DEFAULT_LOCALE);
     }
 
     private ValueRetriever siteArtikkelRetriever() throws URISyntaxException {
         Map<String, List<URI>> uris = new HashMap<>();
         uris.put(DEFAULT_LOCALE, singletonList(new URI(appresUrl + ARTIKLER_NB_NO_REMOTE)));
-        return new ValuesFromContentWithResourceBundleFallback(singletonList(INNHOLDSTEKSTER_NB_NO_LOCAL), contentRetriever(), uris, DEFAULT_LOCALE);
+        return new ValuesFromContentWithResourceBundleFallback(asList(INNHOLDSTEKSTER_NB_NO_LOCAL,
+                MODIABRUKERDIALOG_NB_NO_LOCAL),
+                contentRetriever(),
+                uris,
+                DEFAULT_LOCALE);
     }
 }
