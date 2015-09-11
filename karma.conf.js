@@ -30,7 +30,7 @@ module.exports = function (config) {
 
 
         plugins: [
-            'karma-bro',
+            'karma-browserify',
             'karma-phantomjs-launcher',
             'karma-chrome-launcher',
             'karma-junit-reporter',
@@ -40,7 +40,10 @@ module.exports = function (config) {
 
         browserify: {
             debug: true,
-            transform: ['reactify']
+            transform: [
+                'babelify',
+                'reactify'
+            ]
         },
 
         coverageReporter: {

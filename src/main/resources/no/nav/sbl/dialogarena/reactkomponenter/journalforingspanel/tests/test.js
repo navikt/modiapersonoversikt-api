@@ -6,11 +6,7 @@ var JournalforingsPanel = require('../index.js');
 var TestUtils = React.addons.TestUtils;
 
 
-describe.only('Journalforing', function () {
-
-    it('null is null test', function(){
-        expect(null).to.be.null;
-    });
+describe('Journalforing', function () {
 
     it('Header should be "Journalføring"', function(){
        var journalforingspanel = TestUtils.renderIntoDocument(
