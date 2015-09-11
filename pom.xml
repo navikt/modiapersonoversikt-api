@@ -1002,14 +1002,16 @@
                 <!-- for å synke innhold mot Enonic kjør: mvn modig-content:sync -Denonic.username=XXX -Denonic.password=XXX -Denonic.url=http://<ip-adresse til admin-node>:8080   Se "Serveroversikt Enonic" på Confluence for IP-adresser -->
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-content-maven-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>2.0.0</version>
                 <configuration>
                     <propertiesFilesRoot>${project.basedir}/web/src/main/resources/content</propertiesFilesRoot>
                     <propertiesFiler>
                         <nb-app>innholdstekster_nb.properties</nb-app>
+                        <modiabrukerdialog>modiabrukerdialog_nb.properties</modiabrukerdialog>
                     </propertiesFiler>
                     <menyPunktPaths>
                         <nb-app>/site/18/app/saksoversikt/nb/tekster</nb-app>
+                        <modiabrukerdialog>/site/19/App/modiabrukerdialog/nb/tekster</modiabrukerdialog>
                     </menyPunktPaths>
                 </configuration>
             </plugin>
