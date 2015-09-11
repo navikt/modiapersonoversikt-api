@@ -57,10 +57,10 @@ var lessTask = function (options) {
     }
 };
 
-function test() {
+function test(options) {
     karma.start({
         configFile: __dirname + '/karma.conf.js',
-        isSingleRun: true
+        singleRun: options.singleRun
     });
 }
 
@@ -84,5 +84,9 @@ gulp.task('default', function () {
 });
 
 gulp.task('test', function () {
-    test();
+    test({singleRun: true});
+});
+
+gulp.task('tdd', function () {
+    test({singleRun: false});
 });
