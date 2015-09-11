@@ -7,15 +7,9 @@ class VelgSak extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            valgtKategori: 'FAG'
+            valgtKategori: this.props.temagruppe === 'OVRG' ? 'GEN' : 'FAG'
         };
         this.endreKategori = this.endreKategori.bind(this);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.temagruppe === 'OVRG') {
-            this.setState({valgtKategori: 'GEN'})
-        }
     }
 
     endreKategori(kategori) {
