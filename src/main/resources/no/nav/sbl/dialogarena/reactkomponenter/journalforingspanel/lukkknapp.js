@@ -1,6 +1,10 @@
 import React from 'react';
 import WicketSender from './../reactwicketmixin/wicketsender.js';
 
+//var React = require('react');
+//var WicketSender = require('./../reactwicketmixin/wicketsender.js');
+
+
 class LukkKnapp extends React.Component {
     constructor(props) {
         super(props);
@@ -20,4 +24,5 @@ class LukkKnapp extends React.Component {
 }
 
 export default LukkKnapp;
+//module.exports='LukkKnapp';
 

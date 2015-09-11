@@ -1,6 +1,9 @@
 import React from 'react';
 import {generateId} from '../utils';
 
+//var React = require('react');
+//var generateId = require('../utils');
+
 class TypeValg extends React.Component {
     constructor(props) {
         super(props);
@@ -28,3 +31,5 @@ class TypeValg extends React.Component {
 }
 
 export default TypeValg;
+
+//module.exports='TypeValg';

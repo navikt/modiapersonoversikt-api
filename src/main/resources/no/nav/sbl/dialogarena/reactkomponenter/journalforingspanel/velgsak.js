@@ -3,6 +3,11 @@ import TypeValg from './typevalg';
 import SakerListe from './sakerliste';
 import { partition } from 'lodash';
 
+//var React = require('react');
+//var TypeValg= require('./typevalg');
+//var SakerListe = require('./sakerliste');
+//var partition = require('lodash');
+
 class VelgSak extends React.Component {
     constructor(props) {
         super(props);
@@ -43,4 +48,5 @@ class VelgSak extends React.Component {
 }
 
 export default VelgSak;
+//module.exports= VelgSak;
 
