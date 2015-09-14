@@ -6,23 +6,28 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.time.Datoformat;
+import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static org.apache.commons.collections15.FactoryUtils.constantFactory;
 
 @JsonDeserialize(using = Sak.SakDeserializer.class)
 @JsonSerialize(using = Sak.SakSerializer.class)
 public class Sak implements Serializable, Comparable<Sak> {
+
+    private static Factory<Locale> locale = constantFactory(Locale.getDefault());
 
     public Optional<String> saksId = none();
     public Optional<String> fagsystemSaksId = none();
@@ -99,7 +104,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     };
 
     public String getOpprettetDatoFormatert() {
-        return opprettetDato == null ? "" : Datoformat.langUtenLiteral(opprettetDato);
+        return opprettetDato == null ? "" : DateTimeFormat.forPattern("d. MMM. yyyy").withLocale(locale.create()).print(opprettetDato);
     }
 
     public String getSaksIdVisning() {
