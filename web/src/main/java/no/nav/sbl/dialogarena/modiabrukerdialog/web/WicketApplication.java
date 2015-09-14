@@ -47,6 +47,7 @@ import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -250,5 +251,11 @@ public class WicketApplication extends WebApplication {
     protected void setSpringComponentInjector() {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
     }
+
+    @Scheduled(fixedDelay = 30 * 60 * 1000)//Hver halvtime
+    private void clearCacheTask() {
+        this.getResourceSettings().getLocalizer().clearCache();
+    }
+
 
 }
