@@ -64,7 +64,7 @@ public class TraadVM implements Serializable {
     }
 
     public Optional<String> getKontorsperretEnhet() {
-        return optional(meldinger.get(0).melding.kontorsperretEnhet);
+        return optional(getEldsteMelding().melding.kontorsperretEnhet);
     }
 
     public boolean erFeilsendt() {
