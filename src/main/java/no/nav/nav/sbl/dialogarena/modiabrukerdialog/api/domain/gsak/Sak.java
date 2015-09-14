@@ -166,8 +166,8 @@ public class Sak implements Serializable, Comparable<Sak> {
             sak.fagsystemKode = node.get("fagsystemKode").textValue();
             sak.fagsystemNavn = node.get("fagsystemNavn").textValue();
             sak.sakstype = node.get("sakstype").textValue();
-            sak.finnesIGsak = node.get("finnesIGsak").booleanValue();
-            sak.finnesIPsak = node.get("finnesIPsak").booleanValue();
+            sak.finnesIGsak = Boolean.valueOf(node.get("finnesIGsak").textValue());
+            sak.finnesIPsak = Boolean.valueOf(node.get("finnesIPsak").textValue());
 
             return sak;
         }
