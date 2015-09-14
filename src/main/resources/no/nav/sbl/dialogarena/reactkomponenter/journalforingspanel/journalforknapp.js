@@ -6,8 +6,7 @@ class JournalforKnapp extends React.Component {
         this.journalfor = this.journalfor.bind(this);
         this.state = {
             sender: false,
-            sendt: false,
-            feilet: false
+            sendt: false
         }
     }
 
@@ -24,13 +23,16 @@ class JournalforKnapp extends React.Component {
                 this.props.traadJournalfort();
             }.bind(this))
             .fail(function () {
-                this.setState({feilet: true, sender: false})
+                this.setState({sender: false});
+                this.props.feiletCallback();
             }.bind(this));
     }
 
     render() {
         return (
-            <button className="journalfor-knapp knapp-advarsel-stor" onClick={this.journalfor}>Journalfør</button>
+            <div>
+                <button className="journalfor-knapp knapp-advarsel-stor" onClick={this.journalfor}>Journalfør</button>
+            </div>
         );
     }
 }
