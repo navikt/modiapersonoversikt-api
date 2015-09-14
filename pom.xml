@@ -212,6 +212,26 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <properties>
+                <sonar.language>js</sonar.language>
+                <sonar.coverage.exclusions></sonar.coverage.exclusions>
+                <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+                <sonar.sources>src/main/resources/no/nav/sbl/dialogarena/reactkomponenter</sonar.sources>
+                <sonar.javascript.jstest.reportsPath>target/surefire-reports</sonar.javascript.jstest.reportsPath>
+                <sonar.javascript.lcov.reportPath>target/karma-coverage/PhantomJS 1.9.7 (Windows 7 0.0.0)/cobertura-coverage.xml
+                </sonar.javascript.lcov.reportPath>
+                <skip.js-tests>false</skip.js-tests>
+            </properties>
+        </profile>
+    </profiles>
 
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/reactkomponenter.git</developerConnection>
