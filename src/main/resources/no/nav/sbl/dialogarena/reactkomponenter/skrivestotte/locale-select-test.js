@@ -1,7 +1,7 @@
-require('./../../test-config.js');
+require('./../test-config');
 var expect = require('chai').expect;
 var React = require('react/addons');
-var LocaleSelect = require('../locale-select');
+var LocaleSelect = require('./locale-select');
 
 describe('LocaleSelect', function () {
     var TestUtils = React.addons.TestUtils;

@@ -1,8 +1,8 @@
-require('./../../test-config.js');
+require('./../test-config');
 var expect = require('chai').expect;
 var React = require('react/addons');
 var assign = require('object-assign');
-var SkrivestotteStore = require('../skrivestotte-store');
+var SkrivestotteStore = require('./skrivestotte-store');
 
 describe('SkrivestotteStore', function () {
 

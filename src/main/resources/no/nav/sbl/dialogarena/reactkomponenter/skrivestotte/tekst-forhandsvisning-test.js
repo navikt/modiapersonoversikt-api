@@ -1,9 +1,9 @@
-require('./../../test-config');
+require('./../test-config');
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var React = require('react/addons');
-var Utils = require('./../../utils/utils-module');
-var TekstForhandsvisning = require('../tekst-forhandsvisning');
+var Utils = require('./../utils/utils-module');
+var TekstForhandsvisning = require('./tekst-forhandsvisning');
 
 describe.skip('TekstForhandsvisning', function () {
     var TestUtils = React.addons.TestUtils;

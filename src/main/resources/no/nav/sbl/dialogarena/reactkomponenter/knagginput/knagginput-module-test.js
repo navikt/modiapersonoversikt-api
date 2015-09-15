@@ -1,8 +1,8 @@
-require('./../../test-config.js');
+require('./../test-config');
 var expect = require('chai').expect;
 var React = require('react/addons');
 var assign = require('object-assign');
-var KnaggInput = require('../knagginput-module');
+var KnaggInput = require('./knagginput-module');
 
 describe('KnaggInput', function () {
     var defaultProps = {
