@@ -17,7 +17,7 @@ class SakerListe extends React.Component {
                             <div>
                                 <span className="text-cell">{sak.saksIdVisning}</span>
                                 <span className="vekk">'|'</span>
-                                <span className="text-cell">{sak.opprettetDatoFormatert}</span>
+                                <span className="text-cell text-align-right">{sak.opprettetDatoFormatert}</span>
                                 <span className="vekk">'|'</span>
                                 <span className="text-cell">{sak.fagsystemNavn}</span>
                             </div>
@@ -96,7 +96,7 @@ class SakerForTema extends React.Component {
                         <div className="info-bar">
                             <span className="text-cell">SAKSID</span>
                             <span className="vekk">'|'</span>
-                            <span className="text-cell">OPPRETTET</span>
+                            <span className="text-cell text-align-right">OPPRETTET</span>
                             <span className="vekk">'|'</span>
                             <span className="text-cell">FAGSYSTEM</span>
                         </div>

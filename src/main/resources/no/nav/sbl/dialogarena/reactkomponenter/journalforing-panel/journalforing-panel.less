@@ -41,10 +41,6 @@
         text-transform: none;
       }
     }
-    .text-cell {
-      display: inline-block;
-      width: 33%;
-    }
   }
 
   .header {
@@ -78,12 +74,6 @@
     .info-bar {
       padding: 0rem 2rem;
       font-size: 12px;
-    }
-    .text-cell {
-      display: inline-block;
-      width: 33%;
-      text-transform: uppercase;
-
     }
     .tilbake-knapp {
       position: absolute;
@@ -161,7 +151,16 @@
       background: url(../img/kryss_hover.svg) no-repeat center center;
     }
   }
-  .info-bar {
+  .text-cell {
+    display: inline-block;
+    width: 33%;
+
+    &.text-align-right {
+      text-align: right;
+      padding-right: 1rem;
+    }
+  }
+  .info-bar, .detaljer-sak {
     .text-cell {
       text-transform: uppercase;
     }
