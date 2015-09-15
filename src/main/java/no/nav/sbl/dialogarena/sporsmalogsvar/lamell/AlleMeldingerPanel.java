@@ -13,7 +13,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -44,7 +44,7 @@ public class AlleMeldingerPanel extends Panel {
             }
         });
 
-        alletraader.add(new ListView<MeldingVM>("nyesteMeldingerITraad", innboksVM.getNyesteMeldingerITraad()) {
+        alletraader.add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
