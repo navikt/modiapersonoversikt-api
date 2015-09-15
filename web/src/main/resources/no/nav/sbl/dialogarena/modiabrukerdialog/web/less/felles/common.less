@@ -337,6 +337,12 @@ input[type=checkbox] {
   .mf3-override('check');
 }
 
+.wicket-modal {
+  * {
+    text-transform: none !important;
+  }
+}
+
 .mf3-override(@type) {
   & + label {
     background-image: url('../img/mf3/@{type}.svg') !important;
