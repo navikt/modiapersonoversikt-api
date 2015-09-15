@@ -3,7 +3,7 @@ module.exports = function (config) {
         frameworks: ['mocha', 'browserify'],
 
         files: [
-            './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/tests/*.js'
+            './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/*-test.js'
         ],
 
         exclude: [],
