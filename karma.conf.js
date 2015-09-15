@@ -35,19 +35,24 @@ module.exports = function (config) {
             'karma-chrome-launcher',
             'karma-junit-reporter',
             'karma-coverage',
+            'browserify-istanbul',
             'karma-mocha'
         ],
 
         browserify: {
             debug: true,
             transform: [
-                'babelify'
+                'babelify',
+                'browserify-istanbul'
             ]
         },
 
         coverageReporter: {
-            type: 'cobertura',
-            dir: './target/karma-coverage'
+            dir: './target/karma-coverage',
+            reporters: [
+                { type: 'lcovonly' },
+                { type: 'html', subdir: 'report-html' }
+            ]
         },
         junitReporter: {
             outputFile: './target/surefire-reports/TEST-karma.xml',

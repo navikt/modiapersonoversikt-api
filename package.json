@@ -10,6 +10,7 @@
   "devDependencies": {
     "babelify": "^6.2.0",
     "browserify": "^6.2.0",
+    "browserify-istanbul": "^0.2.1",
     "chai": "^2.0.0",
     "glob": "^4.3.5",
     "gulp": "^3.8.9",
