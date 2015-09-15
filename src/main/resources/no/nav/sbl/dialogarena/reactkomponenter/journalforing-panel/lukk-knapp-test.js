@@ -3,6 +3,7 @@ var expect = require('chai').expect;
 var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
 var sinon = require('sinon');
+require('sinon-chai');
 var LukkKnapp= require('./lukk-knapp');
 
 describe('LukkKnapp test', function () {
@@ -19,7 +20,7 @@ describe('LukkKnapp test', function () {
         );
         var knapp=React.findDOMNode(lukkKnapp);
         TestUtils.Simulate.click(knapp);
-        expect(window.Wicket.Ajax.ajax.calledOnce).to.equal(true);
+        expect(window.Wicket.Ajax.ajax).to.have.been.calledOnce;
         delete window.Wicket.Ajax;
     });
 
