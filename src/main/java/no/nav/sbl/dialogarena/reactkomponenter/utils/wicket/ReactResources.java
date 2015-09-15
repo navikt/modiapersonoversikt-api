@@ -10,10 +10,10 @@ public class ReactResources {
             .scripts(new JavaScriptResourceReference(ResourceReference.class, "build/reactkomponenter.js"))
             .less(
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/sokLayout.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/meldingerSok.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/sok-layout.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/meldinger-sok.less"),
                     new PackageResourceReference(ResourceReference.class, "build/knagginput.less"),
                     new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/journalforingspanel.less")
+                    new PackageResourceReference(ResourceReference.class, "build/journalforing-panel.less")
             ).done();
 }

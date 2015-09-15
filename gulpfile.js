@@ -13,7 +13,7 @@ var browserifyTask = function (isDev) {
     console.log('starting browserify with options: ', isDev);
     // Our app bundler
     var props = watchify.args;
-    props.entries = ['./src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/index.js'];
+    props.entries = ['./src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/reactkomponenter-module.js'];
     props.debug = isDev;
     props.cache = {};
     props.packageCache = {};
