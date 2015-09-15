@@ -1,17 +1,4 @@
 {
-  "namespace": {
-    "base": "ModiaJS",
-    "components": "Components"
-  },
   "srcPath": "./src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/",
-  "targetPath": "./target/classes/no/nav/sbl/dialogarena/reactkomponenter/build/",
-  "navReact": "React",
-  "components": [
-    "utils",
-    "reactwicketmixin",
-    "skrivestotte",
-    "knagginput",
-    "modal",
-    "meldingerSok"
-  ]
+  "targetPath": "./target/classes/no/nav/sbl/dialogarena/reactkomponenter/build/"
 }
