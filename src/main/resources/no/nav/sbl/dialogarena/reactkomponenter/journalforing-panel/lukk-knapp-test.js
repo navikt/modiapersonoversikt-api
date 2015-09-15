@@ -1,9 +1,9 @@
-require('./../../testConfig.js');
+require('./../test-config');
 var expect = require('chai').expect;
 var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
 var sinon = require('sinon');
-var LukkKnapp= require('../LukkKnapp');
+var LukkKnapp= require('./lukk-knapp');
 
 describe('LukkKnapp test', function () {
 
