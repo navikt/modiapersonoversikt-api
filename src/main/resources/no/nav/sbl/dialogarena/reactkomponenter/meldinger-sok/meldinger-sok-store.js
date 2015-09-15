@@ -107,7 +107,7 @@ var hentSokeresultater =
                     this.state.feilet = true;
                     this.fireUpdate(this.listeners);
                 }
-            }.bind(this))
+            }.bind(this));
 
     }, 150);
 

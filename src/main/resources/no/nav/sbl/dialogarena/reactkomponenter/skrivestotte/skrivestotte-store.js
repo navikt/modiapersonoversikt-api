@@ -118,7 +118,7 @@ var hentSokeresultater =
             this.state.valgtTekst = resultat[0] || {};
             updateScroll($(this.container).find('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
-        }.bind(this))
+        }.bind(this));
     }, 150);
 
 var sok = function (fritekst, knagger) {
@@ -136,7 +136,7 @@ var sok = function (fritekst, knagger) {
 };
 
 function stripEmTags(tekst) {
-    return tekst.replace(/<em>(.*?)<\/em>/g, '$1')
+    return tekst.replace(/<em>(.*?)<\/em>/g, '$1');
 }
 
 function autofullfor(tekst, autofullforMap) {
