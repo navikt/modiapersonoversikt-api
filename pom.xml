@@ -61,7 +61,7 @@
         <modig.core.version>1.0.1</modig.core.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig-log-jaxws.version>1.1.3</modig-log-jaxws.version>
-        <modig-content.version>2.0.10</modig-content.version>
+        <modig-content.version>2.0.11</modig-content.version>
         <modig-wicket-test.version>1.0.0</modig-wicket-test.version>
         <modig-core-test.version>1.0.0</modig-core-test.version>
         <commons-lang3.version>3.1</commons-lang3.version>
