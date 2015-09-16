@@ -7,9 +7,9 @@ import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.JoarkService;
 import no.nav.sbl.dialogarena.sak.util.ResourceStreamAjaxBehaviour;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat.Feilmelding;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,16 +52,21 @@ public class KvitteringsPanel extends Panel {
     private Logger logger = LoggerFactory.getLogger(KvitteringsPanel.class);
     private ModigModalWindow modalWindow;
     private String fnr;
+    private static final DateTime HL4_2015_DATO = new DateTime(2014, 12, 9, 0, 0);
+    private static final String ARKIVTEMA_BIDRAG = "BID";
+    private final Kvittering kvittering;
+    private String sakstemakode;
 
-    public KvitteringsPanel(String id, String tittel, Model<Kvittering> kvitteringsModel, String fnr) {
+    public KvitteringsPanel(String id, String tittel, Model<Kvittering> kvitteringsModel, String fnr, String sakstemakode) {
         super(id, kvitteringsModel);
         this.fnr = fnr;
-        Kvittering kvittering = kvitteringsModel.getObject();
+        this.sakstemakode = sakstemakode;
+        kvittering = kvitteringsModel.getObject();
 
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
 
-        String dato = dateTime((kvittering.behandlingDato));
+        String dato = dateTime(kvittering.behandlingDato);
         String sendtAvString = cms.hentTekst("kvittering.sendt.av");
 
         String sendtInnTekst;
@@ -102,7 +108,7 @@ public class KvitteringsPanel extends Panel {
 
     private void leggTilVedleggFeiletPoput() {
         modalWindow = new ModigModalWindow("vedleggFeiletPopup");
-        modalWindow.setInitialHeight(250);
+        modalWindow.setInitialHeight(300);
         add(modalWindow);
     }
 
@@ -111,7 +117,7 @@ public class KvitteringsPanel extends Panel {
         innsendteVedlegg.add(visibleIf(of(!kvittering.innsendteDokumenter.isEmpty())));
         innsendteVedlegg.add(
                 new Label("innsendteDokumenterHeader", cms.hentTekst("behandling.innsendte.dokumenter.header")),
-                getDokumenterView("innsendteVedlegg", kvittering.journalpostId, kvittering.innsendteDokumenter, false)
+                getDokumenterView("innsendteVedlegg", kvittering.journalpostId, kvittering.innsendteDokumenter, false, kvittering.behandlingDato)
         );
         add(innsendteVedlegg);
     }
@@ -121,12 +127,12 @@ public class KvitteringsPanel extends Panel {
         manglendeVedlegg.add(visibleIf(of(!kvittering.manglendeDokumenter.isEmpty() && !kvittering.ettersending)));
         manglendeVedlegg.add(
                 new Label("manglendeVedleggHeader", cms.hentTekst("behandling.manglende.dokumenter.header")),
-                getDokumenterView("manglendeVedlegg", kvittering.journalpostId, kvittering.manglendeDokumenter, true)
+                getDokumenterView("manglendeVedlegg", kvittering.journalpostId, kvittering.manglendeDokumenter, true, kvittering.behandlingDato)
         );
         add(manglendeVedlegg);
     }
 
-    private PropertyListView<Dokument> getDokumenterView(String listViewId, final String journalpostId, List<Dokument> dokumenter, final boolean visInnsendingsvalg) {
+    private PropertyListView<Dokument> getDokumenterView(String listViewId, final String journalpostId, List<Dokument> dokumenter, final boolean visInnsendingsvalg, final DateTime opprettetDato) {
         return new PropertyListView<Dokument>(listViewId, dokumenter) {
 
             @Override
@@ -153,6 +159,7 @@ public class KvitteringsPanel extends Panel {
                     String lenkeVisningsTekst = hentVisDokumentTekst(dokument.hovedskjema);
                     hentVedleggLenke.add(new Label("saksoversikt.kvittering.visvedlegg", lenkeVisningsTekst));
                     hentVedleggLenke.add(new AttributeAppender("aria-label", lenkeVisningsTekst + ": " + dokumentTittel));
+                    hentVedleggLenke.add(visibleIf(new Model<>(bleSendtInnEtter2014HL4(opprettetDato) && !erTemaBidrag())));
                     item.add(hentVedleggLenke);
                 }
             }
@@ -160,12 +167,19 @@ public class KvitteringsPanel extends Panel {
     }
 
     private void hentOgVisDokument(AjaxRequestTarget target, String journalpostId, Dokument dokument) {
-        HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr);
+        try {
+            HentDokumentResultat hentetDokument = joarkService.hentDokument(journalpostId, dokument.arkivreferanse, fnr, sakstemakode);
+            if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
+                visVedlegg(target, hentetDokument.pdfSomBytes.get());
+            } else {
+                visFeilmeldingVindu(target, hentetDokument.feilmelding, hentetDokument.argumenterTilFeilmelding);
+            }
+        } catch (Exception e) {
+            logger.error("Det skjedde en uventet feil i hentDokument-kallet mot Joark. " +
+                    "Dette kan skyldes at tjenesten er nede eller at det skjer en feil i f. eks. datapower. " +
+                    "Brukeren vil vises en generell feilmelding");
 
-        if (hentetDokument.harTilgang && hentetDokument.pdfSomBytes.isSome()) {
-            visVedlegg(target, hentetDokument.pdfSomBytes.get());
-        } else {
-            visFeilmeldingVindu(target, hentetDokument.feilmelding);
+            visFeilmeldingVindu(target, Feilmelding.GENERELL_FEIL);
         }
     }
 
@@ -175,8 +189,11 @@ public class KvitteringsPanel extends Panel {
         resourceStreamAjaxBehavoiur.open(target);
     }
 
-    private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding) {
-        modalWindow.setContent(new ModalAdvarselPanel(modalWindow, feilmelding.heading, feilmelding.lead, "modalvindu.advarsel.knapp"));
+    private void visFeilmeldingVindu(AjaxRequestTarget target, Feilmelding feilmelding, String... argumenter) {
+        modalWindow.setContent(new ModalAdvarselPanel(modalWindow,
+                cms.hentTekst(feilmelding.heading),
+                format(cms.hentTekst(feilmelding.lead), argumenter),
+                cms.hentTekst("modalvindu.advarsel.knapp")));
         modalWindow.show(target);
     }
 
@@ -201,6 +218,17 @@ public class KvitteringsPanel extends Panel {
 
     private String hentVisDokumentTekst(boolean erHovedskjema) {
         return erHovedskjema ? cms.hentTekst("saksoversikt.kvittering.vissoknad") : cms.hentTekst("saksoversikt.kvittering.visvedlegg");
+    }
+
+    private boolean bleSendtInnEtter2014HL4(DateTime opprettetDato) {
+        if (opprettetDato.isAfter(HL4_2015_DATO)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean erTemaBidrag() {
+        return ARKIVTEMA_BIDRAG.equalsIgnoreCase(sakstemakode);
     }
 
     @Override

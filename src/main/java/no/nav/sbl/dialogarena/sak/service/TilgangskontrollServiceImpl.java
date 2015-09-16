@@ -9,6 +9,7 @@ import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -43,18 +44,26 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     private static final String JOURNALPOST_STATUS_JOURNALFORT = "J";
     private static final String JOURNALPOST_STATUS_UTGAAR = "U";
     private static final String JOURNALPOST_STATUS_UKJENT_BRUKER = "UB";
+    private static final String SAKSTEMAKODE_PENSJON = "PEN";
+    private static final String SAKSTEMAKODE_UFORETRYD = "UFO";
 
-    public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr) {
-        return sjekkTilgang(journalpostId, fnr);
+    public HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode) {
+        return sjekkTilgang(journalpostId, fnr, sakstemakode);
     }
 
-    private HentDokumentResultat sjekkTilgang(String journalpostId, String fnr) {
+    private HentDokumentResultat sjekkTilgang(String journalpostId, String fnr, String sakstemakode) {
         if (!harJournalpostId(journalpostId)) {
             return new HentDokumentResultat(false, IKKE_JOURNALFORT);
         }
 
+        if (erSaksTemaKodeSomIkkeHarVedleggIJoark(sakstemakode)) {
+            return new HentDokumentResultat(false, UGYLDIG_SAKSTEMA);
+        }
+
         WSJournalpost journalpost = hentJournalpost(journalpostId);
-        if (!erJournalfort(journalpost)) {
+        if (erFeilregistrert(journalpost)) {
+            return new HentDokumentResultat(false, FEILREGISTRERT);
+        } else if (!erJournalfort(journalpost)) {
             if (harStatusUtgaar(journalpost)) {
                 return new HentDokumentResultat(false, STATUS_UTGAAR);
             } else if (harUkjentBruker(journalpost)) {
@@ -62,14 +71,16 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             } else {
                 return new HentDokumentResultat(false, IKKE_JOURNALFORT);
             }
-        } else if (erFeilregistrert(journalpost)) {
-            return new HentDokumentResultat(false, FEILREGISTRERT);
         } else if (!erInnsenderSakspart(journalpost, fnr)) {
-            return new HentDokumentResultat(false, IKKE_SAKSPART);
+            return new HentDokumentResultat(false, IKKE_SAKSPART, hentSakspart(journalpost));
         } else if (!harEnhetTilgangTilTema(journalpost)) {
             return new HentDokumentResultat(false, INGEN_TILGANG);
         }
         return new HentDokumentResultat(true);
+    }
+
+    private boolean erSaksTemaKodeSomIkkeHarVedleggIJoark(String sakstemakode) {
+        return SAKSTEMAKODE_PENSJON.equalsIgnoreCase(sakstemakode) || SAKSTEMAKODE_UFORETRYD.equalsIgnoreCase(sakstemakode);
     }
 
     private boolean harJournalpostId(String journalpostid) {
@@ -139,6 +150,31 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return erInnsenderSakspart;
     }
 
+    private WSSak hentSak(String sakId) {
+        return gSakService.hentSak(sakId);
+    }
+
+    private static Predicate<WSAktoer> aktoerMedFnr(final String fnr) {
+        return new Predicate<WSAktoer>() {
+            @Override
+            public boolean evaluate(WSAktoer wsAktoer) {
+                return wsAktoer.getIdent().equals(fnr);
+            }
+        };
+    }
+
+    private String hentSakspart(WSJournalpost journalpost) {
+        WSSak sak = hentSak(journalpost.getGjelderSak().getSakId());
+        return on(sak.getGjelderBrukerListe()).map(AKTOER_TIL_IDENT).head().getOrElse("");
+    }
+
+    private static Transformer<WSAktoer, String> AKTOER_TIL_IDENT = new Transformer<WSAktoer, String>() {
+        @Override
+        public String transform(WSAktoer wsAktoer) {
+            return wsAktoer.getIdent();
+        }
+    };
+
     private boolean harEnhetTilgangTilTema(WSJournalpost journalpost) {
         PolicyRequest temagruppePolicyRequest = forRequest(
                 actionId("temagruppe"),
@@ -156,16 +192,4 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return true;
     }
 
-    private WSSak hentSak(String sakId) {
-        return gSakService.hentSak(sakId);
-    }
-
-    private static Predicate<WSAktoer> aktoerMedFnr(final String fnr) {
-        return new Predicate<WSAktoer>() {
-            @Override
-            public boolean evaluate(WSAktoer wsAktoer) {
-                return wsAktoer.getIdent().equals(fnr);
-            }
-        };
-    }
 }

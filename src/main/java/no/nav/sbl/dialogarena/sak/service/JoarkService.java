@@ -6,7 +6,7 @@ import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
 
 public interface JoarkService {
 
-    HentDokumentResultat hentDokument(String journalpostId, String dokumentId, String fnr);
+    HentDokumentResultat hentDokument(String journalpostId, String dokumentId, String fnr, String sakstemakode);
     WSJournalpost hentJournalpost(String journalpostId);
 
 }

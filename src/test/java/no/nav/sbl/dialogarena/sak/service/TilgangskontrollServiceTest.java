@@ -51,6 +51,7 @@ public class TilgangskontrollServiceTest {
     public static final String SAKSTYPE_GENERELL = "GEN";
     public static final String BRUKERS_IDENT = "12345678901";
     public static final String IKKE_BRUKERS_IDENT = "12345678902";
+    public static final String SAKSTEMAKODE = "FOR";
 
 
     @Before
@@ -68,7 +69,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJournalfortOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
         assertTrue(hentDokumentResultat.harTilgang);
         assertNull(hentDokumentResultat.feilmelding);
     }
@@ -78,7 +79,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setIkkeJournalfortOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(IKKE_JOURNALFORT, hentDokumentResultat.feilmelding);
     }
@@ -88,7 +89,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setStatusUtgaarOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(STATUS_UTGAAR, hentDokumentResultat.feilmelding);
     }
@@ -98,7 +99,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setStatusUkjentBrukerOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(UKJENT_BRUKER, hentDokumentResultat.feilmelding);
     }
@@ -108,9 +109,10 @@ public class TilgangskontrollServiceTest {
         setGsakUtenSakspart();
         setJournalfortOgIkkeFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(IKKE_SAKSPART, hentDokumentResultat.feilmelding);
+        assertNotNull(hentDokumentResultat.argumenterTilFeilmelding);
     }
 
     @Test
@@ -118,7 +120,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJournalfortOgFeilRegistrert();
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(FEILREGISTRERT, hentDokumentResultat.feilmelding);
     }
@@ -128,7 +130,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJoarkThrows(SystemException.class);
 
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
     }
 
     @Test(expected = SystemException.class)
@@ -136,7 +138,7 @@ public class TilgangskontrollServiceTest {
         setGsakMedSakspart();
         setJoarkThrows(SystemException.class);
 
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
     }
 
     @Test(expected = SystemException.class)
@@ -144,7 +146,7 @@ public class TilgangskontrollServiceTest {
         setGsakThrows(SystemException.class);
         setJournalfortOgIkkeFeilRegistrert();
 
-        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
     }
 
     @Test
@@ -153,7 +155,7 @@ public class TilgangskontrollServiceTest {
         setJournalfortOgIkkeFeilRegistrert();
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
 
-        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT);
+        HentDokumentResultat hentDokumentResultat = tilgangskontrollService.harSaksbehandlerTilgangTilDokument("journalpostId", BRUKERS_IDENT, SAKSTEMAKODE);
         assertFalse(hentDokumentResultat.harTilgang);
         assertEquals(INGEN_TILGANG, hentDokumentResultat.feilmelding);
     }
