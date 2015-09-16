@@ -33,3 +33,9 @@ Tester kan kjøres på to måter:
 ##Tips
 
 * Marker node_modules mappen som ekskludert i IntelliJ. Høyreklikk på mappen, velg "Mark Directory As" og "Excluded".
+
+## Retningslinjer for kode
+
+Alle filnavn og mapper skal skriver som lowercase med dash (-) som skilletegn.
+Hovedfilen (eller komponenten) i en mappe skal ha samme navn som mappen den ligger i og "-module" postfix.
+Alle require/import uttrykk skal skrives uten ".js" postfixet.
