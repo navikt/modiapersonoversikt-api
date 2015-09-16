@@ -13,7 +13,7 @@
     <name>modia-saksoversikt</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>4.4</version>
+    <version>4.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -297,6 +297,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modia-saksoversikt.git</developerConnection>
         <url>http://stash.devillo.no/scm/dial/modia-saksoversikt.git</url>
-        <tag>4.4</tag>
+        <tag>3.3</tag>
     </scm>
 </project>
