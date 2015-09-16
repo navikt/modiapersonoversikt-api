@@ -101,13 +101,13 @@ var hentSokeresultater =
                 this.fireUpdate(this.listeners);
             }.bind(this))
             .fail(function (jqXHR) {
-                if (jqXHR.status == 403) {
+                if (jqXHR.status === 403) {
                     this.sendToWicket('reindekser');
                 } else {
                     this.state.feilet = true;
                     this.fireUpdate(this.listeners);
                 }
-            }.bind(this))
+            }.bind(this));
 
     }, 150);
 

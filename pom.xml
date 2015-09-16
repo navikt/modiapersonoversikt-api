@@ -226,7 +226,7 @@
                 <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
                 <sonar.sources>src/main/resources/no/nav/sbl/dialogarena/reactkomponenter</sonar.sources>
                 <sonar.javascript.jstest.reportsPath>target/surefire-reports</sonar.javascript.jstest.reportsPath>
-                <sonar.javascript.lcov.reportPath>target/karma-coverage/PhantomJS 1.9.7 (Windows 7 0.0.0)/cobertura-coverage.xml
+                <sonar.javascript.lcov.reportPath>target/karma-coverage/PhantomJS 1.9.7 (Linux 0.0.0)/lcov.info
                 </sonar.javascript.lcov.reportPath>
                 <skip.js-tests>false</skip.js-tests>
             </properties>
