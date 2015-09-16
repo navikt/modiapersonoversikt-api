@@ -24,6 +24,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattServi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -76,6 +77,8 @@ public class HenvendelseUtsendingServiceImplTest {
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
     @Captor
     ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
+    @Captor
+    ArgumentCaptor<WSFerdigstillHenvendelseRequest> wsFerdigstillHenvendelseRequestCaptor;
     @Captor
     ArgumentCaptor<Sak> sakArgumentCaptor;
     @Captor
@@ -166,6 +169,22 @@ public class HenvendelseUtsendingServiceImplTest {
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name()));
+    }
+
+    @Test
+    public void skalOppretteHenvendelse() {
+        henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.name(), FNR, BEHANDLINGS_ID);
+
+        verify(sendUtHenvendelsePortType).opprettHenvendelse(SVAR_SKRIFTLIG.name(), FNR,  BEHANDLINGS_ID);
+    }
+
+    @Test
+    public void skalFerdigstilleHenvendelse() throws Exception {
+        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
+        henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none(), BEHANDLINGS_ID);
+
+        verify(sendUtHenvendelsePortType).ferdigstillHenvendelse(wsFerdigstillHenvendelseRequestCaptor.capture());
+        assertThat(wsFerdigstillHenvendelseRequestCaptor.getValue().getBehandlingsId(), is(BEHANDLINGS_ID));
     }
 
     @Test

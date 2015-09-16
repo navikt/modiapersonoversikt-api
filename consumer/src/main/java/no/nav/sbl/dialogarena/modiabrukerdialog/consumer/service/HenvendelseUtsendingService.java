@@ -9,6 +9,10 @@ import java.util.List;
 public interface HenvendelseUtsendingService {
     void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception;
 
+    String opprettHenvendelse(String type, String fnr, String behandlingskjedeId);
+
+    void ferdigstillHenvendelse (Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId) throws Exception;
+
     List<Melding> hentTraad(String fnr, String traadId);
 
     void merkSomKontorsperret(String fnr, List<String> meldingsIDer);
