@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.tjeneste.virksomhet.journal.v1.*;
+import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSArkivtemaer;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
 import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSSak;
@@ -27,15 +28,15 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class JoarkPortTypeMock {
 
-    private static WSJournalpost defaultJournalpost = createJournalpost(JOURNALPOSTID_DEFAULT, "J", SAK_MED_INNSENDER, false);
+    private static WSJournalpost defaultJournalpost = createJournalpost(JOURNALPOSTID_DEFAULT, "J", SAK_MED_INNSENDER, false, "DAG");
 
     private static Map<String, WSJournalpost> journalpostMap =
             asMap(
                     JOURNALPOSTID_DEFAULT, defaultJournalpost,
-                    JOURNALPOSTID_FEILREGISTRERT_SAK, createJournalpost(JOURNALPOSTID_FEILREGISTRERT_SAK, "J", SAK_MED_INNSENDER, true),
-                    JOURNALPOSTID_IKKE_JOURNALFORT, createJournalpost(JOURNALPOSTID_IKKE_JOURNALFORT, "N", SAK_MED_INNSENDER, false),
-                    JOURNALPOSTID_IKKE_SAKSPART, createJournalpost(JOURNALPOSTID_IKKE_SAKSPART, "J", SAK_UTEN_INNSENDER, false),
-                    JOURNALPOSTID_DOKUMENT_SLETTET, createJournalpost(JOURNALPOSTID_DOKUMENT_SLETTET, "J", SAK_MED_INNSENDER, false)
+                    JOURNALPOSTID_FEILREGISTRERT_SAK, createJournalpost(JOURNALPOSTID_FEILREGISTRERT_SAK, "J", SAK_MED_INNSENDER, true, "DAG"),
+                    JOURNALPOSTID_IKKE_JOURNALFORT, createJournalpost(JOURNALPOSTID_IKKE_JOURNALFORT, "N", SAK_MED_INNSENDER, false, "DAG"),
+                    JOURNALPOSTID_IKKE_SAKSPART, createJournalpost(JOURNALPOSTID_IKKE_SAKSPART, "J", SAK_UTEN_INNSENDER, false, "DAG"),
+                    JOURNALPOSTID_DOKUMENT_SLETTET, createJournalpost(JOURNALPOSTID_DOKUMENT_SLETTET, "J", SAK_MED_INNSENDER, false, "DAG")
             );
 
     @Bean(name = "joarkPortType")
@@ -81,11 +82,12 @@ public class JoarkPortTypeMock {
         }
     }
 
-    private static WSJournalpost createJournalpost(String journalpostId, String status, String sakId, boolean feilregistrert) {
+    private static WSJournalpost createJournalpost(String journalpostId, String status, String sakId, boolean feilregistrert, String tema) {
         return new WSJournalpost()
                 .withJournalpostId(journalpostId)
                 .withJournalstatus(createJournalStatus(status))
-                .withGjelderSak(createSak(sakId, feilregistrert));
+                .withGjelderSak(createSak(sakId, feilregistrert))
+                .withArkivtema(new WSArkivtemaer().withValue(tema));
     }
 
     private static WSSak createSak(String sakId, boolean feilregistrert) {

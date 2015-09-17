@@ -102,7 +102,7 @@
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>3.4</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>3.5-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>4.6-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>4.3</saksoversikt.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
@@ -111,7 +111,7 @@
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.39</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
-        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.24</henvendelse-soknader-tjenestespesifikasjon.version>
+        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>1.0.0</joark-tjenestespesifikasjon.version>
     </properties>
 

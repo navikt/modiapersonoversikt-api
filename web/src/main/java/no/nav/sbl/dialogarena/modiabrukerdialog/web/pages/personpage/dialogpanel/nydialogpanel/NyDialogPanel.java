@@ -236,9 +236,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
     public void oppdaterReferatVM(AjaxRequestTarget target) {
-        settOppModellMedDefaultVerdier();
         skrivestottePanel.oppdater(target);
-        target.add(this);
     }
 
     private void settOppModellMedDefaultVerdier() {

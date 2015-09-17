@@ -203,7 +203,10 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     private Melding lagMelding() {
-        return new Melding(HENVENDELSEID_VERDI, SPORSMAL_MODIA_UTGAAENDE, DateTime.now()).withTraadId(HENVENDELSEID_VERDI).withTemagruppe(ARBD.name());
+        return new Melding(HENVENDELSEID_VERDI, SPORSMAL_MODIA_UTGAAENDE, DateTime.now())
+                .withTraadId(HENVENDELSEID_VERDI)
+                .withTemagruppe(ARBD.name())
+                .withErTilknyttetAnsatt(false);
     }
 
     private Melding lagBrukerSporsmalMedOppgaveId() {

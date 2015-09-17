@@ -41,11 +41,15 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.siste;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
@@ -77,7 +81,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         this.oppgaveId = oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
-        getModelObject().oppgaveTilknytning = sporsmal.erTilknyttetAnsatt != null && sporsmal.erTilknyttetAnsatt ? SAKSBEHANDLER : ENHET;
+        getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
 
@@ -141,6 +145,24 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         leggTilbakePanel.setVisibilityAllowed(false);
 
         add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
+    }
+
+    static HenvendelseVM.OppgaveTilknytning erTilknyttetAnsatt(List<Melding> traad) {
+        boolean tilknyttetAnsatt;
+        if (harUtgaaendeSporsmal(traad)) {
+            tilknyttetAnsatt = siste(traad).get().erTilknyttetAnsatt;
+        } else {
+            tilknyttetAnsatt = true;
+        }
+        return tilknyttetAnsatt ? SAKSBEHANDLER : ENHET;
+    }
+
+    private static boolean harUtgaaendeSporsmal(List<Melding> traad) {
+        return on(traad).exists(where(Melding.TYPE, equalTo(SPORSMAL_MODIA_UTGAAENDE)));
+    }
+
+    private static boolean ingenAvType(List<Melding> svar, Meldingstype type) {
+        return !on(svar).exists(where(Melding.TYPE, equalTo(type)));
     }
 
     private boolean traadenErEtEnkeltSporsmalFraBruker() {

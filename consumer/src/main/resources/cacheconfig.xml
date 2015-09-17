@@ -70,7 +70,7 @@
     </cache:advice>
     <cache:advice id="joarkAdvice" key-generator="userkeygenerator">
         <cache:caching cache="joarkCache">
-            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="hentDokument"/>
         </cache:caching>
     </cache:advice>
 

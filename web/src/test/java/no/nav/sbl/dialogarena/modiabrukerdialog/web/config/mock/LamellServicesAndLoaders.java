@@ -5,6 +5,8 @@ import no.nav.kjerneinfo.kontrakter.oppfolging.loader.OppfolgingsLoader;
 import no.nav.kjerneinfo.kontrakter.ytelser.YtelseskontrakterLoader;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
@@ -55,6 +57,16 @@ public class LamellServicesAndLoaders {
     @Bean
     public SykepengerServiceBi sykepengerServiceBi() {
         return mock(SykepengerServiceBi.class);
+    }
+
+    @Bean
+    public HenvendelseBehandlingService henvendelseBehandlingService() {
+        return mock(HenvendelseBehandlingService.class);
+    }
+
+    @Bean
+    public GsakService gsakService() {
+        return mock(GsakService.class);
     }
 
 }

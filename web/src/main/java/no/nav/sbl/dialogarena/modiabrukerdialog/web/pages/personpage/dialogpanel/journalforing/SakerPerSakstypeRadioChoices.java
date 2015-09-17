@@ -17,7 +17,8 @@ import org.apache.wicket.model.ResourceModel;
 import java.util.List;
 
 import static no.nav.modig.modia.aria.AriaHelpers.toggleButtonConnector;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class SakerPerSakstypeRadioChoices extends Panel {
 
@@ -52,7 +53,8 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                     }
                 });
             }
-        }.add(visibleIf(open)));
+        });
+        sakswrapper.add(hasCssClassIf("hidden", not(open)));
 
         toggleButtonConnector(header, sakswrapper, open);
         add(header, sakswrapper);
