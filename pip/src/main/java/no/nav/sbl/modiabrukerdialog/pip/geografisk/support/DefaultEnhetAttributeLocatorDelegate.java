@@ -12,23 +12,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Delegate that retrieves enhet information from NORG and NAVAnsatt services.
  */
 public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocatorDelegate {
 
+    public static final String NAV_VAERNES = "1783";
     private static Logger logger = LoggerFactory.getLogger(EnhetAttributeLocator.class);
     @Inject
     private GOSYSNAVansatt ansattService;
     @Inject
     private GOSYSNAVOrgEnhet enhetService;
+    private final HashMap<String, List<String>> kontorhierarki;
+
 
     public DefaultEnhetAttributeLocatorDelegate() {
+        kontorhierarki = new HashMap<>();
+        kontorhierarki.put(NAV_VAERNES, Arrays.asList("1664", "1665", "1711", "1714", "1717"));
     }
 
     /**
@@ -46,6 +48,9 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
                 enhetIdSet = hentUnderenheter(lokalEnhet.getEnhetsId());
             } else {
                 enhetIdSet = hentFylkesEnheter(lokalEnhet);
+                if(lokalEnhet.getEnhetsId().startsWith("17")){
+                    values.addAll(kontorhierarki.get(NAV_VAERNES));
+                }
             }
             enhetIdSet.add(lokalEnhet.getEnhetsId());
 
@@ -65,7 +70,11 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
         Set<String> values = new HashSet<>();
         List<ASBOGOSYSNavEnhet> enheter = hentLokalEnheter(ansattId);
         for (ASBOGOSYSNavEnhet enhet : enheter) {
-            values.add(enhet.getEnhetsId());
+            String enhetsId = enhet.getEnhetsId();
+            values.add(enhetsId);
+            if(kontorhierarki.containsKey(enhetsId)){
+                values.addAll(kontorhierarki.get(enhetsId));
+            }
         }
         return values;
     }
