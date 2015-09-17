@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.reactkomponenter.utils.wicket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -7,15 +8,20 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
+import javax.inject.Inject;
 
+
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 
 import static java.lang.String.format;
-import static no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.SerializeUtils.deserialize;
-import static no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.SerializeUtils.serialize;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class ReactComponentPanel extends MarkupContainer {
+
+    @Inject
+    protected ObjectMapper mapper;
 
     protected static final String JS_REF_REACT = "window.ModiaJS.React";
     protected static final String JS_REF_COMPONENTS = "window.ModiaJS.Components";
@@ -102,7 +108,7 @@ public class ReactComponentPanel extends MarkupContainer {
     }
 
     String createScript(String componentName, Map<String, Object> props) {
-        String json = SerializeUtils.serialize(props);
+        String json = serialize(props);
         return format("%s.%s = %s.createElement(%s.%s, %s);", JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), JS_REF_REACT, JS_REF_COMPONENTS, componentName, json);
     }
 
@@ -130,6 +136,24 @@ public class ReactComponentPanel extends MarkupContainer {
         public CallbackWrapper(Class<T> type, ReactComponentCallback<T> callback) {
             this.type = type;
             this.callback = callback;
+        }
+    }
+
+    private String serialize(Object obj) {
+        StringWriter sw = new StringWriter();
+        try {
+            mapper.writeValue(sw, obj);
+        } catch (IOException e) {
+            return "";
+        }
+        return sw.toString();
+    }
+
+    private <T> T deserialize(String string, Class<T> type) {
+        try {
+            return mapper.readValue(string.getBytes(), type);
+        } catch (IOException e) {
+            return null;
         }
     }
 }
