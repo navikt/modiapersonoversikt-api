@@ -1,10 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.modig.lang.option.Optional;
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Predicate;
@@ -12,7 +8,6 @@ import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
@@ -20,11 +15,9 @@ import java.util.Locale;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static org.apache.commons.collections15.FactoryUtils.constantFactory;
 
-@JsonDeserialize(using = Sak.SakDeserializer.class)
-@JsonSerialize(using = Sak.SakSerializer.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Sak implements Serializable, Comparable<Sak> {
 
     private static Factory<Locale> locale = constantFactory(Locale.getDefault());
@@ -156,46 +149,4 @@ public class Sak implements Serializable, Comparable<Sak> {
             return 0;
         }
     }
-
-    static class SakDeserializer extends JsonDeserializer<Sak> {
-
-        @Override
-        public Sak deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-            JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-
-            Sak sak = new Sak();
-            sak.saksId = optional(node.get("saksId").textValue());
-            sak.fagsystemSaksId = optional(node.get("fagsystemSaksId").textValue());
-            sak.temaKode = node.get("temaKode").textValue();
-            sak.temaNavn = node.get("temaNavn").textValue();
-            sak.fagsystemKode = node.get("fagsystemKode").textValue();
-            sak.fagsystemNavn = node.get("fagsystemNavn").textValue();
-            sak.sakstype = node.get("sakstype").textValue();
-            sak.finnesIGsak = Boolean.valueOf(node.get("finnesIGsak").textValue());
-            sak.finnesIPsak = Boolean.valueOf(node.get("finnesIPsak").textValue());
-
-            return sak;
-        }
-    }
-
-    static class SakSerializer extends JsonSerializer<Sak> {
-
-        @Override
-        public void serialize(Sak sak, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("saksId", sak.saksId.getOrElse(null));
-            jsonGenerator.writeStringField("saksIdVisning", sak.getSaksIdVisning());
-            jsonGenerator.writeStringField("fagsystemSaksId", sak.fagsystemSaksId.getOrElse(null));
-            jsonGenerator.writeStringField("temaKode", sak.temaKode);
-            jsonGenerator.writeStringField("temaNavn", sak.temaNavn);
-            jsonGenerator.writeStringField("fagsystemKode", sak.fagsystemKode);
-            jsonGenerator.writeStringField("fagsystemNavn", sak.fagsystemNavn);
-            jsonGenerator.writeStringField("sakstype", sak.sakstype);
-            jsonGenerator.writeStringField("opprettetDatoFormatert", sak.getOpprettetDatoFormatert());
-            jsonGenerator.writeStringField("finnesIGsak", sak.finnesIGsak.toString());
-            jsonGenerator.writeStringField("finnesIPsak", sak.finnesIPsak.toString());
-            jsonGenerator.writeEndObject();
-        }
-    }
-
 }
