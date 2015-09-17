@@ -107,6 +107,11 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak, behandlingsId);
     }
 
+    @Override
+    public void avbrytHenvendelse(String behandlingsId){
+        sendUtHenvendelsePortType.avbrytHenvendelse(behandlingsId);
+    }
+
     private XMLHenvendelse lagXMLHenvendelseOgSettEnhet(Melding melding) {
         XMLHenvendelseType type = getXMLHenvendelseTypeBasertPaaMeldingstype(melding.meldingstype);
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(melding, type);

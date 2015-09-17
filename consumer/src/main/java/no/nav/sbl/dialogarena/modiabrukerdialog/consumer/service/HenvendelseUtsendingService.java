@@ -13,6 +13,8 @@ public interface HenvendelseUtsendingService {
 
     void ferdigstillHenvendelse (Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId) throws Exception;
 
+    void avbrytHenvendelse(String behandlingsId);
+
     List<Melding> hentTraad(String fnr, String traadId);
 
     void merkSomKontorsperret(String fnr, List<String> meldingsIDer);
