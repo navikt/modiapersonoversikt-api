@@ -13,12 +13,12 @@ class SakerListe extends React.Component {
             const saker = group.map((sak) => {
                 return (
                     <li className="text-row-list">
-                        <a href="javascript:void(0)" className="content-row-list" onClick={() => velgSak(sak)}>
+                        <a href="javascript:void(0)" role="button" className="content-row-list" onClick={() => velgSak(sak)}>
                             <div>
                                 <span className="text-cell">{sak.saksIdVisning}</span>
-                                <span className="vekk">'|'</span>
+                                <span className="vekk"> | </span>
                                 <span className="text-cell text-align-right">{sak.opprettetDatoFormatert}</span>
-                                <span className="vekk">'|'</span>
+                                <span className="vekk"> | </span>
                                 <span className="text-cell">{sak.fagsystemNavn}</span>
                             </div>
                         </a>
@@ -95,9 +95,9 @@ class SakerForTema extends React.Component {
 
                         <div className="info-bar">
                             <span className="text-cell">SAKSID</span>
-                            <span className="vekk">'|'</span>
+                            <span className="vekk"> | </span>
                             <span className="text-cell text-align-right">OPPRETTET</span>
-                            <span className="vekk">'|'</span>
+                            <span className="vekk"> | </span>
                             <span className="text-cell">FAGSYSTEM</span>
                         </div>
                     </button>

@@ -53,16 +53,16 @@ class JournalforSak extends React.Component {
 
                     <div className="info-bar">
                         <span className="text-cell">Saksid</span>
-                        <span className="vekk">'|'</span>
+                        <span className="vekk"> | </span>
                         <span className="text-cell">Opprettet</span>
-                        <span className="vekk">'|'</span>
+                        <span className="vekk"> | </span>
                         <span className="text-cell">Fagsystem</span>
                     </div>
                     <div className="info-sak">
                         <span className="text-cell">{sak.saksIdVisning}</span>
-                        <span className="vekk">'|'</span>
+                        <span className="vekk"> | </span>
                         <span className="text-cell">{sak.opprettetDatoFormatert}</span>
-                        <span className="vekk">'|'</span>
+                        <span className="vekk"> | </span>
                         <span className="text-cell">{sak.fagsystemNavn}</span>
                     </div>
                 </div>
