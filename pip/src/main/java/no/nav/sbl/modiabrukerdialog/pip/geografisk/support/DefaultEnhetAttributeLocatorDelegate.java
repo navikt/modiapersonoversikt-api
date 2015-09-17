@@ -25,7 +25,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
     private GOSYSNAVansatt ansattService;
     @Inject
     private GOSYSNAVOrgEnhet enhetService;
-    private final HashMap<String, List<String>> kontorhierarki;
+    private final Map<String, List<String>> kontorhierarki;
 
 
     public DefaultEnhetAttributeLocatorDelegate() {
@@ -48,7 +48,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
                 enhetIdSet = hentUnderenheter(lokalEnhet.getEnhetsId());
             } else {
                 enhetIdSet = hentFylkesEnheter(lokalEnhet);
-                if(lokalEnhet.getEnhetsId().startsWith("17")){
+                if (lokalEnhet.getEnhetsId().startsWith("17")) {
                     values.addAll(kontorhierarki.get(NAV_VAERNES));
                 }
             }
@@ -72,7 +72,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
         for (ASBOGOSYSNavEnhet enhet : enheter) {
             String enhetsId = enhet.getEnhetsId();
             values.add(enhetsId);
-            if(kontorhierarki.containsKey(enhetsId)){
+            if (kontorhierarki.containsKey(enhetsId)) {
                 values.addAll(kontorhierarki.get(enhetsId));
             }
         }
