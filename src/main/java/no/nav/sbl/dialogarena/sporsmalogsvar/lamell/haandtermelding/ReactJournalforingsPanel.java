@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -10,9 +9,10 @@ import org.apache.wicket.event.Broadcast;
 import java.util.HashMap;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.TEMAGRUPPE_TEMA_MAPPING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.AnimertJournalforingsPanel.TRAAD_JOURNALFORT;
 
 public class ReactJournalforingsPanel extends AnimertPanel {
+
+    public static final String TRAAD_JOURNALFORT = "sos.journalforingspanel.traadJournalfort";
 
     private final ReactComponentPanel reactComponentPanel;
     private final InnboksVM innboksVM;
