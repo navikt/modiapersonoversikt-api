@@ -23,10 +23,10 @@ class TypeValg extends React.Component {
     render() {
         return (
             <div className="type-valg">
-                <input name="typeVelger" id={this.id1} type="radio" checked={this.props.valgtKategori === 'FAG'} value="FAG" onChange={this.endre}/>
-                <label className="label" htmlFor={this.id1} ref="typevalg.FAG">Fagsaker</label>
-                <input name="typeVelger" id={this.id2} type="radio" checked={this.props.valgtKategori === 'GEN'} value="GEN" onChange={this.endre}/>
-                <label className="label" htmlFor={this.id2} ref="typevalg.GEN">Generelle saker</label>
+                <input name="typeVelger" id={this.id1} type="radio" checked={this.props.valgtKategori === 'FAG'} value="FAG" ref="typevalg.FAG" onChange={this.endre}/>
+                <label className="label" htmlFor={this.id1}>Fagsaker</label>
+                <input name="typeVelger" id={this.id2} type="radio" checked={this.props.valgtKategori === 'GEN'} value="GEN" ref="typevalg.GEN" onChange={this.endre}/>
+                <label className="label" htmlFor={this.id2}>Generelle saker</label>
             </div>
         );
     }
