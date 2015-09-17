@@ -116,6 +116,15 @@ public class LeggTilbakePanelTest extends WicketPageTest {
     }
 
     @Test
+    public void leggTilbakeSenderAvbrytTilHenvendelse() {
+        wicket.inForm(ofType(Form.class))
+                .select("valgtAarsak", 1)
+                .submitWithAjaxButton(withId("leggtilbake"));
+
+        Mockito.verify(henvendelseUtsendingService, Mockito.times(1)).avbrytHenvendelse(BEHANDLINGS_ID);
+    }
+
+    @Test
     public void leggTilbakeInabil() {
         wicket.inForm(ofType(Form.class))
                 .select("valgtAarsak", 1)

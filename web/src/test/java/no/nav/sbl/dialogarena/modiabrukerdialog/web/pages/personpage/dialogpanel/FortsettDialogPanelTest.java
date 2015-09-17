@@ -27,13 +27,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.hamcrest.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.mockito.Matchers;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -66,6 +65,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     private static final String TEMAGRUPPE = Temagruppe.FMLI.name();
     private static final String VALGT_ENHET = "valgtEnhet";
     private static final String BRUKERS_ENHET = "1234";
+    private static final String BEHANDLINGS_ID = "behandlingsId";
 
     @Captor
     private ArgumentCaptor<Melding> meldingArgumentCaptor;
@@ -385,6 +385,15 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")));
+    }
+
+    @Test
+    public void senderAvbrytTilHenvendelseDersomBrukerAvbryterMelding() {
+        when(henvendelseUtsendingService.opprettHenvendelse(anyString(), anyString(), anyString())).thenReturn(BEHANDLINGS_ID);
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV()), Optional.<String>none()))
+                .click().link(withId("leggtilbake"));
+
+        verify(henvendelseUtsendingService, times(1)).avbrytHenvendelse(BEHANDLINGS_ID);
     }
 
     @Test
