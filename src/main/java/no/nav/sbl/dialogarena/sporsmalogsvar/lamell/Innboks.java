@@ -7,9 +7,6 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -23,7 +20,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,21 +36,22 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference BESVAR_INDIKATOR_JS = new JavaScriptResourceReference(Innboks.class, "besvarIndikator.js");
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
 
-    @Inject
-    private GsakService gsakService;
-    @Inject
-    private HenvendelseBehandlingService henvendelseBehandlingService;
-
     private InnboksVM innboksVM;
 
-    public Innboks(String id, final String fnr, InnboksProps props) {
+    public Innboks(String id, final InnboksVM innboksVM) {
         super(id);
         setOutputMarkupId(true);
-
-        this.innboksVM = new InnboksVM(fnr, henvendelseBehandlingService);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
+        this.innboksVM = innboksVM;
+        innboksVM.oppdaterMeldinger();
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
 
-        haandterProps(props);
+        if (innboksVM.getSessionHenvendelseId().isSome()) {
+            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(innboksVM.getSessionHenvendelseId().get());
+            if (meldingITraad.isSome()) {
+                innboksVM.setValgtMelding(meldingITraad.get());
+            }
+        }
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
 
@@ -117,25 +114,6 @@ public class Innboks extends Lerret {
         return traadRefs;
     }
 
-    private void haandterProps(InnboksProps props) {
-        if (props.henvendelseId.isSome()) {
-            innboksVM.setSessionHenvendelseId(props.henvendelseId.get());
-            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(props.henvendelseId.get());
-            if (meldingITraad.isSome()) {
-                innboksVM.setValgtMelding(meldingITraad.get());
-                innboksVM.focusValgtTraadOnOpen = true;
-            }
-        }
-        if (props.oppgaveId.isSome() && gsakService.oppgaveKanManuelltAvsluttes(props.oppgaveId.get())) {
-            innboksVM.setSessionOppgaveId(props.oppgaveId.get());
-        }
-        if (props.oppgaveId.isSome() && props.henvendelseId.isSome() && props.fortsettModus.getOrElse(false)) {
-            innboksVM.traadBesvares = props.henvendelseId.get();
-        } else if (props.besvarModus.isSome()) {
-            innboksVM.traadBesvares = props.besvarModus.get();
-        }
-    }
-
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
@@ -178,7 +156,6 @@ public class Innboks extends Lerret {
 
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {
-        innboksVM.traadBesvares = null;
         target.add(this);
     }
 

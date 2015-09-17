@@ -47,6 +47,8 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
         List<Sak> sakerForBruker = TestUtils.createMockSaksliste();
         sakerForBruker.get(0).opprettetDato = DateTime.now();
         sakerForBruker.get(0).saksId = optional(JOURNALFORT_SAKSID);
+        innboksVM.oppdaterMeldinger();
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
         innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId = JOURNALFORT_SAKSID;
     }
 

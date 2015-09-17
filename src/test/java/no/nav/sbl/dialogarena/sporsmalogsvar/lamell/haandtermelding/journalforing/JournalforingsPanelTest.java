@@ -33,7 +33,10 @@ public class JournalforingsPanelTest extends WicketPageTest {
         doThrow(Exception.class).when(sakerService).hentListeAvSaker(anyString());
         doThrow(Exception.class).when(sakerService).hentSaker(anyString());
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("id", new InnboksVM("", henvendelseBehandlingService));
+        InnboksVM innboksVM = new InnboksVM("", henvendelseBehandlingService);
+        innboksVM.oppdaterMeldinger();
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("id", innboksVM);
         journalforingsPanel.oppdatereJournalforingssaker();
 
         wicket.goToPageWith(journalforingsPanel)

@@ -48,6 +48,7 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
     @Test
     public void setterValgtMeldingDersomManTrykkerPaaDen() {
         InnboksVM innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        innboksVM.oppdaterMeldinger();
         innboksVM.setValgtMelding("id1");
 
         wicket.goToPageWith(new AlleMeldingerPanel("id", innboksVM, ""))

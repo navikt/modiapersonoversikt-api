@@ -33,7 +33,7 @@ public class InnboksVM implements Serializable {
 
     private Map<String, TraadVM> traader = new HashMap<>();
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
-    private Optional<MeldingVM> valgtMelding;
+    private Optional<MeldingVM> valgtMelding = none();
     private String fnr, feilmeldingKey;
     private Optional<String> sessionOppgaveId = none(), sessionHenvendelseId = none();
     public String traadBesvares;
@@ -42,8 +42,6 @@ public class InnboksVM implements Serializable {
     public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService) {
         this.fnr = fnr;
         this.henvendelseBehandlingService = henvendelseBehandlingService;
-        oppdaterMeldinger();
-        valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
     }
 
     public String getFnr() {
@@ -160,5 +158,11 @@ public class InnboksVM implements Serializable {
 
     public void setSessionHenvendelseId(String sessionHenvendelseId) {
         this.sessionHenvendelseId = optional(sessionHenvendelseId);
+    }
+
+    public void settForsteSomValgtHvisIkkeSatt() {
+        if (!valgtMelding.isSome()) {
+            valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
+        }
     }
 }

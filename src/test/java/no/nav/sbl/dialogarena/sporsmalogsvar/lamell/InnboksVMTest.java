@@ -47,6 +47,7 @@ public class InnboksVMTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIToTraader());
 
         innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        innboksVM.oppdaterMeldinger();
     }
 
     @Test
@@ -75,6 +76,7 @@ public class InnboksVMTest {
 
     @Test
     public void nyesteMeldingINyesteTraadSkalVaereDefaultValgt() {
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
         assertThat(innboksVM.getValgtTraad().getNyesteMelding(), is(innboksVM.getNyesteMeldingINyesteTraad()));
     }
 
@@ -126,6 +128,8 @@ public class InnboksVMTest {
 
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), Temagruppe.ARBD, traadId)));
         innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        innboksVM.oppdaterMeldinger();
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad(traadId);
         assertTrue(nyesteMeldingITraad.isSome());

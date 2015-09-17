@@ -37,7 +37,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     public void skalKunneBesvareTraadInitiertAvBruker() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createStandardMelding()));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
     }
 
@@ -46,7 +46,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1")));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
     }
 
@@ -56,7 +56,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
                 createStandardMelding(),
                 createMelding("melding2", SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, "melding1")));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
     }
 
@@ -67,7 +67,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         melding.kontorsperretEnhet = "kontorsperretEnhet";
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
     }
 
@@ -78,7 +78,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         melding.kontorsperretEnhet = "kontorsperretEnhet";
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM("fnr")))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
     }
 
@@ -88,7 +88,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         melding.journalfortTemanavn = "journalfortTemanavnSomIkkeSkalVises";
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().notContainPatterns(melding.journalfortTemanavn);
     }
 
@@ -99,7 +99,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         melding.journalfortTemanavn = "journalfortTemanavnSomSkalVises";
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containPatterns(melding.journalfortTemanavn);
     }
 
@@ -110,7 +110,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         melding.markertSomFeilsendtAv = "navIdent";
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM(fnr, henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
     }
 
@@ -121,7 +121,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         melding.meldingstype = SPORSMAL_SKRIFTLIG;
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM(fnr, henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsInvisible().and(withId("skrevetAvContainer")));
     }
 
@@ -133,8 +133,19 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         melding.navIdent = "ident";
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
 
-        wicket.goToPageWith(new TraaddetaljerPanel("id", new InnboksVM(fnr, henvendelseBehandlingService)))
+        wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsVisible().and(withId("skrevetAvContainer")));
+    }
+
+    private InnboksVM innboksVM() {
+        return innboksVM("209380283");
+    }
+
+    private InnboksVM innboksVM(String fnr) {
+        InnboksVM innboksVM = new InnboksVM(fnr, henvendelseBehandlingService);
+        innboksVM.oppdaterMeldinger();
+        innboksVM.settForsteSomValgtHvisIkkeSatt();
+        return innboksVM;
     }
 
     private Melding createStandardMelding() {
