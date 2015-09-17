@@ -74,7 +74,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
 
     public LamellContainer(String id, String fnrFromRequest, Session session) {
-        super(id, createLamellFactories(fnrFromRequest, session));
+        super(id, createLamellFactories(fnrFromRequest));
         this.fnrFromRequest = fnrFromRequest;
         addNewFactory(createMeldingerLamell(fnrFromRequest, session));
     }
@@ -167,7 +167,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest, Session session) {
+    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(fnrFromRequest));
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
