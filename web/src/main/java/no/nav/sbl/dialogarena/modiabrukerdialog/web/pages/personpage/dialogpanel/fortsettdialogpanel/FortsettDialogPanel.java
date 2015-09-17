@@ -81,11 +81,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         getModelObject().oppgaveTilknytning = sporsmal.erTilknyttetAnsatt != null && sporsmal.erTilknyttetAnsatt ? SAKSBEHANDLER : ENHET;
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
+        opprettHenvendelse();
 
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
-        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal);
+        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
         kvittering = new KvitteringsPanel("kvittering");
 
         visTraadContainer.setOutputMarkupPlaceholderTag(true);
@@ -126,6 +127,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     target.focusComponent(leggTilbakePanel.hentForsteFokusKomponent());
                 } else {
                     send(getPage(), BREADTH, SVAR_AVBRUTT);
+                    henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
                 }
             }
         };
@@ -142,8 +144,6 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         leggTilbakePanel.setVisibilityAllowed(false);
 
         add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
-
-        opprettHenvendelse();
     }
 
     private boolean traadenErEtEnkeltSporsmalFraBruker() {

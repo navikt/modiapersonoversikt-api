@@ -39,6 +39,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
 
     private static final String MELDING_FNR = "11111111111";
     private static final String MELDING_ID = "123";
+    private static final String BEHANDLINGS_ID = "behandlingsid";
 
     private static final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("").withEnhet("1234"), null);
 
@@ -57,7 +58,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         sporsmal.gjeldendeTemagruppe = Temagruppe.ARBD;
         sporsmal.tilknyttetEnhet = enhet;
         sporsmal.brukersEnhet = enhet;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, BEHANDLINGS_ID));
     }
 
     @Test
@@ -182,7 +183,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ANSOS;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, BEHANDLINGS_ID));
 
         wicket.should().containComponent(both(withId("temagruppeWrapper")).and(thatIsInvisible()));
     }
