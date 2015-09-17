@@ -9,14 +9,16 @@ import org.jboss.security.xacml.core.model.context.SubjectType;
 import org.jboss.security.xacml.interfaces.RequestContext;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.jboss.security.xacml.factories.RequestAttributeFactory.createStringAttributeType;
 import static org.jboss.security.xacml.factories.RequestResponseContextFactory.createRequestCtx;
 
 public class XACMLRequestBuilder {
-	Map<String, Object> subjectAttributes = new HashMap<String, Object>();
+	Map<String, List<Object>> subjectAttributes = new HashMap<>();
 	Map<String, Object> resourceAttributes = new HashMap<String, Object>();
 	Map<String, Object> actionAttributes = new HashMap<String, Object>();
 	Map<String, Object> environmentAttributes = new HashMap<String, Object>();
@@ -26,12 +28,18 @@ public class XACMLRequestBuilder {
 	}
 
 	public XACMLRequestBuilder withSubjectAttr(String attr, String value) {
-		subjectAttributes.put(attr, value);
+		if(!subjectAttributes.containsKey(attr)){
+			subjectAttributes.put(attr, new ArrayList<>());
+		}
+		subjectAttributes.get(attr).add(value);
 		return this;
 	}
 
 	public XACMLRequestBuilder withSubjectAttr(String attr, Boolean value) {
-		subjectAttributes.put(attr, value);
+		if(!subjectAttributes.containsKey(attr)){
+			subjectAttributes.put(attr, new ArrayList<>());
+		}
+		subjectAttributes.get(attr).add(value);
 		return this;
 	}
 
@@ -60,8 +68,10 @@ public class XACMLRequestBuilder {
 		// Create a subject type
 		SubjectType subject = new SubjectType();
 		for (String attrName : subjectAttributes.keySet()) {
-			AttributeType attr = createAttribute(attrName, subjectAttributes.get(attrName));
-			subject.getAttribute().add(attr);
+			for (Object value : subjectAttributes.get(attrName)) {
+				AttributeType attr = createAttribute(attrName, value);
+				subject.getAttribute().add(attr);
+			}
 		}
 
 		// Create a resource type

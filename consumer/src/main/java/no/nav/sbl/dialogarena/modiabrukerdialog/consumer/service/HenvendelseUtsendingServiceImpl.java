@@ -10,6 +10,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -26,6 +27,7 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -127,14 +129,24 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
         }
 
+
+
         Melding sporsmal = meldinger.get(0);
         String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        // List<String> hentEnhenterForValgtEnhet(valgtEnhet)
         if (sporsmal.kontorsperretEnhet != null) {
-            pep.assertAccess(forRequest(
+            List<PolicyAttribute> requestList = Arrays.asList(
                     actionId("kontorsperre"),
                     resourceId(""),
                     subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(sporsmal.kontorsperretEnhet))));
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(sporsmal.kontorsperretEnhet)));
+
+            if("1783".equals(valgtEnhet)){
+                requestList.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", "1664"));
+                requestList.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", "1664"));
+            }
+
+            pep.assertAccess(forRequest(requestList));
         }
         if (sporsmal.gjeldendeTemagruppe == OKSOS) {
             pep.assertAccess(forRequest(
