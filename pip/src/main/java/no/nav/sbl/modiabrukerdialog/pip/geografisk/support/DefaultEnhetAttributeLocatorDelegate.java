@@ -7,6 +7,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.AnsattEnhetUtil;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +26,9 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
     private GOSYSNAVansatt ansattService;
     @Inject
     private GOSYSNAVOrgEnhet enhetService;
-    private final Map<String, List<String>> kontorhierarki;
 
 
     public DefaultEnhetAttributeLocatorDelegate() {
-        kontorhierarki = new HashMap<>();
-        kontorhierarki.put(NAV_VAERNES, Arrays.asList("1664", "1665", "1711", "1714", "1717"));
     }
 
     /**
@@ -48,9 +46,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
                 enhetIdSet = hentUnderenheter(lokalEnhet.getEnhetsId());
             } else {
                 enhetIdSet = hentFylkesEnheter(lokalEnhet);
-                if (lokalEnhet.getEnhetsId().startsWith("17")) {
-                    values.addAll(kontorhierarki.get(NAV_VAERNES));
-                }
+                enhetIdSet.addAll(AnsattEnhetUtil.hentEkstraEnheterForFylke(lokalEnhet.getEnhetsId()));
             }
             enhetIdSet.add(lokalEnhet.getEnhetsId());
 
@@ -71,10 +67,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
         List<ASBOGOSYSNavEnhet> enheter = hentLokalEnheter(ansattId);
         for (ASBOGOSYSNavEnhet enhet : enheter) {
             String enhetsId = enhet.getEnhetsId();
-            values.add(enhetsId);
-            if (kontorhierarki.containsKey(enhetsId)) {
-                values.addAll(kontorhierarki.get(enhetsId));
-            }
+            values.addAll(AnsattEnhetUtil.hentEnheterForValgtEnhet(enhetsId));
         }
         return values;
     }
