@@ -40,7 +40,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String SAKSTYPE_GENERELL = "GEN";
     public static final String SAKSTYPE_MED_FAGSAK = "MFS";
     public static final String FAGSYSTEMKODE_ARENA = "AO01";
-    public static final String FAGSYSTEMKODE_PSAK = "PSAK";
+    public static final String FAGSYSTEMKODE_PSAK = "PP01";
 
     public static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
     public static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = unmodifiableList(asList("AGR", "FUL", "GEN", "KTR", "STO", "SER", "SYM", "TRK", "TRY", "VEN", "UFM", TEMAKODE_OPPFOLGING));
