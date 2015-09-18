@@ -9,11 +9,13 @@ import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.AnsattEnhetUtil;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -24,7 +26,10 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -127,14 +132,20 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
+        final Set<String> enheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
+
         return new Predicate<Melding>() {
             @Override
             public boolean evaluate(Melding melding) {
-                PolicyRequest kontorsperrePolicyRequest = forRequest(
-                        actionId("kontorsperre"),
+                List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(actionId("kontorsperre"),
                         resourceId(""),
-                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet))));
+
+                for (String enhet : enheter) {
+                    attributes.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(enhet)));
+                }
+
+                PolicyRequest kontorsperrePolicyRequest = forRequest(attributes);
 
                 return isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest);
             }
