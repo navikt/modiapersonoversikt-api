@@ -9,29 +9,27 @@ import static no.nav.sbl.modiabrukerdialog.pdp.test.util.DecisionTypeAssert.asse
 import static org.jboss.security.xacml.core.model.context.DecisionType.DENY;
 import static org.jboss.security.xacml.core.model.context.DecisionType.PERMIT;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.*;
-import static org.junit.Assert.assertEquals;
-
 
 public class KontorsperrePolicyTest extends AbstractPDPTest {
 
     @Test
     public void allowAccessSammeLokalEnhet() {
         RequestContext request = createRequest(ENHET, ENHET);
-        assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
     }
 
     @Test
     public void denyAccessIkkeSammeLokalEnhet() {
         RequestContext request = createRequest(ENHET, "1234");
-        assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(DENY);
     }
 
     @Test
     public void allowAccessSammeLokalEnheter() {
         RequestContext request = createRequest(ENHET, ENHET, ENHET2);
-        assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
         RequestContext request2 = createRequest(ENHET2, ENHET, ENHET2);
-        assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request2).getResult().getDecision());
+        assertThat(pdp.evaluate(request2)).hasDecision(PERMIT);
     }
 
     @Test
@@ -43,13 +41,13 @@ public class KontorsperrePolicyTest extends AbstractPDPTest {
     @Test
     public void denyAccessHvisSubjectEnhetIkkeErSatt() {
         RequestContext request = createRequest(ENHET, null);
-        assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(DENY);
     }
 
     @Test
     public void allowAccessHvisAnsvarligEnhetIkkeErSatt() {//Melding ikke kontorsperret
         RequestContext request = createRequest(null, "ENHET");
-        assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
     }
 
     private RequestContext createRequest(String ansvarligEnhet, String... saksbehandlerEnheter) {

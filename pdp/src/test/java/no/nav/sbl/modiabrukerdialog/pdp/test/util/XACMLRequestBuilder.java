@@ -1,11 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pdp.test.util;
 
-import org.jboss.security.xacml.core.model.context.ActionType;
-import org.jboss.security.xacml.core.model.context.AttributeType;
-import org.jboss.security.xacml.core.model.context.EnvironmentType;
-import org.jboss.security.xacml.core.model.context.RequestType;
-import org.jboss.security.xacml.core.model.context.ResourceType;
-import org.jboss.security.xacml.core.model.context.SubjectType;
+import org.jboss.security.xacml.core.model.context.*;
 import org.jboss.security.xacml.interfaces.RequestContext;
 
 import java.io.IOException;

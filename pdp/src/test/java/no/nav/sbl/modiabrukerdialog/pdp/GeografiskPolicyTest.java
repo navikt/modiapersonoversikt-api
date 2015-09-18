@@ -4,13 +4,13 @@ import no.nav.sbl.modiabrukerdialog.pdp.test.util.XACMLRequestBuilder;
 import org.jboss.security.xacml.interfaces.RequestContext;
 import org.junit.Test;
 
+import static no.nav.sbl.modiabrukerdialog.pdp.test.util.DecisionTypeAssert.assertThat;
 import static org.jboss.security.xacml.core.model.context.DecisionType.DENY;
 import static org.jboss.security.xacml.core.model.context.DecisionType.PERMIT;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_ACTION_ID;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_RESOURCE_ID;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_ROLE;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_SUBJECT_ID;
-import static org.junit.Assert.assertEquals;
 
 
 public class GeografiskPolicyTest extends AbstractPDPTest {
@@ -24,7 +24,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
-		assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);;
 	}
 
 	@Test
@@ -74,7 +74,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
-		assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID_MED_BEGRUNNELSE)
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);;
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, "")
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);;
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID_MED_BEGRUNNELSE)
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);;
 	}
 
 	@Test
@@ -123,6 +123,6 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
-		assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+        assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
 }
