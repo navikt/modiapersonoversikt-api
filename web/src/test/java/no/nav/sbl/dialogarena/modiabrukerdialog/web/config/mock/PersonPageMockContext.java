@@ -23,7 +23,8 @@ import static org.mockito.Mockito.when;
         UtbetalingerMockContext.class,
         SporsmalOgSvarMockContext.class,
         SaksoversiktMockContext.class,
-        ConsumerServicesMockContext.class
+        ConsumerServicesMockContext.class,
+        JacksonMockContext.class
 })
 public class PersonPageMockContext {
 

@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Configuration
-@Import(value = {ConsumerServicesMockContext.class})
+@Import(value = {ConsumerServicesMockContext.class, JacksonMockContext.class})
 public class DialogPanelMockContext {
     @Bean
     public CmsContentRetriever cmsContentRetriever() {
