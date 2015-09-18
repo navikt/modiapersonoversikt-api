@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.PropertyResolver;
@@ -145,5 +146,10 @@ public class ServiceTestContext {
     @Bean
     public PropertyResolver propertyResolver() {
         return mock(PropertyResolver.class);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }
