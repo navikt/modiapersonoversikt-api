@@ -2,8 +2,10 @@ package no.nav.sbl.modiabrukerdialog.pdp;
 
 import no.nav.sbl.modiabrukerdialog.pdp.test.util.XACMLRequestBuilder;
 import org.jboss.security.xacml.interfaces.RequestContext;
+
 import org.junit.Test;
 
+import static no.nav.sbl.modiabrukerdialog.pdp.test.util.DecisionTypeAssert.assertThat;
 import static org.jboss.security.xacml.core.model.context.DecisionType.DENY;
 import static org.jboss.security.xacml.core.model.context.DecisionType.PERMIT;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.*;
@@ -26,10 +28,16 @@ public class KontorsperrePolicyTest extends AbstractPDPTest {
 
     @Test
     public void allowAccessSammeLokalEnheter() {
-        RequestContext request = createRequest(ENHET, ENHET, ENHET2 );
+        RequestContext request = createRequest(ENHET, ENHET, ENHET2);
         assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
         RequestContext request2 = createRequest(ENHET2, ENHET, ENHET2);
         assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request2).getResult().getDecision());
+    }
+
+    @Test
+    public void denyAccessUlikLokalEnheter() {
+        RequestContext request = createRequest(ENHET, "0314", ENHET2);
+        assertThat(pdp.evaluate(request)).hasDecision(DENY);
     }
 
     @Test
@@ -61,4 +69,5 @@ public class KontorsperrePolicyTest extends AbstractPDPTest {
 
         return req.build();
     }
+
 }
