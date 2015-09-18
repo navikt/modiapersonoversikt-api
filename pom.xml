@@ -46,12 +46,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-time</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
             <scope>provided</scope>
@@ -79,12 +73,7 @@
         <!--Diverse-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
 
