@@ -12,7 +12,7 @@
     <description>Fellesbibliotek for React-komponenter</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>reactkomponenter</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.8</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -222,7 +222,7 @@
 
             <properties>
                 <sonar.language>js</sonar.language>
-                <sonar.coverage.exclusions></sonar.coverage.exclusions>
+                <sonar.coverage.exclusions />
                 <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
                 <sonar.sources>src/main/resources/no/nav/sbl/dialogarena/reactkomponenter</sonar.sources>
                 <sonar.javascript.jstest.reportsPath>target/surefire-reports</sonar.javascript.jstest.reportsPath>
@@ -236,6 +236,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/reactkomponenter.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/sbl/repos/reactkomponenter/</url>
-        <tag>HEAD</tag>
+        <tag>reactkomponenter-1.8</tag>
     </scm>
 </project>
