@@ -35,12 +35,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.TransformerUtils.castTo;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
+import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -60,6 +66,9 @@ public class HenvendelseBehandlingServiceImplTest {
 
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<PolicyRequest> pepArgument;
 
     @Mock
     private HenvendelsePortType henvendelsePortType;
@@ -248,4 +257,30 @@ public class HenvendelseBehandlingServiceImplTest {
 
     }
 
+    @Test
+    public void skalPopulereValgtEnhetDersomSaksbehandlerHarFlere() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet("1664"));
+
+        String valgtEnhet = "1783";
+        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(valgtEnhet)).collect();
+
+        verify(pep).hasAccess(pepArgument.capture());
+        assertThat(pepArgument.getValue().getAttributes()).contains(
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString("1664"))
+        );
+    }
+
+    @Test
+    public void skalPopulereValgtEnhetDersomSaksbehandlerHarKunEn() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet("1664"));
+
+        String valgtEnhet = "1718";
+        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(valgtEnhet)).collect();
+
+        verify(pep).hasAccess(pepArgument.capture());
+        assertThat(pepArgument.getValue().getAttributes()).contains(
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet))
+        );
+    }
 }

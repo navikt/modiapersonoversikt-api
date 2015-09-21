@@ -131,7 +131,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
-    private Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
+    protected Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
         final Set<String> enheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
 
         return new Predicate<Melding>() {
