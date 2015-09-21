@@ -363,6 +363,7 @@
             <scope>test</scope>
         </dependency>
 
+
         <!--Diverse-->
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
@@ -486,7 +487,12 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>1.7.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
