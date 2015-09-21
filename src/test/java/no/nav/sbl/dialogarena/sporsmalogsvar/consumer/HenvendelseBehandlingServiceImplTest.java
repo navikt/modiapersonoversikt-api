@@ -35,16 +35,19 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.TransformerUtils.castTo;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -63,6 +66,9 @@ public class HenvendelseBehandlingServiceImplTest {
 
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<PolicyRequest> pepArgument;
 
     @Mock
     private HenvendelsePortType henvendelsePortType;
@@ -119,21 +125,21 @@ public class HenvendelseBehandlingServiceImplTest {
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
 
-        assertThat(request.getFodselsnummer(), is(FNR));
-        assertTrue(request.getTyper().contains(SPORSMAL_SKRIFTLIG.name()));
-        assertTrue(request.getTyper().contains(SVAR_SKRIFTLIG.name()));
-        assertTrue(request.getTyper().contains(SVAR_OPPMOTE.name()));
-        assertTrue(request.getTyper().contains(SVAR_TELEFON.name()));
-        assertTrue(request.getTyper().contains(REFERAT_OPPMOTE.name()));
-        assertTrue(request.getTyper().contains(REFERAT_TELEFON.name()));
+        assertThat(request.getFodselsnummer()).isEqualTo(FNR);
+        assertThat(request.getTyper()).contains(SPORSMAL_SKRIFTLIG.name());
+        assertThat(request.getTyper()).contains(SVAR_OPPMOTE.name());
+        assertThat(request.getTyper()).contains(SVAR_SKRIFTLIG.name());
+        assertThat(request.getTyper()).contains(SVAR_TELEFON.name());
+        assertThat(request.getTyper()).contains(REFERAT_OPPMOTE.name());
+        assertThat(request.getTyper()).contains(REFERAT_TELEFON.name());
     }
 
     @Test
     public void skalTransformereResponsenTilMeldingsliste() {
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger.size(), is(1));
-        assertThat(meldinger.get(0).id, is(BEHANDLINGS_ID));
+        assertThat(meldinger).hasSize(1);
+        assertThat(meldinger.get(0).id).isEqualTo(BEHANDLINGS_ID);
     }
 
     @Test
@@ -181,9 +187,9 @@ public class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger.size(), is(2));
-        assertThat(meldinger.get(0).id, is(equalTo("id1")));
-        assertThat(meldinger.get(1).id, is(equalTo("id2")));
+        assertThat(meldinger).hasSize(2);
+        assertThat(meldinger.get(0).id).isEqualTo("id1");
+        assertThat(meldinger.get(1).id).isEqualTo("id2");
     }
 
     @Test
@@ -198,9 +204,9 @@ public class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger.size(), is(2));
-        assertThat(meldinger.get(0).fritekst, is(equalTo("fritekst")));
-        assertThat(meldinger.get(1).fritekst, is("tilgang.journalfort"));
+        assertThat(meldinger).hasSize(2);
+        assertThat(meldinger.get(0).fritekst).isEqualTo("fritekst");
+        assertThat(meldinger.get(1).fritekst).isEqualTo("tilgang.journalfort");
     }
 
     @Test
@@ -217,7 +223,7 @@ public class HenvendelseBehandlingServiceImplTest {
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger.get(0).journalfortTemanavn, is(ARKIVTEMANAVN));
+        assertThat(meldinger.get(0).journalfortTemanavn).isEqualTo(ARKIVTEMANAVN);
     }
 
     @Test
@@ -230,7 +236,7 @@ public class HenvendelseBehandlingServiceImplTest {
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertNull(meldinger.get(0).journalfortTemanavn);
+        assertThat(meldinger.get(0).journalfortTemanavn).isNull();
     }
 
     @Test
@@ -247,7 +253,34 @@ public class HenvendelseBehandlingServiceImplTest {
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger.get(0).fritekst, is(not(fritekst)));
+        assertThat(meldinger.get(0).fritekst).isNotEqualTo(fritekst);
+
     }
 
+    @Test
+    public void skalPopulereValgtEnhetDersomSaksbehandlerHarFlere() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet("1664"));
+
+        String valgtEnhet = "1783";
+        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(valgtEnhet)).collect();
+
+        verify(pep).hasAccess(pepArgument.capture());
+        assertThat(pepArgument.getValue().getAttributes()).contains(
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString("1664"))
+        );
+    }
+
+    @Test
+    public void skalPopulereValgtEnhetDersomSaksbehandlerHarKunEn() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet("1664"));
+
+        String valgtEnhet = "1718";
+        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(valgtEnhet)).collect();
+
+        verify(pep).hasAccess(pepArgument.capture());
+        assertThat(pepArgument.getValue().getAttributes()).contains(
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet))
+        );
+    }
 }
