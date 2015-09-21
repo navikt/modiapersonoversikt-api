@@ -147,11 +147,15 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             pep.assertAccess(forRequest(requestList));
         }
         if (sporsmal.gjeldendeTemagruppe == OKSOS) {
-            pep.assertAccess(forRequest(
+            List<PolicyAttribute> requestList = new ArrayList<>(Arrays.asList(
                     actionId("oksos"),
                     resourceId(""),
-                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(sporsmal.brukersEnhet))));
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(sporsmal.brukersEnhet)))
+            );
+            for (String enhet : valgteEnheter) {
+                requestList.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", enhet));
+            }
+            pep.assertAccess(forRequest(requestList));
         }
 
         return meldinger;
