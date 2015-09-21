@@ -10,12 +10,14 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.AnsattEnhetUtil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
@@ -26,7 +28,7 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -127,14 +129,22 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
         }
 
+
+
         Melding sporsmal = meldinger.get(0);
         String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        Set<String> valgteEnheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
         if (sporsmal.kontorsperretEnhet != null) {
-            pep.assertAccess(forRequest(
+            List<PolicyAttribute> requestList = new ArrayList<>(Arrays.asList(
                     actionId("kontorsperre"),
                     resourceId(""),
-                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(sporsmal.kontorsperretEnhet))));
+
+            for (String enhet : valgteEnheter) {
+                requestList.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", enhet));
+            }
+
+            pep.assertAccess(forRequest(requestList));
         }
         if (sporsmal.gjeldendeTemagruppe == OKSOS) {
             pep.assertAccess(forRequest(

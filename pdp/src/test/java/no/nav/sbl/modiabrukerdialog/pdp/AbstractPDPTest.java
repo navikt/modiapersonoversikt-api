@@ -20,6 +20,7 @@ public class AbstractPDPTest {
 	protected static final String ACTION_ID_MED_BEGRUNNELSE = "lesMedBegrunnelse";
 	protected static final String FNR = "***REMOVED***";
 	protected static final String ENHET = "0313";
+	protected static final String ENHET2 = "1783";
 	protected static final String SUBJECT_ID = "Z999999";
 	protected static PolicyDecisionPoint pdp;
 

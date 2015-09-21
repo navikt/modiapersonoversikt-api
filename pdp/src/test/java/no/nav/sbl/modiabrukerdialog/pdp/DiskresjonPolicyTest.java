@@ -3,10 +3,10 @@ package no.nav.sbl.modiabrukerdialog.pdp;
 import org.jboss.security.xacml.interfaces.RequestContext;
 import org.junit.Test;
 
+import static no.nav.sbl.modiabrukerdialog.pdp.test.util.DecisionTypeAssert.assertThat;
 import static org.jboss.security.xacml.core.model.context.DecisionType.DENY;
 import static org.jboss.security.xacml.core.model.context.DecisionType.PERMIT;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_ROLE;
-import static org.junit.Assert.assertEquals;
 
 public class DiskresjonPolicyTest extends AbstractPDPTest {
 
@@ -16,7 +16,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE3")
 				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "0")
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
 	}
 
 	@Test
@@ -25,7 +25,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE3")
 				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "7")
 				.build();
-		assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE7")
 				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "7")
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE3")
 				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "6")
 				.build();
-		assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE6")
 				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "6")
 				.build();
-		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
 	}
 }
 
