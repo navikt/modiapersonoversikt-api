@@ -41,10 +41,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,6 +61,9 @@ public class HenvendelseBehandlingServiceImplTest {
     private static final List<String> IDER_I_VALGT_TRAAD = asList(ID_1, ID_2, ID_3);
     private static final String NAVBRUKERS_ENHET = "Navbrukers enhet";
     public static final String ARKIVTEMANAVN = "arkivtemanavn";
+    public static final String NAV_SELBU = "1664";
+    public static final String NAV_LEKSVIK = "1718";
+    public static final String NAV_VAERNES = "1783";
 
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
@@ -258,29 +259,58 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalPopulereValgtEnhetDersomSaksbehandlerHarFlere() throws Exception {
-        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet("1664"));
+    public void skalSendeFlereEnheterTilPepForKontorsperre() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet(NAV_SELBU));
 
-        String valgtEnhet = "1783";
-        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(valgtEnhet)).collect();
+        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(NAV_VAERNES)).collect();
 
         verify(pep).hasAccess(pepArgument.capture());
         assertThat(pepArgument.getValue().getAttributes()).contains(
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString("1664"))
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_VAERNES)),
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_SELBU))
         );
     }
 
     @Test
-    public void skalPopulereValgtEnhetDersomSaksbehandlerHarKunEn() throws Exception {
-        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet("1664"));
+    public void skalSendeEnEnheterTilPepForKontorsperre() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet(NAV_SELBU));
 
-        String valgtEnhet = "1718";
-        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(valgtEnhet)).collect();
+        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(NAV_LEKSVIK)).collect();
 
         verify(pep).hasAccess(pepArgument.capture());
         assertThat(pepArgument.getValue().getAttributes()).contains(
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet))
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_LEKSVIK))
         );
     }
+
+    @Test
+    public void skalSendeFlereEnheterTilPepForOkonomiskSosialeMeldinger() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withGjeldendeTemagruppe(OKSOS));
+
+        on(meldinger).map(henvendelseBehandlingService.okonomiskSosialhjelpTilgang(NAV_VAERNES)).collect();
+
+        verify(pep).hasAccess(pepArgument.capture());
+        assertThat(pepArgument.getValue().getAttributes()).contains(
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_VAERNES)),
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_SELBU))
+        );
+    }
+
+    @Test
+    public void skalSendeEnEnheterTilPepForOkonomiskSosialeMeldinger() throws Exception {
+        List<Melding> meldinger = Arrays.asList(new Melding().withGjeldendeTemagruppe(OKSOS));
+
+        on(meldinger).map(henvendelseBehandlingService.okonomiskSosialhjelpTilgang(NAV_LEKSVIK)).collect();
+
+        verify(pep).hasAccess(pepArgument.capture());
+        assertThat(pepArgument.getValue().getAttributes()).contains(
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_LEKSVIK))
+        );
+    }
+
+
+
+
+
+
 }

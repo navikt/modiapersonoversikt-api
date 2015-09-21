@@ -26,10 +26,7 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -152,15 +149,22 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         };
     }
 
-    private Transformer<Melding, Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
+    protected Transformer<Melding, Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
+        final Set<String> enheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
         return new Transformer<Melding, Melding>() {
             @Override
             public Melding transform(Melding melding) {
-                PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(
+                List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(
                         actionId("oksos"),
                         resourceId(""),
-                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.brukersEnhet)));
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.brukersEnhet))
+                ));
+
+                for (String enhet : enheter) {
+                    attributes.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(enhet)));
+                }
+
+                PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
 
                 if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
                     melding.fritekst = propertyResolver.getProperty("tilgang.OKSOS");
