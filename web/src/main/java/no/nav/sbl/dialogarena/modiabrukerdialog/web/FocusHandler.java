@@ -2,14 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.modia.utils.ComponentFinder;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import org.apache.commons.collections15.Closure;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.request.cycle.RequestCycle;
 

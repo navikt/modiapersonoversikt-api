@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.varsling.VarslingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.CmsSkrivestotte;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
