@@ -17,14 +17,13 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingServi
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
+import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
@@ -61,6 +60,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String LAMELL_SAKSOVERSIKT = "saksoversikt";
     public static final String LAMELL_MELDINGER = "meldinger";
+    public static final String LAMELL_VARSLING = "varsling";
     public static final String PANEL = "panel";
 
     private String fnrFromRequest;
@@ -173,6 +173,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
         lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
+        lamellFactories.add(createVarslingsLamell(fnrFromRequest));
 
         if (visUtbetalinger()) {
             lamellFactories.add(createUtbetalingLamell(fnrFromRequest));
@@ -232,6 +233,15 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
                         return new SaksoversiktLerret(markupId, fnrFromRequest);
                     }
                 };
+            }
+        });
+    }
+
+    private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {
+        return newLamellFactory(LAMELL_VARSLING, "V", true, new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id, String name) {
+                return new VarselLerret(id);
             }
         });
     }

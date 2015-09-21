@@ -59,6 +59,7 @@
         <webservice alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
         <webservice alias="domene.Brukerdialog:HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
+        <webservice alias="domene.Brukerdialog:Varsler_v1" mapToProperty="varsler.ws"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <webservice alias="Journal_v1" mapToProperty="joark.ws"/>
         <webservice alias="pensjon:PensjonSak_v1" mapToProperty="pensjon.sak.v1"/>

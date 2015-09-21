@@ -35,6 +35,7 @@ import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.FancySelect;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
+import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -223,6 +224,7 @@ public class WicketApplication extends WebApplication {
                         FeedbackLabel.JS
                 )
                 .withModules(ReactResources.REACT_KOMPONENTER)
+                .withModules(VarselLerret.RESOURCES)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }

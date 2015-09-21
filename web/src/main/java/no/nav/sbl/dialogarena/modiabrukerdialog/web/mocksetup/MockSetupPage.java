@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.varsling.VarslingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.CmsSkrivestotte;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -38,6 +39,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.varsling.VarslingEndpointConfig.VARSLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
 
@@ -111,6 +113,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("NORG", NORG_KEY),
                 new MockSetupModel("CMS Skrivestøtte", CMS_SKRIVESTOTTE_KEY),
                 new MockSetupModel("PensjonSak", PENSJONSAK_KEY),
+                new MockSetupModel("Varsler", VARSLING_KEY),
                 new MockSetupModel("CMS", CMS_KEY)
         );
     }
