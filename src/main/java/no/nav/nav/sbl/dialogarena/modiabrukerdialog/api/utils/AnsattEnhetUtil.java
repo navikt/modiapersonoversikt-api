@@ -15,7 +15,7 @@ public class AnsattEnhetUtil {
 
     public static Set<String> hentEnheterForValgtEnhet(String valgtEnhet) {
         List<String> enheter = new ArrayList<>(Arrays.asList(valgtEnhet));
-        if(NAV_VAERNES.equals(valgtEnhet)){
+        if (NAV_VAERNES.equals(valgtEnhet)) {
             enheter.add(NAV_SELBU);
             enheter.add(NAV_TYDAL);
             enheter.add(NAV_MERAAKER);
@@ -27,7 +27,7 @@ public class AnsattEnhetUtil {
 
     public static Set<String> hentEkstraEnheterForFylke(String valgtEnhet) {
         List<String> enheter = new ArrayList<>();
-        if(valgtEnhet.startsWith(PREFIX_NORD_TROENDELAG)){
+        if (valgtEnhet.startsWith(PREFIX_NORD_TROENDELAG)) {
             enheter.add(NAV_SELBU);
             enheter.add(NAV_TYDAL);
             enheter.add(NAV_MERAAKER);
