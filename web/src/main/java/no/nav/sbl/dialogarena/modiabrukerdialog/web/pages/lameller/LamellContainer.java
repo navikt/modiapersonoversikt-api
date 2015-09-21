@@ -241,7 +241,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_VARSLING, "V", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id, String name) {
-                return new VarselLerret(id);
+                return new VarselLerret(id, fnrFromRequest);
             }
         });
     }
