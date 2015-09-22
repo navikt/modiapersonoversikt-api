@@ -22,16 +22,29 @@
         <wicket.version>6.11.0</wicket.version>
         <modig.frontend.version>1.1.108</modig.frontend.version>
         <common.records.version>1.3</common.records.version>
-        <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
+        <varsling.tjeneste.version>0.0.5-SNAPSHOT</varsling.tjeneste.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
+        <modig.security.version>1.0.24</modig.security.version>
+        <collections-generic.version>4.01</collections-generic.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>varsler</artifactId>
+            <version>${varsling.tjeneste.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
             <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-ws</artifactId>
+            <version>${modig.security.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -85,6 +98,14 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
             <version>2.0.3</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
+            <version>${collections-generic.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -97,18 +118,6 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-request</artifactId>
             <version>${wicket.version}</version>
         </dependency>
 
@@ -190,25 +199,15 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-ws</artifactId>
-            <version>1.0.24-NO_RESTEASY</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
             <artifactId>modig-testcertificates</artifactId>
             <version>1.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>1.0.24-NO_RESTEASY</version>
-            <scope>test</scope>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
