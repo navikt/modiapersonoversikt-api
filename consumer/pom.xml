@@ -114,6 +114,11 @@
             <artifactId>modia-saksoversikt</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modia-varsling</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

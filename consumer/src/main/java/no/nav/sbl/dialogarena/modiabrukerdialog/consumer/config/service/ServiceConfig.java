@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import no.nav.modig.wicket.services.HealthCheckService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.VarslerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
@@ -80,11 +79,6 @@ public class ServiceConfig {
     @Bean
     public PsakService psakService(PensjonSakV1 pensjonSakV1) {
         return new PsakServiceImpl(pensjonSakV1);
-    }
-
-    @Bean
-    public VarslerService varslerService() {
-        return new VarslerServiceImpl();
     }
 
 }

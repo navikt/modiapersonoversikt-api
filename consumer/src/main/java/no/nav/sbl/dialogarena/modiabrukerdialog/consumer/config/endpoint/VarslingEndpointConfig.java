@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.varsling;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 
 import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
 import no.nav.modig.modia.ping.PingResult;
@@ -7,7 +7,8 @@ import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.VarslerMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy;
+import no.nav.sbl.dialogarena.varsel.config.VarslerMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +17,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class VarslingEndpointConfig {
@@ -28,7 +28,7 @@ public class VarslingEndpointConfig {
         final VarslerPorttype prod = createVarslingPortType(new UserSAMLOutInterceptor());
         final VarslerPorttype mock = new VarslerMock();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, VARSLING_KEY, VarslerPorttype.class);
+        return TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher(prod, mock, VARSLING_KEY, VarslerPorttype.class);
     }
 
     @Bean
