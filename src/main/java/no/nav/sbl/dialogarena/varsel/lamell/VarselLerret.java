@@ -13,7 +13,7 @@ import java.util.HashMap;
 public final class VarselLerret extends Lerret {
 
     public static final FrontendModule RESOURCES = new FrontendModule.With()
-            .scripts(new JavaScriptResourceReference(ResourceReference.class, "build/varsel-module.js"))
+//            .scripts(new JavaScriptResourceReference(ResourceReference.class, "build/varsel-module.js"))
             .less(new PackageResourceReference(ResourceReference.class, "build/varsel-module.less"))
             .done();
 

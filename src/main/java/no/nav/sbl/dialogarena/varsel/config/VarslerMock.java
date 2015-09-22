@@ -17,7 +17,7 @@ public class VarslerMock implements VarslerPorttype {
                         new WSVarsel()
                                 .withVarseltype("SMS")
                                 .withMottattidspunkt(new XMLGregorianCalendarImpl(now.minusMinutes(60).toGregorianCalendar()))
-                                .withStatuskode("OK")
+                                .withStatus("OK")
                                 .withMeldingListe(new WSMeldingListe().withMelding(
                                         lagWsMelding("SMS", "En sms melding", "12345678", "", now.minusDays(1)),
                                         lagWsMelding("EPOST", "En EPOST melding", "test@testeres.com", "", now.minusDays(1)),
@@ -26,7 +26,7 @@ public class VarslerMock implements VarslerPorttype {
                         new WSVarsel()
                                 .withVarseltype("EPOST")
                                 .withMottattidspunkt(new XMLGregorianCalendarImpl(now.minusDays(2).minusHours(1).toGregorianCalendar()))
-                                .withStatuskode("FEIL")
+                                .withStatus("FEIL")
                                 .withMeldingListe(new WSMeldingListe().withMelding(
                                         lagWsMelding("SMS", "En feilet sms", "", "Ingen telefon nummer", now.minusDays(2)),
                                         lagWsMelding("EPOST", "En EPOST sms", "", "Ingen epost adr", now.minusDays(2)),

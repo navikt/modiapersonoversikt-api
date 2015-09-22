@@ -33,7 +33,7 @@ public class VarslerServiceImpl implements VarslerService {
             DateTime mottattTidspunkt = new DateTime(
                     wsVarsel.getMottattidspunkt().toGregorianCalendar().getTime()
             );
-            String statusKode = wsVarsel.getStatuskode();
+            String statusKode = wsVarsel.getStatus();
             List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
                     .map(TIL_VARSEL_MELDING)
                     .collect();
