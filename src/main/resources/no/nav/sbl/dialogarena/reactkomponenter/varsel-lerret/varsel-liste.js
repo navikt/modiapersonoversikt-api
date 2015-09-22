@@ -11,7 +11,10 @@ class VarselListe extends React.Component {
     }
 
     render() {
-        const varselRad = this.props.varsler.map(TIL_VARSEL_RAD);
+        const varselRad = this.props.varsler.map((varsel) => {
+            return <VarselRad varsel={varsel} store={this.props.store}/>
+        });
+
         return (
             <div className="varsel-liste">
                 <div className="varsel-liste-header">
