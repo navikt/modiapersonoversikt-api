@@ -224,7 +224,6 @@ public class WicketApplication extends WebApplication {
                         FeedbackLabel.JS
                 )
                 .withModules(ReactResources.REACT_KOMPONENTER)
-                .withModules(VarselLerret.RESOURCES)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }
