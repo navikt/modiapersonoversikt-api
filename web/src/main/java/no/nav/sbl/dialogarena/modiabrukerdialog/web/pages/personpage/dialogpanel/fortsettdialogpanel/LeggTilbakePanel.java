@@ -58,11 +58,13 @@ public class LeggTilbakePanel extends Panel {
     private final WebMarkupContainer feedbackPanelSuccess;
     private final FeedbackPanel feedbackPanel;
     private final AjaxLink lukkKnapp;
+    private final String behandlingsId;
 
-    public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal) {
+    public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal, String behandlingsId) {
         super(id);
         this.oppgaveId = oppgaveId;
         this.sporsmal = sporsmal;
+        this.behandlingsId = behandlingsId;
         setOutputMarkupPlaceholderTag(true);
 
         leggTilbakeVM = new LeggTilbakeVM();
@@ -163,6 +165,7 @@ public class LeggTilbakePanel extends Panel {
                     target.add(form, feedbackPanelSuccess);
                     target.focusComponent(lukkKnapp);
                     send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
+                    henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
                 } finally {
                     timer.stop();
                 }
