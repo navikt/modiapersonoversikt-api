@@ -50,6 +50,7 @@ public class InnboksVM implements Serializable {
 
     public final void oppdaterMeldinger() {
         traader.clear();
+        nyesteMeldingerITraad.clear();
         feilmeldingKey = "";
         try {
             List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);

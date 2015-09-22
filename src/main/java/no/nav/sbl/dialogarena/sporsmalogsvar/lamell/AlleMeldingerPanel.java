@@ -122,6 +122,8 @@ public class AlleMeldingerPanel extends Panel {
                 if (!Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT.equals(event.getPayload())) {
                     target.appendJavaScript("Meldinger.focusOnSelectedElement();");
                 }
+            } else {
+                innboksVM.setValgtMelding((MeldingVM) null);
             }
             send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
             target.add(this);

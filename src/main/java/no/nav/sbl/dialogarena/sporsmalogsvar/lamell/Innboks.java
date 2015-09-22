@@ -23,12 +23,12 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 
 public class Innboks extends Lerret {
 
@@ -154,8 +154,8 @@ public class Innboks extends Lerret {
         target.add(this);
     }
 
-    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
-    public void unsetBesvartModus(AjaxRequestTarget target) {
+    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER, TRAAD_MERKET})
+    public void leggTilTarget(AjaxRequestTarget target) {
         target.add(this);
     }
 
