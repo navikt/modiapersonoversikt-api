@@ -71,6 +71,17 @@ describe('SakerListe', function () {
         expect(sakerForTema.map(elem => elem.props.erEkspandert)).to.eql([true, false, false]);
     });
 
+    it('skal ekspandere allt temagrupper da ingen prioritet temagruppe er given', function () {
+        const saker = [
+            lagSak('AAP'),
+            lagSak('BIL'),
+            lagSak('DAG')
+        ];
+        const sakerForTema = setup(saker);
+
+        expect(sakerForTema.map(elem => elem.props.erEkspandert)).to.eql([true, true, true]);
+    });
+
     const lagSak = (tema) => {
         return {temaKode: tema, temaNavn: tema}
     };
