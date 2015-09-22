@@ -20,7 +20,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.AnsattEnhetUtil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -79,54 +78,18 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             throw new OppgaveErFerdigstilt();
         }
 
-        XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
-
-        WSSendUtHenvendelseResponse wsSendUtHenvendelseResponse = sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
-                .withType(xmlHenvendelse.getHenvendelseType())
-                .withFodselsnummer(melding.fnrBruker)
-                .withAny(xmlHenvendelse));
-
-        fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak, wsSendUtHenvendelseResponse.getBehandlingsId());
-    }
-
-    @Override
-    public String opprettHenvendelse(String type, String fnr, String behandlingskjedeId) {
-        return sendUtHenvendelsePortType.opprettHenvendelse(type, fnr, behandlingskjedeId);
-    }
-
-    @Override
-    public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId) throws Exception {
-        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
-            throw new OppgaveErFerdigstilt();
-        }
-
-        XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
-
-        sendUtHenvendelsePortType.ferdigstillHenvendelse(new WSFerdigstillHenvendelseRequest()
-                .withAny(xmlHenvendelse)
-                .withBehandlingsId(behandlingsId));
-
-        fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak, behandlingsId);
-    }
-
-    @Override
-    public void avbrytHenvendelse(String behandlingsId){
-        sendUtHenvendelsePortType.avbrytHenvendelse(behandlingsId);
-    }
-
-    private XMLHenvendelse lagXMLHenvendelseOgSettEnhet(Melding melding) {
         XMLHenvendelseType type = getXMLHenvendelseTypeBasertPaaMeldingstype(melding.meldingstype);
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(melding, type);
         String enhet = isNotBlank(melding.brukersEnhet) ? melding.brukersEnhet : getEnhet(melding.fnrBruker);
         xmlHenvendelse.setBrukersEnhet(enhet);
 
-        return xmlHenvendelse;
-    }
+        WSSendUtHenvendelseResponse wsSendUtHenvendelseResponse = sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
+                .withType(type.name())
+                .withFodselsnummer(melding.fnrBruker)
+                .withAny(xmlHenvendelse));
 
-    private void fullbyrdeSendtInnHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId) throws Exception {
+        melding.id = wsSendUtHenvendelseResponse.getBehandlingsId();
         Temagruppe temagruppe = Temagruppe.valueOf(melding.temagruppe);
-        melding.id = behandlingsId;
-
         if (melding.traadId == null) {
             melding.traadId = melding.id;
         }
