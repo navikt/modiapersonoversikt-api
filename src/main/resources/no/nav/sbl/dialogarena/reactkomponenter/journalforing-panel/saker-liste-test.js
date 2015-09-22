@@ -35,7 +35,7 @@ describe('SakerListe', function () {
 
     });
 
-    it("sorterer på alfabetisk på temaNavn", function () {
+    it("skal sortere på alfabetisk på temaNavn", function () {
         const saker = [
             lagSak('AAB'),
             lagSak('AAA'),
@@ -58,7 +58,6 @@ describe('SakerListe', function () {
 
         expect(sakerForTema.map(elem => elem.props.tema)).to.eql(['tema1', 'tema2', 'BIL', 'DAG']);
     });
-
 
     it("skal ekspandere prioritete temagrupper og minimera resten", function () {
         const saker = [
