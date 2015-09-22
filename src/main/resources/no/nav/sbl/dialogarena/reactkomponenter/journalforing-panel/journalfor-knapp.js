@@ -38,7 +38,7 @@ class JournalforKnapp extends React.Component {
         } else {
             return (
                 <div>
-                    <button className="journalfor-knapp knapp-advarsel-stor" onClick={this.journalfor}>Journalfør</button>
+                    <button className="journalfor-knapp knapp-hoved-stor" onClick={this.journalfor}>Journalfør</button>
                 </div>
             );
         }
