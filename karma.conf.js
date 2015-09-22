@@ -1,3 +1,5 @@
+var istanbul = require('browserify-istanbul');
+
 module.exports = function (config) {
     config.set({
         frameworks: ['mocha', 'browserify'],
@@ -43,15 +45,14 @@ module.exports = function (config) {
             debug: true,
             transform: [
                 'babelify',
-                'browserify-istanbul'
+                istanbul({ignore: ['**/*-test.js']})
             ]
         },
 
         coverageReporter: {
             dir: './target/karma-coverage',
             reporters: [
-                { type: 'lcovonly' },
-                { type: 'html', subdir: 'report-html' }
+                { type: 'lcovonly' }
             ]
         },
         junitReporter: {
