@@ -7,10 +7,7 @@ import no.nav.sbl.dialogarena.varsel.ResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import java.util.HashMap;
 
 
 public final class VarselLerret extends Lerret {
@@ -20,11 +17,12 @@ public final class VarselLerret extends Lerret {
             .less(new PackageResourceReference(ResourceReference.class, "build/varsel-module.less"))
             .done();
 
-    public VarselLerret(String id, String fnr) {
+    public VarselLerret(String id, final String fnr) {
         super(id);
-        List<Object> s = on(asList()).collect();
 
-        add(new ReactComponentPanel("varselLerret", "VarselLerret"));
+        add(new ReactComponentPanel("varselLerret", "VarselLerret", new HashMap<String, Object>() {{
+            put("fnr", fnr);
+        }}));
     }
 
 

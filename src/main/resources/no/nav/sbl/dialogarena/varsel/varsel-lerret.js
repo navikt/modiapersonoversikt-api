@@ -1,17 +1,31 @@
 import React from 'react';
+import AsyncLoader from './async-loader';
+import FilterHeader from './filter-header';
+import VarselListe from './varsel-liste';
 
 class VarselLerret extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+
+        this.state = {
+            filtersetup: {
+                fraDato: undefined,
+                tilDato: undefined,
+                type: undefined
+            }
+        };
+        this.promise = $.get('/modiabrukerdialog/rest/varsler/' + this.props.fnr);
     }
 
     render() {
         return (
             <div className="varsel-lerret">
-                <h1>Hallo</h1>
-                <h2>Test test</h2>
+                <AsyncLoader promises={this.promise} toProp="varsler">
+                    <FilterHeader filterSetup={this.state.filtersetup}/>
+                    <VarselListe />
+                </AsyncLoader>
             </div>
-            );
+        );
     }
 }
 
