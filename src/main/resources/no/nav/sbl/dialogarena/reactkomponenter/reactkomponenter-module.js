@@ -3,7 +3,8 @@ window.ModiaJS = {
         MeldingerSok: require('./meldinger-sok/meldinger-sok-module'),
         Skrivestotte: require('./skrivestotte/skrivestotte-module'),
         JournalforingsPanel: require('./journalforing-panel/journalforing-panel-module'),
-        VelgSakPanel: require('./velg-sak-panel/velg-sak-panel-module')
+        VelgSakPanel: require('./velg-sak-panel/velg-sak-panel-module'),
+        VarselLerret: require('./varsel-lerret/varsel-lerret-module')
     },
     InitializedComponents: {},
     React: require('./nav-react')

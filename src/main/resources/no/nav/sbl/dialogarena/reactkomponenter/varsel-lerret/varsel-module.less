@@ -1,0 +1,44 @@
+.varsel-lerret {
+  .varsel-liste-header {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .varsel-liste-header, .varsel-rad-header, .varsel-rad-element {
+    padding: 1rem;
+    > span {
+      display: inline-block;
+      &.header-dato, &.header-kanal, &.innhold-kanal {
+        width: 20%;
+      }
+      &.header-type {
+        width: 60%;
+      }
+      &.innhold-melding {
+        width: 80%;
+      }
+    }
+  }
+  .varsel-rad-header {
+    background-color: #ccc;
+    width: 100%;
+
+    &.ekpandert {
+      background-color: #333;
+      color: #f1f1f1;
+    }
+  }
+  .varsel-rad-element {
+    padding-top: 2rem;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #ccc;
+    }
+  }
+
+  .innhold-kanal {
+    font-weight: 600;
+  }
+  .innhold-informasjon {
+    margin-left: 20%;
+  }
+}

@@ -27,6 +27,7 @@
     "karma-phantomjs-launcher": "git+http://stash.devillo.no/scm/npmm/karma-phantomjs-launcher.git#fe9bd9c2d7ce16622e6bf373318ad0fa5894c63c",
     "karma-remote-reporter": "^0.2.0",
     "mocha": "^2.1.0",
+    "moment": "^2.10.6",
     "object-assign": "^2.0.0",
     "react-tools": "^0.13.0",
     "sanitize-html": "^1.9.0",
