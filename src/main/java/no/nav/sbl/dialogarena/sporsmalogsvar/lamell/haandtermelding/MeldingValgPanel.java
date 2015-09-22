@@ -21,7 +21,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.Haand
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel.PANEL_TOGGLET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
-@RefreshOnEvents({PANEL_LUKKET, MELDING_VALGT})
+@RefreshOnEvents({PANEL_LUKKET, MELDING_VALGT, PANEL_TOGGLET})
 public class MeldingValgPanel extends Panel {
 
     private final MarkupContainer tilknyttetPanel;

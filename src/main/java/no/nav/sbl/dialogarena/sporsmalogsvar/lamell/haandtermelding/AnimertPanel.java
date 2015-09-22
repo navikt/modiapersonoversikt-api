@@ -68,7 +68,7 @@ public abstract class AnimertPanel extends Panel {
     public void lukkPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
-            send(getParent(), BREADTH, PANEL_LUKKET);
+            send(getPage(), BREADTH, PANEL_LUKKET);
             target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
             target.add(this);
         }
