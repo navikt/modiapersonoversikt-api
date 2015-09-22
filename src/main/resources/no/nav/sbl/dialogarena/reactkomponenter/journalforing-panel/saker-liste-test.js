@@ -47,7 +47,7 @@ describe('SakerListe', function () {
         expect(sakerForTema.map(elem => elem.props.tema)).to.eql(['AAA', 'AAAA', 'AAAC', 'AAB']);
     });
 
-    it("skal liste prioritete temagrupper først", function(){
+    it("skal liste prioritete temagrupper først", function () {
         const saker = [
             lagSak('DAG'),
             lagSak('tema1'),
@@ -57,7 +57,18 @@ describe('SakerListe', function () {
         const sakerForTema = setupMedTemagruppe(saker, 'ARBD', {ARBD: ['tema1', 'tema2']});
 
         expect(sakerForTema.map(elem => elem.props.tema)).to.eql(['tema1', 'tema2', 'BIL', 'DAG']);
-        expect(sakerForTema.map(elem => elem.props.tema)).to.not.eql(['tema1', 'tema2', 'DAG', 'BIL' ]);
+    });
+
+
+    it("skal ekspandere prioritete temagrupper og minimera resten", function () {
+        const saker = [
+            lagSak('tema1'),
+            lagSak('BIL'),
+            lagSak('DAG')
+        ];
+        const sakerForTema = setupMedTemagruppe(saker, 'ARBD', {ARBD: ['tema1']});
+
+        expect(sakerForTema.map(elem => elem.props.erEkspandert)).to.eql([true, false, false]);
     });
 
     const lagSak = (tema) => {
@@ -69,7 +80,8 @@ describe('SakerListe', function () {
         return TestUtils.scryRenderedComponentsWithType(sakerListe, SakerForTema);
     };
     const setupMedTemagruppe = (saker, temagruppe, mapping) => {
-        const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker} temagruppe={temagruppe} temagruppeTemaMapping={mapping}/>);
+        const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker} temagruppe={temagruppe}
+                                                                    temagruppeTemaMapping={mapping}/>);
         return TestUtils.scryRenderedComponentsWithType(sakerListe, SakerForTema);
     }
 });
