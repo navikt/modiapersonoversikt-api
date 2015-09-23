@@ -1,5 +1,6 @@
 import React from 'react';
-import { prettyDate} from './dato-formatering'
+import VarselRadElement from './varsel-rad-element';
+import { prettyDate} from './dato-formatering';
 
 class VarselRad extends React.Component {
     constructor(props) {
@@ -18,33 +19,30 @@ class VarselRad extends React.Component {
 
         const sendIKanal = varsel.meldingListe.map((m) => m.kanal).join(", ");
         let headerClassname = 'varsel-rad-header';
+        let pilClassname = 'ekspanderingspil';
         let meldinger = null;
 
         if (varsel.ekspandert) {
             headerClassname += ' ekspandert';
-            meldinger = varsel.meldingListe.map((melding) => {
-                return (
-                    <div className="varsel-rad-element">
-                        <span className="innhold-kanal">{melding.kanal + ':'}</span>
-                        <span className="innhold-melding">{melding.innhold}</span>
-
-                        <p className="innhold-informasjon">{melding.mottakerInformasjon}</p>
-                    </div>
-                );
-            });
+            pilClassname += ' opp';
+            meldinger = varsel.meldingListe.map((melding) => <VarselRadElement melding={melding}/>);
+        } else {
+            pilClassname += ' ned';
         }
 
 
-
         return (
-            <div className="varsel-rad">
+            <li className="varsel-rad">
                 <button className={headerClassname} onClick={this.toggleEkspandert}>
                     <span className="header-dato">{prettyDate(varsel.mottattTidspunkt)}</span>
                     <span className="header-type">{varsel.varselType}</span>
                     <span className="header-kanal">{sendIKanal}</span>
+                    <i className={pilClassname}></i>
                 </button>
-                {meldinger}
-            </div>
+                <ul className="reset-ul-styling">
+                    {meldinger}
+                </ul>
+            </li>
         );
     }
 }

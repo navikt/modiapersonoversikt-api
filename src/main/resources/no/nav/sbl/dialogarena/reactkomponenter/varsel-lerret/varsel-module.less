@@ -20,13 +20,21 @@
       }
     }
   }
+  .varsel-liste-header, .varsel-rad-header {
+    padding-right: 3rem;
+  }
+  .reset-ul-styling {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
   .varsel-rad {
     margin-bottom: 3px;
   }
   .varsel-rad-header {
     background-color: #ebebeb;
     width: 100%;
-    border:none;
+    border: none;
     text-align: left;
 
     &.ekspandert {
@@ -36,8 +44,20 @@
   }
   .varsel-rad-element {
     padding-top: 2rem;
+    font-size: 16px;
+    
     &:not(:last-of-type) {
       border-bottom: 1px solid #ccc;
+    }
+  }
+  .innhold-informasjon {
+    font-weight: 600;
+    font-style: italic;
+    &.ok {
+      color: #226aa4;
+    }
+    &.error {
+      color: #BA3A26;
     }
   }
 
@@ -46,5 +66,13 @@
   }
   .innhold-informasjon {
     margin-left: 20%;
+  }
+  .ekspanderingspil {
+    position: absolute;
+    margin-top: 4px;
+    .pil(8px, #226aa4);
+    &.opp {
+      .pil(8px, #f1f1f1);
+    }
   }
 }

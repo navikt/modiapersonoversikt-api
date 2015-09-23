@@ -19,11 +19,14 @@ class VarselListe extends React.Component {
             <div className="varsel-liste">
                 <div className="varsel-liste-header">
                     <span className="header-dato">Dato</span>
+                    <span className="vekk"> | </span>
                     <span className="header-type">Type</span>
+                    <span className="vekk"> | </span>
                     <span className="header-kanal">Sendt i kanal</span>
                 </div>
-
-                {varselRad}
+                <ul className="reset-ul-styling">
+                    {varselRad}
+                </ul>
             </div>
         );
     }
