@@ -8,16 +8,23 @@ class VarselRadElement extends React.Component {
     }
 
     getInnholdInfo(melding) {
-        console.log('melding', melding);
-        if (melding.statusKode === 'OK') {
-            if (melding.mottakerInformasjon) {
+        if (melding.statusKode === 'OK' && melding.kanal === 'NAV.NO') {
+            if (melding.utsendingsTidspunkt) {
+                return <p className="innhold-informasjon ok">Sendt til Ditt NAV</p>;
+            } else {
+                return <p className="innhold-informasjon error">Har ikke mottatt kvittering</p>;
+            }
+        } else if (melding.statusKode === 'OK' && melding.kanal !== 'NAV.NO') {
+            if (melding.utsendingsTidspunkt) {
                 const prefix = melding.kanal === 'SMS' ? 'Tlf.: ' : 'Epost: ';
                 return <p className="innhold-informasjon ok">{prefix + melding.mottakerInformasjon}</p>;
             } else {
-                return <p className="innhold-informasjon error">Mangler kontaktinformasjon</p>;
+                return <p className="innhold-informasjon error">Har ikke mottatt kvittering</p>;
             }
+        } else if (melding.statusKode === '314') {
+            return <p className="innhold-informasjon error">Mangler kontaktinformasjon</p>;
         } else if (melding.statusKode === '500') {
-            return <p className="innhold-informasjon error">Det skjedde en intern feil</p>;
+            return <p className="innhold-informasjon error">Feil under generering av varsel</p>;
         } else {
             return <p className="innhold-informasjon error">Det skjedde en feil ved utsending av varslet</p>;
         }
