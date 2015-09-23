@@ -101,7 +101,7 @@
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
-        <varsling.tjeneste.version>0.0.5-SNAPSHOT</varsling.tjeneste.version>
+        <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>3.7-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>4.8-SNAPSHOT</sporsmalogsvar.version>
