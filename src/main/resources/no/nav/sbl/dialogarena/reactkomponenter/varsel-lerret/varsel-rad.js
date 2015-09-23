@@ -33,11 +33,13 @@ class VarselRad extends React.Component {
 
         return (
             <li className="varsel-rad">
-                <button className={headerClassname} onClick={this.toggleEkspandert}>
+                <button className={headerClassname} onClick={this.toggleEkspandert} aria-expanded={varsel.ekspandert} >
                     <span className="header-dato">{prettyDate(varsel.mottattTidspunkt)}</span>
+                    <span className="vekk"> | </span>
                     <span className="header-type">{varsel.varselType}</span>
+                    <span className="vekk"> | </span>
                     <span className="header-kanal">{sendIKanal}</span>
-                    <i className={pilClassname}></i>
+                    <i className={pilClassname} aria-hidden="true" />
                 </button>
                 <ul className="reset-ul-styling">
                     {meldinger}

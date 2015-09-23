@@ -1,4 +1,5 @@
 import Store from './../utils/store'
+import { sortBy } from 'lodash';
 
 class VarselStore extends Store {
     constructor(fnr) {
@@ -14,11 +15,14 @@ class VarselStore extends Store {
         };
 
         this.state.promise.done((varsler) => {
-            this.state.varsler = varsler.map((varsel, idx) => {
-                varsel.ekspandert = false;
-                varsel.idx = idx;
-                return varsel;
-            });
+            this.state.varsler = sortBy(varsler, 'mottattTidspunkt')
+                .reverse()
+                .map((varsel, idx) => {
+                    varsel.ekspandert = false;
+                    varsel.idx = idx;
+                    return varsel;
+                });
+
             this.fireUpdate();
         })
     }

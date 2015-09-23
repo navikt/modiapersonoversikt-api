@@ -36,8 +36,10 @@ class VarselRadElement extends React.Component {
 
         return (
             <li className="varsel-rad-element">
-                <span className="innhold-kanal">{melding.kanal + ': '}</span>
-                <span className="innhold-melding">{melding.innhold}</span>
+                <p>
+                    <span className="innhold-kanal">{melding.kanal + ': '}</span>
+                    <span className="innhold-melding">{melding.innhold}</span>
+                </p>
                 {innholdInfo}
             </li>
         );
