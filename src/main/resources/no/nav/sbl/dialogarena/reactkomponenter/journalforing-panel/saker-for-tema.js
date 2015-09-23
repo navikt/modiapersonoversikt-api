@@ -30,16 +30,17 @@ class SakerForTema extends React.Component {
 
                             <div className="ekspanderingspil opp"></div>
                         </div>
-
-                        <div className="info-bar">
-                            <span className="text-cell">SAKSID</span>
-                            <span className="vekk"> | </span>
-                            <span className="text-cell text-align-right">OPPRETTET</span>
-                            <span className="vekk"> | </span>
-                            <span className="text-cell">FAGSYSTEM</span>
-                        </div>
                     </button>
                     <ul className="list-saker">
+                        <li>
+                            <div className="info-bar">
+                                <span className="text-cell text-transform-uppercase">saksid</span>
+                                <span className="vekk"> | </span>
+                                <span className="text-cell text-align-right text-transform-uppercase">opprettet</span>
+                                <span className="vekk"> | </span>
+                                <span className="text-cell text-transform-uppercase">fagsystem</span>
+                            </div>
+                        </li>
                         {this.props.saker}
                     </ul>
                 </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { chain, mapValues, contains, partition, flatten } from 'lodash';
-
 import SakerForTema from './saker-for-tema';
 
 class SakerListe extends React.Component {
@@ -62,6 +61,5 @@ function grupperPaaTemakodeOgSorter(saker) {
         .sortBy(group => group[0].temaNavn)
         .value();
 }
-
 
 export default SakerListe;
