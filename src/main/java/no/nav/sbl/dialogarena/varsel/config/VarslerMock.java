@@ -19,18 +19,18 @@ public class VarslerMock implements VarslerPorttype {
                                 .withMottattidspunkt(new XMLGregorianCalendarImpl(now.minusMinutes(60).toGregorianCalendar()))
                                 .withStatus("OK")
                                 .withMeldingListe(new WSMeldingListe().withMelding(
-                                        lagWsMelding("SMS", "En sms melding", "12345678", "", now.minusDays(1)),
-                                        lagWsMelding("EPOST", "En EPOST melding", "test@testeres.com", "", now.minusDays(1)),
-                                        lagWsMelding("NAV.NO", "En NAVNO melding", "", "", now.minusDays(1))
+                                        lagWsMelding("SMS", "En sms melding", "12345678", "", "OK", now.minusDays(1)),
+                                        lagWsMelding("EPOST", "En EPOST melding", "test@testeres.com", "", "OK", now.minusDays(1)),
+                                        lagWsMelding("NAV.NO", "En NAVNO melding", "", "", "OK", now.minusDays(1))
                                 )),
                         new WSVarsel()
                                 .withVarseltype("EPOST")
                                 .withMottattidspunkt(new XMLGregorianCalendarImpl(now.minusDays(2).minusHours(1).toGregorianCalendar()))
                                 .withStatus("FEIL")
                                 .withMeldingListe(new WSMeldingListe().withMelding(
-                                        lagWsMelding("SMS", "En feilet sms", "", "Ingen telefon nummer", now.minusDays(2)),
-                                        lagWsMelding("EPOST", "En EPOST sms", "", "Ingen epost adr", now.minusDays(2)),
-                                        lagWsMelding("NAV.NO", "OK", "", "", now.minusDays(2))
+                                        lagWsMelding("SMS", "En feilet sms", "", "Ingen telefon nummer", "ERROR", now.minusDays(2)),
+                                        lagWsMelding("EPOST", "En EPOST sms", "", "Ingen epost adr", "ERROR", now.minusDays(2)),
+                                        lagWsMelding("NAV.NO", "OK", "", "", "OK", now.minusDays(2))
                                 ))));
     }
 
@@ -39,7 +39,7 @@ public class VarslerMock implements VarslerPorttype {
 
     }
 
-    private static WSMelding lagWsMelding(String kanal, String innhold, String informasjon, String feilbeskrivelse, DateTime date) {
+    private static WSMelding lagWsMelding(String kanal, String innhold, String informasjon, String feilbeskrivelse, String statusKode, DateTime date) {
         if (date == null) {
             date = DateTime.now();
         }
@@ -48,6 +48,7 @@ public class VarslerMock implements VarslerPorttype {
                 .withInnhold(innhold)
                 .withMottakerinformasjon(informasjon)
                 .withFeilbeskrivelse(feilbeskrivelse)
-                .withUtsendingstidspunkt(new XMLGregorianCalendarImpl(date.toGregorianCalendar()));
+                .withUtsendingstidspunkt(new XMLGregorianCalendarImpl(date.toGregorianCalendar()))
+                .withStatuskode(statusKode);
     }
 }

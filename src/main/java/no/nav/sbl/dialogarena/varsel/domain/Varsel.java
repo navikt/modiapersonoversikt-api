@@ -22,13 +22,15 @@ public class Varsel {
         public final String innhold;
         public final String mottakerInformasjon;
         public final DateTime utsendingsTidspunkt;
+        public final String statusKode;
         public final String feilbeskrivelse;
 
-        public VarselMelding(String kanal, String innhold, String mottakerInformasjon, DateTime utsendingsTidspunkt, String feilbeskrivelse) {
+        public VarselMelding(String kanal, String innhold, String mottakerInformasjon, DateTime utsendingsTidspunkt, String statusKode, String feilbeskrivelse) {
             this.kanal = kanal;
             this.innhold = innhold;
             this.mottakerInformasjon = mottakerInformasjon;
             this.utsendingsTidspunkt = utsendingsTidspunkt;
+            this.statusKode = statusKode;
             this.feilbeskrivelse = feilbeskrivelse;
         }
     }

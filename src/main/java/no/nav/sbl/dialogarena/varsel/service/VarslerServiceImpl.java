@@ -48,12 +48,13 @@ public class VarslerServiceImpl implements VarslerService {
             String kanal = wsMelding.getKanal();
             String innhold = wsMelding.getInnhold();
             String mottakerInformasjon = wsMelding.getMottakerinformasjon();
+            String statusKode = wsMelding.getStatuskode();
             DateTime utsendingsTidpunkt = new DateTime(
                     wsMelding.getUtsendingstidspunkt().toGregorianCalendar().getTime()
             );
             String feilbeskrivelse = wsMelding.getFeilbeskrivelse();
 
-            return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, feilbeskrivelse);
+            return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, statusKode, feilbeskrivelse);
         }
     };
 }
