@@ -22,7 +22,7 @@
         <wicket.version>6.11.0</wicket.version>
         <modig.frontend.version>1.1.108</modig.frontend.version>
         <common.records.version>1.3</common.records.version>
-        <varsling.tjeneste.version>0.0.5-SNAPSHOT</varsling.tjeneste.version>
+        <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <modig.security.version>1.0.24</modig.security.version>
         <collections-generic.version>4.01</collections-generic.version>

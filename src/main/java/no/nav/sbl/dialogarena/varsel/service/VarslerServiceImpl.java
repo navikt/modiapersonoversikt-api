@@ -33,12 +33,12 @@ public class VarslerServiceImpl implements VarslerService {
             DateTime mottattTidspunkt = new DateTime(
                     wsVarsel.getMottattidspunkt().toGregorianCalendar().getTime()
             );
-            String statusKode = wsVarsel.getStatus();
+            String status = wsVarsel.getStatus();
             List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
                     .map(TIL_VARSEL_MELDING)
                     .collect();
 
-            return new Varsel(varselType, mottattTidspunkt, statusKode, meldingListe);
+            return new Varsel(varselType, mottattTidspunkt, status, meldingListe);
         }
     };
 
@@ -53,8 +53,10 @@ public class VarslerServiceImpl implements VarslerService {
                     wsMelding.getUtsendingstidspunkt().toGregorianCalendar().getTime()
             );
             String feilbeskrivelse = wsMelding.getFeilbeskrivelse();
+            String epostemne = wsMelding.getEpostemne();
+            String url = wsMelding.getUrl();
 
-            return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, statusKode, feilbeskrivelse);
+            return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, statusKode, feilbeskrivelse, epostemne, url);
         }
     };
 }
