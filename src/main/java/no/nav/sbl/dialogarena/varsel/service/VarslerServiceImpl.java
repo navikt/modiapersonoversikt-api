@@ -8,9 +8,11 @@ import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.optional;
 
 public class VarslerServiceImpl implements VarslerService {
 
@@ -30,9 +32,7 @@ public class VarslerServiceImpl implements VarslerService {
         @Override
         public Varsel transform(WSVarsel wsVarsel) {
             String varselType = wsVarsel.getVarseltype();
-            DateTime mottattTidspunkt = new DateTime(
-                    wsVarsel.getMottattidspunkt().toGregorianCalendar().getTime()
-            );
+            DateTime mottattTidspunkt = optional(wsVarsel.getMottattidspunkt()).map(TIL_DATETIME).getOrElse(null);
             String status = wsVarsel.getStatus();
             List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
                     .map(TIL_VARSEL_MELDING)
@@ -49,14 +49,19 @@ public class VarslerServiceImpl implements VarslerService {
             String innhold = wsMelding.getInnhold();
             String mottakerInformasjon = wsMelding.getMottakerinformasjon();
             String statusKode = wsMelding.getStatuskode();
-            DateTime utsendingsTidpunkt = new DateTime(
-                    wsMelding.getUtsendingstidspunkt().toGregorianCalendar().getTime()
-            );
+            DateTime utsendingsTidpunkt = optional(wsMelding.getUtsendingstidspunkt()).map(TIL_DATETIME).getOrElse(null);
             String feilbeskrivelse = wsMelding.getFeilbeskrivelse();
             String epostemne = wsMelding.getEpostemne();
             String url = wsMelding.getUrl();
 
             return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, statusKode, feilbeskrivelse, epostemne, url);
+        }
+    };
+
+    private static final Transformer<XMLGregorianCalendar, DateTime> TIL_DATETIME = new Transformer<XMLGregorianCalendar, DateTime>() {
+        @Override
+        public DateTime transform(XMLGregorianCalendar xmlGregorianCalendar) {
+            return new DateTime(xmlGregorianCalendar.toGregorianCalendar().getTime());
         }
     };
 }
