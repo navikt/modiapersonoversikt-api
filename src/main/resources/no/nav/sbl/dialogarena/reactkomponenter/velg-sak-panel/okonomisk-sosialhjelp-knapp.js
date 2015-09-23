@@ -49,7 +49,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
         }
         return (
             <div className="saker-tema">
-                <button className="sosialhjelp-knapp" onClick={this.toggleEkspandering}>
+                <button className="sosialhjelp-knapp" onClick={this.toggleEkspandering} aria-expanded={this.state.ekspandert}>
                     <div className="tema-bar">
                         <h3 className="tema-overskrift">Økonomisk sosialhjelp</h3>
 
