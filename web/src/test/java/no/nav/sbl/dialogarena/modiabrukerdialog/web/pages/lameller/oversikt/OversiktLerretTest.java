@@ -5,13 +5,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.*;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
-import no.nav.sbl.dialogarena.varsel.config.VarslerMock;
-import no.nav.sbl.dialogarena.varsel.config.VarslingContext;
-import no.nav.sbl.dialogarena.varsel.service.VarslerService;
+import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -36,7 +33,7 @@ public class OversiktLerretTest extends WicketPageTest {
                 .should().containComponent(withId("sykepenger").and(ofType(SykepengerWidget.class)))
                 .should().containComponent(withId("meldinger").and(ofType(MeldingerWidget.class)))
                 .should().containComponent(withId("saksoversikt").and(ofType(SaksoversiktWidget.class)))
-                .should().containComponent(withId("varsling-lenke").and(ofType(OversiktLerret.VarslerAjaxLink.class)));
+                .should().containComponent(withId("varsling-lenke").and(ofType(VarslerOversiktLink.class)));
     }
 
 }
