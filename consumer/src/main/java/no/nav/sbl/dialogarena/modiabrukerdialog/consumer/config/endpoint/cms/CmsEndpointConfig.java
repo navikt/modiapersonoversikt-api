@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -43,6 +44,7 @@ public class CmsEndpointConfig {
     private static final Logger log = getLogger(CmsEndpointConfig.class);
 
     @Bean
+    @Primary
     public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
         CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
         cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
