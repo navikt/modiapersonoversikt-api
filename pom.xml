@@ -13,7 +13,7 @@
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>4.8-SNAPSHOT</version>
+    <version>4.8</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -545,7 +545,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/sporsmalogsvar.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/sporsmalogsvar/</url>
-        <tag>HEAD</tag>
+        <tag>sporsmal-og-svar-4.8</tag>
     </scm>
 
     <reporting>
