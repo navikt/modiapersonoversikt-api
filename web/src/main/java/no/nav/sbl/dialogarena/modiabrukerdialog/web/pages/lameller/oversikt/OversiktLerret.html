@@ -1,7 +1,11 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div>
-        <a wicket:id="varsling-lenke" href="javascript:void(0)" class="varsel-link">Gå til varsling</a>
+        <a wicket:id="varsling-lenke" href="javascript:void(0)" class="varsel-link">
+            <span>
+                <wicket:container wicket:id="varsling-tekst"/>
+            </span>
+        </a>
     </div>
 
     <div class="kolonne">
