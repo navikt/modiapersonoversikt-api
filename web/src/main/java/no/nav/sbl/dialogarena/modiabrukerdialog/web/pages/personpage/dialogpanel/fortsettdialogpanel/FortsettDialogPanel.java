@@ -74,6 +74,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
+    private String behandlingsId;
 
     public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
@@ -84,11 +85,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
+        opprettHenvendelse();
 
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
-        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal);
+        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
         kvittering = new KvitteringsPanel("kvittering");
 
         visTraadContainer.setOutputMarkupPlaceholderTag(true);
@@ -129,6 +131,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     target.focusComponent(leggTilbakePanel.hentForsteFokusKomponent());
                 } else {
                     send(getPage(), BREADTH, SVAR_AVBRUTT);
+                    henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
                 }
             }
         };
@@ -182,6 +185,14 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         animertVisningToggle(target, leggTilbakePanel);
         target.add(this);
         target.focusComponent(leggTilbakeKnapp);
+    }
+
+    private void opprettHenvendelse() {
+        String type = SVAR_SKRIFTLIG.toString();
+        String fnr = grunnInfo.bruker.fnr;
+        String behandlingskjedeId = sporsmal.traadId;
+
+        behandlingsId = henvendelseUtsendingService.opprettHenvendelse(type, fnr, behandlingskjedeId);
     }
 
     private class FortsettDialogForm extends Form<HenvendelseVM> {
@@ -271,7 +282,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 sak = optional(henvendelseVM.valgtSak);
             }
 
-            henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId, sak);
+            henvendelseUtsendingService.ferdigstillHenvendelse(melding, oppgaveId, sak, behandlingsId);
         }
 
         private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {
