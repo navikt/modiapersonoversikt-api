@@ -4,10 +4,7 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -20,7 +17,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.Model;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,13 +31,9 @@ import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OVRG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_TELEFON;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.TestUtils.createMockSaker;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -67,24 +59,20 @@ public class NyDialogPanelTest extends WicketPageTest {
     protected HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private SakerService sakerService;
+
     @Inject
     private CmsContentRetriever cmsContentRetriever;
 
     @InjectMocks
     private NyDialogPanel testNyDialogPanel;
 
-    private Saker saker;
     private GrunnInfo grunnInfo;
 
     @Before
     public void setUp() {
-        saker = createMockSaker();
         grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", ""), new GrunnInfo.Saksbehandler("", "", ""));
         testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
 
-        when(sakerService.hentSaker(anyString())).thenReturn(saker);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(false);
         initMocks(this);
@@ -139,58 +127,6 @@ public class NyDialogPanelTest extends WicketPageTest {
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void senderOgJournalforerSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws Exception {
-        reset(henvendelseUtsendingService);
-
-        settISporsmalsModus();
-
-        Sak sak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
-        testNyDialogPanel.getModelObject().valgtSak = sak;
-        testNyDialogPanel.get("nydialogform:journalforing:sak-validering").setDefaultModel(Model.of("OK"));
-
-
-        wicket.goToPageWith(testNyDialogPanel)
-                .inForm(withId("nydialogform"))
-                .select("velgModus", 1)
-                .write("tekstfelt:text", FRITEKST)
-                .submitWithAjaxButton(withId("send"));
-
-        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), sakArgumentCaptor.capture());
-
-        Melding melding = meldingArgumentCaptor.getValue();
-        assertThat(melding.kanal, is(TEKST.name()));
-        assertThat(melding.meldingstype, is(SPORSMAL_MODIA_UTGAAENDE));
-        assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
-        assertThat(melding.fnrBruker, is(FNR));
-        assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
-        assertThat(melding.temagruppe, is(OVRG.name()));
-        assertThat(melding.fritekst, is(FRITEKST));
-        assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
-
-        Sak sendtSak = sakArgumentCaptor.getValue().get();
-        assertThat(sendtSak, is(sak));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void girFeilmeldingDersomManSenderSporsmalUtenValgtJournalforingssak() throws Exception {
-        reset(henvendelseUtsendingService);
-
-        settISporsmalsModus();
-
-        wicket.goToPageWith(testNyDialogPanel)
-                .inForm(withId("nydialogform"))
-                .select("velgModus", 1)
-                .write("tekstfelt:text", FRITEKST)
-                .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsVisible().withId("nydialogform"))
-                .should().containComponent(thatIsInvisible().ofType(KvitteringsPanel.class));
-
-        verify(henvendelseUtsendingService, never()).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
-    }
 
     @Test
     public void viserDisabledCheckedBrukerKanSvareDersomISporsmalsmodus() {
@@ -214,19 +150,6 @@ public class NyDialogPanelTest extends WicketPageTest {
                 .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsInvisible().withId("nydialogform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void garTilKvitteringssideOgsaaDersomJournalforingKasterException() throws Exception {
-        doThrow(new JournalforingFeilet()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
-        wicket.goToPageWith(testNyDialogPanel)
-                .inForm(withId("nydialogform"))
-                .write("tekstfelt:text", "dette er en fritekst")
-                .select("kanal", 0)
-                .select("temagruppe", 1)
-                .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsVisible().and(ofType(KvitteringsPanel.class)));
     }
 
     @Test

@@ -21,9 +21,15 @@ public class JournalforingController {
     private SakerService sakerService;
 
     @GET
-    @Path("/saker")
-    public List<Sak> hentSaker(@PathParam("fnr") String fnr) {
-        return sakerService.hentRelevanteSaker(fnr);
+    @Path("/saker/sammensatte")
+    public List<Sak> hentSammensatteSaker(@PathParam("fnr") String fnr) {
+        return sakerService.hentSammensatteSaker(fnr);
+    }
+
+    @GET
+    @Path("/saker/pensjon")
+    public List<Sak> hentPensjonSaker(@PathParam("fnr") String fnr) {
+        return sakerService.hentPensjonSaker(fnr);
     }
 
     @POST
