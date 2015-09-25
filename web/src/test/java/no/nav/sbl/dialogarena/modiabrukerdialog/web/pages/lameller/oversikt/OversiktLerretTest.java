@@ -2,12 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksoversiktMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SporsmalOgSvarMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.UtbetalingerMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.*;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
+import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +20,8 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         SykepengerWidgetMockContext.class,
         UtbetalingerMockContext.class,
         SaksoversiktMockContext.class,
-        SporsmalOgSvarMockContext.class
+        SporsmalOgSvarMockContext.class,
+        VarslingMockContext.class
 })
 public class OversiktLerretTest extends WicketPageTest {
 
@@ -33,7 +32,8 @@ public class OversiktLerretTest extends WicketPageTest {
                 .should().containComponent(withId("lenker").and(ofType(LenkeWidget.class)))
                 .should().containComponent(withId("sykepenger").and(ofType(SykepengerWidget.class)))
                 .should().containComponent(withId("meldinger").and(ofType(MeldingerWidget.class)))
-                .should().containComponent(withId("saksoversikt").and(ofType(SaksoversiktWidget.class)));
+                .should().containComponent(withId("saksoversikt").and(ofType(SaksoversiktWidget.class)))
+                .should().containComponent(withId("varsling-lenke").and(ofType(VarslerOversiktLink.class)));
     }
 
 }

@@ -24,7 +24,8 @@ import static org.mockito.Mockito.when;
         SporsmalOgSvarMockContext.class,
         SaksoversiktMockContext.class,
         ConsumerServicesMockContext.class,
-        JacksonMockContext.class
+        JacksonMockContext.class,
+        VarslingMockContext.class
 })
 public class PersonPageMockContext {
 
