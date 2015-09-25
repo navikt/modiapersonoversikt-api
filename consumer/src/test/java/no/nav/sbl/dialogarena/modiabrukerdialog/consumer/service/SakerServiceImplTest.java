@@ -41,11 +41,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -111,41 +113,41 @@ public class SakerServiceImplTest {
 
     @Test
     public void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        /*sakerListe.add(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
+        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
+                createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
 
-        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
+        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        Saker saker = sakerService.hentSaker(FNR);
+        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
 
-        assertThat(saker.getSakerListeGenerelle(), not(containsTema(TEMAKODE_OPPFOLGING)));*/
+        assertThat(saker.size(), is(1));
+        assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test
     public void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-       /* String oppfolgingssakId = "4";
-        sakerListe.add(createWSGenerellSak(oppfolgingssakId, "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
+                createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
 
-        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
+        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        Saker saker = sakerService.hentSaker(FNR);
+        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
 
-        assertThat(saker.getSakerListeGenerelle(), containsTema(TEMAKODE_OPPFOLGING));
-        assertThat(hentSakerForTema(saker.getSakerListeGenerelle(), TEMAKODE_OPPFOLGING).saksliste.get(0).saksId.get(), is(oppfolgingssakId));*/
+        assertThat(saker.size(), is(1));
+        assertThat(saker.get(0).sakstype, is(SAKSTYPE_GENERELL));
     }
 
     @Test
     public void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        /*String oppfolgingssakGenerellId = "4";
-        String oppfolgingssakFagsakId = "5";
-        sakerListe.add(createWSGenerellSak(oppfolgingssakGenerellId, "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
-        sakerListe.add(createWSGenerellSak(oppfolgingssakFagsakId, "55", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
+        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
+                createWSGenerellSak("5", "55", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
 
-        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
+        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        Saker saker = sakerService.hentSammensatteSaker(FNR);
+        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
 
-        assertThat(saker.getSakerListeGenerelle(), not(containsTema(TEMAKODE_OPPFOLGING)));
-        assertThat(saker.getSakerListeFagsak(), containsTema(TEMAKODE_OPPFOLGING));*/
+        assertThat(saker.size(), is(1));
+        assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test
@@ -161,7 +163,7 @@ public class SakerServiceImplTest {
                         .withSakstypeKode(new Sakstypekode().withKode("ARBEID"))
         ));
 
-        List<Sak> saker = sakerService.hentSammensatteSaker(FNR);
+        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
 
       /*  assertThat(saker.getSakerListeGenerelle(), not(containsTema(TEMAKODE_OPPFOLGING)));
         assertThat(saker.getSakerListeFagsak(), containsTema(TEMAKODE_OPPFOLGING));
