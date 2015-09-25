@@ -17,7 +17,7 @@ public class VarslerMock implements VarslerPorttype {
                 new WSVarsel()
                     .withVarseltype("SPORSMAL")
                     .withMottattidspunkt(new XMLGregorianCalendarImpl(now.minusMinutes(60).toGregorianCalendar()))
-                    .withStatus("OK")
+                    .withStatus("Ferdig")
                     .withMeldingListe(new WSMeldingListe().withMelding(
                         lagWsMelding("SMS", "En sms melding", "12345678", "", "OK", now.minusDays(1), "", ""),
                         lagWsMelding("EPOST", "En EPOST melding", "test@testeres.com", "", "OK", now.minusDays(1), "epostemne", ""),
@@ -26,7 +26,7 @@ public class VarslerMock implements VarslerPorttype {
                 new WSVarsel()
                     .withVarseltype("SVAR")
                     .withMottattidspunkt(new XMLGregorianCalendarImpl(now.minusDays(2).minusHours(1).toGregorianCalendar()))
-                    .withStatus("FEIL")
+                    .withStatus("Feilet")
                     .withMeldingListe(new WSMeldingListe().withMelding(
                         lagWsMelding("SMS", "En feilet sms", "", "Ingen telefon nummer", "ERROR", now.minusDays(2), "", ""),
                         lagWsMelding("EPOST", "En EPOST sms", "", "Ingen epost adr", "ERROR", now.minusDays(2), "epostemne", ""),
@@ -35,10 +35,10 @@ public class VarslerMock implements VarslerPorttype {
                 new WSVarsel()
                     .withVarseltype("MOTE")
                     .withMottattidspunkt(new XMLGregorianCalendarImpl(now.minusDays(2).minusHours(1).toGregorianCalendar()))
-                    .withStatus("OK")
+                    .withStatus("Ferdig")
                     .withMeldingListe(new WSMeldingListe().withMelding(
                         lagWsMelding("SMS", "En sms melding", "12345678", "", "OK", now.minusDays(1), "", ""),
-                        lagWsMelding("EPOST", "En EPOST melding", "test@testeres.com", "", "OK", now.minusDays(1), "epostemne", ""),
+                        lagWsMelding("EPOST", "En EPOST melding", "test@testeres.com", "", "500", now.minusDays(1), "epostemne", ""),
                         lagWsMelding("NAV.NO", "En NAVNO melding", "", "", "OK", now.minusDays(1), "", "url")
                     ))));
     }

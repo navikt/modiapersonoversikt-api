@@ -13,6 +13,8 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VARSLER_MED_STATUS_FERDIG;
+import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.VARSELMELDINGER_MED_KVITTERING_OK;
 
 public class VarslerServiceImpl implements VarslerService {
 
@@ -22,11 +24,10 @@ public class VarslerServiceImpl implements VarslerService {
     @Override
     public List<Varsel> hentAlleVarsler(String fnr) {
         WSHentVarslerResponse response = ws.hentVarsler(
-                new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
+            new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
         );
-        return on(response.getVarselListe().getVarsel()).map(TIL_VARSEL).collect();
+        return on(response.getVarselListe().getVarsel()).map(TIL_VARSEL).filter(VARSLER_MED_STATUS_FERDIG).collect();
     }
-
 
     private static Transformer<WSVarsel, Varsel> TIL_VARSEL = new Transformer<WSVarsel, Varsel>() {
         @Override
@@ -35,8 +36,9 @@ public class VarslerServiceImpl implements VarslerService {
             DateTime mottattTidspunkt = optional(wsVarsel.getMottattidspunkt()).map(TIL_DATETIME).getOrElse(null);
             String status = wsVarsel.getStatus();
             List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
-                    .map(TIL_VARSEL_MELDING)
-                    .collect();
+                .map(TIL_VARSEL_MELDING)
+                .filter(VARSELMELDINGER_MED_KVITTERING_OK)
+                .collect();
 
             return new Varsel(varselType, mottattTidspunkt, status, meldingListe);
         }
