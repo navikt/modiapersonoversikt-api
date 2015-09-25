@@ -32,19 +32,18 @@ public class VarslingContext {
     }
 
     @Bean(name = "varsling-cms-integrasjon")
-    public CmsContentRetriever varslingCmsContentRetriver() throws URISyntaxException {
+    public CmsContentRetriever varslingCmsContentRetriver(ContentRetriever contentRetriever) throws URISyntaxException {
         CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
         cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
-        cmsContentRetriever.setTeksterRetriever(siteContentRetriever());
+        cmsContentRetriever.setTeksterRetriever(siteContentRetriever(contentRetriever));
         return cmsContentRetriever;
     }
 
-    private ValueRetriever siteContentRetriever() throws URISyntaxException {
+    private ValueRetriever siteContentRetriever(ContentRetriever contentRetriever) throws URISyntaxException {
         Map<String, URI> uris = new HashMap<>();
         uris.put(DEFAULT_LOCALE,
                 new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE)
         );
-        ContentRetriever contentRetriever = new HttpContentRetriever();
 
         return new ValuesFromContentWithResourceBundleFallback(
                 INNHOLDSTEKSTER_NB_NO_LOCAL,
