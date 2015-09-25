@@ -66,6 +66,7 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference HENTPERSON = new PackageResourceReference(BasePage.class, "less/komponenter/hentperson.less");
     public static final PackageResourceReference KJERNEINFO = new PackageResourceReference(Kjerneinfo.class, "kjerneinfo.less");
     public static final PackageResourceReference OVERSIKT = new PackageResourceReference(BasePage.class, "less/komponenter/oversikt.less");
+    public static final PackageResourceReference VARSLING = new PackageResourceReference(BasePage.class, "less/komponenter/varsling.less");
     public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(SykmeldingsperiodePanel.class, "sykepenger_foreldrepenger.less");
 
     public static final FrontendModule SCROLL = new FrontendModule.With()
