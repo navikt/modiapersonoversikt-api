@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMockSaker;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettMeldingEksempel;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -54,13 +53,6 @@ public class ServiceTestContext {
     @Bean
     public GsakService gsakService() {
         return mock(GsakService.class);
-    }
-
-    @Bean
-    public SakerService sakerService() {
-        SakerService sakerService = mock(SakerService.class);
-        when(sakerService.hentSaker(anyString())).thenReturn(createMockSaker());
-        return sakerService;
     }
 
     @Bean
