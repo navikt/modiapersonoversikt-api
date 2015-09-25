@@ -170,4 +170,12 @@
            overflowToDisk="false"
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="varslingCache" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="180"
+           timeToLiveSeconds="180"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
 </ehcache>
