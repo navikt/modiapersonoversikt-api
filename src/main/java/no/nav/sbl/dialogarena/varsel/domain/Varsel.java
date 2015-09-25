@@ -28,6 +28,12 @@ public class Varsel {
             return varsel.status;
         }
     };
+    public static final Transformer<Varsel, List<VarselMelding>> MELDINGLISTE = new Transformer<Varsel, List<VarselMelding>>() {
+        @Override
+        public List<VarselMelding> transform(Varsel varsel) {
+            return varsel.meldingListe;
+        }
+    };
 
     public static class VarselMelding {
         public final String kanal;

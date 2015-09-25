@@ -28,7 +28,11 @@ public class VarslerServiceImpl implements VarslerService {
         WSHentVarslerResponse response = ws.hentVarsler(
                 new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
         );
-        return on(response.getVarselListe().getVarsel()).map(TIL_VARSEL).filter(where(STATUS, equalTo(STATUS_FERDIG))).collect();
+        return on(response.getVarselListe().getVarsel())
+                .map(TIL_VARSEL)
+                .filter(where(STATUS, equalTo(STATUS_FERDIG)))
+                .filter(where(MELDINGLISTE, not(empty())))
+                .collect();
     }
 
     private static Transformer<WSVarsel, Varsel> TIL_VARSEL = new Transformer<WSVarsel, Varsel>() {
