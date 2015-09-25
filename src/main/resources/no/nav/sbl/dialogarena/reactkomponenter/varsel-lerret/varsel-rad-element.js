@@ -8,13 +8,11 @@ class VarselRadElement extends React.Component {
     }
 
     getInnholdInfo(melding) {
+        const resources = this.props.store.getResources();
+
         if (melding.statusKode === 'OK' && melding.utsendingsTidspunkt) {
-            if (melding.kanal === 'NAV.NO') {
-                return <p className="innhold-informasjon ok">Sendt til Ditt NAV</p>;
-            } else {
-                const prefix = melding.kanal === 'SMS' ? 'Tlf.: ' : 'Epost: ';
-                return <p className="innhold-informasjon ok">{prefix + melding.mottakerInformasjon}</p>;
-            }
+            const prefix = resources.getOrElse('varsel.tilbakemelding.' + melding.kanal, melding.kanal);
+            return <p className="innhold-informasjon ok">{prefix + melding.mottakerInformasjon}</p>;
         }
     }
 
