@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.varsel.domain;
 
-import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -22,13 +22,12 @@ public class Varsel {
         this.meldingListe = meldingListe;
     }
 
-    public static final Predicate<? super Varsel> VARSLER_MED_STATUS_FERDIG = new Predicate<Varsel>() {
+    public static final Transformer<Varsel, String> STATUS = new Transformer<Varsel, String>() {
         @Override
-        public boolean evaluate(Varsel varsel) {
-            return STATUS_FERDIG.equals(varsel.status);
+        public String transform(Varsel varsel) {
+            return varsel.status;
         }
     };
-
 
     public static class VarselMelding {
         public final String kanal;
@@ -51,10 +50,17 @@ public class Varsel {
             this.url = url;
         }
 
-        public static final Predicate<? super VarselMelding> VARSELMELDINGER_MED_KVITTERING_OK = new Predicate<VarselMelding>() {
+        public static final Transformer<VarselMelding, String> STATUSKODE = new Transformer<VarselMelding, String>() {
             @Override
-            public boolean evaluate(VarselMelding varselMelding) {
-                return (STATUSKODE_OK.equals(varselMelding.statusKode)) && varselMelding.utsendingsTidspunkt != null;
+            public String transform(VarselMelding varselmelding) {
+                return varselmelding.statusKode;
+            }
+        };
+
+        public static final Transformer<VarselMelding, DateTime> UTSENDINGSTIDSPUNKT = new Transformer<VarselMelding, DateTime>() {
+            @Override
+            public DateTime transform(VarselMelding varselmelding) {
+                return varselmelding.utsendingsTidspunkt;
             }
         };
     }

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.varsel.service;
 import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
 import no.nav.melding.domene.brukerdialog.varsler.v1.meldinger.*;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
-import no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding;
+import no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -12,9 +12,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VARSLER_MED_STATUS_FERDIG;
-import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.VARSELMELDINGER_MED_KVITTERING_OK;
+import static no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
+import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.STATUSKODE;
+import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.UTSENDINGSTIDSPUNKT;
 
 public class VarslerServiceImpl implements VarslerService {
 
@@ -24,9 +26,9 @@ public class VarslerServiceImpl implements VarslerService {
     @Override
     public List<Varsel> hentAlleVarsler(String fnr) {
         WSHentVarslerResponse response = ws.hentVarsler(
-            new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
+                new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
         );
-        return on(response.getVarselListe().getVarsel()).map(TIL_VARSEL).filter(VARSLER_MED_STATUS_FERDIG).collect();
+        return on(response.getVarselListe().getVarsel()).map(TIL_VARSEL).filter(where(STATUS, equalTo(STATUS_FERDIG))).collect();
     }
 
     private static Transformer<WSVarsel, Varsel> TIL_VARSEL = new Transformer<WSVarsel, Varsel>() {
@@ -36,9 +38,10 @@ public class VarslerServiceImpl implements VarslerService {
             DateTime mottattTidspunkt = optional(wsVarsel.getMottattidspunkt()).map(TIL_DATETIME).getOrElse(null);
             String status = wsVarsel.getStatus();
             List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
-                .map(TIL_VARSEL_MELDING)
-                .filter(VARSELMELDINGER_MED_KVITTERING_OK)
-                .collect();
+                    .map(TIL_VARSEL_MELDING)
+                    .filter(where(UTSENDINGSTIDSPUNKT, not(equalTo(null))))
+                    .filter(where(STATUSKODE, equalTo(STATUSKODE_OK)))
+                    .collect();
 
             return new Varsel(varselType, mottattTidspunkt, status, meldingListe);
         }
