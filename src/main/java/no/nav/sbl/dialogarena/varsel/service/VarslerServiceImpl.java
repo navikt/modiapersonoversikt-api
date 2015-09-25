@@ -4,7 +4,6 @@ import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
 import no.nav.melding.domene.brukerdialog.varsler.v1.meldinger.*;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding;
-import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -14,11 +13,10 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VARSLER_MED_STATUS_FERDIG;
+import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.VARSELMELDINGER_MED_KVITTERING_OK;
 
 public class VarslerServiceImpl implements VarslerService {
-
-    public static final String STATUS_FERDIG = "Ferdig";
-    public static final String STATUSKODE_OK = "OK";
 
     @Inject
     private VarslerPorttype ws;
@@ -26,20 +24,10 @@ public class VarslerServiceImpl implements VarslerService {
     @Override
     public List<Varsel> hentAlleVarsler(String fnr) {
         WSHentVarslerResponse response = ws.hentVarsler(
-                new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
+            new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
         );
-        return on(response.getVarselListe().getVarsel()).map(TIL_VARSEL).filter(varslerMedStatusFerdig()).collect();
+        return on(response.getVarselListe().getVarsel()).map(TIL_VARSEL).filter(VARSLER_MED_STATUS_FERDIG).collect();
     }
-
-    private Predicate<? super Varsel> varslerMedStatusFerdig() {
-        return new Predicate<Varsel>() {
-            @Override
-            public boolean evaluate(Varsel varsel) {
-                return STATUS_FERDIG.equals(varsel.status);
-            }
-        };
-    }
-
 
     private static Transformer<WSVarsel, Varsel> TIL_VARSEL = new Transformer<WSVarsel, Varsel>() {
         @Override
@@ -48,22 +36,13 @@ public class VarslerServiceImpl implements VarslerService {
             DateTime mottattTidspunkt = optional(wsVarsel.getMottattidspunkt()).map(TIL_DATETIME).getOrElse(null);
             String status = wsVarsel.getStatus();
             List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
-                    .map(TIL_VARSEL_MELDING)
-                    .filter(varselMeldingerMedKvitteringOK())
-                    .collect();
+                .map(TIL_VARSEL_MELDING)
+                .filter(VARSELMELDINGER_MED_KVITTERING_OK)
+                .collect();
 
             return new Varsel(varselType, mottattTidspunkt, status, meldingListe);
         }
     };
-
-    private static Predicate<? super VarselMelding> varselMeldingerMedKvitteringOK() {
-        return new Predicate<VarselMelding>() {
-            @Override
-            public boolean evaluate(VarselMelding varselMelding) {
-                return (STATUSKODE_OK.equals(varselMelding.statusKode)) && varselMelding.utsendingsTidspunkt != null;
-            }
-        };
-    }
 
     private static final Transformer<WSMelding, VarselMelding> TIL_VARSEL_MELDING = new Transformer<WSMelding, VarselMelding>() {
         @Override
