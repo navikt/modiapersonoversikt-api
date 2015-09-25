@@ -32,8 +32,9 @@ public class VarslerOversiktLink extends AjaxLink<String> {
 
     public VarslerOversiktLink(String id, String fnr) {
         super(id);
+        List<Varsel> varsler = varselService.hentAlleVarsler(fnr);
 
-        add(new Label("varsling-tekst", nyeVarslerDenSisteUken(fnr)));
+        add(new Label("varsling-tekst", nyeVarslerDenSisteUken(varsler)));
     }
 
     @Override
@@ -41,9 +42,7 @@ public class VarslerOversiktLink extends AjaxLink<String> {
         send(VarslerOversiktLink.this, Broadcast.BUBBLE, new NamedEventPayload(WIDGET_HEADER_CLICKED, new WidgetHeaderPayload("varsling")));
     }
 
-    private String nyeVarslerDenSisteUken(String fnr) {
-        List<Varsel> varsler = varselService.hentAlleVarsler(fnr);
-
+    protected String nyeVarslerDenSisteUken(List<Varsel> varsler) {
         if (varsler.isEmpty()) {
             return cms.hentTekst("varsler.oversikt.lenke.ingen.varsler");
         }
