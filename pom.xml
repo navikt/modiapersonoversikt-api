@@ -106,7 +106,7 @@
         <modiabrukerdialog-api.version>3.7</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>4.8</sporsmalogsvar.version>
         <saksoversikt.version>4.3</saksoversikt.version>
-        <varsling.modia.version>1.1</varsling.modia.version>
+        <varsling.modia.version>1.2</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>2.0.4</modia-felleskomponenter.version>
