@@ -5,7 +5,6 @@ class FilterHeader extends React.Component {
         super(props);
     }
     render() {
-        console.log('props', this.props);
         return (
             <div className="filter-header">
 

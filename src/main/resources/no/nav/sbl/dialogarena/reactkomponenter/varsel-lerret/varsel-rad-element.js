@@ -21,11 +21,13 @@ class VarselRadElement extends React.Component {
     render() {
         const melding = this.props.melding;
         const innholdInfo = this.getInnholdInfo(melding);
+        const resources = this.props.store.getResources();
 
         return (
             <li className="varsel-rad-element">
                 <p>
-                    <span className="innhold-kanal">{melding.kanal + ': '}</span>
+                    <span
+                        className="innhold-kanal">{resources.getOrElse('varsel.kanal.' + melding.kanal, melding.kanal) + ': '}</span>
                     <span className="innhold-melding">{melding.innhold}</span>
                 </p>
                 {innholdInfo}
