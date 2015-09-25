@@ -26,7 +26,7 @@ public class PsakServiceImpl implements PsakService {
     }
 
     @Override
-    public Collection<? extends Sak> hentSakerFor(String fnr) {
+    public List<Sak> hentSakerFor(String fnr) {
         try {
             List<WSSakSammendrag> sakSammendragListe = pensjonSakV1.hentSakSammendragListe(new WSHentSakSammendragListeRequest().withPersonident(fnr)).getSakSammendragListe();
             return on(sakSammendragListe).map(TIL_SAK).collect();
