@@ -61,7 +61,7 @@
         <modig.core.version>1.0.1</modig.core.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig-log-jaxws.version>1.1.3</modig-log-jaxws.version>
-        <modig-content.version>2.0.12</modig-content.version>
+        <modig-content.version>2.0.13</modig-content.version>
         <modig-wicket-test.version>1.0.0</modig-wicket-test.version>
         <modig-core-test.version>1.0.0</modig-core-test.version>
         <commons-lang3.version>3.1</commons-lang3.version>
@@ -106,7 +106,7 @@
         <modiabrukerdialog-api.version>3.7</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>4.8</sporsmalogsvar.version>
         <saksoversikt.version>4.3</saksoversikt.version>
-        <varsling.modia.version>1.0</varsling.modia.version>
+        <varsling.modia.version>1.1-SNAPSHOT</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>2.0.4</modia-felleskomponenter.version>
