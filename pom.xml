@@ -62,7 +62,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>reactkomponenter</artifactId>
-            <version>1.11-SNAPSHOT</version>
+            <version>1.11</version>
             <scope>provided</scope>
         </dependency>
 
