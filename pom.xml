@@ -47,6 +47,17 @@
             <version>${modig.security.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-wicket</artifactId>
+            <version>${modig.wicket.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
