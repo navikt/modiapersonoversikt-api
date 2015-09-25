@@ -30,6 +30,22 @@ public class ReactJournalforingsPanel extends Panel {
         this.henvendelseVM = henvendelseVM;
         setOutputMarkupPlaceholderTag(true);
 
+        final WebMarkupContainer sakValgt = new WebMarkupContainer("sakValgt");
+        sakValgt.add(visibleIf(henvendelseVM.getObject().sakErSatt()));
+        sakValgt.add(new Label("valgtSaksDatoFormatert"));
+        sakValgt.add(new Label("valgtSak.temaNavn"));
+        sakValgt.add(new Label("valgtSak.saksIdVisning"));
+
+        final AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                reactComponentPanel.setVisibilityAllowed(!reactComponentPanel.isVisibleInHierarchy());
+                oppdaterHiddenFelt();
+                target.add(hiddenField);
+                target.add(ReactJournalforingsPanel.this);
+            }
+        };
+
         reactComponentPanel = new ReactComponentPanel("reactjournalforing", "VelgSakPanel", new HashMap<String, Object>() {
             {
                 put("fnr", fnr);
@@ -44,17 +60,13 @@ public class ReactJournalforingsPanel extends Panel {
                 henvendelseVM.getObject().valgtSak = sak;
                 reactComponentPanel.setVisibilityAllowed(false);
                 target.add(ReactJournalforingsPanel.this);
+                target.focusComponent(valgtSakLenke);
             }
         });
 
         WebMarkupContainer ingenSakValgt = new WebMarkupContainer("ingenSakValgt");
         ingenSakValgt.add(visibleIf(not(henvendelseVM.getObject().sakErSatt())));
 
-        WebMarkupContainer sakValgt = new WebMarkupContainer("sakValgt");
-        sakValgt.add(visibleIf(henvendelseVM.getObject().sakErSatt()));
-        sakValgt.add(new Label("valgtSaksDatoFormatert"));
-        sakValgt.add(new Label("valgtSak.temaNavn"));
-        sakValgt.add(new Label("valgtSak.saksIdVisning"));
 
         hiddenField = new HiddenField<>("sak-validering", Model.of(""));
         oppdaterHiddenFelt();
@@ -63,15 +75,6 @@ public class ReactJournalforingsPanel extends Panel {
         add(hiddenField);
 
 
-        AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                reactComponentPanel.setVisibilityAllowed(!reactComponentPanel.isVisibleInHierarchy());
-                oppdaterHiddenFelt();
-                target.add(hiddenField);
-                target.add(ReactJournalforingsPanel.this);
-            }
-        };
         IModel<Boolean> velgSakPanelOpen = new Model<Boolean>() {
             @Override
             public Boolean getObject() {
