@@ -19,7 +19,7 @@ import java.util.Map;
 @Configuration
 public class VarslingContext {
 
-    private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/modiabrukerdialog/nb/tekster";
+    private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/modia-varsling/nb/tekster";
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.modia-varsling";
     public static final String DEFAULT_LOCALE = "nb";
 
