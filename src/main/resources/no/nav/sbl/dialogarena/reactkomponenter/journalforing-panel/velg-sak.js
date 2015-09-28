@@ -17,7 +17,10 @@ class VelgSak extends React.Component {
     }
 
     render() {
-        const kategorier = partition(this.props.saker, sak => sak.sakstype === 'GEN');
+        let mergedSaker = this.props.saker[0] || [];
+        mergedSaker = mergedSaker.concat(this.props.saker[1] || []);
+
+        const kategorier = partition(mergedSaker, sak => sak.sakstype === 'GEN');
         const generelle = kategorier[0];
         const fagsaker = kategorier[1];
 
