@@ -73,7 +73,6 @@ public class SakerServiceImpl implements SakerService {
         List<Sak> saker = psakService.hentSakerFor(fnr);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
         return saker;
-
     }
 
     @Override
