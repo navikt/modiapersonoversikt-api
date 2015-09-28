@@ -9,12 +9,14 @@ class PromiseUtils {
         const results = new Array(promises.length);
         let NOF_resolved = 0;
         let atLeastNIsOK = false;
+        let countOK = 0;
 
         promises.forEach((promise, index) => {
             promise
                 .success((res) => {
                     results[index] = res;
-                    atLeastNIsOK = true;
+                    countOK++;
+                    atLeastNIsOK = countOK >= n;
                 })
                 .fail(() => {
                     results[index] = null;
