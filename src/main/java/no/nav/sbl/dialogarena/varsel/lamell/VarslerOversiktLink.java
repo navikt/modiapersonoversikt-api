@@ -5,6 +5,7 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
+import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -16,6 +17,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 
+import static java.lang.String.format;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 
 public class VarslerOversiktLink extends AjaxLink<String> {
@@ -28,13 +31,19 @@ public class VarslerOversiktLink extends AjaxLink<String> {
     private CmsContentRetriever cms;
 
 
-    private static final int EI_UKE = 7;
+    private static final int EN_UKE = 7;
 
     public VarslerOversiktLink(String id, String fnr) {
         super(id);
         List<Varsel> varsler = varselService.hentAlleVarsler(fnr);
+        int antallNyeVarsler = on(varsler)
+                .filter(erNyereEnn(EN_UKE))
+                .collect().size();
 
-        add(new Label("varsling-tekst", nyeVarslerDenSisteUken(varsler)));
+        String cmsKeyForVarselLenke = hentCMSKeyForVarselLenke(antallNyeVarsler, varsler.isEmpty());
+        String cmsTekstForVarselLenke = cms.hentTekst(cmsKeyForVarselLenke);
+
+        add(new Label("varsling-tekst", format(cmsTekstForVarselLenke, antallNyeVarsler)));
     }
 
     @Override
@@ -42,25 +51,21 @@ public class VarslerOversiktLink extends AjaxLink<String> {
         send(VarslerOversiktLink.this, Broadcast.BUBBLE, new NamedEventPayload(WIDGET_HEADER_CLICKED, new WidgetHeaderPayload("varsling")));
     }
 
-    protected String nyeVarslerDenSisteUken(List<Varsel> varsler) {
-        if (varsler.isEmpty()) {
-            return cms.hentTekst("varsler.oversikt.lenke.ingen.varsler");
+    protected static String hentCMSKeyForVarselLenke(int antallNyeVarsler, boolean harVarsler) {
+        if (!harVarsler) {
+            return "varsler.oversikt.lenke.ingen.varsler";
         }
+        return antallNyeVarsler > 0 ? "varsler.oversikt.lenke.nye.varsler" : "varsler.oversikt.lenke";
+    }
 
-        int antallNyeVarsler = 0;
-        LocalDate iDag = LocalDate.now();
-
-        for (Varsel varsel : varsler) {
-            int dagerSidenVarsel = Days.daysBetween(varsel.mottattTidspunkt.toLocalDate(), iDag).getDays();
-            if (dagerSidenVarsel <= EI_UKE) {
-                antallNyeVarsler++;
+    protected static Predicate<Varsel> erNyereEnn(final int antallDager) {
+        return new Predicate<Varsel>() {
+            @Override
+            public boolean evaluate(Varsel varsel) {
+                LocalDate now = LocalDate.now();
+                int dagerSidenVarsel = Days.daysBetween(varsel.mottattTidspunkt.toLocalDate(), now).getDays();
+                return dagerSidenVarsel <= antallDager;
             }
-        }
-
-        String label = (antallNyeVarsler > 0) ?
-                cms.hentTekst("varsler.oversikt.lenke.nye.varsler") :
-                cms.hentTekst("varsler.oversikt.lenke");
-
-        return String.format(label, antallNyeVarsler);
+        };
     }
 }
