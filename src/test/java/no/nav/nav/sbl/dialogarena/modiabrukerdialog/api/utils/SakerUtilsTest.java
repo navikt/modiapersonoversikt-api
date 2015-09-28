@@ -1,7 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import org.joda.time.DateTime;
@@ -17,8 +16,6 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
-import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -160,31 +157,9 @@ public class SakerUtilsTest {
         return sak;
     }
 
-    private void assertSakstypeGenerell(List<SakerForTema> sakerForTemaListe, boolean generell) {
-        for (SakerForTema sakerForTema : sakerForTemaListe) {
-            for (Sak sak : sakerForTema.saksliste) {
-                assertThat(sak.isSakstypeForVisningGenerell(), is(generell));
-            }
-        }
-    }
 
-    private void assertSortert(List<SakerForTema> sakerForTemaListe) {
-        for (int i = 0; i < sakerForTemaListe.size() - 1; i++) {
-            assertThat(sakerForTemaListe.get(i).compareTo(sakerForTemaListe.get(i + 1)), lessThan(0));
-        }
-    }
 
-    public void assertDatoSortert(SakerForTema sakerForTema) {
-        for (int i = 0; i < sakerForTema.saksliste.size() - 1; i++) {
-            assertThat(sakerForTema.saksliste.get(i).opprettetDato.compareTo(sakerForTema.saksliste.get(i + 1).opprettetDato), greaterThanOrEqualTo(0));
-        }
-    }
 
-    private int antallSaker(List<SakerForTema> temasakerListe) {
-        int lengde = 0;
-        for (SakerForTema sakerForTema : temasakerListe) {
-            lengde += sakerForTema.saksliste.size();
-        }
-        return lengde;
-    }
+
+
 }
