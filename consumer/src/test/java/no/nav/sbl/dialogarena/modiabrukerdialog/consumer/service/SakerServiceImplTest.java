@@ -2,8 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerListe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
@@ -27,10 +25,6 @@ import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse;
-import org.apache.commons.collections15.Predicate;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -96,6 +90,21 @@ public class SakerServiceImplTest {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
 
         assertThat(saksliste.get(0).saksId.get(), is("1"));
+    }
+
+    @Test
+    public void transformererResponseTilSakslistePensjon() {
+        Sak pensjon = new Sak();
+        pensjon.temaKode = "PENS";
+        Sak ufore = new Sak();
+        ufore.temaKode = "UFO";
+        List<Sak> pensjonssaker = asList(pensjon, ufore);
+        when(psakService.hentSakerFor(FNR)).thenReturn(pensjonssaker);
+        List<Sak> saksliste = sakerService.hentPensjonSaker(FNR);
+
+        assertThat(saksliste.size(), is(2));
+        assertThat(saksliste.get(0).temaNavn, is("PENS"));
+        assertThat(saksliste.get(1).temaNavn, is("UFO"));
     }
 
     @Test
@@ -165,17 +174,11 @@ public class SakerServiceImplTest {
 
         List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
 
-      /*  assertThat(saker.getSakerListeGenerelle(), not(containsTema(TEMAKODE_OPPFOLGING)));
-        assertThat(saker.getSakerListeFagsak(), containsTema(TEMAKODE_OPPFOLGING));
-
-        SakerForTema oppfolging = hentSakerForTema(saker.getSakerListeFagsak(), TEMAKODE_OPPFOLGING);
-        assertThat(oppfolging.saksliste, hasSize(1));
-        assertThat(oppfolging.saksliste.get(0).saksId.get(), is(saksId));
-        assertThat(oppfolging.saksliste.get(0).fagsystemSaksId.get(), is(saksId));
-        assertThat(oppfolging.saksliste.get(0).sakstype, is(Sak.SAKSTYPE_MED_FAGSAK));
-        assertThat(oppfolging.saksliste.get(0).opprettetDato, is(dato.toDateTimeAtStartOfDay()));
-        assertThat(oppfolging.saksliste.get(0).fagsystemKode, is(FAGSYSTEMKODE_ARENA));
-        assertThat(oppfolging.saksliste.get(0).finnesIGsak, is(false));*/
+        assertThat(saker.size(), is(1));
+        assertThat(saker.get(0).getSaksIdVisning(), is(saksId));
+        assertThat(saker.get(0).opprettetDato, is(dato.toDateTimeAtStartOfDay()));
+        assertThat(saker.get(0).fagsystemKode, is(FAGSYSTEMKODE_ARENA));
+        assertThat(saker.get(0).finnesIGsak, is(false));
     }
 
     @Test
@@ -198,38 +201,6 @@ public class SakerServiceImplTest {
 
         sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak);
         verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, saksId, sak.temaKode, valgtNavEnhet);
-    }
-
-    private static SakerForTema hentSakerForTema(SakerListe sakerListe, final String temakode) {
-        return on(sakerListe).filter(new Predicate<SakerForTema>() {
-            @Override
-            public boolean evaluate(SakerForTema sakerForTema) {
-                return temakode.equals(sakerForTema.temaKode);
-            }
-        }).head().get();
-    }
-
-
-    private Matcher<SakerListe> containsTema(final String temakode) {
-        return new BaseMatcher<SakerListe>() {
-            @Override
-            public boolean matches(Object o) {
-                if (o instanceof SakerListe) {
-                    SakerListe saker = (SakerListe) o;
-                    for (SakerForTema sak : saker) {
-                        if (temakode.equals(sak.temaKode)) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Saker inneholder ikke sak med tema " + temakode);
-            }
-        };
     }
 
     private ArrayList<WSSak> createSaksliste() {
