@@ -3,7 +3,7 @@ class PromiseUtils {
     static atLeastN(n, ...promises) {
         const deferred = $.Deferred();
         if (n < 0 || n > promises.length || typeof n !== "number") {
-            const message = "n = " + n + ". n must be a number greater than zero, and less than or equal to the number of promises. "
+            const message = "n = " + n + ". n must be a number greater than zero, and less than or equal to the number of promises. ";
             throw new RangeError(message);
         }
         const results = new Array(promises.length);
