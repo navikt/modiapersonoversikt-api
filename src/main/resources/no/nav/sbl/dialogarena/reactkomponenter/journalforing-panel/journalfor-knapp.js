@@ -23,7 +23,6 @@ class JournalforKnapp extends React.Component {
             data: JSON.stringify(this.props.sak)
         })
             .done(function (response, status, xhr) {
-                this.setState({sender: false});
                 this.props.traadJournalfort();
             }.bind(this))
             .fail(function () {
