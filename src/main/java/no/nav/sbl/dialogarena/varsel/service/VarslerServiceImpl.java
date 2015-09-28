@@ -6,33 +6,45 @@ import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
 import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.STATUSKODE;
 import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.UTSENDINGSTIDSPUNKT;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class VarslerServiceImpl implements VarslerService {
+
+    private static final Logger log = getLogger(VarslerServiceImpl.class);
 
     @Inject
     private VarslerPorttype ws;
 
     @Override
     public List<Varsel> hentAlleVarsler(String fnr) {
-        WSHentVarslerResponse response = ws.hentVarsler(
-                new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
-        );
-        return on(response.getVarselListe().getVarsel())
-                .map(TIL_VARSEL)
-                .filter(where(STATUS, equalTo(STATUS_FERDIG)))
-                .filter(where(MELDINGLISTE, not(empty())))
-                .collect();
+        try {
+            WSHentVarslerResponse response = ws.hentVarsler(
+                    new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
+            );
+
+            return on(response.getVarselListe().getVarsel())
+                    .map(TIL_VARSEL)
+                    .filter(where(STATUS, equalTo(STATUS_FERDIG)))
+                    .filter(where(MELDINGLISTE, not(empty())))
+                    .collect();
+        } catch (SOAPFaultException sfe) {
+            log.error("Feilet ved uthenting av varsler.", sfe);
+            return emptyList();
+        }
     }
 
     private static Transformer<WSVarsel, Varsel> TIL_VARSEL = new Transformer<WSVarsel, Varsel>() {
