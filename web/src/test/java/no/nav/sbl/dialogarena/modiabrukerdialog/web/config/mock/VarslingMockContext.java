@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.URISyntaxException;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class VarslingMockContext {
@@ -19,6 +21,8 @@ public class VarslingMockContext {
 
     @Bean(name = "varsling-cms-integrasjon")
     public CmsContentRetriever varslingCmsContentRetriver() throws URISyntaxException {
-        return mock(CmsContentRetriever.class);
+        CmsContentRetriever contentRetriever = mock(CmsContentRetriever.class);
+        when(contentRetriever.hentTekst(anyString())).thenReturn("");
+        return contentRetriever;
     }
 }
