@@ -3,7 +3,6 @@ class PromiseUtils {
     static atLeastN(n, wrapperPromise) {
         const deferred = $.Deferred();
         var numPromises = Object.keys(wrapperPromise).length;
-        debugger;
         if (n < 0 || n > numPromises || typeof n !== "number") {
             const message = "n = " + n + ". n must be a number greater than zero, and less than or equal to the number of promises. ";
             throw new RangeError(message);
