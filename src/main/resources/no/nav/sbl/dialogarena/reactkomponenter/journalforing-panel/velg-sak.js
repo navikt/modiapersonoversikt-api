@@ -17,15 +17,16 @@ class VelgSak extends React.Component {
     }
 
     render() {
-        let mergedSaker = this.props.saker[0] || [];
-        mergedSaker = mergedSaker.concat(this.props.saker[1] || []);
+        let mergedSaker = [];
+        Object.keys(this.props.saker).forEach((key) => {
+            mergedSaker = mergedSaker.concat(this.props.saker[key] || []);
+        });
 
         const kategorier = partition(mergedSaker, sak => sak.sakstype === 'GEN');
         const generelle = kategorier[0];
         const fagsaker = kategorier[1];
 
         const saker = this.state.valgtKategori === 'FAG' ? fagsaker : generelle;
-
         return (
             <div>
                 <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori}/>

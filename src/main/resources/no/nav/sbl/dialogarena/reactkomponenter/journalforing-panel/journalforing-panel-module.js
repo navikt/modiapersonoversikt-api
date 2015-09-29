@@ -22,7 +22,13 @@ class JournalforingsPanel extends React.Component {
         const gsakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/sammensatte');
         const psakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/pensjon');
 
-        this.promise = PromiseUtils.atLeastN(1,gsakSaker, psakSaker);
+        var wrapperPromise = {
+            gsak: gsakSaker,
+            psak: psakSaker
+        };
+
+        this.promise = PromiseUtils.atLeastN(1, wrapperPromise);
+
     }
 
     velgSak(sak) {
