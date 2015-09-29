@@ -20,6 +20,8 @@ class VelgSakPanel extends React.Component {
         };
 
         this.promise = PromiseUtils.atLeastN(1, wrapperPromise);
+
+        this.velgSak = this.velgSak.bind(this);
     }
 
     velgSak(sak) {

@@ -18,7 +18,7 @@ class VelgSak extends React.Component {
     }
 
     render() {
-        const feileteAjaxkall = Object.keys(this.props.saker).reduce((acc, key) => {
+        const feileteAjaxkall = Object.keys(this.props.saker || {}).reduce((acc, key) => {
             if (this.props.saker[key] === null) {
                 acc.push(key);
             }
@@ -28,7 +28,7 @@ class VelgSak extends React.Component {
         const advarsler = feileteAjaxkall.map((feiletKall) => <AdvarselBoks
             tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
 
-        const mergedSaker = Object.keys(this.props.saker).reduce((acc, key) => {
+        const mergedSaker = Object.keys(this.props.saker || {}).reduce((acc, key) => {
             acc = acc.concat(this.props.saker[key] || []);
             return acc;
         }, []);
