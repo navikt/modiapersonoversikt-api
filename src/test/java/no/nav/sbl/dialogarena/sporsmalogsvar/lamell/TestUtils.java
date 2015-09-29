@@ -10,9 +10,6 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerListe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
@@ -83,20 +80,6 @@ public class TestUtils {
         return sak;
     }
 
-    public static Saker createMockSaker() {
-        List<Sak> generelleSakerTema1 = new ArrayList<>(asList(
-            createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-            createSak(SAKS_ID_2, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4))));
-        SakerForTema sakerforTemaGenerelle = new SakerForTema(TEMA_1, "navn", generelleSakerTema1);
-        SakerListe sakerListeGenerelle = new SakerListe(asList(sakerforTemaGenerelle));
-
-        List<Sak> fagSakerTema2 = new ArrayList<>(asList(
-            createSak(SAKS_ID_3, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_FAG, DateTime.now().minusDays(4))));
-        SakerForTema sakerforTemaFagsaker = new SakerForTema(TEMA_2, "navn", fagSakerTema2);
-        SakerListe sakerListeFagsaker = new SakerListe(asList(sakerforTemaFagsaker));
-
-        return new Saker(sakerListeFagsaker, sakerListeGenerelle);
-    }
 
     public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, Temagruppe temagruppe, String traadId) {
         Melding melding = new Melding(id, type, opprettetDato);
