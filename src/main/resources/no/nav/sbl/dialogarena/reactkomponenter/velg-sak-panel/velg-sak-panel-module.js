@@ -14,8 +14,12 @@ class VelgSakPanel extends React.Component {
         const gsakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/sammensatte');
         const psakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/pensjon');
 
-        this.promise = PromiseUtils.atLeastN(1,gsakSaker, psakSaker);
-        this.velgSak = this.velgSak.bind(this);
+        var wrapperPromise = {
+            gsak: gsakSaker,
+            psak: psakSaker
+        };
+
+        this.promise = PromiseUtils.atLeastN(1, wrapperPromise);
     }
 
     velgSak(sak) {
