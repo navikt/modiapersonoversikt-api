@@ -1,4 +1,4 @@
- package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 
 import no.nav.modig.content.CmsContentRetriever;
@@ -7,11 +7,8 @@ import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -19,12 +16,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockC
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Saksbehandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.TidligereMeldingPanel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -32,12 +25,13 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.joda.time.DateTime;
-import org.hamcrest.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
-import org.mockito.Matchers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -53,7 +47,6 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKS
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.SAKSBEHANDLER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.TestUtils.createMockSaker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel.erTilknyttetAnsatt;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
@@ -87,22 +80,18 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private CmsContentRetriever cmsContentRetriever;
-    @Inject
-    private SakerService sakerService;
+
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @InjectMocks
     private FortsettDialogPanel testFortsettDialogPanel;
 
-    private Saker saker;
     private GrunnInfo grunnInfo;
 
     @Before
     public void setUp() {
         grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", ""), new Saksbehandler("", "", ""));
-        saker = createMockSaker();
-        when(sakerService.hentSaker(anyString())).thenReturn(saker);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
 
         testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), Optional.<String>none());
@@ -211,45 +200,6 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void senderIkkeSporsmalOgFaarFeilmeldingDersomManVelgerBrukerKanSvareOgSkriftligKanalMenIkkeVelgerJournalforingssak() throws Exception {
-        reset(henvendelseUtsendingService);
-
-        wicket.goToPageWith(testFortsettDialogPanel)
-                .inForm(withId("fortsettdialogform"))
-                .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
-                .select("fortsettdialogformelementer:kanal", 0)
-                .check("fortsettdialogformelementer:brukerKanSvare", true)
-                .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsVisible().and(withId("feedback")));
-
-        verify(henvendelseUtsendingService, never()).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void senderOgJournalforerSporsmalDersomManVelgerBrukerKanSvareOgSkriftligKanalOgJournalforingssak() throws Exception {
-        reset(henvendelseUtsendingService);
-
-        Sak sak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
-        testFortsettDialogPanel.getModelObject().valgtSak = sak;
-
-        wicket.goToPageWith(testFortsettDialogPanel)
-                .inForm(withId("fortsettdialogform"))
-                .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
-                .select("fortsettdialogformelementer:kanal", 0)
-                .check("fortsettdialogformelementer:brukerKanSvare", true)
-                .submitWithAjaxButton(withId("send"));
-
-        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), sakArgumentCaptor.capture(), anyString());
-
-        Melding melding = meldingArgumentCaptor.getValue();
-        assertThat(melding.meldingstype, is(SPORSMAL_MODIA_UTGAAENDE));
-
-        Sak sendtSak = sakArgumentCaptor.getValue().get();
-        assertThat(sendtSak, is(sak));
-    }
 
     @Test
     @SuppressWarnings("unchecked")
@@ -332,16 +282,6 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         assertThat(errorMessages, hasItem(testFortsettDialogPanel.getString("fortsettdialogform.feilmelding.oppgaveferdigstilt")));
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void garTilKvitteringssideOgsaDersomJournalforingKasterException() throws Exception {
-        doThrow(new JournalforingFeilet()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
-        wicket.goToPageWith(testFortsettDialogPanel)
-                .inForm(withId("fortsettdialogform"))
-                .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
-                .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsVisible().and(ofType(KvitteringsPanel.class)));
-    }
 
     @Test
     @SuppressWarnings("unchecked")

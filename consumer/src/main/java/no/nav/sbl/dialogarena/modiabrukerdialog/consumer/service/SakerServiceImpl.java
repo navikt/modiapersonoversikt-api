@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
@@ -35,7 +34,6 @@ import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
@@ -61,27 +59,20 @@ public class SakerServiceImpl implements SakerService {
 
 
     @Override
-    public Saker hentSaker(String fnr) {
-        List<Sak> sakerForBruker = hentListeAvSaker(fnr);
-        leggTilFagsystemnavnOgTemanavn(sakerForBruker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
-        return hentGenerelleOgIkkeGenerelleSaker(sakerForBruker);
-    }
-
-    @Override
-    public List<Sak> hentListeAvSaker(String fnr) {
+    public List<Sak> hentSammensatteSaker(String fnr) {
         List<Sak> saker = hentSakerFraGsak(fnr);
         leggTilFraArena(fnr, saker);
-        leggTilSakerFraPsak(fnr, saker);
         leggTilManglendeGenerelleSaker(saker);
         behandleOppfolgingsSaker(saker);
-        return saker;
+        leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+        return on(saker).filter(either(GODSKJENT_FAGSAK).or(GODSKJENT_GENERELL)).collect();
     }
 
     @Override
-    public List<Sak> hentRelevanteSaker(String fnr) {
-        List<Sak> saker = hentListeAvSaker(fnr);
+    public List<Sak> hentPensjonSaker(String fnr) {
+        List<Sak> saker = psakService.hentSakerFor(fnr);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
-        return on(saker).filter(either(GODSKJENT_FAGSAK).or(GODSKJENT_GENERELL)).collect();
+        return saker;
     }
 
     @Override
@@ -140,9 +131,6 @@ public class SakerServiceImpl implements SakerService {
         }
     }
 
-    private void leggTilSakerFraPsak(String fnr, List<Sak> saker) {
-        saker.addAll(psakService.hentSakerFor(fnr));
-    }
 
     private void leggTilManglendeGenerelleSaker(List<Sak> saker) {
         List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
