@@ -190,6 +190,7 @@ public class WicketApplication extends WebApplication {
                         BasePage.HENTPERSON,
                         BasePage.KJERNEINFO,
                         BasePage.OVERSIKT,
+                        BasePage.VARSLING,
                         BasePage.SYKEPENGER_FORELDREPENGER,
                         PersonPage.DIALOGPANEL_LESS,
                         FancySelect.LESS

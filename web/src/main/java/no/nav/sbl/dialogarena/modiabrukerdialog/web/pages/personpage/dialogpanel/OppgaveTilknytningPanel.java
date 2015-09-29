@@ -76,6 +76,7 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
             public void onClick(AjaxRequestTarget target) {
                 isOpen.setObject(false);
                 target.add(aapnePopup, oppgaveTilknytningPopup);
+                target.focusComponent(aapnePopup);
             }
         };
         oppgaveTilknytningPopup.add(oppgaveTilknytningValg, ok, lukkPopup);
