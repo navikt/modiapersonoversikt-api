@@ -76,7 +76,7 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
             }
 
             @Override
-            public void serialize(Optional<?> value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
+            public void serialize(Optional<?> value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
                 if (value.isSome()) {
                     provider.defaultSerializeValue(value.get(), jgen);
                 } else {
@@ -99,7 +99,7 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
             }
 
             @Override
-            public Optional<?> deserialize(JsonParser jp, DeserializationContext context) throws IOException, JsonProcessingException {
+            public Optional<?> deserialize(JsonParser jp, DeserializationContext context) throws IOException {
                 Object reference = context.findRootValueDeserializer(innerType).deserialize(jp, context);
                 return Optional.optional(reference);
             }

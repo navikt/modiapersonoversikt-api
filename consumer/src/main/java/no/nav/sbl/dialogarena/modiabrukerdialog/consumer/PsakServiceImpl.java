@@ -10,7 +10,6 @@ import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
-import java.util.Collection;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
