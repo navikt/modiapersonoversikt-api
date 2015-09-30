@@ -42,7 +42,7 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
 
     @Test
     public void starterAlleMeldingerPanelUtenFeil() {
-        wicket.goToPageWith(new AlleMeldingerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService), ""));
+        wicket.goToPageWith(new AlleMeldingerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
         innboksVM.oppdaterMeldinger();
         innboksVM.setValgtMelding("id1");
 
-        wicket.goToPageWith(new AlleMeldingerPanel("id", innboksVM, ""))
+        wicket.goToPageWith(new AlleMeldingerPanel("id", innboksVM))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class));
 
         assertThat(innboksVM.getValgtTraad().getNyesteMelding().melding.id, is("id2"));

@@ -31,7 +31,7 @@ public class AlleMeldingerPanel extends Panel {
     public static final String TRAAD_ID_PREFIX = "allemeldingertraad-";
     private InnboksVM innboksVM;
 
-    public AlleMeldingerPanel(String id, final InnboksVM innboksVM, final String traadDetaljerMarkupId) {
+    public AlleMeldingerPanel(String id, final InnboksVM innboksVM) {
         super(id, new CompoundPropertyModel<>(innboksVM));
         setOutputMarkupId(true);
 
