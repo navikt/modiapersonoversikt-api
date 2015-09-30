@@ -1,6 +1,7 @@
 import React from 'react';
 import { isArray, includes, toArray } from 'lodash';
 import Snurrepipp from './snurrepipp';
+import AdvarselBoks from './../utils/advarsel-boks';
 
 class AsyncLoader extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ class AsyncLoader extends React.Component {
     render() {
         let children;
         if (this.state.status === 'rejected') {
-            children = <h1 className="feil">Det skjedde en feil</h1>;
+            children= <AdvarselBoks tekst="Henting av data mislyktes"/>
         } else if (this.state.status === 'pending') {
             children = <Snurrepipp />;
         } else {
