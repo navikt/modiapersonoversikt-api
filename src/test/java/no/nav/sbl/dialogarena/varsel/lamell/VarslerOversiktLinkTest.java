@@ -21,4 +21,9 @@ public class VarslerOversiktLinkTest {
     public void ingenVarslerSkalReturnereRiktigCmsKey() {
         assertThat(VarslerOversiktLink.hentCMSKeyForVarselLenke(0, false), is("varsler.oversikt.lenke.ingen.varsler"));
     }
+
+    @Test
+    public void feilVedUthentingAvVarslerSkalReturnereRiktigCmsKey() {
+        assertThat(VarslerOversiktLink.hentCMSKeyForVarselLenke(-1, false), is("varsler.oversikt.lenke.feil.uthenting"));
+    }
 }

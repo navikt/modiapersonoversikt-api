@@ -13,7 +13,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.option.Optional.optional;
@@ -43,7 +42,7 @@ public class VarslerServiceImpl implements VarslerService {
                     .collect();
         } catch (SOAPFaultException sfe) {
             log.error("Feilet ved uthenting av varsler.", sfe);
-            return emptyList();
+            return null;
         }
     }
 

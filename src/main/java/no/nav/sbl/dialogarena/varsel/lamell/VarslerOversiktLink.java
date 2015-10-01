@@ -25,25 +25,26 @@ public class VarslerOversiktLink extends AjaxLink<String> {
 
     @Inject
     private VarslerService varselService;
-
     @Inject
     @Named("varsling-cms-integrasjon")
     private CmsContentRetriever cms;
 
-
     private static final int EN_UKE = 7;
+    public static final int FEIL_VED_UTHENTING = -1;
 
     public VarslerOversiktLink(String id, String fnr) {
         super(id);
         List<Varsel> varsler = varselService.hentAlleVarsler(fnr);
-        int antallNyeVarsler = on(varsler)
-                .filter(erNyereEnn(EN_UKE))
-                .collect().size();
 
-        String cmsKeyForVarselLenke = hentCMSKeyForVarselLenke(antallNyeVarsler, varsler.isEmpty());
+        int antallNyeVarsler =  (varsler != null) ? (on(varsler).filter(erNyereEnn(EN_UKE)).collect().size()) : FEIL_VED_UTHENTING;
+        String cmsKeyForVarselLenke = hentCMSKeyForVarselLenke(antallNyeVarsler, harBrukerVarsler(varsler));
         String cmsTekstForVarselLenke = cms.hentTekst(cmsKeyForVarselLenke);
 
         add(new Label("varsling-tekst", format(cmsTekstForVarselLenke, antallNyeVarsler)));
+    }
+
+    private boolean harBrukerVarsler(List<Varsel> varsler) {
+        return varsler != null && !varsler.isEmpty();
     }
 
     @Override
@@ -52,6 +53,10 @@ public class VarslerOversiktLink extends AjaxLink<String> {
     }
 
     protected static String hentCMSKeyForVarselLenke(int antallNyeVarsler, boolean harVarsler) {
+        if (antallNyeVarsler == FEIL_VED_UTHENTING) {
+            return "varsler.oversikt.lenke.feil.uthenting";
+        }
+
         if (!harVarsler) {
             return "varsler.oversikt.lenke.ingen.varsler";
         }

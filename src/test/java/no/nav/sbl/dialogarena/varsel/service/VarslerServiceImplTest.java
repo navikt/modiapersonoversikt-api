@@ -12,9 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +30,6 @@ public class VarslerServiceImplTest {
         when(ws.hentVarsler(any(WSHentVarslerRequest.class))).thenThrow(SOAPFaultException.class);
         List<Varsel> varsler = impl.hentAlleVarsler("10108000398");
 
-        assertThat(varsler, is(empty()));
+        assertNull(varsler);
     }
 }
