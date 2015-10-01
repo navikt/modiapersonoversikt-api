@@ -26,6 +26,7 @@ window.ModiaJS.Components = {};
 window.$ = require('jquery');
 
 //shim for $(':focusable') since it is part of jQuery UI and we dont need that.
+//SONAR:OFF
 function visible(element) {
     return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(function () {
             return $.css(this, 'visibility') === 'hidden';
@@ -69,6 +70,6 @@ $.extend($.expr[':'], {
     },
     tabbable: tabbable
 });
-
+//SONAR:ON
 
 module.exports = {};
