@@ -29,8 +29,11 @@ class PromiseUtils {
                     NOF_resolved++;
 
                     if (NOF_resolved === numPromises) {
-                        if (atLeastNIsOK)deferred.resolve(results);
-                        else deferred.reject(results);
+                        if (atLeastNIsOK) {
+                            deferred.resolve(results);
+                        } else {
+                            deferred.reject(results);
+                        }
                     }
                 });
 

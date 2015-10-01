@@ -34,7 +34,7 @@ class VarselStore extends Store {
             this.state.resources = new ResourceMap(resources);
 
             this.fireUpdate();
-        })
+        });
     }
 
     getResources() {
