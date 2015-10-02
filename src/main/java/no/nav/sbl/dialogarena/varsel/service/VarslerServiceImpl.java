@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.varsel.service;
 
 import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
 import no.nav.melding.domene.brukerdialog.varsler.v1.meldinger.*;
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
 import org.apache.commons.collections15.Transformer;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
+import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
 import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.STATUSKODE;
@@ -29,20 +31,20 @@ public class VarslerServiceImpl implements VarslerService {
     private VarslerPorttype ws;
 
     @Override
-    public List<Varsel> hentAlleVarsler(String fnr) {
+    public Optional<List<Varsel>> hentAlleVarsler(String fnr) {
         try {
-            WSHentVarslerResponse response = ws.hentVarsler(
-                    new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr))
-            );
+            WSHentVarslerResponse response = ws.hentVarsler(new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr)));
 
-            return on(response.getVarselListe().getVarsel())
-                    .map(TIL_VARSEL)
-                    .filter(where(STATUS, equalTo(STATUS_FERDIG)))
-                    .filter(where(MELDINGLISTE, not(empty())))
-                    .collect();
+            List<Varsel> varsler = on(response.getVarselListe().getVarsel())
+                .map(TIL_VARSEL)
+                .filter(where(STATUS, equalTo(STATUS_FERDIG)))
+                .filter(where(MELDINGLISTE, not(empty())))
+                .collect();
+
+            return optional(varsler);
         } catch (SOAPFaultException sfe) {
             log.error("Feilet ved uthenting av varsler.", sfe);
-            return null;
+            return none();
         }
     }
 
@@ -53,10 +55,10 @@ public class VarslerServiceImpl implements VarslerService {
             DateTime mottattTidspunkt = optional(wsVarsel.getMottattidspunkt()).map(TIL_DATETIME).getOrElse(null);
             String status = wsVarsel.getStatus();
             List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
-                    .map(TIL_VARSEL_MELDING)
-                    .filter(where(UTSENDINGSTIDSPUNKT, not(equalTo(null))))
-                    .filter(where(STATUSKODE, equalTo(STATUSKODE_OK)))
-                    .collect();
+                .map(TIL_VARSEL_MELDING)
+                .filter(where(UTSENDINGSTIDSPUNKT, not(equalTo(null))))
+                .filter(where(STATUSKODE, equalTo(STATUSKODE_OK)))
+                .collect();
 
             return new Varsel(varselType, mottattTidspunkt, status, meldingListe);
         }

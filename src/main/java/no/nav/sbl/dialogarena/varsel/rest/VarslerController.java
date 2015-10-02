@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.varsel.rest;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 public class VarslerController {
 
     @Inject
+    @Named("varsling-service")
     VarslerService varslerService;
 
     @Inject
@@ -27,7 +29,7 @@ public class VarslerController {
 
     @GET
     @Path("/")
-    public List<Varsel> hentAlleVarsler(@PathParam("fnr") String fnr) {
+    public Optional<List<Varsel>> hentAlleVarsler(@PathParam("fnr") String fnr) {
         return varslerService.hentAlleVarsler(fnr);
     }
 
