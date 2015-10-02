@@ -2,10 +2,14 @@ import React from 'react';
 import { isArray, includes, toArray } from 'lodash';
 import Snurrepipp from './snurrepipp';
 import AdvarselBoks from './../utils/advarsel-boks';
+import Q from 'q';
+
+window.Q = Q;
 
 class AsyncLoader extends React.Component {
     constructor(props) {
         super(props);
+        console.log('promises', this.props.promises);
         let promiseStates = ensureArray(this.props.promises || []).map((p) => p.state());
         this.state = {
             status: combinedStates(promiseStates),
@@ -14,16 +18,26 @@ class AsyncLoader extends React.Component {
     }
 
     componentDidMount() {
-        $.when.apply($, ensureArray(this.props.promises)).then(function () { //fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
+        Q.all(ensureArray(this.props.promises)).then(function () { //fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
             let dataargs;
             let args = toArray(arguments);
+
+            debugger;
             if (ensureArray(this.props.promises).length === 1) {
-                dataargs = args[0];
+                dataargs = args[0][0];
+
+                var newdataargs = Object.keys(dataargs).reduce((acc, key, idx)=> {
+                    console.log('value', dataargs[key].value);
+                    acc[key] = dataargs[key].value;
+                    return acc;
+                }, {});
+
             } else {
                 dataargs = args.map((resp) => resp[0]);
             }
+
             this.setState({
-                data: dataargs,
+                data: newdataargs,
                 status: "ok"
             });
         }.bind(this), function () {
@@ -36,7 +50,7 @@ class AsyncLoader extends React.Component {
     render() {
         let children;
         if (this.state.status === 'rejected') {
-            children= <AdvarselBoks tekst="Henting av data mislyktes"/>
+            children = <AdvarselBoks tekst="Henting av data mislyktes"/>
         } else if (this.state.status === 'pending') {
             children = <Snurrepipp />;
         } else {

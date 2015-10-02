@@ -1,3 +1,5 @@
+import Q from 'q';
+
 class PromiseUtils {
 
     static atLeastN(n, wrapperPromise) {
@@ -8,36 +10,37 @@ class PromiseUtils {
             throw new RangeError(message);
         }
 
-        const results = Object.keys(wrapperPromise)
-            .reduce((acc, key) => {
-                acc[key] = null;
-                return acc;
-            }, {});
+        const promiseArray = Object.keys(wrapperPromise).sort().reduce((acc, key)=> {
+            acc.push(wrapperPromise[key]);
+            return acc;
+        }, []);
 
-        let NOF_resolved = 0;
-        let atLeastNIsOK = false;
-        let countOK = 0;
+        Q.allSettled(promiseArray)
+                        .then(function (settledPromises) {
+                            console.log('settled', settledPromises);
 
-        Object.keys(wrapperPromise).forEach((key) => {
-            wrapperPromise[key]
-                .success((res) => {
-                    results[key] = res;
-                    countOK++;
-                    atLeastNIsOK = countOK >= n;
-                })
-                .always(() => {
-                    NOF_resolved++;
+                            const results = Object.keys(wrapperPromise).reduce((acc, key, idx) => {
+                                acc[key] = settledPromises[idx];
+                                return acc;
+                            }, {});
+                            console.log('results', results);
 
-                    if (NOF_resolved === numPromises) {
-                        if (atLeastNIsOK) {
-                            deferred.resolve(results);
-                        } else {
-                            deferred.reject(results);
-                        }
-                    }
-                });
+                            const success = Object.keys(wrapperPromise).reduce((acc, key, idx)=> {
+                                if (wrapperPromise[key]) {
+                                    return acc + 1;
+                                } else {
+                                    return acc;
+                                }
+                            }, 0);
+                            console.log('success', success);
 
-        });
+
+                            if (success >= n) {
+                                deferred.resolve(results);
+                            } else {
+                                deferred.reject(results);
+                }
+            });
 
         return deferred.promise();
     }

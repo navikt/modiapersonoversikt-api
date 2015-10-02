@@ -4,6 +4,8 @@ import JournalforSak from './journalfor-sak';
 import LukkKnapp from './lukk-knapp';
 import AsyncLoader from './../utils/async-loader';
 import PromiseUtils from './../utils/promise-utils';
+import Ajax from './../utils/ajax';
+import Q from 'q';
 
 const VELG_SAK = 'VELG_SAK';
 const JOURNALFOR = 'JOURNALFOR';
@@ -19,16 +21,17 @@ class JournalforingsPanel extends React.Component {
         this.velgSak = this.velgSak.bind(this);
         this.tilbake = this.tilbake.bind(this);
 
-        const gsakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/sammensatte');
-        const psakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/pensjon');
+        const url = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
+
+        const gsakPromise = Ajax.get(url + '/saker/sammensatte');
+        const psakPromise = Ajax.get(url + '/saker/pensjon');
 
         var wrapperPromise = {
-            gsak: gsakSaker,
-            psak: psakSaker
+            gsak: gsakPromise,
+            psak: psakPromise
         };
 
         this.promise = PromiseUtils.atLeastN(1, wrapperPromise);
-
     }
 
     velgSak(sak) {
