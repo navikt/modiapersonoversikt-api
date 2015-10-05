@@ -4,7 +4,6 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.content.ValueRetriever;
 import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
-import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 import no.nav.sbl.dialogarena.varsel.service.VarslerServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,7 @@ public class VarslingContext {
     @Value("${appres.cms.url}")
     private String appresUrl;
 
-    @Bean
+    @Bean(name = "varsling-service")
     public VarslerService varslerService() {
         return new VarslerServiceImpl();
     }
