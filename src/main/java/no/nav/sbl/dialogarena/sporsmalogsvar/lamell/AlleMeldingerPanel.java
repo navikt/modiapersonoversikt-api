@@ -4,10 +4,13 @@ import no.nav.modig.modia.model.StringFormatModel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
@@ -19,16 +22,28 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
+import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.ReactJournalforingsPanel.TRAAD_JOURNALFORT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
+import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class AlleMeldingerPanel extends Panel {
 
     public static final String TRAAD_ID_PREFIX = "allemeldingertraad-";
+    public static final Behavior FORCE_FOCUS_BEHAVIOUR = new Behavior() {
+        @Override
+        public void renderHead(Component component, IHeaderResponse response) {
+            super.renderHead(component, response);
+            response.render(forScript(format(
+                    "setTimeout(function(){$('#%s input[type=radio]').focus();},100);",
+                    component.getMarkupId()
+            )));
+        }
+    };
     private InnboksVM innboksVM;
 
     public AlleMeldingerPanel(String id, final InnboksVM innboksVM) {
@@ -74,6 +89,9 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
+                if (innboksVM.getSessionHenvendelseId().isSome() && innboksVM.erValgtMelding(meldingVM).getObject()) {
+                    item.add(FORCE_FOCUS_BEHAVIOUR);
+                }
 
                 item.add(new AjaxEventBehavior("click") {
                     @Override
