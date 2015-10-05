@@ -25,7 +25,7 @@ class PromiseUtils {
                             }, {});
                             console.log('results', results);
 
-                            const success = Object.keys(wrapperPromise).reduce((acc, key, idx)=> {
+                            const success = Object.keys(wrapperPromise).reduce((acc, key)=> {
                                 if (wrapperPromise[key]) {
                                     return acc + 1;
                                 } else {

@@ -26,7 +26,7 @@ class Ajax {
     static put(url){
         return doRequest(http.put(url), requestModifier);
     }
-    static delete(url){
+    static remove(url){
         return doRequest(http.delete(url), requestModifier);
     }
 }

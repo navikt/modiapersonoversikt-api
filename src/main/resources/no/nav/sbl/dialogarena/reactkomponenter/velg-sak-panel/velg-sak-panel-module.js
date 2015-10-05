@@ -4,6 +4,8 @@ import VelgSak from '../journalforing-panel/velg-sak';
 import WicketSender from './../react-wicket-mixin/wicket-sender';
 import OkonomiskSosialhjelpKnapp from './okonomisk-sosialhjelp-knapp';
 import PromiseUtils from './../utils/promise-utils';
+import Ajax from './../utils/ajax';
+import Q from 'q';
 
 class VelgSakPanel extends React.Component {
     constructor(props) {
@@ -11,12 +13,14 @@ class VelgSakPanel extends React.Component {
         this.state = {
             saker: []
         };
-        const gsakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/sammensatte');
-        const psakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/pensjon');
+        const url = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
+
+        const gsakPromise = Ajax.get(url + '/saker/sammensatte');
+        const psakPromise = Ajax.get(url + '/saker/pensjon');
 
         var wrapperPromise = {
-            gsak: gsakSaker,
-            psak: psakSaker
+            gsak: gsakPromise,
+            psak: psakPromise
         };
 
         this.promise = PromiseUtils.atLeastN(1, wrapperPromise);
