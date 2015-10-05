@@ -17,17 +17,21 @@ function doRequest(req, requestModifier = req => req) {
 }
 
 class Ajax {
-    static get(url, requestModifier = (req) => req){
+    static get(url, requestModifier = (req) => req) {
         return doRequest(http.get(url), requestModifier);
     }
-    static post(url){
-        return doRequest(http.post(url), requestModifier);
+
+    static post(url, contentType, data, requestModifier = (req) => req) {
+
+        return doRequest(http.post(url).type(contentType).send(data), requestModifier);
     }
-    static put(url){
+
+    static put(url) {
         return doRequest(http.put(url), requestModifier);
     }
-    static remove(url){
-        return doRequest(http.delete(url), requestModifier);
+
+    static delete(url) {
+        return doRequest(http.del(url), requestModifier);
     }
 }
 
