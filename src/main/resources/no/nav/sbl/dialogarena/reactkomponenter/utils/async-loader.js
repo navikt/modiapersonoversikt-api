@@ -9,7 +9,6 @@ window.Q = Q;
 class AsyncLoader extends React.Component {
     constructor(props) {
         super(props);
-        console.log('promises', this.props.promises);
         let promiseStates = ensureArray(this.props.promises || []).map((p) => p.state());
         this.state = {
             status: combinedStates(promiseStates),
@@ -26,7 +25,6 @@ class AsyncLoader extends React.Component {
                 dataargs = args[0][0];
 
                 var newdataargs = Object.keys(dataargs).reduce((acc, key)=> {
-                    console.log('value', dataargs[key].value);
                     acc[key] = dataargs[key].value;
                     return acc;
                 }, {});

@@ -3,6 +3,7 @@ import TypeValg from './typevalg';
 import SakerListe from './saker-liste';
 import AdvarselBoks from './../utils/advarsel-boks';
 import { partition } from 'lodash';
+import Q from 'q';
 
 class VelgSak extends React.Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class VelgSak extends React.Component {
 
     render() {
         const feileteAjaxkall = Object.keys(this.props.saker || {}).reduce((acc, key) => {
-            if (this.props.saker[key] === null) {
+            if (!this.props.saker[key]) {
                 acc.push(key);
             }
             return acc;

@@ -16,29 +16,26 @@ class PromiseUtils {
         }, []);
 
         Q.allSettled(promiseArray)
-                        .then(function (settledPromises) {
-                            console.log('settled', settledPromises);
+            .then(function (settledPromises) {
 
-                            const results = Object.keys(wrapperPromise).reduce((acc, key, idx) => {
-                                acc[key] = settledPromises[idx];
-                                return acc;
-                            }, {});
-                            console.log('results', results);
+                const results = Object.keys(wrapperPromise).reduce((acc, key, idx) => {
+                    acc[key] = settledPromises[idx];
+                    return acc;
+                }, {});
 
-                            const success = Object.keys(wrapperPromise).reduce((acc, key)=> {
-                                if (wrapperPromise[key]) {
-                                    return acc + 1;
-                                } else {
-                                    return acc;
-                                }
-                            }, 0);
-                            console.log('success', success);
+                const success = Object.keys(wrapperPromise).reduce((acc, key)=> {
+                    if (wrapperPromise[key].isFulfilled()) {
+                        return acc + 1;
+                    } else {
+                        return acc;
+                    }
+                }, 0);
 
 
-                            if (success >= n) {
-                                deferred.resolve(results);
-                            } else {
-                                deferred.reject(results);
+                if (success >= n) {
+                    deferred.resolve(results);
+                } else {
+                    deferred.reject(results);
                 }
             });
 
