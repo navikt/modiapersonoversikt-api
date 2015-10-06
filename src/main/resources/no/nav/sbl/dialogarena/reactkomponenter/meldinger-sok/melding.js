@@ -4,6 +4,13 @@ var sanitize = require('sanitize-html');
 var format = require('string-format');
 
 var Melding = React.createClass({
+
+    toNameCase: function (navn) {
+        return navn.replace(/\b(?!em)\w+?\b/g, function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    },
+
     render: function () {
         var melding = this.props.melding;
         var clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
@@ -40,6 +47,10 @@ var Melding = React.createClass({
         });
 
         var dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
+        var skrevetMelding = format('Skrevet av: {} ({})',
+            this.toNameCase(melding.skrevetAv.navn),
+            melding.fraBruker);
+
         return (
             <div className={cls}>
                 <img className={'avsenderBilde ' + clsExt} src={src} alt={altTekst}/>
@@ -51,8 +62,7 @@ var Melding = React.createClass({
                         <p dangerouslySetInnerHTML={{__html: dato}}></p>
 
                         <p>
-                            <span>Skrevet av: </span>
-                            <span dangerouslySetInnerHTML={{__html: melding.fraBruker}}></span>
+                            <span dangerouslySetInnerHTML={{__html: skrevetMelding}}></span>
                         </p>
                     </article>
                     <article className="fritekst">{paragrafer}</article>
