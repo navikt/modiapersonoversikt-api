@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.varsel.rest;
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 
@@ -11,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +29,8 @@ public class VarslerController {
 
     @GET
     @Path("/")
-    public Optional<List<Varsel>> hentAlleVarsler(@PathParam("fnr") String fnr) {
-        return varslerService.hentAlleVarsler(fnr);
+    public List<Varsel> hentAlleVarsler(@PathParam("fnr") String fnr) {
+        return varslerService.hentAlleVarsler(fnr).getOrElse(Collections.<Varsel>emptyList());
     }
 
     @GET
