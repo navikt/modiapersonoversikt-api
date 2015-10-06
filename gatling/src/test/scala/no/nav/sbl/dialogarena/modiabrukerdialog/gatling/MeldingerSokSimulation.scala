@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.gatling
 
-import java.lang.Double._
-
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
@@ -10,10 +8,10 @@ import scala.util.Random
 
 class MeldingerSokSimulation extends Simulation {
 
-  val env = System.getProperty("env")
-  val meldingerSokUsers = Integer.getInteger("meldingersok.users")
-  val skrivestotteSokUsers = Integer.getInteger("skrivestottesok.users")
-  val duration: Double = valueOf(System.getProperty("duration"))
+  val env = "q4"
+  val meldingerSokUsers = 1
+  val skrivestotteSokUsers = 1
+  val duration: Double = 1
   val baseUrl = "https://modapp-" + env + ".adeo.no"
 
   val httpProtocol = http
@@ -53,49 +51,40 @@ class MeldingerSokSimulation extends Simulation {
     })
   }
 
-  val meldingerSokScenario = scenario("Søk i meldinger")
-    .feed(csv("fnr.csv").random)
-    .feed(csv("navIdenter_" + env + ".csv").random)
-    .exec(
-      http("start")
-        .get("/modiabrukerdialog/")
-        .check(status.is(401)))
-    .pause(5)
-    .exec(
-      http("login")
-        .post("/modiabrukerdialog/j_security_check")
-        .headers(headers)
-        .formParam("j_username", "${navIdent}")
-        .formParam("j_password", "${passord}"))
-    .exitHereIfFailed
+  def login(scenarioName: String) = {
+    scenario(scenarioName)
+      .feed(csv("fnr_" + env + ".csv").random)
+      .feed(csv("navIdenter_" + env + ".csv").random)
+      .exec(
+        http("start")
+          .get("/modiabrukerdialog/")
+          .check(status.is(401)))
+      .pause(5)
+      .exec(
+        http("login")
+          .post("/modiabrukerdialog/j_security_check")
+          .headers(headers)
+          .formParam("j_username", "${navIdent}")
+          .formParam("j_password", "${passord}"))
+      .exitHereIfFailed
+  }
+
+  val meldingerSokScenario = login("Søk i meldinger scenario")
     .pause(1)
     .exec(
-      http("indekser")
+      http("indekser meldinger")
         .get("/modiabrukerdialog/rest/meldinger/${fnr}/indekser")
         .headers(headers))
     .exitHereIfFailed
     .pause(100 millis)
     .exec(sokChain("Søk i meldinger", "/modiabrukerdialog/rest/meldinger/${fnr}/sok/", query))
 
-  val skrivestotteSokScenario = scenario("Søk i hjelpetekster")
-    .feed(csv("navIdenter_" + env + ".csv").random)
-    .exec(
-      http("start")
-        .get("/modiabrukerdialog/")
-        .check(status.is(401)))
-    .pause(5)
-    .exec(
-      http("login")
-        .post("/modiabrukerdialog/j_security_check")
-        .headers(headers)
-        .formParam("j_username", "${navIdent}")
-        .formParam("j_password", "${passord}"))
-    .exitHereIfFailed
+  val skrivestotteSokScenario = login("Søk i hjelpetekster scenario")
     .pause(1)
     .exec(sokChain("Søk i hjelpetekster", "/modiabrukerdialog/rest/skrivestotte/sok?fritekst=", query))
 
   setUp(
     meldingerSokScenario.inject(rampUsers(meldingerSokUsers) over (duration minutes)),
-    skrivestotteSokScenario.inject(rampUsers (skrivestotteSokUsers) over (duration minutes)))
+    skrivestotteSokScenario.inject(rampUsers(skrivestotteSokUsers) over (duration minutes)))
     .protocols(httpProtocol)
 }
