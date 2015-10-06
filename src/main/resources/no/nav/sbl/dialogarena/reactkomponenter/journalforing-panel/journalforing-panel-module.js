@@ -19,16 +19,12 @@ class JournalforingsPanel extends React.Component {
         this.velgSak = this.velgSak.bind(this);
         this.tilbake = this.tilbake.bind(this);
 
-        const gsakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/sammensatte');
-        const psakSaker = $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/pensjon');
-
-        var wrapperPromise = {
-            gsak: gsakSaker,
-            psak: psakSaker
+        var promiseWrapper = {
+            gsak: $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/sammensatte'),
+            psak: $.get('/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/saker/pensjon')
         };
 
-        this.promise = PromiseUtils.atLeastN(1, wrapperPromise);
-
+        this.promise = PromiseUtils.atLeastN(1, promiseWrapper);
     }
 
     velgSak(sak) {
