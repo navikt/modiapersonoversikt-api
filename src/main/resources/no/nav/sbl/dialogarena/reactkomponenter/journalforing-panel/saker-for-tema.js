@@ -27,7 +27,6 @@ class SakerForTema extends React.Component {
                     <button onClick={this.toggleEkspandering} aria-expanded="true">
                         <div className="tema-bar">
                             <h3 className="tema-overskrift">{this.props.tema}</h3>
-
                             <div className="ekspanderingspil opp"></div>
                         </div>
                     </button>
@@ -50,7 +49,6 @@ class SakerForTema extends React.Component {
                 <div className="saker-tema">
                     <button className="tema-bar" onClick={this.toggleEkspandering} aria-expanded="false">
                         <h3 className="tema-overskrift">{this.props.tema}</h3>
-
                         <div className="ekspanderingspil ned"></div>
                     </button>
                 </div>

@@ -1,78 +1,103 @@
 .varsel-lerret {
-  margin: 3px;
-  .varsel-liste-header {
-    font-size: 14px;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .varsel-liste-header, .varsel-rad-header, .varsel-rad-element {
-    padding: 1rem;
-    span {
-      display: inline-block;
-      &.header-dato, &.header-kanal, &.innhold-kanal {
-        width: 20%;
-      }
-      &.header-type {
-        width: 60%;
-      }
-      &.innhold-melding {
-        width: 80%;
-      }
-    }
-  }
-  .varsel-liste-header, .varsel-rad-header {
-    padding-right: 3rem;
-  }
-  .reset-ul-styling {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .varsel-rad {
-    margin-bottom: 3px;
-  }
-  .varsel-rad-header {
-    background-color: #ebebeb;
-    width: 100%;
-    border: none;
-    text-align: left;
+	margin: 3px;
+	.varsel-liste-header, .varsel-rad-header, .varsel-rad-element {
+		padding: 1rem;
+		span {
+			display: inline-block;
+			vertical-align: top;
+			&.header-dato, &.innhold-kanal {
+				width: 18%;
+			}
+			&.header-kanal {
+				width: 32%;
+				position: relative;
+			}
+			&.header-type {
+				width: 50%;
+			}
+			&.innhold-melding {
+				width: 82%;
+			}
+		}
+	}
+	.varsel-liste-header {
+		font-size: 14px;
+		text-transform: uppercase;
+		font-weight: 600;
+		padding-bottom: 0.5rem;
+	}
+	.reset-ul-styling {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.varsel-rad {
+		margin-bottom: 3px;
+	}
+	.varsel-rad-header {
+		background-color: #ebebeb;
+		width: 100%;
+		border: none;
+		text-align: left;
 
-    &.ekspandert {
-      background-color: #333;
-      color: #f1f1f1;
-    }
-  }
-  .varsel-rad-element {
-    padding-top: 2rem;
-    font-size: 16px;
+		&.ekspandert {
+			background-color: #333;
+			color: #f1f1f1;
+		}
+	}
+	.varsel-rad-element {
+		font-size: 16px;
+		padding: 0;
+		&:not(:last-of-type) {
+			border-bottom: 1px solid #ccc;
+		}
+	}
+	.innhold-informasjon {
+		font-weight: 600;
+		font-style: italic;
+		margin-top: -0.5rem;
+		&.ok {
+			color: #226aa4;
+		}
+		&.error {
+			color: #BA3A26;
+		}
+	}
 
-    &:not(:last-of-type) {
-      border-bottom: 1px solid #ccc;
-    }
-  }
-  .innhold-informasjon {
-    font-weight: 600;
-    font-style: italic;
-    &.ok {
-      color: #226aa4;
-    }
-    &.error {
-      color: #BA3A26;
-    }
-  }
+	.innhold-kanal {
+		font-weight: 600;
+	}
+	.innhold-informasjon {
+		margin-left: 18%;
+	}
+	.ekspanderingspil {
+		position: absolute;
+		top: 3px;
+		right: 0;
+		.pil(8px, #226aa4);
+		&.opp {
+			.pil(8px, #f1f1f1);
+		}
+	}
+}
 
-  .innhold-kanal {
-    font-weight: 600;
-  }
-  .innhold-informasjon {
-    margin-left: 20%;
-  }
-  .ekspanderingspil {
-    position: absolute;
-    margin-top: 4px;
-    .pil(8px, #226aa4);
-    &.opp {
-      .pil(8px, #f1f1f1);
-    }
-  }
+@media (min-width: 1440px) {
+	.varsel-lerret {
+		.varsel-liste-header, .varsel-rad-header, .varsel-rad-element {
+			span {
+				&.header-dato, &.innhold-kanal {
+					width: 18%;
+				}
+				&.header-kanal {
+					width: 26%;
+				}
+				&.header-type {
+					width: 56%;
+				}
+				&.innhold-melding {
+					width: 82%;
+				}
+			}
+		}
+	}
 }

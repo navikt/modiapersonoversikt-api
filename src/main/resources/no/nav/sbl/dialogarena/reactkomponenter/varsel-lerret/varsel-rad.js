@@ -40,11 +40,12 @@ class VarselRad extends React.Component {
                 <button className={headerClassname} onClick={this.toggleEkspandert} aria-expanded={varsel.ekspandert}>
                     <span className="header-dato">{prettyDate(varsel.mottattTidspunkt, datoformat)}</span>
                     <span className="vekk"> | </span>
-                    <span
-                        className="header-type">{resources.getOrElse('varsel.varseltype.' + varsel.varselType, 'Ukjent nøkkel: ' + varsel.varselType)}</span>
+                    <span className="header-type">{resources.getOrElse('varsel.varseltype.' + varsel.varselType, 'Ukjent nøkkel: ' + varsel.varselType)}</span>
                     <span className="vekk"> | </span>
-                    <span className="header-kanal">{sendIKanal}</span>
-                    <i className={pilClassname} aria-hidden="true"/>
+                    <span className="header-kanal">
+                        {sendIKanal}
+                        <i className={pilClassname} aria-hidden="true"/>
+                    </span>
                 </button>
                 <ul className="reset-ul-styling">
                     {meldinger}
