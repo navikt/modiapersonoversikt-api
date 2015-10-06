@@ -17,6 +17,7 @@ import org.apache.wicket.model.StringResourceModel;
 
 import java.text.MessageFormat;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
@@ -39,16 +40,8 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
         final WebMarkupContainer oppgaveTilknytningPopup = new WebMarkupContainer("oppgaveTilknytningPopup");
         oppgaveTilknytningPopup.setOutputMarkupPlaceholderTag(true);
         oppgaveTilknytningPopup.add(visibleIf(isOpen));
-        final AjaxLink aapnePopup = new AjaxLink("aapnePopup") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                isOpen.setObject(true);
-                target.add(this, oppgaveTilknytningPopup);
-            }
-        };
-        AriaHelpers.ToggleButton.button(aapnePopup, oppgaveTilknytningPopup, isOpen);
 
-        RadioChoice<OppgaveTilknytning> oppgaveTilknytningValg = new RadioChoice<>("oppgaveTilknytning", asList(OppgaveTilknytning.values()), new IChoiceRenderer<OppgaveTilknytning>() {
+        final RadioChoice<OppgaveTilknytning> oppgaveTilknytningValg = new RadioChoice<>("oppgaveTilknytning", asList(OppgaveTilknytning.values()), new IChoiceRenderer<OppgaveTilknytning>() {
             @Override
             public Object getDisplayValue(OppgaveTilknytning object) {
                 String key = "oppgavetilknytning." + object.name();
@@ -63,6 +56,23 @@ public class OppgaveTilknytningPanel extends GenericPanel<HenvendelseVM> {
                 return object.name();
             }
         });
+        oppgaveTilknytningValg.setOutputMarkupId(true);
+
+        final AjaxLink aapnePopup = new AjaxLink("aapnePopup") {
+            String flytteFokusTilValgtRadioJavaScript = format(
+                    "delayed(function () {" +
+                    "    $('#%s input[type=radio][checked]').focus();" +
+                    "});", oppgaveTilknytningValg.getMarkupId());
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                isOpen.setObject(true);
+                target.add(this, oppgaveTilknytningPopup);
+                target.appendJavaScript(flytteFokusTilValgtRadioJavaScript);
+            }
+        };
+        AriaHelpers.ToggleButton.button(aapnePopup, oppgaveTilknytningPopup, isOpen);
+
         AjaxButton ok = new AjaxButton("ok") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
