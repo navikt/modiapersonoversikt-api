@@ -9,30 +9,23 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
-import no.nav.sbl.dialogarena.varsel.domain.Varsel;
-import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static no.nav.modig.lang.option.Optional.optional;
-import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Configuration
 @Import({
-    SykepengerWidgetMockContext.class,
-    UtbetalingerMockContext.class,
-    SporsmalOgSvarMockContext.class,
-    SaksoversiktMockContext.class,
-    ConsumerServicesMockContext.class,
-    JacksonMockContext.class,
-    VarslingMockContext.class
+        SykepengerWidgetMockContext.class,
+        UtbetalingerMockContext.class,
+        SporsmalOgSvarMockContext.class,
+        SaksoversiktMockContext.class,
+        ConsumerServicesMockContext.class,
+        JacksonMockContext.class,
+        VarslingMockContext.class
 })
 public class PersonPageMockContext {
 
@@ -79,14 +72,5 @@ public class PersonPageMockContext {
         when(mock.getDefaultLocale()).thenReturn("nb");
         when(mock.hentTekst(anyString())).thenReturn("Tekst fra mock-cms");
         return mock;
-    }
-
-    @Bean
-    public VarslerService varslerService() {
-        VarslerService varslerServiceMock = mock(VarslerService.class);
-        List<Varsel> varselList = new ArrayList<>();
-        varselList.add(new Varsel("", now(), "", new ArrayList<Varsel.VarselMelding>()));
-        when(varslerServiceMock.hentAlleVarsler(anyString())).thenReturn(optional(varselList));
-        return varslerServiceMock;
     }
 }

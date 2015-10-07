@@ -27,7 +27,7 @@ public class VarslingMockContext {
         return contentRetriever;
     }
 
-    @Bean(name = "varsling-service")
+    @Bean
     public VarslerService varslerService() {
         VarslerService varslerServiceMock = mock(VarslerService.class);
         List<Varsel> varselList = new ArrayList<>();
