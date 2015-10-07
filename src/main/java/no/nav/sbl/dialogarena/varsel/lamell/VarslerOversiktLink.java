@@ -26,7 +26,6 @@ import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 public class VarslerOversiktLink extends AjaxLink<String> {
 
     @Inject
-    @Named("varsling-service")
     private VarslerService varselService;
     @Inject
     @Named("varsling-cms-integrasjon")

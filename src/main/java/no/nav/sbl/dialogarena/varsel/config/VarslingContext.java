@@ -6,7 +6,6 @@ import no.nav.modig.content.ValueRetriever;
 import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 import no.nav.sbl.dialogarena.varsel.service.VarslerServiceImpl;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,10 +21,9 @@ public class VarslingContext {
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.modia-varsling";
     public static final String DEFAULT_LOCALE = "nb";
 
-    @Value("${appres.cms.url}")
-    private String appresUrl;
+    private String appresUrl = System.getProperty("appres.cms.url");
 
-    @Bean(name = "varsling-service")
+    @Bean
     public VarslerService varslerService() {
         return new VarslerServiceImpl();
     }

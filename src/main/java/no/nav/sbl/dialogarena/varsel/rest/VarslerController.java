@@ -20,7 +20,6 @@ import java.util.Map;
 public class VarslerController {
 
     @Inject
-    @Named("varsling-service")
     VarslerService varslerService;
 
     @Inject
