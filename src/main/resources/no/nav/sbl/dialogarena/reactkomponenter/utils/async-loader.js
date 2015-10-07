@@ -36,14 +36,16 @@ class AsyncLoader extends React.Component {
     render() {
         let children;
         if (this.state.status === 'rejected') {
-            children= <AdvarselBoks tekst="Henting av data mislyktes"/>
+            children = <AdvarselBoks tekst="Henting av data mislyktes"/>
         } else if (this.state.status === 'pending') {
             children = <Snurrepipp />;
         } else {
             let passingProps = {};
             passingProps[this.props.toProp] = this.state.data;
 
-            children = React.Children.map(this.props.children, function (elem) {
+            const reactChildren = isArray(this.props.children) ? this.props.children.filter((child) => child != null) : this.props.children;
+
+            children = React.Children.map(reactChildren, function (elem) {
                 return React.cloneElement(elem, passingProps);
             });
         }
