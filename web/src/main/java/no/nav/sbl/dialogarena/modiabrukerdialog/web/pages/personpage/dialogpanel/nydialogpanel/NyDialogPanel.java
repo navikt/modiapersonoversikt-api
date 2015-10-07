@@ -231,7 +231,18 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
+
+        String forhindreAtEntertastIModusVelgerApnerSok = "" +
+                "var ENTER_KEY = 13;" +
+                "$('.modusVelger').on('keydown', 'input[type=radio]', function(event) {" +
+                "   var keycode = (event.keyCode ? event.keyCode : event.which);" +
+                "   if (keycode == ENTER_KEY) {" +
+                "       event.preventDefault();" +
+                "   }" +
+                "});";
+
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
+        response.render(OnDomReadyHeaderItem.forScript(forhindreAtEntertastIModusVelgerApnerSok));
     }
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
