@@ -25,7 +25,7 @@ public class ReactJournalforingsPanel extends Panel {
     private final HiddenField hiddenField;
     private final IModel<HenvendelseVM> henvendelseVM;
 
-    public ReactJournalforingsPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM) {
+    public ReactJournalforingsPanel(String id, final String fnr, final IModel<HenvendelseVM> henvendelseVM, final boolean skalViseOkonomiskSosialhjelp) {
         super(id);
         this.henvendelseVM = henvendelseVM;
         setOutputMarkupPlaceholderTag(true);
@@ -49,6 +49,7 @@ public class ReactJournalforingsPanel extends Panel {
         reactComponentPanel = new ReactComponentPanel("reactjournalforing", "VelgSakPanel", new HashMap<String, Object>() {
             {
                 put("fnr", fnr);
+                put("skalViseOkonomiskSosialhjelp", skalViseOkonomiskSosialhjelp);
             }
         });
         reactComponentPanel
