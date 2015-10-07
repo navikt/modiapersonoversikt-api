@@ -20,7 +20,7 @@ class VelgSak extends React.Component {
     render() {
         const advarsler = Object.keys(this.props.saker || {})
             .filter((key) => {
-                return !!this.props.saker[key];
+                return !this.props.saker[key];
             })
             .map((feiletKall) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
 
