@@ -4,8 +4,6 @@ import Snurrepipp from './snurrepipp';
 import AdvarselBoks from './../utils/advarsel-boks';
 import Q from 'q';
 
-window.Q = Q;
-
 class AsyncLoader extends React.Component {
     constructor(props) {
         super(props);
