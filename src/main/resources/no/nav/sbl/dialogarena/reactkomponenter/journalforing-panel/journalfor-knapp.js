@@ -1,5 +1,7 @@
 import React from 'react';
 import Snurrepipp from '../utils/snurrepipp';
+import Ajax from './../utils/ajax';
+import Q from 'q';
 
 class JournalforKnapp extends React.Component {
     constructor(props) {
@@ -16,19 +18,21 @@ class JournalforKnapp extends React.Component {
             sender: true
         });
 
-        $.ajax({
-            type: 'POST',
-            url: '/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/' + this.props.traadId,
-            contentType: 'application/json',
-            data: JSON.stringify(this.props.sak)
-        })
-            .done(function (response, status, xhr) {
-                this.props.traadJournalfort();
-            }.bind(this))
-            .fail(function () {
-                this.setState({sender: false});
-                this.props.feiletCallback();
-            }.bind(this));
+
+        const url = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/' + this.props.traadId;
+        const data = JSON.stringify(this.props.sak);
+
+        const journalforPromise = Ajax.post(url,data);
+
+        journalforPromise.done(()=> {
+            this.props.traadJournalfort();
+        });
+        journalforPromise.fail(()=> {
+            this.setState({sender: false});
+            this.props.feiletCallback();
+        });
+
+
     }
 
     render() {

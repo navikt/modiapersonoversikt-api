@@ -3,6 +3,7 @@ import TypeValg from './typevalg';
 import SakerListe from './saker-liste';
 import AdvarselBoks from './../utils/advarsel-boks';
 import { partition } from 'lodash';
+import Q from 'q';
 
 class VelgSak extends React.Component {
     constructor(props) {
@@ -18,11 +19,15 @@ class VelgSak extends React.Component {
     }
 
     render() {
-        const advarsler = Object.keys(this.props.saker || {})
-            .filter((key) => {
-                return !this.props.saker[key];
-            })
-            .map((feiletKall) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
+        const feileteAjaxkall = Object.keys(this.props.saker || {}).reduce((acc, key) => {
+            if (typeof this.props.saker[key] === 'undefined') {
+                acc.push(key);
+            }
+            return acc;
+        }, []);
+
+        const advarsler = feileteAjaxkall.map((feiletKall) => <AdvarselBoks
+            tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
 
         const mergedSaker = Object.keys(this.props.saker || {}).reduce((acc, key) => {
             acc = acc.concat(this.props.saker[key] || []);
