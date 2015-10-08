@@ -110,7 +110,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         kanalbeskrivelse.setOutputMarkupId(true);
         add(kanalbeskrivelse);
 
-        ReactJournalforingsPanel journalforingsPanel = new ReactJournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model);
+        ReactJournalforingsPanel journalforingsPanel = new ReactJournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model, false);
         journalforingsPanel.add(visibleIf(
                 both(brukerKanSvare.getModel())
                         .and(not(model.getObject().traadJournalfort()))

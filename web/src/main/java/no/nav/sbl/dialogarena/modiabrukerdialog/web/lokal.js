@@ -213,3 +213,13 @@ function addPrintEventListener() {
     }
 }
 
+function delayed(func, time) {
+    time = time || 0;
+    var deferred = $.Deferred();
+
+    setTimeout(function () {
+        deferred.resolve(func());
+    }, time);
+
+    return deferred.promise();
+}

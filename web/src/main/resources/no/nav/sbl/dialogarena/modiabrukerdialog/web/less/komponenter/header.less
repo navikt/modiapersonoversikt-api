@@ -18,17 +18,37 @@
 }
 
 .personsok-button {
-  margin: 0 0 0 20px;
-  width: 66px;
-  height: 66px;
-  border-radius: 66px;
-  text-align: center;
-  background-color: #fff;
+  #hentPerson & {
+    margin: -3px 0 0 17px;
+  }
+  .personpanel & {
+    margin: -6px 0 0 17px;
+  }
+  width: 72px;
+  height: 72px;
+  border-radius: 72px;
+  background: none;
   border: none;
   font-size: 1.8rem;
-  &:hover {
+  padding: 0;
+
+  span {
+    width: 66px;
+    height: 66px;
+    border-radius: 66px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+    display: inline-block;
+    padding-top: 15px;
+  }
+  &:hover span {
     background-color: @blue;
     outline: none;
+  }
+  &:focus {
+    box-shadow: none;
+    border: 3px solid #ffbd66;
   }
   &:active {
     .personsok-pil {
@@ -41,6 +61,8 @@
   .personsok-pil {
     display: block;
     width: 0;
+    height: 0;
+    padding: 0;
     margin: 0 auto;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
@@ -49,19 +71,33 @@
 }
 
 .nullstill-button {
-  margin: 0 0 0 10px;
-  width: 66px;
-  height: 66px;
+  margin: -3px 0 0 10px;
+  width: 72px;
+  height: 72px;
+  border-radius: 72px;
+  background: none;
   border: none;
-  background: transparent url(/modiabrukerdialog/img/nullstill_bruker.svg) no-repeat right center;
-  background-size: 66px;
-  color: transparent;
-  border-radius: 100%;
-  &:hover {
+  padding: 0;
+
+  span {
+    width: 66px;
+    height: 66px;
+    background: transparent url(/modiabrukerdialog/img/nullstill_bruker.svg) no-repeat right center;
+    background-size: 66px;
+    border-radius: 66px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+  &:focus {
+    box-shadow: none;
+    border: 3px solid #ffbd66;
+  }
+  &:hover span {
     background: transparent url(/modiabrukerdialog/img/nullstill_bruker_hover.svg) no-repeat right center;
     background-size: 66px;
     outline: none;
   }
+
 }
 
 .search-intern {
@@ -113,12 +149,13 @@
 }
 
 .navbar.menu-intern .saksbehandler {
-  float: right;
   color: white;
-  margin-right: 2rem;
   font-family: modus, arial, helvetica, sans-serif;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 1px;
+  position: absolute;
+  top: 0;
+  right: 2rem;
 }

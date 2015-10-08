@@ -109,19 +109,74 @@
                 <groupId>io.gatling</groupId>
                 <artifactId>gatling-maven-plugin</artifactId>
                 <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <phase>none</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
-                    <simulationClass>no.nav.sbl.dialogarena.modiabrukerdialog.gatling.MeldingerSokSimulation</simulationClass>
+                    <jvmArgs>
+                        <jvmArg>-Dduration.minutes=1</jvmArg>
+                        <jvmArg>-Dmeldingersok.users=1</jvmArg>
+                        <jvmArg>-Dskrivestottesok.users=1</jvmArg>
+                        <jvmArg>-Djournalforing.users=1</jvmArg>
+                    </jvmArgs>
+                    <simulationClass>no.nav.sbl.dialogarena.modiabrukerdialog.gatling.ModiaSimulation</simulationClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>meldingsok</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.gatling</groupId>
+                        <artifactId>gatling-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArgs>
+                                <jvmArg>-Dduration.minutes=1</jvmArg>
+                                <jvmArg>-Dmeldingersok.users=1</jvmArg>
+                            </jvmArgs>
+                            <simulationClass>no.nav.sbl.dialogarena.modiabrukerdialog.gatling.MeldingerSokSimulation</simulationClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>skrivestottesok</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.gatling</groupId>
+                        <artifactId>gatling-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArgs>
+                                <jvmArg>-Dduration.minutes=1</jvmArg>
+                                <jvmArg>-Dskrivestottesok.users=1</jvmArg>
+                            </jvmArgs>
+                            <simulationClass>no.nav.sbl.dialogarena.modiabrukerdialog.gatling.SkrivestotteSokSimulation</simulationClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>journalforing</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.gatling</groupId>
+                        <artifactId>gatling-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArgs>
+                                <jvmArg>-Dduration.minutes=1</jvmArg>
+                                <jvmArg>-Djournalforing.users=1</jvmArg>
+                            </jvmArgs>
+                            <simulationClass>no.nav.sbl.dialogarena.modiabrukerdialog.gatling.JournalforingSimulation</simulationClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

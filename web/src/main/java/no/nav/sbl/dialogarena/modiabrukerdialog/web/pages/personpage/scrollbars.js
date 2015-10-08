@@ -27,7 +27,7 @@ Modig.lagScrollbars = function () {
     $('.lamell.meldinger .traad-liste-visning').mCustomScrollbar(Modig.scrollOptions);
     $('.lamell.meldinger .traadvisning').mCustomScrollbar($.extend({}, Modig.scrollOptions, {
         advanced: {
-            autoScrollOnFocus: "input:not([type=submit]),textarea,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true'],article[tabindex]"
+            autoScrollOnFocus: "input:not([type=submit]),select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true'],article[tabindex]"
         }
     }));
 
