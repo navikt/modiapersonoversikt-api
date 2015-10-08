@@ -20,10 +20,9 @@ class JournalforKnapp extends React.Component {
 
 
         const url = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr + '/' + this.props.traadId;
-        const contentType = 'application/json';
         const data = JSON.stringify(this.props.sak);
 
-        const journalforPromise = Ajax.post(url, contentType, data);
+        const journalforPromise = Ajax.post(url,data);
 
         journalforPromise.done(()=> {
             this.props.traadJournalfort();

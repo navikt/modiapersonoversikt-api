@@ -1,29 +1,30 @@
 import http from 'superagent';
 import Q from 'q';
 
-function toPromise(req) {
-    const deferred = Q.defer();
-
-    req.end((err, resp) => {
-        if (err)deferred.reject([err, resp]);
-        else deferred.resolve(resp.body);
-    });
-
-    return deferred.promise;
-}
-
-function doRequest(req, requestModifier = req => req) {
-    return toPromise(requestModifier(req))
-}
-
 class Ajax {
-    static get(url, requestModifier = (req) => req) {
-        return doRequest(http.get(url), requestModifier);
+
+    static toPromise(req) {
+        const deferred = Q.defer();
+
+        req.end((err, resp) => {
+            if (err)deferred.reject([err, resp]);
+            else deferred.resolve(resp.body);
+        });
+
+        return deferred.promise;
     }
 
-    static post(url, contentType, data, requestModifier = (req) => req) {
+    static doRequest(req, requestModifier = req => req) {
+        return Ajax.toPromise(requestModifier(req))
+    }
 
-        return doRequest(http.post(url).type(contentType).send(data), requestModifier);
+    static get(url, requestModifier = (req) => req) {
+        return Ajax.doRequest(http.get(url), requestModifier);
+    }
+
+    static post(url, data, requestModifier = (req) => req) {
+
+        return this.doRequest(http.post(url).type('application/json').send(data), requestModifier);
     }
 
     static put(url) {
