@@ -2,6 +2,7 @@ import React from 'react';
 import { isArray, includes, toArray } from 'lodash';
 import Snurrepipp from './snurrepipp';
 import AdvarselBoks from './../utils/advarsel-boks';
+import Q from 'q';
 
 class AsyncLoader extends React.Component {
     constructor(props) {
@@ -14,16 +15,24 @@ class AsyncLoader extends React.Component {
     }
 
     componentDidMount() {
-        $.when.apply($, ensureArray(this.props.promises)).then(function () { //fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
+        Q.all(ensureArray(this.props.promises)).then(function () { //fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
             let dataargs;
             let args = toArray(arguments);
+
             if (ensureArray(this.props.promises).length === 1) {
-                dataargs = args[0];
+                dataargs = args[0][0];
+
+                var newdataargs = Object.keys(dataargs).reduce((acc, key)=> {
+                    acc[key] = dataargs[key].value;
+                    return acc;
+                }, {});
+
             } else {
                 dataargs = args.map((resp) => resp[0]);
             }
+
             this.setState({
-                data: dataargs,
+                data: newdataargs,
                 status: "ok"
             });
         }.bind(this), function () {
