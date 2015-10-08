@@ -12,8 +12,15 @@ class VarselRadElement extends React.Component {
 
         if (melding.statusKode === 'OK' && melding.utsendingsTidspunkt) {
             const prefix = resources.getOrElse('varsel.tilbakemelding.' + melding.kanal, melding.kanal);
-            return <p className="innhold-informasjon ok">{prefix + melding.mottakerInformasjon}</p>;
+            return <p className="innhold-informasjon ok">{prefix + this.getMottakerInfo(melding)}</p>;
         }
+    }
+
+    getMottakerInfo(melding) {
+        if (melding.mottakerInformasjon == null) {
+            return '';
+        }
+        return melding.mottakerInformasjon;
     }
 
     render() {
@@ -22,15 +29,15 @@ class VarselRadElement extends React.Component {
         const resources = this.props.store.getResources();
         const epostEmne = melding.kanal === 'EPOST' && melding.epostemne ?
             <div><span className="innhold-epostemne">{melding.epostemne}</span><br/></div> :
-			undefined;
+            undefined;
 
         return (
             <li className="varsel-rad-element">
                 <div className="varsel-innhold-container">
                     <span className="innhold-kanal">{resources.getOrElse('varsel.kanal.' + melding.kanal, melding.kanal) + ': '}</span>
                     <div className="innhold-melding">
-                      {epostEmne}
-                      <span>{melding.innhold}</span>
+                        {epostEmne}
+                        <span>{melding.innhold}</span>
                     </div>
                 </div>
                 {innholdInfo}
