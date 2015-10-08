@@ -20,7 +20,7 @@ class VelgSak extends React.Component {
 
     render() {
         const feileteAjaxkall = Object.keys(this.props.saker || {}).reduce((acc, key) => {
-            if (!this.props.saker[key]) {
+            if (typeof this.props.saker[key] === 'undefined') {
                 acc.push(key);
             }
             return acc;
