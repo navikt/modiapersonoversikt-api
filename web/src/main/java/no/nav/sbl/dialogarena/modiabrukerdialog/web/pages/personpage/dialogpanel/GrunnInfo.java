@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.kjerneinfo.domain.person.Personnavn;
+
 import java.io.Serializable;
 
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -24,6 +26,22 @@ public class GrunnInfo implements Serializable {
             this.etternavn = namifyString(etternavn);
             this.navn = String.format("%s %s", this.fornavn, this.etternavn);
             this.navkontor = navkontor;
+        }
+
+        public Bruker(String fnr) {
+            this.fnr = fnr;
+        }
+
+        public Bruker withPersonnavn(Personnavn personnavn) {
+            this.fornavn = namifyString(personnavn.getFornavn());
+            this.etternavn = namifyString(personnavn.getEtternavn());
+            this.navn = String.format("%s %s", this.fornavn, this.etternavn);
+            return this;
+        }
+
+        public Bruker withEnhet(String enhet) {
+            this.navkontor = enhet;
+            return this;
         }
     }
 

@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
+import com.codahale.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -12,11 +14,15 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Radio;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
@@ -27,12 +33,8 @@ import static java.lang.Boolean.TRUE;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
 import static org.apache.wicket.ajax.attributes.AjaxRequestAttributes.EventPropagation;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
@@ -96,23 +98,28 @@ public class PlukkOppgavePanel extends Panel {
 
         @Override
         protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-            if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
-                redirectForAaBesvareOppgave(
-                        getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR),
-                        getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR),
-                        getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR)
-                );
-                return;
-            }
+            final Timer.Context timer = MetricsFactory.createTimer("hendelse.plukk.time").time();
+            try {
+                if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
+                    redirectForAaBesvareOppgave(
+                            getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR),
+                            getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR),
+                            getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR)
+                    );
+                    return;
+                }
 
-            Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject());
-            if (oppgave.isSome()) {
-                lagrePlukketOppgavePaaSession(oppgave.get());
-                lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());
-                redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().henvendelseId, oppgave.get().oppgaveId);
-            } else {
-                error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
-                target.add(feedbackPanel, PlukkOppgavePanel.this.velgtemagruppeKnapp);
+                Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject());
+                if (oppgave.isSome()) {
+                    lagrePlukketOppgavePaaSession(oppgave.get());
+                    lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());
+                    redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().henvendelseId, oppgave.get().oppgaveId);
+                } else {
+                    error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
+                    target.add(feedbackPanel, PlukkOppgavePanel.this.velgtemagruppeKnapp);
+                }
+            } finally {
+                timer.stop();
             }
         }
 

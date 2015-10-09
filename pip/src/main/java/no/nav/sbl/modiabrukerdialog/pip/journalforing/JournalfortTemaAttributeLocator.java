@@ -1,6 +1,5 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing;
 
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.config.JournalfortTemaPipConfig;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.jboss.security.xacml.interfaces.XACMLConstants;
 import org.jboss.security.xacml.locators.AttributeLocator;
@@ -10,12 +9,12 @@ import org.jboss.security.xacml.sunxacml.attr.AttributeValue;
 import org.jboss.security.xacml.sunxacml.attr.BagAttribute;
 import org.jboss.security.xacml.sunxacml.cond.EvaluationResult;
 import org.jboss.security.xacml.util.JBossXACMLUtil;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
+
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider.context;
 
 public class JournalfortTemaAttributeLocator extends AttributeLocator {
 
@@ -31,7 +30,6 @@ public class JournalfortTemaAttributeLocator extends AttributeLocator {
         this.attributeDesignatorSupported = true;
         this.attributeSelectorSupported = true;
         this.designatorTypes.add(0);
-        ApplicationContext context = new AnnotationConfigApplicationContext(JournalfortTemaPipConfig.class);
         delegate = context.getBean(JournalfortTemaAttributeLocatorDelegate.class);
     }
 
@@ -59,6 +57,7 @@ public class JournalfortTemaAttributeLocator extends AttributeLocator {
     private String getSubjectId(EvaluationCtx context) {
         return (String) context.getSubjectAttribute(STRING_TYPE, SUBJECT_ID, SUBJECT_CATEGORY).getAttributeValue().getValue();
     }
+
     private String getValgtEnhet(EvaluationCtx context) {
         return (String) context.getSubjectAttribute(STRING_TYPE, VALGTENHET_ID, SUBJECT_CATEGORY).getAttributeValue().getValue();
     }

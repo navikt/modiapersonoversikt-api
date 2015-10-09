@@ -2,12 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.behandlebrukerprofil.consumer.messages.BehandleBrukerprofilRequest;
+import no.nav.behandlebrukerprofil.consumer.support.DefaultBehandleBrukerprofilService;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserUgyldigInput;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,11 +20,9 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mo
 public class BehandleBrukerprofilConsumerConfigResolver {
 
     @Inject
-    @Qualifier("behandleBrukerprofilService")
-    private Wrapper<BehandleBrukerprofilServiceBi> defaultService;
+    private Wrapper<DefaultBehandleBrukerprofilService> defaultService;
 
     @Inject
-    @Qualifier("behandleBrukerprofilMock")
     private Wrapper<BehandleBrukerprofilServiceBi> mockService;
 
     @Bean

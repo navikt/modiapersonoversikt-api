@@ -1,21 +1,24 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.SakerForTema;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 
 import java.util.List;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.modia.aria.AriaHelpers.toggleButtonConnector;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class SakerPerSakstypeRadioChoices extends Panel {
 
@@ -23,16 +26,17 @@ public class SakerPerSakstypeRadioChoices extends Panel {
         super(id);
         setOutputMarkupId(true);
 
-        AjaxLink link = new AjaxLink("link") {
+        AjaxLink header = new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 open.setObject(!open.getObject());
                 target.add(SakerPerSakstypeRadioChoices.this);
             }
         };
-        link.add(
+        header.add(
                 new Label("sakstype", new ResourceModel(sakstypePropertyKey)),
-                new PilOppNed("pilSaker", link, open));
+                new PilOppNed("pilSaker", open)
+        );
 
         WebMarkupContainer sakswrapper = new WebMarkupContainer("sakswrapper");
         sakswrapper.add(new PropertyListView<SakerForTema>("saksgruppeliste", model) {
@@ -49,9 +53,10 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                     }
                 });
             }
-        }.add(visibleIf(open)));
+        });
+        sakswrapper.add(hasCssClassIf("hidden", not(open)));
 
-        link.add(AttributeAppender.append("aria-controls", sakswrapper.getMarkupId()));
-        add(link, sakswrapper);
+        toggleButtonConnector(header, sakswrapper, open);
+        add(header, sakswrapper);
     }
 }

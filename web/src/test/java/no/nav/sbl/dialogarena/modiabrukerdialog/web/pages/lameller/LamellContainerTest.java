@@ -3,10 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ForeldrepengerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykmeldingsperiodePanelMockContext;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_FORELDREPENGER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_KONTRAKTER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_SYKEPENGER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.*;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,19 +20,15 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {
-        WicketTesterConfig.class,
-        SykmeldingsperiodePanelMockContext.class,
-        ForeldrepengerPanelMockContext.class,
-        LamellServicesAndLoaders.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class LamellContainerTest {
+@ContextConfiguration(classes = {LamellServicesAndLoaders.class})
+public class LamellContainerTest extends WicketPageTest {
 
     private LamellContainer lamellContainer;
 
     @Before
     public void setup() {
-        lamellContainer = new LamellContainer("lameller", "22222222222");
+        lamellContainer = new LamellContainer("lameller", "22222222222", wicket.tester.getSession());
     }
 
     @Test(expected = ApplicationException.class)

@@ -6,6 +6,11 @@
 @modiagraaskrift: #b7b1a9;
 @modiaaquablaa: #008fc4;
 
+[class*=sidebar-hoyre] {
+  background-color: #f0f0f0;
+  border-left: 2px solid #a5a5a5;
+}
+
 .dialogpanel {
   text-align: center;
   padding-bottom: 2em;
@@ -21,8 +26,12 @@
     margin-top: 30px;
     text-align: left;
 
-    input[type=radio] + label {
+    label {
       display: block;
+    }
+  }
+  .modusVelger, .popupContainer {
+    input[type=radio] + label {
       margin: 0 auto;
       color: #3e3832;
       padding: 5px 5px 5px 37px;
@@ -81,6 +90,87 @@
     display: inline-block;
     &.fortsettdialogpaneloverskrift {
       margin: 0;
+    }
+  }
+  .oppgavetilknytning {
+    margin: 0 @sideMargin;
+    max-width: 420px;
+    section {
+      margin: 8px 0;
+      text-align: left;
+      width: 100%;
+      span {
+        display: inline-block;
+        vertical-align: bottom;
+        max-width: 88%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      a {
+        font-weight: normal;
+        cursor: pointer;
+        text-decoration: underline;
+        z-index: 2;
+      }
+    }
+    .popupContainer {
+      display: inline-block;
+      position: relative;
+    }
+    .popup {
+      position: absolute;
+      z-index: 1;
+      background-color: #ffffff;
+      border: 1px solid #cbcbcb;
+      top: 35px;
+      right: -1.5rem;
+      width: 375px;
+      padding: 24px 32px 32px 32px;
+      -webkit-box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
+      -moz-box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
+      box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
+      text-align: left;
+      h4 {
+        margin: 0 0 16px 0;
+      }
+      input[type=radio] + label {
+        margin: 0;
+        text-align: left;
+        width: 100%;
+        color: #3e3832;
+        padding-right: 1rem;
+      }
+      input[type=button] {
+        margin-right: 16px;
+      }
+      a {
+        cursor: pointer;
+      }
+      .skiller {
+        height: 1px;
+        background-color: #cbcbcb;
+        margin: 16px 0;
+      }
+      &:after, &:before {
+        position: absolute;
+        content: " ";
+        bottom: 100%;
+        left: 90%;
+        border: solid transparent;
+        height: 0;
+        width: 0;
+      }
+      &:before {
+        border-width: 14px;
+        margin-left: -14px;
+        border-bottom-color: #cbcbcb;
+      }
+      &:after {
+        border-width: 13px;
+        margin-left: -13px;
+        border-bottom-color: #ffffff;
+      }
     }
   }
   .temagruppeoverskrift {

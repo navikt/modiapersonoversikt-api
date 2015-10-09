@@ -1,0 +1,115 @@
+.navbar {
+  margin-bottom: 0;
+  padding: 40px 30px 40px 30px;
+  background-color: @modiaBackground;
+  white-space: no-wrap;
+  position: relative;
+  FORM {
+    margin: 0;
+  }
+  H1 {
+    display: none;
+  }
+}
+
+.menu-intern .sokeboks {
+  float: left;
+  min-width: 37rem;
+}
+
+.personsok-button {
+  margin: 0 0 0 20px;
+  width: 66px;
+  height: 66px;
+  border-radius: 66px;
+  text-align: center;
+  background-color: #fff;
+  border: none;
+  font-size: 1.8rem;
+  &:hover, &:focus {
+    background-color: @blue;
+    outline: none;
+  }
+  &:active {
+    .personsok-pil {
+      border-top: none;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 7px solid @modiaBackground;
+    }
+  }
+  .personsok-pil {
+    display: block;
+    width: 0;
+    margin: 0 auto;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid @modiaBackground;
+  }
+}
+
+.nullstill-button {
+  margin: 0 0 0 10px;
+  width: 66px;
+  height: 66px;
+  border: none;
+  background: transparent url(../img/nullstill_bruker.svg) no-repeat right center;
+  background-size: 66px;
+  color: transparent;
+  &:hover,&:focus {
+    background: transparent url(../img/nullstill_bruker_hover.svg) no-repeat right center;
+    background-size: 66px;
+    outline: none;
+  }
+}
+
+.search-intern {
+  width: 24rem;
+  display: block;
+  position: relative;
+  float: left;
+  INPUT[type=text] {
+    float: left;
+    height: 64px;
+    width: 100%;
+    padding: 0 40px 0 20px;
+    font-size: 2.14rem;
+  }
+  INPUT[type=image] {
+    float: left;
+    margin: -55px 0 0 260px;
+  }
+  #submitFodselsnummer {
+    margin: 0;
+    height: 40px;
+    padding: 4px;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    text-align: center;
+  }
+  INPUT[type=button]:hover, INPUT[type=button].hover, INPUT[type=button]:active, INPUT[type=submit]:hover, INPUT[type=submit]:active {
+    right: 1rem;
+    position: absolute;
+  }
+  SPAN.feedbackPanelERROR, UL.feedbackPanel, LI:before {
+    color: @errorTextLight;
+    font-size: @fontSizeMini;
+    background: transparent;
+    white-space: nowrap;
+    content: "" !important;
+    position: absolute;
+    left: 0;
+    bottom: -0.6em;
+  }
+  INPUT.errorJS {
+    background-color: @errorBackgroundLight;
+    border: 1px solid @errorTextLight;
+    color: @black;
+  }
+  UL.feedbackPanel {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+}

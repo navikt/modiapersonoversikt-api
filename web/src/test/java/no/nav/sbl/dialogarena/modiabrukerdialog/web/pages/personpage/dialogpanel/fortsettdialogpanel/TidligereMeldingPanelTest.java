@@ -8,9 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.FMLI;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,7 +31,6 @@ public class TidligereMeldingPanelTest extends WicketPageTest {
 
     @Test
     public void skalToggleFritekstSynligVedKlikkPaaOverskriftContainer() {
-
         wicket.goToPageWith(new TidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", false))
                 .should().containComponent(thatIsVisible().withId("fritekst"))
                 .onComponent(withId("overskriftContainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))

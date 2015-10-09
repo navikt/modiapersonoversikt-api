@@ -6,7 +6,6 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -22,10 +21,8 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
-@ContextConfiguration(classes = {
-        HentPersonPanelMockContext.class,
-        SaksbehandlerInnstillingerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {HentPersonPanelMockContext.class})
 public class HentPersonPageTest extends WicketPageTest {
 
     @Test
@@ -41,56 +38,70 @@ public class HentPersonPageTest extends WicketPageTest {
                 .should().containPatterns("errorMessage");
     }
 
-	@Test
+    @Test
+    public void shouldRenderHentPersonPageWithErrorMessageAndFnr() {
+        wicket.goTo(HentPersonPage.class, with().param("error", "errorMessage").param(HentPersonPanel.JSON_SOKT_FNR, "wrongFnr"))
+                .should().containPatterns("errorMessage")
+                .should().containPatterns("wrongFnr");
+    }
+
+    @Test
     public void shouldRenderHentPersonPageWithSikkerhetstiltak() {
         wicket.goTo(HentPersonPage.class, with().param(HentPersonPage.SIKKERHETSTILTAK, "Farlig."))
                 .should().containPatterns(HentPersonPage.SIKKERHETSTILTAK);
     }
 
-	@Test
-	public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
-		HentPersonPage page = new HentPersonPage(new PageParameters());
-		String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
-		assertEquals("Farlig.", sikkerhetstiltak);
-	}
+    @Test
+    public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
+        HentPersonPage page = new HentPersonPage(new PageParameters());
+        String sikkerhetstiltak = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}", HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        assertEquals("Farlig.", sikkerhetstiltak);
+    }
 
 
-	@Test
-	public void shouldExtractErrortext() throws JSONException {
-		HentPersonPage page = new HentPersonPage(new PageParameters());
-		String errorTxt = page.getErrorText("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
-		assertEquals("Feil tekst", errorTxt);
-	}
+    @Test
+    public void shouldExtractErrortext() throws JSONException {
+        HentPersonPage page = new HentPersonPage(new PageParameters());
+        String errorTxt = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}", HentPersonPanel.JSON_ERROR_TEXT);
+        assertEquals("Feil tekst", errorTxt);
+    }
 
-	@Test
-	public void shouldExtractNullWhenFnrtExist() throws JSONException {
-		HentPersonPage page = new HentPersonPage(new PageParameters());
-		String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\"}");
-		assertNull(sikkerhetstiltak);
-	}
+    @Test
+    public void shouldExtractErrortextAndSoktFnr() throws JSONException {
+        HentPersonPage page = new HentPersonPage(new PageParameters());
+        String soktFnr = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}", HentPersonPanel.JSON_SOKT_FNR);
+        assertEquals("wrongFnr", soktFnr);
+    }
 
-	@Test
-	public void vellykketGotoHentPersonPageBeggeError() {
+    @Test
+    public void shouldExtractNullWhenFnrtExist() throws JSONException {
+        HentPersonPage page = new HentPersonPage(new PageParameters());
+        String sikkerhetstiltak = page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        assertNull(sikkerhetstiltak);
+    }
 
-		wicket.goTo(HentPersonPage.class, with().param("pageParameters", "{\"errortext\":\"Feil tekst\"}"));
+    @Test
+    public void vellykketGotoHentPersonPageBeggeError() {
 
-		wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}"));
-	}
+        wicket.goTo(HentPersonPage.class, with().param("pageParameters", "{\"errortext\":\"Feil tekst\"}"));
 
-	@Test
-	public void vellykketGotoHentPersonPageKunErrortekst() {
+        wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}"));
+    }
 
-		wicket.goTo(HentPersonPage.class, with().param("pageParameters", "{\"errortext\":\"Feil tekst\"}"));
+    @Test
+    public void vellykketGotoHentPersonPageKunErrortekst() {
 
-		wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\"}"));
-	}
+        wicket.goTo(HentPersonPage.class, with().param("pageParameters", "{\"errortext\":\"Feil tekst\"}"));
 
-	private EventGenerator createEvent(final String eventNavn, final Object payload) {
-		return new EventGenerator() {
-			@Override
-			public Object createEvent(AjaxRequestTarget target) {
-				return new NamedEventPayload(eventNavn, payload);
-			}
-		};
-	}
+        wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\"}"));
+    }
+
+    private EventGenerator createEvent(final String eventNavn, final Object payload) {
+        return new EventGenerator() {
+            @Override
+            public Object createEvent(AjaxRequestTarget target) {
+                return new NamedEventPayload(eventNavn, payload);
+            }
+        };
+    }
 }

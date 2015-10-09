@@ -24,6 +24,7 @@ import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING1;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING2;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING3;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERINGETTERSENDELSE1;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERINGETTERSENDELSE2;
 import static org.joda.time.DateTime.now;
@@ -37,8 +38,10 @@ public class SakOgBehandlingPortTypeMock {
     public static final String GENERISK_BEHANDLINGSID = "behandlingsid123";
     public static final String DAGPENGEARKIVTEMA = "DAG";
     public static final String AAPARKIVTEMA = "AAP";
+    public static final String FORELDREPENGER_ARKIV_TEMA = "FOR";
     public static final String DAGPENGER_BEHANDLINGSTEMA = "ab0001";
     public static final String AAP_BEHANDLINGSTEMA = "ab0100";
+    public static final String FOR_BEHANDLINGSTEMA = "ab0026";
     public static final String OMS_BEHANDLINGSTEMA = "ab0149";
     public static final String GRU_BEHANDLINGSTEMA = "ab0132";
     public static final String KON_BEHANDLINGSTEMA = "ab0084";
@@ -77,6 +80,7 @@ public class SakOgBehandlingPortTypeMock {
         List<WSSak> liste = asList(
                 dagpengerSak(),
                 aapSak(),
+                foreldrepengerSak(),
                 feilutbetalingSak(),
                 omsSak(),
                 hjeSak(),
@@ -109,6 +113,16 @@ public class SakOgBehandlingPortTypeMock {
                         createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE1, AAP_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(15)),
                         createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1)),
                         createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae00XX")) // Skal filtreres bort
+                );
+    }
+
+    public static WSSak foreldrepengerSak() {
+        return new WSSak()
+                .withSaksId("3")
+                .withSakstema(new WSSakstemaer().withValue(FORELDREPENGER_ARKIV_TEMA))
+                .withBehandlingskjede(
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, FOR_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(2)),
+                        createBehandlingKobletTilKvittering(KVITTERING3, FOR_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(6))
                 );
     }
 

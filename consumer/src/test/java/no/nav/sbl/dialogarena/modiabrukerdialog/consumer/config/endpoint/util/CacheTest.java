@@ -10,10 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.inject.Inject;
 
-@ContextConfiguration(classes = {
-        CacheConfiguration.class,
-        SubjectHandlerTestConfig.class
-})
+@ContextConfiguration(classes = {CacheConfiguration.class})
 public abstract class CacheTest {
     protected static EhCacheCacheManager cm;
 

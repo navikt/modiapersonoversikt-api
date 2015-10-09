@@ -38,9 +38,11 @@ public class HentPersonPage extends BasePage {
 	public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
 	public static final String FNR = "fnr";
 	public static final String ERROR = "error";
+    public static final String SOKT_FNR = "soektfnr";
 
 	public HentPersonPage(PageParameters pageParameters) {
-        HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
+        String fnr = pageParameters.get(SOKT_FNR).toString();
+        HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel", fnr);
         setupErrorText(pageParameters, hentPersonPanel);
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
@@ -86,14 +88,16 @@ public class HentPersonPage extends BasePage {
 
 	@RunOnEvents(GOTO_HENT_PERSONPAGE)
 	public void refreshKjerneinfoSikkerhetsInfo(AjaxRequestTarget target, String query) throws JSONException {
-		String errorText = getErrorText(query);
-		String sikkerhetstiltak = getSikkerhetsTiltakBeskrivelse(query);
+		String errorText = getTextFromPayload(query, HentPersonPanel.JSON_ERROR_TEXT);
+        String soktFnr = getTextFromPayload(query, HentPersonPanel.JSON_SOKT_FNR);
+		String sikkerhetstiltak = getTextFromPayload(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
 
 		PageParameters pageParameters = new PageParameters();
 		if (!StringUtils.isEmpty(sikkerhetstiltak)) {
-			pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak);
+			pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak)
+                    .set(SOKT_FNR, soktFnr);
 		} else {
-			pageParameters.set(ERROR, errorText);
+			pageParameters.set(ERROR, errorText).set(SOKT_FNR, soktFnr);
 		}
 
 		throw new RestartResponseException(HentPersonPage.class, pageParameters);
@@ -120,12 +124,15 @@ public class HentPersonPage extends BasePage {
         send(getPage(), DEPTH, new NamedEventPayload(HENTPERSON_CLEAR_MESSAGES, query));
     }
 
-	protected String getSikkerhetsTiltakBeskrivelse(String query) throws JSONException {
-		return getJsonField(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
-	}
-
-	protected String getErrorText(String query) throws JSONException {
-		return getJsonField(query, HentPersonPanel.JSON_ERROR_TEXT);
+    /**
+     * Hente forskjellige teksten fra en payload (JSONobjekt).
+     * @param query
+     * @param jsonField
+     * @return
+     * @throws JSONException
+     */
+	protected String getTextFromPayload(String query, String jsonField) throws JSONException {
+		return getJsonField(query, jsonField);
 	}
 
 	private String getJsonField(String query, String field) throws JSONException {

@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaModel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.joda.time.DateTime;
 
@@ -18,6 +18,7 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
     public Kanal kanal;
     public Temagruppe temagruppe;
     public Modus modus;
+    public OppgaveTilknytning oppgaveTilknytning;
     public Sak valgtSak;
     public boolean brukerKanSvare = false, traadJournalfort = false;
 
@@ -27,6 +28,10 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
 
     public static enum Modus {
         REFERAT, SPORSMAL
+    }
+
+    public static enum OppgaveTilknytning {
+        SAKSBEHANDLER, ENHET
     }
 
     public AbstractReadOnlyModel<Boolean> sakErSatt() {

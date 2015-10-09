@@ -1,0 +1,212 @@
+/* Generelle mixins, variabler, typografi og stiler som bruker av andre stilregler */
+@mainContentWidth: 50%;
+@sidebarYtrePadding: 15px;
+
+/* Mixins */
+.kolonne {
+  float: left;
+  display: block;
+  min-height: 30px;
+  width: 47.93617021276595%;
+}
+
+.generell-pil(@verticalSize, @horizontalSize, @color) {
+  height: 0;
+  width: 0;
+  border-left: @verticalSize solid transparent;
+  border-right: @verticalSize solid transparent;
+
+  &.ned {
+    border-top: @horizontalSize solid @color;
+  }
+  &.opp {
+    border-bottom: @horizontalSize solid @color;
+  }
+}
+
+.pil(@size, @color) {
+  .generell-pil(@size, @size, @color);
+}
+
+/* Generelle elementer */
+
+HTML {
+  overflow-y: scroll;
+  height: 100%;
+  background: @white;
+  font-size: 14px;
+}
+
+BODY {
+  height: auto;
+  min-height: 100%;
+  background: @white;
+}
+
+/* Typografi */
+H1, H2, H3 {
+  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  line-height: 1.2em;
+}
+
+H1 {
+  font-size: 2.5rem;
+}
+
+H2, ._H2 {
+  font-size: 2.0rem;
+}
+
+H3, ._H3 {
+  font-size: 1.43rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* FORMS */
+LABEL, .label {
+  text-transform: uppercase;
+  position: relative;
+  margin-top: 1em;
+  color: @grayLight;
+  font-size: 0.857rem;
+}
+
+INPUT.errorJS, SELECT.errorJS {
+  background-color: @errorBackgroundLight;
+  border: 1px solid @errorTextLight;
+}
+
+LABEL.errorJS {
+  position: absolute;
+  left: 0;
+  bottom: -2.9rem;
+  white-space: nowrap;
+  color: @errorTextLight;
+  text-transform: none;
+}
+
+UL.feedbackPanel {
+  padding: 1rem 1rem 1rem 2rem;
+  list-style-type: none;
+  color: @white;
+  background-color: #da153a;
+  font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  LI:before {
+    content: "* ";
+  }
+  A, A:visited {
+    color: @white;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+
+.description {
+  color: @grayLight;
+  font-size: 0.714rem;
+  white-space: nowrap;
+  text-transform: none;
+}
+
+.dateGroup INPUT[type=text] {
+  background: @white url(../img/kalender.svg) no-repeat right center;
+  background-size: 21px;
+}
+
+[class*=-liten] {
+  margin-top: 2px;
+}
+
+.default-error {
+  padding-top: 10px;
+  SVG {
+    height: 30px;
+    width: 30px;
+    margin: auto;
+    display: block;
+    PATH {
+      fill: @orange;
+    }
+  }
+  P {
+    padding-top: 20px;
+    margin: 0;
+    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  HR {
+    margin: 25px auto;
+    border-top: 1px solid @grayLight;
+    width: 30px;
+  }
+}
+
+.default-modal {
+  .default-error;
+  width: 400px;
+}
+
+.error-panel {
+  background-color: @bodyBackground;
+  padding: 10px 0;
+  P {
+    padding-top: 10px;
+  }
+}
+
+.default-cursor {
+  cursor: default !important;
+}
+
+fieldset.wcag {
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  > legend {
+    color: transparent;
+    width: 0;
+    height: 0;
+  }
+}
+
+.wicket-ajax-indicator {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.warn {
+  border: 1px solid #cccccc;
+  padding: 12px 12px 12px 52px;
+  background: url(../img/utropstegn-sirkel.svg) no-repeat 12px;
+  text-align: left;
+  font-weight: bold;
+  p {
+    margin: 0;
+    padding-left: 12px;
+    border-left: 1px solid #f18a10;
+  }
+}
+
+.bekreft-dialog {
+  UL {
+    margin: 20px 0 0 0;
+    padding: 0;
+    text-align: center;
+    LI {
+      margin-bottom: 30px;
+      display: block;
+      &:last-of-type {
+        margin-bottom: 15px;
+      }
+    }
+  }
+}

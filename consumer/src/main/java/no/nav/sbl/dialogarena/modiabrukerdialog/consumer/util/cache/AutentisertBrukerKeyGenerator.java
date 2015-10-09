@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher;
 import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.cache.interceptor.DefaultKeyGenerator;
+import org.springframework.cache.interceptor.SimpleKeyGenerator;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -18,7 +18,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
  * Denne er deprecated pga potensielle hash-kollisjoner
  * i nyeste versjon av Spring.
  */
-public class AutentisertBrukerKeyGenerator extends DefaultKeyGenerator {
+public class AutentisertBrukerKeyGenerator extends SimpleKeyGenerator {
 
     public AutentisertBrukerKeyGenerator() {
         super();

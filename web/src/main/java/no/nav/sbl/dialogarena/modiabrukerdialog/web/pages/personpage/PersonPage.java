@@ -14,6 +14,7 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -38,10 +39,8 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -57,10 +56,7 @@ import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FORTSETTDIALOGMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
@@ -84,10 +80,10 @@ public class PersonPage extends BasePage {
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String ERROR = "error";
+    public static final String SOKT_FNR = "soektfnr";
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
-    public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
+    public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
-    public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(HenvendelseVM.class, "jquery-ui-selectmenu.min.js");
 
     private final String fnr;
 
@@ -107,12 +103,12 @@ public class PersonPage extends BasePage {
         }
 
         redirectPopup = createRedirectModalWindow("redirectModal");
-        lamellContainer = new LamellContainer("lameller", fnr);
+        lamellContainer = new LamellContainer("lameller", fnr, getSession());
 
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
 
         add(
-                new HentPersonPanel("searchPanel"),
+                new HentPersonPanel("searchPanel", ""),
                 new Button("toggle-sok"),
                 new NullstillLink("nullstill"),
                 lamellContainer,
@@ -190,14 +186,15 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
     public void gotoHentPersonPage(AjaxRequestTarget target, String query) throws JSONException {
-        String errorText = getErrorText(query);
-        String sikkerhetstiltak = getSikkerhetsTiltakBeskrivelse(query);
+        String errorText = getTextFromPayload(query, HentPersonPanel.JSON_ERROR_TEXT);
+        String sikkerhetstiltak = getTextFromPayload(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        String soktFnr = getTextFromPayload(query, HentPersonPanel.JSON_SOKT_FNR);
 
         PageParameters pageParameters = new PageParameters();
         if (!StringUtils.isEmpty(sikkerhetstiltak)) {
-            pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak);
+            pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak).set(SOKT_FNR, soktFnr);
         } else {
-            pageParameters.set(ERROR, errorText);
+            pageParameters.set(ERROR, errorText).set(SOKT_FNR, soktFnr);
         }
 
         throw new RestartResponseException(HentPersonPage.class, pageParameters);
@@ -253,7 +250,7 @@ public class PersonPage extends BasePage {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
-    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT})
+    @RunOnEvents({Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
     public void slettPlukketOppgaveFraSession() {
         getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
         getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
@@ -311,12 +308,16 @@ public class PersonPage extends BasePage {
         }
     }
 
-    protected String getSikkerhetsTiltakBeskrivelse(String query) throws JSONException {
-        return getJsonField(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
-    }
-
-    protected String getErrorText(String query) throws JSONException {
-        return getJsonField(query, HentPersonPanel.JSON_ERROR_TEXT);
+    /**
+     * Hente forskjellige teksten fra en payload (JSONobjekt).
+     *
+     * @param query
+     * @param jsonField
+     * @return
+     * @throws JSONException
+     */
+    protected String getTextFromPayload(String query, String jsonField) throws JSONException {
+        return getJsonField(query, jsonField);
     }
 
     private String getJsonField(String query, String field) throws JSONException {

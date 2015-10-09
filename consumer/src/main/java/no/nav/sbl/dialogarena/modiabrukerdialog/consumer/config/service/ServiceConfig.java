@@ -1,7 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import no.nav.modig.wicket.services.HealthCheckService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
@@ -25,12 +30,12 @@ public class ServiceConfig {
 
     @Bean
     public HenvendelseUtsendingService henvendelseUtsendingService() {
-        return new HenvendelseUtsendingService();
+        return new HenvendelseUtsendingServiceImpl();
     }
 
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService() {
-        return new OppgaveBehandlingService();
+        return new OppgaveBehandlingServiceImpl();
     }
 
     @Bean
@@ -40,12 +45,12 @@ public class ServiceConfig {
 
     @Bean
     public EnhetService enhetService() {
-        return new DefaultEnhetService();
+        return new EnhetServiceImpl();
     }
 
     @Bean
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return new DefaultSaksbehandlerInnstillingerService();
+        return new SaksbehandlerInnstillingerServiceImpl();
     }
 
     @Bean

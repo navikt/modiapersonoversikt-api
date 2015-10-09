@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 
 import static no.nav.modig.lang.option.Optional.none;
 
@@ -23,7 +24,8 @@ public class MeldingBuilder {
                 .withType(type)
                 .withFritekst(henvendelseVM.getFritekst())
                 .withEksternAktor(navident)
-                .withTilknyttetEnhet(valgtEnhet);
+                .withTilknyttetEnhet(valgtEnhet)
+                .withErTilknyttetAnsatt(henvendelseVM.oppgaveTilknytning == OppgaveTilknytning.SAKSBEHANDLER);
         if (eldsteMeldingITraad.isSome()) {
             melding
                     .withTraadId(eldsteMeldingITraad.get().id)

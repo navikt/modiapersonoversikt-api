@@ -3,13 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Ansatt;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -42,7 +41,19 @@ public class AnsattServiceImpl implements AnsattService {
 
     @Override
     public List<Ansatt> ansatteForEnhet(AnsattEnhet enhet) {
-        return new ArrayList<>();
+        ASBOGOSYSNavEnhet request = new ASBOGOSYSNavEnhet();
+        request.setEnhetsId(enhet.enhetId);
+        request.setEnhetsNavn(enhet.enhetNavn);
+        try {
+            return on(ansattWS.hentNAVAnsattListe(request).getNAVAnsatte()).map(new Transformer<ASBOGOSYSNAVAnsatt, Ansatt>() {
+                @Override
+                public Ansatt transform(ASBOGOSYSNAVAnsatt ansatt) {
+                    return new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId());
+                }
+            }).collect();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected static final Transformer<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = new Transformer<ASBOGOSYSNavEnhet, AnsattEnhet>() {

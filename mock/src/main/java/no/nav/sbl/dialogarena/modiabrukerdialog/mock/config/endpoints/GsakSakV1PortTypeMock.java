@@ -4,6 +4,8 @@ import no.nav.tjeneste.virksomhet.sak.v1.*;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
+import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakRequest;
+import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSHentSakResponse;
 import org.joda.time.DateTime;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -14,6 +16,7 @@ import java.util.*;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock.AKTOER_ID_MOCK;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -21,16 +24,17 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class GsakSakV1PortTypeMock {
 
-    public static final String SAKSID_1 = "15818532";
-    public static final String SAKSID_2 = "85154832";
+    public static final String SAK_MED_INNSENDER = "15818532";
+    public static final String SAK_UTEN_INNSENDER = "85154832";
     public static final String SAKSTYPE_GENERELL = "GEN";
-
+    private static final WSPerson AKTOR = new WSPerson().withIdent(AKTOER_ID_MOCK);
+    private static final WSPerson ANNEN_INNSENDER = new WSPerson().withIdent("***REMOVED***");
     private static Random idGenerator = new Random();
     private static List<WSSak> defaultSaksliste = asList(
             createSak("DAG", DateTime.now().minusDays(1)),
-            createSak("TRY", "FS22", SAKSTYPE_GENERELL, SAKSID_1, DateTime.now().minusDays(4)),
+            createSak("TRY", "FS22", SAKSTYPE_GENERELL, SAK_MED_INNSENDER, DateTime.now().minusDays(4)),
             createSak("HJE", "IT01", DateTime.now().minusDays(4)),
-            createSak("FUL", "FS22", SAKSTYPE_GENERELL, SAKSID_2, DateTime.now().minusDays(3)),
+            createSak("FUL", "FS22", SAKSTYPE_GENERELL, SAK_UTEN_INNSENDER, DateTime.now().minusDays(3)),
             createSak("OPP", "AO01", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
             createSak("BIL", "V2", "Bilsøknad", DateTime.now().minusDays(4)),
             createSak("IND", "OEBS", "Individstønad", DateTime.now().minusDays(4)),
@@ -47,11 +51,18 @@ public class GsakSakV1PortTypeMock {
             createSak("FOR", "FS22", "Foreldrepenger", DateTime.now().minusDays(10)));
 
     private static List<WSSak> saksliste3 = asList(createSak("SYM", DateTime.now().minusWeeks(3)));
+    private static WSSak defaultSak = createSak("DAG", DateTime.now().minusDays(5), AKTOR);
 
     private static Map<String, List<WSSak>> sakslisteMap =
             asMap(
                     "11111111111", saksliste2,
                     "12345678901", saksliste3);
+
+    private static Map<String, WSSak> sakMap =
+            asMap(
+                    SAK_UTEN_INNSENDER, createSak("DAG", DateTime.now().minusDays(5), ANNEN_INNSENDER)
+            );
+
 
     @Bean
     public SakV1 sakV1Mock() {
@@ -68,9 +79,24 @@ public class GsakSakV1PortTypeMock {
                     return new WSFinnSakResponse().withSakListe(sakerForBruker(bruker));
                 }
             });
+            when(sakV1.hentSak(any(WSHentSakRequest.class))).thenAnswer(new Answer<WSHentSakResponse>() {
+                @Override
+                public WSHentSakResponse answer(InvocationOnMock invocation) {
+                    String sakId = ((WSHentSakRequest) invocation.getArguments()[0]).getSakId();
+                    return new WSHentSakResponse().withSak(sakForSakId(sakId));
+                }
+            });
             return sakV1;
-        } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
+        } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster | HentSakSakIkkeFunnet e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static WSSak sakForSakId(String sakId) {
+        if (sakMap.containsKey(sakId)) {
+            return sakMap.get(sakId);
+        } else {
+            return defaultSak;
         }
     }
 
@@ -82,9 +108,10 @@ public class GsakSakV1PortTypeMock {
         }
     }
 
-    private static WSSak createSak(String tema, DateTime opprettet) {
+    private static WSSak createSak(String tema, DateTime opprettet, WSPerson... brukerliste) {
         return new WSSak()
                 .withSakId("" + idGenerator.nextInt(100000000))
+                .withGjelderBrukerListe(brukerliste)
                 .withFagsystemSakId("" + idGenerator.nextInt(100000000))
                 .withFagomraade(new WSFagomraader().withValue(tema))
                 .withOpprettelsetidspunkt(opprettet)
@@ -93,7 +120,7 @@ public class GsakSakV1PortTypeMock {
     }
 
     private static WSSak createSak(String tema, String fagsystem, DateTime opprettet) {
-        return createSak(tema, opprettet).withFagsystem(new WSFagsystemer().withValue(fagsystem));
+        return createSak(tema, opprettet, AKTOR).withFagsystem(new WSFagsystemer().withValue(fagsystem));
     }
 
     private static WSSak createSak(String tema, String fagsystem, String sakstype, DateTime opprettet) {

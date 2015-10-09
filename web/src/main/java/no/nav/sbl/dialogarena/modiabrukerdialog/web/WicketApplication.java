@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.constants.ModiaConstants;
+import no.nav.modig.modia.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.modia.lamell.LamellPanel;
 import no.nav.modig.modia.lamell.ModalErrorPanel;
 import no.nav.modig.modia.liste.EkspanderingsListe;
@@ -31,6 +31,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.FancySelect;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -130,7 +131,7 @@ public class WicketApplication extends WebApplication {
                 try {
                     return cms.hentTekst(key);
                 } catch (Exception e) {
-                    log.warn("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
+                    log.trace("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
                     return null;
                 }
             }
@@ -156,21 +157,38 @@ public class WicketApplication extends WebApplication {
                 .addConditionalCss(
                         PersonPage.INTERN_IE,
                         SaksoversiktLerret.SAKSOVERSIKT_IE_CSS,
-                        BasePage.MODIA_FLEXBOX_IE_CSS,
+                        BasePage.MODIA_LAYOUT_IE_CSS,
+                        BasePage.KJERNEINFO_IE9_CSS,
                         Innboks.MELDINGER_IE_CSS,
-                        UtbetalingLerret.UTBETALING_IE_CSS
+                        FancySelect.IECSS
                 )
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
-                        BasePage.MODIA_KOMPONENTER_LESS,
-                        BasePage.MODIA_RAMME_LESS,
-                        BasePage.MODIA_FLEXBOX_LESS,
+                        BasePage.MODIA_WIDGET_LESS,
+                        BasePage.MODIA_LAMELL_LESS,
+                        BasePage.MODIA_LAYOUT_LESS,
+                        BasePage.HEADER,
+                        BasePage.RESPONSIVE,
                         BasePage.PERSONINFO_LESS,
                         UtbetalingLerret.UTBETALING_LESS,
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
-                        PersonPage.DIALOGPANEL_LESS
+                        BasePage.KJERNEINFO_FELLES_LISTE,
+                        BasePage.OPPFOLGING,
+                        BasePage.OPPGAVEFORM,
+                        BasePage.PERSONSOK_GENERELL,
+                        BasePage.PERSONSOK_RESULT,
+                        BasePage.PERSONSOK_SEARCH,
+                        BasePage.SAKBEHANDLERINNSTILLINGER,
+                        BasePage.JOURNALFORING,
+                        BasePage.BRUKERPROFIL,
+                        BasePage.HENTPERSON,
+                        BasePage.KJERNEINFO,
+                        BasePage.OVERSIKT,
+                        BasePage.SYKEPENGER_FORELDREPENGER,
+                        PersonPage.DIALOGPANEL_LESS,
+                        FancySelect.LESS
                 )
                 .addCss(
                         BasePage.PERSONSOKRESULT,
@@ -192,10 +210,11 @@ public class WicketApplication extends WebApplication {
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
                         UtbetalingLerret.UTBETALING_LAMELL_JS,
-                        PersonPage.SELECTMENU_JS,
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
-                        Innboks.MELDINGER_JS
+                        Innboks.MELDINGER_JS,
+                        Innboks.BESVAR_INDIKATOR_JS,
+                        FancySelect.JS
                 )
                 .withModules(ReactResources.REACT_KOMPONENTER)
                 .withResourcePacking(this.usesDeploymentConfig())

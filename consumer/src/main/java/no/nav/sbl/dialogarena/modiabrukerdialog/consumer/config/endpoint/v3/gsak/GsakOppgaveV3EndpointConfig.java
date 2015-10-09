@@ -5,11 +5,8 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import org.apache.cxf.feature.Feature;
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,7 +15,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.createOppgavePortTypeMock;
 
 @Configuration
@@ -28,7 +25,10 @@ public class GsakOppgaveV3EndpointConfig {
 
     @Bean
     public OppgaveV3 gsakOppgavePortType() {
-        return createSwitcher(createOppgavePortType(new UserSAMLOutInterceptor()), createOppgavePortTypeMock(), GSAK_V3_KEY, OppgaveV3.class);
+        OppgaveV3 prod = createOppgavePortType(new UserSAMLOutInterceptor());
+        OppgaveV3 mock = createOppgavePortTypeMock();
+
+        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_V3_KEY, OppgaveV3.class);
     }
 
     @Bean
@@ -50,15 +50,10 @@ public class GsakOppgaveV3EndpointConfig {
     }
 
     private static OppgaveV3 createOppgavePortType(AbstractSAMLOutInterceptor interceptor) {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(System.getProperty("gsak.oppgave.v3.url"));
-        proxyFactoryBean.setServiceClass(OppgaveV3.class);
-        proxyFactoryBean.getOutInterceptors().add(interceptor);
-        List<Feature> features = proxyFactoryBean.getFeatures();
-        features.add(new LoggingFeature());
-        features.add(new WSAddressingFeature());
-
-        return proxyFactoryBean.create(OppgaveV3.class);
+        return new CXFClient<>(OppgaveV3.class)
+                .address(System.getProperty("gsak.oppgave.v3.url"))
+                .withOutInterceptor(interceptor)
+                .build();
     }
 
 }

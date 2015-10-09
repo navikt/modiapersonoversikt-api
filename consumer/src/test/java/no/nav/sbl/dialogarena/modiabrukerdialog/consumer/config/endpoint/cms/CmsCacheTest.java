@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms;
 
 import no.nav.modig.cache.CacheConfig;
 import no.nav.modig.content.ContentRetriever;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.testconfig.ProperySourcesPlaceholderConfigurer;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +26,6 @@ public class CmsCacheTest {
 
     @Inject
     private ContentRetriever cms;
-
     @Inject
     private EhCacheCacheManager cm;
 

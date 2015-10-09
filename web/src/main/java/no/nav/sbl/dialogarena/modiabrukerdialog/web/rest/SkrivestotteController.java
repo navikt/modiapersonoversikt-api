@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst;
 import org.apache.commons.collections15.Transformer;
-import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -17,7 +16,6 @@ import java.util.Set;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
-@Controller
 @Path("/skrivestotte")
 @Produces(APPLICATION_JSON)
 public class SkrivestotteController {

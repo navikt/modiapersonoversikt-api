@@ -10,7 +10,6 @@ import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinforma
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserUgyldigInput;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -21,9 +20,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.ALLOW_MOCK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
@@ -32,7 +29,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 public class BehandleBrukerprofilConsumerConfigResolverTest {
 
     @Inject
-    @Qualifier("behandleBrukerprofilService")
     private Wrapper<DefaultBehandleBrukerprofilService> defaultService;
 
     @Inject
