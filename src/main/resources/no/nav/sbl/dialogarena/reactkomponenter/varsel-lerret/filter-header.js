@@ -5,8 +5,9 @@ class FilterHeader extends React.Component {
         super(props);
     }
     render() {
+        const {style} = this.props;
         return (
-            <div className="filter-header">
+            <div className="filter-header" style={style}>
 
             </div>
         );

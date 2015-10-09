@@ -6,10 +6,11 @@ class Infoboks extends React.Component {
     }
 
     render() {
+        const {tekst, style} = this.props;
         return (
-            <div className="feilmelding">
+            <div className="feilmelding" style={style}>
                 <div className="robust-ikon-feil-gra"></div>
-                <span className="stor">{this.props.tekst}</span>
+                <span className="stor">{tekst}</span>
             </div>
         )
     }

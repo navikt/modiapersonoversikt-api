@@ -3,7 +3,7 @@ import Q from 'q';
 class PromiseUtils {
 
     static atLeastN(n, wrapperPromise) {
-        const deferred = $.Deferred();
+        const deferred = Q.defer();
         var numPromises = Object.keys(wrapperPromise).length;
         if (n < 0 || n > numPromises || typeof n !== "number") {
             const message = "n = " + n + ". n must be a number greater than zero, and less than or equal to the number of promises. ";
@@ -39,7 +39,7 @@ class PromiseUtils {
                 }
             });
 
-        return deferred.promise();
+        return deferred.promise;
     }
 }
 

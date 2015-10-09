@@ -7,7 +7,7 @@ import Q from 'q';
 class AsyncLoader extends React.Component {
     constructor(props) {
         super(props);
-        let promiseStates = ensureArray(this.props.promises || []).map((p) => p.state());
+        let promiseStates = ensureArray(this.props.promises || []).map((p) => p.inspect().state);
         this.state = {
             status: combinedStates(promiseStates),
             data: null
@@ -47,7 +47,7 @@ class AsyncLoader extends React.Component {
         if (this.state.status === 'rejected') {
             children = <AdvarselBoks tekst="Henting av data mislyktes"/>
         } else if (this.state.status === 'pending') {
-            children = <Snurrepipp />;
+            children = <Snurrepipp {...this.props.snurrepipp}/>;
         } else {
             let passingProps = {};
             passingProps[this.props.toProp] = this.state.data;

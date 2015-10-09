@@ -11,13 +11,14 @@ class VarselListe extends React.Component {
     }
 
     render() {
-        const varselRad = this.props.varsler.map((varsel) => {
-            return <VarselRad varsel={varsel} store={this.props.store}/>
+        const {style, store, varsler} = this.props;
+        const varselRad = varsler.map((varsel) => {
+            return <VarselRad varsel={varsel} store={store}/>
         });
-        const resources = this.props.store.getResources();
+        const resources = store.getResources();
 
         return (
-            <div className="varsel-liste">
+            <div className="varsel-liste" style={style}>
                 <ul className="reset-ul-styling">
                     <li className="varsel-liste-header">
                         <span className="header-dato">{resources.getOrElse('varsel.ledetekst.header.dato', 'Dato')}</span>

@@ -3,7 +3,7 @@ import AsyncLoader from './../utils/async-loader';
 import VarselStore from './varsel-store';
 import FilterHeader from './filter-header';
 import VarselListe from './varsel-liste';
-import Infoboks from './infoboks'
+import Infoboks from './infoboks';
 
 class VarselLerret extends React.Component {
     constructor(props) {
@@ -27,20 +27,16 @@ class VarselLerret extends React.Component {
 
     render() {
         const resources = this.store.getResources();
-
-        if (this.state.varsler.length == 0) {
-            return (
-                <div className="varsel-lerret">
-                    <Infoboks tekst={resources.getOrElse('varsling.lerret.feilmelding.ingenvarsler', 'Det finnes ingen varsler for brukeren')}/>
-                </div>
-            )
-        }
+        const ingenMeldingerInfotekst = resources.getOrElse('varsling.lerret.feilmelding.ingenvarsler', 'Det finnes ingen varsler for brukeren');
+        const visMeldingsListe = this.state.varsler.length !== 0 ? null : {display: 'none'};
+        const visIngenMeldingerInfoboks = this.state.varsler.length !== 0 ? {display: 'none'} : null;
 
         return (
             <div className="varsel-lerret">
-                <AsyncLoader promises={this.promise}>
-                    <FilterHeader filterSetup={this.state.filtersetup}/>
-                    <VarselListe varsler={this.state.varsler} store={this.store}/>
+                <AsyncLoader promises={this.state.promise} snurrepipp={{farge: 'hvit'}}>
+                    <Infoboks tekst={ingenMeldingerInfotekst} style={visIngenMeldingerInfoboks}/>
+                    <FilterHeader filterSetup={this.state.filtersetup} style={visMeldingsListe}/>
+                    <VarselListe varsler={this.state.varsler} store={this.store} style={visMeldingsListe}/>
                 </AsyncLoader>
             </div>
         );
