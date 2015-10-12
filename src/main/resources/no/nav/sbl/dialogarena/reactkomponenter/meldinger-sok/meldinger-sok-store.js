@@ -2,39 +2,6 @@ import Utils from './../utils/utils-module';
 import Store from './../utils/store';
 import WicketSender from './../react-wicket-mixin/wicket-sender';
 
-function nesteMelding(elementer, index) {
-    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
-}
-
-function updateScroll(tabliste, valgtIndex) {
-    var $parent = $(tabliste);
-    var $valgt = $parent.find('.sok-element').eq(valgtIndex);
-
-    Utils.adjustScroll($parent, $valgt);
-}
-
-var sok = (fnr, query) => {
-    query = query || "";
-    query = query.replace(/\./g, '');
-    var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
-    return $.get(url);
-};
-
-
-function hentMelding(hentElement, elementer, valgtElement) {
-    for (var i = 0; i < elementer.length; i++) {
-        if (elementer[i].key === valgtElement.key) {
-            return hentElement(elementer, i);
-        }
-    }
-}
-
-function forrigeMelding(elementer, index) {
-    return index === 0 ? elementer[0] : elementer[index - 1];
-}
-
-
-
 
 class MeldingerSokStore extends Store {
     constructor(...args) {
@@ -45,22 +12,10 @@ class MeldingerSokStore extends Store {
         this.state.initialisert = false;
         this.state.feilet = false;
         this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
-
-        //this.update = this.update.bind(this);
-        //this.onChange = this.onChange.bind(this);
-        //this.traadChanged = this.traadChanged.bind(this);
-        //this.onKeyDown = this.onKeyDown = this.onKeyDown.bind(this);
-        //this.oppdaterTraadRefs = this.oppdaterTraadRefs.bind(this);
-        //this.submit = this.submit.bind(this);
     }
 
-
     update(props) {
-        $.extend(this.state, props);
-        $.ajax({
-            async: false,
-            url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'
-        });
+        Object.assign(this, props);
 
         this.onChange({target: {value: this.state.fritekst}});
 
@@ -71,10 +26,8 @@ class MeldingerSokStore extends Store {
         this.state.fritekst = event.target.value;
 
         hentSokeresultater.bind(this)(this.state.fritekst);
-        //hentSokeresultater.call(this, this.state.fritekst);
 
         this.fireUpdate(this.listeners);
-
     }
 
     traadChanged(traad, tabliste) {
@@ -116,6 +69,37 @@ class MeldingerSokStore extends Store {
         $('#' + this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
         afterSubmit();
     }
+}
+
+function nesteMelding(elementer, index) {
+    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
+}
+
+function updateScroll(tabliste, valgtIndex) {
+    var $parent = $(tabliste);
+    var $valgt = $parent.find('.sok-element').eq(valgtIndex);
+
+    Utils.adjustScroll($parent, $valgt);
+}
+
+var sok = (fnr, query) => {
+    query = query || "";
+    query = query.replace(/\./g, '');
+    var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
+    return $.get(url);
+};
+
+
+function hentMelding(hentElement, elementer, valgtElement) {
+    for (var i = 0; i < elementer.length; i++) {
+        if (elementer[i].key === valgtElement.key) {
+            return hentElement(elementer, i);
+        }
+    }
+}
+
+function forrigeMelding(elementer, index) {
+    return index === 0 ? elementer[0] : elementer[index - 1];
 }
 
 var hentSokeresultater =
