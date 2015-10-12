@@ -1,93 +1,5 @@
-var Utils = require('./../utils/utils-module');
-var Store = require('./../utils/store');
-
-var SkrivestotteStore = function () {
-    Store.apply(this, arguments);
-    if (this.state.tekster.length > 0) {
-        this.state.valgtTekst = this.state.tekster[0];
-    }
-};
-SkrivestotteStore.prototype = $.extend({}, Store.prototype, SkrivestotteStore.prototype);
-
-SkrivestotteStore.prototype.tekstChanged = function (tekst, tabliste) {
-    this.state.valgtTekst = tekst;
-
-    updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.leggTilKnagg = function (knagg) {
-    this.state.knagger = this.state.knagger || [];
-    this.state.knagger.push(knagg);
-
-    hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.slettKnagg = function (knagg) {
-    var nyeKnagger = this.state.knagger.slice(0);
-    var index = nyeKnagger.indexOf(knagg);
-    this.state.knagger.splice(index, 1);
-
-    hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.setLocale = function (locale) {
-    this.state.valgtLocale = locale;
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.onChange = function (data) {
-    this.state.fritekst = data.fritekst;
-    this.state.knagger = data.knagger;
-
-    hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
-    switch (event.keyCode) {
-        case 38: /* pil opp */
-            event.preventDefault();
-            this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
-
-            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
-
-            this.fireUpdate(this.listeners);
-            break;
-        case 40: /* pil ned */
-            event.preventDefault();
-            this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
-
-            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
-
-            this.fireUpdate(this.listeners);
-            break;
-    }
-};
-
-SkrivestotteStore.prototype.submit = function (onSubmit, event) {
-    event.preventDefault();
-    var $tekstfelt = $('#' + this.state.tekstfeltId);
-    $tekstfelt.focus();
-
-    // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
-    setTimeout(function () {
-        var eksisterendeTekst = $tekstfelt.val();
-        eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
-        $tekstfelt
-            .focus()
-            .val(eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor))
-            .trigger('input');
-
-        onSubmit();
-    }.bind(this), 0);
-};
+import Utils from './../utils/utils-module';
+import Store from './../utils/store';
 
 function updateScroll(tabliste, valgtIndex) {
     var $parent = $(tabliste);
@@ -121,7 +33,7 @@ var hentSokeresultater =
         }.bind(this));
     }, 150);
 
-var sok = function (fritekst, knagger) {
+var sok = (fritekst, knagger) => {
     fritekst = fritekst || '';
     knagger = knagger || [];
 
@@ -161,4 +73,100 @@ function autofullfor(tekst, autofullforMap) {
     });
 }
 
-module.exports = SkrivestotteStore;
+
+class SkrivstotteStore extends Store {
+    constructor(...args) {
+        super(args[0]);
+        if (this.state.tekster.length > 0) {
+            this.state.valgtTekst = this.state.tekster[0];
+        }
+    }
+
+    textChanged(tekst, tabliste) {
+        this.state.valgtTekst = tekst;
+
+        updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+
+        this.fireUpdate(this.listeners);
+    }
+
+    leggTilKnagg(knagg) {
+        this.state.knagger = this.state.knagger || [];
+        this.state.knagger.push(knagg);
+
+        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+
+        this.fireUpdate(this.listeners);
+
+    }
+
+    slettKnagg(knagg) {
+        var nyeKnagger = this.state.knagger.slice(0);
+        var index = nyeKnagger.indexOf(knagg);
+        this.state.knagger.splice(index, 1);
+
+        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+
+        this.fireUpdate(this.listeners);
+
+    }
+
+    setLocale(locale) {
+        this.state.valgtLocale = locale;
+        this.fireUpdate(this.listeners);
+    }
+
+    onChange(data) {
+        this.state.fritekst = data.fritekst;
+        this.state.knagger = data.knagger;
+
+        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+
+        this.fireUpdate(this.listeners);
+
+    }
+
+    onKeyDown(tabliste, event) {
+        switch (event.keyCode) {
+            case 38: /* pil opp */
+                event.preventDefault();
+                this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
+
+                updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+
+                this.fireUpdate(this.listeners);
+                break;
+            case 40: /* pil ned */
+                event.preventDefault();
+                this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
+
+                updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+
+                this.fireUpdate(this.listeners);
+                break;
+        }
+
+    }
+
+    submit(onSubmit, event) {
+        event.preventDefault();
+        var $tekstfelt = $('#' + this.state.tekstfeltId);
+        $tekstfelt.focus();
+
+        // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
+        setTimeout(function () {
+            var eksisterendeTekst = $tekstfelt.val();
+            eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
+            $tekstfelt
+                .focus()
+                .val(eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor))
+                .trigger('input');
+
+            onSubmit();
+        }.bind(this), 0);
+
+    }
+
+}
+
+export default SkrivstotteStore;
