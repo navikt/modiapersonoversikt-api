@@ -233,7 +233,9 @@
 
             <properties>
                 <sonar.language>js</sonar.language>
-                <sonar.coverage.exclusions />
+                <sonar.coverage.exclusions>
+                    src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/*-test.js
+                </sonar.coverage.exclusions>
                 <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
                 <sonar.sources>src/main/resources/no/nav/sbl/dialogarena/reactkomponenter</sonar.sources>
                 <sonar.javascript.jstest.reportsPath>target/surefire-reports</sonar.javascript.jstest.reportsPath>
