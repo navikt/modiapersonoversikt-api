@@ -69,7 +69,7 @@ public class TemagruppeTemaMapping {
 
             put("PEN", Temagruppe.PENS.name());
             put("SUP", Temagruppe.PENS.name());
-            put("UFO", Temagruppe.PENS.name());
+            put("UFO", Temagruppe.UFRT.name());
 
             put("HJE", Temagruppe.HJLPM.name());
             put("BIL", Temagruppe.BIL.name());
