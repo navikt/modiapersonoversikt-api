@@ -72,8 +72,8 @@ public class TemagruppeTemaMapping {
             put("UFO", Temagruppe.PENS.name());
 
             put("HJE", Temagruppe.HJLPM.name());
-            put("BIL", Temagruppe.HJLPM.name());
-            put("HEL", Temagruppe.HJLPM.name());
+            put("BIL", Temagruppe.BIL.name());
+            put("HEL", Temagruppe.ORT_HJE.name());
         }
     };
 

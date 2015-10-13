@@ -17,7 +17,7 @@ public class TemagruppeTemaMappingTest {
     public void temaTilTemagruppeTest() {
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("AAP"), is(ARBD.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("FOS"), is(ARBD.name()));
-        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("HEL"), is(HJLPM.name()));
+        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("HEL"), is(ORT_HJE.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TRK"), is(OVRG.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("UFO"), is(PENS.name()));
     }
