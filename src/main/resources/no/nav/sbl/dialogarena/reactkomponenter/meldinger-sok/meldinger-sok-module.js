@@ -27,7 +27,8 @@ var modalConfig = {
 var MeldingerSok = React.createClass({
     vis: function (props) {
         props = props || {};
-        this.store.fetchData().then(this.refs.modal.open);
+        this.store.initializeVisning();
+        this.refs.modal.open();
     },
     skjul: function () {
         this.refs.modal.close();

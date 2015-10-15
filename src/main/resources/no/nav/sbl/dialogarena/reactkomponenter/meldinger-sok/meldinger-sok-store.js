@@ -14,10 +14,10 @@ class MeldingerSokStore extends Store {
         this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
     }
 
-    fetchData() {
+    initializeVisning() {
         return Ajax.get('/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser').then(() => {
             this.update();
-        })
+        });
     }
 
     update(props) {
@@ -131,11 +131,13 @@ function onFulfilled(traader) {
 
 function onRejected(error) {
     if (error[0].status === 403) {
-        this.sendToWicket('reindekser');
+        this.sendToWicket('oppdater');
+        this.initializeVisning();
     } else {
         this.state.feilet = true;
         this.fireUpdate(this.listeners);
     }
 }
+
 
 export default MeldingerSokStore;
