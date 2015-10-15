@@ -78,13 +78,11 @@ public class Innboks extends Lerret {
                 target.add(meldingerSokToggleContainer);
             }
         };
-        meldingerSok.addCallback("reindekser", Void.class, new ReactComponentCallback<Void>() {
+        meldingerSok.addCallback("oppdater", Void.class, new ReactComponentCallback<Void>() {
             @Override
             public void onCallback(AjaxRequestTarget target, Void data) {
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
-                meldingerSok.call("vis", getMeldingerSokProps());
-                target.add(meldingerSokToggleContainer);
             }
         });
         meldingerSokToggleContainer.add(meldingerSokToggleButton);
