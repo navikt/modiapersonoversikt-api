@@ -1,5 +1,6 @@
 import Utils from './../utils/utils-module';
 import Store from './../utils/store';
+import Ajax from './../utils/ajax';
 
 function updateScroll(tabliste, valgtIndex) {
     var $parent = $(tabliste);
@@ -43,8 +44,7 @@ var sok = (fritekst, knagger) => {
     if (knagger.length !== 0) {
         url += '&tags=' + encodeURIComponent(knagger);
     }
-
-    return $.get(url);
+    return Ajax.get(url);
 };
 
 function stripEmTags(tekst) {

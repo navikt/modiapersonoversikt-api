@@ -29,7 +29,9 @@ var Utils = {
             }
         };
     },
-    adjustScroll: function ($parent, $element) {
+    adjustScroll: function (parent, element) {
+        var $parent = $(parent);
+        var $element = $(element);
         if ($element.length === 0) {
             return;
         }
@@ -64,7 +66,7 @@ var Utils = {
         avsnitt = sanitize(avsnitt, {allowedTags: ['a', 'em']});
         return <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>;
     },
-    omit: function(obj, filterkeys) {
+    omit: function (obj, filterkeys) {
         var nObj = Object.create(null);
         var filters = filterkeys.hasOwnProperty('length') ? filterkeys : [filterkeys];
 

@@ -1,11 +1,11 @@
 import Utils from './../utils/utils-module';
 import Store from './../utils/store';
 import WicketSender from './../react-wicket-mixin/wicket-sender';
-
+import Ajax from './../utils/ajax';
 
 class MeldingerSokStore extends Store {
-    constructor(...args) {
-        super(args[0]);
+    constructor(props) {
+        super(props);
         if (this.state.traader.length > 0) {
             this.state.valgtTraad = this.state.traader[0];
         }
@@ -14,8 +14,14 @@ class MeldingerSokStore extends Store {
         this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
     }
 
+    fetchData() {
+        return Ajax.get('/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser').then(() => {
+            this.update();
+        })
+    }
+
     update(props) {
-        Object.assign(this, props);
+        this.state = Object.assign(this.state, props);
 
         this.onChange({target: {value: this.state.fritekst}});
 
@@ -40,8 +46,8 @@ class MeldingerSokStore extends Store {
     }
 
     onKeyDown(tabliste, event) {
-        switch (event.keyCode) {
-            case 38: /* pil opp */
+        switch (event.key) {
+            case "ArrowUp":
                 event.preventDefault();
                 this.state.valgtTraad = hentMelding(forrigeMelding, this.state.traader, this.state.valgtTraad);
 
@@ -49,7 +55,7 @@ class MeldingerSokStore extends Store {
 
                 this.fireUpdate(this.listeners);
                 break;
-            case 40: /* pil ned */
+            case "ArrowDown":
                 event.preventDefault();
                 this.state.valgtTraad = hentMelding(nesteMelding, this.state.traader, this.state.valgtTraad);
 
@@ -66,7 +72,7 @@ class MeldingerSokStore extends Store {
 
     submit(afterSubmit, event) {
         event.preventDefault();
-        $('#' + this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
+        document.querySelector('#' + this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
         afterSubmit();
     }
 }
@@ -76,17 +82,15 @@ function nesteMelding(elementer, index) {
 }
 
 function updateScroll(tabliste, valgtIndex) {
-    var $parent = $(tabliste);
-    var $valgt = $parent.find('.sok-element').eq(valgtIndex);
-
-    Utils.adjustScroll($parent, $valgt);
+    var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
+    Utils.adjustScroll(tabliste, element);
 }
 
 var sok = (fnr, query) => {
     query = query || "";
     query = query.replace(/\./g, '');
     var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
-    return $.get(url);
+    return Ajax.get(url);
 };
 
 
@@ -102,35 +106,36 @@ function forrigeMelding(elementer, index) {
     return index === 0 ? elementer[0] : elementer[index - 1];
 }
 
-var hentSokeresultater =
-    Utils.debounce(function (fritekst) {
-        sok(this.state.fnr, fritekst)
-            .done(function (traader) {
-                traader.forEach((traad) => {
-                    traad.key = traad.traadId;
-                    traad.datoInMillis = traad.dato.millis;
-                    traad.innhold = traad.meldinger[0].fritekst;
-                    traad.opprettetDato = traad.meldinger[0].opprettetDatoTekst;
+var hentSokeresultater = Utils.debounce(function (fritekst) {
+    sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
+}, 150);
 
-                    traad.meldinger.forEach((melding) => {
-                        melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
-                        melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
-                    });
-                });
-                this.state.traader = traader;
-                this.state.valgtTraad = traader[0] || {};
-                this.state.initialisert = true;
-                updateScroll($(this.container).find('.sok-liste'), 0);
-                this.fireUpdate(this.listeners);
-            }.bind(this))
-            .fail(function (jqXHR) {
-                if (jqXHR.status === 403) {
-                    this.sendToWicket('reindekser');
-                } else {
-                    this.state.feilet = true;
-                    this.fireUpdate(this.listeners);
-                }
-            }.bind(this));
-    }, 150);
+function onFulfilled(traader) {
+    traader.forEach(function (traad) {
+        traad.key = traad.traadId;
+        traad.datoInMillis = traad.dato.millis;
+        traad.innhold = traad.meldinger[0].fritekst;
+        traad.opprettetDato = traad.meldinger[0].opprettetDatoTekst;
+
+        traad.meldinger.forEach((melding) => {
+            melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
+            melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
+        });
+    });
+    this.state.traader = traader;
+    this.state.valgtTraad = traader[0] || {};
+    this.state.initialisert = true;
+    updateScroll(this.container.querySelector('.sok-liste'), 0);
+    this.fireUpdate(this.listeners);
+}
+
+function onRejected(error) {
+    if (error[0].status === 403) {
+        this.sendToWicket('reindekser');
+    } else {
+        this.state.feilet = true;
+        this.fireUpdate(this.listeners);
+    }
+}
 
 export default MeldingerSokStore;

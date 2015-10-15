@@ -27,15 +27,14 @@ var modalConfig = {
 var MeldingerSok = React.createClass({
     vis: function (props) {
         props = props || {};
-        this.store.update(props);
-        this.refs.modal.open();
+        this.store.fetchData().then(this.refs.modal.open);
     },
     skjul: function () {
         this.refs.modal.close();
     },
 
     getInitialState: function () {
-        this.store = new MeldingerSokStore($.extend({}, {
+        this.store = new MeldingerSokStore(Object.assign({
             fritekst: "",
             traader: [],
             valgtTraad: {},
@@ -43,6 +42,7 @@ var MeldingerSok = React.createClass({
             listePanelId: Utils.generateId('sok-liste-'),
             forhandsvisningsPanelId: Utils.generateId('sok-forhandsvisningsPanelId-')
         }, this.props));
+
         return this.store.getState();
     },
     componentDidMount: function () {
@@ -78,6 +78,7 @@ var MeldingerSok = React.createClass({
                               aria-controls={this.state.forhandsvisningsPanelId}>
                     {tekstlistekomponenter}
                 </ScrollPortal>
+
                 <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel"
                      id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
                     <ForhandsvisningKomponent traad={this.state.valgtTraad}/>
@@ -115,7 +116,7 @@ var MeldingerSok = React.createClass({
                                 value={this.state.fritekst}
                                 title="Søk"
                                 onChange={this.store.onChange.bind(this.store)}
-                                onKeyDown={this.store.onKeyDown.bind(this.store, $('#'+this.state.listePanelId))}
+                                onKeyDown={this.store.onKeyDown.bind(this.store, document.querySelector('#'+this.state.listePanelId))}
                                 aria-controls={this.state.listePanelId}
                                 />
                             <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
