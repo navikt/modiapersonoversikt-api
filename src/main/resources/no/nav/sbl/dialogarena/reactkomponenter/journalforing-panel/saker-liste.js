@@ -14,7 +14,8 @@ class SakerListe extends React.Component {
             const saker = group.map((sak) => {
                 return (
                     <li className="text-row-list">
-                        <a href="javascript:void(0)" role="button" className="content-row-list" onClick={() => velgSak(sak)}>
+                        <a href="javascript:void(0)" role="button" className="content-row-list"
+                           onClick={() => velgSak(sak)}>
                             <div>
                                 <span className="text-cell">{sak.saksIdVisning}</span>
                                 <span className="vekk"> | </span>
@@ -29,7 +30,8 @@ class SakerListe extends React.Component {
             var temagruppe = this.props.temagruppe;
             var temaKode = group[0].temaKode;
             const erEkspandert = !temagruppe || contains(this.props.temagruppeTemaMapping[temagruppe], temaKode);
-            return <SakerForTema tema={group[0].temaNavn} saker={saker} erEkspandert={erEkspandert}/>
+            return <SakerForTema tema={group[0].temaNavn} saker={saker} erEkspandert={erEkspandert}
+                                 temaKode={temaKode}/>
         });
 
         return (
