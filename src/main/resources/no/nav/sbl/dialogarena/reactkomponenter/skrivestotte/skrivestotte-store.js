@@ -3,9 +3,8 @@ import Store from './../utils/store';
 import Ajax from './../utils/ajax';
 
 function updateScroll(tabliste, valgtIndex) {
-    var $parent = $(tabliste);
-    var $valgt = $parent.find('.sok-element').eq(valgtIndex);
-    Utils.adjustScroll($parent, $valgt);
+    var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
+    Utils.adjustScroll(tabliste, element);
 }
 
 function hentTekst(hentElement, elementer, valgtElement) {
@@ -29,7 +28,7 @@ var hentSokeresultater =
         sok(fritekst, knagger).done(function (resultat) {
             this.state.tekster = resultat;
             this.state.valgtTekst = resultat[0] || {};
-            updateScroll($(this.container).find('.sok-liste'), 0);
+            updateScroll(this.container.querySelector('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
         }.bind(this));
     }, 150);
@@ -82,7 +81,7 @@ class SkrivstotteStore extends Store {
         }
     }
 
-    textChanged(tekst, tabliste) {
+    tekstChanged(tekst, tabliste) {
         this.state.valgtTekst = tekst;
 
         updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
@@ -127,40 +126,40 @@ class SkrivstotteStore extends Store {
     }
 
     onKeyDown(tabliste, event) {
-        switch (event.keyCode) {
-            case 38: /* pil opp */
+        switch (event.key) {
+            case "ArrowUp":
                 event.preventDefault();
-                this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
+                this.state.valgtTraad = hentMelding(forrigeMelding, this.state.traader, this.state.valgtTraad);
 
-                updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
                 this.fireUpdate(this.listeners);
                 break;
-            case 40: /* pil ned */
+            case "ArrowDown":
                 event.preventDefault();
-                this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
+                this.state.valgtTraad = hentMelding(nesteMelding, this.state.traader, this.state.valgtTraad);
 
-                updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
                 this.fireUpdate(this.listeners);
                 break;
         }
-
     }
 
     submit(onSubmit, event) {
         event.preventDefault();
-        var $tekstfelt = $('#' + this.state.tekstfeltId);
-        $tekstfelt.focus();
+        var tekstfelt = document.querySelector('#' + this.state.tekstfeltId);
+        tekstfelt.focus();
 
         // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
         setTimeout(function () {
-            var eksisterendeTekst = $tekstfelt.val();
+            var eksisterendeTekst = typeof tekstfelt.value === 'undefined' ? "" : tekstfelt.value;
             eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
-            $tekstfelt
-                .focus()
-                .val(eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor))
-                .trigger('input');
+            tekstfelt.focus();
+            tekstfelt.value = eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor);
+            var thisEvent = document.createEvent('Event');
+            thisEvent.initEvent('input', true, true);
+            tekstfelt.dispatchEvent(thisEvent);
 
             onSubmit();
         }.bind(this), 0);
