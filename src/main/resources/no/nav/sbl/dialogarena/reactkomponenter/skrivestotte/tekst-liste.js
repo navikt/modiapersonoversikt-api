@@ -17,8 +17,9 @@ var TekstListeKomponent = React.createClass({
 });
 
 function tekstChanged() {
+
     this.props.store.tekstChanged(this.props.tekst, this.getDOMNode().parentNode);
-    $(this.getDOMNode()).find('input').focus();
+    this.getDOMNode().querySelector('input').focus();
 }
 
 function erValgtTekst(tekst, valgtTekst) {
