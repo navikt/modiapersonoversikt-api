@@ -5,7 +5,7 @@ var TestUtils = React.addons.TestUtils;
 var sinon = require('sinon');
 var Ajax = require('./ajax');
 
-describe.only('HTTP request', function () {
+describe('HTTP request', function () {
 
     sinon.spy(Ajax, 'toPromise');
 
