@@ -1,7 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.utbetaling.domain.*;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Trekk;
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
 import org.apache.wicket.markup.html.list.ListView;
@@ -125,6 +128,17 @@ public class DetaljPanelTest extends AbstractWicketTest {
                 .should().containComponents(6, withId("underytelse"));
     }
 
+    @Test
+    public void viserPositiveTrekkMedTilbakebetaling() {
+        System.setProperty("ytelse.skatt.beskrivelse.tekst", "Skattetrekk");
+        UtbetalingVM utbetalingVM = new UtbetalingVM(createMockHovedytelseMedPositiveTrekk());
+        List<YtelseVM> ytelseVMer = detaljPanel.createYtelseVMerList(utbetalingVM);
+
+        assertThat(ytelseVMer.get(0).getYtelse(), is("Skattetrekk tilbakebetaling"));
+        assertThat(ytelseVMer.get(1).getYtelse(), is("Skattetrekk"));
+        assertThat(ytelseVMer.get(2).getYtelse(), is("Kreditortrekk tilbakebetaling"));
+    }
+
     private Record<Hovedytelse> createMockHovedytelse() {
         return new Record<Hovedytelse>()
                 .with(Hovedytelse.id, "id1")
@@ -145,11 +159,11 @@ public class DetaljPanelTest extends AbstractWicketTest {
 
     private List<Record<Underytelse>> createUnderytelser() {
         return asList(new Record<Underytelse>()
-                    .with(Underytelse.ytelsesType, "Grunnbeløp")
-                    .with(Underytelse.satsBeloep, 10D)
-                    .with(Underytelse.satsType, "SatsType")
-                    .with(Underytelse.satsAntall, 1D)
-                    .with(Underytelse.ytelseBeloep, 100D),
+                        .with(Underytelse.ytelsesType, "Grunnbeløp")
+                        .with(Underytelse.satsBeloep, 10D)
+                        .with(Underytelse.satsType, "SatsType")
+                        .with(Underytelse.satsAntall, 1D)
+                        .with(Underytelse.ytelseBeloep, 100D),
                 new Record<Underytelse>()
                         .with(Underytelse.ytelsesType, "Særtillegg")
                         .with(Underytelse.satsBeloep, 11D)
@@ -165,6 +179,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
                     .with(Trekk.trekkBeloep, -140D));
     }
 
+
     private List<Double> createSkattListe() {
         return asList(-10D, -1D, -2D);
     }
@@ -173,5 +188,31 @@ public class DetaljPanelTest extends AbstractWicketTest {
         return new Record<Aktoer>()
             .with(Aktoer.aktoerId, "***REMOVED***")
             .with(Aktoer.navn, "Ola Nordmann");
+    }
+
+    private Record<Hovedytelse> createMockHovedytelseMedPositiveTrekk() {
+        return new Record<Hovedytelse>()
+                .with(Hovedytelse.id, "id1")
+                .with(Hovedytelse.utbetaltTil, createUtbetaltTil())
+                .with(Hovedytelse.utbetaltTilKonto, "***REMOVED***")
+                .with(Hovedytelse.ytelse, "Dagpenger")
+                .with(Hovedytelse.utbetalingsmelding, "Dette er en testmelding")
+                .with(Hovedytelse.trekkListe, createTrekkListeMedTilbakeBetaling())
+                .with(Hovedytelse.bruttoUtbetalt, 2000D)
+                .with(Hovedytelse.sammenlagtTrekkBeloep, -200D)
+                .with(Hovedytelse.sumTrekk, 14D)
+                .with(Hovedytelse.skattListe, createTilbakebetalingSkattListe())
+                .with(Hovedytelse.sumSkatt, -9D);
+    }
+
+    private List<Record<Trekk>> createTrekkListeMedTilbakeBetaling() {
+        return asList(new Record<Trekk>()
+                .with(Trekk.kreditor, "Test-Kreditor AS")
+                .with(Trekk.trekksType, "Kreditortrekk")
+                .with(Trekk.trekkBeloep, 100D));
+    }
+
+    private List<Double> createTilbakebetalingSkattListe() {
+        return asList(10D, -1D);
     }
 }

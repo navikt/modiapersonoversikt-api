@@ -20,6 +20,9 @@ public class VMUtils {
      * @param sluttDato
      * @return
      */
+
+    public static final String TILBAKEBETALING = " tilbakebetaling";
+
     public static boolean erGyldigStartSluttVerdier(DateTime startDato, DateTime sluttDato) {
         if(startDato == null || sluttDato == null) {
             return false;
@@ -32,6 +35,9 @@ public class VMUtils {
         return new Transformer<Double, YtelseVM>() {
             @Override
             public YtelseVM transform(Double skatt) {
+                if (skatt > 0) {
+                    return new YtelseVM(new StringResourceModel("ytelse.skatt.beskrivelse.tekst", component, null).getString() + TILBAKEBETALING, skatt);
+                }
                 return new YtelseVM(new StringResourceModel("ytelse.skatt.beskrivelse.tekst", component, null).getString(), skatt);
             }
         };
@@ -40,6 +46,9 @@ public class VMUtils {
     public static final Transformer<Record<Trekk>, YtelseVM> TREKK_TIL_YTELSE_VM = new Transformer<Record<Trekk>, YtelseVM>() {
         @Override
         public YtelseVM transform(Record<Trekk> trekk) {
+            if (trekk.get(Trekk.trekkBeloep) > 0) {
+                return new YtelseVM(trekk.get(Trekk.trekksType) + TILBAKEBETALING, trekk.get(Trekk.trekkBeloep));
+            }
             return new YtelseVM(trekk.get(Trekk.trekksType), trekk.get(Trekk.trekkBeloep));
         }
     };

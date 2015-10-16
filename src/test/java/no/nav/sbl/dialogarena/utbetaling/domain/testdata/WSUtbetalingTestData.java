@@ -5,7 +5,8 @@ import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -47,7 +48,7 @@ public class WSUtbetalingTestData {
                                                         .withYtelseskomponenttype("Særtillegg")
                                                         .withYtelseskomponentbeloep(1456.00))
                                         .withYtelseskomponentersum(6656.00)
-                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(1500.00))
                                         .withTrekksum(-1500.00)
                                         .withYtelseNettobeloep(5156.00)
                                         .withBilagsnummer("***REMOVED***"),
@@ -158,12 +159,12 @@ public class WSUtbetalingTestData {
                         .withTrekkListe(
                                 new WSTrekk()
                                         .withTrekktype("Kreditortrekk")
-                                        .withTrekkbeloep(-900.00)
+                                        .withTrekkbeloep(900.00)
                                         .withKreditor("***REMOVED***"))
-                        .withTrekksum(-900.00)
+                        .withTrekksum(900.00)
                         .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                         .withSkattsum(-2267.00)
-                        .withYtelseNettobeloep(11833.00)
+                        .withYtelseNettobeloep(13633.00)
                         .withBilagsnummer("***REMOVED***"))
                 .withUtbetalingsdato(now().minusMonths(2))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
@@ -196,8 +197,8 @@ public class WSUtbetalingTestData {
                                                         .withYtelseskomponentbeloep(21419.75))
                                         .withYtelseskomponentersum(21419.75)
                                         .withTrekkListe(new ArrayList<WSTrekk>())
-                                        .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
-                                        .withSkattsum(-2267.00)
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(2267.00))
+                                        .withSkattsum(2267.00)
                                         .withYtelseNettobeloep(19152.75)
                                         .withBilagsnummer("30742-5731"))
                         .withForfallsdato(now().minusMonths(1).plusDays(14))
