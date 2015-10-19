@@ -29,5 +29,5 @@ describe('HTTP request', function () {
         expect(Ajax.toPromise.calledWith(sinon.match({header: {['Content-Type']: 'application/json'}}))).to.equal(true);
     });
 
-
+    Ajax.toPromise.restore();
 });

@@ -6,7 +6,6 @@ import Ajax from './../utils/ajax';
 class MeldingerSokStore extends Store {
     constructor(props) {
         super(props);
-        console.log(props);
         if (this.state.traader.length > 0) {
             this.state.valgtTraad = this.state.traader[0];
         }

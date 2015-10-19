@@ -4,6 +4,7 @@ var sinon = require('sinon');
 var React = require('react/addons');
 var assign = require('object-assign');
 var MeldingerSokStore = require('./meldinger-sok-store');
+var Ajax = require('./../utils/ajax');
 
 describe('SkrivestotteStore', function () {
 
@@ -21,18 +22,24 @@ describe('SkrivestotteStore', function () {
     });
 
     it('indekserer ved update', function () {
-        sinon.spy($, 'ajax');
+        sinon.spy(Ajax, 'get');
         var fnr = '12345678910';
         var store = new MeldingerSokStore(assign({}, initialState, {fnr: fnr}));
 
-        store.update();
+        store.initializeVisning();
 
-        expect($.ajax.calledOnce).to.equal(true);
-        var args = $.ajax.args[0][0];
-        expect(args['async']).to.equal(false);
-        expect(args['url']).to.contain(fnr).and.to.contain('indekser');
+        const compareURL = sinon.match(function (url) {
+            return url.contains(fnr) && url.contains('indekser');
+        });
 
-        $.ajax.restore();
+        String.prototype.contains = function (it) {
+            return this.indexOf(it) != -1;
+        };
+
+        expect(Ajax.get.calledOnce).to.equal(true);
+        expect(Ajax.get.calledWith(compareURL)).to.equal(true);
+
+        Ajax.get.restore();
     });
 
 });

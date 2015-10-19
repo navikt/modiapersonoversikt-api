@@ -42,7 +42,6 @@ function ok(jqEvent, wicketConfig) {
 }
 
 function failure() {
-    console.log('failure', arguments);
 
     const deferKey = wicketConfig.u;
     const defer = deferDict[deferKey];
