@@ -21,7 +21,7 @@ describe('SkrivestotteStore', function () {
         expect(store.state.valgtTraad).to.equal(traader[0]);
     });
 
-    it('indekserer ved update', function () {
+    it('indekserer ved initializeVisning', function () {
         sinon.spy(Ajax, 'get');
         var fnr = '12345678910';
         var store = new MeldingerSokStore(assign({}, initialState, {fnr: fnr}));
