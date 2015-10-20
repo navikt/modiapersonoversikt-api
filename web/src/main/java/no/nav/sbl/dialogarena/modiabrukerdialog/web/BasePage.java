@@ -49,6 +49,7 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference MODIA_WIDGET_LESS = new PackageResourceReference(BasePage.class, "less/felles/widget.less");
     public static final PackageResourceReference MODIA_LAMELL_LESS = new PackageResourceReference(BasePage.class, "less/felles/lamell.less");
     public static final PackageResourceReference MODIA_LAYOUT_LESS = new PackageResourceReference(BasePage.class, "less/felles/layout.less");
+    public static final PackageResourceReference MODIA_UTILITIES_LESS = new PackageResourceReference(BasePage.class, "less/felles/utilities.less");
     public static final PackageResourceReference RESPONSIVE = new PackageResourceReference(BasePage.class, "less/felles/responsive.less");
 
     public static final PackageResourceReference HEADER = new PackageResourceReference(BasePage.class, "less/komponenter/header.less");
