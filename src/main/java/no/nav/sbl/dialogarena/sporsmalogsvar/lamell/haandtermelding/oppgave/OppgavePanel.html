@@ -15,8 +15,10 @@
     <div wicket:id="nyoppgaveForm"></div>
     <div wicket:id="avsluttOppgaveForm"></div>
 
-    <input type="button" wicket:id="okKnapp" class="knapp-hoved-stor" wicket:message="value:nyoppgave.ok"/>
-    <a wicket:id="avbryt" class="avbryt-knapp">
+    <div class="blokk-s">
+        <input type="button" wicket:id="okKnapp" class="knapp-hoved-stor" wicket:message="value:nyoppgave.ok"/>
+    </div>
+    <a wicket:id="avbryt" class="focus-fyll" role="button">
         <wicket:message key="nyoppgave.avbryt"/>
     </a>
     <a wicket:id="nyOppgaveKnapp" class="avbryt-knapp">
