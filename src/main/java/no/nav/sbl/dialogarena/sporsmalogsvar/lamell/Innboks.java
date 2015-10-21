@@ -5,6 +5,8 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,6 +22,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +40,9 @@ public class Innboks extends Lerret {
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
 
     private InnboksVM innboksVM;
+
+    @Inject
+    OppgaveBehandlingService oppgaveBehandlingService;
 
     public Innboks(String id, final InnboksVM innboksVM) {
         super(id);
@@ -93,6 +99,13 @@ public class Innboks extends Lerret {
         feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
         feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
 
+        if (innboksVM.harFeilmelding().getObject().equals(true)) {
+            String beskrivelse = "Legger tilbake en oppgave som du ikke har rett at se";
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId(), beskrivelse, Optional.<Temagruppe>none());
+            innboksVM.setSessionHenvendelseId("");
+            innboksVM.setSessionOppgaveId("");
+        }
+
         meldingsliste.add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel);
         add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
     }
@@ -129,6 +142,15 @@ public class Innboks extends Lerret {
             }
         }
     }
+
+    @Override
+    public void onClosing(AjaxRequestTarget target, boolean isMinimizing) {
+        innboksVM.setSessionHenvendelseId(null);
+        if (!isMinimizing) {
+            innboksVM.setValgtMelding(((MeldingVM) null));
+        }
+    }
+
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
