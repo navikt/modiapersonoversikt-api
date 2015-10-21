@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -42,8 +41,8 @@ public class VarslerServiceImpl implements VarslerService {
                 .collect();
 
             return optional(varsler);
-        } catch (SOAPFaultException sfe) {
-            log.error("Feilet ved uthenting av varsler.", sfe);
+        } catch (Exception ex) {
+            log.error("Feilet ved uthenting av varsler.", ex);
             return none();
         }
     }
