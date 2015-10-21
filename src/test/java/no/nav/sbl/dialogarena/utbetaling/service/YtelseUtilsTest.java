@@ -21,7 +21,8 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class YtelseUtilsTest {
 
@@ -256,7 +257,7 @@ public class YtelseUtilsTest {
 
     @Test
     public void korrektDefaultStartDato() {
-        DateTime startDato = now().minusDays(90);
+        DateTime startDato = now().minusDays(30);
         assertThat(YtelseUtils.defaultStartDato().getYear(), is(startDato.getYear()));
         assertThat(YtelseUtils.defaultStartDato().getMonthOfYear(), is(startDato.getMonthOfYear()));
         assertThat(YtelseUtils.defaultStartDato().getDayOfMonth(), is(startDato.getDayOfMonth()));

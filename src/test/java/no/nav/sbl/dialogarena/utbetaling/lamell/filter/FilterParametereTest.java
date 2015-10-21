@@ -165,9 +165,9 @@ public class FilterParametereTest {
     }
 
     @Test
-    public void intervallHvisSiste3Mnd() {
-        Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.SISTE_3_MND);
-        assertThat(LocalDate.now().minusDays(90), is(interval.getStart().toLocalDate()));
+    public void intervallHvisSiste3Dager() {
+        Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.SISTE_30_DAGER);
+        assertThat(LocalDate.now().minusDays(30), is(interval.getStart().toLocalDate()));
         assertThat(LocalDate.now(), is(interval.getEnd().toLocalDate()));
     }
 

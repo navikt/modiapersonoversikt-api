@@ -22,7 +22,7 @@ import static org.joda.time.DateTime.now;
 public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
 
     public enum PeriodeVelger {
-        SISTE_3_MND,
+        SISTE_30_DAGER,
         INNEVAERENDE_AAR,
         I_FJOR,
         EGENDEFINERT
@@ -44,7 +44,7 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     public PeriodeVelger periodeVelgerValg;
 
     public FilterParametere(Set<String> hovedYtelser) {
-        this.periodeVelgerValg = PeriodeVelger.SISTE_3_MND;
+        this.periodeVelgerValg = PeriodeVelger.SISTE_30_DAGER;
         this.startDato = defaultStartDato();
         this.sluttDato = defaultSluttDato();
 
@@ -143,8 +143,8 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     protected Interval intervalBasertPaaPeriodevalg(PeriodeVelger valg) {
         DateTime start, end;
         switch(valg) {
-            case SISTE_3_MND:
-                start = now().minusDays(90);
+            case SISTE_30_DAGER:
+                start = now().minusDays(30);
                 end = now();
                 return new Interval(start, end);
             case INNEVAERENDE_AAR:

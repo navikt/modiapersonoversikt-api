@@ -14,16 +14,14 @@ import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonth;
 
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.either;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.*;
@@ -33,7 +31,7 @@ import static org.joda.time.LocalDate.now;
 public class YtelseUtils {
 
     public static LocalDate defaultStartDato() {
-        return now().minusDays(90);
+        return now().minusDays(30);
     }
 
     public static LocalDate defaultSluttDato() {
