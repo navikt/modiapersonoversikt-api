@@ -4,6 +4,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
@@ -24,13 +25,18 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UtbetalingServiceImpl implements UtbetalingService {
 
     private static final Logger logger = getLogger(UtbetalingServiceImpl.class);
+    protected static final int EKSTRA_SOKEPERIODE = 20;
 
     @Inject
     private UtbetalingV1 utbetalingV1;
 
     @Override
     public List<Record<Hovedytelse>> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        return on(getWSUtbetalinger(fnr, startDato, sluttDato)).flatmap(TO_HOVEDYTELSE).collect(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR);
+        List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden = on(getWSUtbetalinger(fnr, startDato, sluttDato))
+                .filter(UtbetalingUtils.finnUtbetalingerMedUtbetalingsdatoISokeperioden(startDato, sluttDato))
+                .collect();
+        return on(utbetalingerMedPosteringInnenPerioden).flatmap(TO_HOVEDYTELSE)
+                .collect(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR);
     }
 
     @Override
@@ -41,7 +47,7 @@ public class UtbetalingServiceImpl implements UtbetalingService {
     protected List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         logger.info("---- Spør etter utebetalinger. Fnr: {}. ----", fnr);
         try {
-            return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
+            return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, startDato.minusDays(EKSTRA_SOKEPERIODE), sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingsinformasjonPeriodeIkkeGyldig ex) {
             throw new ApplicationException("Utbetalingsperioden er ikke gyldig. ", ex);
         } catch (HentUtbetalingsinformasjonPersonIkkeFunnet ex) {

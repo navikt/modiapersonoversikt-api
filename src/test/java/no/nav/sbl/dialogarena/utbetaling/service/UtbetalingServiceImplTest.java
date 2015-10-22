@@ -8,6 +8,7 @@ import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriod
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSForespurtPeriode;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -17,10 +18,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createKariNordmannUtbetaling;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetalingMedUtbetalingsDato;
 import static org.hamcrest.Matchers.is;
+import static org.joda.time.LocalDate.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -52,12 +56,12 @@ public class UtbetalingServiceImplTest {
     public void hentUtbetalingerReturnererKorrekteHovedytelser() {
         UtbetalingServiceImpl spyService = spy(utbetalingService);
         String fnr = "***REMOVED***";
-        LocalDate fom = new LocalDate(2015, 1, 1);
-        LocalDate tom = new LocalDate(2015, 1, 2);
+        LocalDate fom = now().minusYears(1);
+        LocalDate tom = now();
 
         doReturn(createKariNordmannUtbetaling()).when(spyService).getWSUtbetalinger(fnr, fom, tom);
         List<Record<Hovedytelse>> hovedytelser = spyService.hentUtbetalinger(fnr, fom, tom);
-        assertThat(hovedytelser.size(), is(5));
+        assertThat(hovedytelser.size(), is(4));
     }
 
     @Test(expected = ApplicationException.class)
@@ -67,9 +71,39 @@ public class UtbetalingServiceImplTest {
         LocalDate fom = new LocalDate(2015, 1, 1);
         LocalDate tom = new LocalDate(2015, 1, 2);
         WSHentUtbetalingsinformasjonRequest request = new WSHentUtbetalingsinformasjonRequest();
-        doReturn(request).when(spyService).createRequest(fnr, fom, tom);
+        doReturn(request).when(spyService).createRequest(fnr, fom.minusDays(UtbetalingServiceImpl.EKSTRA_SOKEPERIODE), tom);
         when(utbetalingV1.hentUtbetalingsinformasjon(request)).thenThrow(new HentUtbetalingsinformasjonPeriodeIkkeGyldig());
 
         spyService.getWSUtbetalinger(fnr, fom, tom);
+    }
+
+    @Test
+    public void finnerUtbetalingerMedPosteringsdatoUtenforSokeperioden() {
+        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        String fnr = "***REMOVED***";
+        LocalDate fom = new LocalDate(now().minusMonths(1));
+        LocalDate tom = new LocalDate(now());
+        List<WSUtbetaling> mockUtbetalingsliste = new ArrayList<>();
+        mockUtbetalingsliste.add(createUtbetalingMedUtbetalingsDato());
+
+        doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, fom, tom);
+        List<Record<Hovedytelse>> hovedytelser = spyService.hentUtbetalinger(fnr, fom, tom);
+
+        assertThat(hovedytelser.size(), is(1));
+    }
+
+    @Test
+    public void utelaterUtbetalingerMedPosteringsdatoInnenforOgMedUtbetalingsdatoUntenforSokeperioden() {
+        UtbetalingServiceImpl spyService = spy(utbetalingService);
+        String fnr = "***REMOVED***";
+        LocalDate fom = new LocalDate(now().minusMonths(1));
+        LocalDate tom = new LocalDate(now().minusMonths(1).minusDays(15));
+        List<WSUtbetaling> mockUtbetalingsliste = new ArrayList<>();
+        mockUtbetalingsliste.add(createUtbetalingMedUtbetalingsDato());
+
+        doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, fom, tom);
+        List<Record<Hovedytelse>> hovedytelser = spyService.hentUtbetalinger(fnr, fom, tom);
+
+        assertThat(hovedytelser.size(), is(0));
     }
 }

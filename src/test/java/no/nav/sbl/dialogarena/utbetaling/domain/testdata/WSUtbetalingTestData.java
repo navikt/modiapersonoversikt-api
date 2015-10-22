@@ -20,6 +20,7 @@ public class WSUtbetalingTestData {
         utbetalinger.add(createOlaNordmannUtbetaling());
         utbetalinger.add(createOsloKommuneUtbetaling());
         utbetalinger.addAll(createKariNordmannUtbetaling());
+        utbetalinger.add(createUtbetalingMedUtbetalingsDato());
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
@@ -65,9 +66,9 @@ public class WSUtbetalingTestData {
                                                         .withYtelseskomponentbeloep(1456.00))
                                         .withYtelseskomponentersum(6656.00)
                                         .withTrekkListe(new ArrayList<WSTrekk>())
-                                        .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
-                                        .withTrekksum(-1500.00)
-                                        .withYtelseNettobeloep(5156.00)
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(1500.00), new WSSkatt().withSkattebeloep(-733.00))
+                                        .withTrekksum(767.00)
+                                        .withYtelseNettobeloep(7423.00)
                                         .withBilagsnummer("***REMOVED***"),
                                 new WSYtelse()
                                         .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
@@ -196,14 +197,50 @@ public class WSUtbetalingTestData {
                                                         .withSatsantall(55.0)
                                                         .withYtelseskomponentbeloep(21419.75))
                                         .withYtelseskomponentersum(21419.75)
-                                        .withTrekkListe(new ArrayList<WSTrekk>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(2267.00))
                                         .withSkattsum(2267.00)
-                                        .withYtelseNettobeloep(19152.75)
+                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withTrekksum(0.00)
+                                        .withYtelseNettobeloep(21419.75)
                                         .withBilagsnummer("30742-5731"))
                         .withForfallsdato(now().minusMonths(1).plusDays(14))
                         .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Utbetalingskort - Norge"))
                         .withUtbetalingsmetode("Utbetalingskort")
                         .withUtbetalingsstatus("Sendt kontofører, avventer forfallsdato");
+    }
+
+    public static WSUtbetaling createUtbetalingMedUtbetalingsDato() {
+        return new WSUtbetaling()
+                .withPosteringsdato(now().minusMonths(1))
+                .withUtbetaltTil(new WSPerson()
+                        .withAktoerId("22222222222")
+                        .withNavn("Ola Nordmann Utbetaling 2"))
+                .withUtbetalingsmelding("Utbetalt dagpenger")
+                .withYtelseListe(
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
+                                .withRettighetshaver(new WSPerson()
+                                        .withAktoerId("22222222222")
+                                        .withNavn("Ola Nordmann Utbetaling 2"))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
+                                .withYtelseskomponentListe(
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponenttype("Dagpenger")
+                                                .withSatsbeloep(389.45)
+                                                .withSatstype("DAG")
+                                                .withSatsantall(55.0)
+                                                .withYtelseskomponentbeloep(21419.75))
+                                .withYtelseskomponentersum(21419.75)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(2267.00))
+                                .withSkattsum(2267.00)
+                                .withTrekkListe(new ArrayList<WSTrekk>())
+                                .withTrekksum(0.00)
+                                .withYtelseNettobeloep(21419.75)
+                                .withBilagsnummer("30742-5731"))
+                .withForfallsdato(now().minusMonths(1).plusDays(14))
+                .withUtbetalingsdato(now().minusMonths(1).plusDays(14))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetalingsmetode("Bankkonto")
+                .withUtbetalingsstatus("Utbetalt");
     }
 }
