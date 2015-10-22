@@ -6,7 +6,7 @@ var assign = require('object-assign');
 var MeldingerSokStore = require('./meldinger-sok-store');
 var Ajax = require('./../utils/ajax');
 
-describe('SkrivestotteStore', function () {
+describe('MeldingerSokStore', function () {
 
     var initialState = {
         fritekst: "",
