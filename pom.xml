@@ -12,7 +12,7 @@
     <name>modia-varsling</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modia-varsling</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.7</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -335,7 +335,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modia-varsling.git</developerConnection>
         <url>http://stash.devillo.no/scm/dial/modia-varsling.git</url>
-        <tag>HEAD</tag>
+        <tag>modia-varsling_1.7</tag>
     </scm>
 
 </project>
