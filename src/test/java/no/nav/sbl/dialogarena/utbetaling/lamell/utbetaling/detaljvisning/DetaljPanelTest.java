@@ -134,9 +134,9 @@ public class DetaljPanelTest extends AbstractWicketTest {
         UtbetalingVM utbetalingVM = new UtbetalingVM(createMockHovedytelseMedPositiveTrekk());
         List<YtelseVM> ytelseVMer = detaljPanel.createYtelseVMerList(utbetalingVM);
 
-        assertThat(ytelseVMer.get(0).getYtelse(), is("Skattetrekk tilbakebetaling"));
+        assertThat(ytelseVMer.get(0).getYtelse(), is("Tilbakebetaling skattetrekk"));
         assertThat(ytelseVMer.get(1).getYtelse(), is("Skattetrekk"));
-        assertThat(ytelseVMer.get(2).getYtelse(), is("Kreditortrekk tilbakebetaling"));
+        assertThat(ytelseVMer.get(2).getYtelse(), is("Tilbakebetaling kreditortrekk"));
     }
 
     private Record<Hovedytelse> createMockHovedytelse() {
