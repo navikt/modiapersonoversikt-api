@@ -14,6 +14,7 @@ Modig.scrollOptions = {
 
 Modig.lagScrollbars = function () {
     $('.sidebar-venstre').mCustomScrollbar(Modig.scrollOptions);
+    $('#personsok').mCustomScrollbar(Modig.scrollOptions);
     $('.sidebar-hoyre').mCustomScrollbar($.extend({}, Modig.scrollOptions, {
         advanced: {
             autoScrollOnFocus: "input,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true'],article[tabindex]"
