@@ -20,12 +20,12 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.TO_HOVEDYTELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.leggTilEkstraDagerPaaStartdato;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UtbetalingServiceImpl implements UtbetalingService {
 
     private static final Logger logger = getLogger(UtbetalingServiceImpl.class);
-    protected static final int EKSTRA_SOKEPERIODE = 20;
 
     @Inject
     private UtbetalingV1 utbetalingV1;
@@ -47,7 +47,7 @@ public class UtbetalingServiceImpl implements UtbetalingService {
     protected List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         logger.info("---- Spør etter utebetalinger. Fnr: {}. ----", fnr);
         try {
-            return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, startDato.minusDays(EKSTRA_SOKEPERIODE), sluttDato)).getUtbetalingListe();
+            return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, leggTilEkstraDagerPaaStartdato(startDato), sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingsinformasjonPeriodeIkkeGyldig ex) {
             throw new ApplicationException("Utbetalingsperioden er ikke gyldig. ", ex);
         } catch (HentUtbetalingsinformasjonPersonIkkeFunnet ex) {

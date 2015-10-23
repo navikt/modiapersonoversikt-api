@@ -8,9 +8,7 @@ import org.junit.Test;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DateUtilsTest {
 
@@ -49,5 +47,24 @@ public class DateUtilsTest {
         assertThat(newDateTime.getHourOfDay(), is(0));
         assertThat(newDateTime.getMinuteOfHour(), is(0));
         assertThat(newDateTime.getSecondOfMinute(), is(0));
+    }
+
+    @Test
+    public void leggerTilEkstraDagerTilStartdato() {
+        LocalDate startDato = LocalDate.now();
+
+        LocalDate nystartDato = leggTilEkstraDagerPaaStartdato(startDato);
+
+        assertThat(nystartDato, is(startDato.minusDays(20)));
+    }
+
+    @Test
+    public void leggerIkkeTilEkstraDagerTilStartdatoHvisStartdatoErHeltIStarten() {
+        LocalDate minsteDato = LocalDate.now().minusYears(3).withDayOfYear(1);
+        LocalDate startDato = LocalDate.now().minusYears(3).withDayOfYear(3);
+
+        LocalDate nyStartDato = leggTilEkstraDagerPaaStartdato(startDato);
+
+        assertThat(nyStartDato, is(minsteDato));
     }
 }

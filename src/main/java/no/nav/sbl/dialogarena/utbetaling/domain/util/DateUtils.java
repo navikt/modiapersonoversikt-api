@@ -8,6 +8,8 @@ import org.joda.time.LocalDate;
 
 public final class DateUtils {
 
+    public static final int EKSTRA_SOKEPERIODE = 20;
+
     private DateUtils() {
     }
 
@@ -71,5 +73,12 @@ public final class DateUtils {
 
     public static boolean isUnixEpoch(LocalDate localDate) {
         return localDate.getYear() == 1970;
+    }
+
+    public static LocalDate leggTilEkstraDagerPaaStartdato(LocalDate startdato){
+        LocalDate minsteDato = LocalDate.now().minusYears(3).withDayOfYear(1);
+        LocalDate nyStartdato = startdato.minusDays(EKSTRA_SOKEPERIODE);
+
+        return (nyStartdato.compareTo(minsteDato) < 0) ? minsteDato : nyStartdato;
     }
 }

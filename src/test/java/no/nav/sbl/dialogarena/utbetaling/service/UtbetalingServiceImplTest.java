@@ -23,6 +23,7 @@ import java.util.List;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createKariNordmannUtbetaling;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetalingMedValgtUtbetalingOgPosteringsdato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.EKSTRA_SOKEPERIODE;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.LocalDate.now;
 import static org.junit.Assert.assertThat;
@@ -71,7 +72,7 @@ public class UtbetalingServiceImplTest {
         LocalDate fom = new LocalDate(2015, 1, 1);
         LocalDate tom = new LocalDate(2015, 1, 2);
         WSHentUtbetalingsinformasjonRequest request = new WSHentUtbetalingsinformasjonRequest();
-        doReturn(request).when(spyService).createRequest(fnr, fom.minusDays(UtbetalingServiceImpl.EKSTRA_SOKEPERIODE), tom);
+        doReturn(request).when(spyService).createRequest(fnr, fom.minusDays(EKSTRA_SOKEPERIODE), tom);
         when(utbetalingV1.hentUtbetalingsinformasjon(request)).thenThrow(new HentUtbetalingsinformasjonPeriodeIkkeGyldig());
 
         spyService.getWSUtbetalinger(fnr, fom, tom);
