@@ -43,8 +43,8 @@ public final class DateUtils {
         };
     }
 
-    public static DateTime minusMonthsAndFixedAtMidnight(DateTime prevDate, int minusMonths) {
-        return prevDate.minusMonths(minusMonths).toDateMidnight().toDateTime();
+    public static DateTime minusDaysAndFixedAtMidnight(DateTime prevDate, int minusDays) {
+        return prevDate.minusDays(minusDays).toDateMidnight().toDateTime();
     }
 
 

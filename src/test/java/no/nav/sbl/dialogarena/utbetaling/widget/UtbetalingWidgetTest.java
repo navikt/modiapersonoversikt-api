@@ -13,7 +13,7 @@ import org.mockito.Matchers;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_MONTHS_TO_SHOW;
+import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -48,22 +48,22 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                     .with(Hovedytelse.id, "2")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW - 1)),
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW - 1)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "3")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW)),
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "4")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW).toDateMidnight().toDateTime().minusMillis(1)),
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW).toDateMidnight().toDateTime().minusMillis(1)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "5")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusMonths(NUMBER_OF_MONTHS_TO_SHOW + 1))
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 1))
         );
 
         List<HovedytelseVM> hovedytelseVMs = UtbetalingWidget.transformUtbetalingToVM(hovedytelser);

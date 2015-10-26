@@ -103,20 +103,20 @@ public class YtelseUtils {
     }
 
     /**
-     * true hvis hovedytelsen er mellom now() og antall måneder tilbake i tid, gitt ved <em>numberOfMonthsToShow</em><br>
+     * true hvis hovedytelsen er mellom now() og antall dager tilbake i tid, gitt ved <em>numberOfDaysToShow</em><br>
      *     F.eks<br>
      *         now: 2015-03-04 <br>
-     *         numberOfMonthsToShow: 3 <br>
-     *         gyldig periode: 2014-12-05 - 2015-03-04 <br>
-     * @param numberOfMonthsToShow
+     *         numberOfDaysToShow: 30 <br>
+     *         gyldig periode: 2014-12-05 - 2015-01-04 <br>
+     * @param numberOfDaysToShow
      * @return
      */
-    public static Predicate<Record<Hovedytelse>> betweenNowAndMonthsBefore(final int numberOfMonthsToShow) {
+    public static Predicate<Record<Hovedytelse>> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
         return new Predicate<Record<Hovedytelse>>() {
             @Override
             public boolean evaluate(Record<Hovedytelse> hovedytelse) {
                 DateTime hovedytelseDato = hovedytelse.get(hovedytelsedato);
-                DateTime threshold = minusMonthsAndFixedAtMidnight(DateTime.now(), numberOfMonthsToShow);
+                DateTime threshold = minusDaysAndFixedAtMidnight(DateTime.now(), numberOfDaysToShow);
                 return hovedytelseDato.isAfter(threshold);
             }
         };

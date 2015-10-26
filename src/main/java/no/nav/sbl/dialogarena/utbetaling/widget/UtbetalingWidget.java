@@ -16,7 +16,7 @@ import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.UtbetalingV
 
 public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
 
-    public static final int NUMBER_OF_MONTHS_TO_SHOW = 3;
+    public static final int NUMBER_OF_DAYS_TO_SHOW = 30;
 
     private final String fnr;
     @Inject
@@ -29,7 +29,7 @@ public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
 
     protected static List<HovedytelseVM> transformUtbetalingToVM(List<Record<Hovedytelse>> utbetalinger) {
         return on(utbetalinger)
-                .filter(betweenNowAndMonthsBefore(NUMBER_OF_MONTHS_TO_SHOW))
+                .filter(betweenNowAndDaysBefore(NUMBER_OF_DAYS_TO_SHOW))
                 .map(TIL_HOVEDYTELSEVM)
                 .collect(new UtbetalingVMComparator());
     }

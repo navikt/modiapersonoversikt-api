@@ -37,12 +37,12 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void minusMonthsToMidnight() {
+    public void minusDaysToMidnight() {
         DateTime dateTime = new DateTime(2015, 10, 10, 11, 11, 11);
-        DateTime newDateTime = minusMonthsAndFixedAtMidnight(dateTime, 3);
+        DateTime newDateTime = minusDaysAndFixedAtMidnight(dateTime, 30);
 
         assertThat(newDateTime.getYear(), is(2015));
-        assertThat(newDateTime.getMonthOfYear(), is(7));
+        assertThat(newDateTime.getMonthOfYear(), is(9));
         assertThat(newDateTime.getDayOfMonth(), is(10));
         assertThat(newDateTime.getHourOfDay(), is(0));
         assertThat(newDateTime.getMinuteOfHour(), is(0));
