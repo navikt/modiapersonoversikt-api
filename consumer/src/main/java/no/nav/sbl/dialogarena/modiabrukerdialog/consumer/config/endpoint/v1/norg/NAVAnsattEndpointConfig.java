@@ -38,7 +38,7 @@ public class NAVAnsattEndpointConfig {
         proxyFactoryBean.setEndpointName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVansatt/Binding", "GOSYSNAVAnsattWSEXP_GOSYSNAVansattHttpPort"));
         proxyFactoryBean.setServiceClass(GOSYSNAVansatt.class);
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        proxyFactoryBean.getFeatures().add(new TimeoutFeature());
+        proxyFactoryBean.getFeatures().add(new TimeoutFeature(30000, 10000));
         proxyFactoryBean.getOutInterceptors().add(new WSS4JOutInterceptor(getSecurityProps()));
 
         GOSYSNAVansatt gosysnaVansatt = proxyFactoryBean.create(GOSYSNAVansatt.class);
