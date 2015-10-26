@@ -72,7 +72,7 @@
         <common-kodeverk.version>1.0.0</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>1.19-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>1.19</reactkomponenter.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -95,7 +95,7 @@
         <personsok.version>1.1.15</personsok.version>
         <kjerneinfo.versjon>1.1.24</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>3.0.1</utbetaling.version>
+        <utbetaling.version>3.0.3</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -105,7 +105,7 @@
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>3.9</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>4.11-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>4.11</sporsmalogsvar.version>
         <saksoversikt.version>4.6</saksoversikt.version>
         <varsling.modia.version>1.7</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
