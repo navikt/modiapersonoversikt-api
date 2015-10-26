@@ -39,7 +39,7 @@ public class AlleMeldingerPanel extends Panel {
         public void renderHead(Component component, IHeaderResponse response) {
             super.renderHead(component, response);
             response.render(forScript(format(
-                    "setTimeout(function(){$('#%s input[type=radio]').focus();},100);",
+                    "setTimeout(function(){$('#%s input[type=radio]:checked').focus();},100);",
                     component.getMarkupId()
             )));
         }
