@@ -7,7 +7,7 @@ var ScrollPortal = React.createClass({
         wrapper.mCustomScrollbar($.extend({}, Modig.scrollOptions, {scrollbarPosition: 'inside'}));
         var container = wrapper.find('.mCSB_container:first').get(0);
         React.render(<div className={this.props.innerClassName}>{this.props.children}</div>, container);
-        oppdaterScrollbarEtterRenderingErFerdig();
+        oppdaterScrollbarEtterRenderingErFerdig(wrapper);
     },
     componentDidMount: function () {
         this.renderList();
