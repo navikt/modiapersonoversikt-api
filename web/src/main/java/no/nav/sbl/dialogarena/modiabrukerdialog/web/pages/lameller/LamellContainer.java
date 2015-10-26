@@ -288,5 +288,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {
         innboksVM.traadBesvares = null;
+        innboksVM.setSessionHenvendelseId(null);
+        innboksVM.setSessionOppgaveId(null);
     }
 }
