@@ -6,6 +6,7 @@ import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
@@ -36,7 +37,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl.ANTALL_PLUKK_FORSOK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl.DEFAULT_ENHET;
 import static org.hamcrest.Matchers.containsString;
@@ -77,7 +77,7 @@ public class OppgaveBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, FikkIkkeTilordnet {
+    public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, OppgaveBehandlingService.FikkIkkeTilordnet {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
         oppgaveBehandlingService.tilordneOppgaveIGsak("oppgaveid", Temagruppe.ARBD);

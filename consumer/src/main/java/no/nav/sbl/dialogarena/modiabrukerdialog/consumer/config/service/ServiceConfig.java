@@ -18,6 +18,7 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.

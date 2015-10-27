@@ -26,6 +26,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meld
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.apache.commons.collections15.Transformer;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 
 import javax.inject.Inject;
 import javax.inject.Named;

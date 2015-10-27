@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
@@ -9,7 +10,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattServi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
