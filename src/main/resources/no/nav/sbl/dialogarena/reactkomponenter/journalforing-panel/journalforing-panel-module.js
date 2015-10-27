@@ -10,6 +10,13 @@ import Q from 'q';
 const VELG_SAK = 'VELG_SAK';
 const JOURNALFOR = 'JOURNALFOR';
 
+function markerSomPsakSaker(pesysSaker) {
+    return pesysSaker.map((sak) => {
+        sak.erPesysSak = true;
+        return sak;
+    })
+}
+
 class JournalforingsPanel extends React.Component {
     constructor(props) {
         super(props);
@@ -21,14 +28,11 @@ class JournalforingsPanel extends React.Component {
         this.velgSak = this.velgSak.bind(this);
         this.tilbake = this.tilbake.bind(this);
 
-        const url = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
-
-        const gsakPromise = Ajax.get(url + '/saker/sammensatte');
-        const psakPromise = Ajax.get(url + '/saker/pensjon');
+        const baseUrl = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
 
         var wrapperPromise = {
-            gsak: gsakPromise,
-            psak: psakPromise
+            gsak: Ajax.get(baseUrl + '/saker/sammensatte'),
+            psak: Ajax.get(baseUrl + '/saker/pensjon').then(markerSomPsakSaker)
         };
 
         this.promise = PromiseUtils.atLeastN(1, wrapperPromise);

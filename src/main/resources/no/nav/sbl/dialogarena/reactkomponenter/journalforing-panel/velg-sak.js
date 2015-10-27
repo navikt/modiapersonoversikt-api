@@ -2,7 +2,8 @@ import React from 'react';
 import TypeValg from './typevalg';
 import SakerListe from './saker-liste';
 import AdvarselBoks from './../utils/advarsel-boks';
-import { partition } from 'lodash';
+import { partition, isUndefined } from 'lodash';
+import { kvpair } from './../utils/utils-module';
 import Q from 'q';
 
 class VelgSak extends React.Component {
@@ -19,33 +20,29 @@ class VelgSak extends React.Component {
     }
 
     render() {
-        const feileteAjaxkall = Object.keys(this.props.saker || {}).reduce((acc, key) => {
-            if (typeof this.props.saker[key] === 'undefined') {
-                acc.push(key);
-            }
-            return acc;
-        }, []);
+        const saker = this.props.saker || {};
 
-        const advarsler = feileteAjaxkall.map((feiletKall) => <AdvarselBoks
-            tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
+        const advarsler = kvpair(saker)
+            .filter(([_, value]) => isUndefined(value))
+            .map(([feiletKall, _]) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
 
-        const mergedSaker = Object.keys(this.props.saker || {}).reduce((acc, key) => {
-            acc = acc.concat(this.props.saker[key] || []);
-            return acc;
-        }, []);
+        const mergedSaker = kvpair(saker)
+            .reduce((acc, [key, value]) => {
+                acc = acc.concat(value || []);
+                return acc;
+            }, []);
 
         const kategorier = partition(mergedSaker, sak => sak.sakstype === 'GEN');
         const generelle = kategorier[0];
         const fagsaker = kategorier[1];
-        const saker = this.state.valgtKategori === 'FAG' ? fagsaker : generelle;
-
+        const sakerSomVises = this.state.valgtKategori === 'FAG' ? fagsaker : generelle;
 
         return (
             <div>
                 <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori}/>
                 {advarsler}
                 <SakerListe
-                    saker={saker}
+                    saker={sakerSomVises}
                     temagruppe={this.props.temagruppe}
                     velgSak={this.props.velgSak}
                     temagruppeTemaMapping={this.props.temagruppeTemaMapping}/>

@@ -22,7 +22,7 @@ class SakerForTema extends React.Component {
 
     render() {
         if (this.state.ekspandert) {
-            const datoHeader = this.props.temaKode === 'PEN' ? 'løpende f.o.m.' : 'opprettet';
+            const datoHeader = this.props.erPesysSak ? 'løpende f.o.m.' : 'opprettet';
             return (
                 <div className="saker-tema">
                     <button onClick={this.toggleEkspandering} aria-expanded="true">

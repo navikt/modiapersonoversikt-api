@@ -27,11 +27,18 @@ class SakerListe extends React.Component {
                     </li>
                 );
             });
-            var temagruppe = this.props.temagruppe;
-            var temaKode = group[0].temaKode;
+            const temagruppe = this.props.temagruppe;
+            const temaKode = group[0].temaKode;
+            const erPesysSak = !!group[0].erPesysSak;
             const erEkspandert = !temagruppe || contains(this.props.temagruppeTemaMapping[temagruppe], temaKode);
-            return <SakerForTema tema={group[0].temaNavn} saker={saker} erEkspandert={erEkspandert}
-                                 temaKode={temaKode}/>
+
+            return <SakerForTema
+                tema={group[0].temaNavn}
+                saker={saker}
+                erEkspandert={erEkspandert}
+                temaKode={temaKode}
+                erPesysSak={erPesysSak}
+                />
         });
 
         return (

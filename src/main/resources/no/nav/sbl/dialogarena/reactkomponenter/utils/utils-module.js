@@ -62,7 +62,7 @@ var Utils = {
         avsnitt = sanitize(avsnitt, {allowedTags: ['a', 'em']});
         return <p dangerouslySetInnerHTML={{__html: avsnitt}}></p>;
     },
-    omit: function(obj, filterkeys) {
+    omit: function (obj, filterkeys) {
         var nObj = Object.create(null);
         var filters = filterkeys.hasOwnProperty('length') ? filterkeys : [filterkeys];
 
@@ -72,6 +72,9 @@ var Utils = {
             }
         }
         return nObj;
+    },
+    kvpair: function (data) {
+        return Object.keys(data).map((key) => [key, data[key]]);
     }
 
 };
