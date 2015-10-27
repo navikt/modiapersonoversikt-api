@@ -122,6 +122,7 @@ public class PeriodeForm extends Panel {
                 sendFilterEndretEvent();
                 target.add(datovelgerContainer);
                 target.appendJavaScript("Utbetalinger.skjulSnurrepipp();");
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
 
             @Override
