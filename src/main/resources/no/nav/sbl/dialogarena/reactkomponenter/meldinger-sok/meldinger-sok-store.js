@@ -70,18 +70,9 @@ class MeldingerSokStore extends Store {
 
     submit(afterSubmit, event) {
         event.preventDefault();
-        document.querySelector('#' + this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
+        document.getElementById(this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
         afterSubmit();
     }
-}
-
-function nesteMelding(elementer, index) {
-    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
-}
-
-function updateScroll(tabliste, valgtIndex) {
-    var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
-    Utils.adjustScroll(tabliste, element);
 }
 
 var sok = (fnr, query) => {
@@ -91,13 +82,16 @@ var sok = (fnr, query) => {
     return Ajax.get(url);
 };
 
-
 function hentMelding(hentElement, elementer, valgtElement) {
     for (var i = 0; i < elementer.length; i++) {
         if (elementer[i].key === valgtElement.key) {
             return hentElement(elementer, i);
         }
     }
+}
+
+function nesteMelding(elementer, index) {
+    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
 }
 
 function forrigeMelding(elementer, index) {
@@ -135,7 +129,11 @@ function onRejected(error) {
         this.state.feilet = true;
         this.fireUpdate(this.listeners);
     }
-}
 
+}
+function updateScroll(tabliste, valgtIndex) {
+    var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
+    Utils.adjustScroll(tabliste, element);
+}
 
 export default MeldingerSokStore;

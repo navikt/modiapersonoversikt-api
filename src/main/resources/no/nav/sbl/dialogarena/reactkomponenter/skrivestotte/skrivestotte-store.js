@@ -3,7 +3,7 @@ import Store from './../utils/store';
 import Ajax from './../utils/ajax';
 
 function updateScroll(tabliste, valgtIndex) {
-    var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
+    var element = tabliste.getElementsByClassName('sok-element').item(valgtIndex);
     Utils.adjustScroll(tabliste, element);
 }
 
@@ -74,8 +74,8 @@ function autofullfor(tekst, autofullforMap) {
 
 
 class SkrivstotteStore extends Store {
-    constructor(...args) {
-        super(args[0]);
+    constructor(props) {
+        super(props);
         if (this.state.tekster.length > 0) {
             this.state.valgtTekst = this.state.tekster[0];
         }
@@ -148,7 +148,7 @@ class SkrivstotteStore extends Store {
 
     submit(onSubmit, event) {
         event.preventDefault();
-        var tekstfelt = document.querySelector('#' + this.state.tekstfeltId);
+        var tekstfelt = document.getElementById(this.state.tekstfeltId);
         tekstfelt.focus();
 
         // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
