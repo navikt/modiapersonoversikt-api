@@ -23,21 +23,20 @@ describe('MeldingerSokStore', function () {
 
     it('indekserer ved initializeVisning', function () {
         sinon.spy(Ajax, 'get');
+
         var fnr = '12345678910';
         var store = new MeldingerSokStore(assign({}, initialState, {fnr: fnr}));
 
         store.initializeVisning();
 
-        const compareURL = sinon.match(function (url) {
-            return url.contains(fnr) && url.contains('indekser');
-        });
-
         String.prototype.contains = function (it) {
             return this.indexOf(it) != -1;
         };
+        var args = Ajax.get.args[0];
+        var url = args[0];
 
         expect(Ajax.get.calledOnce).to.equal(true);
-        expect(Ajax.get.calledWith(compareURL)).to.equal(true);
+        expect(url).to.contains(fnr).and.to.contain('indekser');
 
         Ajax.get.restore();
     });
