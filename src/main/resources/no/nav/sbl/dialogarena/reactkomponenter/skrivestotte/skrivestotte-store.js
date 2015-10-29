@@ -1,98 +1,10 @@
-var Utils = require('./../utils/utils-module');
-var Store = require('./../utils/store');
-
-var SkrivestotteStore = function () {
-    Store.apply(this, arguments);
-    if (this.state.tekster.length > 0) {
-        this.state.valgtTekst = this.state.tekster[0];
-    }
-};
-SkrivestotteStore.prototype = $.extend({}, Store.prototype, SkrivestotteStore.prototype);
-
-SkrivestotteStore.prototype.tekstChanged = function (tekst, tabliste) {
-    this.state.valgtTekst = tekst;
-
-    updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.leggTilKnagg = function (knagg) {
-    this.state.knagger = this.state.knagger || [];
-    this.state.knagger.push(knagg);
-
-    hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.slettKnagg = function (knagg) {
-    var nyeKnagger = this.state.knagger.slice(0);
-    var index = nyeKnagger.indexOf(knagg);
-    this.state.knagger.splice(index, 1);
-
-    hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.setLocale = function (locale) {
-    this.state.valgtLocale = locale;
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.onChange = function (data) {
-    this.state.fritekst = data.fritekst;
-    this.state.knagger = data.knagger;
-
-    hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
-    this.fireUpdate(this.listeners);
-};
-
-SkrivestotteStore.prototype.onKeyDown = function (tabliste, event) {
-    switch (event.keyCode) {
-        case 38: /* pil opp */
-            event.preventDefault();
-            this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
-
-            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
-
-            this.fireUpdate(this.listeners);
-            break;
-        case 40: /* pil ned */
-            event.preventDefault();
-            this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
-
-            updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
-
-            this.fireUpdate(this.listeners);
-            break;
-    }
-};
-
-SkrivestotteStore.prototype.submit = function (onSubmit, event) {
-    event.preventDefault();
-    var $tekstfelt = $('#' + this.state.tekstfeltId);
-    $tekstfelt.focus();
-
-    // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
-    setTimeout(function () {
-        var eksisterendeTekst = $tekstfelt.val();
-        eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
-        $tekstfelt
-            .focus()
-            .val(eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor))
-            .trigger('input');
-
-        onSubmit();
-    }.bind(this), 0);
-};
+import Utils from './../utils/utils-module';
+import Store from './../utils/store';
+import Ajax from './../utils/ajax';
 
 function updateScroll(tabliste, valgtIndex) {
-    var $parent = $(tabliste);
-    var $valgt = $parent.find('.sok-element').eq(valgtIndex);
-    Utils.adjustScroll($parent, $valgt);
+    var element = tabliste.getElementsByClassName('sok-element').item(valgtIndex);
+    Utils.adjustScroll(tabliste, element);
 }
 
 function hentTekst(hentElement, elementer, valgtElement) {
@@ -116,12 +28,12 @@ var hentSokeresultater =
         sok(fritekst, knagger).done(function (resultat) {
             this.state.tekster = resultat;
             this.state.valgtTekst = resultat[0] || {};
-            updateScroll($(this.container).find('.sok-liste'), 0);
+            updateScroll(this.container.querySelector('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
         }.bind(this));
     }, 150);
 
-var sok = function (fritekst, knagger) {
+var sok = (fritekst, knagger) => {
     fritekst = fritekst || '';
     knagger = knagger || [];
 
@@ -131,8 +43,7 @@ var sok = function (fritekst, knagger) {
     if (knagger.length !== 0) {
         url += '&tags=' + encodeURIComponent(knagger);
     }
-
-    return $.get(url);
+    return Ajax.get(url);
 };
 
 function stripEmTags(tekst) {
@@ -161,4 +72,100 @@ function autofullfor(tekst, autofullforMap) {
     });
 }
 
-module.exports = SkrivestotteStore;
+
+class SkrivstotteStore extends Store {
+    constructor(props) {
+        super(props);
+        if (this.state.tekster.length > 0) {
+            this.state.valgtTekst = this.state.tekster[0];
+        }
+    }
+
+    tekstChanged(tekst, tabliste) {
+        this.state.valgtTekst = tekst;
+
+        updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+
+        this.fireUpdate(this.listeners);
+    }
+
+    leggTilKnagg(knagg) {
+        this.state.knagger = this.state.knagger || [];
+        this.state.knagger.push(knagg);
+
+        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+
+        this.fireUpdate(this.listeners);
+
+    }
+
+    slettKnagg(knagg) {
+        var nyeKnagger = this.state.knagger.slice(0);
+        var index = nyeKnagger.indexOf(knagg);
+        this.state.knagger.splice(index, 1);
+
+        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+
+        this.fireUpdate(this.listeners);
+
+    }
+
+    setLocale(locale) {
+        this.state.valgtLocale = locale;
+        this.fireUpdate(this.listeners);
+    }
+
+    onChange(data) {
+        this.state.fritekst = data.fritekst;
+        this.state.knagger = data.knagger;
+
+        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+
+        this.fireUpdate(this.listeners);
+
+    }
+
+    onKeyDown(tabliste, event) {
+        switch (event.key) {
+            case "ArrowUp":
+                event.preventDefault();
+                this.state.valgtTraad = hentMelding(forrigeMelding, this.state.traader, this.state.valgtTraad);
+
+                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+
+                this.fireUpdate(this.listeners);
+                break;
+            case "ArrowDown":
+                event.preventDefault();
+                this.state.valgtTraad = hentMelding(nesteMelding, this.state.traader, this.state.valgtTraad);
+
+                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+
+                this.fireUpdate(this.listeners);
+                break;
+        }
+    }
+
+    submit(onSubmit, event) {
+        event.preventDefault();
+        var tekstfelt = document.getElementById(this.state.tekstfeltId);
+        tekstfelt.focus();
+
+        // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
+        setTimeout(function () {
+            var eksisterendeTekst = typeof tekstfelt.value === 'undefined' ? "" : tekstfelt.value;
+            eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
+            tekstfelt.focus();
+            tekstfelt.value = eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor);
+            var thisEvent = document.createEvent('Event');
+            thisEvent.initEvent('input', true, true);
+            tekstfelt.dispatchEvent(thisEvent);
+
+            onSubmit();
+        }.bind(this), 0);
+
+    }
+
+}
+
+export default SkrivstotteStore;

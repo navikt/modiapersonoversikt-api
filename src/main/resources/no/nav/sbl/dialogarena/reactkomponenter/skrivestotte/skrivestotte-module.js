@@ -33,7 +33,7 @@ var Skrivestotte = React.createClass({
         this.refs.modal.close();
     },
     getInitialState: function () {
-        this.store = new SkrivestotteStore($.extend({}, {
+        this.store=new SkrivestotteStore(Object.assign({
             knagger: [],
             fritekst: "",
             tekster: [],
