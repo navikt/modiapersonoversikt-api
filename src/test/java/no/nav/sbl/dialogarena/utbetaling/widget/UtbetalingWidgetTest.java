@@ -85,27 +85,27 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "1")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "2")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "3")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "4")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now()))
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now()))
         );
 
         when(utbetalingService.hentUtbetalinger(Matchers.matches(FNR), Matchers.any(LocalDate.class), Matchers.any(LocalDate.class))).thenReturn(list);
@@ -121,33 +121,33 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "1")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "2")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "3")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "4")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now())),
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
                 new Record<Hovedytelse>()
                         .with(Hovedytelse.id, "5")
                         .with(Hovedytelse.nettoUtbetalt, 0D)
-                        .with(Hovedytelse.hovedytelsedato, now().minusMonths(1))
+                        .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                         .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusMonths(1), now()))
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now()))
         );
 
         when(utbetalingService.hentUtbetalinger(Matchers.matches(FNR), Matchers.any(LocalDate.class), Matchers.any(LocalDate.class))).thenReturn(list);

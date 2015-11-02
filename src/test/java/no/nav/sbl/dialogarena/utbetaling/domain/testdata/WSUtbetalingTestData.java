@@ -11,6 +11,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.joda.time.DateTime.now;
 
 
@@ -21,7 +22,7 @@ public class WSUtbetalingTestData {
         utbetalinger.add(createOlaNordmannUtbetaling());
         utbetalinger.add(createOsloKommuneUtbetaling());
         utbetalinger.addAll(createKariNordmannUtbetaling());
-        utbetalinger.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusMonths(1).plusDays(14), now().minusMonths(1).plusDays(14)));
+        utbetalinger.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14), now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14)));
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
@@ -36,7 +37,7 @@ public class WSUtbetalingTestData {
     public static List<WSUtbetaling> createKariNordmannUtbetaling() {
         WSYtelsestyper ytelesestype = new WSYtelsestyper().withValue("Alderspensjon");
         WSPerson testWSPerson = new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3");
-        WSPeriode ytelsesperiode = new WSPeriode().withFom(now().minusYears(1).minusMonths(1)).withTom(now().minusYears(1));
+        WSPeriode ytelsesperiode = new WSPeriode().withFom(now().minusYears(1).minusDays(NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusYears(1));
         List<WSYtelseskomponent> ytelseskomponenter = Arrays.asList(
                 LagTestWSYtelse.lagYtelseskomponent("Grunnpermisjon", 5200.00),
                 LagTestWSYtelse.lagYtelseskomponent("Særtillegg", 1456.00));
@@ -72,7 +73,7 @@ public class WSUtbetalingTestData {
                         .withUtbetalingsmetode("Bankkonto")
                         .withUtbetalingsstatus("Utbetalt"),
                 new WSUtbetaling()
-                        .withPosteringsdato(now().minusYears(1).minusMonths(2))
+                        .withPosteringsdato(now().minusYears(1).minusDays(2*NUMBER_OF_DAYS_TO_SHOW))
                         .withUtbetaltTil(testWSPerson)
                         .withUtbetalingNettobeloep(4389.00)
                         .withUtbetalingsmelding("Alderspensjon for desember")
@@ -80,7 +81,7 @@ public class WSUtbetalingTestData {
                                 new WSYtelse()
                                         .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
                                         .withRettighetshaver(testWSPerson)
-                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(3)).withTom(now().minusYears(1).minusMonths(2)))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusDays(3*NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusYears(1).minusMonths(2)))
                                         .withYtelseskomponentListe(
                                                 LagTestWSYtelse.lagYtelseskomponent("Grunnpermisjon", 5200.00),
                                                 LagTestWSYtelse.lagYtelseskomponent("Særtillegg", 1456.00))
@@ -90,7 +91,7 @@ public class WSUtbetalingTestData {
                                         .withSkattsum(-2267.00)
                                         .withYtelseNettobeloep(4389.00)
                                         .withBilagsnummer("***REMOVED***"))
-                        .withForfallsdato(now().minusYears(1).minusMonths(2))
+                        .withForfallsdato(now().minusYears(1).minusDays(2*NUMBER_OF_DAYS_TO_SHOW))
                         .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("***REMOVED******REMOVED***896").withKontotype("Konto - Utland"))
                         .withUtbetalingsmetode("Bankkonto")
                         .withUtbetalingsstatus("Under saksbehandling")
@@ -107,7 +108,7 @@ public class WSUtbetalingTestData {
                                 .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
                                 .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
                                 .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Plan- og bygningsetaten"))
-                                .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(2).minusDays(15)).withTom(now().minusMonths(1).minusDays(15)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW).minusDays(15)).withTom(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).minusDays(15)))
                                 .withYtelseskomponentListe(
                                         LagTestWSYtelse.lagYtelseskomponent("Sykepenger, arbeidstakere", 15000.00))
                                 .withYtelseskomponentersum(15000.00)
@@ -117,7 +118,7 @@ public class WSUtbetalingTestData {
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(13633.00)
                                 .withBilagsnummer("***REMOVED***"))
-                .withUtbetalingsdato(now().minusMonths(2))
+                .withUtbetalingsdato(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
@@ -126,14 +127,14 @@ public class WSUtbetalingTestData {
     public static WSUtbetaling createOlaNordmannUtbetaling() {
         WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Ola Nordmann Utbetaling 2");
         return new WSUtbetaling()
-                .withPosteringsdato(now().minusMonths(1))
+                .withPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                 .withUtbetaltTil(personOlaNordmann)
                 .withUtbetalingsmelding("Utbetalt dagpenger")
                 .withYtelseListe(
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
                                 .withRettighetshaver(personOlaNordmann)
-                                .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW)))
                                 .withYtelseskomponentListe(
                                         LagTestWSYtelse.lagYtelseskomponent("Dagpenger", 21419.75, 389.45, 55.0)
                                                 .withSatstype("DAG"))
@@ -144,7 +145,7 @@ public class WSUtbetalingTestData {
                                 .withTrekksum(0.00)
                                 .withYtelseNettobeloep(21419.75)
                                 .withBilagsnummer("30742-5731"))
-                .withForfallsdato(now().minusMonths(1).plusDays(14))
+                .withForfallsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Utbetalingskort - Norge"))
                 .withUtbetalingsmetode("Utbetalingskort")
                 .withUtbetalingsstatus("Sendt kontofører, avventer forfallsdato");
@@ -153,14 +154,14 @@ public class WSUtbetalingTestData {
     public static WSUtbetaling createUtbetalingMedValgtUtbetalingOgPosteringsdato(DateTime posteringsdato, DateTime utbetalingsdato ) {
         WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Ola Nordmann Utbetaling 2");
         return new WSUtbetaling()
-                .withPosteringsdato(now().minusMonths(1))
+                .withPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                 .withUtbetaltTil(personOlaNordmann)
                 .withUtbetalingsmelding("Utbetalt dagpenger")
                 .withYtelseListe(
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
                                 .withRettighetshaver(personOlaNordmann)
-                                .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW)))
                                 .withYtelseskomponentListe(
                                         LagTestWSYtelse.lagYtelseskomponent("Dagpenger", 21419.75, 389.45, 55.0)
                                                 .withSatstype("DAG"))
