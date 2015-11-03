@@ -102,8 +102,8 @@ public class Innboks extends Lerret {
         if (innboksVM.harFeilmelding().getObject().equals(true)) {
             String beskrivelse = "Legger tilbake en oppgave som du ikke har rett at se";
             oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId(), beskrivelse, Optional.<Temagruppe>none());
-            innboksVM.setSessionHenvendelseId("");
-            innboksVM.setSessionOppgaveId("");
+            innboksVM.setSessionHenvendelseId(null);
+            innboksVM.setSessionOppgaveId(null);
         }
 
         meldingsliste.add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel);
