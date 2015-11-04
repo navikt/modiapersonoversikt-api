@@ -4,8 +4,7 @@
   border: 1px solid @borderColorLight;
   background-color: @bodyBackground;
   &:focus {
-    border-color: @linkColor;
-    outline: none;
+    .focus-sammensatt-mixin;
   }
   a:hover {
     text-decoration: none;
@@ -117,7 +116,8 @@
     a:focus {
       background-color: @linkColor;
       color: @white !important;
-      outline: none;
+      .focus-sammensatt-inset-mixin();
+
       .tidsrom, .subject, ul.metadata {
         color: @white !important;
       }
