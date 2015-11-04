@@ -137,6 +137,7 @@ public class Innboks extends Lerret {
     @Override
     public void onOpening(AjaxRequestTarget target) {
         if (target != null) {
+            target.appendJavaScript("Meldinger.init();");
             if (innboksVM.focusValgtTraadOnOpen) {
                 target.appendJavaScript("Meldinger.focusOnSelectedElement()");
             }
