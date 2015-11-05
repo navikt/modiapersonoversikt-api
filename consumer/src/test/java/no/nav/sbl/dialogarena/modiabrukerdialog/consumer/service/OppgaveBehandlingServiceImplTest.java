@@ -151,7 +151,7 @@ public class OppgaveBehandlingServiceImplTest {
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), containsString(opprinneligBeskrivelse + "\n"));
+        assertThat(endreOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
         assertThat(endreOppgave.getFagomradeKode(), is("ARBD_KNA"));
         assertThat(endreOppgave.getAnsvarligEnhetId(), is(hentOppgaveResponse.getOppgave().getAnsvarligEnhetId()));
     }
@@ -174,7 +174,7 @@ public class OppgaveBehandlingServiceImplTest {
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), containsString(opprinneligBeskrivelse + "\n"));
+        assertThat(endreOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
         assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
         assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhet));
     }
