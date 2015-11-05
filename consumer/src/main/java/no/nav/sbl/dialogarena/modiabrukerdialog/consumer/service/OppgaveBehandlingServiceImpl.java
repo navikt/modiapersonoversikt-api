@@ -144,7 +144,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
         String nyBeskrivelse = header + leggTil;
-        return isBlank(gammelBeskrivelse) ? nyBeskrivelse : gammelBeskrivelse + "\n\n" + nyBeskrivelse;
+        return isBlank(gammelBeskrivelse) ? nyBeskrivelse :  nyBeskrivelse + "\n\n" + gammelBeskrivelse;
     }
 
     private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
