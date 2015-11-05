@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import org.apache.wicket.ajax.AjaxRequestHandler;
@@ -36,5 +37,33 @@ public class KvitteringsPanelTest extends WicketPageTest {
                 .click().link(withId("startNyDialogLenke"))
                 .should().containComponent(ofType(KvitteringsPanel.class).thatIsInvisible())
                 .should().inAjaxResponse().haveComponents(ofType(KvitteringsPanel.class));
+    }
+
+    @Test
+    public void skalIkkeviseTemgruppemeldingDersomTemagruppeIkkeErANSOS() {
+        KvitteringsPanel kvitteringsPanel = new KvitteringsPanel("id");
+        wicket.goToPageWith(kvitteringsPanel);
+        kvitteringsPanel.visTemagruppebasertKvittering(
+                new AjaxRequestHandler(wicket.tester.getLastRenderedPage()),
+                "kvitteringsmelding",
+                Temagruppe.ARBD,
+                new Form("id"));
+        wicket.goToPageWith(kvitteringsPanel);
+
+        wicket.should().containComponent(withId("temagruppemelding").thatIsInvisible());
+    }
+
+    @Test
+    public void skalViseTemagruppemeldingDersomTemagruppeErANSOS() {
+        KvitteringsPanel kvitteringsPanel = new KvitteringsPanel("id");
+        wicket.goToPageWith(kvitteringsPanel);
+        kvitteringsPanel.visTemagruppebasertKvittering(
+                new AjaxRequestHandler(wicket.tester.getLastRenderedPage()),
+                "kvitteringsmelding",
+                Temagruppe.ANSOS,
+                new Form("id"));
+        wicket.goToPageWith(kvitteringsPanel);
+
+        wicket.should().containComponent(withId("temagruppemelding").thatIsVisible());
     }
 }

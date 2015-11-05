@@ -315,7 +315,9 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<HenvendelseVM> form) {
         try {
-            switch (getModelObject().modus) {
+            HenvendelseVM henvendelseVM = getModelObject();
+
+            switch (henvendelseVM.modus) {
                 case REFERAT:
                     sendReferat();
                     break;
@@ -323,8 +325,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                     sendSporsmal();
                     break;
             }
+
+            String kvitteringstekstKey = henvendelseVM.getKvitteringsTekstKeyBasertPaaModus("nydialogpanel");
+
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
-            kvittering.visKvittering(target, getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel")), form);
+            kvittering.visTemagruppebasertKvittering(target, getString(kvitteringstekstKey),  henvendelseVM.temagruppe, form);
         } catch (JournalforingFeilet e) {
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
             kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form);
