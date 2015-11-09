@@ -107,14 +107,26 @@ var Utbetalinger = (function () {
     };
 
     function kopierOgSkrivUt(html) {
-        $('body > .print .content').html('<div class="utbetalinger">' + html + '</div>');
+        var ddmmyyyy = finnUtskriftsdato();
+        var urlPathname = window.location.pathname;
+        var fnr = urlPathname.split("person/")[1] || "";
+        var printerInformasjon = '<p>Utskriftsdato: ' + ddmmyyyy + '</p>'+ '<p>Brukers fødselsnummer: '+ fnr + '</p>';
+
+        $('body > .print .content')
+            .html('<div class="utbetalinger">' + printerInformasjon  + html + '</div>')
+            .css('padding-top', '2rem');
+
+        $('body > .print .dato-utskrift #dato').text(ddmmyyyy);
+        $('body > .print').css('padding-top', '5rem');
+        window.print();
+    }
+
+    function finnUtskriftsdato() {
         var date = new Date();
         var day = date.getDate();
         var month = date.getMonth() + 1;
         var year = date.getFullYear();
-        var ddmmyyyy = ((day < 10 ? '0' : '') + day) + '.' + ((month < 10 ? '0' : '') + month) + '.' + year;
-        $('body > .print .dato-utskrift #dato').text(ddmmyyyy);
-        window.print();
+        return ((day < 10 ? '0' : '') + day) + '.' + ((month < 10 ? '0' : '') + month) + '.' + year;
     }
 
     var visSnurrepipp = function() {
