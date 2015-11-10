@@ -319,6 +319,10 @@
     .utbetaling-ramme-innhold {
       background-color: white;
       font-size: 0.9rem;
+
+      &:focus {
+        .focus-sammensatt-inset-mixin;
+      }
     }
     .feilmelding {
       margin: 0 2rem;
@@ -518,9 +522,11 @@
     }
   }
   .utbetalingslinje {
-    border-top: 2px solid #ffffff;
     border-bottom: 1px solid @borderColor;
     cursor: pointer;
+    &:focus {
+      .focus-sammensatt-inset-mixin;
+    }
     .main {
       position: relative;
       .statuspanel {
