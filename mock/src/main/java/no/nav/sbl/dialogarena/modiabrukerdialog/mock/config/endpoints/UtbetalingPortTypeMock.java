@@ -56,7 +56,7 @@ public class UtbetalingPortTypeMock {
 
     private static List<WSUtbetaling> kariNordmannUtbetaling() {
         return asList(new WSUtbetaling()
-                        .withPosteringsdato(now().minusYears(1))
+                        .withPosteringsdato(now().minusDays(30))
                         .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
                         .withUtbetalingNettobeloep(19724.00)
                         .withUtbetalingsmelding("Alderspensjon med 3 mnd etterbetaling")
@@ -65,8 +65,8 @@ public class UtbetalingPortTypeMock {
                                 kariNordmannYtelse2(),
                                 kariNordmannYtelse3(),
                                 kariNordmannYtelse4())
-                        .withUtbetalingsdato(now().minusYears(1).plusMonths(2))
-                        .withForfallsdato(now().minusYears(1).plusMonths(2))
+                        .withUtbetalingsdato(now().minusDays(15))
+                        .withForfallsdato(now().minusDays(15))
                         .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype("Konto - Utland"))
                         .withUtbetalingsmetode("Bankkonto")
                         .withUtbetalingsstatus("Utbetalt"),
@@ -241,7 +241,7 @@ public class UtbetalingPortTypeMock {
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(11840.00)
                                 .withBilagsnummer("10201498456"))
-                .withUtbetalingsdato(now().minusMonths(2))
+                .withUtbetalingsdato(now().minusDays(2*30))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
@@ -249,7 +249,7 @@ public class UtbetalingPortTypeMock {
 
     private static WSUtbetaling createOlaNordmannUtbetaling() {
         return new WSUtbetaling()
-                .withPosteringsdato(now().minusMonths(1))
+                .withPosteringsdato(now().minusDays(30))
                 .withUtbetaltTil(new WSPerson()
                         .withAktoerId("22222222222")
                         .withNavn("Ola Nordmann Utbetaling 2"))
@@ -261,7 +261,7 @@ public class UtbetalingPortTypeMock {
                                 .withRettighetshaver(new WSPerson()
                                         .withAktoerId("22222222222")
                                         .withNavn("Ola Nordmann Utbetaling 2"))
-                                .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*30)).withTom(now().minusDays(2*30)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponenttype("Dagpenger")
@@ -275,7 +275,7 @@ public class UtbetalingPortTypeMock {
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(19152.75)
                                 .withBilagsnummer("30742-5731"))
-                .withForfallsdato(now().minusMonths(1).plusDays(14))
+                .withForfallsdato(now().minusDays(30).plusDays(14))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Utbetalingskort - Norge"))
                 .withUtbetalingsmetode("Utbetalingskort")
                 .withUtbetalingsstatus("Returnert for saksbehandling");
