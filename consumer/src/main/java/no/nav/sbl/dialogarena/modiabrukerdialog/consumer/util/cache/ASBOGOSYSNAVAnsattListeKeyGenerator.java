@@ -17,7 +17,6 @@ import java.util.Map;
 public class ASBOGOSYSNAVAnsattListeKeyGenerator extends SimpleKeyGenerator {
 
     public ASBOGOSYSNAVAnsattListeKeyGenerator() {
-        super();
     }
 
     @Override
@@ -31,14 +30,14 @@ public class ASBOGOSYSNAVAnsattListeKeyGenerator extends SimpleKeyGenerator {
         if (transformer != null) {
             return transformer.transform(param0);
         }
-        return super.generate(target, method, params); // TODO: burde ikke vare denne returnere params?
+        return params;
     }
 
     private static Map<Class, Transformer> asbogosysCachekeyMapper = new HashMap<Class, Transformer>() {{
         put(ASBOGOSYSNavEnhet.class, new Transformer<ASBOGOSYSNavEnhet, Object>() {
             @Override
-            public Object transform(ASBOGOSYSNavEnhet obj) {
-                return obj.getEnhetsId();
+            public Object transform(ASBOGOSYSNavEnhet enhet) {
+                return enhet.getEnhetsId();
             }
         });
 
