@@ -48,8 +48,10 @@
         </cache:caching>
 
         <cache:caching cache="asbogosysAnsatt" key-generator="asbogosyskeygenerator">
-            <cache:cacheable method="hent*"/>
-            <cache:cacheable method="finn*"/>
+            <cache:cacheable method="hentNAVAnsatt"/>
+            <cache:cacheable method="finnArenaNAVAnsattListe"/>
+            <cache:cacheable method="hentNAVAnsattFagomradeListe"/>
+            <cache:cacheable method="hentNAVAnsattEnhetListe"/>
         </cache:caching>
     </cache:advice>
     <cache:advice id="aktorAdvice" key-generator="userkeygenerator">
