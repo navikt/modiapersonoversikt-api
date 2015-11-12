@@ -95,7 +95,7 @@ public class TraadVM implements Serializable {
         return SPORSMAL.contains(getEldsteMelding().melding.meldingstype) &&
                 !getEldsteMelding().melding.kassert
                 && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
-                && !getEldsteMelding().erFeilsendt() && !(getEldsteMelding().melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !traadOKSOSKanSes());
+                && !getEldsteMelding().erFeilsendt() && !(getEldsteMelding().melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !traadOKSOSKanSes()) && !getEldsteMelding().melding.ingenTilgangJournalfort;
     }
 
     private boolean traadOKSOSKanSes() {

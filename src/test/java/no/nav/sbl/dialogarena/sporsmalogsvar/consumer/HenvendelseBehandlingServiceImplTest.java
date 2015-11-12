@@ -59,7 +59,6 @@ public class HenvendelseBehandlingServiceImplTest {
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String BEHANDLINGS_ID = "id1";
-    private static final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer());
     private static final List<String> IDER_I_VALGT_TRAAD = asList(ID_1, ID_2, ID_3);
     private static final String NAVBRUKERS_ENHET = "Navbrukers enhet";
     public static final String ARKIVTEMANAVN = "arkivtemanavn";
