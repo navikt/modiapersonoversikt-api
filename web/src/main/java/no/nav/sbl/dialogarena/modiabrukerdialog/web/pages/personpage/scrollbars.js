@@ -81,8 +81,8 @@ Modig.lagScrollbars = function () {
         keyboard: {enable: false}
     }));
 
-    //Alle lerret med unntak av meldinger og saksoversikt
-    $('.lamell:not(.meldinger):not(.saksoversikt) .lerret').mCustomScrollbar(Modig.scrollOptions);
+    //Alle lerret med unntak av meldinger, saksoversikt, og utbetalinger.
+    $('.lamell:not(.meldinger):not(.saksoversikt):not(.utbetalinger) .lerret').mCustomScrollbar(Modig.scrollOptions);
 
     //For meldinger lamell
     $('.lamell.meldinger .traad-liste-visning').mCustomScrollbar(Modig.scrollOptions);
