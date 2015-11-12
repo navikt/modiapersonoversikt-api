@@ -90,11 +90,11 @@ public class HenvendelseBehandlingServiceImplTest {
     @Mock
     private LDAPService ldapService;
 
-    @InjectMocks
-    private HenvendelseBehandlingServiceImpl henvendelseBehandlingService;
-
     @Mock
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    @InjectMocks
+    private HenvendelseBehandlingServiceImpl henvendelseBehandlingService;
 
 
     private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer(),pep, saksbehandlerInnstillingerService);
