@@ -36,10 +36,12 @@ public class PeriodeForm extends Panel {
 
     private FilterParametere filterParametere;
     private MarkupContainer datovelgerContainer;
+    private PeriodeForm thisPeriodeform;
 
     public PeriodeForm(String id, FilterParametere filterParametere) {
         super(id);
         this.filterParametere = filterParametere;
+        thisPeriodeform = this;
         datovelgerContainer = createDatovelgerWrapper("datovelger");
         add(createForm("periodeForm"));
     }
@@ -84,6 +86,7 @@ public class PeriodeForm extends Panel {
                     datovelgerContainer.setVisibilityAllowed(true);
                     target.add(datovelgerContainer);
                 } else {
+                    FeedbackLabel.addFormLabelsToTarget(target, thisPeriodeform);
                     datovelgerContainer.setVisibilityAllowed(false);
                     target.add(datovelgerContainer);
                 }
