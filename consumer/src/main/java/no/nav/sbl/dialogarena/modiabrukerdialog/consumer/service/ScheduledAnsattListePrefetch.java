@@ -7,6 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetServic
 import org.apache.commons.collections15.Closure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 public class ScheduledAnsattListePrefetch {
 
     public static final String KL_7_OG_KL_19_MANDAG_TIL_FERDAG = "0 0 7,19 * * MON-FRI";
+    public static final String CACHE_NAME = "asbogosysAnsattListe";
 
     Logger logger = LoggerFactory.getLogger(ScheduledAnsattListePrefetch.class);
 
@@ -26,9 +28,15 @@ public class ScheduledAnsattListePrefetch {
     @Inject
     private GOSYSNAVansatt ansattWS;
 
+    @Inject
+    CacheManager cacheManager;
+
     @Scheduled(cron = KL_7_OG_KL_19_MANDAG_TIL_FERDAG)
     public void prefetchAnsattListe() {
         logger.info("Starter prefetch av alle ansatte i alle enheter");
+
+        cacheManager.getCache(CACHE_NAME).clear();
+
         List<AnsattEnhet> alleEnheter = enhetService.hentAlleEnheter();
         on(alleEnheter).forEach(new Closure<AnsattEnhet>() {
             @Override

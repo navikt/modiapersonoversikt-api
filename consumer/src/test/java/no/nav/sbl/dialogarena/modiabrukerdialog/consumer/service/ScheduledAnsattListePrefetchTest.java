@@ -12,6 +12,8 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +30,8 @@ public class ScheduledAnsattListePrefetchTest {
     EnhetService enhetService;
     @Mock
     GOSYSNAVansatt ansattWS;
+    @Mock
+    CacheManager cacheManager;
 
     @Captor
     ArgumentCaptor<ASBOGOSYSNavEnhet> captor;
@@ -40,6 +44,7 @@ public class ScheduledAnsattListePrefetchTest {
     public void setUp() throws Exception {
         enheter = Arrays.asList(new AnsattEnhet("0100", "Nav Østfold"), new AnsattEnhet("2960", "Nav Drift"));
         when(enhetService.hentAlleEnheter()).thenReturn(enheter);
+        when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 
     @Test
