@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -32,6 +34,12 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    @Inject
+    private EnforcementPoint pep;
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBruker() {
@@ -142,7 +150,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     }
 
     private InnboksVM innboksVM(String fnr) {
-        InnboksVM innboksVM = new InnboksVM(fnr, henvendelseBehandlingService);
+        InnboksVM innboksVM = new InnboksVM(fnr, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         innboksVM.oppdaterMeldinger();
         innboksVM.settForsteSomValgtHvisIkkeSatt();
         return innboksVM;

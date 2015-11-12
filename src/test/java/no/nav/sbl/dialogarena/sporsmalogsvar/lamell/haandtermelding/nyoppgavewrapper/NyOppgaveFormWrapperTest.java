@@ -1,11 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -55,14 +57,19 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     @Inject
     private GsakKodeverk gsakKodeverk;
 
+    @Inject
+    private EnforcementPoint pep;
     private InnboksVM innboksVM;
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Before
     public void setUp() {
         initMocks(this);
         innboksVM = mock(InnboksVM.class);
         Melding melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "id");
-        when(innboksVM.getValgtTraad()).thenReturn(new TraadVM(asList(new MeldingVM(melding, 1))));
+        when(innboksVM.getValgtTraad()).thenReturn(new TraadVM(asList(new MeldingVM(melding, 1)), pep, saksbehandlerInnstillingerService));
         when(gsakKodeverk.hentTemaListe()).thenReturn(TEMALISTE_MOCK);
     }
 

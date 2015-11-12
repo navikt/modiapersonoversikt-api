@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.joda.time.DateTime;
@@ -40,13 +42,18 @@ public class InnboksVMTest {
     @Inject
     HenvendelseBehandlingService henvendelseBehandlingService;
 
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private EnforcementPoint pep;
+
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIToTraader());
 
-        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         innboksVM.oppdaterMeldinger();
     }
 
@@ -115,7 +122,7 @@ public class InnboksVMTest {
     @Test
     public void skalFungereUtenMeldinger() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
-        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
 
         assertThat(innboksVM.getTraader().size(), is(0));
         assertThat(innboksVM.getValgtTraad().getMeldinger().size(), is(0));
@@ -127,7 +134,7 @@ public class InnboksVMTest {
         String traadId = "traadId";
 
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), Temagruppe.ARBD, traadId)));
-        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         innboksVM.oppdaterMeldinger();
         innboksVM.settForsteSomValgtHvisIkkeSatt();
 
@@ -138,7 +145,7 @@ public class InnboksVMTest {
     @Test
     public void henterNyesteMeldingITraadMedUkjentTraadId() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
-        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad("traadId");
         assertFalse(nyesteMeldingITraad.isSome());

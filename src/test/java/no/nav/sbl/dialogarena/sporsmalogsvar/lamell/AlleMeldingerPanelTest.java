@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -33,6 +35,12 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    @Inject
+    private EnforcementPoint pep;
+
     @Before
     public void setUp() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
@@ -42,12 +50,12 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
 
     @Test
     public void starterAlleMeldingerPanelUtenFeil() {
-        wicket.goToPageWith(new AlleMeldingerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService)));
+        wicket.goToPageWith(new AlleMeldingerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService)));
     }
 
     @Test
     public void setterValgtMeldingDersomManTrykkerPaaDen() {
-        InnboksVM innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
+        InnboksVM innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         innboksVM.oppdaterMeldinger();
         innboksVM.setValgtMelding("id1");
 

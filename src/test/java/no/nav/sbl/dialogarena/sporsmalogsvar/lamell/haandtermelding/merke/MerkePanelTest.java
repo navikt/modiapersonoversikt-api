@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -37,6 +39,12 @@ public class MerkePanelTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    @Inject
+    private EnforcementPoint pep;
 
     private InnboksVM innboksVM;
 
@@ -187,7 +195,7 @@ public class MerkePanelTest extends WicketPageTest {
 
     private MerkePanel getMerkePanel(List<Melding> meldinger) {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(meldinger);
-        innboksVM = new InnboksVM(FNR, henvendelseBehandlingService);
+        innboksVM = new InnboksVM(FNR, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         innboksVM.oppdaterMeldinger();
         innboksVM.settForsteSomValgtHvisIkkeSatt();
         MerkePanel merkePanel = new MerkePanel("panel", innboksVM);

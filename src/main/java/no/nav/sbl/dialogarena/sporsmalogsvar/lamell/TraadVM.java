@@ -1,31 +1,51 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.AnsattEnhetUtil;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 
 public class TraadVM implements Serializable {
 
+
     private List<MeldingVM> meldinger;
+
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public Sak journalfortSak;
 
-    public TraadVM(List<MeldingVM> meldinger) {
+    private EnforcementPoint pep;
+
+    public TraadVM(List<MeldingVM> meldinger, EnforcementPoint pep, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
         this.meldinger = meldinger;
+        this.pep = pep;
+        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
     }
 
     public List<MeldingVM> getMeldinger() {
@@ -75,7 +95,24 @@ public class TraadVM implements Serializable {
         return SPORSMAL.contains(getEldsteMelding().melding.meldingstype) &&
                 !getEldsteMelding().melding.kassert
                 && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
-                && !getEldsteMelding().erFeilsendt();
+                && !getEldsteMelding().erFeilsendt() && !(getEldsteMelding().melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !traadOKSOSKanSes());
+    }
+
+    private boolean traadOKSOSKanSes() {
+        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+
+        final Set<String> enheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
+
+        List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(
+                actionId("oksos"),
+                resourceId(""),
+                resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(getEldsteMelding().melding.brukersEnhet))
+        ));
+        for (String enhet : enheter) {
+            attributes.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(enhet)));
+        }
+        PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
+        return pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
     }
 
     public boolean erTemagruppeSosialeTjenester() {

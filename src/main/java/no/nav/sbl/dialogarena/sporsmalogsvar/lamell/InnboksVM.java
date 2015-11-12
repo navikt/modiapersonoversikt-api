@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -31,6 +33,8 @@ public class InnboksVM implements Serializable {
 
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     private Map<String, TraadVM> traader = new HashMap<>();
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
     private Optional<MeldingVM> valgtMelding = none();
@@ -38,10 +42,13 @@ public class InnboksVM implements Serializable {
     private Optional<String> sessionOppgaveId = none(), sessionHenvendelseId = none();
     public String traadBesvares;
     public boolean focusValgtTraadOnOpen = false;
+    EnforcementPoint pep;
 
-    public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService) {
+    public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService, EnforcementPoint pep, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
         this.fnr = fnr;
         this.henvendelseBehandlingService = henvendelseBehandlingService;
+        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
+        this.pep = pep;
     }
 
     public String getFnr() {
@@ -62,7 +69,7 @@ public class InnboksVM implements Serializable {
 
             Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
             for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
-                traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue())));
+                traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue()), pep, saksbehandlerInnstillingerService));
             }
             nyesteMeldingerITraad = on(traader.values()).map(new Transformer<TraadVM, MeldingVM>() {
                 @Override
@@ -107,14 +114,16 @@ public class InnboksVM implements Serializable {
     }
 
     public TraadVM getValgtTraad() {
-        return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new TraadVM(new ArrayList<MeldingVM>());
+        return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new TraadVM(new ArrayList<MeldingVM>(), pep, saksbehandlerInnstillingerService);
     }
 
     public MeldingVM getNyesteMeldingINyesteTraad() {
         return nyesteMeldingerITraad.get(0);
     }
 
-    public List<MeldingVM> getNyesteMeldingerITraad() { return nyesteMeldingerITraad; }
+    public List<MeldingVM> getNyesteMeldingerITraad() {
+        return nyesteMeldingerITraad;
+    }
 
     public Map<String, TraadVM> getTraader() {
         return traader;

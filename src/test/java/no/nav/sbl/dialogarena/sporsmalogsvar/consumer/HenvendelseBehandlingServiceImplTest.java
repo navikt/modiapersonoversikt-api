@@ -34,6 +34,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +54,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HenvendelseBehandlingServiceImplTest {
+
 
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
@@ -77,8 +79,7 @@ public class HenvendelseBehandlingServiceImplTest {
     protected BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Mock
     private EnforcementPoint pep;
-    @Mock
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     @Mock
     private PersonKjerneinfoServiceBi kjerneinfo;
     @Mock
@@ -92,6 +93,12 @@ public class HenvendelseBehandlingServiceImplTest {
 
     @InjectMocks
     private HenvendelseBehandlingServiceImpl henvendelseBehandlingService;
+
+    @Mock
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+
+    private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer(),pep, saksbehandlerInnstillingerService);
 
     @Before
     public void setUp() {
