@@ -8,8 +8,10 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.*;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -31,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +73,14 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
     private GsakService gsakService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     private InnboksVM innboksVM;
 
+    @Inject
+    @Named("pep")
+    private EnforcementPoint pep;
 
     public LamellContainer(String id, String fnrFromRequest, Session session) {
         super(id, createLamellFactories(fnrFromRequest));
@@ -250,7 +259,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private LamellFactory createMeldingerLamell(final String fnrFromRequest, final Session session) {
-        innboksVM = new InnboksVM(fnrFromRequest, henvendelseBehandlingService);
+        innboksVM = new InnboksVM(fnrFromRequest, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         InnboksProps props = new InnboksProps(
                 optional((String) session.getAttribute(HENVENDELSEID)),
                 optional((String) session.getAttribute(OPPGAVEID)),
