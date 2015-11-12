@@ -73,4 +73,10 @@ public class ServiceConfig {
         return new SakerServiceImpl();
     }
 
+    @Bean
+    public ScheduledAnsattListePrefetch scheduledAnsattListePrefetch() {
+
+        return new ScheduledAnsattListePrefetch();
+    }
+
 }
