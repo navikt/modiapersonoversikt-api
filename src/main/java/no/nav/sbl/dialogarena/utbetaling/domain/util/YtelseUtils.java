@@ -116,7 +116,7 @@ public class YtelseUtils {
             @Override
             public boolean evaluate(Record<Hovedytelse> hovedytelse) {
                 DateTime hovedytelseDato = hovedytelse.get(hovedytelsedato);
-                DateTime threshold = minusDaysAndFixedAtMidnight(DateTime.now(), numberOfDaysToShow);
+                DateTime threshold = minusDaysAndFixedAtMidnightAtDayBefore(DateTime.now(), numberOfDaysToShow);
                 return hovedytelseDato.isAfter(threshold);
             }
         };

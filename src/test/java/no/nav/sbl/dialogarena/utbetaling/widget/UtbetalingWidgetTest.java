@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 public class UtbetalingWidgetTest extends AbstractWicketTest {
 
     private static final String FNR = "***REMOVED***";
+    private static final int MIDNIGHT_AT_DAY_BEFORE = 1;
 
     private UtbetalingService utbetalingService;
     private UtbetalingWidget utbetalingWidget;
@@ -43,27 +44,27 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                 .with(Hovedytelse.id, "1")
                 .with(Hovedytelse.nettoUtbetalt, 0D)
                 .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                .with(Hovedytelse.hovedytelsedato, now()),
+                .with(Hovedytelse.hovedytelsedato, now().minusDays(MIDNIGHT_AT_DAY_BEFORE)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "2")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW - 1)),
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE - 1)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "3")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW)),
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "4")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW).toDateMidnight().toDateTime().minusMillis(1)),
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE).toDateMidnight().toDateTime().minusMillis(1)),
             new Record<Hovedytelse>()
                     .with(Hovedytelse.id, "5")
                     .with(Hovedytelse.nettoUtbetalt, 0D)
                     .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 1))
+                    .with(Hovedytelse.hovedytelsedato, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE + 1))
         );
 
         List<HovedytelseVM> hovedytelseVMs = UtbetalingWidget.transformUtbetalingToVM(hovedytelser);
