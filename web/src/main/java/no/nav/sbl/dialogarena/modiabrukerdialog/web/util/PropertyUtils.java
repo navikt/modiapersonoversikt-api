@@ -8,7 +8,7 @@ public class PropertyUtils {
     private static final String VIS_UTBETALINGER = "visUtbetalinger";
     private static final String DEFAULT_VIS_UTBETALINGER = "true";
 
-    public static boolean visUtbetalinger() {
+    public static boolean visUtbetalinger(String enhetsId) {
         return valueOf(getProperty(VIS_UTBETALINGER, DEFAULT_VIS_UTBETALINGER));
     }
 }
