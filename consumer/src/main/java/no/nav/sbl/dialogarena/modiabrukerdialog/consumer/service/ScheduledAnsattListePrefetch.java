@@ -17,7 +17,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class ScheduledAnsattListePrefetch {
 
-    public static final String KL_7_OG_KL_19_HVER_DAG = "0 0 7,19 * * *";
+    public static final String SCHEDULE_KEY= "prefetch.norg.ansattliste.schedule";
     public static final String CACHE_NAME = "asbogosysAnsattListe";
 
     Logger logger = LoggerFactory.getLogger(ScheduledAnsattListePrefetch.class);
@@ -31,7 +31,7 @@ public class ScheduledAnsattListePrefetch {
     @Inject
     CacheManager cacheManager;
 
-    @Scheduled(cron = KL_7_OG_KL_19_HVER_DAG)
+    @Scheduled(cron = "${"+SCHEDULE_KEY+"}")
     public void prefetchAnsattListe() {
         logger.info("Starter prefetch av alle ansatte i alle enheter");
 
