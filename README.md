@@ -24,6 +24,15 @@ Bakgrunnen for at denne har blitt til en fast jobb var et ønske om å få ned s
 Tidspunktet for kjøring av jobben bestemmes av en property `prefetch.norg.ansattliste.schedule` under fasitressursen `modiabrukerdialog.properties`. Formatet er Springs `@Scheduled`
 cron-format. Jobben bør kjøre utenfor saksbehandlernes arbeidstider, som også er tider når NORG har kapasitet til å svare raskere.
 
+Dersom propertyen ikke finnes eller inneholder feil vil applikasjonen feile under oppstart med tilsvarende
+
+    // Propertyen finnes ikke
+    java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': Could not resolve placeholder 'prefetch.norg.ansattliste.schedule' in string value "${prefetch.norg.ansattliste.schedule}"
+
+    // En del av cron-uttrykket er feil
+    java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': For input string: "7x19"
+
+
 ## Oppstart av appen på Jetty
 - Hvis man får OutOfMemoryError ved lokal kjøring så kan man sette opp PermGen space i prosessen som kjører StartJetty,
 ved å legge til -XX:MaxPermSize=256M som VM Option.
