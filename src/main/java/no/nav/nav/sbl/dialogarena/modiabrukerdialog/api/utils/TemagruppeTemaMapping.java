@@ -16,7 +16,7 @@ public class TemagruppeTemaMapping {
 
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
-            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK"));
+            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
             put(Temagruppe.FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
             put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
             put(Temagruppe.PENS.name(), asList("PEN", "SUP", "UFO"));
@@ -42,6 +42,8 @@ public class TemagruppeTemaMapping {
             put("VEN", Temagruppe.ARBD.name());
             put("YRA", Temagruppe.ARBD.name());
             put("YRK", Temagruppe.ARBD.name());
+            put("TSO", Temagruppe.ARBD.name());
+            put("TSR", Temagruppe.ARBD.name());
 
             put("BAR", Temagruppe.FMLI.name());
             put("BID", Temagruppe.FMLI.name());
