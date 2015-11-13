@@ -21,7 +21,8 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         UtbetalingerMockContext.class,
         SaksoversiktMockContext.class,
         SporsmalOgSvarMockContext.class,
-        VarslingMockContext.class
+        VarslingMockContext.class,
+        SaksbehandlerInnstillingerPanelMockContext.class
 })
 public class OversiktLerretTest extends WicketPageTest {
 

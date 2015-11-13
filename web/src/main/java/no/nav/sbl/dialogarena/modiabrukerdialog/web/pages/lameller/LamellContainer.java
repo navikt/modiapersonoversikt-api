@@ -85,7 +85,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public LamellContainer(String id, String fnrFromRequest, Session session) {
         super(id, createLamellFactories(fnrFromRequest));
         this.fnrFromRequest = fnrFromRequest;
+
+        if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
+            addNewFactory(createUtbetalingLamell(fnrFromRequest));
+        }
         addNewFactory(createMeldingerLamell(fnrFromRequest, session));
+
     }
 
     @Override
@@ -183,10 +188,6 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
         lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
         lamellFactories.add(createVarslingsLamell(fnrFromRequest));
-
-        if (visUtbetalinger()) {
-            lamellFactories.add(createUtbetalingLamell(fnrFromRequest));
-        }
 
         return lamellFactories;
     }
