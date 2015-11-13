@@ -8,7 +8,7 @@ Cacheoppsett er hovedsakelig beskrevet i `cacheconfig.xml` og benytter seg av Sp
 
 Tjenestekall mot NORG caches i to forskjellige cacher. Se `cacheconfig.xml` for eksakt hvilke kall som bruker hvilken cache.
 Det er hovedsakelig en forskjell på time-to-live og key-generering. Den ene cachen har caching som tar hensyn til innlogget saksbehandler, og har en kort time-to-live.
-Den andre cachen har data som ikke endre pr bruker og caches derfor bare på request. Denne har også en lengre time-to-live for at dataene skal leve frem til neste faste
+Den andre cachen har data som ikke endres pr bruker og caches derfor per node. Denne har også en lengre time-to-live for at dataene skal leve frem til neste faste
 cache-populeringsjobb. Se *Faste jobber* for mer informasjon om denne.
 
 Tjenestekall mot andre tjenester har egne cacher.
