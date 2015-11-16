@@ -30,7 +30,7 @@ describe('MeldingerSokStore', function () {
         store.initializeVisning();
 
         String.prototype.contains = function (it) {
-            return this.indexOf(it) != -1;
+            return this.indexOf(it) !== -1;
         };
         var args = Ajax.get.args[0];
         var url = args[0];
