@@ -45,13 +45,21 @@ function focusable(element, isTabIndexNotNaN) {
         return !!img && visible(img);
     }
 
+    return _focusableForNonAreaNode(element, isTabIndexNotNaN, nodeName);
+}
 
-    return (/input|select|textarea|button|object/.test(nodeName) ?
-            !element.disabled :
-            'a' === nodeName ?
-            element.href || isTabIndexNotNaN :
-                isTabIndexNotNaN) &&
-        visible(element);
+function _focusableForNonAreaNode(element, isTabIndexNotNaN, nodeName) {
+    if (/input|select|textarea|button|object/.test(nodeName)) {
+        return !element.disabled;
+    }
+    else {
+        if ('a' === nodeName) {
+            return element.href || isTabIndexNotNaN;
+        }
+        else {
+            return isTabIndexNotNaN && visible(element);
+        }
+    }
 }
 
 function tabbable(element) {

@@ -7,15 +7,19 @@ class Ajax {
         const deferred = Q.defer();
 
         req.end((err, resp) => {
-            if (err)deferred.reject([err, resp]);
-            else deferred.resolve(resp.body);
+            if (err) {
+                deferred.reject([err, resp]);
+            }
+            else {
+                deferred.resolve(resp.body);
+            }
         });
 
         return deferred.promise;
     }
 
     static doRequest(req, requestModifier = req => req) {
-        return Ajax.toPromise(requestModifier(req))
+        return Ajax.toPromise(requestModifier(req));
     }
 
     static get(url, requestModifier = (req) => req) {

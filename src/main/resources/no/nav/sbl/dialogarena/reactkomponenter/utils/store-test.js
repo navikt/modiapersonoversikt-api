@@ -6,26 +6,30 @@ var TestStore = function () {
     Store.apply(this, arguments);
 };
 TestStore.prototype = $.extend({}, Store.prototype, TestStore.prototype);
-TestStore.prototype.setState = function(nState) {
+TestStore.prototype.setState = function (nState) {
     this.state = nState;
     this.fireUpdate();
 };
 
 describe('Store', function () {
 
-    it('Tar vare på initial state', function(){
+    it('Tar vare på initial state', function () {
         var state = {myState: 1};
         var store = new Store(state);
 
         assert.equal(store.getState(), state);
     });
 
-    it('kaller alle listeners ved fireUpdate', function(){
+    it('kaller alle listeners ved fireUpdate', function () {
         var ts = new TestStore({});
         var resp1 = null;
         var resp2 = null;
-        var listener1 = function(){resp1 = true};
-        var listener2 = function(){resp2 = true};
+        var listener1 = function () {
+            resp1 = true;
+        };
+        var listener2 = function () {
+            resp2 = true;
+        };
 
         ts.addListener(listener1);
         ts.addListener(listener2);
@@ -36,12 +40,16 @@ describe('Store', function () {
         assert.equal(resp2, true);
     });
 
-    it('removeListener fjerner lytting', function(){
+    it('removeListener fjerner lytting', function () {
         var ts = new TestStore({});
         var resp1 = null;
         var resp2 = null;
-        var listener1 = function(){resp1 = true};
-        var listener2 = function(){resp2 = true};
+        var listener1 = function () {
+            resp1 = true;
+        };
+        var listener2 = function () {
+            resp2 = true;
+        };
 
         ts.addListener(listener1);
         ts.addListener(listener2);
