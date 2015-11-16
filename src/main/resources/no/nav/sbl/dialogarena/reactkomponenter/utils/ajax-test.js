@@ -5,9 +5,16 @@ var TestUtils = React.addons.TestUtils;
 var sinon = require('sinon');
 var Ajax = require('./ajax');
 
-describe.only('HTTP request', function () {
+describe('HTTP request', function () {
 
-    sinon.spy(Ajax, 'toPromise');
+    beforeEach(function () {
+        sinon.spy(Ajax, 'toPromise');
+    });
+
+    afterEach(function () {
+        Ajax.toPromise.restore();
+    });
+
 
     it("should use contentType in RequestModifier if set", function () {
 
@@ -24,7 +31,7 @@ describe.only('HTTP request', function () {
 
         Ajax.post('http://localhost:9876/echo', {});
 
-        expect(Ajax.toPromise.calledTwice).to.equal(true);
+        expect(Ajax.toPromise.calledOnce).to.equal(true);
 
         expect(Ajax.toPromise.calledWith(sinon.match({header: {['Content-Type']: 'application/json'}}))).to.equal(true);
     });
