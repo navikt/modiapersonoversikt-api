@@ -29,10 +29,10 @@ describe('Store', function () {
         var resp1 = null;
         var resp2 = null;
         var listener1 = function () {
-            resp1 = true
+            resp1 = true;
         };
         var listener2 = function () {
-            resp2 = true
+            resp2 = true;
         };
 
         ts.addListener(listener1);
@@ -50,10 +50,10 @@ describe('Store', function () {
         var resp1 = null;
         var resp2 = null;
         var listener1 = function () {
-            resp1 = true
+            resp1 = true;
         };
         var listener2 = function () {
-            resp2 = true
+            resp2 = true;
         };
 
         ts.addListener(listener1);
