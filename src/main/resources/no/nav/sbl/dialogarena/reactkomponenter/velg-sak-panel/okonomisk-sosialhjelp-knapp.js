@@ -21,7 +21,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
             saksId: null,
             fagsystemSaksId: null,
             temaKode: 'OKSOS',
-            temaNavn: 'Økonomisk sosialhjelp',
+            temaNavn: 'Ø - Ikke i bruk',
             fagsystemKode: null,
             fagsystemNavn: null,
             sakstype: null,
@@ -41,7 +41,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
                     <li className="text-row-list">
                         <a href="javascript:void(0)" role="button" className="content-row-list"
                            onClick={this.velgOkonomiskSosialhelp}>
-                            Økonomisk sosialhjelp - vil ikke bli journalført
+                            Ø - Ikke i bruk - vil ikke bli journalført
                         </a>
                     </li>
                 </ul>
@@ -51,7 +51,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
             <div className="saker-tema">
                 <button className="sosialhjelp-knapp" onClick={this.toggleEkspandering} aria-expanded={this.state.ekspandert}>
                     <div className="tema-bar">
-                        <h3 className="tema-overskrift">Økonomisk sosialhjelp</h3>
+                        <h3 className="tema-overskrift">Ø - Ikke i bruk</h3>
 
                         <div className={'ekspanderingspil ' + pilRetning}></div>
                     </div>
