@@ -1,11 +1,10 @@
 require('./../test-config');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var React = require('react/addons');
 var assign = require('object-assign');
 var MeldingerSokStore = require('./meldinger-sok-store');
 
-describe('SkrivestotteStore', function () {
+describe('MeldingerSokStore', function () {
 
     var initialState = {
         fritekst: "",
@@ -35,4 +34,44 @@ describe('SkrivestotteStore', function () {
         $.ajax.restore();
     });
 
+    it('pil opp ger førre melding men er ikke cyklisk', function () {
+        const e1 = {key: "key1"};
+        const e2 = {key: "key2"};
+        const e3 = {key: "key3"};
+        const elementer = [e1, e2, e3];
+        var event = $.Event("keypress");
+        event.which = 38;
+        event.keyCode = 38;
+        var store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
+
+        store.onKeyDown([], event);
+
+        expect(store.state.valgtTraad).to.equal(e1);
+
+        store.state.valgtTraad = e3;
+        store.onKeyDown([], event);
+        expect(store.state.valgtTraad).to.equal(e2);
+
+    });
+
+    it('pil ned ger neste melding men er ikke cyklisk', function () {
+        const e1 = {key: "key1"};
+        const e2 = {key: "key2"};
+        const e3 = {key: "key3"};
+        const elementer = [e1, e2, e3];
+        var event = $.Event("keypress");
+        event.which = 40;
+        event.keyCode = 40;
+        var store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
+        store.state.valgtTraad = e3;
+
+        store.onKeyDown([], event);
+
+        expect(store.state.valgtTraad).to.equal(e3);
+
+        store.state.valgtTraad = e2;
+        store.onKeyDown([], event);
+        expect(store.state.valgtTraad).to.equal(e3);
+
+    });
 });
