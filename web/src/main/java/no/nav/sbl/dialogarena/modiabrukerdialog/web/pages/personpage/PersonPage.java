@@ -29,6 +29,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.Plu
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
+import org.apache.commons.collections15.Closure;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
@@ -101,6 +103,11 @@ public class PersonPage extends BasePage {
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString();
+
+        if (pageParameters.getNamedKeys().size() > 1) {//FNR er alltid i url
+            clearSession();
+        }
+
         boolean parametereBleFunnetOgFlyttet = flyttURLParametereTilSession(pageParameters);
         if (parametereBleFunnetOgFlyttet) {
             setResponsePage(this.getClass(), pageParameters);
@@ -132,6 +139,15 @@ public class PersonPage extends BasePage {
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
+    }
+
+    private void clearSession() {
+        on(URL_TIL_SESSION_PARAMETERE).forEach(new Closure<String>() {
+            @Override
+            public void execute(String param) {
+                getSession().removeAttribute(param);
+            }
+        });
     }
 
     @Override
