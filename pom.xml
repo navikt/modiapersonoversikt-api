@@ -95,7 +95,7 @@
         <personsok.version>1.1.18</personsok.version>
         <kjerneinfo.versjon>1.1.26</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>3.0.5</utbetaling.version>
+        <utbetaling.version>3.0.6-SNAPSHOT</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
