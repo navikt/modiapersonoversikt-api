@@ -24,6 +24,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -94,7 +95,7 @@ public class InnboksVM implements Serializable {
 
     public Optional<MeldingVM> getNyesteMeldingITraad(String traadId) {
         Optional<MeldingVM> meldingVM = on(nyesteMeldingerITraad).filter(where(TRAAD_ID, equalTo(traadId))).head();
-        if (!meldingVM.isSome()) {
+        if (!meldingVM.isSome() && isBlank(feilmeldingKey)) {
             feilmeldingKey = "innboks.feilmelding.ingentilgang";
         }
         return meldingVM;
