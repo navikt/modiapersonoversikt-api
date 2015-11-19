@@ -80,5 +80,5 @@ describe("utils test", function () {
         expect(kv[0]).to.eql(['a', 1]);
         expect(kv[1]).to.eql(['b', 2]);
         expect(kv[2]).to.eql(['c', 3]);
-    })
+    });
 });
