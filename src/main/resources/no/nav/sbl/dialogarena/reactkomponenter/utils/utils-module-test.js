@@ -1,5 +1,4 @@
-var expect = require('chai').expect;
-var assert = require('chai').assert;
+import { expect, assert } from 'chai';
 import { delayed } from './../test-utils';
 import { debounce, generateId, leggTilLenkerTags, omit, kvpair } from './utils-module';
 

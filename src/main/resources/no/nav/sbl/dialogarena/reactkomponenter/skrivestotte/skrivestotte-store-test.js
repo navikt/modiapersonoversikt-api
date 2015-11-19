@@ -1,30 +1,30 @@
-require('./../test-config');
-var expect = require('chai').expect;
-var React = require('react/addons');
-var assign = require('object-assign');
-var SkrivestotteStore = require('./skrivestotte-store');
+import './../test-config';
+import { expect } from 'chai';
+import React from 'react/addons';
+import assign from 'object-assign';
 import sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
+import SkrivestotteStore from './skrivestotte-store';
 chai.use(sinonChai);
 
 describe('SkrivestotteStore', function () {
 
-    var initialState = {
+    const initialState = {
         fritekst: "",
         tekster: [],
         valgtTekst: {}
     };
 
     it('setter valgt tekst hvis tekster finnes', function () {
-        var tekster = [{id: 1}];
-        var store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
+        const tekster = [{id: 1}];
+        const store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
 
         expect(store.state.valgtTekst).to.equal(tekster[0]);
     });
 
     it('knagger kan legges til og fjernes', function () {
-        var store = new SkrivestotteStore(assign({}, initialState, {knagger: []}));
+        const store = new SkrivestotteStore(assign({}, initialState, {knagger: []}));
         store.leggTilKnagg("knagg1");
         store.leggTilKnagg("knagg2");
         store.slettKnagg("knagg1");
@@ -40,10 +40,14 @@ describe('SkrivestotteStore', function () {
     var event = $.Event("keypress");
 
     it('pil opp ger førre tekst men er ikke cyklisk', function () {
-
+        const t1 = {key: "key1"};
+        const t2 = {key: "key2"};
+        const t3 = {key: "key3"};
+        const tekster = [t1, t2, t3];
+        var event = $.Event("keypress");
         event.which = 38;
         event.keyCode = 38;
-        var store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
+        const store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
 
         store.onKeyDown([], event);
 
@@ -59,7 +63,7 @@ describe('SkrivestotteStore', function () {
 
         event.which = 40;
         event.keyCode = 40;
-        var store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
+        const store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
         store.state.valgtTekst = t3;
 
         store.onKeyDown([], event);

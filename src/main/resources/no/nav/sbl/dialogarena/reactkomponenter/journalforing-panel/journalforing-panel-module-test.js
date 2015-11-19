@@ -1,18 +1,16 @@
-require('./../test-config.js');
-var expect = require('chai').expect;
-var assert = require('chai').assert;
-var React = require('react/addons');
-var JournalforingsPanel = require('./journalforing-panel-module');
-var TestUtils = React.addons.TestUtils;
-
+import './../test-config';
+import { expect, assert } from 'chai';
+import React from 'react/addons';
+import JournalforingsPanel from './journalforing-panel-module';
+const TestUtils = React.addons.TestUtils;
 
 describe('Journalforing', function () {
 
-    it('Header should be "Journalføring"', function(){
-       var journalforingspanel = TestUtils.renderIntoDocument(
-           <JournalforingsPanel/>
-       );
-        var header = TestUtils.findRenderedDOMComponentWithTag(journalforingspanel, 'h2');
+    it('Header should be "Journalføring"', function () {
+        const journalforingspanel = TestUtils.renderIntoDocument(
+            <JournalforingsPanel/>
+        );
+        const header = TestUtils.findRenderedDOMComponentWithTag(journalforingspanel, 'h2');
         assert.equal(header.getDOMNode().textContent, 'Journalføring');
     });
 

@@ -1,33 +1,33 @@
-require('./../test-config');
-var expect = require('chai').expect;
-var sinon = require('sinon');
-var assign = require('object-assign');
-var MeldingerSokStore = require('./meldinger-sok-store');
+import './../test-config';
+import { expect } from 'chai';
+import sinon from 'sinon';
+import assign from 'object-assign';
+import MeldingerSokStore from './meldinger-sok-store';
 
 describe('MeldingerSokStore', function () {
 
-    var initialState = {
+    const initialState = {
         fritekst: "",
         traader: [],
         valgtTraad: {}
     };
 
     it('setter valgt tråd hvis tråder finnes', function () {
-        var traader = [{id: 1}, {id: 2}];
-        var store = new MeldingerSokStore(assign({}, initialState, {traader: traader}));
+        const traader = [{id: 1}, {id: 2}];
+        const store = new MeldingerSokStore(assign({}, initialState, {traader: traader}));
 
         expect(store.state.valgtTraad).to.equal(traader[0]);
     });
 
     it('indekserer ved update', function () {
         sinon.spy($, 'ajax');
-        var fnr = '12345678910';
-        var store = new MeldingerSokStore(assign({}, initialState, {fnr: fnr}));
+        const fnr = '12345678910';
+        const store = new MeldingerSokStore(assign({}, initialState, {fnr: fnr}));
 
         store.update();
 
         expect($.ajax.calledOnce).to.equal(true);
-        var args = $.ajax.args[0][0];
+        const args = $.ajax.args[0][0];
         expect(args['async']).to.equal(false);
         expect(args['url']).to.contain(fnr).and.to.contain('indekser');
 
@@ -39,10 +39,10 @@ describe('MeldingerSokStore', function () {
         const e2 = {key: "key2"};
         const e3 = {key: "key3"};
         const elementer = [e1, e2, e3];
-        var event = $.Event("keypress");
+        const event = $.Event("keypress");
         event.which = 38;
         event.keyCode = 38;
-        var store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
+        const store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
 
         store.onKeyDown([], event);
 
@@ -59,10 +59,10 @@ describe('MeldingerSokStore', function () {
         const e2 = {key: "key2"};
         const e3 = {key: "key3"};
         const elementer = [e1, e2, e3];
-        var event = $.Event("keypress");
+        const event = $.Event("keypress");
         event.which = 40;
         event.keyCode = 40;
-        var store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
+        const store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
         store.state.valgtTraad = e3;
 
         store.onKeyDown([], event);

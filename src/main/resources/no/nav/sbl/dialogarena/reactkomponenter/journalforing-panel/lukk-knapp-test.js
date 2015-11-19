@@ -1,10 +1,10 @@
-require('./../test-config');
-var expect = require('chai').expect;
-var React = require('react/addons');
-var TestUtils = React.addons.TestUtils;
-var sinon = require('sinon');
-require('sinon-chai');
-var LukkKnapp= require('./lukk-knapp');
+import './../test-config';
+import { expect } from 'chai';
+import React from 'react/addons';
+import sinon from 'sinon';
+import 'sinon-chai';
+import LukkKnapp from './lukk-knapp';
+const TestUtils = React.addons.TestUtils;
 
 describe('LukkKnapp test', function () {
 
@@ -15,10 +15,10 @@ describe('LukkKnapp test', function () {
             }
         };
         sinon.spy(window.Wicket.Ajax, 'ajax');
-        var lukkKnapp = TestUtils.renderIntoDocument(
+        const lukkKnapp = TestUtils.renderIntoDocument(
             <LukkKnapp/>
         );
-        var knapp=React.findDOMNode(lukkKnapp);
+        const knapp=React.findDOMNode(lukkKnapp);
         TestUtils.Simulate.click(knapp);
         expect(window.Wicket.Ajax.ajax).to.have.been.calledOnce;
         delete window.Wicket.Ajax;

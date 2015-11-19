@@ -1,5 +1,4 @@
-var expect = require('chai').expect;
-var assert = require('chai').assert;
+import { expect, assert } from 'chai';
 import PromiseUtils from './promise-utils';
 import {createTestPromise, delayed, shouldThrowException} from './../test-utils';
 

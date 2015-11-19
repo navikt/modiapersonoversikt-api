@@ -1,4 +1,4 @@
-require('./../test-config');
+import './../test-config';
 import React from 'react/addons';
 import { render, strEndsWith } from './../test-utils';
 import { expect, assert } from 'chai';
