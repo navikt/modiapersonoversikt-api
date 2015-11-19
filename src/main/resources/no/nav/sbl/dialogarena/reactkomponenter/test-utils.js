@@ -1,3 +1,5 @@
+var TestUtils = React.addons.TestUtils;
+import React from 'react/addons';
 import Q from 'q';
 
 export function createTestPromise() {
@@ -21,4 +23,16 @@ export function shouldThrowException(fn, done) {
     } catch (e) {
         done();
     }
+}
+
+export function render(component) {
+    const renderedComponent = TestUtils.renderIntoDocument(component);
+    return {
+        component: renderedComponent,
+        dom: React.findDOMNode(renderedComponent)
+    };
+}
+
+export function strEndsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
