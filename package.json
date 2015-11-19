@@ -24,6 +24,7 @@
     "karma-coverage": "^0.5.2",
     "karma-junit-reporter": "^0.2.2",
     "karma-mocha": "^0.1.10",
+    "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "git+http://stash.devillo.no/scm/npmm/karma-phantomjs-launcher.git#fe9bd9c2d7ce16622e6bf373318ad0fa5894c63c",
     "karma-remote-reporter": "^0.2.0",
     "mocha": "^2.1.0",
