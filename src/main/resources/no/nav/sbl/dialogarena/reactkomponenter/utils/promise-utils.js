@@ -43,6 +43,4 @@ class PromiseUtils {
     }
 }
 
-export
-default
-PromiseUtils;
+export default PromiseUtils;
