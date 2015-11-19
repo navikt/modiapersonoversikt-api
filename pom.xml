@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>6.33-SNAPSHOT</version>
+    <version>6.33-IE11-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -110,7 +110,7 @@
         <varsling.modia.version>1.7</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>2.0.7-SNAPSHOT</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>2.0.7-IE11-SNAPSHOT</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.39</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
