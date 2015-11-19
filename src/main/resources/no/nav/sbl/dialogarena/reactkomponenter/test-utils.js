@@ -12,7 +12,7 @@ export function createTestPromise() {
     }
 }
 
-export function delayed(fn, delay = 10) {
+export function delayed(fn, delay = 100) {
     setTimeout(fn, delay);
 }
 
