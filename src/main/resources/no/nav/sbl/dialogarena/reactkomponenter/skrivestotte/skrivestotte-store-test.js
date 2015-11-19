@@ -3,6 +3,10 @@ var expect = require('chai').expect;
 var React = require('react/addons');
 var assign = require('object-assign');
 var SkrivestotteStore = require('./skrivestotte-store');
+import sinon from 'sinon';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+chai.use(sinonChai);
 
 describe('SkrivestotteStore', function () {
 
@@ -29,12 +33,14 @@ describe('SkrivestotteStore', function () {
 
     });
 
+    const t1 = {key: "key1"};
+    const t2 = {key: "key2"};
+    const t3 = {key: "key3"};
+    const tekster = [t1, t2, t3];
+    var event = $.Event("keypress");
+
     it('pil opp ger førre tekst men er ikke cyklisk', function () {
-        const t1 = {key: "key1"};
-        const t2 = {key: "key2"};
-        const t3 = {key: "key3"};
-        const tekster = [t1, t2, t3];
-        var event = $.Event("keypress");
+
         event.which = 38;
         event.keyCode = 38;
         var store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
@@ -50,11 +56,7 @@ describe('SkrivestotteStore', function () {
     });
 
     it('pil ned ger neste tekst men er ikke cyklisk', function () {
-        const t1 = {key: "key1"};
-        const t2 = {key: "key2"};
-        const t3 = {key: "key3"};
-        const tekster = [t1, t2, t3];
-        var event = $.Event("keypress");
+
         event.which = 40;
         event.keyCode = 40;
         var store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
@@ -67,6 +69,19 @@ describe('SkrivestotteStore', function () {
         store.state.valgtTekst = t2;
         store.onKeyDown([], event);
         expect(store.state.valgtTekst).to.equal(t3);
+
+    });
+
+    it('hent søk resultater gør et søk', function () {
+        sinon.spy($, 'get');
+        var store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
+        const fritekst = "helloWorld";
+        const knagger = "earth";
+        SkrivestotteStore._sok(fritekst, knagger);
+        expect($.get).to.have.been.calledOnce;
+
+        var args = $.get.args[0][0];
+        expect(args).to.contain('sok').and.to.contain(fritekst).and.to.contain('tags').and.to.contain(knagger);
 
     });
 });

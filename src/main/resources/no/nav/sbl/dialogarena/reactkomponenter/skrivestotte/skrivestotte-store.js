@@ -75,18 +75,18 @@ SkrivestotteStore.prototype.submit = function (onSubmit, event) {
     event.preventDefault();
     var $tekstfelt = $('#' + this.state.tekstfeltId);
     /*
-        Dette er så bad at det nesten gjør vondt. Vi muterer her på styling som egentlig skal håndteres av enhancedtextarea (wicket komponent).
-        Men pga behoved for fancyscroll så kan vi her ikke sette fokus til tekstfeltet slik at det får med seg at noe skjer.
+     Dette er så bad at det nesten gjør vondt. Vi muterer her på styling som egentlig skal håndteres av enhancedtextarea (wicket komponent).
+     Men pga behoved for fancyscroll så kan vi her ikke sette fokus til tekstfeltet slik at det får med seg at noe skjer.
      */
     $tekstfelt.css('color', 'inherit');
 
     // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
     setTimeout(function () {
         /*
-            Igjen, rett og slett vondt. Hvis man setter fokus til tekstfeltet hadde man sluppet dette, men det kan vi da
-            altså ikke gjøre. Det er derfor viktig at teksten i IE9placeholder er den samme som "placeholder"-teksten i skrivefeltet.
+         Igjen, rett og slett vondt. Hvis man setter fokus til tekstfeltet hadde man sluppet dette, men det kan vi da
+         altså ikke gjøre. Det er derfor viktig at teksten i IE9placeholder er den samme som "placeholder"-teksten i skrivefeltet.
 
-            Oppgradering til IE11 + penger så kan dette fikses ved å ta ibruk native placeholder for textarea
+         Oppgradering til IE11 + penger så kan dette fikses ved å ta ibruk native placeholder for textarea
          */
         var IE9placeholder = 'Alt du skriver i denne boksen blir synlig for bruker når du trykker "Del med bruker".';
         var eksisterendeTekst = $tekstfelt.val();
@@ -126,7 +126,7 @@ function nesteTekst(elementer, index) {
 
 var hentSokeresultater =
     Utils.debounce(function (fritekst, knagger) {
-        sok(fritekst, knagger).done(function (resultat) {
+        SkrivestotteStore._sok(fritekst, knagger).done(function (resultat) {
             this.state.tekster = resultat;
             this.state.valgtTekst = resultat[0] || {};
             updateScroll($(this.container).find('.sok-liste'), 0);
@@ -134,7 +134,7 @@ var hentSokeresultater =
         }.bind(this));
     }, 150);
 
-var sok = function (fritekst, knagger) {
+SkrivestotteStore._sok = function (fritekst, knagger) {
     fritekst = fritekst || '';
     knagger = knagger || [];
 
