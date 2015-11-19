@@ -22,18 +22,24 @@ class VarselStore extends Store {
             }
         };
 
-        this.state.promise.done(([varsler, resources]) => {
-            this.state.varsler = sortBy(varsler, 'mottattTidspunkt')
-                .reverse()
-                .map((varsel, idx) => {
-                    varsel.ekspandert = false;
-                    varsel.idx = idx;
-                    return varsel;
-                });
-            this.state.resources = new ResourceMap(resources);
+        this.state.promise.done(this._resourcesResolved);
+    }
 
-            this.fireUpdate();
-        });
+    _resourcesResolved([varsler, resources]) {
+        this._sortVarsler(varsler);
+        this.state.resources = new ResourceMap(resources);
+
+        this.fireUpdate();
+    }
+
+    _sortVarsler(varsler) {
+        this.state.varsler = sortBy(varsler, 'mottattTidspunkt')
+            .reverse()
+            .map((varsel, idx) => {
+                varsel.ekspandert = false;
+                varsel.idx = idx;
+                return varsel;
+            });
     }
 
     getResources() {
