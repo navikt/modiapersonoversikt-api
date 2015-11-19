@@ -8,6 +8,9 @@ class VarselStore extends Store {
     constructor(fnr) {
         super();
 
+        this._sortVarsler = this._sortVarsler.bind(this);
+        this._resourcesResolved = this._resourcesResolved.bind(this);
+
         const varsler = Ajax.get('/modiabrukerdialog/rest/varsler/' + fnr);
         const resources = Ajax.get('/modiabrukerdialog/rest/varsler/' + fnr + '/resources');
 
