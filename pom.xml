@@ -25,6 +25,8 @@
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <modig.security.version>1.0.24</modig.security.version>
         <collections-generic.version>4.01</collections-generic.version>
+        <reactkomponenter.version>1.2.5</reactkomponenter.version>
+        <modia-felleskomponenter.version>2.0.6</modia-felleskomponenter.version>
     </properties>
 
     <dependencies>
@@ -37,7 +39,7 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
-            <version>2.0.0</version>
+            <version>${modia-felleskomponenter.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -61,7 +63,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>reactkomponenter</artifactId>
-            <version>1.17</version>
+            <version>${reactkomponenter.version}}</version>
             <scope>provided</scope>
         </dependency>
 
