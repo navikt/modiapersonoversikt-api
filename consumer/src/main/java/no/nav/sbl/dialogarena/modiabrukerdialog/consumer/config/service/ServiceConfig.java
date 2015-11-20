@@ -81,4 +81,10 @@ public class ServiceConfig {
         return new PsakServiceImpl(pensjonSakV1);
     }
 
+    @Bean
+    public ScheduledAnsattListePrefetch scheduledAnsattListePrefetch() {
+
+        return new ScheduledAnsattListePrefetch();
+    }
+
 }
