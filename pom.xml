@@ -63,7 +63,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>reactkomponenter</artifactId>
-            <version>${reactkomponenter.version}}</version>
+            <version>${reactkomponenter.version}</version>
             <scope>provided</scope>
         </dependency>
 
