@@ -1,11 +1,12 @@
+/* eslint-env mocha */
 import { expect, assert } from 'chai';
 import { delayed } from './../test-utils';
 import { debounce, generateId, leggTilLenkerTags, omit, kvpair } from './utils-module';
 
-describe("utils test", function () {
-    it("debounce test immediate", function (done) {
+describe('utils test', () => {
+    it('debounce test immediate', (done) => {
         let c = 0;
-        const fn = debounce(function () {
+        const fn = debounce(() => {
             c = c + 1;
         }, 100, true);
 
@@ -17,9 +18,9 @@ describe("utils test", function () {
         done();
     });
 
-    it("debounce test", function (done) {
+    it('debounce test', (done) => {
         let c = 0;
-        const fn = debounce(function () {
+        const fn = debounce(() => {
             c = c + 1;
         }, 0);
 
@@ -33,16 +34,16 @@ describe("utils test", function () {
         }, 0);
     });
 
-    it("Genererer OK id", function(){
-        const suffix = "minid";
+    it('Genererer OK id', () => {
+        const suffix = 'minid';
 
-        var exp = new RegExp("^" + suffix + "\\d{13}-\\d{1,17}$");
-        var result = exp.test(generateId(suffix));
+        const exp = new RegExp('^' + suffix + '\\d{13}-\\d{1,17}$');
+        const result = exp.test(generateId(suffix));
 
         assert.isTrue(result);
     });
 
-    it("Finner lenker i fritekst", function(){
+    it('Finner lenker i fritekst', () => {
         const fritekst = `
             Her er vg.no (denne funker ikke) du kan også bruke www.vg.no eller om du virkelig vil https://www.vg.no
         `;
@@ -52,7 +53,7 @@ describe("utils test", function () {
         assert.isTrue(result.indexOf('<a target="_blank" href="https://www.vg.no">') >= 0);
     });
 
-    it("omit kopierer object med unntatt av verdier", function(){
+    it('omit kopierer object med unntatt av verdier', () => {
         const myObj = {
             a: 1,
             b: 2,
@@ -66,7 +67,7 @@ describe("utils test", function () {
         assert.isTrue(Object.keys(filterListe).length === 1);
     });
 
-    it("kvpair mapper object til double-array", function(){
+    it('kvpair mapper object til double-array', () => {
         const myObj = {
             a: 1,
             b: 2,

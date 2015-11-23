@@ -4,7 +4,6 @@ import SakerListe from './saker-liste';
 import AdvarselBoks from './../utils/advarsel-boks';
 import { partition, isUndefined } from 'lodash';
 import { kvpair } from './../utils/utils-module';
-import Q from 'q';
 
 class VelgSak extends React.Component {
     constructor(props) {
@@ -27,9 +26,8 @@ class VelgSak extends React.Component {
             .map(([feiletKall, _]) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
 
         const mergedSaker = kvpair(saker)
-            .reduce((acc, [key, value]) => {
-                acc = acc.concat(value || []);
-                return acc;
+            .reduce((acc, [_, value]) => {
+                return acc.concat(value || []);
             }, []);
 
         const kategorier = partition(mergedSaker, sak => sak.sakstype === 'GEN');
@@ -50,5 +48,13 @@ class VelgSak extends React.Component {
         );
     }
 }
+
+VelgSak.propTypes = {
+    'temagruppe': React.PropTypes.string.isRequired,
+    'temagruppeTemaMapping': React.PropTypes.object.isRequired,
+    'valgtKategori': React.PropTypes.string.isRequired,
+    'saker': React.PropTypes.array.isRequired,
+    'velgSak': React.PropTypes.func.isRequired
+};
 
 export default VelgSak;

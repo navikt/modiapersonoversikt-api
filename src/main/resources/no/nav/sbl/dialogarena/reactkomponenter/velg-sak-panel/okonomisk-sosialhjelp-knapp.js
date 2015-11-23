@@ -39,7 +39,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
             content = (
                 <ul className="list-saker">
                     <li className="text-row-list">
-                        <a href="javascript:void(0)" role="button" className="content-row-list"
+                        <a href="#" role="button" className="content-row-list"
                            onClick={this.velgOkonomiskSosialhelp}>
                             Ø - Ikke i bruk - vil ikke bli journalført
                         </a>
@@ -61,5 +61,9 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
         );
     }
 }
+
+OkonomiskSosialhjelpKnapp.propTypes = {
+    'velgSak': React.PropTypes.func.isRequired
+};
 
 export default OkonomiskSosialhjelpKnapp;

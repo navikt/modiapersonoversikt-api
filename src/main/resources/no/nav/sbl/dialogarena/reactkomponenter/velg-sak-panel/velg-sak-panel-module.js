@@ -1,17 +1,16 @@
 import React from 'react';
 import AsyncLoader from './../utils/async-loader';
 import VelgSak from '../journalforing-panel/velg-sak';
-import WicketSender from './../react-wicket-mixin/wicket-sender';
+import wicketSender from './../react-wicket-mixin/wicket-sender';
 import OkonomiskSosialhjelpKnapp from './okonomisk-sosialhjelp-knapp';
 import PromiseUtils from './../utils/promise-utils';
 import Ajax from './../utils/ajax';
-import Q from 'q';
 
 function markerSomPsakSaker(pesysSaker) {
     return pesysSaker.map((sak) => {
         sak.erPesysSak = true;
         return sak;
-    })
+    });
 }
 
 class VelgSakPanel extends React.Component {
@@ -22,7 +21,7 @@ class VelgSakPanel extends React.Component {
         };
         const baseUrl = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
 
-        var wrapperPromise = {
+        const wrapperPromise = {
             gsak: Ajax.get(baseUrl + '/saker/sammensatte'),
             psak: Ajax.get(baseUrl + '/saker/pensjon').then(markerSomPsakSaker)
         };
@@ -33,7 +32,7 @@ class VelgSakPanel extends React.Component {
     }
 
     velgSak(sak) {
-        WicketSender(this.props.wicketurl, this.props.wicketcomponent, 'velgSak', sak);
+        wicketSender(this.props.wicketurl, this.props.wicketcomponent, 'velgSak', sak);
     }
 
     render() {
@@ -49,5 +48,11 @@ class VelgSakPanel extends React.Component {
     }
 }
 
-export default VelgSakPanel;
+VelgSakPanel.propTypes = {
+    'wicketurl': React.PropTypes.string.isRequired,
+    'wicketcomponent': React.PropTypes.string.isRequired,
+    'fnr': React.PropTypes.string.isRequired,
+    'skalViseOkonomiskSosialhjelp': React.PropTypes.bool.isRequired
+};
 
+export default VelgSakPanel;

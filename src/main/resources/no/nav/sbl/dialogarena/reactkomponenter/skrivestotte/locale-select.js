@@ -1,6 +1,6 @@
-var React = require('react/addons');
+const React = require('react/addons');
 
-var spraak = {
+const spraak = {
     'nb_NO': 'Norsk (Bokmål)',
     'nn_NO': 'Norsk (Nynorsk)',
     'en_US': 'Engelsk',
@@ -12,24 +12,28 @@ var spraak = {
     'ru_RU': 'Russisk',
     'ur': 'Urdu'
 };
-var LocaleSelect = React.createClass({
-    onChange: function (event) {
+const LocaleSelect = React.createClass({
+    propTypes: {
+        'tekst': React.PropTypes.object.isRequired,
+        'store': React.PropTypes.object.isRequired,
+        'locale': React.PropTypes.string
+    },
+    onChange: function onChange(event) {
         this.props.store.setLocale(event.target.value);
     },
-    render: function () {
-        var uniqueLocales = Object.keys(this.props.tekst.innhold);
+    render: function render() {
+        const uniqueLocales = Object.keys(this.props.tekst.innhold);
         if (uniqueLocales.length <= 1) {
             return null;
-        } else {
-            var options =  uniqueLocales.map(function (locale) {
-                return <option key={locale} value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>;
-            });
-            return (
-                <select onChange={this.onChange} value={this.props.locale}>
-                    {options}
-                </select>
-            );
         }
+        const options = uniqueLocales.map(function tilOptionsValg(locale) {
+            return <option key={locale} value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>;
+        });
+        return (
+            <select onChange={this.onChange} value={this.props.locale}>
+                {options}
+            </select>
+        );
     }
 });
 

@@ -1,6 +1,8 @@
-var TestUtils = React.addons.TestUtils;
+/* eslint-env mocha */
+/* eslint no-undef:0 */
 import React from 'react/addons';
 import Q from 'q';
+const TestUtils = React.addons.TestUtils;
 
 export function createTestPromise() {
     const deferred = Q.defer();
@@ -9,7 +11,7 @@ export function createTestPromise() {
         promise: deferred.promise,
         reject: deferred.reject,
         resolve: deferred.resolve
-    }
+    };
 }
 
 export function delayed(fn, delay = 100) {

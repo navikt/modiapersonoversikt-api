@@ -1,24 +1,25 @@
+/* eslint-env mocha */
 import { expect, assert } from 'chai';
 import PromiseUtils from './promise-utils';
 import {createTestPromise, delayed, shouldThrowException} from './../test-utils';
 
-describe("PromiseUtils", function () {
-    it("Should throw exception if N is negative", function (done) {
+describe('PromiseUtils', () => {
+    it('Should throw exception if N is negative', (done) => {
         shouldThrowException(() => PromiseUtils.atLeastN(-1, []), done);
     });
 
-    it("Should throw exception if N is greater then number of promises", function (done) {
+    it('Should throw exception if N is greater then number of promises', (done) => {
         shouldThrowException(() => PromiseUtils.atLeastN(1, []), done);
     });
 
-    it("Should throw exception if N is not a number", function (done) {
-        shouldThrowException(() => PromiseUtils.atLeastN("", []), done);
+    it('Should throw exception if N is not a number', (done) => {
+        shouldThrowException(() => PromiseUtils.atLeastN('', []), done);
     });
 
-    it("Resolved if N = 1 promises are OK", function(done){
-        var data = "Data";
-        var p1 = createTestPromise();
-        var p2 = createTestPromise();
+    it('Resolved if N = 1 promises are OK', (done) => {
+        const data = 'Data';
+        const p1 = createTestPromise();
+        const p2 = createTestPromise();
 
         PromiseUtils.atLeastN(1, {p1: p1.promise, p2: p2.promise})
             .then((results) => {
@@ -30,15 +31,15 @@ describe("PromiseUtils", function () {
         p1.resolve(data);
         p2.reject();
 
-        delayed(() => assert.fail());//Delayed slik at promise fungerer
+        delayed(() => assert.fail());// Delayed slik at promise fungerer
     });
 
-    it("Resolved if N = 2 promises are OK", function(done){
-        var data = "Data";
-        var data2 = "Data2";
-        var p1 = createTestPromise();
-        var p2 = createTestPromise();
-        var p3 = createTestPromise();
+    it('Resolved if N = 2 promises are OK', (done) => {
+        const data = 'Data';
+        const data2 = 'Data2';
+        const p1 = createTestPromise();
+        const p2 = createTestPromise();
+        const p3 = createTestPromise();
 
         PromiseUtils.atLeastN(2, {p1: p1.promise, p2: p2.promise, p3: p3.promise})
             .then((results) => {
@@ -51,15 +52,15 @@ describe("PromiseUtils", function () {
         p2.resolve(data2);
         p3.reject();
 
-        delayed(() => assert.fail());//Delayed slik at promise fungerer
+        delayed(() => assert.fail());// Delayed slik at promise fungerer
     });
 
-    it("Reject if N promises are not satisfied", function(done){
-        var data = "Data";
-        var data2 = "Data2";
-        var p1 = createTestPromise();
-        var p2 = createTestPromise();
-        var p3 = createTestPromise();
+    it('Reject if N promises are not satisfied', (done) => {
+        const data = 'Data';
+        const data2 = 'Data2';
+        const p1 = createTestPromise();
+        const p2 = createTestPromise();
+        const p3 = createTestPromise();
 
         PromiseUtils.atLeastN(3, {p1: p1.promise, p2: p2.promise, p3: p3.promise})
             .catch(() => {
@@ -70,6 +71,6 @@ describe("PromiseUtils", function () {
         p2.resolve(data2);
         p3.reject();
 
-        delayed(() => assert.fail());//Delayed slik at promise fungerer
+        delayed(() => assert.fail());// Delayed slik at promise fungerer
     });
 });

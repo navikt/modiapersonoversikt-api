@@ -1,4 +1,4 @@
-var moment = window.moment = require('moment');
+const moment = window.moment = require('moment');
 require('moment/locale/nb');
 moment.locale('nb');
 

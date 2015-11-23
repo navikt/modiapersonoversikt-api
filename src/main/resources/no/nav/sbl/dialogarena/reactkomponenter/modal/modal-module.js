@@ -1,13 +1,11 @@
-var React = require('react');
-var Portal = require('./modal-portal');
+const React = require('react');
+const Portal = require('./modal-portal');
 
-var Modal = React.createClass({
-    getInitialState: function () {
-        return {
-            isOpen: this.props.isOpen || false
-        };
+const Modal = React.createClass({
+    propTypes: {
+        'isOpen': React.PropTypes.boolean
     },
-    getDefaultProps: function () {
+    getDefaultProps: function getDefaultProps() {
         return {
             title: {
                 text: 'Modal Title',
@@ -24,30 +22,35 @@ var Modal = React.createClass({
                 show: true,
                 tag: 'span'
             }
-        }
+        };
     },
-    componentDidMount: function () {
+    getInitialState: function getInitialState() {
+        return {
+            isOpen: this.props.isOpen || false
+        };
+    },
+    componentDidMount: function componentDidMount() {
         if (typeof this.portalElement === 'undefined') {
             this.portalElement = document.createElement('div');
-            this.portalElement.className = "react-modal-container";
+            this.portalElement.className = 'react-modal-container';
             document.body.appendChild(this.portalElement);
         }
 
-        this.renderPortal(this.props, this.state)
+        this.renderPortal(this.props, this.state);
     },
-    componentWillReceiveProps: function (props) {
-        this.renderPortal(props, this.state)
+    componentWillReceiveProps: function componentWillReceiveProps(props) {
+        this.renderPortal(props, this.state);
     },
-    componentWillUnmount: function () {
+    componentDidUpdate: function componentDidUpdate() {
+        this.renderPortal(this.props, this.state);
+    },
+    componentWillUnmount: function componentWillUnmount() {
         this.close();
     },
-    componentDidUpdate: function () {
-        this.renderPortal(this.props, this.state)
-    },
-    open: function () {
-        var elementsByClassName = document.getElementsByClassName('react-modal-container');
-        var match = false;
-        for (var i = 0; i < elementsByClassName.length; i++) {
+    open: function open() {
+        const elementsByClassName = document.getElementsByClassName('react-modal-container');
+        let match = false;
+        for (let i = 0; i < elementsByClassName.length; i++) {
             if (elementsByClassName[i].innerHTML === this.portalElement.innerHTML) {
                 match = true;
                 break;
@@ -62,21 +65,21 @@ var Modal = React.createClass({
         $(document.body).children().not(this.portalElement).attr('aria-hidden', true);
         this.setState({isOpen: true});
     },
-    close: function () {
+    close: function close() {
         this.setState({isOpen: false});
         document.body.removeChild(this.portalElement);
         $(document.body).removeClass('modal-open');
         $(document.body).children().removeAttr('aria-hidden');
     },
-    renderPortal: function (props, state) {
-        var modal = {
+    renderPortal: function renderPortal(props, state) {
+        const modal = {
             open: this.open,
             close: this.close
         };
 
         this.modal = React.render(<Portal {...props} {...state} modal={modal}/>, this.portalElement);
     },
-    render: function () {
+    render: function render() {
         return null;
     }
 });

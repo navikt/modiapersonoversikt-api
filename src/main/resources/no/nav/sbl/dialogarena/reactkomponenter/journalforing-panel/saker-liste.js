@@ -1,6 +1,29 @@
+/* eslint no-script-url:0 */
 import React from 'react';
 import { chain, mapValues, contains, partition, flatten } from 'lodash';
 import SakerForTema from './saker-for-tema';
+
+function skillUtPrioriterteSaker(saker, temagruppe, temagruppeTemaMapping) {
+    return partition(saker, sak => contains(temagruppeTemaMapping[temagruppe], sak.temaKode));
+}
+
+function grupperPaaTemakodeOgSorter(saker) {
+    return chain(saker)
+        .groupBy(sak => sak.temaKode)
+        .sortBy(group => group[0].temaNavn)
+        .value();
+}
+
+function grupperSaker() {
+    const saker = this.props.saker;
+    const temagruppe = this.props.temagruppe;
+    if (temagruppe) {
+        const gruppert = skillUtPrioriterteSaker(saker, temagruppe, this.props.temagruppeTemaMapping).map(grupperPaaTemakodeOgSorter);
+        return flatten(gruppert);
+    }
+
+    return grupperPaaTemakodeOgSorter(saker);
+}
 
 class SakerListe extends React.Component {
     constructor(props) {
@@ -32,13 +55,13 @@ class SakerListe extends React.Component {
             const erPesysSak = !!group[0].erPesysSak;
             const erEkspandert = !temagruppe || contains(this.props.temagruppeTemaMapping[temagruppe], temaKode);
 
-            return <SakerForTema
+            return (<SakerForTema
                 tema={group[0].temaNavn}
                 saker={saker}
                 erEkspandert={erEkspandert}
                 temaKode={temaKode}
                 erPesysSak={erPesysSak}
-                />
+                />);
         });
 
         return (
@@ -49,26 +72,10 @@ class SakerListe extends React.Component {
     }
 }
 
-function grupperSaker() {
-    const saker = this.props.saker;
-    const temagruppe = this.props.temagruppe;
-    if (temagruppe) {
-        const gruppert = skillUtPrioriterteSaker(saker, temagruppe, this.props.temagruppeTemaMapping).map(grupperPaaTemakodeOgSorter);
-        return flatten(gruppert);
-    } else {
-        return grupperPaaTemakodeOgSorter(saker);
-    }
-}
-
-function skillUtPrioriterteSaker(saker, temagruppe, temagruppeTemaMapping) {
-    return partition(saker, sak => contains(temagruppeTemaMapping[temagruppe], sak.temaKode));
-}
-
-function grupperPaaTemakodeOgSorter(saker) {
-    return chain(saker)
-        .groupBy(sak => sak.temaKode)
-        .sortBy(group => group[0].temaNavn)
-        .value();
-}
+SakerListe.propTypes = {
+    temagruppe: React.PropTypes.string.isRequired,
+    temagruppeTemaMapping: React.PropTypes.object.isRequired,
+    velgSak: React.PropTypes.func.isRequired
+};
 
 export default SakerListe;

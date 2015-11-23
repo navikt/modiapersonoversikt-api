@@ -5,10 +5,10 @@ class TypeValg extends React.Component {
     constructor(props) {
         super(props);
 
-        this.id1 = generateId("typevalg");
-        this.id2 = generateId("typevalg");
+        this.id1 = generateId('typevalg');
+        this.id2 = generateId('typevalg');
 
-        this.endre = this.endre.bind(this)
+        this.endre = this.endre.bind(this);
     }
 
     componentDidMount() {
@@ -46,5 +46,10 @@ class TypeValg extends React.Component {
         );
     }
 }
+
+TypeValg.propTypes = {
+    valgtKategori: React.PropTypes.string.isRequired,
+    endreKategori: React.PropTypes.func.isRequired
+};
 
 export default TypeValg;
