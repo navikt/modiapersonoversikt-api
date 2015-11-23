@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+/* eslint no-unused-expressions:0 */
 import './../test-config';
 import { expect } from 'chai';
 import React from 'react/addons';
@@ -14,22 +16,22 @@ function getContent(modal) {
     return modal.modal.refs.content;
 }
 
-describe('Modal', function () {
-
-    afterEach(function (done) {
+describe('Modal', () => {
+    afterEach((done) => {
         React.unmountComponentAtNode(document.body);
-        document.body.innerHTML = "";
+        document.body.innerHTML = '';
         setTimeout(done);
     });
 
-    it('creates portal as a direct child of body', function () {
+    it('creates portal as a direct child of body', () => {
         const modal = createModal();
 
         const modalContainer = document.getElementsByClassName('react-modal-container');
         expect(modalContainer).not.to.be.null;
+        expect(modal).not.to.be.null;
     });
 
-    it('default is closed and have the correct attributes', function () {
+    it('default is closed and have the correct attributes', () => {
         const modal = createModal();
         const portal = modal.modal.getDOMNode();
 
@@ -55,14 +57,14 @@ describe('Modal', function () {
         expect(describedBy).not.to.be.null;
     });
 
-    it('repects the isOpen prop', function () {
+    it('repects the isOpen prop', () => {
         const modal = createModal({isOpen: true});
 
         const portal = modal.modal.getDOMNode();
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
-    it('Renders content til portal.content div', function () {
+    it('Renders content til portal.content div', () => {
         const modal = createModal();
         const content = getContent(modal);
 

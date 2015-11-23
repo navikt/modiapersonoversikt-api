@@ -12,7 +12,13 @@ class Infoboks extends React.Component {
                 <div className="robust-ikon-feil-gra"></div>
                 <span className="stor">{tekst}</span>
             </div>
-        )
+        );
     }
 }
+
+Infoboks.propTypes = {
+    'tekst': React.PropTypes.string.isRequired,
+    'style': React.PropTypes.string
+};
+
 export default Infoboks;

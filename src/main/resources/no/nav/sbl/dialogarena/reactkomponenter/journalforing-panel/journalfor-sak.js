@@ -1,7 +1,7 @@
 import React from 'react';
 import TilbakeKnapp from './tilbake-knapp';
 import JournalforKnapp from './journalfor-knapp';
-import WicketSender from './../react-wicket-mixin/wicket-sender';
+import wicketSender from './../react-wicket-mixin/wicket-sender';
 
 class JournalforSak extends React.Component {
     constructor(props) {
@@ -15,7 +15,7 @@ class JournalforSak extends React.Component {
     }
 
     traadJournalfort() {
-        WicketSender(this.props.wicketurl, this.props.wicketcomponent, 'traadJournalfort');
+        wicketSender(this.props.wicketurl, this.props.wicketcomponent, 'traadJournalfort');
     }
 
     journalforingFeilet() {
@@ -26,25 +26,26 @@ class JournalforSak extends React.Component {
 
     lagFeedbackPanel() {
         const feilmeldinger = this.state.feilmeldinger;
-        if (feilmeldinger.length === 0)return;
-        else {
-            const feilmeldingerElement = feilmeldinger.map((feilmelding) => <li className="feedbackPanelERROR">{feilmelding}</li>);
-            return (<div className="feedback" role="alert" aria-live="assertive" aria-atomic="true">
-                <ul className="feedbackPanel">
-                    {feilmeldingerElement}
-                </ul>
-            </div>);
-        }
+        if (feilmeldinger.length === 0) return null;
+
+
+        const feilmeldingerElement = feilmeldinger.map((feilmelding) => <li
+            className="feedbackPanelERROR">{feilmelding}</li>);
+        return (<div className="feedback" role="alert" aria-live="assertive" aria-atomic="true">
+            <ul className="feedbackPanel">
+                {feilmeldingerElement}
+            </ul>
+        </div>);
     }
 
     render() {
         const sak = this.props.sak;
-        const header = sak.sakstype === 'GEN' ? "Generelle saker" : "Fagsaker";
+        const header = sak.sakstype === 'GEN' ? 'Generelle saker' : 'Fagsaker';
         const feedbackpanel = this.lagFeedbackPanel();
 
         return (
             <div className="detaljer-sak">
-                <TilbakeKnapp tilbake={this.props.tilbake} ref="tilbakeknapp"></TilbakeKnapp>
+                <TilbakeKnapp tilbake={this.props.tilbake} ref="tilbakeknapp" />
 
                 <h3 className="sub-header">{header}</h3>
                 {feedbackpanel}
@@ -73,5 +74,14 @@ class JournalforSak extends React.Component {
         );
     }
 }
+
+JournalforSak.propTypes = {
+    tilbake: React.PropTypes.func.isRequired,
+    traadId: React.PropTypes.string.isRequired,
+    fnr: React.PropTypes.string.isRequired,
+    sak: React.PropTypes.object.isRequired,
+    wicketurl: React.PropTypes.string.isRequired,
+    wicketcomponent: React.PropTypes.string.isRequired
+};
 
 export default JournalforSak;

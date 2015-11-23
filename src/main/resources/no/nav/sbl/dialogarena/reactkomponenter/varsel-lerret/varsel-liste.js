@@ -1,10 +1,6 @@
 import React from 'react';
 import VarselRad from './varsel-rad';
 
-const TIL_VARSEL_RAD = (varsel) => {
-    return <VarselRad varsel={varsel}/>;
-};
-
 class VarselListe extends React.Component {
     constructor(props) {
         super(props);
@@ -13,7 +9,7 @@ class VarselListe extends React.Component {
     render() {
         const {style, store, varsler} = this.props;
         const varselRad = varsler.map((varsel) => {
-            return <VarselRad varsel={varsel} store={store}/>
+            return <VarselRad varsel={varsel} store={store}/>;
         });
         const resources = store.getResources();
 
@@ -33,5 +29,11 @@ class VarselListe extends React.Component {
         );
     }
 }
+
+VarselListe.propTypes = {
+    'style': React.PropTypes.string,
+    'store': React.PropTypes.object.isRequired,
+    'varsler': React.PropTypes.array
+};
 
 export default VarselListe;

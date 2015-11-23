@@ -12,7 +12,7 @@ class SakerForTema extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({
             ekspandert: nextProps.erEkspandert
-        })
+        });
     }
 
     toggleEkspandering(event) {
@@ -47,18 +47,25 @@ class SakerForTema extends React.Component {
                     </ul>
                 </div>
             );
-        } else {
-            return (
-                <div className="saker-tema">
-                    <button className="tema-bar" onClick={this.toggleEkspandering} aria-expanded="false">
-                        <h3 className="tema-overskrift">{this.props.tema}</h3>
-
-                        <div className="ekspanderingspil ned"></div>
-                    </button>
-                </div>
-            );
         }
+
+        return (
+            <div className="saker-tema">
+                <button className="tema-bar" onClick={this.toggleEkspandering} aria-expanded="false">
+                    <h3 className="tema-overskrift">{this.props.tema}</h3>
+
+                    <div className="ekspanderingspil ned"></div>
+                </button>
+            </div>
+        );
     }
 }
+
+SakerForTema.propTypes = {
+    erPesysSak: React.PropTypes.bool.isRequired,
+    erEkspandert: React.PropTypes.bool.isRequired,
+    tema: React.PropTypes.string.isRequired,
+    saker: React.PropTypes.array.isRequired
+};
 
 export default SakerForTema;

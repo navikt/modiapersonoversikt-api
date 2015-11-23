@@ -1,33 +1,33 @@
+/* eslint-env mocha */
 import './../test-config';
 import Store from './store';
 import { assert } from 'chai';
 
-const TestStore = function () {
+const TestStore = function TestStore() {
     Store.apply(this, arguments);
 };
 TestStore.prototype = $.extend({}, Store.prototype, TestStore.prototype);
-TestStore.prototype.setState = function (nState) {
+TestStore.prototype.setState = function setState(nState) {
     this.state = nState;
     this.fireUpdate();
 };
 
-describe('Store', function () {
-
-    it('Tar vare på initial state', function () {
+describe('Store', () => {
+    it('Tar vare på initial state', () => {
         const state = {myState: 1};
         const store = new Store(state);
 
         assert.equal(store.getState(), state);
     });
 
-    it('kaller alle listeners ved fireUpdate', function () {
+    it('kaller alle listeners ved fireUpdate', () => {
         const ts = new TestStore({});
         let resp1 = null;
         let resp2 = null;
-        const listener1 = function () {
+        const listener1 = () => {
             resp1 = true;
         };
-        const listener2 = function () {
+        const listener2 = () => {
             resp2 = true;
         };
 
@@ -40,14 +40,14 @@ describe('Store', function () {
         assert.equal(resp2, true);
     });
 
-    it('removeListener fjerner lytting', function () {
+    it('removeListener fjerner lytting', () => {
         const ts = new TestStore({});
         let resp1 = null;
         let resp2 = null;
-        const listener1 = function () {
+        const listener1 = () => {
             resp1 = true;
         };
-        const listener2 = function () {
+        const listener2 = () => {
             resp2 = true;
         };
 

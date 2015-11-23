@@ -9,8 +9,7 @@ class Ajax {
         req.end((err, resp) => {
             if (err) {
                 deferred.reject([err, resp]);
-            }
-            else {
+            } else {
                 deferred.resolve(resp.body);
             }
         });
@@ -18,8 +17,8 @@ class Ajax {
         return deferred.promise;
     }
 
-    static doRequest(req, requestModifier = req => req) {
-        return Ajax.toPromise(requestModifier(req));
+    static doRequest(request, requestModifier = req => req) {
+        return Ajax.toPromise(requestModifier(request));
     }
 
     static get(url, requestModifier = (req) => req) {
@@ -27,16 +26,15 @@ class Ajax {
     }
 
     static post(url, data, requestModifier = (req) => req) {
-
-        return this.doRequest(http.post(url).type('application/json').send(data), requestModifier);
+        return Ajax.doRequest(http.post(url).type('application/json').send(data), requestModifier);
     }
 
-    static put(url) {
-        return doRequest(http.put(url), requestModifier);
+    static put(url, requestModifier = (req) => req) {
+        return Ajax.doRequest(http.put(url), requestModifier);
     }
 
-    static delete(url) {
-        return doRequest(http.del(url), requestModifier);
+    static delete(url, requestModifier = (req) => req) {
+        return Ajax.doRequest(http.del(url), requestModifier);
     }
 }
 

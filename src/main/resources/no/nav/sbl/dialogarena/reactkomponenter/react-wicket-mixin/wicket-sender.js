@@ -1,9 +1,10 @@
-module.exports = function (url, component, action, data) {
+/* globals Wicket:true */
+module.exports = function wicketsender(url, component, action, data) {
     Wicket.Ajax.ajax({
-        "u": url,
-        "c": component,
-        "ep": [
-            {"name": action, "value": JSON.stringify(data)}
+        'u': url,
+        'c': component,
+        'ep': [
+            {'name': action, 'value': JSON.stringify(data)}
         ]
     });
 };

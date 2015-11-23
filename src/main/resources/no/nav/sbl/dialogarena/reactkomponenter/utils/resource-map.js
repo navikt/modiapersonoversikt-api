@@ -1,3 +1,4 @@
+/* eslint no-console:0 */
 class ResourceMap {
     constructor(resources) {
         this.resources = resources;

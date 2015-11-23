@@ -1,13 +1,13 @@
-var React = require('react/addons');
-var Modal = require('./../modal/modal-module');
-var Utils = require('./../utils/utils-module');
-var TekstForhandsvisning = require('./tekst-forhandsvisning');
-var TekstListeKomponent = require('./tekst-liste');
-var KnaggInput = require('./../knagginput/knagginput-module');
-var SkrivestotteStore = require('./skrivestotte-store');
-var ScrollPortal = require('./../utils/scroll-portal');
+import React from 'react/addons';
+import Modal from './../modal/modal-module';
+import Utils from './../utils/utils-module';
+import TekstForhandsvisning from './tekst-forhandsvisning';
+import TekstListeKomponent from './tekst-liste';
+import KnaggInput from './../knagginput/knagginput-module';
+import SkrivestotteStore from './skrivestotte-store';
+import ScrollPortal from './../utils/scroll-portal';
 
-var modalConfig = {
+const modalConfig = {
     title: {
         text: 'Skrivestøtte modal',
         show: false,
@@ -25,17 +25,11 @@ var modalConfig = {
     }
 };
 
-var Skrivestotte = React.createClass({
-    vis: function () {
-        this.refs.modal.open();
-    },
-    skjul: function () {
-        this.refs.modal.close();
-    },
-    getInitialState: function () {
+const Skrivestotte = React.createClass({
+    getInitialState: function getInitialState() {
         this.store = new SkrivestotteStore($.extend({}, {
             knagger: [],
-            fritekst: "",
+            fritekst: '',
             tekster: [],
             valgtTekst: {},
             valgtLocale: Utils.Constants.LOCALE_DEFAULT,
@@ -44,27 +38,36 @@ var Skrivestotte = React.createClass({
         }, this.props));
         return this.store.getState();
     },
-    componentDidMount: function () {
+    componentDidMount: function componentDidMount() {
         this.store.setContainerElement(this.refs.modal.portalElement);
         this.store.addListener(this.storeChanged);
         this.store.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
     },
-    componentDidUnmount: function () {
+    componentDidUnmount: function componentDidUnmount() {
         this.store.removeListener(this.storeChanged);
     },
-    keyDownHandler: function (event) {
+    keyDownHandler: function keyDownHandler(event) {
         if (event.keyCode === 13) {
             this.store.submit(this.skjul, event);
         }
     },
-    render: function () {
-        var tekstlistekomponenter = this.state.tekster.map(function (tekst) {
-            return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
+    vis: function vis() {
+        this.refs.modal.open();
+    },
+    skjul: function skjul() {
+        this.refs.modal.close();
+    },
+    storeChanged: function storeChanged() {
+        this.setState(this.store.getState());
+    },
+    render: function render() {
+        const tekstlistekomponenter = this.state.tekster.map(function tekstListeVM(tekst) {
+            return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>;
         }.bind(this));
 
-        var erTom = this.state.tekster.length === 0;
-        var sokVisning = (
-            <div className={"sok-visning " + (erTom ? 'hidden' : '')}>
+        const erTom = this.state.tekster.length === 0;
+        const sokVisning = (
+            <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
                 <ScrollPortal id={this.state.listePanelId}
                               className="sok-liste"
                               role="tablist"
@@ -81,8 +84,8 @@ var Skrivestotte = React.createClass({
             </div>
         );
 
-        var tomVisning = (
-            <div className={"sok-visning " + (erTom ? '' : 'hidden')}>
+        const tomVisning = (
+            <div className={'sok-visning ' + (erTom ? '' : 'hidden')}>
                 <h1 className="tom">Ingen treff</h1>
             </div>
         );
@@ -103,10 +106,7 @@ var Skrivestotte = React.createClass({
                 </form>
             </Modal>
         );
-    },
-    storeChanged: function () {
-        this.setState(this.store.getState());
     }
 });
 
-module.exports = Skrivestotte;
+export default Skrivestotte;

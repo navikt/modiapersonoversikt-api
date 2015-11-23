@@ -7,7 +7,6 @@ class VarselRad extends React.Component {
         super(props);
 
         this.toggleEkspandert = this.toggleEkspandert.bind(this);
-
     }
 
     toggleEkspandert() {
@@ -20,7 +19,7 @@ class VarselRad extends React.Component {
         const datoformat = resources.getOrElse('varsel.ledetekst.rad.datoformat', 'DD. MMM, HH.mm');
         const sendIKanal = varsel.meldingListe
             .map((m) => resources.getOrElse('varsel.kanal.' + m.kanal, m.kanal))
-            .join(", ");
+            .join(', ');
 
         let headerClassname = 'varsel-rad-header';
         let pilClassname = 'ekspanderingspil';
@@ -54,5 +53,11 @@ class VarselRad extends React.Component {
         );
     }
 }
+
+VarselRad.propTypes = {
+    'store': React.PropTypes.object.isRequired,
+    'toggleEkspandert': React.PropTypes.func.isRequired,
+    'varsel': React.PropTypes.object.isRequired
+};
 
 export default VarselRad;

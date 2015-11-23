@@ -1,0 +1,12 @@
+{
+  "parser": "babel-eslint",
+  "rules": {
+    "indent": [2, 4, {"SwitchCase": 1}],
+    "comma-dangle": [2, "never"],
+    "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}]
+  },
+  "globals": {
+    "$": false
+  },
+  "extends": "airbnb"
+}
