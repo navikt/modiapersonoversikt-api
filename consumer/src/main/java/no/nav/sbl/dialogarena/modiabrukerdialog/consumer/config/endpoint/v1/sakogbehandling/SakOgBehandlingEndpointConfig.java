@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling;
 
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
@@ -11,12 +11,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
-import static java.lang.System.currentTimeMillis;
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
@@ -35,20 +29,7 @@ public class SakOgBehandlingEndpointConfig {
     @Bean
     public Pingable pingSakOgBehandling() {
         final SakOgBehandling_v1PortType ws = createSakogbehandlingPortType(new SystemSAMLOutInterceptor());
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-
-                long start = currentTimeMillis();
-                String name = "SAKOGBEHANDLING";
-                try {
-                    ws.ping();
-                    return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
-                }
-            }
-        };
+        return new PingableWebService("SAKOGBEHANDLING", ws);
     }
 
     private SakOgBehandling_v1PortType createSakogbehandlingPortType(AbstractSAMLOutInterceptor interceptor) {

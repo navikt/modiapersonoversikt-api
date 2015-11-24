@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 
 import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
@@ -11,12 +11,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy
 import no.nav.sbl.dialogarena.varsel.config.VarslerMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 
 @Configuration
 public class VarslingEndpointConfig {
@@ -34,19 +28,7 @@ public class VarslingEndpointConfig {
     @Bean
     public Pingable varslerPing() {
         final VarslerPorttype ws = createVarslingPortType(new SystemSAMLOutInterceptor());
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = System.currentTimeMillis();
-                String name = "Varsler_v1";
-                try {
-                    ws.ping();
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-                }
-            }
-        };
+        return new PingableWebService("Varsler_v1", ws);
     }
 
 

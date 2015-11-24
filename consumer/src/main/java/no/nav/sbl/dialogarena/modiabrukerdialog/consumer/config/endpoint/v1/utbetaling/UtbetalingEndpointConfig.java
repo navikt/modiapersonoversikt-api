@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling;
 
-import no.nav.modig.modia.ping.PingResult;
-import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
@@ -14,12 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.namespace.QName;
-import java.util.Arrays;
-import java.util.List;
 
-import static java.lang.System.currentTimeMillis;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
@@ -37,7 +31,7 @@ public class UtbetalingEndpointConfig {
 
     @Bean
     public UtbetalingPing pingUtbetalingV1() {
-        return new UtbetalingPing();
+        return new UtbetalingPing("UTBETALING",createUtbetalingPortType(new SystemSAMLOutInterceptor()));
     }
 
     private UtbetalingV1 createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
@@ -53,18 +47,12 @@ public class UtbetalingEndpointConfig {
         return proxyFactoryBean.create(UtbetalingV1.class);
     }
 
-    public class UtbetalingPing implements Pingable {
+    public class UtbetalingPing extends PingableWebService {
 
-        @Override
-        public List<PingResult> ping() {
-            long start = currentTimeMillis();
-            String name = "UTBETALING";
-            try {
-                createUtbetalingPortType(new SystemSAMLOutInterceptor()).ping();
-                return Arrays.asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
-            } catch (Exception e) {
-                return Arrays.asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
-            }
+        public UtbetalingPing(String name, Object webservice) {
+            super(name, webservice);
         }
     }
 }
+
+

@@ -1,21 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark;
 
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.journal.v1.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import java.util.List;
 
-import static java.lang.System.currentTimeMillis;
 import static java.lang.System.getProperty;
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.JoarkPortTypeMock.getJournalPortTypeMock;
 
@@ -32,7 +27,7 @@ public class JoarkEndpointConfig {
                 .wsdl("classpath:joark/no/nav/tjeneste/virksomhet/journal/v1/journal.wsdl");
     }
 
-    @Bean(name ="joarkPortType" )
+    @Bean(name = "joarkPortType")
     public Journal_v1PortType joarkPortType() throws HentJournalpostSikkerhetsbegrensning, HentJournalpostJournalpostIkkeFunnet, HentDokumentURLDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet {
         final Journal_v1PortType prod = createJoarkPortType().withOutInterceptor(new UserSAMLOutInterceptor()).build();
         return createSwitcher(
@@ -45,21 +40,8 @@ public class JoarkEndpointConfig {
 
     @Bean
     public Pingable pingJoark() {
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
+        Journal_v1PortType ws = createJoarkPortType().withOutInterceptor(new SystemSAMLOutInterceptor()).build();
+        return new PingableWebService("JOARK", ws); }
 
-                long start = currentTimeMillis();
-                String name = "JOARK";
-                try {
-                    createJoarkPortType().withOutInterceptor(new SystemSAMLOutInterceptor()).build().ping();
-                    return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
-                }
-            }
-        };
     }
-}
+

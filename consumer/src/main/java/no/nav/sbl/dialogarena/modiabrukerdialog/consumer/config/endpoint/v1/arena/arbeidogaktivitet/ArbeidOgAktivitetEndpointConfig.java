@@ -45,16 +45,20 @@ public class ArbeidOgAktivitetEndpointConfig {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
-                String name = "ARENA_ARBEIDOGAKTIVITET_V1";
                 try {
                     ws.hentSakListe(new WSHentSakListeRequest()
                             .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker("10108000398"))
                             .withFom(LocalDate.now())
                             .withTom(LocalDate.now()));
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+                    return asList(new PingResult(name(), SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
+                    return asList(new PingResult(name(), SERVICE_FAIL, System.currentTimeMillis() - start));
                 }
+            }
+
+            @Override
+            public String name() {
+                return "ARENA_ARBEIDOGAKTIVITET_V1";
             }
         };
     }
