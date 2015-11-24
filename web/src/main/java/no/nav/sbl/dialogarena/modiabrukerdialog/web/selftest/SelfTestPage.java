@@ -36,12 +36,12 @@ public class SelfTestPage extends SelfTestBase {
         List<AvhengighetStatus> serviceStatuses = new ArrayList<>();
         for (Pingable pingable : pingables) {
             try {
-                if(shouldServiceBeIncluded(pingable)) {
+                if (shouldServiceBeIncluded(pingable)) {
                     List<PingResult> pingResults = pingable.ping();
                     for (PingResult pingResult : pingResults) {
                         String serviceName = pingResult.getServiceName().toUpperCase();
                         String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
-                        serviceStatuses.add(new AvhengighetStatus(serviceName + "_PING", status, pingResult.getElapsedTime()));
+                        serviceStatuses.add(new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime()));
                     }
                 }
             } catch (Exception e) {
@@ -57,7 +57,7 @@ public class SelfTestPage extends SelfTestBase {
      */
     private boolean shouldServiceBeIncluded(Pingable pingable) {
         Map<Class, String> services = possibleServicesToBeExcluded();
-        if(services.containsKey(pingable.getClass())) {
+        if (services.containsKey(pingable.getClass())) {
             return Boolean.valueOf(System.getProperty(services.get(pingable.getClass()), "true"));
         }
         return true;
