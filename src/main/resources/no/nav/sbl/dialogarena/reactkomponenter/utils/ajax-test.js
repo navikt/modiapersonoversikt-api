@@ -1,22 +1,21 @@
+/* eslint-env mocha */
 import './../test-config';
 import { expect } from 'chai';
-import React from 'react/addons';
 import sinon from 'sinon';
 import Ajax from './ajax';
 
-describe('HTTP request', function () {
-
-    beforeEach(function () {
+describe('HTTP request', () => {
+    beforeEach(() => {
         sinon.spy(Ajax, 'toPromise');
     });
 
-    afterEach(function () {
+    afterEach(() => {
         Ajax.toPromise.restore();
     });
 
-    it("should use contentType in RequestModifier if set", function () {
 
-        Ajax.post('http://localhost:9876/echo', {}, function (req) {
+    it('should use contentType in RequestModifier if set', () => {
+        Ajax.post('http://localhost:9876/echo', {}, (req) => {
             return req.type('text/html');
         });
 
@@ -25,13 +24,11 @@ describe('HTTP request', function () {
         expect(Ajax.toPromise.calledWith(sinon.match({header: {['Content-Type']: 'text/html'}}))).to.equal(true);
     });
 
-    it("should use contentType 'application/json' if no contentType in RequestModifier", function () {
-
+    it('should use contentType \'application/json\' if no contentType in RequestModifier', () => {
         Ajax.post('http://localhost:9876/echo', {});
 
         expect(Ajax.toPromise.calledOnce).to.equal(true);
 
         expect(Ajax.toPromise.calledWith(sinon.match({header: {['Content-Type']: 'application/json'}}))).to.equal(true);
     });
-
 });

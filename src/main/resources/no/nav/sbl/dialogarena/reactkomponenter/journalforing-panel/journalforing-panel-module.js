@@ -5,7 +5,6 @@ import LukkKnapp from './lukk-knapp';
 import AsyncLoader from './../utils/async-loader';
 import PromiseUtils from './../utils/promise-utils';
 import Ajax from './../utils/ajax';
-import Q from 'q';
 
 const VELG_SAK = 'VELG_SAK';
 const JOURNALFOR = 'JOURNALFOR';
@@ -14,7 +13,7 @@ function markerSomPsakSaker(pesysSaker) {
     return pesysSaker.map((sak) => {
         sak.erPesysSak = true;
         return sak;
-    })
+    });
 }
 
 class JournalforingsPanel extends React.Component {
@@ -30,7 +29,7 @@ class JournalforingsPanel extends React.Component {
 
         const baseUrl = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
 
-        var wrapperPromise = {
+        const wrapperPromise = {
             gsak: Ajax.get(baseUrl + '/saker/sammensatte'),
             psak: Ajax.get(baseUrl + '/saker/pensjon').then(markerSomPsakSaker)
         };
@@ -42,7 +41,7 @@ class JournalforingsPanel extends React.Component {
         this.setState({
             aktivtVindu: JOURNALFOR,
             valgtSak: sak
-        })
+        });
     }
 
     tilbake(event) {
@@ -50,7 +49,7 @@ class JournalforingsPanel extends React.Component {
         this.setState({
             aktivtVindu: VELG_SAK,
             valgtSak: null
-        })
+        });
     }
 
     render() {
@@ -65,13 +64,13 @@ class JournalforingsPanel extends React.Component {
                 </AsyncLoader>
             );
         } else {
-            aktivtVindu = <JournalforSak
+            aktivtVindu = (<JournalforSak
                 fnr={this.props.fnr}
                 traadId={this.state.traadId}
                 sak={this.state.valgtSak}
                 tilbake={this.tilbake}
                 wicketurl={this.props.wicketurl}
-                wicketcomponent={this.props.wicketcomponent}/>
+                wicketcomponent={this.props.wicketcomponent}/>);
         }
         return (
             <form className="journalforings-panel shadow">
@@ -83,5 +82,11 @@ class JournalforingsPanel extends React.Component {
     }
 }
 
-export default JournalforingsPanel;
+JournalforingsPanel.propTypes = {
+    temagruppeTemaMapping: React.PropTypes.object.isRequired,
+    fnr: React.PropTypes.string.isRequired,
+    wicketurl: React.PropTypes.string.isRequired,
+    wicketcomponent: React.PropTypes.string.isRequired
+};
 
+export default JournalforingsPanel;

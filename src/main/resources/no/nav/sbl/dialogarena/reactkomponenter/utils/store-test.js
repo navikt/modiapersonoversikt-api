@@ -1,4 +1,5 @@
-import "./../test-config.js";
+/* eslint-env mocha */
+import './../test-config';
 import Store from './store';
 import {expect} from 'chai';
 
@@ -13,25 +14,24 @@ class TestStore extends Store {
     }
 }
 
-describe('Store', function () {
-
-    it('Tar vare på initial state', function () {
-
-        var state = {myState: 1};
-        var store = new Store(state);
+describe('Store', () => {
+    it('Tar vare på initial state', () => {
+        const state = {myState: 1};
+        const store = new Store(state);
 
         expect(store.getState()).to.equal(state);
 
     });
-
-    it('kaller alle listeners ved fireUpdate', function () {
-        var ts = new TestStore({});
-        var resp1 = null;
-        var resp2 = null;
-        var listener1 = function () {
+    
+    it('kaller alle listeners ved fireUpdate', () => {
+        const ts = new TestStore({});
+        let resp1 = null;
+        let resp2 = null;
+        const listener1 = () => {
             resp1 = true;
         };
-        var listener2 = function () {
+     
+        const listener2 = () => {
             resp2 = true;
         };
 
@@ -44,15 +44,16 @@ describe('Store', function () {
         expect(resp2).to.equal(true);
 
     });
-
-    it('removeListener fjerner lytting', function () {
-        var ts = new TestStore({});
-        var resp1 = null;
-        var resp2 = null;
-        var listener1 = function () {
+    
+    it('removeListener fjerner lytting', () => {
+        const ts = new TestStore({});
+        let resp1 = null;
+        let resp2 = null;
+        const listener1 = () => {
             resp1 = true;
         };
-        var listener2 = function () {
+    
+        const listener2 = () => {
             resp2 = true;
         };
 

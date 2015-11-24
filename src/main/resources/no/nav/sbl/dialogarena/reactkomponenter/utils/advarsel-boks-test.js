@@ -1,18 +1,16 @@
+/* eslint-env mocha */
 import './../test-config';
 import { expect } from 'chai';
 import React from 'react/addons';
-import sinon from 'sinon';
-import 'sinon-chai';
 import AdvarselBoks from './advarsel-boks';
 const TestUtils = React.addons.TestUtils;
 
-describe('AdvarselBoks test', function(){
-    it("Skal vise tekst og ha klassen warn", function(){
-        const text = "TEXT";
+describe('AdvarselBoks test', () => {
+    it('Skal vise tekst og ha klassen warn', () => {
+        const text = 'TEXT';
         const advarselboks = TestUtils.renderIntoDocument(<AdvarselBoks tekst={text}/>);
 
         const rendered = React.findDOMNode(advarselboks);
-
 
         expect(rendered.tagName).to.equal('DIV');
         expect(rendered.classList[0]).to.equal('advarsel-boks');

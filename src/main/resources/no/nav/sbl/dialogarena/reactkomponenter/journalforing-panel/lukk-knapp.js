@@ -1,5 +1,5 @@
 import React from 'react';
-import WicketSender from './../react-wicket-mixin/wicket-sender';
+import wicketSender from './../react-wicket-mixin/wicket-sender';
 
 class LukkKnapp extends React.Component {
     constructor(props) {
@@ -9,7 +9,7 @@ class LukkKnapp extends React.Component {
 
     lukk(event) {
         event.preventDefault();
-        WicketSender(this.props.wicketurl, this.props.wicketcomponent, 'lukkPanel');
+        wicketSender(this.props.wicketurl, this.props.wicketcomponent, 'lukkPanel');
     }
 
     render() {
@@ -18,5 +18,10 @@ class LukkKnapp extends React.Component {
         );
     }
 }
+
+LukkKnapp.propTypes = {
+    wicketurl: React.PropTypes.string.isRequired,
+    wicketcomponent: React.PropTypes.string.isRequired
+};
 
 export default LukkKnapp;

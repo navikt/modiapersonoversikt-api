@@ -17,7 +17,7 @@ class VarselRadElement extends React.Component {
     }
 
     getMottakerInfo(melding) {
-        if (melding.mottakerInformasjon == null) {
+        if (melding.mottakerInformasjon === null) {
             return '';
         }
         return melding.mottakerInformasjon;
@@ -45,5 +45,10 @@ class VarselRadElement extends React.Component {
         );
     }
 }
+
+VarselRadElement.propTypes = {
+    'store': React.PropTypes.object.isRequired,
+    'melding': React.PropTypes.object.isRequired
+};
 
 export default VarselRadElement;

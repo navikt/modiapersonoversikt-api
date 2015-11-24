@@ -1,16 +1,16 @@
 window.ModiaJS = {};
 window.ModiaJS.Components = {};
-(function () {
-    var Ap = Array.prototype;
-    var slice = Ap.slice;
-    var Fp = Function.prototype;
+(function bindPolyfill() {
+    const Ap = Array.prototype;
+    const slice = Ap.slice;
+    const Fp = Function.prototype;
 
-    Fp.bind = function (context) {
-        var func = this;
-        var args = slice.call(arguments, 1);
+    Fp.bind = function binder(context) {
+        const func = this;
+        const args = slice.call(arguments, 1);
 
         function bound() {
-            var invokedAsContructor = func.prototype && (this instanceof func);
+            const invokedAsContructor = func.prototype && (this instanceof func);
             return func.apply(
                 !invokedAsContructor && context || this, args.concat(slice.call(arguments))
             );
@@ -22,20 +22,36 @@ window.ModiaJS.Components = {};
     };
 })();
 
-//jQuery
+// jQuery
 window.$ = require('jquery');
 
-//shim for $(':focusable') since it is part of jQuery UI and we dont need that.
-//SONAR:OFF
+// shim for $(':focusable') since it is part of jQuery UI and we dont need that.
+// SONAR:OFF
 function visible(element) {
-    return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(function () {
-            return $.css(this, 'visibility') === 'hidden';
-        }).length;
+    return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(() => {
+        return $.css(this, 'visibility') === 'hidden';
+    }).length;
 }
-function focusable(element, isTabIndexNotNaN) {
-    var map, mapName, img, nodeName = element.nodeName.toLowerCase();
 
-    if ('area' === nodeName) {
+function _focusableForNonAreaNode(element, isTabIndexNotNaN, nodeName) {
+    if (/input|select|textarea|button|object/.test(nodeName)) {
+        return !element.disabled;
+    }
+
+    if (nodeName === 'a') {
+        return element.href || isTabIndexNotNaN;
+    }
+
+    return isTabIndexNotNaN && visible(element);
+}
+
+function focusable(element, isTabIndexNotNaN) {
+    let map;
+    let mapName;
+    let img;
+    const nodeName = element.nodeName.toLowerCase();
+
+    if (nodeName === 'area') {
         map = element.parentNode;
         mapName = map.name;
         if (!element.href || !mapName || map.nodeName.toLocaleLowerCase() !== 'map') {
@@ -48,36 +64,22 @@ function focusable(element, isTabIndexNotNaN) {
     return _focusableForNonAreaNode(element, isTabIndexNotNaN, nodeName);
 }
 
-function _focusableForNonAreaNode(element, isTabIndexNotNaN, nodeName) {
-    if (/input|select|textarea|button|object/.test(nodeName)) {
-        return !element.disabled;
-    }
-    else {
-        if ('a' === nodeName) {
-            return element.href || isTabIndexNotNaN;
-        }
-        else {
-            return isTabIndexNotNaN && visible(element);
-        }
-    }
-}
-
 function tabbable(element) {
-    var tabIndex = $.attr(element, 'tabindex');
+    let tabIndex = $.attr(element, 'tabindex');
     if (tabIndex === null) {
         tabIndex = undefined;
     }
 
-    var isTabIndexNaN = isNaN(tabIndex);
+    const isTabIndexNaN = isNaN(tabIndex);
     return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
 }
 
 $.extend($.expr[':'], {
-    focusable: function (element) {
+    focusable: function focusableExtention(element) {
         return focusable(element, !isNaN($.attr(element, 'tabindex')));
     },
     tabbable: tabbable
 });
-//SONAR:ON
+// SONAR:ON
 
 module.exports = {};

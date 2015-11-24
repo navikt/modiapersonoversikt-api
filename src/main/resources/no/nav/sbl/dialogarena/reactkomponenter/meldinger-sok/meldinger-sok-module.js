@@ -1,12 +1,12 @@
-var React = require('react/addons');
-var Modal = require('./../modal/modal-module');
-var ListevisningKomponent = require('./listevisning');
-var ForhandsvisningKomponent = require('./forhandsvisning');
-var Utils = require('./../utils/utils-module');
-var MeldingerSokStore = require('./meldinger-sok-store');
-var ScrollPortal = require('./../utils/scroll-portal');
+import React from 'react/addons';
+import Modal from './../modal/modal-module';
+import ListevisningKomponent from './listevisning';
+import ForhandsvisningKomponent from './forhandsvisning';
+import Utils from './../utils/utils-module';
+import MeldingerSokStore from './meldinger-sok-store';
+import ScrollPortal from './../utils/scroll-portal';
 
-var modalConfig = {
+const modalConfig = {
     title: {
         text: 'Meldingersøk modal',
         show: false,
@@ -24,52 +24,50 @@ var modalConfig = {
     }
 };
 
-var MeldingerSok = React.createClass({
-    vis: function (props) {
-        props = props || {};
-        this.store.initializeVisning();
-        this.refs.modal.open();
-    },
-    skjul: function () {
-        this.refs.modal.close();
-    },
-
-    getInitialState: function () {
-        this.store = new MeldingerSokStore(Object.assign({
-            fritekst: "",
+const MeldingerSok = React.createClass({
+    getInitialState: function getInitialState() {
+        this.store = new MeldingerSokStore($.extend({}, {
+            fritekst: '',
             traader: [],
             valgtTraad: {},
             traadMarkupIds: {},
             listePanelId: Utils.generateId('sok-liste-'),
             forhandsvisningsPanelId: Utils.generateId('sok-forhandsvisningsPanelId-')
         }, this.props));
-
         return this.store.getState();
     },
-    componentDidMount: function () {
+    componentDidMount: function componentDidMount() {
         this.store.setContainerElement(this.refs.modal.portalElement);
         this.store.addListener(this.storeChanged);
     },
-    componentDidUnmount: function () {
+    componentDidUnmount: function componentDidUnmount() {
         this.store.removeListener(this.storeChanged);
     },
-    keyDownHandler: function (event) {
+    keyDownHandler: function keyDownHandler(event) {
         if (event.keyCode === 13) {
             this.store.submit(this.skjul, event);
         }
     },
-    render: function () {
-        var tekstlistekomponenter = this.state.traader.map(function (traad) {
-            return <ListevisningKomponent
+    vis: function vis(props = {}) {
+        this.store.update(props);
+        this.refs.modal.open();
+    },
+    skjul: function skjul() {
+        this.refs.modal.close();
+    },
+    storeChanged: function storeChanged() {
+        this.setState(this.store.getState());
+    },
+    render: function render() {
+        const tekstlistekomponenter = this.state.traader.map((traad) => <ListevisningKomponent
                 key={traad.traadId}
                 traad={traad}
                 valgtTraad={this.state.valgtTraad}
                 store={this.store}
-                />
-        }.bind(this));
-        var erTom = this.state.traader.length === 0;
-        var sokVisning = (
-            <div className={"sok-visning " + (erTom ? 'hidden' : '')}>
+                />);
+        const erTom = this.state.traader.length === 0;
+        const sokVisning = (
+            <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
                 <ScrollPortal id={this.state.listePanelId}
                               className="sok-liste"
                               role="tablist"
@@ -79,27 +77,27 @@ var MeldingerSok = React.createClass({
                               aria-controls={this.state.forhandsvisningsPanelId}>
                     {tekstlistekomponenter}
                 </ScrollPortal>
-
                 <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel"
                      id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
                     <ForhandsvisningKomponent traad={this.state.valgtTraad}/>
                 </div>
             </div>
         );
-        var tomInnhold;
+        let tomInnhold;
         if (this.state.feilet) {
-            tomInnhold = <h1 className="tom">Noe feilet</h1>
+            tomInnhold = <h1 className="tom">Noe feilet</h1>;
         } else if (this.state.initialisert) {
             tomInnhold = <h1 className="tom">Ingen treff</h1>;
         } else {
-            tomInnhold =
+            tomInnhold = (
                 <div className="tom">
                     <img src="../img/ajaxloader/hvit/loader_hvit_128.gif" alt="Henter meldinger"></img>
                 </div>
+            );
         }
 
-        var tomVisning = (
-            <div className={"sok-visning " + (erTom ? '' : 'hidden')}>
+        const tomVisning = (
+            <div className={'sok-visning ' + (erTom ? '' : 'hidden')}>
                 {tomInnhold}
             </div>
         );
@@ -117,7 +115,7 @@ var MeldingerSok = React.createClass({
                                 value={this.state.fritekst}
                                 title="Søk"
                                 onChange={this.store.onChange.bind(this.store)}
-                                onKeyDown={this.store.onKeyDown.bind(this.store, document.getElementById(this.state.listePanelId))}
+                                onKeyDown={this.store.onKeyDown.bind(this.store, $('#' + this.state.listePanelId))}
                                 aria-controls={this.state.listePanelId}
                                 />
                             <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
@@ -129,9 +127,6 @@ var MeldingerSok = React.createClass({
                 </form>
             </Modal>
         );
-    },
-    storeChanged: function () {
-        this.setState(this.store.getState());
     }
 });
 

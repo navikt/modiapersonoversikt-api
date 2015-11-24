@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 import './../test-config';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -6,14 +7,13 @@ import Utils from './../utils/utils-module';
 import TekstForhandsvisning from './tekst-forhandsvisning';
 const TestUtils = React.addons.TestUtils;
 
-describe('TekstForhandsvisning', function () {
-
+describe('TekstForhandsvisning', () => {
     const tekst = {innhold: {'nb_NO': 'tekst'}, tags: []};
 
-    it('splitter tekst i avsnitt', function () {
+    it('splitter tekst i avsnitt', () => {
         sinon.spy(Utils, 'tilParagraf');
 
-        let shallowRenderer = TestUtils.createRenderer();
+        const shallowRenderer = TestUtils.createRenderer();
         shallowRenderer.render(
             <TekstForhandsvisning tekst={tekst} />
         );
@@ -22,6 +22,4 @@ describe('TekstForhandsvisning', function () {
 
         Utils.tilParagraf.restore();
     });
-
-
 });

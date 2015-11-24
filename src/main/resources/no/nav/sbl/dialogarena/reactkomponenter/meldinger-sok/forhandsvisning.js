@@ -1,25 +1,26 @@
-var React = require('react/addons');
-var Melding = require('./melding');
-var ScrollPortal = require('./../utils/scroll-portal');
-var format = require('string-format');
+import React from 'react/addons';
+import Melding from './melding';
+import ScrollPortal from './../utils/scroll-portal';
+import format from 'string-format';
 
-var ForhandsvisningKomponent = React.createClass({
-    render: function () {
+const ForhandsvisningKomponent = React.createClass({
+    propTypes: {
+        traad: React.PropTypes.object.isRequired
+    },
+    render: function render() {
         if (!this.props.traad.hasOwnProperty('meldinger')) {
             return null;
         }
 
-        var traad = this.props.traad;
-        var meldinger = traad.meldinger;
+        const traad = this.props.traad;
+        const meldinger = traad.meldinger;
 
-        var meldingElementer = meldinger.map(function(melding){
-            return <Melding key={melding.id} melding={melding} />
-        });
+        const meldingElementer = meldinger.map((melding) => <Melding key={melding.id} melding={melding} />);
 
-        var antallInformasjon = format('Viser <b>{}</b> av <b>{}</b> {} i dialogen',
+        const antallInformasjon = format('Viser <b>{}</b> av <b>{}</b> {} i dialogen',
             meldinger.length,
             traad.antallMeldingerIOpprinneligTraad,
-            traad.antallMeldingerIOpprinneligTraad === 1 ? "melding" : "meldinger"
+            traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
         );
 
         return (
