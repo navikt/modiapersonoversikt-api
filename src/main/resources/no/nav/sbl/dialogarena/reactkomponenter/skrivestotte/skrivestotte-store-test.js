@@ -7,8 +7,17 @@ import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import SkrivestotteStore from './skrivestotte-store';
 chai.use(sinonChai);
+import Ajax from '../utils/ajax';
 
 describe('SkrivestotteStore', function () {
+
+    before(()=> {
+        sinon.stub(SkrivestotteStore, '_updateScroll');
+    });
+
+    after(()=> {
+        SkrivestotteStore._updateScroll.restore();
+    });
 
     const initialState = {
         fritekst: "",
@@ -40,11 +49,6 @@ describe('SkrivestotteStore', function () {
     var event = $.Event("keypress");
 
     it('pil opp ger førre tekst men er ikke cyklisk', function () {
-        const t1 = {key: "key1"};
-        const t2 = {key: "key2"};
-        const t3 = {key: "key3"};
-        const tekster = [t1, t2, t3];
-        var event = $.Event("keypress");
         event.which = 38;
         event.keyCode = 38;
         const store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
@@ -77,15 +81,18 @@ describe('SkrivestotteStore', function () {
     });
 
     it('hent søk resultater gør et søk', function () {
-        sinon.spy($, 'get');
+        sinon.spy(Ajax, 'get');
         var store = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
         const fritekst = "helloWorld";
         const knagger = "earth";
         SkrivestotteStore._sok(fritekst, knagger);
-        expect($.get).to.have.been.calledOnce;
 
-        var args = $.get.args[0][0];
-        expect(args).to.contain('sok').and.to.contain(fritekst).and.to.contain('tags').and.to.contain(knagger);
+        expect(Ajax.get).to.have.been.calledOnce;
 
+        var args = Ajax.get.args[0];
+        var url = args[0];
+        expect(url).to.contain('sok').and.to.contain(fritekst).and.to.contain('tags').and.to.contain(knagger);
+
+        Ajax.get.restore();
     });
 });

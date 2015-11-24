@@ -9,6 +9,7 @@ class MeldingerSokStore extends Store {
         if (this.state.traader.length > 0) {
             this.state.valgtTraad = this.state.traader[0];
         }
+
         this.state.initialisert = false;
         this.state.feilet = false;
         this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
@@ -44,20 +45,20 @@ class MeldingerSokStore extends Store {
     }
 
     onKeyDown(tabliste, event) {
-        switch (event.key) {
-            case "ArrowUp":
+        switch (event.keyCode) {
+            case 38:
                 event.preventDefault();
                 this.state.valgtTraad = hentMelding(forrigeMelding, this.state.traader, this.state.valgtTraad);
 
-                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+                MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
                 this.fireUpdate(this.listeners);
                 break;
-            case "ArrowDown":
+            case 40:
                 event.preventDefault();
                 this.state.valgtTraad = hentMelding(nesteMelding, this.state.traader, this.state.valgtTraad);
 
-                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+                MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
                 this.fireUpdate(this.listeners);
                 break;
@@ -72,6 +73,11 @@ class MeldingerSokStore extends Store {
         event.preventDefault();
         document.getElementById(this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
         afterSubmit();
+    }
+
+    static _updateScroll(tabliste, valgtIndex) {
+        var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
+        Utils.adjustScroll(tabliste, element);
     }
 }
 
@@ -131,9 +137,6 @@ function onRejected(error) {
     }
 
 }
-function updateScroll(tabliste, valgtIndex) {
-    var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
-    Utils.adjustScroll(tabliste, element);
-}
+
 
 export default MeldingerSokStore;

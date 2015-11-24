@@ -3,8 +3,21 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import assign from 'object-assign';
 import MeldingerSokStore from './meldinger-sok-store';
+import Ajax from '../utils/ajax';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+chai.use(sinonChai);
 
 describe('MeldingerSokStore', function () {
+
+    before(()=> {
+        sinon.stub(MeldingerSokStore, '_updateScroll');
+    });
+
+    after(()=> {
+        MeldingerSokStore._updateScroll.restore();
+    });
+
 
     const initialState = {
         fritekst: "",
@@ -19,32 +32,35 @@ describe('MeldingerSokStore', function () {
         expect(store.state.valgtTraad).to.equal(traader[0]);
     });
 
-    it('indekserer ved update', function () {
-        sinon.spy($, 'ajax');
+    it('indekserer ved initializeVisning', function () {
+        sinon.spy(Ajax, 'get');
+
         var fnr = '12345678910';
         var store = new MeldingerSokStore(assign({}, initialState, {fnr: fnr}));
 
         store.initializeVisning();
 
-        expect($.ajax.calledOnce).to.equal(true);
-        var args = $.ajax.args[0][0];
-        expect(args['async']).to.equal(false);
-        expect(args['url']).to.contain(fnr).and.to.contain('indekser');
+        var args = Ajax.get.args[0];
+        var url = args[0];
 
-        expect(Ajax.get.calledOnce).to.equal(true);
-        expect(url).to.contains(fnr).and.to.contain('indekser');
+        expect(Ajax.get).to.have.been.calledOnce;
+        expect(url).to.contain(fnr).and.to.contain('indekser');
 
         Ajax.get.restore();
     });
 
+    const e1 = {key: "key1"};
+    const e2 = {key: "key2"};
+    const e3 = {key: "key3"};
+    const elementer = [e1, e2, e3];
+
+    const event = $.Event("keypress");
+
     it('pil opp ger førre melding men er ikke cyklisk', function () {
-        const e1 = {key: "key1"};
-        const e2 = {key: "key2"};
-        const e3 = {key: "key3"};
-        const elementer = [e1, e2, e3];
-        const event = $.Event("keypress");
+
         event.which = 38;
         event.keyCode = 38;
+
         const store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
 
         store.onKeyDown([], event);
@@ -55,14 +71,10 @@ describe('MeldingerSokStore', function () {
         store.onKeyDown([], event);
         expect(store.state.valgtTraad).to.equal(e2);
 
+
     });
 
     it('pil ned ger neste melding men er ikke cyklisk', function () {
-        const e1 = {key: "key1"};
-        const e2 = {key: "key2"};
-        const e3 = {key: "key3"};
-        const elementer = [e1, e2, e3];
-        const event = $.Event("keypress");
         event.which = 40;
         event.keyCode = 40;
         const store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));

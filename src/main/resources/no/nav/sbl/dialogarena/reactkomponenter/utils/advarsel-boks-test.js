@@ -8,7 +8,7 @@ const TestUtils = React.addons.TestUtils;
 
 describe('AdvarselBoks test', function(){
     it("Skal vise tekst og ha klassen warn", function(){
-        const text = "TEXT"
+        const text = "TEXT";
         const advarselboks = TestUtils.renderIntoDocument(<AdvarselBoks tekst={text}/>);
 
         const rendered = React.findDOMNode(advarselboks);

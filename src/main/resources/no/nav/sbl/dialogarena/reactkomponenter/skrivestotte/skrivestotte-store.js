@@ -2,77 +2,6 @@ import Utils from './../utils/utils-module';
 import Store from './../utils/store';
 import Ajax from './../utils/ajax';
 
-function updateScroll(tabliste, valgtIndex) {
-    var element = tabliste.getElementsByClassName('sok-element').item(valgtIndex);
-    Utils.adjustScroll(tabliste, element);
-}
-
-function hentTekst(hentElement, elementer, valgtElement) {
-    for (var i = 0; i < elementer.length; i++) {
-        if (elementer[i].key === valgtElement.key) {
-            return hentElement(elementer, i);
-        }
-    }
-}
-
-function forrigeTekst(elementer, index) {
-    return index === 0 ? elementer[0] : elementer[index - 1];
-}
-
-function nesteTekst(elementer, index) {
-    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
-}
-
-var hentSokeresultater =
-    Utils.debounce(function (fritekst, knagger) {
-        sok(fritekst, knagger).done(function (resultat) {
-            this.state.tekster = resultat;
-            this.state.valgtTekst = resultat[0] || {};
-            updateScroll(this.container.querySelector('.sok-liste'), 0);
-            this.fireUpdate(this.listeners);
-        }.bind(this));
-    }, 150);
-
-var sok = (fritekst, knagger) => {
-    fritekst = fritekst || '';
-    knagger = knagger || [];
-
-    fritekst = fritekst.replace(/^#*(.*)$/, '$1');
-
-    var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
-    if (knagger.length !== 0) {
-        url += '&tags=' + encodeURIComponent(knagger);
-    }
-    return Ajax.get(url);
-};
-
-function stripEmTags(tekst) {
-    return tekst.replace(/<em>(.*?)<\/em>/g, '$1');
-}
-
-function autofullfor(tekst, autofullforMap) {
-    var nokler = {
-        'bruker.fnr': autofullforMap.bruker.fnr,
-        'bruker.fornavn': autofullforMap.bruker.fornavn,
-        'bruker.etternavn': autofullforMap.bruker.etternavn,
-        'bruker.navn': autofullforMap.bruker.navn,
-        'bruker.navkontor': autofullforMap.bruker.navkontor,
-        'saksbehandler.fornavn': autofullforMap.saksbehandler.fornavn,
-        'saksbehandler.etternavn': autofullforMap.saksbehandler.etternavn,
-        'saksbehandler.navn': autofullforMap.saksbehandler.navn,
-        'saksbehandler.enhet': autofullforMap.saksbehandler.enhet
-    };
-
-    return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
-        var verdi = nokler[resultat];
-        if (typeof verdi === 'undefined') {
-            return '[ukjent nøkkel]';
-        }
-        return nokler[resultat] || '[fant ingen verdi]';
-    });
-}
-
-
 class SkrivstotteStore extends Store {
     constructor(props) {
         super(props);
@@ -126,20 +55,20 @@ class SkrivstotteStore extends Store {
     }
 
     onKeyDown(tabliste, event) {
-        switch (event.key) {
-            case "ArrowUp":
+        switch (event.keyCode) {
+            case 38:
                 event.preventDefault();
-                this.state.valgtTraad = hentMelding(forrigeMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
 
-                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+                SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
                 this.fireUpdate(this.listeners);
                 break;
-            case "ArrowDown":
+            case 40:
                 event.preventDefault();
-                this.state.valgtTraad = hentMelding(nesteMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
 
-                updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+                SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
                 this.fireUpdate(this.listeners);
                 break;
@@ -166,6 +95,91 @@ class SkrivstotteStore extends Store {
 
     }
 
+    static _updateScroll(tabliste, valgtIndex) {
+        var element = tabliste.getElementsByClassName('sok-element').item(valgtIndex);
+        Utils.adjustScroll(tabliste, element);
+    }
+
+    static _sok(fritekst, knagger) {
+        fritekst = fritekst || '';
+        knagger = knagger || [];
+
+        fritekst = fritekst.replace(/^#*(.*)$/, '$1');
+
+        var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
+        if (knagger.length !== 0) {
+            url += '&tags=' + encodeURIComponent(knagger);
+        }
+        return Ajax.get(url);
+    }
+
+;
+
+}
+
+function hentTekst(hentElement, elementer, valgtElement) {
+    for (var i = 0; i < elementer.length; i++) {
+        if (elementer[i].key === valgtElement.key) {
+            return hentElement(elementer, i);
+        }
+    }
+}
+
+function forrigeTekst(elementer, index) {
+    return index === 0 ? elementer[0] : elementer[index - 1];
+}
+
+function nesteTekst(elementer, index) {
+    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
+}
+
+var hentSokeresultater =
+    Utils.debounce(function (fritekst, knagger) {
+        SkrivstotteStore._sok(fritekst, knagger).done(function (resultat) {
+            this.state.tekster = resultat;
+            this.state.valgtTekst = resultat[0] || {};
+            updateScroll(this.container.querySelector('.sok-liste'), 0);
+            this.fireUpdate(this.listeners);
+        }.bind(this));
+    }, 150);
+
+var sok = (fritekst, knagger) => {
+    fritekst = fritekst || '';
+    knagger = knagger || [];
+
+    fritekst = fritekst.replace(/^#*(.*)$/, '$1');
+
+    var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
+    if (knagger.length !== 0) {
+        url += '&tags=' + encodeURIComponent(knagger);
+    }
+    return Ajax.get(url);
+};
+
+function stripEmTags(tekst) {
+    return tekst.replace(/<em>(.*?)<\/em>/g, '$1');
+}
+
+function autofullfor(tekst, autofullforMap) {
+    var nokler = {
+        'bruker.fnr': autofullforMap.bruker.fnr,
+        'bruker.fornavn': autofullforMap.bruker.fornavn,
+        'bruker.etternavn': autofullforMap.bruker.etternavn,
+        'bruker.navn': autofullforMap.bruker.navn,
+        'bruker.navkontor': autofullforMap.bruker.navkontor,
+        'saksbehandler.fornavn': autofullforMap.saksbehandler.fornavn,
+        'saksbehandler.etternavn': autofullforMap.saksbehandler.etternavn,
+        'saksbehandler.navn': autofullforMap.saksbehandler.navn,
+        'saksbehandler.enhet': autofullforMap.saksbehandler.enhet
+    };
+
+    return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
+        var verdi = nokler[resultat];
+        if (typeof verdi === 'undefined') {
+            return '[ukjent nøkkel]';
+        }
+        return nokler[resultat] || '[fant ingen verdi]';
+    });
 }
 
 export default SkrivstotteStore;
