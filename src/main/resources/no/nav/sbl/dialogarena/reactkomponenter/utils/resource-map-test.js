@@ -1,7 +1,6 @@
-require('./../test-config.js');
-var ResourceMap = require('./resource-map');
-var assert = require('chai').assert;
-
+import './../test-config';
+import ResourceMap from './resource-map';
+import { assert } from 'chai';
 
 describe('ResourceMap', function () {
 

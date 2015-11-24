@@ -1,9 +1,8 @@
-require('./../test-config.js');
-var expect = require('chai').expect;
-var React = require('react/addons');
-var TestUtils = React.addons.TestUtils;
-var sinon = require('sinon');
-var Ajax = require('./ajax');
+import './../test-config';
+import { expect } from 'chai';
+import React from 'react/addons';
+import sinon from 'sinon';
+import Ajax from './ajax';
 
 describe('HTTP request', function () {
 

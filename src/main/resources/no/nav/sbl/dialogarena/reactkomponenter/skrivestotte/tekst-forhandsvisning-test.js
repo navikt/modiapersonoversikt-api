@@ -1,19 +1,19 @@
-require('./../test-config');
-var expect = require('chai').expect;
-var sinon = require('sinon');
-var React = require('react/addons');
-var Utils = require('./../utils/utils-module');
-var TekstForhandsvisning = require('./tekst-forhandsvisning');
+import './../test-config';
+import { expect } from 'chai';
+import sinon from 'sinon';
+import React from 'react/addons';
+import Utils from './../utils/utils-module';
+import TekstForhandsvisning from './tekst-forhandsvisning';
+const TestUtils = React.addons.TestUtils;
 
 describe('TekstForhandsvisning', function () {
-    var TestUtils = React.addons.TestUtils;
 
-    var tekst = {innhold: {'nb_NO': 'tekst'}, tags: []};
+    const tekst = {innhold: {'nb_NO': 'tekst'}, tags: []};
 
     it('splitter tekst i avsnitt', function () {
         sinon.spy(Utils, 'tilParagraf');
 
-        var shallowRenderer = TestUtils.createRenderer();
+        let shallowRenderer = TestUtils.createRenderer();
         shallowRenderer.render(
             <TekstForhandsvisning tekst={tekst} />
         );

@@ -22,6 +22,7 @@ class SakerForTema extends React.Component {
 
     render() {
         if (this.state.ekspandert) {
+            const datoHeader = this.props.erPesysSak ? 'løpende f.o.m.' : 'opprettet';
             return (
                 <div className="saker-tema">
                     <button onClick={this.toggleEkspandering} aria-expanded="true">
@@ -35,7 +36,7 @@ class SakerForTema extends React.Component {
                             <div className="info-bar">
                                 <span className="text-cell text-transform-uppercase">saksid</span>
                                 <span className="vekk"> | </span>
-                                <span className="text-cell text-align-right text-transform-uppercase">opprettet</span>
+                                <span className="text-cell text-align-right text-transform-uppercase">{datoHeader}</span>
                                 <span className="vekk"> | </span>
                                 <span className="text-cell text-transform-uppercase">fagsystem</span>
                             </div>

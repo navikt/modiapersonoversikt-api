@@ -1,8 +1,8 @@
-require('./../test-config');
-var expect = require('chai').expect;
-var React = require('react/addons');
-var Modal = require('./modal-module.js');
-var TestUtils = React.addons.TestUtils;
+import './../test-config';
+import { expect } from 'chai';
+import React from 'react/addons';
+import Modal from './modal-module';
+const TestUtils = React.addons.TestUtils;
 
 function createModal(props, children) {
     return TestUtils.renderIntoDocument(React.createElement(
@@ -23,15 +23,15 @@ describe('Modal', function () {
     });
 
     it('creates portal as a direct child of body', function () {
-        var modal = createModal();
+        const modal = createModal();
 
-        var modalContainer = document.getElementsByClassName('react-modal-container');
+        const modalContainer = document.getElementsByClassName('react-modal-container');
         expect(modalContainer).not.to.be.null;
     });
 
     it('default is closed and have the correct attributes', function () {
-        var modal = createModal();
-        var portal = modal.modal.getDOMNode();
+        const modal = createModal();
+        const portal = modal.modal.getDOMNode();
 
         expect(portal.hasAttribute('tabindex')).to.be.true;
         expect(portal.hasAttribute('class')).to.be.true;
@@ -45,28 +45,28 @@ describe('Modal', function () {
         expect(portal.getAttribute('aria-hidden')).to.be.eql('true');
         expect(portal.getAttribute('role')).to.be.eql('dialog');
 
-        var labelledById = portal.getAttribute('aria-labelledby');
-        var describedById = portal.getAttribute('aria-describedby');
+        const labelledById = portal.getAttribute('aria-labelledby');
+        const describedById = portal.getAttribute('aria-describedby');
 
-        var labelledBy = document.getElementById(labelledById);
-        var describedBy = document.getElementById(describedById);
+        const labelledBy = document.getElementById(labelledById);
+        const describedBy = document.getElementById(describedById);
 
         expect(labelledBy).not.to.be.null;
         expect(describedBy).not.to.be.null;
     });
 
     it('repects the isOpen prop', function () {
-        var modal = createModal({isOpen: true});
+        const modal = createModal({isOpen: true});
 
-        var portal = modal.modal.getDOMNode();
+        const portal = modal.modal.getDOMNode();
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
     it('Renders content til portal.content div', function () {
-        var modal = createModal();
-        var content = getContent(modal);
+        const modal = createModal();
+        const content = getContent(modal);
 
-        var span = TestUtils.findRenderedDOMComponentWithClass(content, 'forReference');
+        const span = TestUtils.findRenderedDOMComponentWithClass(content, 'forReference');
         expect(span).not.to.be.null;
     });
 });

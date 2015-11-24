@@ -41,10 +41,8 @@ var Utils = {
         var scrollContainer = $parent.find('.mCSB_container');
         var scrollPos = parseInt(scrollContainer.css('top'));
 
-        if (elementTop + scrollPos < 0) {
-            $parent.mCustomScrollbar('scrollTo', $element);
-        } else if (elementBottom + scrollPos > $parent.outerHeight()) {
-            $parent.mCustomScrollbar('scrollTo', $element);
+        if ((elementTop + scrollPos < 0) || (elementBottom + scrollPos > $parent.outerHeight())) {
+            $parent.mCustomScrollbar('scrollTo', $element, {scrollInertia: 0});
         }
     },
     generateId: function (prefix) {
@@ -76,6 +74,9 @@ var Utils = {
             }
         }
         return nObj;
+    },
+    kvpair: function (data) {
+        return Object.keys(data).map((key) => [key, data[key]]);
     }
 
 };

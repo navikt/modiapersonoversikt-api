@@ -1,31 +1,30 @@
-require('./../test-config');
-var expect = require('chai').expect;
-var React = require('react/addons');
-var LocaleSelect = require('./locale-select');
+import './../test-config';
+import { expect } from 'chai';
+import React from 'react/addons';
+import LocaleSelect from './locale-select';
+const TestUtils = React.addons.TestUtils;
 
 describe('LocaleSelect', function () {
-    var TestUtils = React.addons.TestUtils;
-
     it('rendrer ingenting hvis kun ett locale', function () {
-        var props = {tekst: {innhold: [{nb_NO: 'tekst'}]}};
+        const props = {tekst: {innhold: [{nb_NO: 'tekst'}]}};
 
-        var element = TestUtils.renderIntoDocument(
+        const element = TestUtils.renderIntoDocument(
             <LocaleSelect {...props} />
         );
 
-        var rendered = TestUtils.scryRenderedDOMComponentsWithTag(element, 'select');
+        const rendered = TestUtils.scryRenderedDOMComponentsWithTag(element, 'select');
 
         expect(rendered).to.be.length(0);
     });
 
     it('rendrer selectboks med locales hvis mer enn ett locale', function () {
-        var props = {tekst: {innhold: [{nb_NO: 'tekst'}, {en_US: 'text'}]}};
+        const props = {tekst: {innhold: [{nb_NO: 'tekst'}, {en_US: 'text'}]}};
 
-        var element = TestUtils.renderIntoDocument(
+        const element = TestUtils.renderIntoDocument(
             <LocaleSelect {...props} />
         );
 
-        var rendered = TestUtils.scryRenderedDOMComponentsWithTag(element, 'select');
+        const rendered = TestUtils.scryRenderedDOMComponentsWithTag(element, 'select');
 
         expect(rendered).to.be.length(1);
     });

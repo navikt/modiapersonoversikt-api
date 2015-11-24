@@ -7,20 +7,24 @@ import PromiseUtils from './../utils/promise-utils';
 import Ajax from './../utils/ajax';
 import Q from 'q';
 
+function markerSomPsakSaker(pesysSaker) {
+    return pesysSaker.map((sak) => {
+        sak.erPesysSak = true;
+        return sak;
+    })
+}
+
 class VelgSakPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             saker: []
         };
-        const url = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
-
-        const gsakPromise = Ajax.get(url + '/saker/sammensatte');
-        const psakPromise = Ajax.get(url + '/saker/pensjon');
+        const baseUrl = '/modiabrukerdialog/rest/journalforing/' + this.props.fnr;
 
         var wrapperPromise = {
-            gsak: gsakPromise,
-            psak: psakPromise
+            gsak: Ajax.get(baseUrl + '/saker/sammensatte'),
+            psak: Ajax.get(baseUrl + '/saker/pensjon').then(markerSomPsakSaker)
         };
 
         this.promise = PromiseUtils.atLeastN(1, wrapperPromise);

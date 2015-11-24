@@ -1,11 +1,11 @@
-require('./../test-config');
-var expect = require('chai').expect;
-var React = require('react/addons');
-var TestUtils = React.addons.TestUtils;
-var sinon = require('sinon');
-require('sinon-chai');
-var SakerListe = require('./saker-liste');
-var SakerForTema = require('./saker-for-tema');
+import './../test-config';
+import { expect } from 'chai';
+import React from 'react/addons';
+import sinon from 'sinon';
+import 'sinon-chai';
+import SakerListe from './saker-liste';
+import SakerForTema from './saker-for-tema';
+const TestUtils = React.addons.TestUtils;
 
 describe('SakerListe', function () {
 
@@ -89,9 +89,9 @@ describe('SakerListe', function () {
         const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker}/>);
         return TestUtils.scryRenderedComponentsWithType(sakerListe, SakerForTema);
     };
+
     const setupMedTemagruppe = (saker, temagruppe, mapping) => {
-        const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker} temagruppe={temagruppe}
-                                                                    temagruppeTemaMapping={mapping}/>);
+        const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker} temagruppe={temagruppe} temagruppeTemaMapping={mapping}/>);
         return TestUtils.scryRenderedComponentsWithType(sakerListe, SakerForTema);
     }
 });
