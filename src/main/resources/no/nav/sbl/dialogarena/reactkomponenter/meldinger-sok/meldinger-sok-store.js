@@ -8,12 +8,18 @@ var MeldingerSokStore = function () {
         this.state.valgtTraad = this.state.traader[0];
     }
     this.state.initialisert = false;
+    this.state.indeksert = false;
     this.state.feilet = false;
     this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
 };
 MeldingerSokStore.prototype = $.extend({}, Store.prototype, MeldingerSokStore.prototype);
 
 MeldingerSokStore.prototype.onChange = function (event) {
+    // Fiks for IE10/IE11/Rect 0.13-bug, se commit-melding for detaljer.
+    if (!this.state.indeksert) {
+        return;
+    }
+
     this.state.fritekst = event.target.value;
 
     hentSokeresultater.bind(this)(this.state.fritekst);
@@ -27,6 +33,7 @@ MeldingerSokStore.prototype.update = function (props) {
         async: false,
         url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'
     });
+    this.state.indeksert = true;
 
     this.onChange({target: {value: this.state.fritekst}});
 
