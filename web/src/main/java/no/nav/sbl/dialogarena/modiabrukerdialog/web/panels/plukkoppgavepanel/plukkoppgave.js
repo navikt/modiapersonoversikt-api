@@ -61,7 +61,7 @@ $(document).on('keydown', '.plukk-knapp, .velg-temagruppe', function (e) {
 });
 
 /*
- Detta er et hack før IE11. Uten dette så kan man ikke bla med piltasterna. Allt her under kan slettes om man hitter en måte at få browsern at løse dette.
+ Detta er et hack for IE11. Uten dette så kan man ikke bla med piltasterna. Allt her under kan slettes om man hitter en måte at få browsern at løse dette.
  */
 
 $(document).on('keydown', '.temagruppe-liste', function (e) {
@@ -73,8 +73,7 @@ $(document).on('keydown', '.temagruppe-liste', function (e) {
 
         if (e.keyCode === 38) {
             RadioGroupHandler.setForrigeTemagruppeTilValgt(radio);
-        }
-        else if (e.keyCode === 40) {
+        } else if (e.keyCode === 40) {
             RadioGroupHandler.setNesteTemagruppeTilValgt(radio);
         }
 
@@ -87,20 +86,16 @@ $(document).on('keydown', '.temagruppe-liste', function (e) {
 
 var RadioGroupHandler = function () {
     var indexValgtTemagruppe = 0;
-
     return {
-
         removeFocusFromPreviousChoice: function (radio) {
             radio[indexValgtTemagruppe].checked = false;
         },
         setNesteTemagruppeTilValgt: function (radio) {
             indexValgtTemagruppe = indexValgtTemagruppe === radio.length - 1 ? 0 : indexValgtTemagruppe + 1;
         },
-
         setForrigeTemagruppeTilValgt: function (radio) {
             indexValgtTemagruppe = indexValgtTemagruppe === 0 ? radio.length - 1 : indexValgtTemagruppe - 1;
         },
-
         setFocusOnNewChoice: function (radio) {
             radio[indexValgtTemagruppe].checked = true;
             radio[indexValgtTemagruppe].focus();
