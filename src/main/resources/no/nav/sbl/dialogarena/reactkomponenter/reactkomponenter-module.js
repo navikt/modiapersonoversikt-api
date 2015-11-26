@@ -4,7 +4,8 @@ window.ModiaJS = {
         Skrivestotte: require('./skrivestotte/skrivestotte-module'),
         JournalforingsPanel: require('./journalforing-panel/journalforing-panel-module'),
         VelgSakPanel: require('./velg-sak-panel/velg-sak-panel-module'),
-        VarselLerret: require('./varsel-lerret/varsel-lerret-module')
+        VarselLerret: require('./varsel-lerret/varsel-lerret-module'),
+        FeilmeldingsModaler: require('./feilmeldingsmodaler/feilmeldingsmodaler-module')
     },
     InitializedComponents: {},
     React: require('./nav-react')
