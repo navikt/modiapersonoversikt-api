@@ -50,6 +50,11 @@ public class GsakRutingEndpointConfig {
             public String name() {
                 return "GSAK_RUTING_V1";
             }
+
+            @Override
+            public String method() {
+                return "finnAnsvarligEnhetForSak";
+            }
         };
     }
 

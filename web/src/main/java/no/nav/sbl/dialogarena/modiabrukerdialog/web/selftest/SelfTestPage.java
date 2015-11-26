@@ -39,9 +39,10 @@ public class SelfTestPage extends SelfTestBase {
                 if (shouldServiceBeIncluded(pingable)) {
                     List<PingResult> pingResults = pingable.ping();
                     for (PingResult pingResult : pingResults) {
-                        String serviceName = pingResult.getServiceName().toUpperCase();
+                        String serviceName = pingable.name();
+                        String methodName = pingable.method();
                         String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
-                        serviceStatuses.add(new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime()));
+                        serviceStatuses.add(new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName));
                     }
                 }
             } catch (Exception e) {

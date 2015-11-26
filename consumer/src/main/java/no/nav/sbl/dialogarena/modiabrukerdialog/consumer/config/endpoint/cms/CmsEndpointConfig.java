@@ -85,6 +85,11 @@ public class CmsEndpointConfig {
             public String name() {
                 return "CMS";
             }
+
+            @Override
+            public String method() {
+                return "ping mot HttpContentRetriever";
+            }
         };
     }
 

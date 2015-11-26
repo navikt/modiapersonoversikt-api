@@ -60,6 +60,11 @@ public class ArbeidOgAktivitetEndpointConfig {
             public String name() {
                 return "ARENA_ARBEIDOGAKTIVITET_V1";
             }
+
+            @Override
+            public String method() {
+                return "hentSakListe";
+            }
         };
     }
 }
