@@ -76,13 +76,6 @@ public class SykmeldingsperioderPanelConfigResolver {
                 return foreldrepengerServiceDefault.wrappedObject.hentForeldrepengerListe(request);
             }
 
-            @Override
-            public PingResult ping() {
-                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return foreldrepengerServiceMock.wrappedObject.ping();
-                }
-                return foreldrepengerServiceDefault.wrappedObject.ping();
-            }
         };
     }
 
