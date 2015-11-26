@@ -17,10 +17,9 @@ public class KontrakterConsumerConfigImpl {
         return ytelseskontraktService;
     }
 
-    public static DefaultOppfolgingskontraktService createOppfolgingskontraktService(OppfoelgingPortType oppfoelgingPortType, OppfoelgingPortType selftestOppfoelgingPortType) {
+    public static DefaultOppfolgingskontraktService createOppfolgingskontraktService(OppfoelgingPortType oppfoelgingPortType) {
         DefaultOppfolgingskontraktService oppfolgingskontraktServiceBi = new DefaultOppfolgingskontraktService();
         oppfolgingskontraktServiceBi.setOppfolgingskontraktService(oppfoelgingPortType);
-        oppfolgingskontraktServiceBi.setSelftestOppfolgingskontraktService(selftestOppfoelgingPortType);
         oppfolgingskontraktServiceBi.setMapper(new OppfolgingskontraktMapper());
         return oppfolgingskontraktServiceBi;
     }

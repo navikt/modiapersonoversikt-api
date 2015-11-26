@@ -41,10 +41,6 @@ public class KontrakterWrapper {
     @Named("oppfolgingPortType")
     private OppfoelgingPortType oppfoelgingPortType;
 
-    @Inject
-    @Named("selftestOppfolgingPortType")
-    private OppfoelgingPortType selftestOppfoelgingPortType;
-
     @Bean
     public Wrapper<DefaultYtelseskontraktService> ytelseskontraktService() {
         return new Wrapper<>(createYtelseskontraktService(ytelseskontraktPortType, selftestYtelseskontraktPortType));
@@ -57,7 +53,7 @@ public class KontrakterWrapper {
 
     @Bean
     public Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService() {
-        return new Wrapper<>(createOppfolgingskontraktService(oppfoelgingPortType, selftestOppfoelgingPortType));
+        return new Wrapper<>(createOppfolgingskontraktService(oppfoelgingPortType));
     }
 
     @Bean

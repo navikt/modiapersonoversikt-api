@@ -64,14 +64,6 @@ public class KontrakterConsumerConfigResolver {
                 }
                 return oppfolgingskontraktService.wrappedObject.hentOppfolgingskontrakter(request);
             }
-
-            @Override
-            public PingResult ping() {
-                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return oppfolgingskontraktMock.wrappedObject.ping();
-                }
-                return oppfolgingskontraktService.wrappedObject.ping();
-            }
         };
     }
 
