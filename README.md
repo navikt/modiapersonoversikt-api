@@ -3,7 +3,7 @@ Reactkomponenter
 
 ## Forberedelser for å kjøre
 
-* Installer node.js, finnes på *F:\F2990\Felles Filer\3 Forvaltningsseksjonen\3.4 Kontor for brukerdialog\Portaler og SBL forvaltning\7. Teknisk\Programmer\nodejs*. Bruk nyeste versjon.
+* Installer node.js, finnes på *F:\F2990\Felles Filer\3 Forvaltningsseksjonen\3.4 Kontor for brukerdialog\Portaler og SBL forvaltning\7. Teknisk\Programmer\nodejs*. Bruk versjon 0.10.33, senare versjoner fungerer ikke med eslint. 
 
 * Kjør følgende kommandoer i en terminal, (2a, 2b, 2c, 2d fra [denne confluence siden](http://confluence.adeo.no/display/AURA/Karma)):
 
