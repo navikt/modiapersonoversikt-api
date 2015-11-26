@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable;
 
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.SykmeldingsperioderPanelConfigImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
@@ -11,7 +10,6 @@ import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerReque
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
-import no.nav.sykmeldingsperioder.ping.SykmeldingsperioderPing;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,10 +40,6 @@ public class SykmeldingsperioderPanelConfigResolver {
     @Qualifier("foreldrepengerServiceMock")
     private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock;
 
-    @Bean
-    public SykmeldingsperioderPing sykmeldingsperioderPing() {
-        return new SykmeldingsperioderPanelConfigImpl().sykmeldingsperioderPing(getForeldrepengerService(), getSykepengerService());
-    }
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
@@ -89,13 +83,6 @@ public class SykmeldingsperioderPanelConfigResolver {
                 return sykepengerServiceDefault.wrappedObject.hentSykmeldingsperioder(request);
             }
 
-            @Override
-            public PingResult ping() {
-                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return sykepengerServiceMock.wrappedObject.ping();
-                }
-                return sykepengerServiceDefault.wrappedObject.ping();
-            }
         };
     }
 
