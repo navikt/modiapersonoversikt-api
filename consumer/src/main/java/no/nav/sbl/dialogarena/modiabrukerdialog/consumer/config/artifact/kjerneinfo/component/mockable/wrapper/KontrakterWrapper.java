@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.KontrakterConsumerConfigImpl.createOppfolgingskontraktService;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.KontrakterConsumerConfigImpl.createYtelseskontraktService;
@@ -30,12 +29,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class KontrakterWrapper {
 
     @Inject
-    @Named("ytelseskontraktV3")
     private YtelseskontraktV3 ytelseskontraktPortType;
 
 
     @Inject
-    @Named("oppfolgingPortType")
     private OppfoelgingPortType oppfoelgingPortType;
 
     @Bean
