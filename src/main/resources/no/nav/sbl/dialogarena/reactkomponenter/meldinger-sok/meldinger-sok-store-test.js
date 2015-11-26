@@ -11,7 +11,6 @@ import sinonChai from 'sinon-chai';
 chai.use(sinonChai);
 
 describe('MeldingerSokStore', () => {
-
     before(()=> {
         sinon.stub(MeldingerSokStore, '_updateScroll');
     });
@@ -43,8 +42,8 @@ describe('MeldingerSokStore', () => {
 
         store.initializeVisning();
 
-        var args = Ajax.get.args[0];
-        var url = args[0];
+        const args = Ajax.get.args[0];
+        const url = args[0];
 
         expect(Ajax.get).to.have.been.calledOnce;
         expect(url).to.contain(fnr).and.to.contain('indekser');
@@ -60,7 +59,6 @@ describe('MeldingerSokStore', () => {
     const event = $.Event('keypress');
 
     it('pil opp ger førre melding men er ikke cyklisk', () =>{
-
         event.which = 38;
         event.keyCode = 38;
         const store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
@@ -72,7 +70,6 @@ describe('MeldingerSokStore', () => {
         store.state.valgtTraad = e3;
         store.onKeyDown([], event);
         expect(store.state.valgtTraad).to.equal(e2);
-
     });
 
     it('pil ned ger neste melding men er ikke cyklisk', () =>{
@@ -90,3 +87,4 @@ describe('MeldingerSokStore', () => {
         expect(store.state.valgtTraad).to.equal(e3);
     });
 });
+

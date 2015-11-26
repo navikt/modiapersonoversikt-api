@@ -30,7 +30,7 @@ class MeldingerSokStore extends Store {
     onChange(event) {
         this.state.fritekst = event.target.value;
 
-        hentSokeresultater.bind(this)(this.state.fritekst);
+        MeldingerSokStore.hentSokeresultater.bind(this)(this.state.fritekst);
 
         this.fireUpdate(this.listeners);
     }
@@ -38,17 +38,16 @@ class MeldingerSokStore extends Store {
     traadChanged(traad, tabliste) {
         this.state.valgtTraad = traad;
 
-        updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
+        MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
         this.fireUpdate(this.listeners);
-
     }
 
     onKeyDown(tabliste, event) {
         switch (event.keyCode) {
             case 38:
                 event.preventDefault();
-                this.state.valgtTraad = hentMelding(forrigeMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTraad = MeldingerSokStore.hentMelding(MeldingerSokStore.forrigeMelding, this.state.traader, this.state.valgtTraad);
 
                 MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
@@ -56,12 +55,13 @@ class MeldingerSokStore extends Store {
                 break;
             case 40:
                 event.preventDefault();
-                this.state.valgtTraad = hentMelding(nesteMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTraad = MeldingerSokStore.hentMelding(MeldingerSokStore.nesteMelding, this.state.traader, this.state.valgtTraad);
 
                 MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
                 this.fireUpdate(this.listeners);
                 break;
+            default:
         }
     }
 
@@ -76,40 +76,35 @@ class MeldingerSokStore extends Store {
     }
 
     static _updateScroll(tabliste, valgtIndex) {
-        var element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
+        const element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
         Utils.adjustScroll(tabliste, element);
     }
-}
 
-var sok = (fnr, query) => {
-    query = query || "";
-    query = query.replace(/\./g, '');
-    var url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(query);
-    return Ajax.get(url);
-};
+    static _sok(fnr, query = '') {
+        const processedQuery = query.replace(/\./g, '');
+        const url = '/modiabrukerdialog/rest/meldinger/' + fnr + '/sok/' + encodeURIComponent(processedQuery);
+        return Ajax.get(url);
+    }
 
-function hentMelding(hentElement, elementer, valgtElement) {
-    for (var i = 0; i < elementer.length; i++) {
-        if (elementer[i].key === valgtElement.key) {
-            return hentElement(elementer, i);
+    static hentMelding(hentElement, elementer, valgtElement) {
+        for (let i = 0; i < elementer.length; i++) {
+            if (elementer[i].key === valgtElement.key) {
+                return hentElement(elementer, i);
+            }
         }
+    }
+
+    static nesteMelding(elementer, index) {
+        return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
+    }
+
+    static forrigeMelding(elementer, index) {
+        return index === 0 ? elementer[0] : elementer[index - 1];
     }
 }
 
-function nesteMelding(elementer, index) {
-    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
-}
-
-function forrigeMelding(elementer, index) {
-    return index === 0 ? elementer[0] : elementer[index - 1];
-}
-
-var hentSokeresultater = Utils.debounce(function (fritekst) {
-    sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
-}, 150);
-
 function onFulfilled(traader) {
-    traader.forEach(function (traad) {
+    traader.forEach((traad) => {
         traad.key = traad.traadId;
         traad.datoInMillis = traad.dato.millis;
         traad.innhold = traad.meldinger[0].fritekst;
@@ -123,7 +118,7 @@ function onFulfilled(traader) {
     this.state.traader = traader;
     this.state.valgtTraad = traader[0] || {};
     this.state.initialisert = true;
-    updateScroll(this.container.querySelector('.sok-liste'), 0);
+    MeldingerSokStore._updateScroll(this.container.querySelector('.sok-liste'), 0);
     this.fireUpdate(this.listeners);
 }
 
@@ -135,8 +130,11 @@ function onRejected(error) {
         this.state.feilet = true;
         this.fireUpdate(this.listeners);
     }
-
 }
 
+
+MeldingerSokStore.hentSokeresultater = Utils.debounce(function doSok(fritekst) {
+    this.sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
+}, 150);
 
 export default MeldingerSokStore;

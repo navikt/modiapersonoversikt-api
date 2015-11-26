@@ -11,7 +11,6 @@ chai.use(sinonChai);
 import Ajax from '../utils/ajax';
 
 describe('SkrivestotteStore', () => {
-
     before(()=> {
         sinon.stub(SkrivestotteStore, '_updateScroll');
     });
@@ -19,7 +18,7 @@ describe('SkrivestotteStore', () => {
     after(()=> {
         SkrivestotteStore._updateScroll.restore();
     });
-    
+
     const initialState = {
         fritekst: '',
         tekster: [],

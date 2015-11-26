@@ -6,7 +6,8 @@
     "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}]
   },
   "globals": {
-    "$": false
+    "$": false,
+    "Wicket": false
   },
   "extends": "airbnb"
 }

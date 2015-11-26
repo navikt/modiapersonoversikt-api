@@ -20,9 +20,8 @@ describe('Store', () => {
         const store = new Store(state);
 
         expect(store.getState()).to.equal(state);
-
     });
-    
+
     it('kaller alle listeners ved fireUpdate', () => {
         const ts = new TestStore({});
         let resp1 = null;
@@ -30,7 +29,7 @@ describe('Store', () => {
         const listener1 = () => {
             resp1 = true;
         };
-     
+
         const listener2 = () => {
             resp2 = true;
         };
@@ -42,9 +41,8 @@ describe('Store', () => {
 
         expect(resp1).to.equal(true);
         expect(resp2).to.equal(true);
-
     });
-    
+
     it('removeListener fjerner lytting', () => {
         const ts = new TestStore({});
         let resp1 = null;
@@ -52,7 +50,7 @@ describe('Store', () => {
         const listener1 = () => {
             resp1 = true;
         };
-    
+
         const listener2 = () => {
             resp2 = true;
         };

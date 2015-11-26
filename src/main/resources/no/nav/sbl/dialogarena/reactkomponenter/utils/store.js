@@ -1,10 +1,8 @@
 class Store {
-
     constructor(state) {
         this.listeners = [];
         this.state = state;
         this.container = undefined;
-
     }
 
     addListener(listener) {
@@ -12,8 +10,8 @@ class Store {
     }
 
     removeListener(listener) {
-        var nyeListeners = this.listeners.slice(0);
-        var index = nyeListeners.indexOf(listener);
+        const nyeListeners = this.listeners.slice(0);
+        const index = nyeListeners.indexOf(listener);
         this.listeners.splice(index, 1);
     }
 
@@ -22,9 +20,7 @@ class Store {
     }
 
     fireUpdate() {
-        this.listeners.forEach(function (listener) {
-            listener();
-        });
+        this.listeners.forEach((listener) =>listener());
     }
 
     setContainerElement(container) {

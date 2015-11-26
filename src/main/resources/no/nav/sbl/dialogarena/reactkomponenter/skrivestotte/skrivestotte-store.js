@@ -13,7 +13,7 @@ class SkrivstotteStore extends Store {
     tekstChanged(tekst, tabliste) {
         this.state.valgtTekst = tekst;
 
-        updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+        SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
         this.fireUpdate(this.listeners);
     }
@@ -22,21 +22,19 @@ class SkrivstotteStore extends Store {
         this.state.knagger = this.state.knagger || [];
         this.state.knagger.push(knagg);
 
-        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+        SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
 
         this.fireUpdate(this.listeners);
-
     }
 
     slettKnagg(knagg) {
-        var nyeKnagger = this.state.knagger.slice(0);
-        var index = nyeKnagger.indexOf(knagg);
+        const nyeKnagger = this.state.knagger.slice(0);
+        const index = nyeKnagger.indexOf(knagg);
         this.state.knagger.splice(index, 1);
 
-        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+        SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
 
         this.fireUpdate(this.listeners);
-
     }
 
     setLocale(locale) {
@@ -48,17 +46,16 @@ class SkrivstotteStore extends Store {
         this.state.fritekst = data.fritekst;
         this.state.knagger = data.knagger;
 
-        hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+        SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
 
         this.fireUpdate(this.listeners);
-
     }
 
     onKeyDown(tabliste, event) {
         switch (event.keyCode) {
             case 38:
                 event.preventDefault();
-                this.state.valgtTekst = hentTekst(forrigeTekst, this.state.tekster, this.state.valgtTekst);
+                this.state.valgtTekst = SkrivstotteStore.hentTekst(SkrivstotteStore.forrigeTekst, this.state.tekster, this.state.valgtTekst);
 
                 SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
@@ -66,120 +63,101 @@ class SkrivstotteStore extends Store {
                 break;
             case 40:
                 event.preventDefault();
-                this.state.valgtTekst = hentTekst(nesteTekst, this.state.tekster, this.state.valgtTekst);
+                this.state.valgtTekst = SkrivstotteStore.hentTekst(SkrivstotteStore.nesteTekst, this.state.tekster, this.state.valgtTekst);
 
                 SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
                 this.fireUpdate(this.listeners);
                 break;
+            default:
         }
     }
 
     submit(onSubmit, event) {
         event.preventDefault();
-        var tekstfelt = document.getElementById(this.state.tekstfeltId);
+        const tekstfelt = document.getElementById(this.state.tekstfeltId);
         tekstfelt.focus();
 
         // Må ha en timeout for å få fokus til å fjerne placeholder-tekst i IE
-        setTimeout(function () {
-            var eksisterendeTekst = typeof tekstfelt.value === 'undefined' ? "" : tekstfelt.value;
-            eksisterendeTekst += eksisterendeTekst.length === 0 ? "" : "\n";
+        setTimeout(() => {
+            let eksisterendeTekst = typeof tekstfelt.value === 'undefined' ? '' : tekstfelt.value;
+            eksisterendeTekst += eksisterendeTekst.length === 0 ? '' : '\n';
             tekstfelt.focus();
-            tekstfelt.value = eksisterendeTekst + autofullfor(stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor);
-            var thisEvent = document.createEvent('Event');
+            tekstfelt.value = eksisterendeTekst + SkrivstotteStore.autofullfor(SkrivstotteStore.stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor);
+            const thisEvent = document.createEvent('Event');
             thisEvent.initEvent('input', true, true);
             tekstfelt.dispatchEvent(thisEvent);
 
             onSubmit();
-        }.bind(this), 0);
-
+        }, 0);
     }
 
     static _updateScroll(tabliste, valgtIndex) {
-        var element = tabliste.getElementsByClassName('sok-element').item(valgtIndex);
+        const element = tabliste.getElementsByClassName('sok-element').item(valgtIndex);
         Utils.adjustScroll(tabliste, element);
     }
 
-    static _sok(fritekst, knagger) {
-        fritekst = fritekst || '';
-        knagger = knagger || [];
+    static _sok(fritekst = '', knagger = []) {
+        const processedFritekst = fritekst.replace(/^#*(.*)$/, '$1');
 
-        fritekst = fritekst.replace(/^#*(.*)$/, '$1');
-
-        var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
+        let url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(processedFritekst);
         if (knagger.length !== 0) {
             url += '&tags=' + encodeURIComponent(knagger);
         }
         return Ajax.get(url);
     }
 
-;
-
-}
-
-function hentTekst(hentElement, elementer, valgtElement) {
-    for (var i = 0; i < elementer.length; i++) {
-        if (elementer[i].key === valgtElement.key) {
-            return hentElement(elementer, i);
+    static hentTekst(hentElement, elementer, valgtElement) {
+        for (let i = 0; i < elementer.length; i++) {
+            if (elementer[i].key === valgtElement.key) {
+                return hentElement(elementer, i);
+            }
         }
+    }
+
+    static forrigeTekst(elementer, index) {
+        return index === 0 ? elementer[0] : elementer[index - 1];
+    }
+
+    static nesteTekst(elementer, index) {
+        return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
+    }
+
+    static stripEmTags(tekst) {
+        return tekst.replace(/<em>(.*?)<\/em>/g, '$1');
+    }
+
+    static autofullfor(tekst, autofullforMap) {
+        const nokler = {
+            'bruker.fnr': autofullforMap.bruker.fnr,
+            'bruker.fornavn': autofullforMap.bruker.fornavn,
+            'bruker.etternavn': autofullforMap.bruker.etternavn,
+            'bruker.navn': autofullforMap.bruker.navn,
+            'bruker.navkontor': autofullforMap.bruker.navkontor,
+            'saksbehandler.fornavn': autofullforMap.saksbehandler.fornavn,
+            'saksbehandler.etternavn': autofullforMap.saksbehandler.etternavn,
+            'saksbehandler.navn': autofullforMap.saksbehandler.navn,
+            'saksbehandler.enhet': autofullforMap.saksbehandler.enhet
+        };
+
+        return tekst.replace(/\[(.*?)]/g, (res, resultat) => {
+            const verdi = nokler[resultat];
+            if (typeof verdi === 'undefined') {
+                return '[ukjent nøkkel]';
+            }
+            return nokler[resultat] || '[fant ingen verdi]';
+        });
     }
 }
 
-function forrigeTekst(elementer, index) {
-    return index === 0 ? elementer[0] : elementer[index - 1];
-}
-
-function nesteTekst(elementer, index) {
-    return index === elementer.length - 1 ? elementer[elementer.length - 1] : elementer[index + 1];
-}
-
-var hentSokeresultater =
-    Utils.debounce(function (fritekst, knagger) {
-        SkrivstotteStore._sok(fritekst, knagger).done(function (resultat) {
+SkrivstotteStore.hentSokeresultater =
+    Utils.debounce(function debouncedSok(fritekst, knagger) {
+        SkrivstotteStore._sok(fritekst, knagger).done(function sokCB(resultat) {
             this.state.tekster = resultat;
             this.state.valgtTekst = resultat[0] || {};
-            updateScroll(this.container.querySelector('.sok-liste'), 0);
+            SkrivstotteStore._updateScroll(this.container.querySelector('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
         }.bind(this));
     }, 150);
-
-var sok = (fritekst, knagger) => {
-    fritekst = fritekst || '';
-    knagger = knagger || [];
-
-    fritekst = fritekst.replace(/^#*(.*)$/, '$1');
-
-    var url = '/modiabrukerdialog/rest/skrivestotte/sok?fritekst=' + encodeURIComponent(fritekst);
-    if (knagger.length !== 0) {
-        url += '&tags=' + encodeURIComponent(knagger);
-    }
-    return Ajax.get(url);
-};
-
-function stripEmTags(tekst) {
-    return tekst.replace(/<em>(.*?)<\/em>/g, '$1');
-}
-
-function autofullfor(tekst, autofullforMap) {
-    var nokler = {
-        'bruker.fnr': autofullforMap.bruker.fnr,
-        'bruker.fornavn': autofullforMap.bruker.fornavn,
-        'bruker.etternavn': autofullforMap.bruker.etternavn,
-        'bruker.navn': autofullforMap.bruker.navn,
-        'bruker.navkontor': autofullforMap.bruker.navkontor,
-        'saksbehandler.fornavn': autofullforMap.saksbehandler.fornavn,
-        'saksbehandler.etternavn': autofullforMap.saksbehandler.etternavn,
-        'saksbehandler.navn': autofullforMap.saksbehandler.navn,
-        'saksbehandler.enhet': autofullforMap.saksbehandler.enhet
-    };
-
-    return tekst.replace(/\[(.*?)]/g, function (tekst, resultat) {
-        var verdi = nokler[resultat];
-        if (typeof verdi === 'undefined') {
-            return '[ukjent nøkkel]';
-        }
-        return nokler[resultat] || '[fant ingen verdi]';
-    });
-}
 
 export default SkrivstotteStore;
