@@ -46,7 +46,6 @@ public class KontrakterConsumerConfigResolverTest {
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());
         resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
-        resolver.ytelseskontraktServiceBi().ping();
         verifyZeroInteractions(oppfolgingskontraktService.wrappedObject);
         verifyZeroInteractions(ytelseskontraktService.wrappedObject);
     }
@@ -55,10 +54,8 @@ public class KontrakterConsumerConfigResolverTest {
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
-        resolver.ytelseskontraktServiceBi().ping();
         resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());
         verify(ytelseskontraktService.wrappedObject, times(1)).hentYtelseskontrakter(any(YtelseskontraktRequest.class));
-        verify(ytelseskontraktService.wrappedObject, times(1)).ping();
         verify(oppfolgingskontraktService.wrappedObject, times(1)).hentOppfolgingskontrakter(any(OppfolgingskontraktRequest.class));
     }
 

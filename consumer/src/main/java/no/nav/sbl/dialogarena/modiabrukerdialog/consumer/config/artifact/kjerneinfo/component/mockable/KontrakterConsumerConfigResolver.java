@@ -8,7 +8,6 @@ import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,13 +43,6 @@ public class KontrakterConsumerConfigResolver {
                 return ytelseskontraktService.wrappedObject.hentYtelseskontrakter(request);
             }
 
-            @Override
-            public PingResult ping() {
-                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return ytelseskontraktMock.wrappedObject.ping();
-                }
-                return ytelseskontraktService.wrappedObject.ping();
-            }
         };
     }
 
