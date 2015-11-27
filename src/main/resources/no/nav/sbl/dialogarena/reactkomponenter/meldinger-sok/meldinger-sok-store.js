@@ -35,7 +35,8 @@ class MeldingerSokStore extends Store {
         this.fireUpdate(this.listeners);
     }
 
-    traadChanged(traad, tabliste) {
+    traadChanged(traad) {
+        const tabliste = document.getElementById(this.state.listePanelId);
         this.state.valgtTraad = traad;
 
         MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
@@ -135,7 +136,7 @@ function onRejected(error) {
 
 MeldingerSokStore.hentSokeresultater =
     Utils.debounce(function doSok(fritekst) {
-        MeldingerSokStore.sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
+        MeldingerSokStore._sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
     }, 150);
 
 export default MeldingerSokStore;
