@@ -142,17 +142,43 @@ function gjennomfoerAvansertSok() {
 }
 
 function setSessionTimeoutBox() {
-    var timeoutValue = 1000 * 60 * 55;
-    var timeout = setTimeout(function () {
-        createTimeoutBox();
-    }, timeoutValue);
+    resetSessionTimeoutBox();
+
+    dialogMedBrukerPing();
 
     Wicket.Event.subscribe('/ajax/call/after', function () {
-        clearTimeout(timeout);
-        timeout = setTimeout(function () {
-            createTimeoutBox();
-        }, timeoutValue);
+        resetSessionTimeoutBox();
     });
+}
+
+function resetSessionTimeoutBox() {
+    var timeoutValue = 1000 * 60 * 55;
+    clearTimeout(this.timeout);
+    window.timeout = setTimeout(function () {
+        createTimeoutBox();
+    }, timeoutValue);
+}
+
+function dialogMedBrukerPing() {
+    var intervalValue = 1000 * 60 * 10;
+    var currentTextLength = getTextAreaLength();
+    setInterval(function () {
+        var textLength = getTextAreaLength();
+        if (textLength != -1 && currentTextLength != textLength) {
+            currentTextLength = textLength;
+            $.ajax("/modiabrukerdialog/internal/isAlive");
+            resetSessionTimeoutBox();
+        }
+    }, intervalValue);
+}
+
+function getTextAreaLength() {
+    var textArea = $('.sidebar-hoyre').find('.expandingtextarea');
+    if (textArea.length > 0) {
+        return textArea[0].value.length;
+    } else {
+        return -1;
+    }
 }
 
 function createTimeoutBox() {
