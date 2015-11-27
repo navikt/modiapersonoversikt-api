@@ -8,7 +8,7 @@ class FlereApneVinduer extends React.Component {
 
         return (
             <Modal {...modalProps} ref="modal" width={700} height={300} onClosing={() => false}>
-                <div className="bekreft-dialog" style={FlereApneVinduer.styling.container}>
+                <section className="bekreft-dialog" style={FlereApneVinduer.styling.container}>
                     <h1 className="medium-ikon-hjelp-strek">{this.props.hovedtekst}</h1>
                     <ul>
                         <li>
@@ -18,7 +18,7 @@ class FlereApneVinduer extends React.Component {
                             <a href="#" onClick={this.props.fortsettCallback}>{this.props.fortsetttekst}</a>
                         </li>
                     </ul>
-                </div>
+                </section>
             </Modal>
         );
     }
