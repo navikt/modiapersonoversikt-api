@@ -133,8 +133,9 @@ function onRejected(error) {
 }
 
 
-MeldingerSokStore.hentSokeresultater = Utils.debounce(function doSok(fritekst) {
-    this.sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
-}, 150);
+MeldingerSokStore.hentSokeresultater =
+    Utils.debounce(function doSok(fritekst) {
+        MeldingerSokStore.sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
+    }, 150);
 
 export default MeldingerSokStore;
