@@ -65,6 +65,11 @@ public class ArbeidOgAktivitetEndpointConfig {
             public String method() {
                 return "hentSakListe";
             }
+
+            @Override
+            public String endpoint() {
+                return System.getProperty("arena.arbeidogaktivitet.v1.url");
+            }
         };
     }
 }

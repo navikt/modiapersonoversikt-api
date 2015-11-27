@@ -55,6 +55,11 @@ public class GsakRutingEndpointConfig {
             public String method() {
                 return "finnAnsvarligEnhetForSak";
             }
+
+            @Override
+            public String endpoint() {
+                return System.getProperty("gsak.ruting.v1.url");
+            }
         };
     }
 

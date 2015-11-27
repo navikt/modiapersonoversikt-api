@@ -41,8 +41,9 @@ public class SelfTestPage extends SelfTestBase {
                     for (PingResult pingResult : pingResults) {
                         String serviceName = pingable.name();
                         String methodName = pingable.method();
+                        String endpoint = pingable.endpoint();
                         String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
-                        serviceStatuses.add(new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName));
+                        serviceStatuses.add(new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName, endpoint));
                     }
                 }
             } catch (Exception e) {

@@ -68,10 +68,12 @@ public class CmsEndpointConfig {
     @Bean
     public Pingable cmsPing() throws URISyntaxException {
         return new Pingable() {
+
+            private String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
+
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
-                String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
                 try {
                     contentRetriever().ping(new URI(url));
                     return asList(new PingResult(SERVICE_OK, System.currentTimeMillis() - start));
@@ -93,7 +95,7 @@ public class CmsEndpointConfig {
 
             @Override
             public String endpoint() {
-                return null;
+                return url;
             }
 
 
