@@ -23,15 +23,15 @@ function createAriaOptional(name, data) {
 
 const ModalPortal = React.createClass({
     propTypes: {
-        'description': React.PropTypes.string,
-        'closeButton': React.PropTypes.string,
-        'title': React.PropTypes.string,
-        'isOpen': React.PropTypes.boolean,
+        'description': React.PropTypes.object,
+        'closeButton': React.PropTypes.object,
+        'title': React.PropTypes.object,
+        'isOpen': React.PropTypes.bool,
         'modal': React.PropTypes.object.isRequired,
         'skipFocus': React.PropTypes.array,
         'children': React.PropTypes.object.isRequired,
-        'width': React.PropTypes.integer,
-        'height': React.PropTypes.integer
+        'width': React.PropTypes.number,
+        'height': React.PropTypes.number
     },
     getDefaultProps: function getDefaultProps() {
         return {
