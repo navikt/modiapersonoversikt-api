@@ -67,7 +67,7 @@ const Modal = React.createClass({
         this.setState({isOpen: true});
     },
     close: function close(force = true) {
-        const precheck = (this.props.onClose || function noOncloseCallbackFound() {return true;})();
+        const precheck = (this.props.onClose || function noOncloseCallbackFound() {return true;})(force);
         if (!force && !precheck) {
             return;
         }
