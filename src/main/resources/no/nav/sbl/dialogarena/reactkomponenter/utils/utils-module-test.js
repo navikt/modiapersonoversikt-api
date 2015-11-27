@@ -37,7 +37,7 @@ describe('utils test', () => {
     it('Genererer OK id', () => {
         const suffix = 'minid';
 
-        const exp = new RegExp('^' + suffix + '\\d{13}-\\d{1,17}$');
+        const exp = new RegExp('^' + suffix + '\\d{1,13}-\\d{1,17}$');
         const result = exp.test(generateId(suffix));
 
         assert.isTrue(result);
