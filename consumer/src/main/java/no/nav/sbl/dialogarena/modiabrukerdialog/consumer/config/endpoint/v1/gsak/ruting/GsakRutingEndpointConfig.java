@@ -40,9 +40,9 @@ public class GsakRutingEndpointConfig {
                 long start = System.currentTimeMillis();
                 try {
                     ws.finnAnsvarligEnhetForSak(new WSFinnAnsvarligEnhetForSakRequest().withBrukersok(new WSBrukersok().withBrukerId("10108000398").withFagomradeKode("DAG")));
-                    return asList(new PingResult(name(), SERVICE_OK, System.currentTimeMillis() - start));
+                    return asList(new PingResult(SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
-                    return asList(new PingResult(name(), SERVICE_FAIL, System.currentTimeMillis() - start));
+                    return asList(new PingResult(SERVICE_FAIL, System.currentTimeMillis() - start));
                 }
             }
 

@@ -50,9 +50,9 @@ public class ArbeidOgAktivitetEndpointConfig {
                             .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker("10108000398"))
                             .withFom(LocalDate.now())
                             .withTom(LocalDate.now()));
-                    return asList(new PingResult(name(), SERVICE_OK, System.currentTimeMillis() - start));
+                    return asList(new PingResult(SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
-                    return asList(new PingResult(name(), SERVICE_FAIL, System.currentTimeMillis() - start));
+                    return asList(new PingResult(SERVICE_FAIL, System.currentTimeMillis() - start));
                 }
             }
 
