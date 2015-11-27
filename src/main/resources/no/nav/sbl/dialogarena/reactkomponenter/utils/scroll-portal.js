@@ -11,7 +11,7 @@ function oppdaterScrollbarEtterRenderingErFerdig(element) {
 const ScrollPortal = React.createClass({
     propTypes: {
         'innerClassName': React.PropTypes.string,
-        'children': React.PropTypes.element
+        'children': React.PropTypes.oneOfType([React.PropTypes.element, React.PropTypes.array])
     },
     componentDidMount: function componentDidMount() {
         this.renderList();

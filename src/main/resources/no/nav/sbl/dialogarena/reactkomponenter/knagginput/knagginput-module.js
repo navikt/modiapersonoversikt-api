@@ -51,7 +51,7 @@ function IEHack() {
 
 const KnaggInput = React.createClass({
     propTypes: {
-        'auto-focus': React.PropTypes.boolean,
+        'auto-focus': React.PropTypes.bool,
         'aria-controls': React.PropTypes.string,
         store: React.PropTypes.object.isRequired,
         tablisteId: React.PropTypes.string.isRequired,
