@@ -3,7 +3,8 @@ const Portal = require('./modal-portal');
 
 const Modal = React.createClass({
     propTypes: {
-        'isOpen': React.PropTypes.boolean
+        'isOpen': React.PropTypes.boolean,
+        'onClose': React.PropTypes.func
     },
     getDefaultProps: function getDefaultProps() {
         return {
@@ -65,7 +66,12 @@ const Modal = React.createClass({
         $(document.body).children().not(this.portalElement).attr('aria-hidden', true);
         this.setState({isOpen: true});
     },
-    close: function close() {
+    close: function close(force = true) {
+        const precheck = (this.props.onClose || function noOncloseCallbackFound() {return true;})();
+        if (!force && !precheck) {
+            return;
+        }
+
         this.setState({isOpen: false});
         document.body.removeChild(this.portalElement);
         $(document.body).removeClass('modal-open');
@@ -74,7 +80,7 @@ const Modal = React.createClass({
     renderPortal: function renderPortal(props, state) {
         const modal = {
             open: this.open,
-            close: this.close
+            close: () => this.close(false)
         };
 
         this.modal = React.render(<Portal {...props} {...state} modal={modal}/>, this.portalElement);
