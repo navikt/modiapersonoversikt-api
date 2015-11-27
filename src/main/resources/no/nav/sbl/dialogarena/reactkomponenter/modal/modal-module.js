@@ -3,7 +3,7 @@ const Portal = require('./modal-portal');
 
 const Modal = React.createClass({
     propTypes: {
-        'isOpen': React.PropTypes.boolean,
+        'isOpen': React.PropTypes.bool,
         'onClose': React.PropTypes.func
     },
     getDefaultProps: function getDefaultProps() {
