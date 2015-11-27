@@ -58,7 +58,7 @@ public class ArbeidOgAktivitetEndpointConfig {
 
             @Override
             public String name() {
-                return "ARENA_ARBEIDOGAKTIVITET_V1";
+                return "Arena - arbeid- og aktivitetssaker";
             }
 
             @Override

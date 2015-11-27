@@ -28,7 +28,7 @@ public class VarslingEndpointConfig {
     @Bean
     public Pingable varslerPing() {
         final VarslerPorttype ws = createVarslingPortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("Varsler_v1", ws);
+        return new PingableWebService("Varsler", ws);
     }
 
 

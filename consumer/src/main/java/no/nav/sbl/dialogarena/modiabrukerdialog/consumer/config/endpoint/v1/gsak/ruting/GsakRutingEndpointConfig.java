@@ -48,7 +48,7 @@ public class GsakRutingEndpointConfig {
 
             @Override
             public String name() {
-                return "GSAK_RUTING_V1";
+                return "Gsak - ruting";
             }
 
             @Override

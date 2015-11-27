@@ -29,7 +29,7 @@ public class SakOgBehandlingEndpointConfig {
     @Bean
     public Pingable pingSakOgBehandling() {
         final SakOgBehandling_v1PortType ws = createSakogbehandlingPortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("SAKOGBEHANDLING", ws);
+        return new PingableWebService("Sak og behandling", ws);
     }
 
     private SakOgBehandling_v1PortType createSakogbehandlingPortType(AbstractSAMLOutInterceptor interceptor) {

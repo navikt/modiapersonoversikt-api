@@ -29,7 +29,7 @@ public class HenvendelseSoknaderEndpointConfig {
     @Bean
     public Pingable pingHenvendelseSoknader() {
         final HenvendelseSoknaderPortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("HENVENDELSE_SOKNADER", ws);
+        return new PingableWebService("Henvendelse soknader", ws);
     }
 
     private HenvendelseSoknaderPortType createHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {

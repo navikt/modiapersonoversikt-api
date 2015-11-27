@@ -28,7 +28,7 @@ public class PensjonSakEndpointConfig {
     @Bean
     public Pingable pensjonSakV1Ping() {
         final PensjonSakV1 ws = createPensjonSakV1(new SystemSAMLOutInterceptor());
-        return new PingableWebService("PENSJON_SAK_V1", ws);
+        return new PingableWebService("Pesys - Pensjonsak", ws);
     }
 
     private static PensjonSakV1 createPensjonSakV1(AbstractSAMLOutInterceptor interceptor) {

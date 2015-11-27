@@ -41,7 +41,7 @@ public class JoarkEndpointConfig {
     @Bean
     public Pingable pingJoark() {
         Journal_v1PortType ws = createJoarkPortType().withOutInterceptor(new SystemSAMLOutInterceptor()).build();
-        return new PingableWebService("JOARK", ws); }
+        return new PingableWebService("Joark", ws); }
 
     }
 

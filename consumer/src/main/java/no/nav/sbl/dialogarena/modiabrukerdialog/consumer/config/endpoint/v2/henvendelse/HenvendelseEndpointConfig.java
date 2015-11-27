@@ -33,7 +33,7 @@ public class HenvendelseEndpointConfig {
     @Bean
     public Pingable henvendelsePing() {
         final HenvendelsePortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("HENVENDELSE_V2", ws);
+        return new PingableWebService("Hent henvendelse", ws);
     }
 
     private static HenvendelsePortType createHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {

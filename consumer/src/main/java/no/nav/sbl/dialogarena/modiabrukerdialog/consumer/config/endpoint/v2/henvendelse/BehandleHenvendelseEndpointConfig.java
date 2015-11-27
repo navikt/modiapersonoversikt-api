@@ -29,7 +29,7 @@ public class BehandleHenvendelseEndpointConfig {
     @Bean
     public Pingable behandleHenvendelsePing() {
         final BehandleHenvendelsePortType ws = createBehandleHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("BEHANDLE_HENVENDELSE", ws);
+        return new PingableWebService("Behandle henvendelse", ws);
     }
 
     private static BehandleHenvendelsePortType createBehandleHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {

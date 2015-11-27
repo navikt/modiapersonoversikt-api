@@ -31,7 +31,7 @@ public class UtbetalingEndpointConfig {
 
     @Bean
     public UtbetalingPing pingUtbetalingV1() {
-        return new UtbetalingPing("UTBETALING",createUtbetalingPortType(new SystemSAMLOutInterceptor()));
+        return new UtbetalingPing("Utbetaling", createUtbetalingPortType(new SystemSAMLOutInterceptor()));
     }
 
     private UtbetalingV1 createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {

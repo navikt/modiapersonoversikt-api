@@ -32,7 +32,7 @@ public class SendUtHenvendelseEndpointConfig {
     @Bean
     public Pingable sendUtHenvendelsePing() {
         final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("SEND_UT_HENVENDELSE", ws);}
+        return new PingableWebService("Send ut henvendelse", ws);}
 
     private static SendUtHenvendelsePortType createSendUtHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
         return new CXFClient<>(SendUtHenvendelsePortType.class)

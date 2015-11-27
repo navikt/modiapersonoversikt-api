@@ -85,7 +85,7 @@ public class CmsEndpointConfig {
 
             @Override
             public String name() {
-                return "CMS";
+                return "Cms";
             }
 
             @Override
