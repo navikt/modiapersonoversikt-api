@@ -115,7 +115,7 @@ const MeldingerSok = React.createClass({
                                 value={this.state.fritekst}
                                 title="Søk"
                                 onChange={this.store.onChange.bind(this.store)}
-                                onKeyDown={this.store.onKeyDown.bind(this.store, $('#' + this.state.listePanelId))}
+                                onKeyDown={this.store.onKeyDown.bind(this.store, document.getElementById(this.state.listePanelId))}
                                 aria-controls={this.state.listePanelId}
                                 />
                             <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>

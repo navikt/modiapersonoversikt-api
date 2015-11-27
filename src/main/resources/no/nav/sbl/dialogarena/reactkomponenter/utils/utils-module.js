@@ -30,10 +30,12 @@ const Utils = {
             }
         };
     },
-    adjustScroll: ($parent, $element) => {
-        if ($element.length === 0) {
+    adjustScroll: (parent, element) => {
+        if (element === null || element.length === 0) {
             return;
         }
+        const $element = $(element);// Har ikke fjernet jQuery her enda.
+        const $parent = $(parent);
 
         const elementTop = $element.position().top;
         const elementBottom = elementTop + $element.outerHeight();

@@ -10,7 +10,8 @@ class SkrivstotteStore extends Store {
         }
     }
 
-    tekstChanged(tekst, tabliste) {
+    tekstChanged(tekst) {
+        const tabliste = document.getElementById(this.state.listePanelId);
         this.state.valgtTekst = tekst;
 
         SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
