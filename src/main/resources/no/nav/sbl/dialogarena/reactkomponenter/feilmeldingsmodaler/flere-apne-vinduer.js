@@ -2,28 +2,20 @@ import React from 'react';
 import Modal from './../modal/modal-module';
 
 class FlereApneVinduer extends React.Component {
-    vis() {
-        this.refs.modal.open();
-    }
-
-    skjul() {
-        this.refs.modal.close();
-    }
-
     render() {
         const {isOpen, title, description, closeButton} = this.props;
         const modalProps = { isOpen, title, description, closeButton };
 
         return (
-            <Modal {...modalProps} width={700} height={300}>
+            <Modal {...modalProps} ref="modal" width={700} height={300} onClosing={() => false}>
                 <div className="bekreft-dialog" style={FlereApneVinduer.styling.container}>
                     <h1 className="medium-ikon-hjelp-strek">{this.props.hovedtekst}</h1>
                     <ul>
                         <li>
-                            <button className="knapp-stor">{this.props.avbryttekst}</button>
+                            <button className="knapp-stor" onClick={this.props.avbrytCallback}>{this.props.avbryttekst}</button>
                         </li>
                         <li>
-                            <a href="#">{this.props.fortsetttekst}</a>
+                            <a href="#" onClick={this.props.fortsettCallback}>{this.props.fortsetttekst}</a>
                         </li>
                     </ul>
                 </div>
@@ -52,7 +44,7 @@ FlereApneVinduer.defaultProps = {
     },
     closeButton: {
         text: 'Lukk feilmeldingsmodal, og nåværende tab.',
-        show: true,
+        show: false,
         tag: 'span.vekk'
     }
 };
@@ -64,7 +56,9 @@ FlereApneVinduer.propTypes = {
     title: React.PropTypes.object,
     description: React.PropTypes.object,
     closeButton: React.PropTypes.object,
-    isOpen: React.PropTypes.boolean
+    isOpen: React.PropTypes.bool,
+    fortsettCallback: React.PropTypes.func.isRequired,
+    avbrytCallback: React.PropTypes.func.isRequired
 };
 
 export default FlereApneVinduer;
