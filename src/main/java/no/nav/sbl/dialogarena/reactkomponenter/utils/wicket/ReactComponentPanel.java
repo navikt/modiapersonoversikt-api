@@ -25,7 +25,7 @@ public class ReactComponentPanel extends MarkupContainer {
 
     protected static final String JS_REF_REACT = "window.ModiaJS.React";
     protected static final String JS_REF_COMPONENTS = "window.ModiaJS.Components";
-    protected static final String JS_REF_INITIALIZED_COMPONENTS = "window.ModiaJS.InitializedComponents";
+    public static final String JS_REF_INITIALIZED_COMPONENTS = "window.ModiaJS.InitializedComponents";
 
     private final transient Map<String, List<CallbackWrapper>> callbacks = new HashMap<>();
 
