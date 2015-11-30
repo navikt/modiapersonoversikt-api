@@ -6,6 +6,7 @@
 
 <display-name>modiabrukerdialog</display-name>
     <session-config>
+        <!-- Oppdatering av denne verdien må korrespondere med verdien i JS-koden som viser timeoutboksen, per 2015-11-30 i sessionTimeout.js. -->
         <session-timeout>60</session-timeout>
         <cookie-config>
             <http-only>true</http-only>

@@ -16,7 +16,7 @@ jQuery(document).ready(function ($) {
     }
 
     function resetSessionTimeoutBox() {
-        var timeoutValue = 1000 * 60 * 55;
+        var timeoutValue = 1000 * 60 * 55; // Oppdatering her må korrespondere med session-timeout-verdien i web.xml.
         clearTimeout(timeout);
         timeout = setTimeout(function () {
             createTimeoutBox();
