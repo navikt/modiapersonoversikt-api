@@ -78,8 +78,14 @@ const Utils = {
     },
     kvpair: (data) => {
         return Object.keys(data).map((key) => [key, data[key]]);
+    },
+    autobind: (ctx) => {
+        Object.getOwnPropertyNames(ctx.constructor.prototype)
+            .filter((prop) => typeof ctx[prop] === 'function')
+            .forEach((method) => {
+                ctx[method] = ctx[method].bind(ctx);
+            });
     }
-
 };
 
 export default Utils;
