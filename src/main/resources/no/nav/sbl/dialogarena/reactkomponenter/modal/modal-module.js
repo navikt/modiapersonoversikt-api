@@ -4,7 +4,7 @@ const Portal = require('./modal-portal');
 const Modal = React.createClass({
     propTypes: {
         'isOpen': React.PropTypes.bool,
-        'onClose': React.PropTypes.func
+        'onClosing': React.PropTypes.func
     },
     getDefaultProps: function getDefaultProps() {
         return {
@@ -67,7 +67,7 @@ const Modal = React.createClass({
         this.setState({isOpen: true});
     },
     close: function close(force = true) {
-        const precheck = (this.props.onClose || function noOncloseCallbackFound() {return true;})(force);
+        const precheck = (this.props.onClosing || function noOncloseCallbackFound() {return true;})(force);
         if (!force && !precheck) {
             return;
         }
