@@ -4,6 +4,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.JacksonMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {LamellServicesAndLoaders.class})
+@ContextConfiguration(classes = {LamellServicesAndLoaders.class, JacksonMockContext.class})
 public class LamellContainerTest extends WicketPageTest {
 
     private LamellContainer lamellContainer;
