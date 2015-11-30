@@ -11,6 +11,7 @@ import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
+import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -21,14 +22,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -55,18 +54,15 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
-import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.CloseButtonCallback;
-import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.WindowClosedCallback;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -74,7 +70,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
-	private static final Logger logger = getLogger(PersonPage.class);
+    private static final Logger logger = getLogger(PersonPage.class);
 
     private static final List<String> URL_TIL_SESSION_PARAMETERE = asList(HENVENDELSEID, OPPGAVEID, BESVARES);
 
@@ -88,12 +84,12 @@ public class PersonPage extends BasePage {
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
     public static final JavaScriptResourceReference SCROLL_JS = new JavaScriptResourceReference(PersonPage.class, "scrollbars.js");
-	public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
+    public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
 
-	private final String fnr;
+    private final String fnr;
 
     private LamellContainer lamellContainer;
-    private RedirectModalWindow redirectPopup;
+    private ReactSjekkForlatModal redirectPopup;
 
     @Inject
     @Named("pep")
@@ -107,11 +103,13 @@ public class PersonPage extends BasePage {
             return;
         }
 
-        redirectPopup = createRedirectModalWindow("redirectModal");
+        redirectPopup = new ReactSjekkForlatModal("redirectModal");
+        konfigurerRedirectPopup();
+
         lamellContainer = new LamellContainer("lameller", fnr, getSession());
 
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
-		final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
+        final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
         add(
                 new HentPersonPanel("searchPanel", ""),
                 new Button("toggle-sok"),
@@ -178,6 +176,22 @@ public class PersonPage extends BasePage {
         for (String param : URL_TIL_SESSION_PARAMETERE) {
             getSession().setAttribute(param, null);
         }
+    }
+
+    private void konfigurerRedirectPopup() {
+        redirectPopup.addCallback(ReactSjekkForlatModal.DISCARD, Void.class, new ReactComponentCallback<Void>() {
+            @Override
+            public void onCallback(AjaxRequestTarget target, Void data) {
+                redirectPopup.redirect();
+            }
+        });
+        redirectPopup.addCallback(ReactSjekkForlatModal.CONFIRM, Void.class, new ReactComponentCallback<Void>() {
+            @Override
+            public void onCallback(AjaxRequestTarget target, Void data) {
+                redirectPopup.hide(target);
+                target.appendJavaScript(getJavascriptSaveButtonFocus());
+            }
+        });
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
@@ -267,32 +281,6 @@ public class PersonPage extends BasePage {
     @Override
     public boolean isVersioned() {
         return false;
-    }
-
-    private RedirectModalWindow createRedirectModalWindow(String id) {
-        final SjekkForlateSideAnswer answer = new SjekkForlateSideAnswer();
-
-        final RedirectModalWindow modiaModalWindow = new RedirectModalWindow(id);
-        modiaModalWindow.setInitialHeight(280);
-        modiaModalWindow.setInitialWidth(600);
-        modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, answer));
-        modiaModalWindow.setWindowClosedCallback(new WindowClosedCallback() {
-            @Override
-            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                if (answer.is(DISCARD)) {
-                    modiaModalWindow.redirect();
-                }
-                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
-            }
-        });
-        modiaModalWindow.setCloseButtonCallback(new CloseButtonCallback() {
-            @Override
-            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
-                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
-                return true;
-            }
-        });
-        return modiaModalWindow;
     }
 
     private void handleRedirect(AjaxRequestTarget target, PageParameters pageParameters, Class<? extends Page> redirectTo) {
