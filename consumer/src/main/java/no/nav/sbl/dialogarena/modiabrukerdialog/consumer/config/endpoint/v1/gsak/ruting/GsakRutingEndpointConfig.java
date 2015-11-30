@@ -10,9 +10,6 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
@@ -36,13 +33,13 @@ public class GsakRutingEndpointConfig {
     public Pingable rutingPing(final Ruting ws) {
         return new Pingable() {
             @Override
-            public List<PingResult> ping() {
+            public PingResult ping() {
                 long start = System.currentTimeMillis();
                 try {
                     ws.finnAnsvarligEnhetForSak(new WSFinnAnsvarligEnhetForSakRequest().withBrukersok(new WSBrukersok().withBrukerId("10108000398").withFagomradeKode("DAG")));
-                    return asList(new PingResult(SERVICE_OK, System.currentTimeMillis() - start));
+                    return new PingResult(SERVICE_OK, System.currentTimeMillis() - start);
                 } catch (Exception e) {
-                    return asList(new PingResult(SERVICE_FAIL, System.currentTimeMillis() - start));
+                    return new PingResult(SERVICE_FAIL, System.currentTimeMillis() - start);
                 }
             }
 

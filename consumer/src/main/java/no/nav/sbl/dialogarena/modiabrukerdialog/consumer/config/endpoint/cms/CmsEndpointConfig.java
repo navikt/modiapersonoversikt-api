@@ -72,14 +72,14 @@ public class CmsEndpointConfig {
             private String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
 
             @Override
-            public List<PingResult> ping() {
+            public PingResult ping() {
                 long start = System.currentTimeMillis();
                 try {
                     contentRetriever().ping(new URI(url));
-                    return asList(new PingResult(SERVICE_OK, System.currentTimeMillis() - start));
+                    return new PingResult(SERVICE_OK, System.currentTimeMillis() - start);
                 } catch (Exception e) {
                     log.error("Fikk exception fra CMS " + url, e);
-                    return asList(new PingResult(SERVICE_FAIL, System.currentTimeMillis() - start));
+                    return new PingResult(SERVICE_FAIL, System.currentTimeMillis() - start);
                 }
             }
 

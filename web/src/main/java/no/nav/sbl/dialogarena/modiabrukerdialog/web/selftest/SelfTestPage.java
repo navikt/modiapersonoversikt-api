@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
+import no.nav.modig.modia.ping.FailedPingResult;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.wicket.selftest.SelfTestBase;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -37,14 +39,18 @@ public class SelfTestPage extends SelfTestBase {
         for (Pingable pingable : pingables) {
             try {
                 if (shouldServiceBeIncluded(pingable)) {
-                    List<PingResult> pingResults = pingable.ping();
-                    for (PingResult pingResult : pingResults) {
-                        String serviceName = pingable.name();
-                        String methodName = pingable.method();
-                        String endpoint = pingable.endpoint();
-                        String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
-                        serviceStatuses.add(new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName, endpoint));
+                    PingResult pingResult = pingable.ping();
+                    String serviceName = pingable.name();
+                    String methodName = pingable.method();
+                    String endpoint = pingable.endpoint();
+                    String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
+                    AvhengighetStatus avhengighetStatus = new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName, endpoint);
+                    if(pingResult instanceof FailedPingResult){
+                        FailedPingResult failedPingResult = (FailedPingResult) pingResult;
+                        avhengighetStatus.addExceptionMessage(ExceptionUtils.getMessage(failedPingResult.getThrowable()));
+                        avhengighetStatus.addStackTrace(ExceptionUtils.getStackTrace(failedPingResult.getThrowable()));
                     }
+                    serviceStatuses.add(avhengighetStatus);
                 }
             } catch (Exception e) {
                 logger.warn("Service was not retrievable. Class: " + pingable.getClass().getCanonicalName() + ". Exception message: " + e.getMessage(), e);
