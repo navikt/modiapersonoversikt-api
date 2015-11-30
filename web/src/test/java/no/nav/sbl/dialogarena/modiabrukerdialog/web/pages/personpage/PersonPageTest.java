@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 import junit.framework.Assert;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
+import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
@@ -81,7 +82,7 @@ public class PersonPageTest extends WicketPageTest {
     public void viserModaldialVedUlagredeEndringerOgRefresh() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
-        RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
+        ReactSjekkForlatModal redirectPopup = mock(ReactSjekkForlatModal.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
         on(personPage).setFieldValue("redirectPopup", redirectPopup);
         on(personPage).setFieldValue("lamellContainer", lamellContainer);
@@ -98,7 +99,7 @@ public class PersonPageTest extends WicketPageTest {
     public void viserIkkeModaldialogVedIngenUlagredeEndringerOgRefresh() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
-        RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
+        ReactSjekkForlatModal redirectPopup = mock(ReactSjekkForlatModal.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
         on(personPage).setFieldValue("redirectPopup", redirectPopup);
         on(personPage).setFieldValue("lamellContainer", lamellContainer);
