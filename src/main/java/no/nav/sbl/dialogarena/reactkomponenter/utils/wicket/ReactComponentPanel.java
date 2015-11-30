@@ -142,6 +142,7 @@ public class ReactComponentPanel extends MarkupContainer {
     private String serialize(Object obj) {
         StringWriter sw = new StringWriter();
         try {
+            ensureMapper();
             mapper.writeValue(sw, obj);
         } catch (IOException e) {
             return "";
@@ -149,8 +150,15 @@ public class ReactComponentPanel extends MarkupContainer {
         return sw.toString();
     }
 
+    private void ensureMapper() {
+        if (this.mapper == null) {
+            this.mapper = new ObjectMapper();
+        }
+    }
+
     private <T> T deserialize(String string, Class<T> type) {
         try {
+            ensureMapper();
             return mapper.readValue(string.getBytes(), type);
         } catch (IOException e) {
             return null;
