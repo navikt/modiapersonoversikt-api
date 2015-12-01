@@ -23,6 +23,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContain
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.ReactTimeoutBoksModal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
@@ -124,7 +125,7 @@ public class PersonPage extends BasePage {
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
                 new DialogPanel("dialogPanel", fnr),
-                new TimeoutBoks("timeoutBoks", fnr)
+                new ReactTimeoutBoksModal("timeoutBoks", fnr)
         );
 
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {

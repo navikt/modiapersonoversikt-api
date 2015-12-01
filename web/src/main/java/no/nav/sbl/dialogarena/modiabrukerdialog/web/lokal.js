@@ -141,27 +141,19 @@ function gjennomfoerAvansertSok() {
     }
 }
 
-function setSessionTimeoutBox() {
+function setSessionTimeoutBox(timeoutBox) {
     var timeoutValue = 1000 * 60 * 55;
     var timeout = setTimeout(function () {
-        createTimeoutBox();
+        timeoutBox.vis();
     }, timeoutValue);
 
     Wicket.Event.subscribe('/ajax/call/after', function () {
         clearTimeout(timeout);
         timeout = setTimeout(function () {
-            createTimeoutBox();
+            timeoutBox.vis();
         }, timeoutValue);
     });
 }
-
-function createTimeoutBox() {
-    if (!$('.wicket-mask-dark')[0]) {
-        $('body').append($('<div/>').addClass('wicket-mask-dark'));
-    }
-    $('.informasjonsboks.timeout').show();
-}
-
 
 function prepareElementForPrint(element, additionalClass) {
     if (additionalClass) {
