@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout;
 
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
