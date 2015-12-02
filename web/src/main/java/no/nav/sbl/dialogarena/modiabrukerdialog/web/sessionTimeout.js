@@ -2,6 +2,7 @@ jQuery(document).ready(function ($) {
     'use strict';
 
     var timeout;
+    var interval;
 
     setSessionTimeoutBox();
 
@@ -25,10 +26,13 @@ jQuery(document).ready(function ($) {
 
     function dialogMedBrukerPing() {
         var intervalValue = 1000 * 60 * 10;
-        var currentTextLength = getTextAreaLength();
-        setInterval(function () {
+        var currentTextLength;
+        interval = setInterval(function () {
+            if (currentTextLength === undefined) {
+                currentTextLength = getTextAreaLength();
+            }
             var textLength = getTextAreaLength();
-            if (textLength != -1 && currentTextLength != textLength) {
+            if (textLength > -1 && currentTextLength != textLength) {
                 currentTextLength = textLength;
                 $.ajax("/modiabrukerdialog/internal/isAlive");
                 resetSessionTimeoutBox();
