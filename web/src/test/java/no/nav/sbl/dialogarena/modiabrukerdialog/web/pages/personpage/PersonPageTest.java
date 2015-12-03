@@ -88,7 +88,7 @@ public class PersonPageTest extends WicketPageTest {
         when(lamellContainer.hasUnsavedChanges()).thenReturn(true);
 
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
-        personPage.refreshKjerneinfo(target, "");
+        personPage.refreshKjerneinfo(target, new PageParameters());
 
         verify(redirectPopup, times(1)).show(target);
         verify(redirectPopup, times(0)).redirect();
@@ -105,7 +105,7 @@ public class PersonPageTest extends WicketPageTest {
         when(lamellContainer.hasUnsavedChanges()).thenReturn(false);
 
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
-        personPage.refreshKjerneinfo(target, "");
+        personPage.refreshKjerneinfo(target, new PageParameters());
 
         verify(redirectPopup, times(0)).show(target);
         verify(redirectPopup, times(1)).redirect();
