@@ -23,8 +23,8 @@ public class GsakOpprettSakEndpointConfig {
     }
 
     @Bean
-    public Pingable behandleSakPing(final BehandleSakV1 ws) {
-        return new PingableWebService("GSAK_BEHANDLESAK_V1", ws);
+    public Pingable behandleSakPing() {
+        return new PingableWebService("Gsak - opprett sak", createGsakOpprettSakPortType());
     }
 
     private static BehandleSakV1 createGsakOpprettSakPortType() {

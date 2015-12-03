@@ -41,7 +41,7 @@ public class AktorEndpointConfig {
 
 
     @Bean
-    public Pingable pingAktoer(final AktoerPortType ws) {
-        return new PingableWebService("AKTOER", ws);
+    public Pingable pingAktoer() {
+        return new PingableWebService("Aktor", aktoerPort());
     }
 }
