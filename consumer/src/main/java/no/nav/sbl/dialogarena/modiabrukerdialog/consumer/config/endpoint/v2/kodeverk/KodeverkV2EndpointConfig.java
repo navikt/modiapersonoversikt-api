@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.common.kodeverk.CachingKodeverkClient;
 import no.nav.sbl.dialogarena.common.kodeverk.DefaultKodeverkClient;
@@ -13,12 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
-import java.util.List;
 
-import static java.lang.System.currentTimeMillis;
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
@@ -32,7 +27,7 @@ public class KodeverkV2EndpointConfig {
     public KodeverkPortType kodeverkPortType() {
         KodeverkPortType prod = lagKodeverkPortType();
         KodeverkPortType mock = KodeverkV2PortTypeMock.kodeverkPortType();
-        
+
         return createMetricsProxyWithInstanceSwitcher(prod, mock, KODEVERK_KEY, KodeverkPortType.class);
     }
 
@@ -45,19 +40,7 @@ public class KodeverkV2EndpointConfig {
 
     @Bean
     public Pingable pingKodeverk(final KodeverkPortType ws) {
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = currentTimeMillis();
-                String name = "KODEVERK_V2";
-                try {
-                    ws.ping();
-                    return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
-                }
-            }
-        };
+        return new PingableWebService("KODEVERK_V2", ws);
     }
 
     private KodeverkPortType lagKodeverkPortType() {

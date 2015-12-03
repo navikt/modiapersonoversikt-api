@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting;
 
+import no.nav.modig.modia.ping.FailedPingResult;
+import no.nav.modig.modia.ping.OkPingResult;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
@@ -10,11 +12,6 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakRutingPortTypeMock.createRutingPortTypeMock;
 
@@ -36,15 +33,29 @@ public class GsakRutingEndpointConfig {
     public Pingable rutingPing(final Ruting ws) {
         return new Pingable() {
             @Override
-            public List<PingResult> ping() {
+            public PingResult ping() {
                 long start = System.currentTimeMillis();
-                String name = "GSAK_RUTING_V1";
                 try {
                     ws.finnAnsvarligEnhetForSak(new WSFinnAnsvarligEnhetForSakRequest().withBrukersok(new WSBrukersok().withBrukerId("10108000398").withFagomradeKode("DAG")));
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+                    return new OkPingResult(System.currentTimeMillis() - start);
                 } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
+                    return new FailedPingResult(e, System.currentTimeMillis() - start);
                 }
+            }
+
+            @Override
+            public String name() {
+                return "Gsak - ruting";
+            }
+
+            @Override
+            public String method() {
+                return "finnAnsvarligEnhetForSak";
+            }
+
+            @Override
+            public String endpoint() {
+                return System.getProperty("gsak.ruting.v1.url");
             }
         };
     }

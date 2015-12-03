@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.KontrakterConsumerConfigImpl.createOppfolgingskontraktService;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.KontrakterConsumerConfigImpl.createYtelseskontraktService;
@@ -30,24 +29,15 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class KontrakterWrapper {
 
     @Inject
-    @Named("ytelseskontraktV3")
     private YtelseskontraktV3 ytelseskontraktPortType;
 
-    @Inject
-    @Named("selftestYtelseskontraktV3")
-    private YtelseskontraktV3 selftestYtelseskontraktPortType;
 
     @Inject
-    @Named("oppfolgingPortType")
     private OppfoelgingPortType oppfoelgingPortType;
-
-    @Inject
-    @Named("selftestOppfolgingPortType")
-    private OppfoelgingPortType selftestOppfoelgingPortType;
 
     @Bean
     public Wrapper<DefaultYtelseskontraktService> ytelseskontraktService() {
-        return new Wrapper<>(createYtelseskontraktService(ytelseskontraktPortType, selftestYtelseskontraktPortType));
+        return new Wrapper<>(createYtelseskontraktService(ytelseskontraktPortType));
     }
 
     @Bean
@@ -57,7 +47,7 @@ public class KontrakterWrapper {
 
     @Bean
     public Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService() {
-        return new Wrapper<>(createOppfolgingskontraktService(oppfoelgingPortType, selftestOppfoelgingPortType));
+        return new Wrapper<>(createOppfolgingskontraktService(oppfoelgingPortType));
     }
 
     @Bean
