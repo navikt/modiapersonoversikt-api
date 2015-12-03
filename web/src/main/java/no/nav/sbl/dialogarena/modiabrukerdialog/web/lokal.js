@@ -68,158 +68,124 @@ jQuery(document).ready(function ($) {
         });
     }
 
-});
+    function focusSearchField() {
+        $('#foedselsnummerInput').focus()
+    }
 
-function focusSearchField() {
-    $('#foedselsnummerInput').focus()
-}
+    function focusLamellHead() {
+        $('.lamell.selected .lamellhode a').focus();
+    }
 
-function focusLamellHead() {
-    $('.lamell.selected .lamellhode a').focus();
-}
+    function closeLamellHead() {
+        $('.lamell.selected button.close').click();
+    }
 
-function closeLamellHead() {
-    $('.lamell.selected button.close').click();
-}
+    function openGosys() {
+        $('.hiddenGosysLenkePanel').click();
+    }
 
-function openGosys() {
-    $('.hiddenGosysLenkePanel').click();
-}
+    function openPesys() {
+        $('.hiddenPesysLenkePanel').click();
+    }
 
-function openPesys() {
-    $('.hiddenPesysLenkePanel').click();
-}
+    function openArenaPersonmappe() {
+        $('.hiddenArenaPersonmappeLenkePanel').click();
+    }
 
-function openArenaPersonmappe() {
-    $('.hiddenArenaPersonmappeLenkePanel').click();
-}
+    function openArenaUtbetalinger() {
+        $('.hiddenArenaUtbetalingLenkePanel').click();
+    }
 
-function openArenaUtbetalinger() {
-    $('.hiddenArenaUtbetalingLenkePanel').click();
-}
+    function openSkrivestotte() {
+        $('.skrivestotteToggle').click();
+    }
 
-function openSkrivestotte() {
-    $('.skrivestotteToggle').click();
-}
+    function openInnboksSok() {
+        $('.innboksSokToggle button').click();
+    }
 
-function openInnboksSok() {
-    $('.innboksSokToggle button').click();
-}
+    function closeResetPerson() {
+        $('.nullstill-button').click();
+    }
 
-function closeResetPerson() {
-    $('.nullstill-button').click();
-}
+    function toggleAvansertSok() {
+        var personsokElement = $('#personsok'), toppmeny = $('.main > .menu-intern'),
+            fornavnInput = $('#utvidetPersonsokForm').find('input[name="fornavn"]'), sokKnapp = $('#toggle-personsok'),
+            dataApne = sokKnapp.attr('data-apne'),
+            dataLukke = sokKnapp.attr('data-lukke');
+        if (personsokElement.is(':visible')) {
+            personsokElement.hide();
+            toppmeny.removeClass('active');
+            sokKnapp.removeClass('active');
+            sokKnapp.attr('title', dataApne);
+            sokKnapp.attr('aria-label', dataApne);
+        } else {
+            personsokElement.show();
+            toppmeny.addClass('active');
+            sokKnapp.addClass('active');
+            sokKnapp.attr('title', dataLukke);
+            sokKnapp.attr('aria-label', dataLukke);
 
-function toggleAvansertSok() {
-    var personsokElement = $('#personsok'), toppmeny = $('.main > .menu-intern'),
-        fornavnInput = $('#utvidetPersonsokForm').find('input[name="fornavn"]'), sokKnapp = $('#toggle-personsok'),
-        dataApne = sokKnapp.attr('data-apne'),
-        dataLukke = sokKnapp.attr('data-lukke');
-    if (personsokElement.is(':visible')) {
-        personsokElement.hide();
-        toppmeny.removeClass('active');
-        sokKnapp.removeClass('active');
-        sokKnapp.attr('title', dataApne);
-        sokKnapp.attr('aria-label', dataApne);
-    } else {
-        personsokElement.show();
-        toppmeny.addClass('active');
-        sokKnapp.addClass('active');
-        sokKnapp.attr('title', dataLukke);
-        sokKnapp.attr('aria-label', dataLukke);
-
-        if (fornavnInput.length != 0) {
-            fornavnInput.focus();
+            if (fornavnInput.length != 0) {
+                fornavnInput.focus();
+            }
         }
     }
-}
 
-function gjennomfoerAvansertSok() {
-    var personsokElement = $('.main > .personsok');
-    if (personsokElement.is(":visible")) {
-        $('#utvidetPersonsokForm:visible').submit();
+    function gjennomfoerAvansertSok() {
+        var personsokElement = $('.main > .personsok');
+        if (personsokElement.is(":visible")) {
+            $('#utvidetPersonsokForm:visible').submit();
+        }
     }
-}
 
-function setSessionTimeoutBox() {
-    var timeoutValue = 1000 * 60 * 55;
-    var timeout = setTimeout(function () {
-        createTimeoutBox();
-    }, timeoutValue);
+    function addPrintEventListener() {
+        var called = 0; // Chrome kjører listeneren 2 ganger, men vi vil bare kjøre beforePrint første gang og afterPrint siste gang de kjører
+        var print = $('.print');
+        var printContent = print.find('.content');
 
-    Wicket.Event.subscribe('/ajax/call/after', function () {
-        clearTimeout(timeout);
-        timeout = setTimeout(function () {
-            createTimeoutBox();
-        }, timeoutValue);
-    });
-}
+        function afterPrint() {
+            if (window.chrome) {
+                if (called === 0) {
+                    called = called + 1;
+                    return;
+                }
+                called = 0;
+            }
+            printContent.empty();
+            print.attr('class', 'print');
+        }
 
-function createTimeoutBox() {
-    if (!$('.wicket-mask-dark')[0]) {
-        $('body').append($('<div/>').addClass('wicket-mask-dark'));
-    }
-    $('.informasjonsboks.timeout').show();
-}
-
-
-function prepareElementForPrint(element, additionalClass) {
-    if (additionalClass) {
-        $('.print').addClass(additionalClass);
-    }
-    $('.print .content').append(element.clone());
-}
-
-function addPrintEventListener() {
-    var called = 0; // Chrome kjører listeneren 2 ganger, men vi vil bare kjøre beforePrint første gang og afterPrint siste gang de kjører
-    var print = $('.print');
-    var printContent = print.find('.content');
-
-    function afterPrint() {
-        if (window.chrome) {
-            if (called === 0) {
-                called = called + 1;
+        function beforePrint() {
+            if (window.chrome && called === 0) {
                 return;
             }
-            called = 0;
-        }
-        printContent.empty();
-        print.attr('class', 'print');
-    }
-
-    function beforePrint() {
-        if (window.chrome && called === 0) {
-            return;
-        }
-        var selectedLamell = $('.lamell.selected');
-        if (printContent.children().length === 0 && !selectedLamell.hasClass('oversikt')) {
-            prepareElementForPrint(selectedLamell);
-        }
-    }
-
-    if (window.onafterprint === undefined) {
-        var mediaQueryList = window.matchMedia('print');
-        mediaQueryList.addListener(function (mql) {
-            if (mql.matches) {
-                beforePrint();
-            } else {
-                afterPrint();
+            var selectedLamell = $('.lamell.selected');
+            if (printContent.children().length === 0 && !selectedLamell.hasClass('oversikt')) {
+                prepareElementForPrint(selectedLamell);
             }
+        }
 
-        });
-    } else {
-        window.onafterprint = afterPrint;
-        window.onbeforeprint = beforePrint;
+        if (window.onafterprint === undefined) {
+            var mediaQueryList = window.matchMedia('print');
+            mediaQueryList.addListener(function (mql) {
+                if (mql.matches) {
+                    beforePrint();
+                } else {
+                    afterPrint();
+                }
+
+            });
+        } else {
+            window.onafterprint = afterPrint;
+            window.onbeforeprint = beforePrint;
+        }
     }
-}
 
-function delayed(func, time) {
-    time = time || 0;
-    var deferred = $.Deferred();
-
-    setTimeout(function () {
-        deferred.resolve(func());
-    }, time);
-
-    return deferred.promise();
-}
+    function prepareElementForPrint(element, additionalClass) {
+        if (additionalClass) {
+            $('.print').addClass(additionalClass);
+        }
+        $('.print .content').append(element.clone());
+    }
+});

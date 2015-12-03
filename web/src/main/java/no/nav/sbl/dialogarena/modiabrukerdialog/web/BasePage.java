@@ -41,6 +41,7 @@ public class BasePage extends WebPage {
             new CssResourceReference(Kjerneinfo.class, "kjerneinfo_ie9.css"), "screen", "lt IE 10");
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(BasePage.class, "lokal.js");
+    public static final JavaScriptResourceReference JS_SESSION_TIMEOUT = new JavaScriptResourceReference(BasePage.class, "sessionTimeout.js");
     public static final JavaScriptResourceReference JS_TAB_POPUP_RESOURCE = new JavaScriptResourceReference(BasePage.class, "tabPopup.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
