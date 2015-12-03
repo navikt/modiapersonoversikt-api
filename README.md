@@ -1,5 +1,7 @@
 # Modia brukerdialog
 
+Modia er en intern arbeidsflate som inneholder kjerneinformasjon om brukeren og som gir medarbeiderne i NAV oversikt over brukerens forhold til NAV.
+
 ## Dokumentasjon
 
 ### Caching
