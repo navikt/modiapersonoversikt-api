@@ -53,7 +53,11 @@ public class SelfTestPage extends SelfTestBase {
                     serviceStatuses.add(avhengighetStatus);
                 }
             } catch (Exception e) {
-                logger.warn("Service was not retrievable. Class: " + pingable.getClass().getCanonicalName() + ". Exception message: " + e.getMessage(), e);
+                AvhengighetStatus avhengighetStatus = new AvhengighetStatus(pingable.name(), STATUS_ERROR, 0, "Feilet utenfor ping-metode");
+                avhengighetStatus.addExceptionMessage(ExceptionUtils.getMessage(e));
+                avhengighetStatus.addStackTrace(ExceptionUtils.getStackTrace(e));
+                serviceStatuses.add(avhengighetStatus);
+                logger.error("Pingable: " + pingable.name()+" failed. Class: " + pingable.getClass().getCanonicalName() + ". Exception message: " + e.getMessage(), e);
             }
         }
         return serviceStatuses;
