@@ -36,6 +36,7 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
     @Override
     public List<WidgetMeldingVM> getFeedItems() {
+
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
         return on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
     }
