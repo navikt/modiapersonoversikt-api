@@ -39,8 +39,8 @@ public class KodeverkV2EndpointConfig {
     }
 
     @Bean
-    public Pingable pingKodeverk(final KodeverkPortType ws) {
-        return new PingableWebService("KODEVERK_V2", ws);
+    public Pingable pingKodeverk() {
+        return new PingableWebService("Kodeverk", lagKodeverkPortType());
     }
 
     private KodeverkPortType lagKodeverkPortType() {

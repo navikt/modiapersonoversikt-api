@@ -25,8 +25,8 @@ public class GsakSakV1EndpointConfig {
     }
 
     @Bean
-    public Pingable gsakSakslistePing(final SakV1 ws) {
-        return new PingableWebService("GSAK_SAK_V1", ws);
+    public Pingable gsakSakslistePing() {
+        return new PingableWebService("Gsak - sak", createEndpoint());
     }
 
     private static SakV1 createEndpoint() {
