@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 
@@ -26,8 +27,8 @@ public class PurgeOppgaverPage extends BasePage {
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
 
-    public PurgeOppgaverPage() {
-
+    public PurgeOppgaverPage(PageParameters pageParameters) {
+        super(pageParameters);
         final IModel<Boolean> ferdig = Model.of(false);
 
         final Component ferdigLabel = new Label("ferdig", "Ferdig!!")

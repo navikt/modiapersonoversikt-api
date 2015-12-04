@@ -96,6 +96,7 @@ public class PersonPage extends BasePage {
     private EnforcementPoint pep;
 
     public PersonPage(PageParameters pageParameters) {
+        super(pageParameters);
         fnr = pageParameters.get("fnr").toString();
         boolean parametereBleFunnetOgFlyttet = flyttURLParametereTilSession(pageParameters);
         if (parametereBleFunnetOgFlyttet) {
