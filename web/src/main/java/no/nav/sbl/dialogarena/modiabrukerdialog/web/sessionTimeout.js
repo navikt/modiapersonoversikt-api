@@ -25,7 +25,7 @@ jQuery(document).ready(function ($) {
     }
 
     function dialogMedBrukerPing() {
-        var intervalValue = 1000 * 60 * 10;
+        var intervalValue = 1000 * 60 * 5;
         var currentTextLength;
         interval = setInterval(function () {
             if (currentTextLength === undefined) {
