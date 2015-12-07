@@ -21,7 +21,8 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
                 new Label("meldingsstatus", new StringFormatModel("%s - %s",
                         new PropertyModel<String>(getModel(), "melding.statusTekst"),
                         new PropertyModel<String>(getModel(), "melding.temagruppeNavn")
-                ))
+                )),
+                new Label("fritekst")
         );
     }
 }
