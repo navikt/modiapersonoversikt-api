@@ -34,6 +34,15 @@ Dersom propertyen ikke finnes eller inneholder feil vil applikasjonen feile unde
     // En del av cron-uttrykket er feil
     java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': For input string: "7x19"
 
+* Oppdatering av kodeverk for Arkivtemaer
+
+Denne jobben oppdaterer kodeverk for Arkivtemaer ved midnatt hver dag.
+
+* Sletting av Wicket resource cache
+
+Wicket har en evig cache på string-resources brukt av applikasjonen, noe som gjør at enonictekster bare blir hentet ved oppstart.
+Denne jobben kjøres derfor hver halvtime for å få oppdatert data fra enonic.
+
 
 ## Oppstart av appen på Jetty
 - Hvis man får OutOfMemoryError ved lokal kjøring så kan man sette opp PermGen space i prosessen som kjører StartJetty,
