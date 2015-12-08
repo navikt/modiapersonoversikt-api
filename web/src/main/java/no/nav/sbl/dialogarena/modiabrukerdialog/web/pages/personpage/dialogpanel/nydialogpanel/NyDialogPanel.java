@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
@@ -18,7 +19,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.ReactJournalforingsPanel;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -46,13 +48,13 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.Brukerprofil.BRUKERPROFIL_OPPDATERT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema;
@@ -70,7 +72,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final GrunnInfo grunnInfo;
     private final KvitteringsPanel kvittering;
     private final List<Component> modusKomponenter = new ArrayList<>();
-    private final EpostVarselPanel epostVarselPanel;
     private final FeedbackPanel feedbackPanel;
     private final SkrivestottePanel skrivestottePanel;
 
@@ -87,17 +88,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         form.add(lagModusVelger(modusModel));
 
-        epostVarselPanel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.bruker.fnr);
-        epostVarselPanel.setOutputMarkupPlaceholderTag(true);
-        modusKomponenter.add(epostVarselPanel);
-        form.add(epostVarselPanel);
-
-        form.add(new Label("navIdent", getSubjectHandler().getUid()));
-
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel());
+        ReactJournalforingsPanel journalforingsPanel = new ReactJournalforingsPanel("journalforing", grunnInfo.bruker.fnr, getModel(), true);
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
         modusKomponenter.add(journalforingsPanel);
         form.add(journalforingsPanel);
+
 
         OppgaveTilknytningPanel oppgaveTilknytningPanel = new OppgaveTilknytningPanel("oppgaveTilknytningPanel", getModel(), grunnInfo);
         oppgaveTilknytningPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
@@ -115,12 +110,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         kanalbeskrivelse.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
         form.add(kanalbeskrivelse);
 
-        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
-                new EnhancedTextAreaConfigurator()
-                        .withMaxCharCount(5000)
-                        .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
-        );
+        EnhancedTextArea tekstfelt = lagTekstFelt(form);
+
         Label tekstfeltLabel = new Label("tekstfelt-label", new StringResourceModel("${modus}.overskrift", getModel()));
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
         form.add(tekstfelt, tekstfeltLabel);
@@ -143,7 +134,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         });
         form.add(radioGroup);
 
-        DropDownChoice<Temagruppe> temagruppeVelger = new DropDownChoice<>("temagruppe", Temagruppe.UTGAAENDE, new ChoiceRenderer<Temagruppe>() {
+        DropDownChoice<Temagruppe> temagruppeVelger = new DropDownChoice<>("temagruppe", Temagruppe.SAMTALEREFERAT, new ChoiceRenderer<Temagruppe>() {
             @Override
             public Object getDisplayValue(Temagruppe object) {
                 return getString(object.name());
@@ -171,7 +162,32 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         kvittering = new KvitteringsPanel("kvittering");
 
+        List<FeedbackLabel> feedbackLabels = leggTilFeedbackLabels(journalforingsPanel, tekstfelt, radioGroup, temagruppeVelger);
+
+        modusKomponenter.addAll(feedbackLabels);
+        form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
+
         add(form, kvittering);
+    }
+
+    private List<FeedbackLabel> leggTilFeedbackLabels(Component... components) {
+        return on(components).map(new Transformer<Component, FeedbackLabel>() {
+            @Override
+            public FeedbackLabel transform(Component component) {
+                return FeedbackLabel.create(component);
+            }
+        }).collect();
+    }
+
+    private EnhancedTextArea lagTekstFelt(Form<HenvendelseVM> form) {
+        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
+                new EnhancedTextAreaConfigurator()
+                        .withMaxCharCount(5000)
+                        .withMinTextAreaHeight(250)
+                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
+        );
+        tekstfelt.setOutputMarkupId(true);
+        return tekstfelt;
     }
 
     private AjaxButton getSubmitKnapp(final PropertyModel<Modus> modusModel, final Form<HenvendelseVM> form) {
@@ -187,8 +203,9 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
+            protected void onError(final AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
+                FeedbackLabel.addFormLabelsToTarget(target, form);
             }
 
         };
@@ -214,17 +231,23 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
+
+        String forhindreAtEntertastIModusVelgerApnerSok = "" +
+                "var ENTER_KEY = 13;" +
+                "$('.modusVelger').on('keydown', 'input[type=radio]', function(event) {" +
+                "   var keycode = (event.keyCode ? event.keyCode : event.which);" +
+                "   if (keycode == ENTER_KEY) {" +
+                "       event.preventDefault();" +
+                "   }" +
+                "});";
+
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
+        response.render(OnDomReadyHeaderItem.forScript(forhindreAtEntertastIModusVelgerApnerSok));
     }
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
     public void oppdaterReferatVM(AjaxRequestTarget target) {
         skrivestottePanel.oppdater(target);
-    }
-
-    @RunOnEvents(BRUKERPROFIL_OPPDATERT)
-    public void oppdaterEpostVarsel(AjaxRequestTarget target) {
-        target.add(epostVarselPanel);
     }
 
     private void settOppModellMedDefaultVerdier() {
@@ -238,12 +261,14 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private RadioGroup<Kanal> lagKanalVelger(IModel<Modus> modusModel) {
-        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
+        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal", new PropertyModel<Kanal>(getModel(), "kanal"));
         modusKomponenter.add(radioGroup);
+
+
         radioGroup.setOutputMarkupPlaceholderTag(true);
         radioGroup.setRequired(true);
         radioGroup.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
-        radioGroup.add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
+        ListView<Kanal> kanalvalg = new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
             @Override
             protected void populateItem(ListItem<Kanal> item) {
                 String kanalType = item.getModelObject().name();
@@ -263,7 +288,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 kanalknappLabel.add(kanalknappLabelTekst, kanalIkon);
                 item.add(kanalKnapp, kanalknappLabel);
             }
-        });
+        };
+        radioGroup.add(kanalvalg);
 
         return radioGroup;
     }
@@ -289,7 +315,9 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<HenvendelseVM> form) {
         try {
-            switch (getModelObject().modus) {
+            HenvendelseVM henvendelseVM = getModelObject();
+
+            switch (henvendelseVM.modus) {
                 case REFERAT:
                     sendReferat();
                     break;
@@ -297,8 +325,11 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                     sendSporsmal();
                     break;
             }
+
+            String kvitteringstekstKey = henvendelseVM.getKvitteringsTekstKeyBasertPaaModus("nydialogpanel");
+
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
-            kvittering.visKvittering(target, getString(getModelObject().getKvitteringsTekstKeyBasertPaaModus("nydialogpanel")), form);
+            kvittering.visTemagruppebasertKvittering(target, getString(kvitteringstekstKey),  henvendelseVM.temagruppe, form);
         } catch (JournalforingFeilet e) {
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
             kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form);
@@ -318,7 +349,12 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private void sendSporsmal() throws Exception {
         HenvendelseVM henvendelseVM = getModelObject();
-        henvendelseVM.temagruppe = Temagruppe.valueOf(hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode));
+        if ("OKSOS".equals(henvendelseVM.valgtSak.temaKode)) {
+            henvendelseVM.temagruppe = Temagruppe.valueOf(henvendelseVM.valgtSak.temaKode);
+            henvendelseVM.valgtSak = null;
+        } else {
+            henvendelseVM.temagruppe = Temagruppe.valueOf(hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode));
+        }
         henvendelseVM.kanal = Kanal.TEKST;
         sendHenvendelse(henvendelseVM, SPORSMAL_MODIA_UTGAAENDE, Optional.<Melding>none());
     }

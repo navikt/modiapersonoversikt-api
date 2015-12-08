@@ -31,11 +31,11 @@ public class SkrivestottePanel extends Panel {
     }
 
     public void vis(AjaxRequestTarget target) {
-        skrivestotte.callFunction(target, "vis");
+        skrivestotte.call("vis");
     }
 
     public void oppdater(AjaxRequestTarget target) {
-        skrivestotte.updateState(target, skrivestotteProps());
+        skrivestotte.updateState(skrivestotteProps());
         target.add(skrivestotte);
     }
 

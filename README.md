@@ -41,5 +41,7 @@ I IntelliJ gjøres dette i ved å klikke "Edit Configurations" i nedtrekksmenyen
 ### IntelliJ
 
 - Opprett en run configuration for klassen StartJetty
-- Endre working directory til <root>\modiabrukerdialog\web
+- Endre working directory til $MODULE_DIR$
 
+### Konfigurering av mockdata
+http://localhost:8083/modiabrukerdialog/internal/mocksetup

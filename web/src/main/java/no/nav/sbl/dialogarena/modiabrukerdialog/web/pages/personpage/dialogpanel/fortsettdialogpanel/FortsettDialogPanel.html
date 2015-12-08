@@ -21,18 +21,19 @@
         </section>
         <section wicket:id="svarcontainer">
             <form wicket:id="fortsettdialogform">
-                <p class="navident" wicket:id="navIdent">NavIdent her</p>
+                <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
                 <wicket:container wicket:id="fortsettdialogformelementer">
                     <div wicket:id="journalforing" class="journalforingSporsmal"></div>
+                    <span wicket:id="journalforing_feedback" class="journalforing-feedback"></span>
 
                     <div wicket:id="oppgaveTilknytningPanel"></div>
 
                     <wicket:container wicket:id="skrivestotteContainer"/>
 
                     <div class="kanaloverskrift">
-                        <h2 class="medium">
+                        <h1 class="medium dialogpanel-header">
                             <span wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</span>
-                        </h2>
+                        </h1>
                         <button wicket:id="skrivestotteToggler" class="skrivestotteToggle"
                                 wicket:message="title:skrivestotte.title">
                             <span class="vekk"><wicket:message key="skrivestotte.arialabel"/></span>
@@ -40,6 +41,7 @@
                     </div>
                     
                     <section wicket:id="tekstfelt" class="tekstfelt"></section>
+                    <span wicket:id="tekstfelt_feedback" class="tekstfelt-feedback"></span>
                     <div class="kanalvelger clearfix">
                         <div wicket:id="kanal">
                             <div wicket:id="kanalvalg" class="kanalvalg">
@@ -50,18 +52,18 @@
                                 </label>
                             </div>
                         </div>
+                        <span wicket:id="kanal_feedback" class="kanal-feedback"></span>
                     </div>
-                    <div>
+                    <div class="brukerkansvar">
                         <input type="checkbox" wicket:id="brukerKanSvare"/>
                         <label wicket:for="brukerKanSvare">
                             <wicket:message key="dialogpanel.brukerKanSvare"/>
                         </label>
                     </div>
                 </wicket:container>
-                <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
                 <input type="submit" wicket:id="send" class="send knapp-hoved lang-tekst"/>
             </form>
-            <a wicket:id="leggtilbake" role="button"><span wicket:id="leggtilbaketekst"></span></a>
+            <a wicket:id="leggtilbake" role="button" class="focus-fyll"><span wicket:id="leggtilbaketekst"></span></a>
         </section>
     </article>
     <div wicket:id="kvittering" class="kvittering"></div>

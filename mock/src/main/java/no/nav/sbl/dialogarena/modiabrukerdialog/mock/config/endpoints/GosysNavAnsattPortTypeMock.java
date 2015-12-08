@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.ASBOGOSYSFagomrade;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.ASBOGOSYSFagomradeListe;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSFinnArenaNAVAnsattListeRequest;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest;
@@ -11,10 +12,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
@@ -37,7 +35,7 @@ public class GosysNavAnsattPortTypeMock {
                 lagNavEnhet("1234", "NAV Mockbrukers Enhet")
         ));
 
-        for (int i = 0,manglende = ANTALL_MOCK_ENHETER - liste.size(); i < manglende; i++) {
+        for (int i = 0, manglende = ANTALL_MOCK_ENHETER - liste.size(); i < manglende; i++) {
             liste.add(lagNavEnhet(lagEnhetId(i), lagEnhetNavn()));
         }
 
@@ -72,7 +70,7 @@ public class GosysNavAnsattPortTypeMock {
             @Override
             public ASBOGOSYSFagomradeListe hentNAVAnsattFagomradeListe(ASBOGOSYSHentNAVAnsattFagomradeListeRequest hentNAVAnsattFagomradeListeRequest)
                     throws HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg {
-                return new ASBOGOSYSFagomradeListe();
+                return new MockFagomraderListe();
             }
 
             @Override
@@ -118,7 +116,7 @@ public class GosysNavAnsattPortTypeMock {
     private static String lagEnhetId(int id) {
         String base = String.valueOf(id);
         while (base.length() < 4) {
-            base = "0"+base;
+            base = "0" + base;
         }
         return base;
     }
@@ -146,6 +144,14 @@ public class GosysNavAnsattPortTypeMock {
         String t = type[r.nextInt(type.length)];
         String p = place[r.nextInt(place.length)];
 
-        return "NAV "+t+" - "+p;
+        return "NAV " + t + " - " + p;
+    }
+
+    private static class MockFagomraderListe extends ASBOGOSYSFagomradeListe {
+        public MockFagomraderListe() {
+            ASBOGOSYSFagomrade fagomrade = new ASBOGOSYSFagomrade();
+            fagomrade.setFagomradeKode("DAG");
+            fagomrader = Arrays.asList(fagomrade);
+        }
     }
 }

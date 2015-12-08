@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,7 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {HenvendelseEndpointConfig.class})
+@ContextConfiguration(classes = {HenvendelseEndpointCacheTestConfig.class})
 public class HenvendelseEndpointCacheTest extends CacheTest {
 
     public static final String CACHE_NAME = "endpointCache";
@@ -35,7 +34,6 @@ public class HenvendelseEndpointCacheTest extends CacheTest {
 
     @BeforeClass
     public static void setup() {
-        System.setProperty(HENVENDELSE_KEY, "true");
         System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
     }

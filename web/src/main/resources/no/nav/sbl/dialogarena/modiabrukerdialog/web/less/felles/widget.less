@@ -4,18 +4,17 @@
   border: 1px solid @borderColorLight;
   background-color: @bodyBackground;
   &:focus {
-    border-color: @linkColor;
-    outline: none;
+    .focus-sammensatt-mixin;
   }
-  A:hover {
+  a:hover {
     text-decoration: none;
   }
-  UL {
+  ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
   }
-  HEADER {
+  header {
     padding: 13px 0;
     background-color: @white;
     text-align: center;
@@ -23,7 +22,7 @@
     &.selected {
       background-color: @grayLighter;
     }
-    H1 {
+    .widget-header {
       ._H3;
       font-size: 1.14rem;
       margin: 5px 0 0 0;
@@ -53,7 +52,7 @@
       padding: 30px 0 15px 0;
     }
   }
-  & UL > LI {
+  & ul > li {
     display: block;
     margin: 0;
     position: relative;
@@ -66,16 +65,16 @@
       border-top: 1px solid @white;
       background-color: #dadada;
     }
-    A, A:visited, A:active {
+    a, a:visited, a:active {
       display: block;
       padding: 20px 30px;
       color: @white;
       text-decoration: none;
     }
-    UL.metadata {
+    ul.metadata {
       margin: 1rem 37px 0 0;
       overflow: auto;
-      LI {
+      li {
         float: left;
         display: inline;
         padding: 0 8px 0 0;
@@ -88,7 +87,7 @@
           background-color: inherit;
         }
       }
-      LI:last-of-type {
+      li:last-of-type {
         margin-right: 0;
         padding-right: 0;
         border-right: none;
@@ -97,7 +96,7 @@
   }
 }
 
-.widget-navigasjon {
+.lamell .widget-navigasjon {
 
   .klikkbar-header {
     cursor: pointer;
@@ -113,12 +112,13 @@
   }
 
   .widget;
-  & UL > LI {
-    A:focus {
+  & ul > li {
+    a:focus {
       background-color: @linkColor;
       color: @white !important;
-      outline: none;
-      .tidsrom, .subject, UL.metadata {
+      .focus-sammensatt-inset-mixin();
+
+      .tidsrom, .subject, ul.metadata {
         color: @white !important;
       }
       .action .tidsrom {
@@ -128,8 +128,11 @@
         color: @white !important;
       }
     }
-    A, A:visited, A:active {
+    a, a:visited, a:active {
       color: @grayDark;
+    }
+    a:hover {
+      text-decoration: none;
     }
     .tingikon {
       width: 65%;
@@ -158,23 +161,25 @@
       font-size: 1.14em;
       font-weight: bold;
     }
-    A.OK .tingstatus {
-      background: url(../img/gront-sjekk.png) bottom center no-repeat;
-    }
-    A.OK:hover .tingstatus {
-      background: url(../img/gront-sjekk-hover.png) bottom center no-repeat;
-    }
-    A.OK:focus .tingstatus {
-      background: url(../img/gront-sjekk-fokus.png) bottom center no-repeat;
-    }
-    A.ERROR .tingstatus {
-      background: url(../img/utropstegn.png) bottom center no-repeat;
-    }
-    A.ERROR:hover .tingstatus {
-      background: url(../img/utropstegn-hover.png) bottom center no-repeat;
-    }
-    A.ERROR:focus .tingstatus {
-      background: url(../img/utropstegn-fokus.png) bottom center no-repeat;
+    a {
+      &.OK .tingstatus {
+        background: url(../img/gront-sjekk.png) bottom center no-repeat;
+      }
+      &.OK:hover .tingstatus {
+        background: url(../img/gront-sjekk-hover.png) bottom center no-repeat;
+      }
+      &.OK:focus .tingstatus {
+        background: url(../img/gront-sjekk-fokus.png) bottom center no-repeat;
+      }
+      &.ERROR .tingstatus {
+        background: url(../img/utropstegn.png) bottom center no-repeat;
+      }
+      &.ERROR:hover .tingstatus {
+        background: url(../img/utropstegn-hover.png) bottom center no-repeat;
+      }
+      &.ERROR:focus .tingstatus {
+        background: url(../img/utropstegn-fokus.png) bottom center no-repeat;
+      }
     }
   }
 }

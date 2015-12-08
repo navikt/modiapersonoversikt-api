@@ -9,7 +9,7 @@ import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v2.YtelseskontraktV2;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -30,12 +30,12 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class KontrakterWrapper {
 
     @Inject
-    @Named("ytelseskontraktV2")
-    private YtelseskontraktV2 ytelseskontraktPortType;
+    @Named("ytelseskontraktV3")
+    private YtelseskontraktV3 ytelseskontraktPortType;
 
     @Inject
-    @Named("selftestYtelseskontraktV2")
-    private YtelseskontraktV2 selftestYtelseskontraktPortType;
+    @Named("selftestYtelseskontraktV3")
+    private YtelseskontraktV3 selftestYtelseskontraktPortType;
 
     @Inject
     @Named("oppfolgingPortType")

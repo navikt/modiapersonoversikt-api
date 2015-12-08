@@ -7,8 +7,17 @@ $(document).on('click', '.temagruppe-liste', function (e) {
 });
 
 $(document).on('click', '.velg-temagruppe', function (e) {
-    $('.temagruppe-liste').toggle()
-        .find('.radiogroup').focus();
+    var $temagruppeliste = $('.temagruppe-liste');
+    $temagruppeliste.toggle();
+
+    var $valgtTemagruppe = $temagruppeliste.find('.radiogroup input:checked');
+
+    if ($valgtTemagruppe.length > 0) {
+        $valgtTemagruppe.focus();
+    } else {
+        $temagruppeliste.find('.radiogroup input:first').focus();
+    }
+
     e.stopPropagation();
 });
 
@@ -33,9 +42,16 @@ $(document).on('click', '.plukk-knapp', function (e) {
     e.stopPropagation();
 });
 window.fokusPlukkOppgaveTemagruppe = function(){
-    $('.temagruppe-liste').show()
-        .find('.radiogroup').focus();
-}
+    var $temagruppeliste = $('.temagruppe-liste');
+    $temagruppeliste.show();
+
+    var $valgtTemagruppe = $temagruppeliste.find('.radiogroup input:checked');
+    if ($valgtTemagruppe.length > 0) {
+        $valgtTemagruppe.focus();
+    } else {
+        $temagruppeliste.find('.radiogroup input:first').focus();
+    }
+};
 $(document).on('keydown', '.plukk-knapp, .velg-temagruppe', function (e) {
     var $target = $(e.currentTarget);
     if (e.keyCode == 13 || e.keyCode == 32) {

@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>5.28.2</version>
+        <version>6.33</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -17,6 +17,7 @@
         in the parent pom and in each module pom. Then JaCoCo will add up information in the
         same report, so that, it will give the cross-module code coverage. -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
+        <jackson.version>2.4.2</jackson.version>
     </properties>
 
     <dependencies>
@@ -113,6 +114,11 @@
             <artifactId>modia-saksoversikt</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modia-varsling</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -170,6 +176,15 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>varsler</artifactId>
+        </dependency>
+
 
         <!--Dialogarena-->
         <dependency>
@@ -319,6 +334,21 @@
         </dependency>
 
         <!--Diverse-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>

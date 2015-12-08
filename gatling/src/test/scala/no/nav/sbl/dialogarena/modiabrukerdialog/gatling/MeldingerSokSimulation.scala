@@ -1,101 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.gatling
 
 import java.lang.Double._
-
 import io.gatling.core.Predef._
-import io.gatling.http.Predef._
+import io.gatling.core.scenario.Simulation
+import no.nav.sbl.dialogarena.modiabrukerdialog.gatling.MeldingerSokScenario.meldingerSokScenario
+import no.nav.sbl.dialogarena.modiabrukerdialog.gatling.Utils._
+import scala.concurrent.duration.DurationDouble
 
-import scala.concurrent.duration._
-import scala.util.Random
 
 class MeldingerSokSimulation extends Simulation {
 
-  val env = System.getProperty("env")
-  val meldingerSokUsers = Integer.getInteger("meldingersok.users")
-  val skrivestotteSokUsers = Integer.getInteger("skrivestottesok.users")
-  val duration: Double = valueOf(System.getProperty("duration"))
-  val baseUrl = "https://modapp-" + env + ".adeo.no"
+  // System properties
+  val duration: Double = valueOf(System.getProperty("duration.minutes"))
+  val users: Int = Integer.getInteger("meldingersok.users")
 
-  val httpProtocol = http
-    .baseURL(baseUrl)
-    .disableWarmUp
-    .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-    .acceptEncodingHeader("gzip, deflate")
-    .acceptLanguageHeader("nb-no,nb;q=0.9,no-no;q=0.8,no;q=0.6,nn-no;q=0.5,nn;q=0.4,en-us;q=0.3,en;q=0.1")
-    .connection("keep-alive")
-    .contentTypeHeader("application/x-www-form-urlencoded")
-    .userAgentHeader("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
-
-  val headers = Map("Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-
-
-  def query: String = {
-    val queries = Array("Arbeid", "Familie", "Arbeidsavklaringspenger", "Sykepenger", "Pensjon", "Samtalereferat telefon")
-    val index = new Random(System.currentTimeMillis()).nextInt(queries.length)
-    queries(index)
-  }
-
-  def sokChain(name: String, url: String, query: String) = {
-    def split(s: String): List[String] = {
-      if (s.isEmpty) {
-        List(s)
-      } else {
-        s :: split(s.init)
-      }
-    }
-
-    split(query).sortBy(_.length).map(_.replace(" ", "%20")).map(s => {
-      exec(
-        http(name)
-          .get(url + s)
-          .headers(headers))
-        .pause(50 millis)
-    })
-  }
-
-  val meldingerSokScenario = scenario("Søk i meldinger")
-    .feed(csv("fnr.csv").random)
-    .feed(csv("navIdenter_" + env + ".csv").random)
-    .exec(
-      http("start")
-        .get("/modiabrukerdialog/")
-        .check(status.is(401)))
-    .pause(5)
-    .exec(
-      http("login")
-        .post("/modiabrukerdialog/j_security_check")
-        .headers(headers)
-        .formParam("j_username", "${navIdent}")
-        .formParam("j_password", "${passord}"))
-    .exitHereIfFailed
-    .pause(1)
-    .exec(
-      http("indekser")
-        .get("/modiabrukerdialog/rest/meldinger/${fnr}/indekser")
-        .headers(headers))
-    .exitHereIfFailed
-    .pause(100 millis)
-    .exec(sokChain("Søk i meldinger", "/modiabrukerdialog/rest/meldinger/${fnr}/sok/", query))
-
-  val skrivestotteSokScenario = scenario("Søk i hjelpetekster")
-    .feed(csv("navIdenter_" + env + ".csv").random)
-    .exec(
-      http("start")
-        .get("/modiabrukerdialog/")
-        .check(status.is(401)))
-    .pause(5)
-    .exec(
-      http("login")
-        .post("/modiabrukerdialog/j_security_check")
-        .headers(headers)
-        .formParam("j_username", "${navIdent}")
-        .formParam("j_password", "${passord}"))
-    .exitHereIfFailed
-    .pause(1)
-    .exec(sokChain("Søk i hjelpetekster", "/modiabrukerdialog/rest/skrivestotte/sok?fritekst=", query))
-
-  setUp(
-    meldingerSokScenario.inject(rampUsers(meldingerSokUsers) over (duration minutes)),
-    skrivestotteSokScenario.inject(rampUsers (skrivestotteSokUsers) over (duration minutes)))
-    .protocols(httpProtocol)
+  setUp(meldingerSokScenario.inject(rampUsers(users) over (duration minutes))).protocols(httpProtocol)
 }

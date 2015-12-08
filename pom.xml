@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>5.28.2</version>
+    <version>6.33</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -40,7 +40,7 @@
         <collections-generic.version>4.01</collections-generic.version>
         <guava.version>r03</guava.version>
         <ehcache.version>2.6.5</ehcache.version>
-        <wicket.version>6.19.0</wicket.version>
+        <wicket.version>6.20.0</wicket.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <logback.version>1.1.3</logback.version>
         <slf4j.version>1.7.12</slf4j.version>
@@ -51,17 +51,17 @@
         <findbugs.version>3.0.0</findbugs.version>
         <metrics.version>3.1.2</metrics.version>
 
-        <!-- egenlagde bibleoteker -->
-        <modig.frontend.version>1.1.114</modig.frontend.version>
+        <!-- egenlagde biblioteker -->
+        <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.0.4</modig.wicket.version>
+        <modig.wicket.version>3.0.5</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.4</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig-log-jaxws.version>1.1.3</modig-log-jaxws.version>
-        <modig-content.version>2.0.10</modig-content.version>
+        <modig-content.version>2.0.13</modig-content.version>
         <modig-wicket-test.version>1.0.0</modig-wicket-test.version>
         <modig-core-test.version>1.0.0</modig-core-test.version>
         <commons-lang3.version>3.1</commons-lang3.version>
@@ -72,7 +72,7 @@
         <common-kodeverk.version>1.0.0</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>0.20</reactkomponenter.version>
+        <reactkomponenter.version>1.25</reactkomponenter.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -88,26 +88,29 @@
         feiler da den finner "*" som navn på rollen. For å fikse dette må rollenavnet som blir overridet i DummyRole endres
         til f. eks dobbelstjerne "**" og SecurityConstrainten må bli overridet i override-web.xml og satt tilsvarende role-name
         der som i DummyRole.  -->
-        <common-jetty.version>1.0.23</common-jetty.version> <!-- Samme som Jetty -->
+        <common-jetty.version>1.0.23</common-jetty.version>
+        <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>1.1.1</personsok.version>
-        <kjerneinfo.versjon>1.1.8</kjerneinfo.versjon>
+        <personsok.version>1.1.18</personsok.version>
+        <kjerneinfo.versjon>1.1.26</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.1.3</utbetaling.version>
+        <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
-        <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.14</behandle.henvendelse.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.41</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>2.4</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>3.10</sporsmalogsvar.version>
-        <saksoversikt.version>3.17</saksoversikt.version>
+        <send.ut.henvendelse.version>0.5</send.ut.henvendelse.version>
+        <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
+        <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
+        <modiabrukerdialog-api.version>3.13</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>4.17</sporsmalogsvar.version>
+        <saksoversikt.version>4.8</saksoversikt.version>
+        <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>1.0.6</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>2.0.6</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.39</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
@@ -405,6 +408,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>varsler</artifactId>
+                <version>${varsling.tjeneste.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modiabrukerdialog-api</artifactId>
                 <version>${modiabrukerdialog-api.version}</version>
             </dependency>
@@ -418,6 +426,11 @@
                 <artifactId>arena-arbeid-og-aktivitet</artifactId>
                 <version>${arena-arbeid-og-aktivitet.version}</version>
             </dependency>
+            <dependency>
+                <groupId>no.nav.sbl</groupId>
+                <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+                <version>1.0.3</version>
+            </dependency>
 
             <!--Dialogarena-->
             <dependency>
@@ -429,6 +442,11 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-saksoversikt</artifactId>
                 <version>${saksoversikt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>modia-varsling</artifactId>
+                <version>${varsling.modia.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -764,6 +782,21 @@
                 <version>${jersey.version}</version>
                 <scope>runtime</scope>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.4.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-joda</artifactId>
+                <version>2.4.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.4.2</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.glassfish.hk2.external</groupId>
@@ -997,14 +1030,16 @@
                 <!-- for å synke innhold mot Enonic kjør: mvn modig-content:sync -Denonic.username=XXX -Denonic.password=XXX -Denonic.url=http://<ip-adresse til admin-node>:8080   Se "Serveroversikt Enonic" på Confluence for IP-adresser -->
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-content-maven-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>2.0.0</version>
                 <configuration>
                     <propertiesFilesRoot>${project.basedir}/web/src/main/resources/content</propertiesFilesRoot>
                     <propertiesFiler>
                         <nb-app>innholdstekster_nb.properties</nb-app>
+                        <modiabrukerdialog>modiabrukerdialog_nb.properties</modiabrukerdialog>
                     </propertiesFiler>
                     <menyPunktPaths>
                         <nb-app>/site/18/app/saksoversikt/nb/tekster</nb-app>
+                        <modiabrukerdialog>/site/19/App/modiabrukerdialog/nb/tekster</modiabrukerdialog>
                     </menyPunktPaths>
                 </configuration>
             </plugin>
@@ -1014,7 +1049,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-5.28.2</tag>
+        <tag>modiabrukerdialog-6.33</tag>
     </scm>
 
     <profiles>

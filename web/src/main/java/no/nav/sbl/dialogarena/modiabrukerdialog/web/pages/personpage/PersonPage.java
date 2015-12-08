@@ -26,8 +26,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.Sjekk
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
+import org.apache.commons.collections15.Closure;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -41,6 +43,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -51,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
@@ -72,9 +76,9 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
-    private static final Logger logger = getLogger(PersonPage.class);
+	private static final Logger logger = getLogger(PersonPage.class);
 
-    private static final List<String> URL_TIL_SESSION_PARAMETERE = asList(HENVENDELSEID, OPPGAVEID, FORTSETTDIALOGMODUS);
+    private static final List<String> URL_TIL_SESSION_PARAMETERE = asList(HENVENDELSEID, OPPGAVEID, BESVARES);
 
     public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
@@ -84,8 +88,11 @@ public class PersonPage extends BasePage {
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
+    public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
+    public static final JavaScriptResourceReference SCROLL_JS = new JavaScriptResourceReference(PersonPage.class, "scrollbars.js");
+	public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
 
-    private final String fnr;
+	private final String fnr;
 
     private LamellContainer lamellContainer;
     private RedirectModalWindow redirectPopup;
@@ -96,6 +103,11 @@ public class PersonPage extends BasePage {
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString();
+
+        if (pageParameters.getNamedKeys().size() > 1) {//FNR er alltid i url
+            clearSession();
+        }
+
         boolean parametereBleFunnetOgFlyttet = flyttURLParametereTilSession(pageParameters);
         if (parametereBleFunnetOgFlyttet) {
             setResponsePage(this.getClass(), pageParameters);
@@ -106,7 +118,7 @@ public class PersonPage extends BasePage {
         lamellContainer = new LamellContainer("lameller", fnr, getSession());
 
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
-
+		final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
         add(
                 new HentPersonPanel("searchPanel", ""),
                 new Button("toggle-sok"),
@@ -116,9 +128,10 @@ public class PersonPage extends BasePage {
                 saksbehandlerInnstillingerPanel,
                 new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
+                new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
-                new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr),
+                new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
                 new DialogPanel("dialogPanel", fnr),
                 new TimeoutBoks("timeoutBoks", fnr)
         );
@@ -126,6 +139,15 @@ public class PersonPage extends BasePage {
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
+    }
+
+    private void clearSession() {
+        on(URL_TIL_SESSION_PARAMETERE).forEach(new Closure<String>() {
+            @Override
+            public void execute(String param) {
+                getSession().removeAttribute(param);
+            }
+        });
     }
 
     @Override
@@ -147,7 +169,8 @@ public class PersonPage extends BasePage {
             public WebMarkupContainer getPanel(String panelId) {
 
                 boolean hasAaregTilgang = pep.hasAccess(forRequest(actionId("aaregles"), resourceId("")));
-                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang);
+                boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
+                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang, hasPesysTilgang);
             }
         });
 

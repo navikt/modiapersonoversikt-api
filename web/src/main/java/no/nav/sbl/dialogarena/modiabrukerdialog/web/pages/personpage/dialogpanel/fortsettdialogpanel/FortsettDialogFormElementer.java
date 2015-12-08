@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -8,7 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.OppgaveTilknytningPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.SkrivestottePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.ReactJournalforingsPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -26,6 +27,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class FortsettDialogFormElementer extends WebMarkupContainer {
@@ -44,7 +47,6 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
 
     public FortsettDialogFormElementer(String id, GrunnInfo grunnInfo, final IModel<HenvendelseVM> model) {
         super(id, model);
-
         final List<Component> avhengerAvKanlOgDelMedBrukerValg = new ArrayList<>();
 
         EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", model,
@@ -108,8 +110,11 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         kanalbeskrivelse.setOutputMarkupId(true);
         add(kanalbeskrivelse);
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model);
-        journalforingsPanel.add(visibleIf(both(brukerKanSvare.getModel()).and(not(model.getObject().traadJournalfort()))));
+        ReactJournalforingsPanel journalforingsPanel = new ReactJournalforingsPanel("journalforing", grunnInfo.bruker.fnr, model, false);
+        journalforingsPanel.add(visibleIf(
+                both(brukerKanSvare.getModel())
+                        .and(not(model.getObject().traadJournalfort()))
+                        .and(not(Model.of(KOMMUNALE_TJENESTER.contains(model.getObject().gjeldendeTemagruppe))))));
         add(journalforingsPanel);
 
         avhengerAvKanlOgDelMedBrukerValg.add(kanalbeskrivelse);
@@ -130,6 +135,13 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
                 oppdaterAlleElementerSomAvhengerAvKanalOgDelMedBrukerValg(target, avhengerAvKanlOgDelMedBrukerValg);
             }
         });
+
+        List<FeedbackLabel> feedbackLabels = asList(FeedbackLabel.create(tekstfelt),
+                FeedbackLabel.create(kanalRadioGroup), FeedbackLabel.create(journalforingsPanel)
+        );
+        avhengerAvKanlOgDelMedBrukerValg.addAll(feedbackLabels);
+
+        add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
     }
 
     private void oppdaterAlleElementerSomAvhengerAvKanalOgDelMedBrukerValg(AjaxRequestTarget target, List<Component> avhengerAvKanlOgDelMedBrukerValg) {

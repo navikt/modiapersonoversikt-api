@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
@@ -30,9 +32,11 @@ public class CmsEndpointConfig {
 
     public static final String CMS_KEY = "start.cms.withmock";
     public static final String DEFAULT_LOCALE = "nb";
-    private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/tekster";
+    private static final String INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE = "/app/modia-saksoversikt/nb/tekster";
+    private static final String INNHOLDSTEKSTER_NB_NO_MODIA_REMOTE = "/app/modiabrukerdialog/nb/tekster";
     private static final String ARTIKLER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/saksinformasjon";
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.innholdstekster";
+    private static final String MODIABRUKERDIALOG_NB_NO_LOCAL = "content.modiabrukerdialog";
 
     @Value("${appres.cms.url}")
     private String appresUrl;
@@ -40,6 +44,7 @@ public class CmsEndpointConfig {
     private static final Logger log = getLogger(CmsEndpointConfig.class);
 
     @Bean
+    @Primary
     public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
         CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
         cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
@@ -67,7 +72,7 @@ public class CmsEndpointConfig {
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "CMS";
-                String url = appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE;
+                String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
                 try {
                     contentRetriever().ping(new URI(url));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
@@ -86,14 +91,26 @@ public class CmsEndpointConfig {
     }
 
     private ValuesFromContentWithResourceBundleFallback getValueRetriever() throws URISyntaxException {
-        Map<String, URI> uris = new HashMap<>();
-        uris.put(DEFAULT_LOCALE, new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
-        return new ValuesFromContentWithResourceBundleFallback(INNHOLDSTEKSTER_NB_NO_LOCAL, contentRetriever(), uris, DEFAULT_LOCALE);
+        Map<String, List<URI>> uris = new HashMap<>();
+        uris.put(DEFAULT_LOCALE, asList(
+                new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_MODIA_REMOTE),
+                new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE)
+        ));
+        return new ValuesFromContentWithResourceBundleFallback(asList(
+                INNHOLDSTEKSTER_NB_NO_LOCAL,
+                MODIABRUKERDIALOG_NB_NO_LOCAL),
+                contentRetriever(),
+                uris,
+                DEFAULT_LOCALE);
     }
 
     private ValueRetriever siteArtikkelRetriever() throws URISyntaxException {
         Map<String, List<URI>> uris = new HashMap<>();
-        uris.put(DEFAULT_LOCALE, asList(new URI(appresUrl + ARTIKLER_NB_NO_REMOTE)));
-        return new ValuesFromContentWithResourceBundleFallback(asList(INNHOLDSTEKSTER_NB_NO_LOCAL), contentRetriever(), uris, DEFAULT_LOCALE);
+        uris.put(DEFAULT_LOCALE, singletonList(new URI(appresUrl + ARTIKLER_NB_NO_REMOTE)));
+        return new ValuesFromContentWithResourceBundleFallback(asList(INNHOLDSTEKSTER_NB_NO_LOCAL,
+                MODIABRUKERDIALOG_NB_NO_LOCAL),
+                contentRetriever(),
+                uris,
+                DEFAULT_LOCALE);
     }
 }

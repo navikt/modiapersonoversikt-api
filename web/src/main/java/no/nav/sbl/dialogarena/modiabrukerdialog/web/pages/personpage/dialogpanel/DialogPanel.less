@@ -31,29 +31,17 @@
     }
   }
   .modusVelger, .popupContainer {
-    input[type=radio] + label {
+    input[type=radio][name] + label {
       margin: 0 auto;
       color: #3e3832;
       padding: 5px 5px 5px 37px;
       line-height: 22px;
       min-height: 22px;
-      background-position: 5px;
-      border: 1px dashed transparent;
+      background-position: 5px !important;
       width: 11rem;
     }
-    input[type=radio]:focus + label {
+    input[type=radio][name]:focus + label {
       border-color: #0067c5;
-    }
-  }
-  .warn {
-    margin: 0 30px 30px;
-  }
-  .vistraad {
-    .ekspanderingspil {
-      top: 4px;
-      &.ekspandert {
-        top: -4px;
-      }
     }
   }
   .traadoverskrift {
@@ -62,25 +50,6 @@
       &.ekspandert {
         border-bottom-color: @modiasvart;
       }
-    }
-  }
-  .ekspanderingcontainer {
-    position: relative;
-    cursor: pointer;
-  }
-  .ekspanderingspil {
-    display: inline-block;
-    position: absolute;
-    top: 14px;
-    width: 0;
-    height: 0;
-    margin-left: 1em;
-    border: 8px solid transparent;
-    border-top-color: #0067c5;
-    &.ekspandert {
-      top: 6px;
-      border: 8px solid transparent;
-      border-bottom-color: #0067c5;
     }
   }
   form {
@@ -120,11 +89,11 @@
     }
     .popup {
       position: absolute;
-      z-index: 1;
+      z-index: 10;
       background-color: #ffffff;
       border: 1px solid #cbcbcb;
       top: 35px;
-      right: -1.5rem;
+      right: -7.5rem;
       width: 375px;
       padding: 24px 32px 32px 32px;
       -webkit-box-shadow: 0 5px 10px 0 rgba(50, 50, 50, 0.3);
@@ -163,12 +132,12 @@
       }
       &:before {
         border-width: 14px;
-        margin-left: -14px;
+        margin-left: -98px;
         border-bottom-color: #cbcbcb;
       }
       &:after {
         border-width: 13px;
-        margin-left: -13px;
+        margin-left: -97px;
         border-bottom-color: #ffffff;
       }
     }
@@ -182,8 +151,11 @@
     margin: 0 @sideMargin;
     text-align: left;
     line-height: 1.4em;
+    word-wrap: break-word;
+    max-width: 410px;
     a {
-      text-decoration: underline;
+      -ms-word-break: break-all;
+      word-break: break-all;
     }
   }
   .dato {
@@ -191,7 +163,7 @@
     text-transform: uppercase;
   }
   .kanalvelger {
-    margin: 1em auto;
+    margin: 1rem 2rem;
     text-align: center;
     .kanalvalg {
       display: inline;
@@ -201,7 +173,7 @@
         width: auto;
         margin: 0.5rem 0;
         border: 1px solid transparent;
-        background-position: 0;
+        background-position: 0 !important;
         > * {
           width: 32px;
           height: 32px;
@@ -232,14 +204,7 @@
           background-image: url(../img/personligoppmote_valgt.svg);
         }
       }
-      input[type="radio"]:focus + label {
-        border: 1px dashed #00a9e0;
-      }
     }
-  }
-  .navident {
-    font-weight: bold;
-    margin-top: 0;
   }
   .send {
     margin: 2em 0;
@@ -255,7 +220,7 @@
     padding: 7px 0;
     margin: 0 @sideMargin;
 
-    h2 {
+    .dialogpanel-header {
       margin: 0;
       color: @modiagraaskrift;
       font-weight: 600;
@@ -263,6 +228,7 @@
 
     button.skrivestotteToggle {
       border: 0;
+      border-radius: 1rem;
       position: absolute;
       left: 5px;
       top: 5px;
@@ -279,6 +245,13 @@
   }
   .tekstfelt {
     margin: 0 @sideMargin;
+    textarea:focus {
+      .ontop-mixin(1);
+    }
+  }
+  .avbrytknapp {
+    //For å få containeren til å ta opp nok plass til å vise temavelgeren sine valg.
+    margin-bottom: 10rem;
   }
   .temagruppevelger-wrapper, .nyTemagruppeSkjuler {
     margin: 0 @sideMargin;
@@ -347,6 +320,9 @@
           white-space: nowrap;
         }
       }
+      &.invalid span.ui-selectmenu-text {
+        color: black !important;
+      }
     }
   }
   input[type=checkbox] {
@@ -355,7 +331,6 @@
       color: #3e3832;
     }
     &:focus + label {
-      border: 1px dashed #00a9e0;
       padding: 2px 2px 2px 32px;
       background-position: 2px 2px;
       line-height: 1.7rem;
@@ -366,8 +341,28 @@
     cursor: auto;
   }
 
-  .feedback {
+  form > .feedback {
     margin: 0 @sideMargin;
+  }
+
+  .feedbacklabel {
+    &.kanal-feedback {
+      float: left;
+    }
+    &.temagruppe-feedback {
+      float: left;
+    }
+    &.tekstfelt-feedback {
+      display: block;
+      margin-left: 2rem;
+    }
+    &.journalforing-feedback {
+      float: left;
+      position: relative;
+      margin-left: 2rem;
+      width: 100%;
+      top: -1rem;
+    }
   }
 }
 
@@ -409,10 +404,14 @@
   }
   .knapp-hoved-stor {
     color: #fff;
+    margin-bottom: 20px;
+  }
+  .avbryt {
+    margin-top: 0;
   }
   .temagruppevelger-wrapper, .nyTemagruppeSkjuler {
     text-align: left;
-    margin: 0px 0 0 5px;
+    margin: 0 0 0 5px;
     .ui-selectmenu-menu {
       box-shadow: none;
       > ul {
@@ -465,6 +464,7 @@
       span.ui-icon {
         border-top-color: #00a9e0;
       }
+
     }
   }
   .aarsak {
@@ -479,7 +479,7 @@
       background-position: 5px;
     }
     input[type=radio]:focus + label {
-      border: 1px dashed #00a9e0;
+      .ontop-mixin;
     }
     &.feiltema label {
       margin-bottom: 0px;
@@ -509,8 +509,11 @@
     font-weight: normal;
     padding: 0 30px;
   }
+  p {
+    padding: 0 30px;
+  }
   a {
-    margin-top: 150px;
+    margin-top: 100px;
   }
   .robust-ikon-gront-sjekk {
     padding-top: 70px;
@@ -526,8 +529,15 @@
   margin: 0 30px 20px 30px;
   .sak-info-link:focus {
     outline: none;
+    box-shadow: none; // rendringfeil i firefox og IE uten denne
     .sak-info {
-      border: 1px solid rgba(82, 168, 236, 0.8);
+      .focus-sammensatt-mixin;
+      .ontop-mixin;
+    }
+  }
+  .sak-info-link:hover {
+    .sak-info {
+      .mouseover-sammensatt-mixin;
     }
   }
   .sak-info, .velg-sak {
@@ -564,22 +574,36 @@
       width: 20%;
     }
   }
-  //Overriding av default journalføringspanel
-  .journalforingpanel {
-    background-color: @modiasvart;
-    padding: 7px 20px;
-    color: @modiagraaskrift;
-    h2 {
-      color: @modiagraaskrift;
-      margin: 14px;
+  .journalforings-panel {
+    margin: 1rem 0 0 0;
+    box-shadow: 0 0 7px #999999;
+
+    .alla-saker {
+      text-align: left;
+      .text-row-list {
+
+        &:hover {
+          color: #f5f5f5;
+        }
+      }
+      .text-cell {
+        width: 30%;
+        &:first-of-type {
+          width: 45%
+        }
+        &:last-of-type {
+          width: 25%;
+        }
+      }
     }
-    .saklisteelement > label {
-      margin-top: 0;
+    .saker-tema {
+      .sosialhjelp-knapp {
+        border-top: 1px solid rgb(153, 153, 153);
+      }
+      a {
+        text-decoration: none;
+      }
     }
-  }
-  .avbryt-knapp {
-    color: #20a9e1;
-    display: block;
-    margin: 1rem 0;
   }
 }
+

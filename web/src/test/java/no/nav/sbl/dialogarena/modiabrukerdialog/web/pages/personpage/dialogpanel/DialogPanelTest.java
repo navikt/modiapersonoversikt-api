@@ -11,8 +11,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
@@ -88,11 +88,22 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void initialisererMedFortsettDialogPanelDersomOppgaveIdOgHenvendelseIdOgFortsettDialogModusParametereErSatt() {
+    public void initialisererMedFortsettDialogPanelDersomOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, true);
 
         wicket.goToPageWith(new DialogPanel(ID, FNR))
                 .should().containComponent(ofType(FortsettDialogPanel.class));
+    }
+
+    @Test
+    public void tilordnerOppgaveHvisOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() throws OppgaveBehandlingService.FikkIkkeTilordnet {
+        settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, true);
+        reset(oppgaveBehandlingService);
+
+        wicket.goToPageWith(new DialogPanel(ID, FNR))
+                .should().containComponent(ofType(FortsettDialogPanel.class));
+
+        verify(oppgaveBehandlingService, times(1)).tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class));
     }
 
     @Test
@@ -188,7 +199,7 @@ public class DialogPanelTest extends WicketPageTest {
     private void settSessionVerdier(String oppgaveIdVerdi, String henvendelseIdVerdi, Boolean fortsettDialogModusVerdi) {
         wicket.tester.getSession().setAttribute(OPPGAVEID, oppgaveIdVerdi);
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelseIdVerdi);
-        wicket.tester.getSession().setAttribute(FORTSETTDIALOGMODUS, fortsettDialogModusVerdi.toString());
+        wicket.tester.getSession().setAttribute(BESVARES, fortsettDialogModusVerdi.toString());
     }
 
     private Melding lagMelding() {

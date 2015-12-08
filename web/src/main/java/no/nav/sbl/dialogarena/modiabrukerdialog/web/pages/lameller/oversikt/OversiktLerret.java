@@ -5,15 +5,18 @@ import no.nav.modig.modia.metrics.TimingMetricsBehaviour;
 import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.modia.widget.async.AsyncWidget;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
+import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +28,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.vi
 
 public class OversiktLerret extends Lerret {
 
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     private List<AsyncWidget> asyncWidgets;
-    
+
     public OversiktLerret(String id, String fnr) {
         super(id);
         add(new TimingMetricsBehaviour("oversikt").withPrefix("lerret."));
@@ -37,7 +43,10 @@ public class OversiktLerret extends Lerret {
                 new MeldingerWidget("meldinger", "M", fnr),
                 new SaksoversiktWidget("saksoversikt", "S", fnr)));
 
-        if(visUtbetalinger()) {
+
+        add(new VarslerOversiktLink("varsling-lenke", fnr));
+
+        if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
             widgets.add(new UtbetalingWidget("utbetalinger", "U", fnr));
         } else {
             add(new WebMarkupContainer("utbetalinger").setVisibilityAllowed(false));

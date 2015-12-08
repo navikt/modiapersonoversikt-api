@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
@@ -26,6 +27,11 @@ public class ApplicationContextBeans {
     @Bean
     public PlukkOppgaveService plukkOppgaveService() {
         return new PlukkOppgaveServiceImpl();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new JacksonConfig().getContext(null);
     }
 
 }

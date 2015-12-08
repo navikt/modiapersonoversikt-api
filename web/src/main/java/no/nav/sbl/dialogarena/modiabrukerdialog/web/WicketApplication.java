@@ -5,6 +5,7 @@ import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.errorhandling.ModiaApplicationConfigurator;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.modia.lamell.LamellPanel;
 import no.nav.modig.modia.lamell.ModalErrorPanel;
 import no.nav.modig.modia.liste.EkspanderingsListe;
@@ -27,6 +28,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.purgeoppgaver.PurgeOppgaverPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
@@ -45,11 +47,13 @@ import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.util.Locale;
 
+import static java.lang.Boolean.getBoolean;
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
 import static no.nav.sbl.dialogarena.time.Datoformat.brukLocaleFra;
@@ -148,7 +152,7 @@ public class WicketApplication extends WebApplication {
 
     private void configureFrontend() {
         new FrontendConfigurator()
-                .withModules(MODIA)
+                .withModules(MODIA, BasePage.SCROLL)
                 .addMetas(
                         MetaTag.XUA_IE_EDGE,
                         MetaTag.CHARSET_UTF8,
@@ -156,10 +160,9 @@ public class WicketApplication extends WebApplication {
                 )
                 .addConditionalCss(
                         PersonPage.INTERN_IE,
-                        SaksoversiktLerret.SAKSOVERSIKT_IE_CSS,
+                        PersonPage.DIALOGPANEL_IE,
                         BasePage.MODIA_LAYOUT_IE_CSS,
                         BasePage.KJERNEINFO_IE9_CSS,
-                        Innboks.MELDINGER_IE_CSS,
                         FancySelect.IECSS
                 )
                 .addLess(
@@ -167,6 +170,7 @@ public class WicketApplication extends WebApplication {
                         BasePage.MODIA_WIDGET_LESS,
                         BasePage.MODIA_LAMELL_LESS,
                         BasePage.MODIA_LAYOUT_LESS,
+                        BasePage.MODIA_UTILITIES_LESS,
                         BasePage.HEADER,
                         BasePage.RESPONSIVE,
                         BasePage.PERSONINFO_LESS,
@@ -186,6 +190,7 @@ public class WicketApplication extends WebApplication {
                         BasePage.HENTPERSON,
                         BasePage.KJERNEINFO,
                         BasePage.OVERSIKT,
+                        BasePage.VARSLING,
                         BasePage.SYKEPENGER_FORELDREPENGER,
                         PersonPage.DIALOGPANEL_LESS,
                         FancySelect.LESS
@@ -197,6 +202,8 @@ public class WicketApplication extends WebApplication {
                 .addScripts(SPIResources.getScripts())
                 .addScripts(
                         BasePage.JS_RESOURCE,
+                        BasePage.JS_TAB_POPUP_RESOURCE,
+                        PersonPage.SCROLL_JS,
                         ShortcutListenerResourceReference.get(),
                         KeyNavigationResourceReference.get(),
                         Widget.JS_RESOURCE,
@@ -214,7 +221,8 @@ public class WicketApplication extends WebApplication {
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS,
                         Innboks.BESVAR_INDIKATOR_JS,
-                        FancySelect.JS
+                        FancySelect.JS,
+                        FeedbackLabel.JS
                 )
                 .withModules(ReactResources.REACT_KOMPONENTER)
                 .withResourcePacking(this.usesDeploymentConfig())
@@ -229,6 +237,9 @@ public class WicketApplication extends WebApplication {
         if (mockSetupErTillatt()) {
             mountPage("internal/mocksetup", MockSetupPage.class);
         }
+        if (getBoolean("kan.purge.oppgaver")) {
+            mountPage("internal/purgeoppgaver", PurgeOppgaverPage.class);
+        }
     }
 
 
@@ -242,5 +253,11 @@ public class WicketApplication extends WebApplication {
     protected void setSpringComponentInjector() {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
     }
+
+    @Scheduled(fixedDelay = 30 * 60 * 1000)//Hver halvtime
+    private void clearCacheTask() {
+        this.getResourceSettings().getLocalizer().clearCache();
+    }
+
 
 }

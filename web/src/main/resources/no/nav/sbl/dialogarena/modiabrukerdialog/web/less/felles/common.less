@@ -1,6 +1,8 @@
 /* Generelle mixins, variabler, typografi og stiler som bruker av andre stilregler */
 @mainContentWidth: 50%;
 @sidebarYtrePadding: 15px;
+@focusfarge: #ffbd66;
+@mouseoverfarge: #0067C5;
 
 /* Mixins */
 .kolonne {
@@ -28,10 +30,42 @@
   .generell-pil(@size, @size, @color);
 }
 
+.focus-sammensatt-mixin {
+  outline: none;
+  box-shadow: 0 0 0 3px @focusfarge;
+}
+
+.focus-sammensatt-inset-mixin(@size: 3px) {
+  outline: none;
+  box-shadow: inset 0 0 0 @size @focusfarge;
+}
+
+.focus-enkel-mixin {
+  outline: none;
+  background-color: @focusfarge;
+  color: #333;
+}
+
+.mouseover-sammensatt-mixin {
+  outline: none;
+  border: 1px solid rgb(0, 103, 197) !important;
+}
+
+.invalid-sammensatt-mixin(@border-size: 1px) {
+  outline: none;
+  border: @border-size solid #BA3A26 !important;
+  background-color: #FBF5F4 !important;
+}
+
+.ontop-mixin(@z-index: 9999) {
+  position: relative;
+  z-index: @z-index;
+}
+
 /* Generelle elementer */
 
 HTML {
-  overflow-y: scroll;
+  overflow: auto;
   height: 100%;
   background: @white;
   font-size: 14px;
@@ -73,34 +107,50 @@ LABEL, .label {
   font-size: 0.857rem;
 }
 
-INPUT.errorJS, SELECT.errorJS {
-  background-color: @errorBackgroundLight;
-  border: 1px solid @errorTextLight;
-}
-
-LABEL.errorJS {
+SPAN.errorJS {
+  .feedbacklabel;
   position: absolute;
   left: 0;
   bottom: -2.9rem;
   white-space: nowrap;
-  color: @errorTextLight;
   text-transform: none;
 }
 
 UL.feedbackPanel {
-  padding: 1rem 1rem 1rem 2rem;
-  list-style-type: none;
-  color: @white;
-  background-color: #da153a;
-  font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  LI:before {
-    content: "* ";
+  padding: 20px 20px 32px 40px;
+  color: #FBF5F4;
+  background-color: #BA3A26;
+  font: 14px Arial, sans-serif;
+  line-height: 14px;
+  text-align: left;
+
+  SPAN.feedbackHeader {
+    margin-left: -1em;
+    font-size: 20px;
+    font-family: modus;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  LI {
+    font-style: italic;
+    &:not(:last-of-type) {
+      margin-bottom: 9px;
+    }
+    A {
+      font-weight: normal;
+    }
   }
   A, A:visited {
     color: @white;
     font-weight: bold;
     text-decoration: underline;
   }
+}
+
+.feedbacklabel {
+  text-align: left;
 }
 
 .description {
@@ -175,10 +225,6 @@ fieldset.wcag {
   }
 }
 
-.wicket-ajax-indicator {
-  display: block;
-}
-
 .hidden {
   display: none;
 }
@@ -208,5 +254,153 @@ fieldset.wcag {
         margin-bottom: 15px;
       }
     }
+  }
+}
+
+.wicket-ajax-indicator {
+  display: block;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+input:not([type=radio]):not([type=checkbox]), textarea, button, select, a[role=button], .ui-selectmenu-button {
+  &:focus {
+    .focus-sammensatt-mixin;
+    & + label {
+      .focus-sammensatt-mixin;
+    }
+  }
+}
+
+a:not([role=button]):not(.focus-outline):not([tabindex]), .focus-fyll {
+  &:focus {
+    .focus-enkel-mixin;
+  }
+}
+
+input[type=text],
+input.hasDatepicker,
+textarea,
+select,
+.ui-selectmenu-button,
+.saksbehandlerinnstillinger-toggle {
+  &:hover {
+    .mouseover-sammensatt-mixin;
+    & + label {
+      .mouseover-sammensatt-mixin;
+    }
+  }
+}
+
+.invalid-sammensatt-mixin-selector(@border-size: 1px) {
+  input[type=text],
+  input.hasDatepicker,
+  textarea,
+  select,
+  .ui-selectmenu-button,
+  .saksbehandlerinnstillinger-toggle,
+  .radioknapper-blokk,
+  .journalforingSporsmal {
+    &.invalid {
+      .invalid-sammensatt-mixin(@border-size);
+      & + label {
+        .invalid-sammensatt-mixin(@border-size);
+      }
+    }
+  }
+}
+
+.invalid-sammensatt-mixin-selector(1px);
+
+.mork-bakgrunn {
+  .invalid-sammensatt-mixin-selector(2px);
+}
+
+.feedbacklabel {
+  color: #BA3A26;
+  font-style: italic;
+  line-height: 14px;
+  margin-top: 8px;
+}
+
+.mork-bakgrunn .feedbacklabel {
+  color: #FF9100;
+  font-style: italic;
+}
+
+input[type=radio] {
+  .mf3-override('radio');
+}
+
+input[type=checkbox] {
+  .mf3-override('check');
+}
+
+.wicket-modal {
+  * {
+    text-transform: none !important;
+  }
+}
+
+.mf3-override(@type) {
+  & + label {
+    background-image: url('../img/mf3/@{type}.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:checked + label {
+    background-image: url('../img/mf3/@{type}_valgt.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:hover + label {
+    background-image: url('../img/mf3/@{type}_hover.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:focus + label {
+    background-image: url('../img/mf3/@{type}_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:checked:hover + label {
+    background-image: url('../img/mf3/@{type}_valgt_hover.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:checked:focus + label {
+    background-image: url('../img/mf3/@{type}_valgt_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:hover:focus + label {
+    background-image: url('../img/mf3/@{type}_hover_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:checked:hover:focus + label {
+    background-image: url('../img/mf3/@{type}_valgt_hover_focus.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:checked:disabled + label {
+    background-image: url('../img/mf3/@{type}_inactive_valgt.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat !important;
+  }
+  &:disabled + label {
+    background-image: url('../img/mf3/@{type}_inactive.svg') !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-repeat: no-repeat;
   }
 }

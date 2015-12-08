@@ -20,13 +20,12 @@
     <Rule RuleId="ident-har-aareg-tilgang" Effect="Permit">
         <Description>Vis aareg-link for bruker med aareg tilg.</Description>
         <Condition>
-            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Aa-register-Lese</AttributeValue>
-                    <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
-                </Apply>
-            </Apply>
-        </Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Aa-register-Lese</AttributeValue>
+				<SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+											AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
+			</Apply>
+		</Condition>
     </Rule>
 
     <Rule RuleId="ingen-andre-har-tilgang" Effect="Deny"/>

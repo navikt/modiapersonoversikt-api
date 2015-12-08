@@ -30,11 +30,7 @@ public class AutentisertBrukerKeyGenerator extends SimpleKeyGenerator {
     }
 
     private String getUser() {
-        try {
-            return getSubjectHandler().getUid();
-        } catch (Exception e) {
-            return "jetty";
-        }
+        return getSubjectHandler().getUid();
     }
 
     private String getTargetClassName(Object target) {

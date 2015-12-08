@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import com.codahale.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -49,6 +50,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.siste;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
@@ -72,6 +74,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
+    private String behandlingsId;
 
     public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
@@ -82,11 +85,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
+        opprettHenvendelse();
 
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
-        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, oppgaveId);
+        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
         kvittering = new KvitteringsPanel("kvittering");
 
         visTraadContainer.setOutputMarkupPlaceholderTag(true);
@@ -127,6 +131,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     target.focusComponent(leggTilbakePanel.hentForsteFokusKomponent());
                 } else {
                     send(getPage(), BREADTH, SVAR_AVBRUTT);
+                    henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
                 }
             }
         };
@@ -170,6 +175,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {
         henvendelseVM.kanal = TEKST;
         henvendelseVM.temagruppe = Temagruppe.valueOf(sporsmal.temagruppe);
+        henvendelseVM.gjeldendeTemagruppe = sporsmal.gjeldendeTemagruppe;
         henvendelseVM.setTraadJournalfort(sporsmal.journalfortDato);
     }
 
@@ -179,6 +185,14 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         animertVisningToggle(target, leggTilbakePanel);
         target.add(this);
         target.focusComponent(leggTilbakeKnapp);
+    }
+
+    private void opprettHenvendelse() {
+        String type = SVAR_SKRIFTLIG.toString();
+        String fnr = grunnInfo.bruker.fnr;
+        String behandlingskjedeId = sporsmal.traadId;
+
+        behandlingsId = henvendelseUtsendingService.opprettHenvendelse(type, fnr, behandlingskjedeId);
     }
 
     private class FortsettDialogForm extends Form<HenvendelseVM> {
@@ -192,7 +206,6 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             timer = MetricsFactory.createTimer("hendelse.besvar.time").time();
             final IModel<HenvendelseVM> henvendelseVM = getModel();
 
-            add(new Label("navIdent", getSubjectHandler().getUid()));
             add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo, henvendelseVM));
 
             feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
@@ -202,7 +215,8 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             sendKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    if (henvendelseVM.getObject().brukerKanSvareSkalEnables().getObject()
+                    if (!KOMMUNALE_TJENESTER.contains(henvendelseVM.getObject().gjeldendeTemagruppe)
+                            && henvendelseVM.getObject().brukerKanSvareSkalEnables().getObject()
                             && henvendelseVM.getObject().brukerKanSvare
                             && henvendelseVM.getObject().valgtSak == null
                             && !henvendelseVM.getObject().traadJournalfort) {
@@ -216,6 +230,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 @Override
                 protected void onError(AjaxRequestTarget target, Form<?> form) {
                     target.add(feedbackPanel);
+                    FeedbackLabel.addFormLabelsToTarget(target, form);
                 }
             };
             sendKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
@@ -247,7 +262,6 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 target.add(feedbackPanel);
             } finally {
                 timer.stop();
-                timer = null;
             }
         }
 
@@ -260,14 +274,15 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     .withFnr(grunnInfo.bruker.fnr)
                     .withNavident(getSubjectHandler().getUid())
                     .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
-                    .build();
+                    .build()
+                    .withBrukersEnhet(sporsmal.brukersEnhet);
 
             Optional<Sak> sak = none();
             if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
                 sak = optional(henvendelseVM.valgtSak);
             }
 
-            henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId, sak);
+            henvendelseUtsendingService.ferdigstillHenvendelse(melding, oppgaveId, sak, behandlingsId);
         }
 
         private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {

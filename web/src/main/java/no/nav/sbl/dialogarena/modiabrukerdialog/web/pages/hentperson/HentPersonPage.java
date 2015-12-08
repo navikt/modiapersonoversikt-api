@@ -8,6 +8,7 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +51,7 @@ public class HentPersonPage extends BasePage {
                 new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukkOppgave"),
+                new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true)
         );
 
@@ -74,6 +76,7 @@ public class HentPersonPage extends BasePage {
 
     @Override
     public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
         response.render(forScript("jQuery('#foedselsnummerInput').focus();SaksbehandlerInnstillinger.focus();"));
     }
 

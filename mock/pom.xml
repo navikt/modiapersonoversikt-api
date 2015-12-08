@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>5.28.2</version>
+        <version>6.33</version>
     </parent>
 
     <artifactId>modiabrukerdialog-mock</artifactId>
@@ -133,6 +133,11 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

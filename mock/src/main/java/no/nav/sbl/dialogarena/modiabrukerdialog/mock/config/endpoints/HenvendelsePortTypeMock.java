@@ -7,8 +7,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import org.joda.time.DateTime;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,9 +18,6 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static org.joda.time.DateTime.now;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @Configuration
 public class HenvendelsePortTypeMock {
@@ -64,6 +59,8 @@ public class HenvendelsePortTypeMock {
     public static final String BEHANDLINGS_ID4 = randomId();
     public static final String BEHANDLINGS_ID5 = randomId();
     public static final String BEHANDLINGS_ID6 = randomId();
+    public static final String BEHANDLINGS_ID7 = randomId();
+    public static final String BEHANDLINGS_ID8 = randomId();
 
     private static String randomId() {
         return valueOf(idGenerator.nextInt());
@@ -111,11 +108,31 @@ public class HenvendelsePortTypeMock {
             createXMLHenvendelse(BEHANDLINGS_ID5, BEHANDLINGS_ID5, now().minusDays(1), null,
                     createXMLMeldingTilBruker("ARBD", "TEKST", KORT_TEKST), valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
                     .withHenvendelseType(SPORSMAL_SKRIFTLIG.name())
-                    .withKontorsperreEnhet("0122"),
+                    .withKontorsperreEnhet("0122")
+                    .withBrukersEnhet("1234"),
 
             createXMLHenvendelse(BEHANDLINGS_ID6, BEHANDLINGS_ID6, now().minusDays(2), null,
-                    null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name())
+                    null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name()),
+
+            createXMLHenvendelse(BEHANDLINGS_ID7, BEHANDLINGS_ID7, now().minusDays(4), null,
+                    createXMLMeldingFraBruker("OKSOS", LANG_TEKST),
+                    valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
+
+            createXMLHenvendelse(randomId(), BEHANDLINGS_ID7, now().minusHours(12), null,
+                    createXMLMeldingTilBruker("OKSOS", "TEKST", KORT_TEKST),
+                    null, createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name()),
+
+            henvendelseMedGjeldendeTemagruppe(BEHANDLINGS_ID8, "ANSOS")
+
     ));
+
+    private static XMLHenvendelse henvendelseMedGjeldendeTemagruppe(String behandlingsId, String gjeldendeTemagruppe) {
+        return createXMLHenvendelse(behandlingsId, behandlingsId, DateTime.now().minusDays(3), null, createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), createXMLJourfortInformasjon(null, null, null, null))
+                .withHenvendelseType(SPORSMAL_SKRIFTLIG.toString())
+                .withGjeldendeTemagruppe(gjeldendeTemagruppe);
+    }
 
     private static XMLJournalfortInformasjon createXMLJourfortInformasjon(DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
         return new XMLJournalfortInformasjon()
@@ -137,7 +154,8 @@ public class HenvendelsePortTypeMock {
                 .withEksternAktor(NAVIDENT)
                 .withJournalfortInformasjon(journalfortInformasjon)
                 .withOppgaveIdGsak(oppgaveId)
-                .withErTilknyttetAnsatt(false);
+                .withErTilknyttetAnsatt(false)
+                .withGjeldendeTemagruppe("ARBD");
 
         return xmlHenvendelse.withMetadataListe(
                 metadata == null ? null : new XMLMetadataListe().withMetadata(metadata));
@@ -168,17 +186,20 @@ public class HenvendelsePortTypeMock {
     }
 
     public static HenvendelsePortType createHenvendelsePortTypeMock() {
-        HenvendelsePortType mockI = mock(HenvendelsePortType.class);
-        when(mockI.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenAnswer(new Answer<WSHentHenvendelseResponse>() {
+        return new HenvendelsePortType() {
             @Override
-            public WSHentHenvendelseResponse answer(InvocationOnMock invocation) {
-                WSHentHenvendelseRequest req = (WSHentHenvendelseRequest) invocation.getArguments()[0];
+            public void ping() {
+            }
+
+            @Override
+            public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest req) {
                 return new WSHentHenvendelseResponse().withAny(hentHenvendelseMedBehandlingsId(req));
             }
-        });
-        when(mockI.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
-                new WSHentHenvendelseListeResponse().withAny(HENVENDELSER.toArray())
-        );
-        return mockI;
+
+            @Override
+            public WSHentHenvendelseListeResponse hentHenvendelseListe(WSHentHenvendelseListeRequest wsHentHenvendelseListeRequest) {
+                return new WSHentHenvendelseListeResponse().withAny(HENVENDELSER.toArray());
+            }
+        };
     }
 }

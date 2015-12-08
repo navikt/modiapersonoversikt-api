@@ -8,8 +8,10 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.*;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -17,14 +19,13 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingServi
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
+import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String LAMELL_SAKSOVERSIKT = "saksoversikt";
     public static final String LAMELL_MELDINGER = "meldinger";
+    public static final String LAMELL_VARSLING = "varsling";
     public static final String PANEL = "panel";
 
     private String fnrFromRequest;
@@ -70,13 +73,24 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
     private GsakService gsakService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     private InnboksVM innboksVM;
 
+    @Inject
+    @Named("pep")
+    private EnforcementPoint pep;
 
     public LamellContainer(String id, String fnrFromRequest, Session session) {
-        super(id, createLamellFactories(fnrFromRequest, session));
+        super(id, createLamellFactories(fnrFromRequest));
         this.fnrFromRequest = fnrFromRequest;
+
+        if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
+            addNewFactory(createUtbetalingLamell(fnrFromRequest));
+        }
         addNewFactory(createMeldingerLamell(fnrFromRequest, session));
+
     }
 
     @Override
@@ -167,16 +181,13 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest, Session session) {
+    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(fnrFromRequest));
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
         lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
-
-        if (visUtbetalinger()) {
-            lamellFactories.add(createUtbetalingLamell(fnrFromRequest));
-        }
+        lamellFactories.add(createVarslingsLamell(fnrFromRequest));
 
         return lamellFactories;
     }
@@ -213,9 +224,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             @Override
             public Lerret createLerret(String id, String name) {
                 return new AjaxLazyLoadLerret(id, name) {
+
+                    final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", fnrFromRequest);
+
                     @Override
                     public Lerret getLazyLoadComponent(String markupId) {
-                        return new UtbetalingLerret(markupId, fnrFromRequest);
+                        return utbetalinglerret;
                     }
                 };
             }
@@ -236,20 +250,25 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
+    private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {
+        return newLamellFactory(LAMELL_VARSLING, "V", true, new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id, String name) {
+                return new VarselLerret(id, fnrFromRequest);
+            }
+        });
+    }
+
     private LamellFactory createMeldingerLamell(final String fnrFromRequest, final Session session) {
-        innboksVM = new InnboksVM(fnrFromRequest, henvendelseBehandlingService);
+        innboksVM = new InnboksVM(fnrFromRequest, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         InnboksProps props = new InnboksProps(
                 optional((String) session.getAttribute(HENVENDELSEID)),
                 optional((String) session.getAttribute(OPPGAVEID)),
                 optional((String) session.getAttribute(BESVARMODUS)),
-                optional(Boolean.valueOf((String) session.getAttribute(FORTSETTDIALOGMODUS))));
+                optional(Boolean.valueOf((String) session.getAttribute(BESVARES))));
 
         if (props.henvendelseId.isSome()) {
             innboksVM.setSessionHenvendelseId(props.henvendelseId.get());
-//            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(props.henvendelseId.get());
-//            if (meldingITraad.isSome()) {
-//                innboksVM.setValgtMelding(meldingITraad.get());
-//            }
         }
         if (props.oppgaveId.isSome() && gsakService.oppgaveKanManuelltAvsluttes(props.oppgaveId.get())) {
             innboksVM.setSessionOppgaveId(props.oppgaveId.get());
@@ -282,5 +301,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {
         innboksVM.traadBesvares = null;
+        innboksVM.setSessionHenvendelseId(null);
+        innboksVM.setSessionOppgaveId(null);
     }
 }

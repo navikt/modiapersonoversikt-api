@@ -32,6 +32,12 @@
              <ns:Policy>
                 <ns:Location>policy/aareg-policy.xml</ns:Location>
             </ns:Policy>
+            <ns:Policy>
+                <ns:Location>policy/okonomisk-sosialhjelp-policy.xml</ns:Location>
+            </ns:Policy>
+			<ns:Policy>
+				<ns:Location>policy/pesys-policy.xml</ns:Location>
+			</ns:Policy>
         </ns:PolicySet>
     </ns:Policies>
     <ns:Locators>

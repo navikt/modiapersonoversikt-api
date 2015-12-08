@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.nav.modig.lang.option.Optional;
 
 import java.util.List;
@@ -16,6 +17,11 @@ public class SkrivestotteTekst {
     public List<String> tags;
     public Map<String, String> innhold;
 
+    public SkrivestotteTekst() {
+        key = "";
+        tittel = "";
+    }
+
     public SkrivestotteTekst(String key, String tittel, Map<String, String> innhold, String... tags) {
         this(key, tittel, innhold, asList(tags));
     }
@@ -27,10 +33,12 @@ public class SkrivestotteTekst {
         this.tags = tags;
     }
 
+    @JsonIgnore
     public Optional<String> getDefaultLocaleInnhold() {
         return optional(innhold.get(LOCALE_DEFAULT));
     }
 
+    @JsonIgnore
     public Boolean isValid() {
         return getDefaultLocaleInnhold().isSome();
     }
