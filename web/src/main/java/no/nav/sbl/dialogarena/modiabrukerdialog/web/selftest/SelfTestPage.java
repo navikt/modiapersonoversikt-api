@@ -43,7 +43,14 @@ public class SelfTestPage extends SelfTestBase {
                     String serviceName = pingable.name();
                     String methodName = pingable.method();
                     String endpoint = pingable.endpoint();
-                    String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
+                    String status;
+                    if (pingResult.getServiceStatus().equals(SERVICE_OK)) {
+                        status = STATUS_OK;
+                    }
+                    else if(pingResult.getServiceStatus().equals(PingResult.ServiceResult.UNPINGABLE)){
+                        status = STATUS_UNPINGABLE;
+                    }
+                    else {status = STATUS_ERROR;}
                     AvhengighetStatus avhengighetStatus = new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName, endpoint);
                     if(pingResult instanceof FailedPingResult){
                         FailedPingResult failedPingResult = (FailedPingResult) pingResult;
