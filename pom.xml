@@ -95,7 +95,7 @@
         <personsok.version>1.1.18</personsok.version>
         <kjerneinfo.versjon>1.1.27-IE11-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>3.0.6</utbetaling.version>
+        <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -106,8 +106,8 @@
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>3.13</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>4.18-IE11-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>4.7</saksoversikt.version>
-        <varsling.modia.version>1.7</varsling.modia.version>
+        <saksoversikt.version>4.8</saksoversikt.version>
+        <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>2.0.7-IE11-SNAPSHOT</modia-felleskomponenter.version>

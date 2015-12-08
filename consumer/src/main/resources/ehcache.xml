@@ -155,6 +155,14 @@
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
 
+	<cache name="asbogosysAnsattListe" maxElementsInMemory="10000"
+		   eternal="false"
+		   timeToIdleSeconds="43200"
+		   timeToLiveSeconds="43200"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   memoryStoreEvictionPolicy="LRU"/>
+
     <cache name="ldap" maxElementsInMemory="20000"
            eternal="false"
            timeToIdleSeconds="3600"

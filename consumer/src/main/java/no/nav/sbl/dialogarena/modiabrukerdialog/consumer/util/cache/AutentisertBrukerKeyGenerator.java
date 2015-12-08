@@ -13,10 +13,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 /**
  * Klasse for å lage cachekey som også tar høyde for
  * brukers ident, slik at ikke tilgang overstyres av
- * cachede entries. NB! Extender DefaultKeyGenerator
- * som er standard i nåværende versjon av Spring.
- * Denne er deprecated pga potensielle hash-kollisjoner
- * i nyeste versjon av Spring.
+ * cachede entries.
  */
 public class AutentisertBrukerKeyGenerator extends SimpleKeyGenerator {
 
