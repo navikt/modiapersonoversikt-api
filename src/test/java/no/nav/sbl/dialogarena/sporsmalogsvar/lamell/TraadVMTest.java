@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_OPPMOTE;
@@ -23,10 +26,16 @@ public class TraadVMTest {
     private List<MeldingVM> meldinger;
     private TraadVM traadVM;
 
+    @Inject
+    private EnforcementPoint pep;
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     @Before
     public void setUp() {
         meldinger = createMeldingVMer();
-        traadVM = new TraadVM(meldinger);
+        traadVM = new TraadVM(meldinger, pep, saksbehandlerInnstillingerService);
     }
 
     @Test

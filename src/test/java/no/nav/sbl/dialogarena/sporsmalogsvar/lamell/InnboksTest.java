@@ -2,9 +2,11 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -44,6 +46,12 @@ public class InnboksTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    @Inject
+    private EnforcementPoint pep;
 
     @Before
     public void setUp() {
@@ -98,7 +106,7 @@ public class InnboksTest extends WicketPageTest {
     }
 
     private InnboksVM innboksVM(String fnr) {
-        return new InnboksVM(fnr, henvendelseBehandlingService);
+        return new InnboksVM(fnr, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
     }
 
     private TraadVM getValgtTraad(Innboks testInnboks) {

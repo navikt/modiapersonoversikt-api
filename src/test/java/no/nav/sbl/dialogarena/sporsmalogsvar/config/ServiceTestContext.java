@@ -8,8 +8,8 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
@@ -61,6 +61,11 @@ public class ServiceTestContext {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(opprettMeldingEksempel()));
         when(henvendelseBehandlingService.getEnhet(anyString())).thenReturn("1234");
         return henvendelseBehandlingService;
+    }
+
+    @Bean
+    public OppgaveBehandlingService oppgaveBehandlingService() {
+        return mock(OppgaveBehandlingService.class);
     }
 
     @Bean
