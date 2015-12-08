@@ -5,6 +5,8 @@ import no.nav.kjerneinfo.kontrakter.oppfolging.loader.OppfolgingsLoader;
 import no.nav.kjerneinfo.kontrakter.ytelser.YtelseskontrakterLoader;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
@@ -69,4 +71,13 @@ public class LamellServicesAndLoaders {
         return mock(GsakService.class);
     }
 
+    @Bean
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
+        return mock(SaksbehandlerInnstillingerService.class);
+    }
+
+    @Bean
+    public EnforcementPoint pep() {
+        return mock(EnforcementPoint.class);
+    }
 }

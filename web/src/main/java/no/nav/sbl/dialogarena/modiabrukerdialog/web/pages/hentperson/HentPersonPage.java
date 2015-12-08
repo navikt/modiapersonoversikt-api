@@ -77,6 +77,7 @@ public class HentPersonPage extends BasePage {
 
     @Override
     public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
         response.render(forScript("jQuery('#foedselsnummerInput').focus();SaksbehandlerInnstillinger.focus();"));
     }
 
