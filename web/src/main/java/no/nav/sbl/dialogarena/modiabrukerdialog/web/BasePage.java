@@ -87,7 +87,6 @@ public class BasePage extends WebPage {
             .done();
 
     private final WebMarkupContainer body;
-    private final ReactTekniskFeilModal reactTekniskFeilModal;
 
     public BasePage(PageParameters pageParameters) {
         body = (WebMarkupContainer) new TransparentWebMarkupContainer("body").setOutputMarkupId(true);
@@ -101,21 +100,15 @@ public class BasePage extends WebPage {
             }
         });
 
-
-        reactTekniskFeilModal = new ReactTekniskFeilModal("tekniskFeil", pageParameters);
-        add(reactTekniskFeilModal);
+        add(new ReactTekniskFeilModal("tekniskFeil", pageParameters));
 
         add(new ExceptionHandlingBehavior() {
                 @Override
                 public IRequestHandler handleException(Component source, Exception ex) {
-                    System.out.println("EXCEPTION FOUND!");
-
                     PageProvider pageProvider = new PageProvider(getPage().getClass(), new PageParameters().set("tekniskfeil", true));
-
                     return new RenderPageRequestHandler(pageProvider);
                 }
             }
-
         );
     }
 
@@ -127,7 +120,6 @@ public class BasePage extends WebPage {
     @Override
     public void onEvent(IEvent<?> event) {
         super.onEvent(event);
-        //reactTekniskFeilModal.show();
         FocusHandler.handleEvent(getPage(), event);
     }
 
