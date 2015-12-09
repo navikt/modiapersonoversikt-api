@@ -36,11 +36,11 @@ var Utils = {
 
         var elementTop = $element.position().top;
         var elementBottom = elementTop + $element.outerHeight();
-        var scrollContainer = $parent.find('.mCSB_container');
-        var scrollPos = parseInt(scrollContainer.css('top'));
 
-        if ((elementTop + scrollPos < 0) || (elementBottom + scrollPos > $parent.outerHeight())) {
-            $parent.mCustomScrollbar('scrollTo', $element, {scrollInertia: 0});
+        if (elementTop < 0) {
+            $parent.scrollTop($parent.scrollTop() + elementTop);
+        } else if (elementBottom > $parent.outerHeight()) {
+            $parent.scrollTop($parent.scrollTop() + (elementBottom - $parent.outerHeight()));
         }
     },
     generateId: function (prefix) {
