@@ -6,6 +6,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -21,7 +22,7 @@ public class ReactTekniskFeilModal extends Panel {
         add(modal);
     }
 
-    private HashMap<String, Object> modalProps(final PageParameters pageParameters) {
+    private Map<String, Object> modalProps(final PageParameters pageParameters) {
         return new HashMap<String, Object>() {{
             put("tekst", getCmsString("feilmelding.tekniskfeil.tekst"));
             put("isOpen", !isBlank(pageParameters.get("tekniskfeil").toString()));
