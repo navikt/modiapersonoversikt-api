@@ -100,7 +100,6 @@ public class AlleMeldingerPanel extends Panel {
                             AlleMeldingerPanel.this.innboksVM.setValgtMelding(meldingVM);
                             send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
                             target.add(AlleMeldingerPanel.this);
-                            target.appendJavaScript("Modig.lagScrollbars()");
                         }
                         target.focusComponent(radio);
                     }
@@ -131,7 +130,6 @@ public class AlleMeldingerPanel extends Panel {
 
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
-            target.appendJavaScript("Modig.lagScrollbars()");
             if (innboksVM.harTraader()) {
                 if (innboksVM.getValgtTraad() == null) {
                     innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
