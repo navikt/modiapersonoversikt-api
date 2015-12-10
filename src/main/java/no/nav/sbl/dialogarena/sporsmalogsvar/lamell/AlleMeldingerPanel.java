@@ -102,6 +102,7 @@ public class AlleMeldingerPanel extends Panel {
                             target.add(AlleMeldingerPanel.this);
                         }
                         target.focusComponent(radio);
+                        target.appendJavaScript("Meldinger.scrollToValgtMelding();");
                     }
                 });
             }
