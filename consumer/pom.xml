@@ -97,6 +97,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Dkif -->
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>dkif-consumer</artifactId>
+        </dependency>
+
         <!--Kodeverk-->
         <dependency>
             <groupId>no.nav</groupId>
@@ -179,6 +185,10 @@
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

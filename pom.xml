@@ -93,7 +93,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.18</personsok.version>
-        <kjerneinfo.versjon>1.1.26</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.27-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -116,6 +116,7 @@
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>1.0.0</joark-tjenestespesifikasjon.version>
+        <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
@@ -315,6 +316,17 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>dkif-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
             <!--Kodeverk-->
             <dependency>
@@ -430,6 +442,11 @@
                 <groupId>no.nav.sbl</groupId>
                 <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
                 <version>1.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl</groupId>
+                <artifactId>dkif-tjenestespesifikasjon</artifactId>
+                <version>${dkif-tjenestespesifikasjon.version}</version>
             </dependency>
 
             <!--Dialogarena-->

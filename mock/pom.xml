@@ -71,6 +71,10 @@
             <groupId>no.nav</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>dkif-consumer</artifactId>
+        </dependency>
 
         <!--Kodeverk-->
         <dependency>
