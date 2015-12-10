@@ -13,7 +13,7 @@
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>4.17</version>
+    <version>4.18-SCROLL-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -35,7 +35,7 @@
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
         <modiabrukerdialog-api.version>3.13</modiabrukerdialog-api.version>
         <reactkomponenter.version>1.25</reactkomponenter.version>
-        <modia-felleskomponenter.version>2.0.6</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>2.0.7-SCROLL</modia-felleskomponenter.version>
     </properties>
 
     <dependencies>
