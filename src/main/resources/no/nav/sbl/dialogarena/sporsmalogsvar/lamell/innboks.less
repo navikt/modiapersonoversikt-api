@@ -29,8 +29,9 @@
   }
   .traad-liste-visning {
     height: 100%;
-    padding: 0 1rem 2rem 0;
-    overflow: visible;
+    padding: 0 0rem 2rem 0;
+    overflow: scroll;
+    overflow-x: hidden;
     input[type=radio] {
       &:focus, &:hover, &:active {
         & + label{
@@ -55,7 +56,8 @@
     overflow-y: visible;
     .traadvisning {
       height: 100%;
-      overflow-y: visible;
+      overflow-y: scroll;
+      overflow-x: hidden;
     }
   }
   .meldingsliste, .traadDetaljer, .traad-liste-traad-liste-scroll {
