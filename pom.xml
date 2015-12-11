@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -27,10 +28,11 @@
         <junit.version>4.11</junit.version>
         <metrics.version>3.1.2</metrics.version>
 
+
         <!-- Egenlagde dependencies  -->
         <modig.frontend.version>1.1.75</modig.frontend.version>
         <modig.wicket.version>3.0.4</modig.wicket.version>
-        <modia-felleskomponenter.version>2.0.6</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>2.0.7-SCROLL</modia-felleskomponenter.version>
         <modiabrukerdialog-api.version>3.13</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.4</modig-lang.version>
@@ -190,6 +192,7 @@
             <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
+
 
         <dependency>
             <groupId>org.hamcrest</groupId>
