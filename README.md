@@ -49,6 +49,12 @@ Denne jobben kjøres derfor hver halvtime for å få oppdatert data fra enonic.
 ved å legge til -XX:MaxPermSize=256M som VM Option.
 I IntelliJ gjøres dette i ved å klikke "Edit Configurations" i nedtrekksmenyen for prosessen "StartJetty" i topplinjen.
 
+- Hvis man får feilmeling om at login.conf ikke finnes (se hele meldingen under), må man sette "Working Directory", under "Edit Configuration" til "\<project dir\>\modiabrukerdialog\web".
+
+
+    Problem accessing /modiabrukerdialog/j_security_check. Reason:
+    src/test/resources/login.conf (No such file or directory)
+
 ### IntelliJ
 
 - Opprett en run configuration for klassen StartJetty
