@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>6.33-IE11-SNAPSHOT</version>
+    <version>6.38-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -72,7 +72,7 @@
         <common-kodeverk.version>1.0.0</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>1.26-IE11-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>1.27</reactkomponenter.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -93,7 +93,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.18</personsok.version>
-        <kjerneinfo.versjon>1.1.27-IE11-SNAPSHOT</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.28</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -105,14 +105,14 @@
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>3.13</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>4.18-IE11-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>4.8</saksoversikt.version>
+        <sporsmalogsvar.version>4.20</sporsmalogsvar.version>
+        <saksoversikt.version>4.11</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>2.0.7-IE11-SNAPSHOT</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>2.0.8</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
-        <nav-fellessystemer-environment.version>4.4.39</nav-fellessystemer-environment.version>
+        <nav-fellessystemer-environment.version>4.4.78</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>1.0.0</joark-tjenestespesifikasjon.version>

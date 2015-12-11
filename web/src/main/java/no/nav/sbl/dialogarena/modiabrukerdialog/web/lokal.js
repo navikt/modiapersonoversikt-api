@@ -1,7 +1,6 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
-    Modig.lagScrollbars();
 
     $('#toggle-personsok').on('click', toggleAvansertSok);
     Modig.shortcutListener.on({key: 'A'}, toggleAvansertSok);
