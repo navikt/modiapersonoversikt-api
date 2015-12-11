@@ -14,7 +14,7 @@
     <name>modia-saksoversikt</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>4.8</version>
+    <version>4.10-SCROLL-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -32,7 +32,7 @@
         <!-- Egenlagde dependencies  -->
         <modig.frontend.version>1.1.75</modig.frontend.version>
         <modig.wicket.version>3.0.4</modig.wicket.version>
-        <modia-felleskomponenter.version>2.0.6</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>2.0.7-SCROLL</modia-felleskomponenter.version>
         <modiabrukerdialog-api.version>3.13</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.4</modig-lang.version>
@@ -314,6 +314,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modia-saksoversikt.git</developerConnection>
         <url>http://stash.devillo.no/scm/dial/modia-saksoversikt.git</url>
-        <tag>4.8</tag>
+        <tag>3.3</tag>
     </scm>
 </project>
