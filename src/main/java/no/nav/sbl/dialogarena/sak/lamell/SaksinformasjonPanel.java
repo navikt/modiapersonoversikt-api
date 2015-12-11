@@ -1,0 +1,27 @@
+package no.nav.sbl.dialogarena.sak.lamell;
+
+import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+
+import javax.inject.Inject;
+
+public class SaksinformasjonPanel extends Panel {
+
+    @Inject
+    protected BulletProofKodeverkService kodeverk;
+
+    @Inject
+    private BulletproofCmsService cms;
+
+    public SaksinformasjonPanel(String id, String temakode) {
+        super(id);
+        boolean harFaktaark = cms.eksistererArtikkel("saksinformasjon." + temakode);
+        setVisible(harFaktaark);
+
+        if(harFaktaark) {
+            add(new Label("saksinformasjonTekst", cms.hentArtikkel("saksinformasjon." + temakode)).setEscapeModelStrings(false));
+        }
+    }
+}

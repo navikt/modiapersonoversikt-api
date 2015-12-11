@@ -1,6 +1,8 @@
 *.iml
+*.ipr
+*.iws
 .idea/*
-*/target
+target/
 *.log
 
 #fitnesse

@@ -1,0 +1,46 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <p class="dato print-hide" wicket:id="dato-topp" />
+    <h2 class="medium" wicket:id="hendelse-tittel"/>
+    <div class="kvittering-topp">
+        <p wicket:id="sendtAv"></p>
+        <span class="mini" wicket:id="sendt-inn"/>
+    </div>
+
+    <div class="kollapsbar">
+        <p class="behandlingstid" wicket:id="behandlingstid"/>
+
+        <section wicket:id="innsendteVedleggSection">
+            <h3 wicket:id="innsendteDokumenterHeader">[]</h3>
+            <ul>
+                <li wicket:id="innsendteVedlegg">
+                    <img class="hake" alt="Hake godkjent, svart" src="./img/hake_svart.svg">
+                    <wicket:container wicket:id="dokument"/>
+                    <a class="vis-vedlegg print-hide inline-lenke" target="_blank" href="#" wicket:id="hent-vedlegg">
+                        <span wicket:id="saksoversikt.kvittering.visvedlegg" aria-hidden="true">[]</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section wicket:id="manglendeVedleggSection">
+            <h3 wicket:id="manglendeVedleggHeader">[]</h3>
+            <ul>
+                <li wicket:id="manglendeVedlegg">
+                    <img class="minus" alt="Manglende vedlegg" src="./img/minus.svg">
+                    <wicket:container wicket:id="dokument"/>
+                    <span>(<wicket:container wicket:id="innsendingsvalg"/>)</span>
+                </li>
+            </ul>
+        </section>
+        <p class="kvitteringsinfo" wicket:id="kvitteringsinfo-bottom">[]</p>
+        <a href="#" class="skriv-ut">Skriv ut</a>
+    </div>
+    <a class="toggle-kollapsbar" href="#">
+        <span class="skjul" wicket:id="skjul-kollapsbar"/>
+        <span wicket:id="vis-kollapsbar"/>
+    </a>
+    <div wicket:id="vedleggFeiletPopup"/>
+
+</wicket:panel>
+</html>
