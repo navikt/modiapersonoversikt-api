@@ -1,4 +1,3 @@
-
 @grayLight: #b7b1a9;
 @grayDark: #3e3832;
 @grayMediumDark: #dadada;
@@ -13,467 +12,476 @@
 @focusColor: @grayDark;
 
 .saksoversikt.lamell {
-    .lerret {
-        padding: 0;
-        overflow-y: visible;
-    }
-    .ajax-content, .saker {
-        height: 100%;
-    }
-    .sak-navigering, .sak-informasjon {
-        height: 100%;
-        float: left;
-        overflow-y: auto;
-    }
-    .lamell-hode-lenker {
-        z-index: 200;
-    }
-    .sak-navigering {
-        width: 40%;
-    }
-    .sak-informasjon {
-        width: 60%;
-    }
+  .lerret {
+    padding: 0;
+    overflow-y: visible;
+  }
+  .ajax-content, .saker {
+    height: 100%;
+  }
+  .sak-navigering, .sak-informasjon {
+    height: 100%;
+    float: left;
+    overflow-y: scroll;
+  }
+  .lamell-hode-lenker {
+    z-index: 200;
+  }
+  .sak-navigering {
+    width: 40%;
+  }
+  .sak-informasjon {
+    width: 60%;
+  }
 }
 
 .widget {
-    .overflowitem {
-        padding: 0;
-        background-color: @white !important;
+  .overflowitem {
+    padding: 0;
+    background-color: @white !important;
 
-        a {
-            text-decoration: none;
-            text-align: center;
-            color: @blueLight !important;
-            padding: 9px !important;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
+    a {
+      text-decoration: none;
+      text-align: center;
+      color: @blueLight !important;
+      padding: 9px !important;
     }
 
-    .widgetDato {
-        display: block;
-        font-size: 0.85rem;
-        margin: 0;
+    a:hover {
+      text-decoration: underline;
     }
+  }
 
-    .widgetTema {
-        display: inline-block;
-        font-weight: bold;
-        font-size: 1.2rem;
-        font-family: Modus, arial, sans-serif;
-        margin: 0;
-    }
+  .widgetDato {
+    display: block;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .widgetTema {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 1.2rem;
+    font-family: Modus, arial, sans-serif;
+    margin: 0;
+  }
 }
 
 .saksoversikt {
-    .feilmelding {
-        background: #BA3A26;
-        padding: 20px;
-        color: #FBF5F4;
-        font: 1rem Arial, sans-serif;
-        font-style: italic;
+  .feilmelding {
+    background: #BA3A26;
+    padding: 20px;
+    color: #FBF5F4;
+    font: 1rem Arial, sans-serif;
+    font-style: italic;
+  }
+
+  .lerret {
+    border-top: 1px solid #ccc;
+    position: relative;
+  }
+
+  li.aktiv {
+    display: block !important;
+  }
+
+  .saksinformasjon {
+    padding: 30px;
+    h2 {
+      font-family: modus, arial, helvetica, sans-serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      margin-top: 0;
+      padding-top: 30px;
+      border-top: 1px solid #d1d1d1;
+
+      &:first-child {
+        padding-top: 0;
+        border-top: none;
+      }
     }
 
-    .lerret {
-        border-top: 1px solid #ccc;
+    p {
+      margin-bottom: 0;
+      padding-bottom: 30px;
+
+      &:last-child {
+        padding-bottom: 10px;
+      }
+    }
+
+    a {
+      font-size: 1rem;
+    }
+  }
+
+  .lamell-hode-lenker {
+    position: absolute;
+    top: -34px;
+    width: 100%;
+
+    .saksinformasjon-lenker {
+      position: absolute;
+      left: 40%;
+      padding-left: 30px;
+      display: inline-block;
+
+      &.hide {
+        display: none;
+      }
+
+      a {
+        font-size: 0.875rem;
+        font-family: modus, arial, helvetica, sans-serif;
+        text-transform: uppercase;
         position: relative;
-    }
 
-    li.aktiv {
-        display: block !important;
-    }
-
-    .saksinformasjon {
-        padding: 30px;
-        h2 {
-            font-family: modus, arial, helvetica, sans-serif;
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            margin-top: 0;
-            padding-top: 30px;
-            border-top: 1px solid #d1d1d1;
-
-            &:first-child {
-                padding-top: 0;
-                border-top: none;
-            }
+        &.active {
+          text-decoration: none;
+          color: @grayDark;
         }
 
-        p {
-            margin-bottom: 0;
-            padding-bottom: 30px;
+      }
+      .skille-tegn {
+        content: "";
+        position: relative;
+        top: -3px;
+        display: inline-block;
+        border: 2px solid @grayDark;
+        border-radius: 2px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+    }
 
-            &:last-child {
-                padding-bottom: 10px;
-            }
+    .oppdater-innhold {
+      position: absolute;
+      right: 30px;
+    }
+  }
+
+  .sak-navigering {
+    background: #f1f1f1;
+    border-right: 1px solid #ccc;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0 0 2rem;
+
+      li {
+        &.aktiv a {
+          background: @blueMedium;
+          color: @offwhite;
+
+          &:hover {
+            background-color: darken(@blueMedium, 5);
+          }
         }
 
         a {
-            font-size: 1rem;
+          padding: 15px 20px;
+          border-bottom: 1px solid #ccc;
+          color: @grayDark;
+          display: block;
+
+          .dato {
+            margin-bottom: 0.17rem;
+          }
+
+          &:hover {
+            background: @grayMediumDark;
+          }
         }
+      }
+    }
+    &:focus {
+      .focus-sammensatt-mixin();
+      .ontop-mixin();
+    }
+  }
+
+  .sak-navigering-liste a:focus {
+    .focus-sammensatt-inset-mixin();
+  }
+
+  .sak-informasjon {
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+
+      li.sakdetaljer:not(.aktiv) {
+        display: none;
+      }
     }
 
-    .lamell-hode-lenker {
+    .aar {
+      position: relative;
+      z-index: 1;
+
+      &:before {
+        content: "";
+        border-top: 1px solid #d1d1d1;
         position: absolute;
-        top: -34px;
+        top: 50%;
+        left: 0;
         width: 100%;
+        z-index: -1;
+      }
 
-        .saksinformasjon-lenker {
-            position: absolute;
-            left: 40%;
-            padding-left: 30px;
-            display: inline-block;
+      &.sort:before {
+        border-color: @grayDark;
+      }
 
-            &.hide {
-                display: none;
-            }
-
-            a {
-                font-size: 0.875rem;
-                font-family: modus, arial, helvetica, sans-serif;
-                text-transform: uppercase;
-                position: relative;
-
-                &.active {
-                    text-decoration: none;
-                    color: @grayDark;
-                }
-
-                &:first-child:after {
-                    content: "";
-                    position: relative;
-                    top: -3px;
-                    display: inline-block;
-                    border: 2px solid @grayDark;
-                    border-radius: 2px;
-                    margin-left: 10px;
-                    margin-right: 5px;
-                }
-            }
-        }
-
-        .oppdater-innhold {
-            position: absolute;
-            right: 30px;
-        }
-    }
-
-    .sak-navigering {
-        background: #f1f1f1;
-        border-right: 1px solid #ccc;
-
-        ul {
-            list-style: none;
-            margin: 0;
-            padding: 0 0 2rem;
-
-            li {
-                &.aktiv a {
-                    background: @blueMedium;
-                    color: @offwhite;
-
-                    &:hover {
-                      background-color: darken(@blueMedium, 5);
-                    }
-                }
-
-                a {
-                    padding: 15px 20px;
-                    border-bottom: 1px solid #ccc;
-                    color: @grayDark;
-                    display: block;
-
-                    .dato {
-                        margin-bottom: 0.17rem;
-                    }
-
-                    &:hover {
-                        background: @grayMediumDark;
-                    }
-                }
-            }
-        }
-    }
-
-    .sak-informasjon {
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-
-            li.sakdetaljer:not(.aktiv) {
-                display: none;
-            }
-        }
-
-        .aar {
-            position: relative;
-            z-index: 1;
-
-            &:before {
-                content: "";
-                border-top: 1px solid #d1d1d1;
-                position: absolute;
-                top: 50%;
-                left: 0;
-                width: 100%;
-                z-index: -1;
-            }
-
-            &.sort:before {
-                border-color: @grayDark;
-            }
-
-            div {
-                width: 100%;
-                text-align: center;
-
-                span {
-                    background: @white;
-                    padding: 0 20px;
-                    font-size: 1.1rem;
-                    font-weight: bold;
-                    font-family: Modus, Arial, sans-serif;
-                }
-            }
-        }
-
-        .behandling-container {
-            padding: 0 30px 30px;
-
-            &:first-child {
-                .aar {
-                    display: none;
-                }
-            }
-
-            .behandling {
-                padding-left: 85px;
-                padding-top: 30px;
-                background: url(../img/under_arbeid_stor_graa.svg) no-repeat left 30px  !important;
-                page-break-inside: avoid;
-
-                &.avsluttet {
-                    background-image: url(../img/hake_stor_graa.svg) !important;
-                }
-
-                &.kvitteringbehandling {
-                    background-image: url(../img/dokument_stor.svg) !important;
-                }
-            }
-        }
-    }
-
-    .behandling-informasjon {
-        .kvittering-topp {
-            p {
-                display: none;
-            }
-        }
-
-        p {
-            margin-bottom: 16px;
-            &.dato {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-        }
-
-        h2 {
-            margin-top: 8px;
-            margin-bottom: 8px;
-        }
-
-        .behandlingstid {
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
-
-        .toggle-kollapsbar {
-            color: #2768B2;
-
-            span:hover {
-                text-decoration: underline;
-            }
-        }
-
-        .kollapsbar {
-            display: none;
-            position: relative;
-
-            h3 {
-                font-size: 1rem;
-                font-family: Arial, Helvetica, sans-serif;
-                font-weight: bold;
-                text-transform: none;
-            }
-
-            section {
-                padding-bottom: 0;
-            }
-
-            .skriv-ut {
-                position: absolute;
-                right: 10px;
-                background: url(../img/print_hover.svg) no-repeat left center;
-                padding-left: 20px;
-                color: #2768B2;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-
-            ul {
-                list-style: none;
-                padding-left: 0;
-                margin-bottom: 30px;
-
-                li {
-                    margin-bottom: 10px;
-                    padding-left: 20px;
-
-                    img {
-                        margin-left: -20px;
-
-                        &.hake {
-                            -ms-transform: scale(0.75, 0.75);
-                            -moz-transform: scale(0.75, 0.75);
-                            -webkit-transform: scale(0.75, 0.75);
-                            transform: scale(0.75, 0.75);
-                        }
-
-                        &.minus {
-                            position: relative;
-                            top: -2px;
-                        }
-                    }
-                }
-            }
-        }
-
-        .skjul {
-            display: none;
-        }
-    }
-
-    .hent-saker {
+      div {
+        width: 100%;
         text-align: center;
-        a {
-            margin: 0;
-            padding: 0;
-            color: @blueDark;
-        }
+
         span {
-            display: block;
-            margin: 0.5em 0;
+          background: @white;
+          padding: 0 20px;
+          font-size: 1.1rem;
+          font-weight: bold;
+          font-family: Modus, Arial, sans-serif;
         }
+      }
     }
+
+    .behandling-container {
+      padding: 0 30px 30px;
+
+      &:first-child {
+        .aar {
+          display: none;
+        }
+      }
+
+      .behandling {
+        padding-left: 85px;
+        padding-top: 30px;
+        background: url(../img/under_arbeid_stor_graa.svg) no-repeat left 30px !important;
+        page-break-inside: avoid;
+
+        &.avsluttet {
+          background-image: url(../img/hake_stor_graa.svg) !important;
+        }
+
+        &.kvitteringbehandling {
+          background-image: url(../img/dokument_stor.svg) !important;
+        }
+      }
+    }
+  }
+
+  .behandling-informasjon {
+    .kvittering-topp {
+      p {
+        display: none;
+      }
+    }
+
+    p {
+      margin-bottom: 16px;
+      &.dato {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    h2 {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .behandlingstid {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+
+    .toggle-kollapsbar {
+      color: #2768B2;
+
+      span:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .kollapsbar {
+      display: none;
+      position: relative;
+
+      h3 {
+        font-size: 1rem;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        text-transform: none;
+      }
+
+      section {
+        padding-bottom: 0;
+      }
+
+      .skriv-ut {
+        position: absolute;
+        right: 10px;
+        background: url(../img/print_hover.svg) no-repeat left center;
+        padding-left: 20px;
+        color: #2768B2;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 30px;
+
+        li {
+          margin-bottom: 10px;
+          padding-left: 20px;
+
+          img {
+            margin-left: -20px;
+
+            &.hake {
+              -ms-transform: scale(0.75, 0.75);
+              -moz-transform: scale(0.75, 0.75);
+              -webkit-transform: scale(0.75, 0.75);
+              transform: scale(0.75, 0.75);
+            }
+
+            &.minus {
+              position: relative;
+              top: -2px;
+            }
+          }
+        }
+      }
+    }
+
+    .skjul {
+      display: none;
+    }
+  }
+
+  .hent-saker {
+    text-align: center;
+    a {
+      margin: 0;
+      padding: 0;
+      color: @blueDark;
+    }
+    span {
+      display: block;
+      margin: 0.5em 0;
+    }
+  }
 }
 
 .print-only {
-    display: none;
+  display: none;
 }
 
 @media print {
-    .saksoversikt {
-        height: 0px !important;
-        display: inline-block;
+  .saksoversikt {
+    height: 0px !important;
+    display: inline-block;
 
-        a.close {
-            display: none;
-        }
-
-        .lamellhode h1{
-            text-align: center;
-        }
+    a.close {
+      display: none;
     }
 
-    .saksoversikt .lerret {
-        height: 0px !important;
-        display: inline-block;
+    .lamellhode h1 {
+      text-align: center;
+    }
+  }
+
+  .saksoversikt .lerret {
+    height: 0px !important;
+    display: inline-block;
+  }
+
+  .sak-navigering {
+    display: none;
+  }
+
+  .flexbox {
+    display: block !important;
+  }
+
+  .sak-informasjon {
+    h2.print-only {
+      padding-left: 30px;
+      padding-top: 30px;
+      text-align: center;
     }
 
-    .sak-navigering {
-        display: none;
+    a {
+      text-decoration: underline;
     }
 
-    .flexbox {
-        display: block !important;
+    a[href]:after {
+      content: "";
+    }
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-hide {
+    display: none !important;
+  }
+
+  .content > .behandling-informasjon {
+    margin-right: 0;
+
+    h2 {
+      text-align: center;
+      font-size: 22px;
+      text-transform: none;
+
+      &:after {
+        content: "";
+        border-top: 1px solid #d1d1d1;
+        display: block;
+        margin: 30px auto;
+        width: 30px;
+      }
     }
 
-    .sak-informasjon {
-        h2.print-only {
-            padding-left: 30px;
-            padding-top: 30px;
-            text-align: center;
-        }
+    .kvittering-topp {
+      text-align: center;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #d1d1d1;
 
-        a {
-            text-decoration: underline;
-        }
-
-        a[href]:after {
-            content: "";
-        }
+      p {
+        display: block;
+        font-size: 17px;
+        font-family: Modus, Arial, Helvetica, sans-serif;
+        font-weight: 600;
+        margin-bottom: 0;
+      }
     }
 
-    .print-only {
-        display: block !important;
+    .kollapsbar {
+      display: block !important;
+      margin-top: 40px;
     }
 
-    .print-hide {
-        display: none !important;
+    .toggle-kollapsbar, .skriv-ut {
+      display: none !important;
     }
-
-    .content > .behandling-informasjon {
-        margin-right: 0;
-
-        h2 {
-            text-align: center;
-            font-size: 22px;
-            text-transform: none;
-
-            &:after {
-                content: "";
-                border-top: 1px solid #d1d1d1;
-                display: block;
-                margin: 30px auto;
-                width: 30px;
-            }
-        }
-
-        .kvittering-topp {
-            text-align: center;
-            padding-bottom: 40px;
-            border-bottom: 1px solid #d1d1d1;
-
-            p {
-                display: block;
-                font-size: 17px;
-                font-family: Modus, Arial, Helvetica, sans-serif;
-                font-weight: 600;
-                margin-bottom: 0;
-            }
-        }
-
-        .kollapsbar {
-            display: block !important;
-            margin-top: 40px;
-        }
-
-        .toggle-kollapsbar, .skriv-ut {
-            display: none !important;
-        }
-    }
+  }
 }
+
 .inline-lenke {
-    span {
-        color: #2768B2 !important;
-    }
-    text-decoration: underline !important;
+  span {
+    color: #2768B2 !important;
+  }
+  text-decoration: underline !important;
 }
