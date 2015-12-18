@@ -62,3 +62,18 @@ I IntelliJ gjøres dette i ved å klikke "Edit Configurations" i nedtrekksmenyen
 
 ### Konfigurering av mockdata
 http://localhost:8083/modiabrukerdialog/internal/mocksetup
+
+### Testbrukere og IDA
+
+Lokalt trenger man ikke å logge inn med noen brukere, blankt brukernavn og passord holder. 
+
+I T og Q-miljøer kan man bruke https://modapp-<miljø>.adeo.no/modiabrukerdialog/j_security_check for innlogging med egenvalgte brukere uten å måtte logge inn i Nav skrivebord. 
+
+Testbrukere kan administreres i [IDA](http://ida.adeo.no/). Her kan man opprette testidenter i AD og gi kontorspesifikke rettigheter mot NORG. 
+Man kan søke etter eksisterende idente runder "Identoversikten" i IDA, og søk etter xteam gi deg teamets identer og hvordan de se ut i de forskjellige miljøene.
+
+Roller tilordnet i AD går på tvers av alle miljøer. Hvilke AD-roller som påvirker Modia finner du i [sysdok](http://confluence.adeo.no/display/EAF/Modiabrukerdialog+-+Tilgangskontroll#Modiabrukerdialog-Tilgangskontroll-Prosesserogroller).
+
+NORG må få satt rettigheter pr miljø. Systemet bestemmer hvilket Nav-kontor (enhet) saksbehandleren er tilknyttet og hvilke rolle den har der. 
+Det finnes ingen tilsvarende sysdok som forteller om roller i NORG, men `SAKB` og `OPPB_GOS` er de vanligste   
+
