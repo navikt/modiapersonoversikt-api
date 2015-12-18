@@ -16,9 +16,14 @@ class MeldingerSokStore extends Store {
     }
 
     initializeVisning() {
-        return Ajax.get('/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser').then(() => {
-            this.update();
-        });
+        return Ajax.get('/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser').then(
+            () => {
+                this.update();
+            },
+            () => {
+                this.state.feilet = true;
+                this.update();
+            });
     }
 
     update() {
