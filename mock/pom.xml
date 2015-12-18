@@ -133,9 +133,7 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
         </dependency>
-        <dependency>true
-
-
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
