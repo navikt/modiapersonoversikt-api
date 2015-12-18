@@ -133,13 +133,19 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
         </dependency>
-        <dependency>
+        <dependency>true
+
+
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <!--Dialogarena-->

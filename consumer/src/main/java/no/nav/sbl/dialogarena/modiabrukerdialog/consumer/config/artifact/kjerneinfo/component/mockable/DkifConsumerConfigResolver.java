@@ -3,9 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 
 import no.nav.dkif.consumer.DkifServiceBi;
 import no.nav.dkif.consumer.support.DefaultDkifService;
-import no.nav.dkif.consumer.support.mapping.DkifMapper;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
+import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonSikkerhetsbegrensing;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonRequest;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +19,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 
 @Configuration
-public class DkifConsumerConfigRespolver {
+public class DkifConsumerConfigResolver {
 
     @Inject
     @Qualifier("dkifDefaultService")
@@ -32,17 +33,13 @@ public class DkifConsumerConfigRespolver {
     public DkifServiceBi dkifServiceBi() {
         return new DkifServiceBi() {
             @Override
-            public WSHentDigitalKontaktinformasjonResponse hentDigitalKontaktinformasjon(WSHentDigitalKontaktinformasjonRequest request) {
+            public WSHentDigitalKontaktinformasjonResponse hentDigitalKontaktinformasjon(WSHentDigitalKontaktinformasjonRequest request)
+                    throws HentDigitalKontaktinformasjonSikkerhetsbegrensing, HentDigitalKontaktinformasjonPersonIkkeFunnet {
                 if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return dkifMockService.wrappedObject.hentDigitalKontaktinformasjon(request);
                 } else {
                     return dkifDefaultService.wrappedObject.hentDigitalKontaktinformasjon(request);
                 }
-            }
-
-            @Override
-            public void setMapper(DkifMapper mapper) {
-
             }
 
             @Override

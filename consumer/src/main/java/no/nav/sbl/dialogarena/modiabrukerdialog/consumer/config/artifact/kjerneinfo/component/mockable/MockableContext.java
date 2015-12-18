@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
         BehandleBrukerprofilConsumerConfigResolver.class,
         BehandleBrukerprofilWrapper.class,
 
-        DkifConsumerConfigRespolver.class,
+        DkifConsumerConfigResolver.class,
         DkifWrapper.class,
 
         KontrakterConsumerConfigResolver.class,

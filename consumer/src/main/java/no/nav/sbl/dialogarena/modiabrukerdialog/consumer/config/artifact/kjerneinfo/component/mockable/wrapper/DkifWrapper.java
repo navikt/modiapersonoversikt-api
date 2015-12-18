@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 import no.nav.dkif.config.spring.DkifConsumerConfig;
 import no.nav.dkif.consumer.DkifServiceBi;
 import no.nav.dkif.consumer.support.DefaultDkifService;
-import no.nav.dkif.consumer.support.mapping.DkifMapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import org.springframework.context.annotation.Bean;
@@ -18,15 +17,15 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class DkifWrapper {
 
     @Inject
-    private DigitalKontaktinformasjonV1 digitalKontaktinformasjonV1;
+    private DigitalKontaktinformasjonV1 dkifV1;
 
     @Inject
-    private DigitalKontaktinformasjonV1 selfTestdigitalKontaktinformasjonV1;
+    private DigitalKontaktinformasjonV1 selfTestDigitalKontaktinformasjonV1;
 
     @Bean
     @Named("dkifDefaultService")
     public Wrapper<DefaultDkifService> dkifDefaultService() {
-        return new Wrapper<>(new DefaultDkifService(digitalKontaktinformasjonV1, selfTestdigitalKontaktinformasjonV1, new DkifMapper()));
+        return new Wrapper<>(new DefaultDkifService(dkifV1, selfTestDigitalKontaktinformasjonV1));
     }
 
     @Bean
