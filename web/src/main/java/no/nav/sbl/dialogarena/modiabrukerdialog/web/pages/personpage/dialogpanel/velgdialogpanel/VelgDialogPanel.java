@@ -23,7 +23,9 @@ public class VelgDialogPanel extends Panel {
         add(startNyDialogLenke);
 
         AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-        target.focusComponent(startNyDialogLenke);
+        if (target != null) {
+            target.focusComponent(startNyDialogLenke);
+        }
 
     }
 }
