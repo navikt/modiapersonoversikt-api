@@ -147,6 +147,7 @@ public class Innboks extends Lerret {
         innboksVM.setSessionHenvendelseId(null);
         if (!isMinimizing) {
             innboksVM.setValgtMelding(((MeldingVM) null));
+            innboksVM.focusValgtTraadOnOpen = false;
         }
     }
 
