@@ -198,6 +198,7 @@ public class DialogPanel extends Panel {
     public void visNyDialogPanel(AjaxRequestTarget target) {
         aktivtPanel = aktivtPanel.replaceWith(new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo));
         target.add(aktivtPanel);
+        target.appendJavaScript("$(\"input[name='velgModus']\").first().focus();"); // Prøvde å gjøre dette med Wicket, men klarte ikke å finne en radioknapp å sette fokus på uten å skrive om en del av koden som oppretter radioknappene.
     }
 
     @RunOnEvents({LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT, NY_DIALOG_AVBRUTT})
