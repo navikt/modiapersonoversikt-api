@@ -55,6 +55,10 @@ I IntelliJ gjøres dette i ved å klikke "Edit Configurations" i nedtrekksmenyen
     Problem accessing /modiabrukerdialog/j_security_check. Reason:
     src/test/resources/login.conf (No such file or directory)
 
+### Testing
+- Java tester køres hver gang man bygger Modia og subset av tester kan også køres i IntelliJ. I terminalen `mvn test`, evt. `mvn clean install`.
+- Js-tester må køres manuellt. Kør filen test_runner.html.
+
 ### IntelliJ
 
 - Opprett en run configuration for klassen StartJetty
