@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -40,6 +42,12 @@ public class ReactJournalforingsPanel extends AnimertPanel {
             }
         });
         add(reactComponentPanel);
+    }
+
+    @SuppressWarnings("unused")
+    @RunOnEvents(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER)
+    public void lukkJournalforingsPanel(AjaxRequestTarget target) {
+        lukkPanel(target);
     }
 
     @Override
