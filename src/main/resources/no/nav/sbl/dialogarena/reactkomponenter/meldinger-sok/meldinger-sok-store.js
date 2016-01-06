@@ -9,8 +9,8 @@ class MeldingerSokStore extends Store {
         if (this.state.traader.length > 0) {
             this.state.valgtTraad = this.state.traader[0];
         }
-
         this.state.initialisert = false;
+        this.state.indeksert = false;
         this.state.feilet = false;
         this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
     }
@@ -26,13 +26,25 @@ class MeldingerSokStore extends Store {
             });
     }
 
-    update() {
+    update(props) {
+        $.extend(this.state, props);
+        $.ajax({
+            async: false,
+            url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'
+        });
+        this.state.indeksert = true;
+
         this.onChange({target: {value: this.state.fritekst}});
 
         this.fireUpdate(this.listeners);
     }
 
     onChange(event) {
+        // Fiks for IE10/IE11/Rect 0.13-bug, se commit-melding for detaljer.
+        if (!this.state.indeksert) {
+            return;
+        }
+
         this.state.fritekst = event.target.value;
 
         MeldingerSokStore.hentSokeresultater.bind(this)(this.state.fritekst);
