@@ -38,6 +38,10 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
         return WidgetDateFormatter.dateTime(melding.opprettetDato);
     }
 
+    public String getFritekst() {
+        return melding.fritekst;
+    }
+
     @Override
     public String getType() {
         return "meldinger";
