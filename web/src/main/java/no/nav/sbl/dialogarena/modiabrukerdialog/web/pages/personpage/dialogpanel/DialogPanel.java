@@ -25,7 +25,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
@@ -35,6 +37,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
@@ -198,7 +201,8 @@ public class DialogPanel extends Panel {
     public void visNyDialogPanel(AjaxRequestTarget target) {
         aktivtPanel = aktivtPanel.replaceWith(new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo));
         target.add(aktivtPanel);
-        target.appendJavaScript("$(\"input[name='velgModus']\").first().focus();"); // Prøvde å gjøre dette med Wicket, men klarte ikke å finne en radioknapp å sette fokus på uten å skrive om en del av koden som oppretter radioknappene.
+        TextArea textarea = in((MarkupContainer) aktivtPanel).findComponent(TextArea.class);
+        target.focusComponent(textarea);
     }
 
     @RunOnEvents({LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT, NY_DIALOG_AVBRUTT})

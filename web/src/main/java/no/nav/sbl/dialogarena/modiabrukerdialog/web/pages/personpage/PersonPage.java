@@ -85,7 +85,6 @@ public class PersonPage extends BasePage {
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
-    public static final JavaScriptResourceReference SCROLL_JS = new JavaScriptResourceReference(PersonPage.class, "scrollbars.js");
     public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
 
     private final String fnr;
