@@ -66,11 +66,11 @@ const MeldingerSok = React.createClass({
     },
     render: function render() {
         const tekstlistekomponenter = this.state.traader.map((traad) => <ListevisningKomponent
-                key={traad.traadId}
-                traad={traad}
-                valgtTraad={this.state.valgtTraad}
-                store={this.store}
-                />);
+            key={traad.traadId}
+            traad={traad}
+            valgtTraad={this.state.valgtTraad}
+            store={this.store}
+        />);
         const erTom = this.state.traader.length === 0;
         const sokVisning = (
             <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
@@ -123,7 +123,7 @@ const MeldingerSok = React.createClass({
                                 onChange={this.onChangeProxy}
                                 onKeyDown={this.store.onKeyDown.bind(this.store, document.getElementById(this.state.listePanelId))}
                                 aria-controls={this.state.listePanelId}
-                                />
+                            />
                             <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
                         </div>
                     </div>

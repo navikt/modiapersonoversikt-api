@@ -40,11 +40,6 @@ class MeldingerSokStore extends Store {
     }
 
     onChange(event) {
-        // Fiks for IE10/IE11/Rect 0.13-bug, se commit-melding for detaljer.
-        if (!this.state.indeksert) {
-            return;
-        }
-
         this.state.fritekst = event.target.value;
 
         MeldingerSokStore.hentSokeresultater.bind(this)(this.state.fritekst);
