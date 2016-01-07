@@ -55,7 +55,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.0.5</modig.wicket.version>
+        <modig.wicket.version>3.4-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.5</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
