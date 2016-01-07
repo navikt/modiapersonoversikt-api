@@ -5,7 +5,7 @@ import moment from 'moment';
 import { prettyDate } from './dato-formatering';
 
 describe('DatoFormatering', () => {
-    /*it('Default datoformat blir satt', () => {
+/*    it('Default datoformat blir satt', () => {
         const dato = new Date();
         const datoStreng = prettyDate(dato);
 
