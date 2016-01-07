@@ -13,8 +13,7 @@ function erValgtTekst(traad, valgtTraad) {
 const ListevisningKomponent = React.createClass({
     propTypes: {
         traad: React.PropTypes.object.isRequired,
-        valgtTraad: React.PropTypes.object.isRequired,
-        traadantallMeldingerIOpprinneligTraad: React.PropTypes.number.isRequired
+        valgtTraad: React.PropTypes.object.isRequired
     },
     statics: {
         lagAriaLabel: function lagAriaLabel(traad) {
@@ -34,7 +33,7 @@ const ListevisningKomponent = React.createClass({
         const statusIkonTekst = format('{0}, {1} {2}',
                 this.props.traad.statusKlasse.match(/ubesvart$/) ? 'Ubesvart' : 'Besvart',
                 this.props.traad.antallMeldingerIOpprinneligTraad,
-                this.props.traadantallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
+                this.props.traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
             );
 
         return (

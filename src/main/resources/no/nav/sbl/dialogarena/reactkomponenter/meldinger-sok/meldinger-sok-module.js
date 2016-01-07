@@ -40,8 +40,14 @@ const MeldingerSok = React.createClass({
         this.store.setContainerElement(this.refs.modal.portalElement);
         this.store.addListener(this.storeChanged);
     },
-    componentDidUnmount: function componentDidUnmount() {
+    componentWillUnmount: function componentDidUnmount() {
         this.store.removeListener(this.storeChanged);
+    },
+    onChangeProxy: function onChangeProxy(e) {
+        const value = e.target.value;
+        if (this.state.fritekst !== value) {
+            this.store.onChange(e);
+        }
     },
     keyDownHandler: function keyDownHandler(event) {
         if (event.keyCode === 13) {
@@ -60,11 +66,11 @@ const MeldingerSok = React.createClass({
     },
     render: function render() {
         const tekstlistekomponenter = this.state.traader.map((traad) => <ListevisningKomponent
-                key={traad.traadId}
-                traad={traad}
-                valgtTraad={this.state.valgtTraad}
-                store={this.store}
-                />);
+            key={traad.traadId}
+            traad={traad}
+            valgtTraad={this.state.valgtTraad}
+            store={this.store}
+        />);
         const erTom = this.state.traader.length === 0;
         const sokVisning = (
             <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
@@ -114,10 +120,10 @@ const MeldingerSok = React.createClass({
                                 placeholder="Søk"
                                 value={this.state.fritekst}
                                 title="Søk"
-                                onChange={this.store.onChange.bind(this.store)}
+                                onChange={this.onChangeProxy}
                                 onKeyDown={this.store.onKeyDown.bind(this.store, document.getElementById(this.state.listePanelId))}
                                 aria-controls={this.state.listePanelId}
-                                />
+                            />
                             <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
                         </div>
                     </div>

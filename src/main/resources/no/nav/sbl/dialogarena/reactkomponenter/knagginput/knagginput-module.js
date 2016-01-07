@@ -89,8 +89,11 @@ const KnaggInput = React.createClass({
         this.props.store.onKeyDown(document.getElementById(this.props.tablisteId), event);
     },
     onChangeProxy: function onChangeProxy(event) {
-        const data = finnKnaggerOgFritekst(event.target.value, this.props.knagger);
-        this.props.store.onChange(data);
+        const value = event.target.value;
+        if (this.props.fritekst !== value) {
+            const data = finnKnaggerOgFritekst(value, this.props.knagger);
+            this.props.store.onChange(data);
+        }
     },
     handleKeyUp: function handleKeyUp(event) {
         const selectionStart = this.state.selectionStart;
