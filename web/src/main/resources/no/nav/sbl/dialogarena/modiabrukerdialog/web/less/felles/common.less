@@ -336,6 +336,17 @@ input[type=checkbox] {
   .mf3-override('check');
 }
 
+[class*=knapp-] {
+  background-image: none !important;
+  border-radius: 2px;
+}
+[class*=knapp-hoved], [class*=knapp-nullstill] {
+  background: #0067C5 none !important;
+  &:hover {
+    background-color: #1976cb !important;
+  }
+}
+
 .wicket-modal {
   * {
     text-transform: none !important;
