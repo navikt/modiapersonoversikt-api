@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
@@ -42,6 +43,11 @@ public class HentPersonPanelMockContext {
     @Bean
     public PersonsokServiceBi personsokServiceBi() {
         return mock(PersonsokServiceBi.class);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return mock(ObjectMapper.class);
     }
 
     @Bean

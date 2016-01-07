@@ -42,6 +42,7 @@ public class HentPersonPage extends BasePage {
     public static final String SOKT_FNR = "soektfnr";
 
     public HentPersonPage(PageParameters pageParameters) {
+        super(pageParameters);
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel", pageParameters);
         setupErrorText(pageParameters, hentPersonPanel);
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");

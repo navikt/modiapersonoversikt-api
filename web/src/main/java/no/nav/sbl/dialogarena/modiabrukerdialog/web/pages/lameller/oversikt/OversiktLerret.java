@@ -57,10 +57,13 @@ public class OversiktLerret extends Lerret {
         for (Component widget : widgets) {
             add(widget);
         }
+
+
     }
 
     @Override
     protected void onRender() {
+
         super.onRender();
         for (AsyncWidget widget : asyncWidgets) {
             widget.startLoading();

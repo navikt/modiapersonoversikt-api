@@ -2,29 +2,7 @@ function createTabHandler(application, options) {
     var localStorageId = application + ".activeTab";
     var sessionStorageId = application + ".tabGuid";
     var isReloadingId = application + ".reloading";
-
-    var greyBackground = '<div class="wicket-mask-dark" style="z-index: 20000; background-image: none; position: absolute; top: 0px; left: 0px;"></div>';
-    var modalDialog = '' +
-        '<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;">' +
-        '   <form>' +
-        '       <div class="w_content_1" >' +
-        '           <div class="w_caption" id="_wicket_window_1">' +
-        '               <a class="w_close" role="button" id="closeModalButton" style="z-index:1" href="#"></a>' +
-        '           </div>' +
-        '           <div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 300px;">' +
-        '               <div id="content5c">' +
-        '                   <section class="bekreft-dialog">' +
-        '                       <h1 class="medium-ikon-hjelp-strek">' + options.hovedtekst + '</h1>' +
-        '                       <ul>' +
-        '                           <li><submit class="knapp-stor" id="confirmCloseTab" >' + options.avbryttekst + '</submit></li>' +
-        '                           <li><a id="confirmActivateTab" href="#">' + options.fortsetttekst + '</a></li>' +
-        '                       </ul>' +
-        '                   </section>' +
-        '               </div>' +
-        '           </div>' +
-        '       </div>' +
-        '   </form>' +
-        '</div>';
+    var isModalOpen = false;
 
     /**
      * Generates a GUID string, according to RFC4122 standards.
@@ -41,7 +19,6 @@ function createTabHandler(application, options) {
 
         return _p8(false) + _p8(true) + _p8(true) + _p8(false);
     };
-
 
     var getTabGuid = function () {
         var tabGuid = window.sessionStorage.getItem(sessionStorageId);
@@ -61,7 +38,6 @@ function createTabHandler(application, options) {
     };
 
     var activateTab = function () {
-        removeModalDialog();
         setActiveTab(getTabGuid());
         setIsReloadingFlag();
         window.location.reload();
@@ -88,22 +64,25 @@ function createTabHandler(application, options) {
     };
 
     var isModalDialogVisible = function () {
-        var backGround = $('.wicket-mask-dark');
-        return backGround.length != 0;
-
+        return isModalOpen;
     };
 
     var createModalDialog = function () {
-        $("body").append(modalDialog).append(greyBackground);
-        $("#confirmActivateTab").click(activateTab);
-        $('#confirmCloseTab').click(closeTab);
-        $('#closeModalButton').click(closeTab);
+        var modalComponent = ModiaJS.React.createElement(
+            ModiaJS.Components.FeilmeldingsModaler.FlereApneVinduer,
+            {
+                isOpen: true,
+                hovedtekst: options.hovedtekst,
+                avbryttekst: options.avbryttekst,
+                fortsetttekst: options.fortsetttekst,
+                avbrytCallback: closeTab,
+                fortsettCallback: activateTab
+            }
+        );
+        ModiaJS.React.render(modalComponent, document.getElementById("feilmeldingsmodaler"));
+        isModalOpen = true;
     };
-
-    var removeModalDialog = function () {
-        $('.wicket-mask-dark').remove();
-        $('wicket-modal').remove();
-    };
+    window.test = createModalDialog;
 
     var storageEventListener = function (e) {
         var tabGuid;

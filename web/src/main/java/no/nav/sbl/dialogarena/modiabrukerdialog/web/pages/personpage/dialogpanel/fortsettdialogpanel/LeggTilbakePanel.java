@@ -59,12 +59,15 @@ public class LeggTilbakePanel extends Panel {
     private final FeedbackPanel feedbackPanel;
     private final AjaxLink lukkKnapp;
     private final String behandlingsId;
+    private final Temagruppe gjeldendeTemagruppe;
+    private final Radio<Aarsak> inhabil;
 
     public LeggTilbakePanel(String id, String temagruppe, Temagruppe gjeldendeTemagruppe, final Optional<String> oppgaveId, Melding sporsmal, String behandlingsId) {
         super(id);
         this.oppgaveId = oppgaveId;
         this.sporsmal = sporsmal;
         this.behandlingsId = behandlingsId;
+        this.gjeldendeTemagruppe = gjeldendeTemagruppe;
         setOutputMarkupPlaceholderTag(true);
 
         leggTilbakeVM = new LeggTilbakeVM();
@@ -83,13 +86,14 @@ public class LeggTilbakePanel extends Panel {
         WebMarkupContainer temagruppeWrapper = new WebMarkupContainer("temagruppeWrapper");
         temagruppeWrapper.setVisibilityAllowed(gjeldendeTemagruppe != ANSOS);
         feiltema = new Radio<>("feiltema", Model.of(FEIL_TEMAGRUPPE));
+        inhabil = new Radio<>("inhabil", Model.of(INHABIL));
         temagruppeWrapper.add(feiltema, temagruppevelger.getParent());
 
         aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
         aarsaker.add(
                 temagruppeWrapper,
-                new Radio<>("inhabil", Model.of(INHABIL)),
+                inhabil,
                 new Radio<>("annen", Model.of(ANNEN)),
                 annenAarsak);
         form.add(aarsaker, temagruppevelgerDropdown);
@@ -210,6 +214,10 @@ public class LeggTilbakePanel extends Panel {
     }
 
     public Component hentForsteFokusKomponent() {
-        return feiltema;
+        if (gjeldendeTemagruppe == ANSOS) {
+            return inhabil;
+        } else{
+            return feiltema;
+        }
     }
 }
