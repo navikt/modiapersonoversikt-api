@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.eksternelenker.EksterneLenkerPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
@@ -42,7 +45,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -95,9 +97,13 @@ public class PersonPage extends BasePage {
     @Named("pep")
     private EnforcementPoint pep;
 
+    @Inject
+    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
+
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
         fnr = pageParameters.get("fnr").toString();
+        sjekkTilgang(fnr, pageParameters);
 
         if (pageParameters.getNamedKeys().size() > 1) {//FNR er alltid i url
             clearSession();
@@ -209,16 +215,20 @@ public class PersonPage extends BasePage {
         });
     }
 
+    private void sjekkTilgang(String fnr, PageParameters params) {
+        HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
+        Boolean erBegrunnet = (Boolean) getSession().getAttribute(HENT_PERSON_BEGRUNNET);
+        request.setBegrunnet((erBegrunnet == null) ? false : erBegrunnet);
+        try {
+            personKjerneinfoServiceBi.hentKjerneinformasjon(request);
+        } catch (RecoverableAuthorizationException e) {
+            throw new RestartResponseException(HentPersonPage.class, params);
+        }
+    }
+
     @RunOnEvents(FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, PageParameters pageParameters) {
         handleRedirect(target, pageParameters, PersonPage.class);
-//                new PageParameters()
-//                        .set(FNR, optional(pageParameters.get(FNR).toString()).getOrElse(""))
-//                        .set(HENVENDELSEID, optional(pageParameters.get(HENVENDELSEID).toString()).getOrElse(""))
-//                        .set(OPPGAVEID, optional(pageParameters.get(OPPGAVEID).toString()).getOrElse(""))
-//                        .set(BESVARES, optional(pageParameters.get(BESVARES).toString()).getOrElse("")),
-//                PersonPage.class
-//        );
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
@@ -310,6 +320,7 @@ public class PersonPage extends BasePage {
         if (lamellContainer.hasUnsavedChanges()) {
             redirectPopup.show(target);
         } else {
+            getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
             redirectPopup.redirect();
         }
     }
