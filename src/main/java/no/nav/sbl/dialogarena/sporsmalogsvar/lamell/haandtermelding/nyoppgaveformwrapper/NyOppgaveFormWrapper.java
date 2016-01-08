@@ -248,11 +248,6 @@ public class NyOppgaveFormWrapper extends Panel {
             protected void onUpdate(AjaxRequestTarget target) {
                 oppdaterAnsatteListe();
                 target.add(ansattVelger);
-                // Prøvde å få til dette med target.forcusComponent(ansattVelger), men siden det er brukt en magisk
-                // jQuery dropdown her så skal ikke fokus settes på ansattVelger, men på et input-element som
-                // genereres av jQuery. En bieffekt av at man setter fokus med koden under er at fokus flyttes
-                // til ansatt-dropdownen både når man trykker enter og tab når enhet-dropdownen har fokus.
-                target.appendJavaScript("$(\"#ansattContainer\").find(\"input[class='ui-autocomplete-input']\").focus()");
             }
 
             @Override
@@ -276,10 +271,8 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
     private MarkupContainer lagAnsattVelger() {
-        final String ansattContainerId = "ansattContainer";
-        WebMarkupContainer container = new WebMarkupContainer(ansattContainerId);
+        WebMarkupContainer container = new WebMarkupContainer("ansattContainer");
         container.setOutputMarkupPlaceholderTag(true);
-        container.setMarkupId(ansattContainerId);
         container.add(new AnsattDropdown("ansatte", new PropertyModel<Ansatt>(form.getModel(), "valgtAnsatt"), new PropertyModel<List<Ansatt>>(form.getModel(), "ansatteTilknyttetEnhet")));
         container.add(visibleIf(not(nullValue(new PropertyModel<List<AnsattEnhet>>(form.getModel(), "enhet")))));
         return container;
