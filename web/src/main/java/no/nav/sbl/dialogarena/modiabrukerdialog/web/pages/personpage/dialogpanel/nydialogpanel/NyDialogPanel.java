@@ -191,12 +191,9 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private AjaxButton getSubmitKnapp(final PropertyModel<Modus> modusModel, final Form<HenvendelseVM> form) {
-
         AjaxButton submitKnapp = new IndicatingAjaxButtonWithImageUrl("send", "../img/ajaxloader/graa/loader_graa_48.gif") {
             @Override
-
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-
                 if (modusModel.getObject().equals(Modus.SPORSMAL) && form.getModelObject().valgtSak == null) {
                     error(getString("valgtSak.Required"));
                     onError(target, form);
