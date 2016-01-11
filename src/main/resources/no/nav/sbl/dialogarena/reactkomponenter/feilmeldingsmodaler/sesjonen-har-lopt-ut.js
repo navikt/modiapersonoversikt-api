@@ -1,25 +1,32 @@
 import React, { PropTypes as pt } from 'react';
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 
-function SesjonenHarLoptUt({isOpen, title, description, closeButton}) {
-    const modalProps = { isOpen, title, description, closeButton };
-    return (
-        <Modal {...modalProps} height={265} width={500} onClosing={() => false}>
-            <div className="informasjonsboks timeout">
-                <h1 className="diger">{this.props.hovedtekst}</h1>
+class SesjonenHarLoptUt extends React.Component {
+    render() {
+        const {
+            isOpen, title, description, closeButton,
+            hovedtekst, beskrivendeTekst, fnr,
+            avbryttekst, fortsetttekst
+            } = this.props;
+        const modalProps = { isOpen, title, description, closeButton };
+        return (
+            <Modal {...modalProps} height={265} width={500} onClosing={() => false}>
+                <div className="informasjonsboks timeout">
+                    <h1 className="diger">{hovedtekst}</h1>
 
-                <p className="normal">{this.props.beskrivendeTekst}</p>
+                    <p className="normal">{beskrivendeTekst}</p>
 
-                <a className="knapp-hoved" href={'./' + this.props.fnr}>
-                    {this.props.avbryttekst}
-                </a>
+                    <a className="knapp-hoved" href={'./' + fnr}>
+                        {avbryttekst}
+                    </a>
 
-                <a className="knapp-stor" href="../">
-                    {this.props.fortsetttekst}
-                </a>
-            </div>
-        </Modal>
-    );
+                    <a className="knapp-stor" href="../">
+                        {fortsetttekst}
+                    </a>
+                </div>
+            </Modal>
+        );
+    }
 }
 
 SesjonenHarLoptUt.defaultProps = {

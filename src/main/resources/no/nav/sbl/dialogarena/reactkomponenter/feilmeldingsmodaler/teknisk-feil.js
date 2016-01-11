@@ -8,15 +8,18 @@ const styling = {
     }
 };
 
-function TekniskFeil({isOpen, title, closeButton}) {
-    const modalProps = {isOpen, title, closeButton};
-    return (
-        <Modal {...modalProps} width={600} height={180} onClosing={() => {return false;}} ref="modal">
-            <section className="default-error">
-                <h1 className="robust-ikon-feil-strek" style={styling.text}>{this.props.tekst}</h1>
-            </section>
-        </Modal>
-    );
+class TekniskFeil extends React.Component {
+    render() {
+        const {isOpen, title, closeButton, tekst} = this.props;
+        const modalProps = { isOpen, title, closeButton };
+        return (
+            <Modal {...modalProps} width={600} height={180} onClosing={() => {return false;}} ref="modal">
+                <section className="default-error">
+                    <h1 className="robust-ikon-feil-strek" style={styling.text}>{tekst}</h1>
+                </section>
+            </Modal>
+        );
+    }
 }
 
 TekniskFeil.defaultProps = {
