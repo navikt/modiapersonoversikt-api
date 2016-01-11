@@ -1,5 +1,5 @@
-import React from 'react';
-import Modal from './../modal/modal-module';
+import React, { PropTypes as pt } from 'react';
+import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 import { autobind } from './../utils/utils-module';
 import sendToWicket from './../react-wicket-mixin/wicket-sender';
 
@@ -38,8 +38,9 @@ class ForkasteEndringer extends React.Component {
                     <ul>
                         <li>{this.props.beskrivendeTekst}</li>
                         <li>
-                            <button className="knapp-stor"
-                                    onClick={this.avbrytCallback}>{this.props.avbryttekst}</button>
+                            <button className="knapp-stor" onClick={this.avbrytCallback}>
+                                {this.props.avbryttekst}
+                            </button>
                         </li>
                         <li>
                             <a href="#" onClick={this.fortsettCallback}>{this.props.fortsetttekst}</a>
@@ -59,36 +60,24 @@ ForkasteEndringer.styling = {
 
 ForkasteEndringer.defaultProps = {
     isOpen: false,
-    title: {
-        text: 'Flere Modia-vinduer åpne',
-        show: false,
-        tag: 'h1.vekk'
-    },
-    description: {
-        text: '',
-        show: false,
-        tag: 'div.vekk'
-    },
-    closeButton: {
-        text: 'Lukk feilmeldingsmodal, og nåværende tab.',
-        show: false,
-        tag: 'span.vekk'
-    }
+    title: defaultHelper('Forkaste endringer modal', false, 'h1.vekk'),
+    description: defaultHelper('', false, 'div.vekk'),
+    closeButton: defaultHelper('Lukk modal', false, 'span.vekk')
 };
 
 ForkasteEndringer.propTypes = {
-    hovedtekst: React.PropTypes.string.isRequired,
-    avbryttekst: React.PropTypes.string.isRequired,
-    fortsetttekst: React.PropTypes.string.isRequired,
-    beskrivendeTekst: React.PropTypes.string,
-    title: React.PropTypes.object,
-    description: React.PropTypes.object,
-    closeButton: React.PropTypes.object,
-    isOpen: React.PropTypes.bool,
-    wicketurl: React.PropTypes.string.isRequired,
-    wicketcomponent: React.PropTypes.string.isRequired,
-    discardCallback: React.PropTypes.string.isRequired,
-    confirmCallback: React.PropTypes.string.isRequired
+    hovedtekst: pt.string.isRequired,
+    avbryttekst: pt.string.isRequired,
+    fortsetttekst: pt.string.isRequired,
+    beskrivendeTekst: pt.string,
+    title: AriaPropType,
+    description: AriaPropType,
+    closeButton: AriaPropType,
+    isOpen: pt.bool,
+    wicketurl: pt.string.isRequired,
+    wicketcomponent: pt.string.isRequired,
+    discardCallback: pt.string.isRequired,
+    confirmCallback: pt.string.isRequired
 };
 
 export default ForkasteEndringer;

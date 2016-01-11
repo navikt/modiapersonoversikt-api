@@ -24,4 +24,3 @@ describe('Snurrepipp test', () => {
         assert.isTrue(strEndsWith(image.src, 'img/ajaxloader/indigo/loader_indigo_1337.gif'));
     });
 });
-

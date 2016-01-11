@@ -1,36 +1,19 @@
-const React = require('react');
-const Portal = require('./modal-portal');
+import React from 'react';
+import Portal from './modal-portal';
 
-const Modal = React.createClass({
-    propTypes: {
-        'isOpen': React.PropTypes.bool,
-        'onClosing': React.PropTypes.func
-    },
-    getDefaultProps: function getDefaultProps() {
-        return {
-            title: {
-                text: 'Modal Title',
-                show: false,
-                tag: 'h1'
-            },
-            description: {
-                text: '',
-                show: false,
-                tag: 'div'
-            },
-            closeButton: {
-                text: '',
-                show: true,
-                tag: 'span'
-            }
-        };
-    },
-    getInitialState: function getInitialState() {
-        return {
+class Modal extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
             isOpen: this.props.isOpen || false
         };
-    },
-    componentDidMount: function componentDidMount() {
+
+        this.open = this.open.bind(this);
+        this.close = this.close.bind(this);
+        this.renderPortal = this.renderPortal.bind(this);
+    }
+
+    componentDidMount() {
         if (typeof this.portalElement === 'undefined') {
             this.portalElement = document.createElement('div');
             this.portalElement.className = 'react-modal-container';
@@ -38,17 +21,21 @@ const Modal = React.createClass({
         }
 
         this.renderPortal(this.props, this.state);
-    },
-    componentWillReceiveProps: function componentWillReceiveProps(props) {
+    }
+
+    componentWillReceiveProps(props) {
         this.renderPortal(props, this.state);
-    },
-    componentDidUpdate: function componentDidUpdate() {
+    }
+
+    componentDidUpdate() {
         this.renderPortal(this.props, this.state);
-    },
-    componentWillUnmount: function componentWillUnmount() {
+    }
+
+    componentWillUnmount() {
         this.close();
-    },
-    open: function open() {
+    }
+
+    open() {
         const elementsByClassName = document.getElementsByClassName('react-modal-container');
         let match = false;
         for (let i = 0; i < elementsByClassName.length; i++) {
@@ -64,30 +51,59 @@ const Modal = React.createClass({
 
         $(document.body).addClass('modal-open');
         $(document.body).children().not(this.portalElement).attr('aria-hidden', true);
-        this.setState({isOpen: true});
-    },
-    close: function close(force = true) {
-        const precheck = (this.props.onClosing || function noOncloseCallbackFound() {return true;})(force);
+        this.setState({ isOpen: true });
+    }
+
+    close(force = true) {
+        const precheck = (this.props.onClosing || function noOncloseCallbackFound() {
+            return true;
+        })(force);
         if (!force && !precheck) {
             return;
         }
 
-        this.setState({isOpen: false});
+        this.setState({ isOpen: false });
         document.body.removeChild(this.portalElement);
         $(document.body).removeClass('modal-open');
         $(document.body).children().removeAttr('aria-hidden');
-    },
-    renderPortal: function renderPortal(props, state) {
+    }
+
+    renderPortal(props, state) {
         const modal = {
             open: this.open,
             close: () => this.close(false)
         };
 
         this.modal = React.render(<Portal {...props} {...state} modal={modal}/>, this.portalElement);
-    },
-    render: function render() {
+    }
+
+    render() {
         return null;
     }
+}
+
+export function defaultHelper(text, show, tag) {
+    return { text, show, tag };
+}
+
+Modal.defaultProps = {
+    title: defaultHelper('Modal Title', false, 'h1'),
+    description: defaultHelper('', false, 'div'),
+    closeButton: defaultHelper('', true, 'span')
+};
+
+export const AriaPropType = React.PropTypes.shape({
+    text: React.PropTypes.string,
+    show: React.PropTypes.bool,
+    tag: React.PropTypes.string
 });
 
-module.exports = Modal;
+Modal.propTypes = {
+    'isOpen': React.PropTypes.bool,
+    'onClosing': React.PropTypes.func,
+    'title': AriaPropType,
+    'description': AriaPropType,
+    'closeButton': AriaPropType
+};
+
+export default Modal;

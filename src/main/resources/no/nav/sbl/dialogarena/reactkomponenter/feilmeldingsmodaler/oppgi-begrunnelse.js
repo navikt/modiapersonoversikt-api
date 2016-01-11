@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import Modal from './../modal/modal-module';
 import { autobind } from './../utils/utils-module';
 import sendToWicket from './../react-wicket-mixin/wicket-sender';
@@ -7,24 +7,25 @@ class OppgiBegrunnelse extends React.Component {
     constructor(props) {
         super(props);
         autobind(this);
-        this.state = {showFeilmelding: false};
+        this.state = { showFeilmelding: false };
         this.sendToWicket = sendToWicket.bind(this, this.props.wicketurl, this.props.wicketcomponent);
     }
 
     avbrytCallback(text) {
         text.value = '';
-        this.setState({showFeilmelding: false});
+        this.setState({ showFeilmelding: false });
         this.sendToWicket(this.props.discardCallback);
     }
 
     fortsettCallback() {
-        const begrunnelse = React.findDOMNode(this.refs.begrunnelse).value;
-        React.findDOMNode(this.refs.begrunnelse).value = '';
+        const begrunnelseNode = React.findDOMNode(this.refs.begrunnelse);
+        const begrunnelse = begrunnelseNode.value;
+        begrunnelseNode.value = '';
 
         if (begrunnelse.length > 0) {
             this.sendToWicket(this.props.confirmCallback, begrunnelse);
         } else {
-            this.setState({showFeilmelding: true});
+            this.setState({ showFeilmelding: true });
         }
     }
 
@@ -38,7 +39,7 @@ class OppgiBegrunnelse extends React.Component {
 
     render() {
         const {isOpen} = this.props;
-        const modalProps = {isOpen};
+        const modalProps = { isOpen };
         const feilmelding = (<span className="feedbacklabel" aria-hidden="false"
                                    aria-live="assertive"
                                    aria-atomic="true" role="alert">Tekstfeltet kan ikke være tomt.</span>);
@@ -58,7 +59,8 @@ class OppgiBegrunnelse extends React.Component {
                                   className={'begrunnelsestekst ' + (this.state.showFeilmelding ? 'invalid' : '')}
                                   required="" name="begrunnelse"
                                   aria-label="Begrunnelse" style={OppgiBegrunnelse.styling.textarea}
-                                  ref="begrunnelse" rows="4"></textarea>
+                                  ref="begrunnelse" rows="4">
+                        </textarea>
                             {this.state.showFeilmelding ? feilmelding : null}
                         </div>
                         <div>
@@ -116,35 +118,18 @@ OppgiBegrunnelse.styling = {
 };
 
 OppgiBegrunnelse.defaultProps = {
-    isOpen: false,
-    title: {
-        text: 'Oppgi begrunnelse for å se denne brukeren',
-        show: false,
-        tag: 'h1.vekk'
-    },
-    description: {
-        text: '',
-        show: false,
-        tag: 'div.vekk'
-    },
-    closeButton: {
-        text: '',
-        show: false,
-        tag: 'span.vekk'
-    }
+    isOpen: false
 };
 
 OppgiBegrunnelse.propTypes = {
-    title: React.PropTypes.string.isRequired,
-    wicketurl: React.PropTypes.string.isRequired,
-    wicketcomponent: React.PropTypes.string.isRequired,
-    lagretekst: React.PropTypes.string.isRequired,
-    avbryttekst: React.PropTypes.string.isRequired,
-    discardCallback: React.PropTypes.string.isRequired,
-    confirmCallback: React.PropTypes.string.isRequired,
-    isOpen: React.PropTypes.bool
+    title: pt.string.isRequired,
+    wicketurl: pt.string.isRequired,
+    wicketcomponent: pt.string.isRequired,
+    lagretekst: pt.string.isRequired,
+    avbryttekst: pt.string.isRequired,
+    discardCallback: pt.string.isRequired,
+    confirmCallback: pt.string.isRequired,
+    isOpen: pt.bool
 };
 
-
 export default OppgiBegrunnelse;
-

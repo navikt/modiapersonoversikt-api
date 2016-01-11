@@ -1,27 +1,26 @@
-import React from 'react';
-import Modal from './../modal/modal-module';
+import React, { PropTypes as pt } from 'react';
+import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 
-class FlereApneVinduer extends React.Component {
-    render() {
-        const {isOpen, title, description, closeButton} = this.props;
-        const modalProps = { isOpen, title, description, closeButton };
+function FlereApneVinduer({isOpen, title, description, closeButton}) {
+    const modalProps = { isOpen, title, description, closeButton };
 
-        return (
-            <Modal {...modalProps} ref="modal" width={700} height={300} onClosing={() => false}>
-                <section className="bekreft-dialog" style={FlereApneVinduer.styling.container}>
-                    <h1 className="medium-ikon-hjelp-strek">{this.props.hovedtekst}</h1>
-                    <ul>
-                        <li>
-                            <button className="knapp-stor" onClick={this.props.avbrytCallback}>{this.props.avbryttekst}</button>
-                        </li>
-                        <li>
-                            <a href="#" onClick={this.props.fortsettCallback}>{this.props.fortsetttekst}</a>
-                        </li>
-                    </ul>
-                </section>
-            </Modal>
-        );
-    }
+    return (
+        <Modal {...modalProps} width={700} height={300} onClosing={() => false}>
+            <section className="bekreft-dialog" style={FlereApneVinduer.styling.container}>
+                <h1 className="medium-ikon-hjelp-strek">{this.props.hovedtekst}</h1>
+                <ul>
+                    <li>
+                        <button className="knapp-stor" onClick={this.props.avbrytCallback}>
+                            {this.props.avbryttekst}
+                        </button>
+                    </li>
+                    <li>
+                        <a href="#" onClick={this.props.fortsettCallback}>{this.props.fortsetttekst}</a>
+                    </li>
+                </ul>
+            </section>
+        </Modal>
+    );
 }
 
 FlereApneVinduer.styling = {
@@ -32,33 +31,21 @@ FlereApneVinduer.styling = {
 
 FlereApneVinduer.defaultProps = {
     isOpen: false,
-    title: {
-        text: 'Flere Modia-vinduer åpne',
-        show: false,
-        tag: 'h1.vekk'
-    },
-    description: {
-        text: '',
-        show: false,
-        tag: 'div.vekk'
-    },
-    closeButton: {
-        text: 'Lukk feilmeldingsmodal, og nåværende tab.',
-        show: false,
-        tag: 'span.vekk'
-    }
+    title: defaultHelper('Flere Modia-vinduer åpne', false, 'h1.vekk'),
+    description: defaultHelper('', false, 'div.vekk'),
+    closeButton: defaultHelper('Lukk feilmeldingsmodal, og nåværende tab.', false, 'span.vekk')
 };
 
 FlereApneVinduer.propTypes = {
-    hovedtekst: React.PropTypes.string.isRequired,
-    avbryttekst: React.PropTypes.string.isRequired,
-    fortsetttekst: React.PropTypes.string.isRequired,
-    title: React.PropTypes.object,
-    description: React.PropTypes.object,
-    closeButton: React.PropTypes.object,
-    isOpen: React.PropTypes.bool,
-    fortsettCallback: React.PropTypes.func.isRequired,
-    avbrytCallback: React.PropTypes.func.isRequired
+    hovedtekst: pt.string.isRequired,
+    avbryttekst: pt.string.isRequired,
+    fortsetttekst: pt.string.isRequired,
+    title: AriaPropType,
+    description: AriaPropType,
+    closeButton: AriaPropType,
+    isOpen: pt.bool,
+    fortsettCallback: pt.func.isRequired,
+    avbrytCallback: pt.func.isRequired
 };
 
 export default FlereApneVinduer;

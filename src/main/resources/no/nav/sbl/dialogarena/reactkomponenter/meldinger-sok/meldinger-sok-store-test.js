@@ -87,4 +87,3 @@ describe('MeldingerSokStore', () => {
         expect(store.state.valgtTraad).to.equal(e3);
     });
 });
-
