@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>6.42-erratic-snail-SNAPSHOT</version>
+        <version>6.42-ERRATIC-SNAIL-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-jee</artifactId>
