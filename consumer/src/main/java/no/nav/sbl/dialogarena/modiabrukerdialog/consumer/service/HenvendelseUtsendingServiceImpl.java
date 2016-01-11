@@ -161,22 +161,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .map(castTo(XMLHenvendelse.class))
                         .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
                         .map(tilMelding(propertyResolver, ldapService))
-                        .map(new Transformer<Melding, Melding>() {
-                            @Override
-                            public Melding transform(Melding melding) {
-                                PolicyRequest temagruppePolicyRequest = forRequest(
-                                        actionId("temagruppe"),
-                                        resourceId(""),
-                                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
-                                );
-                                if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                                    melding.fritekst = "";
-                                }
-
-                                return melding;
-                            }
-                        })
+                        .map(journalfortTemaTilgang(valgtEnhet))
                         .collect(ELDSTE_FORST);
 
         if (meldinger.isEmpty()) {
@@ -210,6 +195,25 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         }
 
         return meldinger;
+    }
+
+    private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
+        return new Transformer<Melding, Melding>() {
+            @Override
+            public Melding transform(Melding melding) {
+                PolicyRequest temagruppePolicyRequest = forRequest(
+                        actionId("temagruppe"),
+                        resourceId(""),
+                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
+                );
+                if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                    melding.fritekst = "";
+                }
+
+                return melding;
+            }
+        };
     }
 
     @Override
