@@ -12,7 +12,7 @@
     <description>Fellesbibliotek for React-komponenter</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>reactkomponenter</artifactId>
-    <version>2.6-SNAPSHOT</version>
+    <version>2.5-FAMOUS-SHADE-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
