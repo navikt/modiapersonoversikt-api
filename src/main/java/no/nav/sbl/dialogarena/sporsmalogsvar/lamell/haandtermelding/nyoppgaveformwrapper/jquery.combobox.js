@@ -80,12 +80,13 @@
                 });
             var widget = this.input.autocomplete('widget').wrap('<div class="ui-autocomplete-wrapper" />');
 
-            //Fjerning av ugyldig data når dropdown blir lukket
             this.input.on('keydown', function (e) {
-                if (e.keyCode >= 37 && e.keyCode <= 40 && !this.input.autocomplete('widget').is(":visible")) { //Sjekker at det er en pil-tast som har blitt trykkt og at listen ikke redan er åpen.
+                //Sjekker at det er en pil-tast som har blitt trykkt og at listen ikke redan er åpen.
+                if (e.keyCode >= 37 && e.keyCode <= 40 && !this.input.autocomplete('widget').is(":visible")) {
                     this.input.autocomplete('option', 'minLength', 0);
                     this.input.trigger('click');
                 }
+                //Fjerning av ugyldig data når dropdown blir lukket
                 else if (e.keyCode === ENTER) {
                     this._removeIfInvalid(e, {});
                     this.input.autocomplete('close');
