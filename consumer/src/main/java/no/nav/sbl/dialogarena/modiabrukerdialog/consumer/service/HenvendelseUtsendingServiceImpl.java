@@ -144,6 +144,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
     @Override
     public List<Melding> hentTraad(String fnr, String traadId) {
+        final String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         List<Melding> meldinger =
                 on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
                         .withTyper(
@@ -160,17 +161,14 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .map(castTo(XMLHenvendelse.class))
                         .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
                         .map(tilMelding(propertyResolver, ldapService))
-                        .map(journalfortTemaTilgang)
+                        .map(journalfortTemaTilgang(valgtEnhet))
                         .collect(ELDSTE_FORST);
 
         if (meldinger.isEmpty()) {
             throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
         }
 
-
-
         Melding sporsmal = meldinger.get(0);
-        String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         Set<String> valgteEnheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
         if (sporsmal.kontorsperretEnhet != null) {
             List<PolicyAttribute> requestList = new ArrayList<>(Arrays.asList(
@@ -199,6 +197,25 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         return meldinger;
     }
 
+    private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
+        return new Transformer<Melding, Melding>() {
+            @Override
+            public Melding transform(Melding melding) {
+                PolicyRequest temagruppePolicyRequest = forRequest(
+                        actionId("temagruppe"),
+                        resourceId(""),
+                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
+                );
+                if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                    melding.fritekst = "";
+                }
+
+                return melding;
+            }
+        };
+    }
+
     @Override
     public void merkSomKontorsperret(String fnr, List<String> meldingsIDer) {
         String enhet = getEnhet(fnr);
@@ -214,22 +231,6 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         @Override
         public String transform(XMLHenvendelse xmlHenvendelse) {
             return xmlHenvendelse.getBehandlingskjedeId();
-        }
-    };
-
-    private final Transformer<Melding, Melding> journalfortTemaTilgang = new Transformer<Melding, Melding>() {
-        @Override
-        public Melding transform(Melding melding) {
-            PolicyRequest temagruppePolicyRequest = forRequest(
-                    actionId("temagruppe"),
-                    resourceId(""),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
-            );
-            if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.fritekst = "";
-            }
-
-            return melding;
         }
     };
 
