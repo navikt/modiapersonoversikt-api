@@ -93,7 +93,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.19-SNAPSHOT</personsok.version>
-        <kjerneinfo.versjon>1.1.28</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.29</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -1042,6 +1042,11 @@
                         <modiabrukerdialog>/site/19/App/modiabrukerdialog/nb/tekster</modiabrukerdialog>
                     </menyPunktPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.9.4</version>
             </plugin>
         </plugins>
     </build>
