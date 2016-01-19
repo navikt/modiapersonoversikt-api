@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>6.43</version>
+    <version>6.44</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -93,7 +93,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.18</personsok.version>
-        <kjerneinfo.versjon>1.1.29</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.30</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -1054,7 +1054,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-6.43</tag>
+        <tag>modiabrukerdialog-6.44</tag>
     </scm>
 
     <profiles>
