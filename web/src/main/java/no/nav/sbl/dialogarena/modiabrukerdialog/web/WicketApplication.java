@@ -152,7 +152,7 @@ public class WicketApplication extends WebApplication {
 
     private void configureFrontend() {
         new FrontendConfigurator()
-                .withModules(MODIA, BasePage.SCROLL)
+                .withModules(MODIA)
                 .addMetas(
                         MetaTag.XUA_IE_EDGE,
                         MetaTag.CHARSET_UTF8,

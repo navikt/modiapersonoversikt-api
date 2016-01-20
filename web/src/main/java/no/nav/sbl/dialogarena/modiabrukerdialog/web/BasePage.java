@@ -5,7 +5,6 @@ import no.nav.components.NOKAmountLabel;
 import no.nav.kjerneinfo.Kjerneinfo;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.frontend.ConditionalCssResource;
-import no.nav.modig.frontend.FrontendModule;
 import no.nav.modig.modia.metrics.TimingMetricsBehaviour;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.personsok.result.PersonsokResultPanel;
@@ -69,16 +68,6 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference OVERSIKT = new PackageResourceReference(BasePage.class, "less/komponenter/oversikt.less");
     public static final PackageResourceReference VARSLING = new PackageResourceReference(BasePage.class, "less/komponenter/varsling.less");
     public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(SykmeldingsperiodePanel.class, "sykepenger_foreldrepenger.less");
-
-    public static final FrontendModule SCROLL = new FrontendModule.With()
-            .stylesheets(new CssResourceReference(BasePage.class, "jquery.mCustomScrollbar.css"))
-            .less(new PackageResourceReference(BasePage.class, "less/felles/scrollstyling.less"))
-            .scripts(
-                    new JavaScriptResourceReference(BasePage.class, "jquery.mousewheel.js"),
-                    new JavaScriptResourceReference(BasePage.class, "jquery.mousewheel-3.0.6.js"),
-                    new JavaScriptResourceReference(BasePage.class, "jquery.mCustomScrollbar.HACK.js")
-            )
-            .done();
 
     private final WebMarkupContainer body;
 
