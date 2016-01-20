@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>6.44</version>
+    <version>PKULV-1263-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
