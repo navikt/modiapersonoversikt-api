@@ -1,41 +1,37 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
 import java.util.List;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.DATE_4;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.ID_4;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.TEMAGRUPPE_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.TRAAD_LENGDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMeldingVMer;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 
 public class TraadVMTest {
 
     private List<MeldingVM> meldinger;
     private TraadVM traadVM;
 
-    @Inject
-    private EnforcementPoint pep;
-
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private EnforcementPoint pepMock;
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerServiceMock;
 
     @Before
     public void setUp() {
+        pepMock = mock(EnforcementPoint.class);
+        saksbehandlerInnstillingerServiceMock = mock(SaksbehandlerInnstillingerService.class);
+
         meldinger = createMeldingVMer();
-        traadVM = new TraadVM(meldinger, pep, saksbehandlerInnstillingerService);
+        traadVM = new TraadVM(meldinger, pepMock, saksbehandlerInnstillingerServiceMock);
     }
 
     @Test
@@ -162,4 +158,25 @@ public class TraadVMTest {
         assertThat(traadVM.erFeilsendt(), is(true));
     }
 
+    @Test
+    public void traadOKSOSKanBesvaresDersomSaksbehandlerHarOKSOSTilgang() throws Exception {
+        testOKSOSKanBesvares(true);
+    }
+
+    @Test
+    public void traadOKSOSKanIkkeBesvaresDersomSaksbehandlerIkkeHarOKSOSTilgang() throws Exception {
+        testOKSOSKanBesvares(false);
+    }
+
+    private void testOKSOSKanBesvares(final boolean kanBesvares) {
+        when(saksbehandlerInnstillingerServiceMock.getSaksbehandlerValgtEnhet()).thenReturn("1100");
+        when(pepMock.hasAccess((PolicyRequest) anyObject())).thenReturn(kanBesvares);
+
+        final Melding melding = new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4);
+        melding.gjeldendeTemagruppe = Temagruppe.OKSOS;
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(melding.withTemagruppe(Temagruppe.OKSOS.toString()), 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
+
+        assertThat(traadVM.traadKanBesvares(), is(kanBesvares));
+    }
 }
