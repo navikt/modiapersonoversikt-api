@@ -42,7 +42,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -52,15 +51,25 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
+import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
+import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
+import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -74,13 +83,12 @@ public class PersonPage extends BasePage {
 
     private static final Logger logger = getLogger(PersonPage.class);
 
-    private static final List<String> URL_TIL_SESSION_PARAMETERE = asList(HENVENDELSEID, OPPGAVEID, BESVARES);
-
     public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
+    public static final String FNR = "fnr";
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
@@ -118,7 +126,7 @@ public class PersonPage extends BasePage {
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
         add(
-                new HentPersonPanel("searchPanel", ""),
+                new HentPersonPanel("searchPanel", false, pageParameters),
                 new Button("toggle-sok"),
                 new NullstillLink("nullstill"),
                 lamellContainer,
@@ -211,14 +219,14 @@ public class PersonPage extends BasePage {
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
-    public void refreshKjerneinfo(AjaxRequestTarget target, String fnr) {
-        handleRedirect(target, new PageParameters().set("fnr", fnr), PersonPage.class);
+    public void refreshKjerneinfo(AjaxRequestTarget target, PageParameters pageParameters) {
+        handleRedirect(target, pageParameters, PersonPage.class);
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
-    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String fnr) {
+    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, PageParameters pageParameters) {
         getSession().setAttribute(HENT_PERSON_BEGRUNNET, true);
-        refreshKjerneinfo(target, fnr);
+        refreshKjerneinfo(target, pageParameters);
     }
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)

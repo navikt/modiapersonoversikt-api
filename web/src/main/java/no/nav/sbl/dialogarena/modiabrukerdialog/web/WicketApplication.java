@@ -230,7 +230,8 @@ public class WicketApplication extends WebApplication {
     }
 
     private void mountPages() {
-        mountPage("/person/${fnr}", PersonPage.class);
+        mountPage("/visPerson/${fnr}", PersonPage.class);
+        mountPage("/person/${fnr}", HentPersonPage.class);
         mountPage("internal/isAlive", HealthCheck.class);
         mountPage("internal/selftest", SelfTestPage.class);
         mountResource("internal/selftest.json", new JsonResourceReference(SelfTestPage.class));

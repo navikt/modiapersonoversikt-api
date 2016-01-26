@@ -9,8 +9,10 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
+import static org.apache.commons.collections15.ComparatorUtils.NATURAL_COMPARATOR;
+import static org.hamcrest.Matchers.contains;
+
 
 public class GsakKodeverkTemaTest {
     @Test
@@ -21,15 +23,12 @@ public class GsakKodeverkTemaTest {
 
     @Test
     public void shouldSortKodeverk() {
-        List<GsakKodeTema.Tema> parse = GsakKodeverkTema.Parser.parse();
+        List<GsakKodeTema.Tema> temaer = GsakKodeverkTema.Parser.parse();
 
-        //supplerende stønad
-        GsakKodeTema.Tema tema = parse.get(33);
+        List<String> tematekster = on(temaer).map(GsakKodeTema.TEKST).collect();
+        List<String> sortertetematekster = on(temaer).map(GsakKodeTema.TEKST).collect(NATURAL_COMPARATOR);
 
-        List<GsakKodeTema.Underkategori> underkategorier = tema.underkategorier;
-
-        assertNotEquals(underkategorier.get(underkategorier.size()-1).kode, "ENSL_VOKS");
-        assertNotEquals(underkategorier.get(0).kode, "ENSL_VOKS");
+        assertThat(tematekster, contains(sortertetematekster.toArray()));
     }
 
     @Test

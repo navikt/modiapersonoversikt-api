@@ -41,10 +41,9 @@ public class HentPersonPage extends BasePage {
 	public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
 
-	public HentPersonPage(PageParameters pageParameters) {
+    public HentPersonPage(PageParameters pageParameters) {
         super(pageParameters);
-        String fnr = pageParameters.get(SOKT_FNR).toString();
-        HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel", fnr);
+        HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel", pageParameters);
         setupErrorText(pageParameters, hentPersonPanel);
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
@@ -86,8 +85,8 @@ public class HentPersonPage extends BasePage {
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
-    public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(PersonPage.class, new PageParameters().set(FNR, query));
+    public void refreshKjerneinfo(AjaxRequestTarget target, PageParameters pageParameters) {
+        throw new RestartResponseException(PersonPage.class, pageParameters);
     }
 
 	@RunOnEvents(GOTO_HENT_PERSONPAGE)
@@ -108,9 +107,9 @@ public class HentPersonPage extends BasePage {
 	}
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
-    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
+    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, PageParameters pageParameters) {
         getSession().setAttribute(HENT_PERSON_BEGRUNNET, true);
-        refreshKjerneinfo(target, query);
+        refreshKjerneinfo(target, pageParameters);
     }
 
     @RunOnEvents(PERSONSOK_FNR_CLICKED)
