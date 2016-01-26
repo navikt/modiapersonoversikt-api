@@ -138,6 +138,31 @@ jQuery(document).ready(function ($) {
         }
     }
 
+function setSessionTimeoutBox(timeoutBox) {
+    var timeoutValue = 1000 * 60 * 55;
+    var timeout = setTimeout(function () {
+        timeoutBox.vis();
+    }, timeoutValue);
+
+    Wicket.Event.subscribe('/ajax/call/after', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            timeoutBox.vis();
+        }, timeoutValue);
+    });
+}
+
+function prepareElementForPrint(element, additionalClass) {
+    if (additionalClass) {
+        $('.print').addClass(additionalClass);
+    }
+    $('.print .content').append(element.clone());
+}
+
+function addPrintEventListener() {
+    var called = 0; // Chrome kjører listeneren 2 ganger, men vi vil bare kjøre beforePrint første gang og afterPrint siste gang de kjører
+    var print = $('.print');
+    var printContent = print.find('.content');
     function addPrintEventListener() {
         var called = 0; // Chrome kjører listeneren 2 ganger, men vi vil bare kjøre beforePrint første gang og afterPrint siste gang de kjører
         var print = $('.print');

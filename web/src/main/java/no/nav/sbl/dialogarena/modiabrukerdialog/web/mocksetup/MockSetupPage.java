@@ -17,6 +17,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -55,7 +56,8 @@ public class MockSetupPage extends BasePage {
     private SkrivestotteSok skrivestotteSok;
 
 
-    public MockSetupPage() {
+    public MockSetupPage(PageParameters pageParameters) {
+        super(pageParameters);
         mockSetupModeller = lagModeller();
 
         add(new ContextImage("modiaLogo", "img/modiaLogo.svg"));

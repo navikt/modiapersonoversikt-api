@@ -42,6 +42,7 @@ public class HentPersonPage extends BasePage {
     public static final String SOKT_FNR = "soektfnr";
 
 	public HentPersonPage(PageParameters pageParameters) {
+        super(pageParameters);
         String fnr = pageParameters.get(SOKT_FNR).toString();
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel", fnr);
         setupErrorText(pageParameters, hentPersonPanel);
