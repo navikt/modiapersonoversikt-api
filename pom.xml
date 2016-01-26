@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>6.43-FAMOUS-SHADE-SNAPSHOT</version>
+    <version>6.42-FAMOUS-SHADE-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -55,7 +55,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.0.5</modig.wicket.version>
+        <modig.wicket.version>3.5</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.4</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -92,7 +92,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>1.1.18</personsok.version>
+        <personsok.version>1.1.20-SNAPSHOT</personsok.version>
         <kjerneinfo.versjon>1.1.29</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
@@ -1054,7 +1054,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-6.43</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <profiles>

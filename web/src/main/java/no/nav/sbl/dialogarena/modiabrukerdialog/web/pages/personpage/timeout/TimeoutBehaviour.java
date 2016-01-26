@@ -23,7 +23,6 @@ public class TimeoutBehaviour extends AbstractDefaultAjaxBehavior {
 
     @Override
     public void renderHead(Component component, IHeaderResponse response) {
-        response.render(forScript("setSessionTimeoutBox();"));
         super.renderHead(component, response);
     }
 

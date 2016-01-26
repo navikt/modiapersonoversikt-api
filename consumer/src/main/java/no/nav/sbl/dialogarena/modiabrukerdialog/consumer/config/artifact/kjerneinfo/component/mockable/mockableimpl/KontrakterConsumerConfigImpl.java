@@ -9,18 +9,16 @@ import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
 
 public class KontrakterConsumerConfigImpl {
 
-    public static DefaultYtelseskontraktService createYtelseskontraktService(YtelseskontraktV3 ytelseskontraktV3, YtelseskontraktV3 selftestYtelseskontraktV3) {
+    public static DefaultYtelseskontraktService createYtelseskontraktService(YtelseskontraktV3 ytelseskontraktV3) {
         DefaultYtelseskontraktService ytelseskontraktService = new DefaultYtelseskontraktService();
         ytelseskontraktService.setYtelseskontraktService(ytelseskontraktV3);
-        ytelseskontraktService.setSelftestYtelseskontraktService(selftestYtelseskontraktV3);
         ytelseskontraktService.setMapper(new YtelseskontraktMapper());
         return ytelseskontraktService;
     }
 
-    public static DefaultOppfolgingskontraktService createOppfolgingskontraktService(OppfoelgingPortType oppfoelgingPortType, OppfoelgingPortType selftestOppfoelgingPortType) {
+    public static DefaultOppfolgingskontraktService createOppfolgingskontraktService(OppfoelgingPortType oppfoelgingPortType) {
         DefaultOppfolgingskontraktService oppfolgingskontraktServiceBi = new DefaultOppfolgingskontraktService();
         oppfolgingskontraktServiceBi.setOppfolgingskontraktService(oppfoelgingPortType);
-        oppfolgingskontraktServiceBi.setSelftestOppfolgingskontraktService(selftestOppfoelgingPortType);
         oppfolgingskontraktServiceBi.setMapper(new OppfolgingskontraktMapper());
         return oppfolgingskontraktServiceBi;
     }
