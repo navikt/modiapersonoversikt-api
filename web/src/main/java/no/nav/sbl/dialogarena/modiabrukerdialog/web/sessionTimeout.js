@@ -1,30 +1,25 @@
-jQuery(document).ready(function ($) {
-    'use strict';
-
     var timeout;
     var interval;
 
-    setSessionTimeoutBox();
+    function setSessionTimeoutBox(timeoutBox) {
+        resetSessionTimeoutBox(timeoutBox);
 
-    function setSessionTimeoutBox() {
-        resetSessionTimeoutBox();
-
-        dialogMedBrukerPing();
+        dialogMedBrukerPing(timeoutBox);
 
         Wicket.Event.subscribe('/ajax/call/after', function () {
-            resetSessionTimeoutBox();
+            resetSessionTimeoutBox(timeoutBox);
         });
     }
 
-    function resetSessionTimeoutBox() {
+    function resetSessionTimeoutBox(timeoutBox) {
         var timeoutValue = 1000 * 60 * 55; // Oppdatering her må korrespondere med session-timeout-verdien i web.xml.
         clearTimeout(timeout);
         timeout = setTimeout(function () {
-            createTimeoutBox();
+            timeoutBox.vis();
         }, timeoutValue);
     }
 
-    function dialogMedBrukerPing() {
+    function dialogMedBrukerPing(timeoutBox) {
         var intervalValue = 1000 * 60 * 5;
         var currentTextLength;
         interval = setInterval(function () {
@@ -35,7 +30,7 @@ jQuery(document).ready(function ($) {
             if (textLength > -1 && currentTextLength != textLength) {
                 currentTextLength = textLength;
                 $.ajax("/modiabrukerdialog/internal/isAlive");
-                resetSessionTimeoutBox();
+                resetSessionTimeoutBox(timeoutBox);
             }
         }, intervalValue);
     }
@@ -48,11 +43,3 @@ jQuery(document).ready(function ($) {
             return -1;
         }
     }
-
-    function createTimeoutBox() {
-        if (!$('.wicket-mask-dark')[0]) {
-            $('body').append($('<div/>').addClass('wicket-mask-dark'));
-        }
-        $('.informasjonsboks.timeout').show();
-    }
-});
