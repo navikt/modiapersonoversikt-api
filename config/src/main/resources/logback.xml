@@ -97,7 +97,11 @@
 
     <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
 
-    <root level="${ROOT_LOG_LEVEL:-INFO}">
+    <logger name="org.apache.cxf" level="OFF">
+        <appender-ref ref="infolog"/>
+    </logger>
+
+    <root level="${ROOT_LOG_LEVEL:-ERROR}">
         <appender-ref ref="exceptionlog"/>
         <appender-ref ref="infolog"/>
         <appender-ref ref="SYSLOG"/>
