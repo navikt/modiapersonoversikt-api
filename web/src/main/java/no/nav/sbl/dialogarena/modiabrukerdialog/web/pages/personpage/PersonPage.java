@@ -330,7 +330,6 @@ public class PersonPage extends BasePage {
         if (lamellContainer.hasUnsavedChanges()) {
             redirectPopup.show(target);
         } else {
-            getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
             redirectPopup.redirect();
         }
     }
@@ -342,6 +341,7 @@ public class PersonPage extends BasePage {
 
         @Override
         public void onClick(AjaxRequestTarget target) {
+            getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }
     }
