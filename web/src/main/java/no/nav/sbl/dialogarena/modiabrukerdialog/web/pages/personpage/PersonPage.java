@@ -11,6 +11,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
+import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
@@ -56,17 +57,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
@@ -74,6 +65,7 @@ import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forReque
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
@@ -227,7 +219,8 @@ public class PersonPage extends BasePage {
 
     private void sjekkTilgang(String fnr, PageParameters params) {
         HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
-        Boolean erBegrunnet = (Boolean) getSession().getAttribute(HENT_PERSON_BEGRUNNET);
+        String fnrBegrunnet = (String) getSession().getAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET);
+        Boolean erBegrunnet = !isBlank(fnrBegrunnet) && fnrBegrunnet.equals(fnr);
         request.setBegrunnet((erBegrunnet == null) ? false : erBegrunnet);
         try {
             personKjerneinfoServiceBi.hentKjerneinformasjon(request);
@@ -243,7 +236,7 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, PageParameters pageParameters) {
-        getSession().setAttribute(HENT_PERSON_BEGRUNNET, true);
+        getSession().setAttribute(HENT_PERSON_BEGRUNNET, pageParameters.get("fnr").toString());
         refreshKjerneinfo(target, pageParameters);
     }
 
@@ -341,7 +334,7 @@ public class PersonPage extends BasePage {
 
         @Override
         public void onClick(AjaxRequestTarget target) {
-            getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
+            getSession().setAttribute(HENT_PERSON_BEGRUNNET, "");
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }
     }

@@ -247,7 +247,7 @@ public class WicketApplication extends WebApplication {
     @Override
     public Session newSession(Request request, Response response) {
         Session session = super.newSession(request, response);
-        session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, false);
+        session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, "");
         return session;
     }
 

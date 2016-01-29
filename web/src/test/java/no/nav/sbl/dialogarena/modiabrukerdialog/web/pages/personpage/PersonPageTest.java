@@ -138,11 +138,11 @@ public class PersonPageTest extends WicketPageTest {
     public void oppdatererKjerneInfoVedFodselsnummerFunnetMedBegrunnelse() {
         final String newFnr = "12345612345";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
-        wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
+        wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, "");
 
         wicket.sendEvent(createEvent(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE, createPageParamerersWithFnr(newFnr)));
 
-        assertEquals(true, wicket.tester.getSession().getAttribute(HENT_PERSON_BEGRUNNET));
+        assertEquals(newFnr, wicket.tester.getSession().getAttribute(HENT_PERSON_BEGRUNNET));
         assertFalse(wicket.tester.ifContains(newFnr).wasFailed());
         assertTrue(wicket.tester.ifContains(testFnr).wasFailed());
     }

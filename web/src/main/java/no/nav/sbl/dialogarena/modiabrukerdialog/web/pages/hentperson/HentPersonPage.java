@@ -108,7 +108,7 @@ public class HentPersonPage extends BasePage {
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, PageParameters pageParameters) {
-        getSession().setAttribute(HENT_PERSON_BEGRUNNET, true);
+        getSession().setAttribute(HENT_PERSON_BEGRUNNET, pageParameters.get("fnr").toString());
         refreshKjerneinfo(target, pageParameters);
     }
 

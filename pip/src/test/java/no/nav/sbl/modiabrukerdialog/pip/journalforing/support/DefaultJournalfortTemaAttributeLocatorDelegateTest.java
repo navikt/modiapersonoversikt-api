@@ -43,7 +43,7 @@ public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
 
         when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenReturn(fagomradeListe);
 
-        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet("", ""), contains("ARBD", "FAML"));
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet("", ""), contains("FAML", "ARBD"));
         verify(ansattService, only()).hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class));
     }
 
