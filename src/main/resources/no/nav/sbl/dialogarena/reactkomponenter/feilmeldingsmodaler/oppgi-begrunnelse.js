@@ -2,6 +2,7 @@ import React, { PropTypes as pt } from 'react';
 import Modal from './../modal/modal-module';
 import { autobind } from './../utils/utils-module';
 import sendToWicket from './../react-wicket-mixin/wicket-sender';
+import assign from 'object-assign';
 
 class OppgiBegrunnelse extends React.Component {
     constructor(props) {
@@ -68,7 +69,7 @@ class OppgiBegrunnelse extends React.Component {
                                     onClick={this.fortsettCallback.bind(this)}>{this.props.lagretekst}
                             </button>
                             <button className="knapp-lenke"
-                                    style={Object.assign(OppgiBegrunnelse.styling.buttonAvbryt, OppgiBegrunnelse.styling.button)}
+                                    style={assign(OppgiBegrunnelse.styling.buttonAvbryt, OppgiBegrunnelse.styling.button)}
                                     onClick={this.avbrytCallback.bind(this)}>{this.props.avbryttekst}
                             </button>
                         </div>
