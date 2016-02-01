@@ -10,13 +10,16 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSFagomrade;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSStatus;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +47,9 @@ public class GsakServiceImplTest {
 
     @Captor
     private ArgumentCaptor<WSOpprettOppgaveRequest> wsOpprettOppgaveRequestArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<WSLagreOppgaveRequest> wsLagreOppgaveRequestArgumentCaptor;
 
     @Mock
     private OppgavebehandlingV3 oppgavebehandling;
@@ -107,14 +113,18 @@ public class GsakServiceImplTest {
     }
 
 
-
     private WSHentOppgaveResponse oppretteOppgaveResponse(String kodeFagomrade, String kodeStatus) {
         WSHentOppgaveResponse wsHentOppgaveResponse = new WSHentOppgaveResponse();
+        WSOppgave wsOppgave = opprettWSOppgave(kodeFagomrade, kodeStatus);
+        wsHentOppgaveResponse.setOppgave(wsOppgave);
+        return wsHentOppgaveResponse;
+    }
+
+    private WSOppgave opprettWSOppgave(String kodeFagomrade, String kodeStatus) {
         WSOppgave wsOppgave = new WSOppgave();
         settFagomradeMedKodeForOppgave(kodeFagomrade, wsOppgave);
         settStatusMedKodeForOppgave(kodeStatus, wsOppgave);
-        wsHentOppgaveResponse.setOppgave(wsOppgave);
-        return wsHentOppgaveResponse;
+        return wsOppgave;
     }
 
     private void settStatusMedKodeForOppgave(String kodeStatus, WSOppgave wsOppgave) {
@@ -127,6 +137,56 @@ public class GsakServiceImplTest {
         WSFagomrade wsFagomrade = new WSFagomrade();
         wsFagomrade.withKode(kodeFagomrade);
         wsOppgave.setFagomrade(wsFagomrade);
+    }
+
+    @Test
+    public void skalKunneFerdigstilleGsakOppgave() throws GsakService.OppgaveErFerdigstilt, LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
+        String testBeskrivelse = "Dette er en test beskrivelse";
+        WSOppgave wsOppgave = opprettWSOppgave("XXX", "YYY");
+        leggTilResterendeOppgaveProperties(wsOppgave);
+        gsakService.ferdigstillGsakOppgave(wsOppgave, testBeskrivelse);
+
+        verify(oppgavebehandling).lagreOppgave(wsLagreOppgaveRequestArgumentCaptor.capture());
+
+        WSEndreOppgave wsEndreOppgave = wsLagreOppgaveRequestArgumentCaptor.getValue().getEndreOppgave();
+        int id = wsLagreOppgaveRequestArgumentCaptor.getValue().getEndretAvEnhetId();
+
+        assertThat(wsEndreOppgave.getBeskrivelse(), containsString(testBeskrivelse));
+        assertThat(wsEndreOppgave.getBeskrivelse(), containsString(JOURNALFORENDE_ENHET));
+        assertThat(id, is(Integer.parseInt(JOURNALFORENDE_ENHET)));
+    }
+
+    private void leggTilResterendeOppgaveProperties(WSOppgave wsOppgave) {
+        wsOppgave.setOppgaveId("111");
+        wsOppgave.setAnsvarligId("111");
+
+        WSBruker wsBruker = new WSBruker();
+        wsBruker.setBrukerId("333");
+        wsBruker.setBrukertypeKode("3333");
+        wsOppgave.setGjelder(wsBruker);
+
+        wsOppgave.setDokumentId("444");
+        wsOppgave.setKravId("555");
+        wsOppgave.setAnsvarligId("666");
+
+        WSOppgavetype wsOppgavetype = new WSOppgavetype();
+        wsOppgavetype.setKode("777");
+        wsOppgave.setOppgavetype(wsOppgavetype);
+
+        WSPrioritet wsPrioritet = new WSPrioritet();
+        wsPrioritet.setKode("888");
+        wsOppgave.setPrioritet(wsPrioritet);
+
+        WSUnderkategori wsUnderkategori = new WSUnderkategori();
+        wsUnderkategori.setKode("999");
+        wsOppgave.setUnderkategori(wsUnderkategori);
+
+        wsOppgave.setAktivFra(new LocalDate(1, 1, 1));
+        wsOppgave.setVersjon(0);
+        wsOppgave.setSaksnummer("1");
+        wsOppgave.setLest(true);
+
+
     }
 
     @Test
