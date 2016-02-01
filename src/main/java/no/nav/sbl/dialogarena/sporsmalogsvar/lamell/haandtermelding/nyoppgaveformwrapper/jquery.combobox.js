@@ -133,6 +133,7 @@
                     }
 
                     // Pass empty string as value to search for, displaying all results
+                    input.autocomplete('option', 'minLength', 0);
                     input.autocomplete("search", "");
                 })
                 .append('<i class="ned">');
