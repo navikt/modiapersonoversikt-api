@@ -8,6 +8,13 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSFagomrade;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSStatus;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
 import org.junit.Before;
@@ -25,6 +32,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,6 +51,8 @@ public class GsakServiceImplTest {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
     private AnsattService ansattWS;
+    @Mock
+    private OppgaveV3 oppgaveWS;
 
     @InjectMocks
     private GsakServiceImpl gsakService;
@@ -55,6 +65,68 @@ public class GsakServiceImplTest {
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+    }
+
+    @Test
+    public void skalIkkeKunneAvslutteOppgaveManuelltHvisOppgaveErFerdigstilt() throws HentOppgaveOppgaveIkkeFunnet {
+        WSHentOppgaveResponse wsHentOppgaveResponse = oppretteOppgaveResponse("XXX", GsakServiceImpl.KODE_OPPGAVE_FERDIGSTILT);
+
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(wsHentOppgaveResponse);
+
+        boolean oppgaveKanManuelltAvsluttes = gsakService.oppgaveKanManuelltAvsluttes(any(String.class));
+
+        verify(oppgaveWS).hentOppgave(any(WSHentOppgaveRequest.class));
+
+        assertThat(oppgaveKanManuelltAvsluttes, is(false));
+    }
+
+    @Test
+    public void skalIkkeKunneAvslutteOppgaveManuelltHvisFagomradeKontaktNAV() throws HentOppgaveOppgaveIkkeFunnet {
+        WSHentOppgaveResponse wsHentOppgaveResponse = oppretteOppgaveResponse(GsakServiceImpl.KODE_KONTAKT_NAV, "YYY");
+
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(wsHentOppgaveResponse);
+
+        boolean oppgaveKanManuelltAvsluttes = gsakService.oppgaveKanManuelltAvsluttes(any(String.class));
+
+        verify(oppgaveWS).hentOppgave(any(WSHentOppgaveRequest.class));
+
+        assertThat(oppgaveKanManuelltAvsluttes, is(false));
+    }
+
+    @Test
+    public void skalKunneAvslutteOppgaveManuelltHvisIkkeFagomradeKontaktNAVogIkkeOppgaveErFerdigstilt() throws HentOppgaveOppgaveIkkeFunnet {
+        WSHentOppgaveResponse wsHentOppgaveResponse = oppretteOppgaveResponse("XXX", "YYY");
+
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(wsHentOppgaveResponse);
+
+        boolean oppgaveKanManuelltAvsluttes = gsakService.oppgaveKanManuelltAvsluttes(any(String.class));
+
+        verify(oppgaveWS).hentOppgave(any(WSHentOppgaveRequest.class));
+
+        assertThat(oppgaveKanManuelltAvsluttes, is(true));
+    }
+
+
+
+    private WSHentOppgaveResponse oppretteOppgaveResponse(String kodeFagomrade, String kodeStatus) {
+        WSHentOppgaveResponse wsHentOppgaveResponse = new WSHentOppgaveResponse();
+        WSOppgave wsOppgave = new WSOppgave();
+        settFagomradeMedKodeForOppgave(kodeFagomrade, wsOppgave);
+        settStatusMedKodeForOppgave(kodeStatus, wsOppgave);
+        wsHentOppgaveResponse.setOppgave(wsOppgave);
+        return wsHentOppgaveResponse;
+    }
+
+    private void settStatusMedKodeForOppgave(String kodeStatus, WSOppgave wsOppgave) {
+        WSStatus wsStatus = new WSStatus();
+        wsStatus.withKode(kodeStatus);
+        wsOppgave.setStatus(wsStatus);
+    }
+
+    private void settFagomradeMedKodeForOppgave(String kodeFagomrade, WSOppgave wsOppgave) {
+        WSFagomrade wsFagomrade = new WSFagomrade();
+        wsFagomrade.withKode(kodeFagomrade);
+        wsOppgave.setFagomrade(wsFagomrade);
     }
 
     @Test
