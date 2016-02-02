@@ -2,6 +2,14 @@ import React, { PropTypes as pt } from 'react';
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 
 class SesjonenHarLoptUt extends React.Component {
+    vis() {
+        this.refs.modal.open();
+    }
+
+    skjul() {
+        this.refs.modal.close();
+    }
+
     render() {
         const {
             isOpen, title, description, closeButton,
@@ -10,7 +18,7 @@ class SesjonenHarLoptUt extends React.Component {
             } = this.props;
         const modalProps = { isOpen, title, description, closeButton };
         return (
-            <Modal {...modalProps} height={265} width={500} onClosing={() => false}>
+            <Modal {...modalProps} ref="modal" height={265} width={500} onClosing={() => false}>
                 <div className="informasjonsboks timeout">
                     <h1 className="diger">{hovedtekst}</h1>
 
