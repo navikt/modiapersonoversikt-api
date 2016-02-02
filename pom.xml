@@ -93,7 +93,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.24-FAMOUS-SHADE</personsok.version>
-        <kjerneinfo.versjon>1.1.34-FAMOUS-SHADE-SNAPSHOT</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.1.34-FAMOUS-SHADE</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -105,7 +105,7 @@
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>4.3-FAMOUS-SHADE</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>5.5-FAMOUS-SHADE-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>5.5-FAMOUS-SHADE</sporsmalogsvar.version>
         <saksoversikt.version>4.11</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
