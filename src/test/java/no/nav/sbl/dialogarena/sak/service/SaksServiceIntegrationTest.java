@@ -21,6 +21,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,6 +57,7 @@ public class SaksServiceIntegrationTest {
 //        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
+    @Ignore
     @Test
     public void testHentTemaer() throws Exception {
         WSSak wsSakAAP = new WSSak()
@@ -114,6 +116,7 @@ public class SaksServiceIntegrationTest {
         assertEquals(DateTime.parse("2014-09-16T14:54:18.848+02:00"), sistoppdaterteDAG.behandlingDato);
     }
 
+    @Ignore
     @Test
     public void testHentBehandlingerForTemakode() throws Exception {
         WSSoknad wsSoknad = new WSSoknad()
