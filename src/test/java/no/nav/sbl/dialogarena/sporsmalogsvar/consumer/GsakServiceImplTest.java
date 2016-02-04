@@ -4,7 +4,6 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGe
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
@@ -19,6 +18,10 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
+import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +32,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
+
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -49,7 +56,10 @@ public class GsakServiceImplTest {
     private ArgumentCaptor<WSOpprettOppgaveRequest> wsOpprettOppgaveRequestArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<WSLagreOppgaveRequest> wsLagreOppgaveRequestArgumentCaptor;
+    private ArgumentCaptor<WSLagreOppgaveRequest> wsLagreOppgaveRequestArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<WSFinnAnsvarligEnhetForOppgavetypeRequest> wsFinnAnsvarligEnhetCaptor;
 
     @Mock
     private OppgavebehandlingV3 oppgavebehandling;
@@ -59,6 +69,8 @@ public class GsakServiceImplTest {
     private AnsattService ansattWS;
     @Mock
     private OppgaveV3 oppgaveWS;
+    @Mock
+    private Ruting ruting;
 
     @InjectMocks
     private GsakServiceImpl gsakService;
@@ -71,6 +83,44 @@ public class GsakServiceImplTest {
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+    }
+
+    @Test
+    public void skalKunneHenteForeslatteEnheter() {
+        WSFinnAnsvarligEnhetForOppgavetypeResponse ansvarligEnhetResponse = opprettAnsvarligEnhetResponse();
+
+        when(ruting.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class))).thenReturn(ansvarligEnhetResponse);
+
+        String fnr = "1234567";
+        String tema = "tema";
+        String type = "type";
+        String kode = "kode";
+        Underkategori underkategori = new Underkategori(kode, "tekst");
+
+        gsakService.hentForeslatteEnheter(fnr, tema, type, optional(underkategori));
+
+        verify(ruting).finnAnsvarligEnhetForOppgavetype(wsFinnAnsvarligEnhetCaptor.capture());
+        WSFinnAnsvarligEnhetForOppgavetypeRequest request = wsFinnAnsvarligEnhetCaptor.getValue();
+        assertThat(request.getBrukerId(), is(fnr));
+        assertThat(request.getFagomradeKode(), is(tema));
+        assertThat(request.getOppgaveKode(), is(type));
+        assertThat(request.getGjelderKode(), is(kode));
+    }
+
+    private WSFinnAnsvarligEnhetForOppgavetypeResponse opprettAnsvarligEnhetResponse() {
+        WSFinnAnsvarligEnhetForOppgavetypeResponse ansvarligEnhetResponse = new WSFinnAnsvarligEnhetForOppgavetypeResponse();
+        List<WSEnhet> list = ansvarligEnhetResponse.getEnhetListe();
+        list.add(opprettEnhet("111", "testEnhet1"));
+        list.add(opprettEnhet("222", "testEnhet2"));
+        list.add(opprettEnhet("333", "testEnhet3"));
+        return ansvarligEnhetResponse;
+    }
+
+    private WSEnhet opprettEnhet(String id, String enhetsNavn) {
+        WSEnhet enhet = new WSEnhet();
+        enhet.setEnhetId(id);
+        enhet.setEnhetNavn(enhetsNavn);
+        return enhet;
     }
 
     @Test
@@ -149,7 +199,7 @@ public class GsakServiceImplTest {
         verify(oppgavebehandling).lagreOppgave(wsLagreOppgaveRequestArgumentCaptor.capture());
 
         WSEndreOppgave wsEndreOppgave = wsLagreOppgaveRequestArgumentCaptor.getValue().getEndreOppgave();
-        int id = wsLagreOppgaveRequestArgumentCaptor.getValue().getEndretAvEnhetId();
+        Integer id = wsLagreOppgaveRequestArgumentCaptor.getValue().getEndretAvEnhetId();
 
         assertThat(wsEndreOppgave.getBeskrivelse(), containsString(testBeskrivelse));
         assertThat(wsEndreOppgave.getBeskrivelse(), containsString(JOURNALFORENDE_ENHET));
@@ -185,8 +235,6 @@ public class GsakServiceImplTest {
         wsOppgave.setVersjon(0);
         wsOppgave.setSaksnummer("1");
         wsOppgave.setLest(true);
-
-
     }
 
     @Test
@@ -236,10 +284,10 @@ public class GsakServiceImplTest {
         NyOppgave nyOppgave = new NyOppgave();
         nyOppgave.beskrivelse = "beskrivelse";
         nyOppgave.enhet = new AnsattEnhet("enhetId", "enhetNavn");
-        nyOppgave.prioritet = new GsakKodeTema.Prioritet("tema", "");
-        nyOppgave.type = new GsakKodeTema.OppgaveType("type", "", 0);
-        nyOppgave.tema = new GsakKodeTema.Tema("tema", "", asList(nyOppgave.type), asList(nyOppgave.prioritet), asList(new GsakKodeTema.Underkategori("", "")));
-        nyOppgave.underkategori = new GsakKodeTema.Underkategori("underkategori", "");
+        nyOppgave.prioritet = new Prioritet("tema", "");
+        nyOppgave.type = new OppgaveType("type", "", 0);
+        nyOppgave.tema = new Tema("tema", "", asList(nyOppgave.type), asList(nyOppgave.prioritet), asList(new Underkategori("", "")));
+        nyOppgave.underkategori = new Underkategori("underkategori", "");
         nyOppgave.henvendelseId = "henvendelseId";
         nyOppgave.brukerId = "12345612345";
         return nyOppgave;
