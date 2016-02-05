@@ -40,6 +40,9 @@ public final class InstanceSwitcher implements InvocationHandler {
         method.setAccessible(true);
         try {
             if (getProperty(key, "false").equalsIgnoreCase("true")) {
+                if (getProperty(key + ".simulate.error", "false").equalsIgnoreCase("true")) {
+                    throw new RuntimeException("Simulerer exception ved kall til tjenesten.");
+                }
                 return method.invoke(alternative, args);
             }
             return method.invoke(defaultInstance, args);

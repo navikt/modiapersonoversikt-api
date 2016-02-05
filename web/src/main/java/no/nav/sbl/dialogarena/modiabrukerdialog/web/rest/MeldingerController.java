@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -18,16 +20,24 @@ import java.util.List;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.RestUtils.hentValgtEnhet;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/meldinger/{fnr}")
 @Produces(APPLICATION_JSON)
 public class MeldingerController {
 
     @Inject
+    private AnsattService ansattService;
+    @Inject
     private HenvendelseBehandlingService henvendelse;
     @Inject
     private MeldingerSok searcher;
+
+    private static final Logger logger = getLogger(MeldingerController.class);
 
     @GET
     @Path("/traader")
@@ -54,9 +64,14 @@ public class MeldingerController {
     @Path("/indekser")
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         String valgtEnhet = hentValgtEnhet(request);
-        List<Melding> meldinger = henvendelse.hentMeldinger(fnr, valgtEnhet);
-        searcher.indekser(fnr, meldinger);
-        return Response.status(Response.Status.OK).build();
+        if(on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect().contains(valgtEnhet)) {
+            List<Melding> meldinger = henvendelse.hentMeldinger(fnr, valgtEnhet);
+            searcher.indekser(fnr, meldinger);
+            return Response.status(Response.Status.OK).build();
+        } else {
+            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
 }

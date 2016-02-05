@@ -39,7 +39,6 @@ public class BehandleBrukerprofilConsumerConfigResolverTest {
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.behandleBrukerprofilServiceBi().oppdaterKontaktinformasjonOgPreferanser(new BehandleBrukerprofilRequest(new Bruker()));
-        resolver.behandleBrukerprofilServiceBi().ping();
         verifyZeroInteractions(defaultService.wrappedObject);
     }
 
@@ -47,9 +46,7 @@ public class BehandleBrukerprofilConsumerConfigResolverTest {
     public void perDefaultSkalProdkodeEksekveres() throws OppdaterKontaktinformasjonOgPreferanserUgyldigInput, OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.behandleBrukerprofilServiceBi().oppdaterKontaktinformasjonOgPreferanser(new BehandleBrukerprofilRequest(new Bruker()));
-        resolver.behandleBrukerprofilServiceBi().ping();
         verify(defaultService.wrappedObject, times(1)).oppdaterKontaktinformasjonOgPreferanser(any(BehandleBrukerprofilRequest.class));
-        verify(defaultService.wrappedObject, times(1)).ping();
     }
 
 }

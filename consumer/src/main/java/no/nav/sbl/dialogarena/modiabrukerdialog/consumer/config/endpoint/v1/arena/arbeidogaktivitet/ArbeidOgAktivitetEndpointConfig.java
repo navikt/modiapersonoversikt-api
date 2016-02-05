@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet;
 
+import no.nav.modig.modia.ping.FailedPingResult;
+import no.nav.modig.modia.ping.OkPingResult;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
@@ -11,11 +13,6 @@ import org.joda.time.LocalDate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.ArbeidOgAktivitetEndpointMock.createArbeidOgAktivitetMock;
 
@@ -43,18 +40,31 @@ public class ArbeidOgAktivitetEndpointConfig {
     public Pingable arbeidOgAktivitetPing(final ArbeidOgAktivitet ws) {
         return new Pingable() {
             @Override
-            public List<PingResult> ping() {
+            public PingResult ping() {
                 long start = System.currentTimeMillis();
-                String name = "ARENA_ARBEIDOGAKTIVITET_V1";
                 try {
                     ws.hentSakListe(new WSHentSakListeRequest()
                             .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker("10108000398"))
                             .withFom(LocalDate.now())
                             .withTom(LocalDate.now()));
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+                    return new OkPingResult(System.currentTimeMillis() - start);
                 } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-                }
+                    return new FailedPingResult(e, System.currentTimeMillis() - start);                }
+            }
+
+            @Override
+            public String name() {
+                return "Arena - arbeid- og aktivitetssaker";
+            }
+
+            @Override
+            public String method() {
+                return "hentSakListe";
+            }
+
+            @Override
+            public String endpoint() {
+                return System.getProperty("arena.arbeidogaktivitet.v1.url");
             }
         };
     }

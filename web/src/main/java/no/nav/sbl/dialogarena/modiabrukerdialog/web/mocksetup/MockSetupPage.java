@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -24,6 +25,7 @@ import java.util.List;
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.VarslingEndpointConfig.VARSLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig.CMS_KEY;
@@ -84,14 +86,29 @@ public class MockSetupPage extends BasePage {
         return new ListView<MockSetupModel>("radioliste", mockSetupModeller) {
             @Override
             protected void populateItem(final ListItem<MockSetupModel> item) {
+                item.setOutputMarkupId(true);
+                PropertyModel<Boolean> useMock = new PropertyModel<>(item.getModelObject(), "useMock");
+                PropertyModel<Boolean> throwException = new PropertyModel<>(item.getModelObject(), "throwException");
+
+                WebMarkupContainer avbruddvalgWrapper = new WebMarkupContainer("avbruddvalg-wrapper");
+                avbruddvalgWrapper.add(visibleIf(useMock));
+                avbruddvalgWrapper.add(new AjaxCheckBox("avbruddvalg", throwException) {
+                    @Override
+                    protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+                        setProperty(item.getModelObject().getKey() + ".simulate.error", item.getModelObject().getThrowException());
+                    }
+                });
+
                 item.add(
                         new Label("radiolabel", item.getModelObject().getServiceName()),
-                        new AjaxCheckBox("mockvalg", new PropertyModel<Boolean>(item.getModelObject(), "useMock")) {
+                        new AjaxCheckBox("mockvalg", useMock) {
                             @Override
                             protected void onUpdate(AjaxRequestTarget target) {
                                 setProperty(item.getModelObject().getKey(), item.getModelObject().getMockProperty());
+                                target.add(item);
                             }
-                        }.setOutputMarkupId(true)
+                        }.setOutputMarkupId(true),
+                        avbruddvalgWrapper
                 );
             }
         };

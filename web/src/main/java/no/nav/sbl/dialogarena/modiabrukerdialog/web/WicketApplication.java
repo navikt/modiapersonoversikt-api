@@ -202,6 +202,7 @@ public class WicketApplication extends WebApplication {
                 .addScripts(SPIResources.getScripts())
                 .addScripts(
                         BasePage.JS_RESOURCE,
+                        BasePage.JS_SESSION_TIMEOUT,
                         BasePage.JS_TAB_POPUP_RESOURCE,
                         ShortcutListenerResourceReference.get(),
                         KeyNavigationResourceReference.get(),
@@ -229,6 +230,7 @@ public class WicketApplication extends WebApplication {
     }
 
     private void mountPages() {
+        mountPage("/hentPerson/${fnr}", HentPersonPage.class);
         mountPage("/person/${fnr}", PersonPage.class);
         mountPage("internal/isAlive", HealthCheck.class);
         mountPage("internal/selftest", SelfTestPage.class);
@@ -245,7 +247,7 @@ public class WicketApplication extends WebApplication {
     @Override
     public Session newSession(Request request, Response response) {
         Session session = super.newSession(request, response);
-        session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, false);
+        session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, "");
         return session;
     }
 

@@ -21,6 +21,12 @@
         .mockform input[type="submit"] {
             margin-top: 1em;
         }
+
+        .avbrudd {
+            margin-left: 4rem;
+            margin-top: -2rem;
+        }
+
     </style>
 </wicket:head>
 <wicket:extend>
@@ -34,6 +40,11 @@
             <div wicket:id="radioliste">
                 <input type="checkbox" wicket:id="mockvalg"/>
                 <label wicket:for="mockvalg"><span wicket:id="radiolabel"></span></label>
+
+                <div wicket:id="avbruddvalg-wrapper" class="avbrudd">
+                    <input type="checkbox" wicket:id="avbruddvalg"/>
+                    <label wicket:for="avbruddvalg"><span>Simuler avbrudd</span></label>
+                </div>
             </div>
             <div>
                 <label for="antallSaker">Antall saker:</label> <input wicket:id="antallSaker" id="antallSaker"

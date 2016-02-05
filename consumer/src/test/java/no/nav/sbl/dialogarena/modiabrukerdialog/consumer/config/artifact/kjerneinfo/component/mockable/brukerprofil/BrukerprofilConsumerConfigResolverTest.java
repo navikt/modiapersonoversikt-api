@@ -42,7 +42,6 @@ public class BrukerprofilConsumerConfigResolverTest {
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
         resolver.brukerprofilServiceBi().setMapper(new BrukerprofilMapper());
-        resolver.brukerprofilServiceBi().ping();
         verifyZeroInteractions(brukerprofilService.wrappedObject);
     }
 
@@ -51,10 +50,8 @@ public class BrukerprofilConsumerConfigResolverTest {
         setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
         resolver.brukerprofilServiceBi().setMapper(new BrukerprofilMapper());
-        resolver.brukerprofilServiceBi().ping();
         verify(brukerprofilService.wrappedObject, times(1)).hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class));
         verify(brukerprofilService.wrappedObject, times(1)).setMapper(any(BrukerprofilMapper.class));
-        verify(brukerprofilService.wrappedObject, times(1)).ping();
     }
 
 }

@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms;
 
 import no.nav.modig.content.*;
 import no.nav.modig.content.enonic.HttpContentRetriever;
+import no.nav.modig.modia.ping.FailedPingResult;
+import no.nav.modig.modia.ping.OkPingResult;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -22,8 +24,6 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -68,19 +68,37 @@ public class CmsEndpointConfig {
     @Bean
     public Pingable cmsPing() throws URISyntaxException {
         return new Pingable() {
+
+            private String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
+
             @Override
-            public List<PingResult> ping() {
+            public PingResult ping() {
                 long start = System.currentTimeMillis();
-                String name = "CMS";
-                String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
                 try {
                     contentRetriever().ping(new URI(url));
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+                    return new OkPingResult(System.currentTimeMillis() - start);
                 } catch (Exception e) {
                     log.error("Fikk exception fra CMS " + url, e);
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
+                    return new FailedPingResult(e, System.currentTimeMillis() - start);
                 }
             }
+
+            @Override
+            public String name() {
+                return "Cms";
+            }
+
+            @Override
+            public String method() {
+                return "ping mot HttpContentRetriever";
+            }
+
+            @Override
+            public String endpoint() {
+                return url;
+            }
+
+
         };
     }
 

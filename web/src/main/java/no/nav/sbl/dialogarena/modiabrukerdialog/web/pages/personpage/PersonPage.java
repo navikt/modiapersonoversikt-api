@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.eksternelenker.EksterneLenkerPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
@@ -8,6 +11,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
+import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
@@ -42,7 +46,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -52,7 +55,6 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
@@ -60,8 +62,10 @@ import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveB
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
@@ -74,18 +78,16 @@ public class PersonPage extends BasePage {
 
     private static final Logger logger = getLogger(PersonPage.class);
 
-    private static final List<String> URL_TIL_SESSION_PARAMETERE = asList(HENVENDELSEID, OPPGAVEID, BESVARES);
-
     public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
+    public static final String FNR = "fnr";
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
-    public static final JavaScriptResourceReference SCROLL_JS = new JavaScriptResourceReference(PersonPage.class, "scrollbars.js");
     public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
 
     private final String fnr;
@@ -97,9 +99,13 @@ public class PersonPage extends BasePage {
     @Named("pep")
     private EnforcementPoint pep;
 
+    @Inject
+    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
+
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
         fnr = pageParameters.get("fnr").toString();
+        sjekkTilgang(fnr, pageParameters);
 
         if (pageParameters.getNamedKeys().size() > 1) {//FNR er alltid i url
             clearSession();
@@ -119,7 +125,7 @@ public class PersonPage extends BasePage {
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
         add(
-                new HentPersonPanel("searchPanel", ""),
+                new HentPersonPanel("searchPanel", false, pageParameters),
                 new Button("toggle-sok"),
                 new NullstillLink("nullstill"),
                 lamellContainer,
@@ -211,15 +217,27 @@ public class PersonPage extends BasePage {
         });
     }
 
+    private void sjekkTilgang(String fnr, PageParameters params) {
+        HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
+        String fnrBegrunnet = (String) getSession().getAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET);
+        Boolean erBegrunnet = !isBlank(fnrBegrunnet) && fnrBegrunnet.equals(fnr);
+        request.setBegrunnet((erBegrunnet == null) ? false : erBegrunnet);
+        try {
+            personKjerneinfoServiceBi.hentKjerneinformasjon(request);
+        } catch (RecoverableAuthorizationException e) {
+            throw new RestartResponseException(HentPersonPage.class, params);
+        }
+    }
+
     @RunOnEvents(FODSELSNUMMER_FUNNET)
-    public void refreshKjerneinfo(AjaxRequestTarget target, String fnr) {
-        handleRedirect(target, new PageParameters().set("fnr", fnr), PersonPage.class);
+    public void refreshKjerneinfo(AjaxRequestTarget target, PageParameters pageParameters) {
+        handleRedirect(target, pageParameters, PersonPage.class);
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
-    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String fnr) {
-        getSession().setAttribute(HENT_PERSON_BEGRUNNET, true);
-        refreshKjerneinfo(target, fnr);
+    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, PageParameters pageParameters) {
+        getSession().setAttribute(HENT_PERSON_BEGRUNNET, pageParameters.get("fnr").toString());
+        refreshKjerneinfo(target, pageParameters);
     }
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
@@ -316,6 +334,7 @@ public class PersonPage extends BasePage {
 
         @Override
         public void onClick(AjaxRequestTarget target) {
+            getSession().setAttribute(HENT_PERSON_BEGRUNNET, "");
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }
     }

@@ -11,11 +11,13 @@ public class MockSetupModel implements Serializable {
     private String serviceName;
     private String key;
     private Boolean useMock;
+    private Boolean throwException;
 
     public MockSetupModel(String serviceName, String key) {
         this.serviceName = serviceName;
         this.useMock = valueOf(getProperty(key, "false"));
         this.key = key;
+        this.throwException = valueOf(getProperty(key + ".simulate.error", "false"));
     }
 
     public String getKey() {
@@ -30,4 +32,7 @@ public class MockSetupModel implements Serializable {
         return useMock ? "true" : "false";
     }
 
+    public String getThrowException() {
+        return throwException ? "true" : "false";
+    }
 }

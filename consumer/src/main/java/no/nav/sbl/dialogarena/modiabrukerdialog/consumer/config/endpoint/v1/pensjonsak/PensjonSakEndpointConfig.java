@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pensjonsak;
 
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
@@ -10,11 +10,6 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
-import static java.util.Collections.singletonList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.PensjonSakEndpointMock.createPensjonSakV1Mock;
 
@@ -32,20 +27,8 @@ public class PensjonSakEndpointConfig {
 
     @Bean
     public Pingable pensjonSakV1Ping() {
-        final String name = "PENSJON_SAK_V1";
         final PensjonSakV1 ws = createPensjonSakV1(new SystemSAMLOutInterceptor());
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = System.currentTimeMillis();
-                try {
-                    ws.ping();
-                    return singletonList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return singletonList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-                }
-            }
-        };
+        return new PingableWebService("Pesys - Pensjonsak", ws);
     }
 
     private static PensjonSakV1 createPensjonSakV1(AbstractSAMLOutInterceptor interceptor) {
