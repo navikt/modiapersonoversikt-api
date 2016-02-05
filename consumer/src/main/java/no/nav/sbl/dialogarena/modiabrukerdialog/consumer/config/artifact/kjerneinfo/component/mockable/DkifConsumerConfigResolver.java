@@ -41,14 +41,6 @@ public class DkifConsumerConfigResolver {
                     return dkifDefaultService.wrappedObject.hentDigitalKontaktinformasjon(request);
                 }
             }
-
-            @Override
-            public PingResult ping() {
-                if(mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return dkifMockService.wrappedObject.ping();
-                }
-                return dkifDefaultService.wrappedObject.ping();
-            }
         };
     }
 

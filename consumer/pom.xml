@@ -99,6 +99,7 @@
             <artifactId>dkif-consumer</artifactId>
         </dependency>
 
+
         <!--Kodeverk-->
         <dependency>
             <groupId>no.nav</groupId>
