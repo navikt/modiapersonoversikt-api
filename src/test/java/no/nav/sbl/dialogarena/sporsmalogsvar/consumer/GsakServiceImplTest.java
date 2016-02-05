@@ -31,11 +31,13 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.apache.commons.collections15.Transformer;
 
 import java.util.List;
 
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema.*;
 import static org.hamcrest.Matchers.containsString;
@@ -97,7 +99,8 @@ public class GsakServiceImplTest {
         String kode = "kode";
         Underkategori underkategori = new Underkategori(kode, "tekst");
 
-        gsakService.hentForeslatteEnheter(fnr, tema, type, optional(underkategori));
+        List<AnsattEnhet> listAnsattEnhet = gsakService.hentForeslatteEnheter(fnr, tema, type, optional(underkategori));
+
 
         verify(ruting).finnAnsvarligEnhetForOppgavetype(wsFinnAnsvarligEnhetCaptor.capture());
         WSFinnAnsvarligEnhetForOppgavetypeRequest request = wsFinnAnsvarligEnhetCaptor.getValue();
@@ -105,6 +108,22 @@ public class GsakServiceImplTest {
         assertThat(request.getFagomradeKode(), is(tema));
         assertThat(request.getOppgaveKode(), is(type));
         assertThat(request.getGjelderKode(), is(kode));
+
+        List<AnsattEnhet> refList = getAnsattEnhetListe(ansvarligEnhetResponse.getEnhetListe());
+
+        assertThat(listAnsattEnhet.get(0).enhetId, is(refList.get(0).enhetId));
+        assertThat(listAnsattEnhet.get(1).enhetId, is(refList.get(1).enhetId));
+        assertThat(listAnsattEnhet.get(2).enhetId, is(refList.get(2).enhetId));
+    }
+
+    private List<AnsattEnhet> getAnsattEnhetListe(final List<WSEnhet> enheter) {
+
+        return on(enheter).map(new Transformer<WSEnhet, AnsattEnhet>() {
+            @Override
+            public AnsattEnhet transform(WSEnhet wsEnhet) {
+                return new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn());
+            }
+        }).collect();
     }
 
     private WSFinnAnsvarligEnhetForOppgavetypeResponse opprettAnsvarligEnhetResponse() {
