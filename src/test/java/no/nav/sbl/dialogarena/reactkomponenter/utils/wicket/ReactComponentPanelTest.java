@@ -34,7 +34,7 @@ public class ReactComponentPanelTest {
         ReactComponentPanel react = new ReactComponentPanel("id", componentName);
         react.mapper = new ObjectMapper();
 
-        String javaScript = react.initializeScript(componentName, new HashMap<String, Object>());
+        String javaScript = react.initializeScript(componentName, new HashMap<>());
 
         assertTrue(javaScript.contains(JS_REF_INITIALIZED_COMPONENTS));
         assertTrue(javaScript.contains(ReactComponentPanel.JS_REF_REACT));
@@ -65,7 +65,7 @@ public class ReactComponentPanelTest {
         ReactComponentPanel panel = new ReactComponentPanel(wicketid, componentName);
         panel.mapper = new ObjectMapper();
 
-        String script = panel.createScript(componentName, new HashMap<String, Object>());
+        String script = panel.createScript(componentName, new HashMap<>());
 
         assertTrue(fuzzyMatch(
                 script,

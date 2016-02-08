@@ -30,7 +30,7 @@ public class ReactComponentPanel extends MarkupContainer {
     private final transient Map<String, List<CallbackWrapper>> callbacks = new HashMap<>();
 
     public ReactComponentPanel(String id, String componentName) {
-        this(id, componentName, new HashMap<String, Object>());
+        this(id, componentName, new HashMap<>());
     }
 
     public ReactComponentPanel(String id, final String componentName, final Map<String, Object> props) {

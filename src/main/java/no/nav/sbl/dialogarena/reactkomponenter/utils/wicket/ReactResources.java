@@ -15,6 +15,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/knagginput.less"),
                     new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"),
                     new PackageResourceReference(ResourceReference.class, "build/journalforing-panel.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/varsel-module.less")
+                    new PackageResourceReference(ResourceReference.class, "build/varsel-module.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less")
             ).done();
 }
