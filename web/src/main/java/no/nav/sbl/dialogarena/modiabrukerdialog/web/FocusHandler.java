@@ -26,25 +26,19 @@ public class FocusHandler {
         }
     }
 
-    private static final Closure<Page> FOKUS_SOK_FELT = new Closure<Page>() {
-        @Override
-        public void execute(Page page) {
-            AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-            TextField input = ComponentFinder.in(page).findWithId(TextField.class, "foedselsnummerInput");
-            target.focusComponent(input);
-        }
+    private static final Closure<Page> FOKUS_SOK_FELT = page -> {
+        AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
+        TextField input = ComponentFinder.in(page).findWithId(TextField.class, "foedselsnummerInput");
+        target.focusComponent(input);
     };
 
-    private static final Closure<Page> FOKUS_PERSON_NAVN = new Closure<Page>() {
-        @Override
-        public void execute(Page page) {
+    private static final Closure<Page> FOKUS_PERSON_NAVN = page -> {
 //        Venter på at visittkortet skal bli oppdatert
 //            if (page.getClass() == PersonPage.class) {
 //                AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
 //                Label label = ComponentFinder.in(page).findWithId(Label.class, "personfakta.personnavn.fornavn");
 //                target.focusComponent(label);
 //            }
-        }
     };
 
     private static final Map<String, Closure<Page>> EVENT_HANDLERS = new HashMap<String, Closure<Page>>() {{

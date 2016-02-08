@@ -38,17 +38,14 @@ public class ScheduledAnsattListePrefetch {
         cacheManager.getCache(CACHE_NAME).clear();
 
         List<AnsattEnhet> alleEnheter = enhetService.hentAlleEnheter();
-        on(alleEnheter).forEach(new Closure<AnsattEnhet>() {
-            @Override
-            public void execute(AnsattEnhet ansattEnhet) {
-                ASBOGOSYSNavEnhet hentNAVAnsattListeRequest = new ASBOGOSYSNavEnhet();
-                hentNAVAnsattListeRequest.setEnhetsId(ansattEnhet.enhetId);
-                hentNAVAnsattListeRequest.setEnhetsNavn(ansattEnhet.enhetNavn);
-                try {
-                    ansattWS.hentNAVAnsattListe(hentNAVAnsattListeRequest);
-                } catch (Exception exception) {
-                    logger.warn("Prefetch av enhet {}:{} til cache feilet med melding {}", ansattEnhet.enhetId, ansattEnhet.enhetNavn, exception.getMessage());
-                }
+        on(alleEnheter).forEach((Closure<AnsattEnhet>) ansattEnhet -> {
+            ASBOGOSYSNavEnhet hentNAVAnsattListeRequest = new ASBOGOSYSNavEnhet();
+            hentNAVAnsattListeRequest.setEnhetsId(ansattEnhet.enhetId);
+            hentNAVAnsattListeRequest.setEnhetsNavn(ansattEnhet.enhetNavn);
+            try {
+                ansattWS.hentNAVAnsattListe(hentNAVAnsattListeRequest);
+            } catch (Exception exception) {
+                logger.warn("Prefetch av enhet {}:{} til cache feilet med melding {}", ansattEnhet.enhetId, ansattEnhet.enhetNavn, exception.getMessage());
             }
         });
         logger.info("Ferdig behandlet prefetch av ansatte i {} enheter", alleEnheter.size());

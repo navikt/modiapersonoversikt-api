@@ -154,12 +154,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             throw exc;
         }
 
-        return newLamellFactory(type, itemId, "", true, new LerretFactory() {
-            @Override
-            public Lerret createLerret(String id, String name) {
-                return new GenericLerret(id, panel);
-            }
-        });
+        return newLamellFactory(type, itemId, "", true, (LerretFactory) (id, name) -> new GenericLerret(id, panel));
     }
 
     private void gotoAndSendToLamell(String lamellId, Object payload) {
@@ -193,70 +188,35 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createBrukerprofilLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
-            @Override
-            public Lerret createLerret(String id, String name) {
-                return new BrukerprofilPanel(id, Model.of(fnrFromRequest));
-            }
-        });
+        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(fnrFromRequest)));
     }
 
     private static LamellFactory createKontrakterLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
-            @Override
-            public Lerret createLerret(String id, String name) {
-                return new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(fnrFromRequest)));
-            }
-        });
+        return newLamellFactory(LAMELL_KONTRAKTER, "T", (LerretFactory) (id, name) -> new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(fnrFromRequest))));
     }
 
     private static LamellFactory createOversiktLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
-            @Override
-            public Lerret createLerret(String id, String name) {
-                return new OversiktLerret(id, fnrFromRequest);
-            }
-        });
+        return newLamellFactory(LAMELL_OVERSIKT, "O", false, (LerretFactory) (id, name) -> new OversiktLerret(id, fnrFromRequest));
     }
 
     private static LamellFactory createUtbetalingLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
+        return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+
+            final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", fnrFromRequest);
+
             @Override
-            public Lerret createLerret(String id, String name) {
-                return new AjaxLazyLoadLerret(id, name) {
-
-                    final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", fnrFromRequest);
-
-                    @Override
-                    public Lerret getLazyLoadComponent(String markupId) {
-                        return utbetalinglerret;
-                    }
-                };
+            public Lerret getLazyLoadComponent(String markupId) {
+                return utbetalinglerret;
             }
         });
     }
 
     private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, new LerretFactory() {
-            @Override
-            public Lerret createLerret(String id, String name) {
-                return new AjaxLazyLoadLerret(id, name) {
-                    @Override
-                    public Lerret getLazyLoadComponent(String markupId) {
-                        return new SaksoversiktLerret(markupId, fnrFromRequest);
-                    }
-                };
-            }
-        });
+        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest));
     }
 
     private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_VARSLING, "V", true, new LerretFactory() {
-            @Override
-            public Lerret createLerret(String id, String name) {
-                return new VarselLerret(id, fnrFromRequest);
-            }
-        });
+        return newLamellFactory(LAMELL_VARSLING, "V", true, (LerretFactory) (id, name) -> new VarselLerret(id, fnrFromRequest));
     }
 
     private LamellFactory createMeldingerLamell(final String fnrFromRequest, final Session session) {
@@ -278,25 +238,15 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         } else if (props.besvarModus.isSome()) {
             innboksVM.traadBesvares = props.besvarModus.get();
         }
-        return newLamellFactory(LAMELL_MELDINGER, "M", new LerretFactory() {
+        return newLamellFactory(LAMELL_MELDINGER, "M", (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
             @Override
-            public Lerret createLerret(String id, String name) {
-                return new AjaxLazyLoadLerret(id, name) {
-                    @Override
-                    public Lerret getLazyLoadComponent(String markupId) {
-                        return new Innboks(markupId, innboksVM);
-                    }
-                };
+            public Lerret getLazyLoadComponent(String markupId) {
+                return new Innboks(markupId, innboksVM);
             }
         });
     }
 
-    private static final Predicate<Lamell> IS_LAMELL_MODIFIED = new Predicate<Lamell>() {
-        @Override
-        public boolean evaluate(Lamell lamell) {
-            return lamell.isModified();
-        }
-    };
+    private static final Predicate<Lamell> IS_LAMELL_MODIFIED = lamell -> lamell.isModified();
 
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus(AjaxRequestTarget target) {

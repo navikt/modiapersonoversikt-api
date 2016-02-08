@@ -45,21 +45,11 @@ public class AnsattServiceImpl implements AnsattService {
         request.setEnhetsId(enhet.enhetId);
         request.setEnhetsNavn(enhet.enhetNavn);
         try {
-            return on(ansattWS.hentNAVAnsattListe(request).getNAVAnsatte()).map(new Transformer<ASBOGOSYSNAVAnsatt, Ansatt>() {
-                @Override
-                public Ansatt transform(ASBOGOSYSNAVAnsatt ansatt) {
-                    return new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId());
-                }
-            }).collect();
+            return on(ansattWS.hentNAVAnsattListe(request).getNAVAnsatte()).map(ansatt -> new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId())).collect();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected static final Transformer<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = new Transformer<ASBOGOSYSNavEnhet, AnsattEnhet>() {
-        @Override
-        public AnsattEnhet transform(ASBOGOSYSNavEnhet asbogosysNavEnhet) {
-            return new AnsattEnhet(asbogosysNavEnhet.getEnhetsId(), asbogosysNavEnhet.getEnhetsNavn());
-        }
-    };
+    protected static final Transformer<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = asbogosysNavEnhet -> new AnsattEnhet(asbogosysNavEnhet.getEnhetsId(), asbogosysNavEnhet.getEnhetsNavn());
 }

@@ -7,13 +7,7 @@ import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.modia.widget.async.AsyncWidget;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
-import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
-import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;
-import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
 import javax.inject.Inject;
@@ -39,31 +33,27 @@ public class OversiktLerret extends Lerret {
 
         List<Widget<?>> widgets = new ArrayList<>(asList(
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
-                new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
-                new MeldingerWidget("meldinger", "M", fnr),
+//                new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
+//                new MeldingerWidget("meldinger", "M", fnr),
                 new SaksoversiktWidget("saksoversikt", "S", fnr)));
 
 
         add(new VarslerOversiktLink("varsling-lenke", fnr));
 
         if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
-            widgets.add(new UtbetalingWidget("utbetalinger", "U", fnr));
+//            widgets.add(new UtbetalingWidget("utbetalinger", "U", fnr));
         } else {
-            add(new WebMarkupContainer("utbetalinger").setVisibilityAllowed(false));
+//            add(new WebMarkupContainer("utbetalinger").setVisibilityAllowed(false));
         }
 
         asyncWidgets = on(widgets).filter(isA(AsyncWidget.class)).map(castTo(AsyncWidget.class)).collect();
 
-        for (Component widget : widgets) {
-            add(widget);
-        }
+        widgets.forEach(this::add);
     }
 
     @Override
     protected void onRender() {
         super.onRender();
-        for (AsyncWidget widget : asyncWidgets) {
-            widget.startLoading();
-        }
+        asyncWidgets.forEach(AsyncWidget::startLoading);
     }
 }

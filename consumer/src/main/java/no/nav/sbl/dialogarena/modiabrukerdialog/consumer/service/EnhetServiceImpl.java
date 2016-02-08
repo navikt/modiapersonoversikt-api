@@ -62,10 +62,5 @@ public class EnhetServiceImpl implements EnhetService {
         }
     }
 
-    private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = new Comparator<AnsattEnhet>() {
-        @Override
-        public int compare(AnsattEnhet o1, AnsattEnhet o2) {
-            return o1.enhetId.compareTo(o2.enhetId);
-        }
-    };
+    private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = (o1, o2) -> o1.enhetId.compareTo(o2.enhetId);
 }

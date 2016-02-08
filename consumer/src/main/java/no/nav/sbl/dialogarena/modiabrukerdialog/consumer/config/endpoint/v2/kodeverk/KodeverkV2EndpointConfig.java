@@ -45,17 +45,14 @@ public class KodeverkV2EndpointConfig {
 
     @Bean
     public Pingable pingKodeverk(final KodeverkPortType ws) {
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = currentTimeMillis();
-                String name = "KODEVERK_V2";
-                try {
-                    ws.ping();
-                    return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
-                }
+        return () -> {
+            long start = currentTimeMillis();
+            String name = "KODEVERK_V2";
+            try {
+                ws.ping();
+                return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
+            } catch (Exception e) {
+                return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
             }
         };
     }

@@ -119,36 +119,28 @@ public class SkrivestotteSok {
     private static String query(String frisok, List<String> tags) {
         String vasketFrisok = LUCENE_PATTERN.matcher(frisok).replaceAll(REPLACEMENT_STRING).trim();
         String frisokQuery = isBlank(vasketFrisok) ? "*:*" : "*" + vasketFrisok + "*";
-        String tagsQuery = on(tags).map(new Transformer<String, String>() {
-            @Override
-            public String transform(String tag) {
-                return TAGS_FILTER + ":" + tag;
-            }
-        }).reduce(ReduceUtils.join(" AND "));
+        String tagsQuery = on(tags).map(tag -> TAGS_FILTER + ":" + tag).reduce(ReduceUtils.join(" AND "));
         return frisokQuery + (isBlank(tagsQuery) ? "" : (" AND " + tagsQuery));
     }
 
     private static List<SkrivestotteTekst> lagSkrivestotteTekster(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, ScoreDoc... hits) {
-        return on(hits).map(new Transformer<ScoreDoc, SkrivestotteTekst>() {
-            @Override
-            public SkrivestotteTekst transform(ScoreDoc hit) {
-                try {
-                    Document doc = searcher.doc(hit.doc);
-                    String tittel = getHighlightedTekst(TITTEL, doc, searcher, analyzer, highlighter);
-                    HashMap<String, String> innhold = new HashMap<>();
-                    for (IndexableField field : doc) {
-                        if (field.name().startsWith(INNHOLD + "_")) {
-                            if (field.name().equals(INNHOLD + "_" + LOCALE_DEFAULT)) {
-                                innhold.put(LOCALE_DEFAULT, getHighlightedTekst(INNHOLD, doc, searcher, analyzer, highlighter));
-                            } else {
-                                innhold.put(field.name().replace(INNHOLD + "_", ""), field.stringValue());
-                            }
+        return on(hits).map(hit -> {
+            try {
+                Document doc = searcher.doc(hit.doc);
+                String tittel = getHighlightedTekst(TITTEL, doc, searcher, analyzer, highlighter);
+                HashMap<String, String> innhold = new HashMap<>();
+                for (IndexableField field : doc) {
+                    if (field.name().startsWith(INNHOLD + "_")) {
+                        if (field.name().equals(INNHOLD + "_" + LOCALE_DEFAULT)) {
+                            innhold.put(LOCALE_DEFAULT, getHighlightedTekst(INNHOLD, doc, searcher, analyzer, highlighter));
+                        } else {
+                            innhold.put(field.name().replace(INNHOLD + "_", ""), field.stringValue());
                         }
                     }
-                    return new SkrivestotteTekst(doc.get(ID), tittel, innhold, split(doc.get(TAGS), " "));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
+                return new SkrivestotteTekst(doc.get(ID), tittel, innhold, split(doc.get(TAGS), " "));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }).collect();
     }

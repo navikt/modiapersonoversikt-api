@@ -14,6 +14,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider.context;
 
@@ -63,9 +64,7 @@ public class EnhetAttributeLocator extends AttributeLocator {
 
     private Set<AttributeValue> convertSet(Set<String> inputSet) {
         Set<AttributeValue> outputSet = new HashSet<>(inputSet.size());
-        for (String string : inputSet) {
-            outputSet.add(JBossXACMLUtil.getAttributeValue(string));
-        }
+        outputSet.addAll(inputSet.stream().map(JBossXACMLUtil::getAttributeValue).collect(Collectors.toList()));
         return outputSet;
     }
 

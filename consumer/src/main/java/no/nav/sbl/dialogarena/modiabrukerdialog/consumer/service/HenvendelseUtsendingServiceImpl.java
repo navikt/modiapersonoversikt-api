@@ -31,8 +31,10 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlin
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.*;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
@@ -188,9 +190,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                     resourceId(""),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(sporsmal.brukersEnhet)))
             );
-            for (String enhet : valgteEnheter) {
-                requestList.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", enhet));
-            }
+            requestList.addAll(valgteEnheter.stream().map(enhet -> subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", enhet)).collect(toList()));
             pep.assertAccess(forRequest(requestList));
         }
 
@@ -198,21 +198,18 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
-        return new Transformer<Melding, Melding>() {
-            @Override
-            public Melding transform(Melding melding) {
-                PolicyRequest temagruppePolicyRequest = forRequest(
-                        actionId("temagruppe"),
-                        resourceId(""),
-                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
-                );
-                if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                    melding.fritekst = "";
-                }
-
-                return melding;
+        return melding -> {
+            PolicyRequest temagruppePolicyRequest = forRequest(
+                    actionId("temagruppe"),
+                    resourceId(""),
+                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
+            );
+            if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                melding.fritekst = "";
             }
+
+            return melding;
         };
     }
 
@@ -227,12 +224,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         behandleHenvendelsePortType.oppdaterTemagruppe(behandlingsId, temagruppe);
     }
 
-    private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = new Transformer<XMLHenvendelse, String>() {
-        @Override
-        public String transform(XMLHenvendelse xmlHenvendelse) {
-            return xmlHenvendelse.getBehandlingskjedeId();
-        }
-    };
+    private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = xmlHenvendelse -> xmlHenvendelse.getBehandlingskjedeId();
 
     private String getEnhet(String fnr) {
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);

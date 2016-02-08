@@ -67,19 +67,16 @@ public class CmsEndpointConfig {
 
     @Bean
     public Pingable cmsPing() throws URISyntaxException {
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = System.currentTimeMillis();
-                String name = "CMS";
-                String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
-                try {
-                    contentRetriever().ping(new URI(url));
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
-                } catch (Exception e) {
-                    log.error("Fikk exception fra CMS " + url, e);
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-                }
+        return () -> {
+            long start = System.currentTimeMillis();
+            String name = "CMS";
+            String url = appresUrl + INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE;
+            try {
+                contentRetriever().ping(new URI(url));
+                return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+            } catch (Exception e) {
+                log.error("Fikk exception fra CMS " + url, e);
+                return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
             }
         };
     }

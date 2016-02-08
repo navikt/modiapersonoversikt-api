@@ -31,7 +31,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.Sa
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.purgeoppgaver.PurgeOppgaverPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactResources;
-import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.FancySelect;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
@@ -175,7 +174,6 @@ public class WicketApplication extends WebApplication {
                         BasePage.RESPONSIVE,
                         BasePage.PERSONINFO_LESS,
                         UtbetalingLerret.UTBETALING_LESS,
-                        SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
                         BasePage.KJERNEINFO_FELLES_LISTE,
@@ -216,7 +214,6 @@ public class WicketApplication extends WebApplication {
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
                         UtbetalingLerret.UTBETALING_LAMELL_JS,
-                        SaksoversiktLerret.SAKSOVERSIKT_JS,
                         SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS,
                         Innboks.BESVAR_INDIKATOR_JS,

@@ -34,17 +34,14 @@ public class BehandleHenvendelseEndpointConfig {
     @Bean
     public Pingable behandleHenvendelsePing() {
         final BehandleHenvendelsePortType ws = createBehandleHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = System.currentTimeMillis();
-                String name = "BEHANDLE_HENVENDELSE";
-                try {
-                    ws.ping();
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-                }
+        return () -> {
+            long start = System.currentTimeMillis();
+            String name = "BEHANDLE_HENVENDELSE";
+            try {
+                ws.ping();
+                return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+            } catch (Exception e) {
+                return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
             }
         };
     }

@@ -37,17 +37,14 @@ public class SendUtHenvendelseEndpointConfig {
     @Bean
     public Pingable sendUtHenvendelsePing() {
         final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = System.currentTimeMillis();
-                String name = "SEND_UT_HENVENDELSE";
-                try {
-                    ws.ping();
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-                }
+        return () -> {
+            long start = System.currentTimeMillis();
+            String name = "SEND_UT_HENVENDELSE";
+            try {
+                ws.ping();
+                return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+            } catch (Exception e) {
+                return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
             }
         };
     }

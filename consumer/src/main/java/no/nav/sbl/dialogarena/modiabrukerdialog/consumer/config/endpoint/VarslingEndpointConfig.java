@@ -34,17 +34,14 @@ public class VarslingEndpointConfig {
     @Bean
     public Pingable varslerPing() {
         final VarslerPorttype ws = createVarslingPortType(new SystemSAMLOutInterceptor());
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-                long start = System.currentTimeMillis();
-                String name = "Varsler_v1";
-                try {
-                    ws.ping();
-                    return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
-                } catch (Exception e) {
-                    return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-                }
+        return () -> {
+            long start = System.currentTimeMillis();
+            String name = "Varsler_v1";
+            try {
+                ws.ping();
+                return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
+            } catch (Exception e) {
+                return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
             }
         };
     }

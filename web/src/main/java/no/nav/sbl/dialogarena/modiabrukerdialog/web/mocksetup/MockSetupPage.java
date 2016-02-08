@@ -84,7 +84,7 @@ public class MockSetupPage extends BasePage {
             protected void populateItem(final ListItem<MockSetupModel> item) {
                 item.add(
                         new Label("radiolabel", item.getModelObject().getServiceName()),
-                        new AjaxCheckBox("mockvalg", new PropertyModel<Boolean>(item.getModelObject(), "useMock")) {
+                        new AjaxCheckBox("mockvalg", new PropertyModel<>(item.getModelObject(), "useMock")) {
                             @Override
                             protected void onUpdate(AjaxRequestTarget target) {
                                 setProperty(item.getModelObject().getKey(), item.getModelObject().getMockProperty());
