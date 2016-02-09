@@ -4,8 +4,8 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
@@ -14,11 +14,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.createHenvendelsePortTypeMock;
 
@@ -38,16 +33,7 @@ public class HenvendelseEndpointConfig {
     @Bean
     public Pingable henvendelsePing() {
         final HenvendelsePortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return () -> {
-            long start = System.currentTimeMillis();
-            String name = "HENVENDELSE_V2";
-            try {
-                ws.ping();
-                return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
-            } catch (Exception e) {
-                return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-            }
-        };
+        return new PingableWebService("Hent henvendelse", ws);
     }
 
     private static HenvendelsePortType createHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {

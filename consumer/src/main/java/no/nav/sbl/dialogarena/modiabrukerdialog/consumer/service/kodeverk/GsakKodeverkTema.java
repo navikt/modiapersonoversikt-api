@@ -82,7 +82,7 @@ public class GsakKodeverkTema implements Serializable {
                 String dekode = getNodeValue(node, DEKODE);
                 List<Node> oppgaveNoder = compileAndEvaluate(oppgaveDokument, "//oppgaveTListe/oppgaveT[@fagomrade='" + temaKode + "']/gosys[@person='true' and not(erGyldig='false')]");
                 List<Node> prioritetNoder = compileAndEvaluate(prioritetDokument, "//prioritetTListe/prioritetT[@fagomrade='" + temaKode + "']/gosys");
-                List<Node> underkategoriNoder = compileAndEvaluate(underkategoriDokument, "//underkategoriListe/underkategori[@fagomrade='" + temaKode + "' and not(@erGyldig = 'false')]/gosys");
+                List<Node> underkategoriNoder = compileAndEvaluate(underkategoriDokument, "//underkategoriListe/underkategori[@fagomrade='" + temaKode + "' and not(@erGyldig = 'false')]/gosys[not(@erGyldig='false')]");
 
                 List<GsakKodeTema.Underkategori> underkategoriList = on(underkategoriNoder).map(NODE_TIL_UNDERKATEGORI).collect(compareWith(new Transformer<GsakKodeTema.Underkategori, String>() {
                     @Override

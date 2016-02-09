@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 import junit.framework.Assert;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
+import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
@@ -15,7 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
@@ -42,9 +42,15 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {PersonPageMockContext.class})
@@ -81,14 +87,14 @@ public class PersonPageTest extends WicketPageTest {
     public void viserModaldialVedUlagredeEndringerOgRefresh() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
-        RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
+        ReactSjekkForlatModal redirectPopup = mock(ReactSjekkForlatModal.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
         on(personPage).setFieldValue("redirectPopup", redirectPopup);
         on(personPage).setFieldValue("lamellContainer", lamellContainer);
         when(lamellContainer.hasUnsavedChanges()).thenReturn(true);
 
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
-        personPage.refreshKjerneinfo(target, "");
+        personPage.refreshKjerneinfo(target, new PageParameters());
 
         verify(redirectPopup, times(1)).show(target);
         verify(redirectPopup, times(0)).redirect();
@@ -98,14 +104,14 @@ public class PersonPageTest extends WicketPageTest {
     public void viserIkkeModaldialogVedIngenUlagredeEndringerOgRefresh() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
-        RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
+        ReactSjekkForlatModal redirectPopup = mock(ReactSjekkForlatModal.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
         on(personPage).setFieldValue("redirectPopup", redirectPopup);
         on(personPage).setFieldValue("lamellContainer", lamellContainer);
         when(lamellContainer.hasUnsavedChanges()).thenReturn(false);
 
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
-        personPage.refreshKjerneinfo(target, "");
+        personPage.refreshKjerneinfo(target, new PageParameters());
 
         verify(redirectPopup, times(0)).show(target);
         verify(redirectPopup, times(1)).redirect();
@@ -132,13 +138,19 @@ public class PersonPageTest extends WicketPageTest {
     public void oppdatererKjerneInfoVedFodselsnummerFunnetMedBegrunnelse() {
         final String newFnr = "12345612345";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
-        wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
+        wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, "");
 
-        wicket.sendEvent(createEvent(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE, newFnr));
+        wicket.sendEvent(createEvent(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE, createPageParamerersWithFnr(newFnr)));
 
-        assertEquals(true, wicket.tester.getSession().getAttribute(HENT_PERSON_BEGRUNNET));
+        assertEquals(newFnr, wicket.tester.getSession().getAttribute(HENT_PERSON_BEGRUNNET));
         assertFalse(wicket.tester.ifContains(newFnr).wasFailed());
         assertTrue(wicket.tester.ifContains(testFnr).wasFailed());
+    }
+
+    private PageParameters createPageParamerersWithFnr(String newFnr) {
+        PageParameters pageparams = new PageParameters();
+        pageparams.add("fnr", newFnr);
+        return pageparams;
     }
 
     @Test

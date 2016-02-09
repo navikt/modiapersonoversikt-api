@@ -21,13 +21,11 @@ public class BrukerprofilWrapper {
     @Inject
     private BrukerprofilPortType brukerprofilPortType;
 
-    @Inject
-    private BrukerprofilPortType selfTestBrukerprofilPortType;
 
     @Bean
     @Qualifier("brukerprofilService")
     public Wrapper<BrukerprofilServiceBi> brukerprofilService() {
-        return new Wrapper<>(new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi());
+        return new Wrapper<>(new BrukerprofilConsumerConfigImpl(brukerprofilPortType).brukerprofilServiceBi());
     }
 
     @Bean

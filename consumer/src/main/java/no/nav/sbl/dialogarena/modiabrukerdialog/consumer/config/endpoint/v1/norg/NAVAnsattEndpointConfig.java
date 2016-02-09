@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.TimeoutFeature;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.feature.LoggingFeature;
@@ -21,6 +23,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gos
 @Configuration
 public class NAVAnsattEndpointConfig {
 
+    private static String address = System.getProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVAnsattWSEXP";;
+
     @Bean
     public GOSYSNAVansatt gosysNavAnsatt() {
         GOSYSNAVansatt prod = createGosysNavAnsattPortType();
@@ -33,7 +37,7 @@ public class NAVAnsattEndpointConfig {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
 
         proxyFactoryBean.setWsdlLocation("classpath:nav-cons-sak-gosys-3.0.0_GOSYSNAVAnsattWSEXP.wsdl");
-        proxyFactoryBean.setAddress(System.getProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVAnsattWSEXP");
+        proxyFactoryBean.setAddress(address);
         proxyFactoryBean.setServiceName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVansatt/Binding", "GOSYSNAVAnsattWSEXP_GOSYSNAVansattHttpService"));
         proxyFactoryBean.setEndpointName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVansatt/Binding", "GOSYSNAVAnsattWSEXP_GOSYSNAVansattHttpPort"));
         proxyFactoryBean.setServiceClass(GOSYSNAVansatt.class);
@@ -49,6 +53,11 @@ public class NAVAnsattEndpointConfig {
         httpConduit.setTlsClientParameters(params);
 
         return gosysnaVansatt;
+    }
+
+    @Bean
+    public Pingable gosysNavAnsattPingable(){
+        return new UnpingableWebService("Norg - navansatt", address);
     }
 
 }

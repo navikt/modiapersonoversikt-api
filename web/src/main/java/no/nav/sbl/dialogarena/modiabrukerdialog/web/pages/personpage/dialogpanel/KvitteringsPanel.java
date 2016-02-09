@@ -31,7 +31,7 @@ public class KvitteringsPanel extends Panel {
         Label temagruppemeldingLabel = new Label("temagruppemelding", new StringResourceModel("nydialogpanel.kvittering.andresocialetjenester", getDefaultModel()));
         temagruppemeldingLabel.add(visibleIf(temagruppeErAnsos()));
 
-        Label kvitteringsmelding = new Label("kvitteringsmelding", new AbstractReadOnlyModel<String>() {
+        Label kvitteringsmeldingLabel = new Label("kvitteringsmelding", new AbstractReadOnlyModel<String>() {
             @Override
             public String getObject() {
                 return KvitteringsPanel.this.kvitteringsmelding;
@@ -50,7 +50,7 @@ public class KvitteringsPanel extends Panel {
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(NY_DIALOG_LENKE_VALGT));
             }
         };
-        add(startNyDialogLenke, temagruppemeldingLabel, kvitteringsmelding);
+        add(startNyDialogLenke, temagruppemeldingLabel, kvitteringsmeldingLabel);
     }
 
     private AbstractReadOnlyModel<Boolean> temagruppeErAnsos() {

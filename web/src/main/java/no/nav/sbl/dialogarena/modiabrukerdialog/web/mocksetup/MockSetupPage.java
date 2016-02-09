@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -16,6 +17,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -23,7 +25,9 @@ import java.util.List;
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.VarslingEndpointConfig.VARSLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig.CMS_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig.CMS_SKRIVESTOTTE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.JoarkEndpointConfig.JOARK_KEY;
@@ -38,7 +42,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.VarslingEndpointConfig.VARSLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
 
@@ -53,7 +56,8 @@ public class MockSetupPage extends BasePage {
     private SkrivestotteSok skrivestotteSok;
 
 
-    public MockSetupPage() {
+    public MockSetupPage(PageParameters pageParameters) {
+        super(pageParameters);
         mockSetupModeller = lagModeller();
 
         add(new ContextImage("modiaLogo", "img/modiaLogo.svg"));
@@ -82,14 +86,29 @@ public class MockSetupPage extends BasePage {
         return new ListView<MockSetupModel>("radioliste", mockSetupModeller) {
             @Override
             protected void populateItem(final ListItem<MockSetupModel> item) {
+                item.setOutputMarkupId(true);
+                PropertyModel<Boolean> useMock = new PropertyModel<>(item.getModelObject(), "useMock");
+                PropertyModel<Boolean> throwException = new PropertyModel<>(item.getModelObject(), "throwException");
+
+                WebMarkupContainer avbruddvalgWrapper = new WebMarkupContainer("avbruddvalg-wrapper");
+                avbruddvalgWrapper.add(visibleIf(useMock));
+                avbruddvalgWrapper.add(new AjaxCheckBox("avbruddvalg", throwException) {
+                    @Override
+                    protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+                        setProperty(item.getModelObject().getKey() + ".simulate.error", item.getModelObject().getThrowException());
+                    }
+                });
+
                 item.add(
                         new Label("radiolabel", item.getModelObject().getServiceName()),
-                        new AjaxCheckBox("mockvalg", new PropertyModel<>(item.getModelObject(), "useMock")) {
+                        new AjaxCheckBox("mockvalg", useMock) {
                             @Override
                             protected void onUpdate(AjaxRequestTarget target) {
                                 setProperty(item.getModelObject().getKey(), item.getModelObject().getMockProperty());
+                                target.add(item);
                             }
-                        }.setOutputMarkupId(true)
+                        }.setOutputMarkupId(true),
+                        avbruddvalgWrapper
                 );
             }
         };

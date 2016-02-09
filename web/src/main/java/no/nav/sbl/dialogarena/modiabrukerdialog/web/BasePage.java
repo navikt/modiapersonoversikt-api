@@ -7,15 +7,20 @@ import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.FrontendModule;
 import no.nav.modig.modia.metrics.TimingMetricsBehaviour;
+import no.nav.modig.wicket.errorhandling.ExceptionHandlingBehavior;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tekniskfeil.ReactTekniskFeilModal;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -23,6 +28,8 @@ import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -41,6 +48,7 @@ public class BasePage extends WebPage {
             new CssResourceReference(Kjerneinfo.class, "kjerneinfo_ie9.css"), "screen", "lt IE 10");
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(BasePage.class, "lokal.js");
+    public static final JavaScriptResourceReference JS_SESSION_TIMEOUT = new JavaScriptResourceReference(BasePage.class, "sessionTimeout.js");
     public static final JavaScriptResourceReference JS_TAB_POPUP_RESOURCE = new JavaScriptResourceReference(BasePage.class, "tabPopup.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
@@ -82,7 +90,7 @@ public class BasePage extends WebPage {
 
     private final WebMarkupContainer body;
 
-    public BasePage() {
+    public BasePage(PageParameters pageParameters) {
         body = (WebMarkupContainer) new TransparentWebMarkupContainer("body").setOutputMarkupId(true);
 
         add(body);
@@ -93,11 +101,23 @@ public class BasePage extends WebPage {
                 send(getPage(), Broadcast.DEPTH, SIDE_LASTET);
             }
         });
+
+        add(new ReactTekniskFeilModal("tekniskFeil", pageParameters));
+
+        add(new ExceptionHandlingBehavior() {
+                @Override
+                public IRequestHandler handleException(Component source, Exception ex) {
+                    PageProvider pageProvider = new PageProvider(getPage().getClass(), new PageParameters().set("tekniskfeil", true));
+                    return new RenderPageRequestHandler(pageProvider);
+                }
+            }
+        );
     }
 
     public WebMarkupContainer getBody() {
         return body;
     }
+
 
     @Override
     public void onEvent(IEvent<?> event) {

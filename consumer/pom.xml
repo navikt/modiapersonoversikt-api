@@ -61,10 +61,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
         </dependency>
 
@@ -202,12 +198,6 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-cxf</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!--Modig-->
