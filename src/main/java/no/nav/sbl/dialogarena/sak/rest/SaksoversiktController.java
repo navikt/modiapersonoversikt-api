@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@Path("/sak/{fnr}")
+@Path("/saksoversikt/{fnr}")
 @Produces("application/json")
 public class SaksoversiktController {
 
