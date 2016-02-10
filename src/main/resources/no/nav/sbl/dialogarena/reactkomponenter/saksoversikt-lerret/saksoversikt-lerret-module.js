@@ -1,22 +1,44 @@
 import React from 'react';
 import SaksoversiktStore from './saksoversikt-store';
+import AsyncLoader from './../utils/async-loader';
 
 class SaksoversiktLerret extends React.Component {
     constructor(props) {
         super(props);
         this.store = new SaksoversiktStore(this.props.fnr);
         this.state = this.store.getState();
+        this.updateState = this.updateState.bind(this);
+    }
+
+    componentDidMount() {
+        this.store.addListener(this.updateState);
+    }
+
+    componentWillUnmount() {
+        this.store.removeListener(this.updateState);
+    }
+
+    updateState() {
+        this.setState(this.store.getState());
     }
 
     render() {
         console.log('render');
+        const temaListe = Object.keys(this.state.behandlingerByTema).map((tema)=> <li>{tema}</li>);
+
         return (
-            <ul>
-                <li>TESTING 1</li>
-                <li>TESTING 2</li>
-            </ul>
+            <div className="saksoversikt-lerret">
+                <AsyncLoader promises={this.state.promise}>
+                    <ul>
+                        {temaListe}
+                    </ul>
+                </AsyncLoader>
+            </div>
         );
     }
 }
+SaksoversiktLerret.propTypes = {
+    'fnr': React.PropTypes.string.isRequired
+};
 
 export default SaksoversiktLerret;

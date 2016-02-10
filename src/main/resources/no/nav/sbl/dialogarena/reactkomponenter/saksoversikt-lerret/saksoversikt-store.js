@@ -2,17 +2,15 @@ import Store from './../utils/store';
 import ResourceMap from './../utils/resource-map';
 import { sortBy } from 'lodash';
 import Ajax from './../utils/ajax';
-import Q from 'q';
 
 class SaksoversiktStore extends Store {
     constructor(fnr) {
         super();
         this._resourcesResolved = this._resourcesResolved.bind(this);
-        const behandlingerByTema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr);
 
         this.state = {
             behandlingerByTema: [],
-            promise: behandlingerByTema
+            promise: Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr)
         };
         this.state.promise.done(this._resourcesResolved);
     }
@@ -34,7 +32,12 @@ class SaksoversiktStore extends Store {
     }
 
     _resourcesResolved(behandlingerByTema) {
-        this.state.behandlingerByTema = behandlingerByTema;
+        this.state.behandlingerByTema = Object.keys(behandlingerByTema).reduce((temaMapping, tema)=> {
+            const temaNavn = behandlingerByTema[tema][0].sakstema;
+            temaMapping[temaNavn] = behandlingerByTema[tema];
+            return temaMapping;
+        }, {});
+
         this.fireUpdate();
     }
 }
