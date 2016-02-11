@@ -21,8 +21,14 @@ public class SaksoversiktController {
     SaksoversiktService saksoversiktService;
 
     @GET
-    @Path("/")
+    @Path("/behandlinger-by-tema")
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(@PathParam("fnr") String fnr) {
         return saksoversiktService.hentBehandlingerByTema(fnr);
+    }
+
+    @GET
+    @Path("/temaer")
+    public List<TemaVM> hentTemaer(@PathParam("fnr") String fnr) {
+        return saksoversiktService.hentTemaer(fnr);
     }
 }
