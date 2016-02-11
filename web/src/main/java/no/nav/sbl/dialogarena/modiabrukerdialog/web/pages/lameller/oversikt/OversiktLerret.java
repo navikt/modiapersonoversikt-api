@@ -7,6 +7,7 @@ import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.modia.widget.async.AsyncWidget;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
+import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;
 import org.apache.wicket.model.util.ListModel;
 
@@ -34,7 +35,7 @@ public class OversiktLerret extends Lerret {
         List<Widget<?>> widgets = new ArrayList<>(asList(
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
 //                new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
-//                new MeldingerWidget("meldinger", "M", fnr),
+                new MeldingerWidget("meldinger", "M", fnr),
                 new SaksoversiktWidget("saksoversikt", "S", fnr)));
 
 
