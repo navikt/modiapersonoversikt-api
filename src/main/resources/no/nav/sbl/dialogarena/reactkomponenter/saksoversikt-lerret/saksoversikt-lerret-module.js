@@ -1,6 +1,7 @@
 import React from 'react';
 import SaksoversiktStore from './saksoversikt-store';
 import AsyncLoader from './../utils/async-loader';
+import TemaListeKomponent from './tema-liste-komponent'
 
 class SaksoversiktLerret extends React.Component {
     constructor(props) {
@@ -24,14 +25,13 @@ class SaksoversiktLerret extends React.Component {
 
     render() {
         console.log('render');
-        const temaListe = Object.keys(this.state.behandlingerByTema).map((tema)=> <li>{tema}</li>);
+        const temaListe = Object.keys(this.state.behandlingerByTema).map((tema)=> {
+            return <TemaListeKomponent tema={tema}/>;});
 
         return (
             <div className="saksoversikt-lerret">
                 <AsyncLoader promises={this.state.promise}>
-                    <ul>
-                        {temaListe}
-                    </ul>
+                    {temaListe}
                 </AsyncLoader>
             </div>
         );
