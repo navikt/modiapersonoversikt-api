@@ -26,12 +26,15 @@ class SaksoversiktLerret extends React.Component {
     render() {
         console.log('render');
         const temaListe = Object.keys(this.state.behandlingerByTema).map((tema)=> {
-            return <TemaListeKomponent tema={tema}/>;});
+            return <TemaListeKomponent tema={tema}/>;
+        });
 
         return (
             <div className="saksoversikt-lerret">
                 <AsyncLoader promises={this.state.promise}>
-                    {temaListe}
+                    <div className="saksoversikt-liste">
+                        {temaListe}
+                    </div>
                 </AsyncLoader>
             </div>
         );
