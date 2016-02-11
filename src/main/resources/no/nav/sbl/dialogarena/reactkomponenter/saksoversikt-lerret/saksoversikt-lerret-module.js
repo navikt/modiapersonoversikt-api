@@ -1,7 +1,7 @@
 import React from 'react';
 import SaksoversiktStore from './saksoversikt-store';
 import AsyncLoader from './../utils/async-loader';
-import TemaListeKomponent from './tema-liste-komponent'
+import TemaListeKomponent from './tema-liste-komponent';
 
 class SaksoversiktLerret extends React.Component {
     constructor(props) {
@@ -24,8 +24,6 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-        console.log('render');
-        debugger;
         const temaListe = this.state.temaer.map((tema)=> {
             return <TemaListeKomponent tema={tema.temakode}/>;
         });
