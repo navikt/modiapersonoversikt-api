@@ -45,8 +45,8 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public JoarkService joarkService() {
-        return new JoarkServiceImpl();
+    public InnsynJournalService joarkService() {
+        return new InnsynJournalServiceImpl();
     }
 
 

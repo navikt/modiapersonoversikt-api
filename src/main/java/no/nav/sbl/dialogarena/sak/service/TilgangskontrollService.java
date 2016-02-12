@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.HentDokumentResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.detalj.TjenesteResultatWrapper;
 
 public interface TilgangskontrollService {
-    HentDokumentResultat harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode);
+    TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode);
 }

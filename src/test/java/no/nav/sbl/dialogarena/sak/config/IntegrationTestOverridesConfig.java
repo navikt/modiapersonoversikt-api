@@ -6,7 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.journal.v1.Journal_v1PortType;
+import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import org.springframework.context.annotation.Bean;
@@ -33,9 +33,8 @@ public class IntegrationTestOverridesConfig {
     }
 
     @Bean
-    @Named("joarkPortType")
-    public Journal_v1PortType joarkPortType() {
-        return mock(Journal_v1PortType.class);
+    public InnsynJournalV1 innsynJournalV1() {
+        return mock(InnsynJournalV1.class);
     }
 
     @Bean

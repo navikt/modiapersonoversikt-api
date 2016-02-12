@@ -40,6 +40,7 @@
         <modig-core.version>1.0.1</modig-core.version>
         <modig.security.version>1.0.24</modig.security.version>
         <reactkomponenter.version>1.28.1-SNAPSHOT</reactkomponenter.version>
+        <common-records.version>1.3</common-records.version>
 
         <!-- Tjenester  -->
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
@@ -48,7 +49,7 @@
         <common-lokalt-kodeverk.version>1.11</common-lokalt-kodeverk.version>
         <common-kodeverk.version>1.0.1</common-kodeverk.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <joark-tjenestespesifikasjon.version>1.0.0</joark-tjenestespesifikasjon.version>
+        <nav-innsynJournal-v1-tjenestespesifikasjon.version>1.0</nav-innsynJournal-v1-tjenestespesifikasjon.version>
 
         <!-- Java  -->
         <javax.inject.version>1</javax.inject.version>
@@ -122,8 +123,8 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>joark-tjenestespesifikasjon</artifactId>
-            <version>${joark-tjenestespesifikasjon.version}</version>
+            <artifactId>innsynjournal-tjenestespesifikasjon</artifactId>
+            <version>${nav-innsynJournal-v1-tjenestespesifikasjon.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -263,6 +264,11 @@
             <artifactId>metrics-servlets</artifactId>
             <version>${metrics.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-records</artifactId>
+            <version>${common-records.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>

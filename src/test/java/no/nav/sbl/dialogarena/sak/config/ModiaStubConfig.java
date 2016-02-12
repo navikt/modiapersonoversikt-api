@@ -4,10 +4,13 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.sak.service.*;
+import no.nav.sbl.dialogarena.sak.service.DataFletter;
+import no.nav.sbl.dialogarena.sak.service.GSakService;
+import no.nav.sbl.dialogarena.sak.service.HenvendelseService;
+import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.journal.v1.Journal_v1PortType;
+import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -31,11 +34,6 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public Journal_v1PortType joarkPortType() {
-        return mock(Journal_v1PortType.class);
-    }
-
-    @Bean
     public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
         SakOgBehandling_v1PortType mock = mock(SakOgBehandling_v1PortType.class);
         when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class)))
@@ -46,6 +44,11 @@ public class ModiaStubConfig {
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
         return mock(HenvendelseSoknaderPortType.class);
+    }
+
+    @Bean
+    public InnsynJournalV1 innsynJournalV1() {
+        return mock(InnsynJournalV1.class);
     }
 
     @Bean
@@ -71,11 +74,6 @@ public class ModiaStubConfig {
     @Bean
     public GSakService gSakService() {
         return mock(GSakService.class);
-    }
-
-    @Bean
-    public JoarkService joarkService() {
-        return mock(JoarkService.class);
     }
 
     @Bean
