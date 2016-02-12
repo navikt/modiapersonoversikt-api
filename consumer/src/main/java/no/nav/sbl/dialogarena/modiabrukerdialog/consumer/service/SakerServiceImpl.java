@@ -114,7 +114,7 @@ public class SakerServiceImpl implements SakerService {
         }
     }
 
-    private List<Sak> hentSakerFraGsak(String fnr) {
+    public List<Sak> hentSakerFraGsak(String fnr) {
         try {
             WSFinnSakResponse response = sakV1.finnSak(new WSFinnSakRequest().withBruker(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson().withIdent(fnr)));
             return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<>());
