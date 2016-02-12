@@ -33,7 +33,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
         <modia-felleskomponenter.version>3.0.6-FAMOUS-SHADE</modia-felleskomponenter.version>
-        <modiabrukerdialog-api.version>4.3-FAMOUS-SHADE</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>4.4-2016_HL2-SNAPSHOT</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.5</modig-lang.version>
         <modig-content.version>2.0.13</modig-content.version>
@@ -274,6 +274,11 @@
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+            <version>1.0.3</version>
         </dependency>
     </dependencies>
 

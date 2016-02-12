@@ -49,10 +49,24 @@ public class SaksoversiktServiceConfig {
         return new InnsynJournalServiceImpl();
     }
 
-
     @Bean
     public DataFletter dataFletter() {
         return new DataFletterImpl();
+    }
+
+    @Bean
+    public SaksService saksService() {
+        return new SaksServiceImpl();
+    }
+
+    @Bean
+    public PesysService pesysService() {
+        return new PesysServiceImpl();
+    }
+
+    @Bean
+    public GsakSakerService gsakSakerService() {
+        return new GsakSakerService();
     }
 
 }
