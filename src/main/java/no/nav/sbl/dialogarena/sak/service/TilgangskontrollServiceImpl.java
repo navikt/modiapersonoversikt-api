@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.GSakService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.detalj.TjenesteResultatWrapper;
 import org.slf4j.Logger;
 

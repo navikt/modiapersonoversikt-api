@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.service;
+package no.nav.sbl.dialogarena.sak.service.interfaces;
 
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 

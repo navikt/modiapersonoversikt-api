@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
+import no.nav.sbl.dialogarena.sak.service.interfaces.InnsynJournalService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.detalj.TjenesteResultatWrapper;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.HentDokumentDokumentIkkeFunnet;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.HentDokumentSikkerhetsbegrensning;

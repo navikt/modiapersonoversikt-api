@@ -50,6 +50,7 @@
         <common-kodeverk.version>1.0.1</common-kodeverk.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
         <nav-innsynJournal-v1-tjenestespesifikasjon.version>1.0</nav-innsynJournal-v1-tjenestespesifikasjon.version>
+        <sanntidpdfkonverter.version>1.0</sanntidpdfkonverter.version>
 
         <!-- Java  -->
         <javax.inject.version>1</javax.inject.version>
@@ -147,6 +148,11 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
             <version>${henvendelse-soknader-tjenestespesifikasjon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>sanntidpdfkonverter</artifactId>
+            <version>${sanntidpdfkonverter.version}</version>
         </dependency>
 
         <dependency>

@@ -4,6 +4,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
+import no.nav.sbl.dialogarena.sak.service.interfaces.*;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.service;
+package no.nav.sbl.dialogarena.sak.service.interfaces;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
