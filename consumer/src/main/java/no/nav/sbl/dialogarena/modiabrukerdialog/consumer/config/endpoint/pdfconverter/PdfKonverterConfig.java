@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.pdfconverter;
 
+import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
@@ -7,10 +8,13 @@ import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.SanntidPdfKonvertererV1;
+import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.meldinger.PingRequest;
+import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.meldinger.PingResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static java.lang.System.getProperty;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.PdfKonvertererMock.createSanntidPdfKonverterMock;
 
@@ -29,7 +33,32 @@ public class PdfKonverterConfig {
     @Bean
     public Pingable pingPdfKonverterer() {
         SanntidPdfKonvertererV1 ws = createSanntidPdfKonverterer(new SystemSAMLOutInterceptor());
-        return new PingableWebService("PdfKonverterer", ws);
+        return new Pingable() {
+            @Override
+            public PingResult ping() {
+                try {
+                    PingResponse ping = ws.ping(new PingRequest());
+                    return new PingResult(SERVICE_OK, 0);
+                } catch (RuntimeException e) {
+                    return new PingResult(SERVICE_FAIL, 0);
+                }
+            }
+
+            @Override
+            public String name() {
+                return "SanntidPdfKonvertererV1";
+            }
+
+            @Override
+            public String method() {
+                return "ping";
+            }
+
+            @Override
+            public String endpoint() {
+                return "SanntidPdfKonvertererV1";
+            }
+        };
     }
 
 
