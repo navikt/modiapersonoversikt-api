@@ -115,7 +115,7 @@
         <nav-fellessystemer-environment.version>4.4.78</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
-        <joark-tjenestespesifikasjon.version>1.0.0</joark-tjenestespesifikasjon.version>
+        <nav-innsynJournal-v1-tjenestespesifikasjon.version>1.0</nav-innsynJournal-v1-tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
@@ -388,8 +388,8 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>joark-tjenestespesifikasjon</artifactId>
-                <version>${joark-tjenestespesifikasjon.version}</version>
+                <artifactId>innsynjournal-tjenestespesifikasjon</artifactId>
+                <version>${nav-innsynJournal-v1-tjenestespesifikasjon.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -1026,6 +1026,22 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>false</failOnWarning>
+                            <ignoreNonCompile>true</ignoreNonCompile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <!-- for å synke innhold mot Enonic kjør: mvn modig-content:sync -Denonic.username=XXX -Denonic.password=XXX -Denonic.url=http://<ip-adresse til admin-node>:8080   Se "Serveroversikt Enonic" på Confluence for IP-adresser -->
                 <groupId>no.nav.modig</groupId>

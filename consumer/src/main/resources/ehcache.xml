@@ -171,14 +171,6 @@
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="joarkCache" maxElementsInMemory="200"
-           eternal="false"
-           timeToIdleSeconds="600"
-           timeToLiveSeconds="600"
-           overflowToDisk="false"
-           diskPersistent="false"
-           memoryStoreEvictionPolicy="LRU"/>
-
     <cache name="varslingCache" maxElementsInMemory="10000"
            eternal="false"
            timeToIdleSeconds="180"

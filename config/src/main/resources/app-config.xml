@@ -57,8 +57,8 @@
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
         <webservice alias="domene.Brukerdialog:Varsler_v1" mapToProperty="varsler.ws"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
-        <webservice alias="Journal_v1" mapToProperty="joark.ws"/>
         <webservice alias="pensjon:PensjonSak_v1" mapToProperty="pensjon.sak.v1"/>
+        <webservice alias="InnsynJournal_v1" mapToProperty="innsyn.journal.v1"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->
