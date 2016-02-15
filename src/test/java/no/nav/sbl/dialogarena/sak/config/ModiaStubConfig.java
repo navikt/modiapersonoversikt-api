@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.sak.service.interfaces.SakOgBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
+import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -79,6 +80,11 @@ public class ModiaStubConfig {
     @Bean
     public SakV1 sakEndpoint() {
         return mock(SakV1.class);
+    }
+
+    @Bean
+    public PensjonSakV1 pensjonSakV1() {
+        return mock(PensjonSakV1.class);
     }
 
     @Bean(name = "pep")

@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
+import no.nav.sbl.dialogarena.sak.service.SaksService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -11,6 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Path("/saksoversikt/{fnr}")
@@ -19,6 +22,9 @@ public class SaksoversiktController {
 
     @Inject
     SaksoversiktService saksoversiktService;
+
+    @Inject
+    SaksService saksService;
 
     @GET
     @Path("/behandlinger-by-tema")
@@ -31,4 +37,11 @@ public class SaksoversiktController {
     public List<TemaVM> hentTemaer(@PathParam("fnr") String fnr) {
         return saksoversiktService.hentTemaer(fnr);
     }
+
+    @GET
+    @Path("/journalposter")
+    public List<Journalpost> hentJournalpostListe(@PathParam("fnr") String fnr) {
+        return saksService.hentJournalpostListe(fnr).get().collect(Collectors.toList());
+    }
+
 }
