@@ -21,8 +21,8 @@ public class InformasjonController {
     @Named("saksoversikt-cms-integrasjon")
     private CmsContentRetriever contentRetriever;
 
-//    @Inject
-//    private MiljovariablerService miljovariablerService;
+    @Inject
+    private MiljovariablerService miljovariablerService;
 
     @GET
     @Path("/tekster")
@@ -30,9 +30,9 @@ public class InformasjonController {
         return contentRetriever.hentAlleTekster();
     }
 
-//    @GET
-//    @Path("/miljovariabler")
-//    public Response hentMiljovariabler(){
-//        return Response.ok(miljovariablerService.hentMiljovariabler()).build();
-//    }
+    @GET
+    @Path("/miljovariabler")
+    public Response hentMiljovariabler(){
+        return Response.ok(miljovariablerService.hentMiljovariabler()).build();
+    }
 }

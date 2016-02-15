@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.sbl.dialogarena.sak.service.*;
+import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,6 +54,11 @@ public class SaksoversiktServiceConfig {
     @Bean
     public DataFletter dataFletter() {
         return new DataFletterImpl();
+    }
+
+    @Bean
+    public MiljovariablerService miljovariablerService() {
+        return new MiljovariablerService();
     }
 
 
