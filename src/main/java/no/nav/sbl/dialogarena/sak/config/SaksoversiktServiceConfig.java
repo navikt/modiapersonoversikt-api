@@ -54,15 +54,16 @@ public class SaksoversiktServiceConfig {
         return new DataFletterImpl();
     }
 
-    @Bean
-    public SaksService saksService() {
-        return new SaksServiceImpl();
-    }
 
     @Bean
     public PesysService pesysService() {
         return new PesysServiceImpl();
     }
+    @Bean
+    public SaksService saksService() {
+        return new SaksServiceImpl(new PesysServiceImpl());
+    }
+
 
     @Bean
     public GsakSakerService gsakSakerService() {

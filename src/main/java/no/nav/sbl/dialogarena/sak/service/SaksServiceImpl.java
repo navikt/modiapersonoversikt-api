@@ -11,7 +11,10 @@ import java.util.stream.Stream;
 
 public class SaksServiceImpl implements SaksService {
 
-    @Inject
+    public SaksServiceImpl(PesysService pesysService) {
+        this.pesysService = pesysService;
+    }
+
     private PesysService pesysService;
 
     @Inject
