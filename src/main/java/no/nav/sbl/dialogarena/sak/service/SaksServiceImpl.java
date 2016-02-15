@@ -31,9 +31,9 @@ public class SaksServiceImpl implements SaksService {
     }
 
     private List<Sak> hentAlleSaker(String fnr) {
-        List<Sak> psakSaker = pesysService.hentSakstemaFraPesys(fnr);
+//        List<Sak> psakSaker = pesysService.hentSakstemaFraPesys(fnr);
         List<Sak> gsaker = gsakSakerService.hentSaker(fnr).get().collect(Collectors.toList());
-        psakSaker.addAll(gsaker);
-        return psakSaker;
+//        psakSaker.addAll(gsaker);
+        return gsaker;
     }
 }

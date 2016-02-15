@@ -13,8 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 
 @Path("/saksoversikt/{fnr}")
@@ -41,8 +40,8 @@ public class SaksoversiktController {
 
     @GET
     @Path("/journalposter")
-    public Optional<Stream<Journalpost>> hentJournalpostListe(@PathParam("fnr") String fnr) {
-        return saksService.hentJournalpostListe(fnr);
+    public List<Journalpost> hentJournalpostListe(@PathParam("fnr") String fnr) {
+        return saksService.hentJournalpostListe(fnr).get().collect(Collectors.toList());
     }
 
 }
