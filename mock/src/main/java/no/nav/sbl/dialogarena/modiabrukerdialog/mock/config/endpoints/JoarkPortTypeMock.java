@@ -14,10 +14,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 
@@ -25,17 +24,6 @@ import static java.util.Arrays.asList;
 public class JoarkPortTypeMock {
     public static InnsynJournalV1 createInnsynJournalV1Mock() {
 
-        Map<String, List<Journalpost>> journalPoster = new HashMap<>();
-
-        journalPoster.put("1", asList(mottattSoknad("1", "DAG", new DateTime().minusDays(20))));
-        journalPoster.put("2", asList(soknadUnderBehandling("2", "OMS", new DateTime().minusDays(40))));
-        journalPoster.put("123", asList(soknadUnderBehandling("123", "OPP", new DateTime().minusDays(19))));
-        journalPoster.put("444", asList(
-                soknadUnderBehandling("444", "DAG", new DateTime().minusDays(100)),
-                mottattSoknad("444", "DAG", new DateTime()),
-                mottattBekreftelse("444", "DAG", new DateTime().minusDays(200)),
-                forvaltningsnotat("444", "DAG", new DateTime())
-        ));
 
         return new InnsynJournalV1() {
 
@@ -51,9 +39,32 @@ public class JoarkPortTypeMock {
                 HentTilgjengeligJournalpostListeResponse response = new HentTilgjengeligJournalpostListeResponse();
 
                 List<Journalpost> journalposts = new ArrayList<>();
+                Map<String, List<Journalpost>> journalPoster = new HashMap<>();
 
-                hentTilgjengeligJournalpostListeRequest.getSakListe()
-                        .stream()
+                int antallSaker = hentTilgjengeligJournalpostListeRequest.getSakListe().size();
+
+
+                List<Sak> list = hentTilgjengeligJournalpostListeRequest.getSakListe();
+
+                Random randomJournalpostIndex = new Random();
+                IntStream indexJournalpostIndexer = randomJournalpostIndex.ints(0, antallSaker).distinct().limit(4);
+                List<Integer> index = indexJournalpostIndexer.boxed().collect(Collectors.toList());
+                int i = 0;
+                String saksId = list.get(index.get(i)).getSakId();
+                journalPoster.put(saksId, asList(mottattSoknad(saksId, "DAG", new DateTime().minusDays(20))));
+                saksId = list.get(index.get(++i)).getSakId();
+                journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OMS", new DateTime().minusDays(40))));
+                saksId = list.get(index.get(++i)).getSakId();
+                journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OPP", new DateTime().minusDays(19))));
+                saksId = list.get(index.get(++i)).getSakId();
+                journalPoster.put(saksId, asList(
+                        soknadUnderBehandling(saksId, "DAG", new DateTime().minusDays(100)),
+                        mottattSoknad(saksId, "DAG", new DateTime()),
+                        mottattBekreftelse(saksId, "DAG", new DateTime().minusDays(200)),
+                        forvaltningsnotat(saksId, "DAG", new DateTime())
+                ));
+
+                list.stream()
                         .forEach(sak -> {
                             if (journalPoster.containsKey(sak.getSakId())) {
                                 journalposts.addAll(journalPoster.get(sak.getSakId()));
@@ -61,16 +72,19 @@ public class JoarkPortTypeMock {
                         });
 
                 response.getJournalpostListe().addAll(journalposts);
-
                 return response;
             }
 
             @Override
-            public HentDokumentResponse hentDokument(HentDokumentRequest hentDokumentRequest) throws HentDokumentDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning {
+            public HentDokumentResponse hentDokument(HentDokumentRequest hentDokumentRequest) throws
+                    HentDokumentDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning {
                 return new HentDokumentResponse();
             }
-        };
+        }
+
+                ;
     }
+
 
     private static Journalpost mottattSoknad(String id, String tema, DateTime mottattDato) {
         Journalpost journalpost = new Journalpost();
@@ -167,7 +181,7 @@ public class JoarkPortTypeMock {
         return journalpost;
     }
 
-    private static DokumentinfoRelasjon dokumentInfoRelasjonMedTittel(String tittel){
+    private static DokumentinfoRelasjon dokumentInfoRelasjonMedTittel(String tittel) {
         JournalfoertDokumentInfo dokumentInfo = new JournalfoertDokumentInfo();
         dokumentInfo.setTittel(tittel);
         dokumentInfo.setDokumentId("123");
@@ -178,7 +192,7 @@ public class JoarkPortTypeMock {
         return dokumentinfoRelasjon;
     }
 
-    private static TilknyttetJournalpostSom lagTilknyttetJournalpostSom(){
+    private static TilknyttetJournalpostSom lagTilknyttetJournalpostSom() {
         TilknyttetJournalpostSom tilknyttetJournalpostSom = new TilknyttetJournalpostSom();
         tilknyttetJournalpostSom.setValue("HOVEDDOKUMENT");
         return tilknyttetJournalpostSom;
