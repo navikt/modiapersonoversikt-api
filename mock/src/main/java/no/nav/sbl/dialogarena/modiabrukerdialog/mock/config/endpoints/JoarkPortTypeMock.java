@@ -36,40 +36,17 @@ public class JoarkPortTypeMock {
             @Override
             public HentTilgjengeligJournalpostListeResponse hentTilgjengeligJournalpostListe(HentTilgjengeligJournalpostListeRequest hentTilgjengeligJournalpostListeRequest)
                     throws HentTilgjengeligJournalpostListeSikkerhetsbegrensning {
+
                 HentTilgjengeligJournalpostListeResponse response = new HentTilgjengeligJournalpostListeResponse();
 
                 List<Journalpost> journalposts = new ArrayList<>();
                 Map<String, List<Journalpost>> journalPoster = new HashMap<>();
 
-                int antallSaker = hentTilgjengeligJournalpostListeRequest.getSakListe().size();
+                List<Sak> saker = hentTilgjengeligJournalpostListeRequest.getSakListe();
 
+                getRandomGeneratedJournalposter(journalPoster, saker);
 
-                List<Sak> list = hentTilgjengeligJournalpostListeRequest.getSakListe();
-
-                Random randomJournalpostIndex = new Random();
-                IntStream indexJournalpostIndexer = randomJournalpostIndex.ints(0, antallSaker).distinct().limit(4);
-                List<Integer> index = indexJournalpostIndexer.boxed().collect(Collectors.toList());
-                int i = 0;
-                String saksId = list.get(index.get(i)).getSakId();
-                journalPoster.put(saksId, asList(mottattSoknad(saksId, "DAG", new DateTime().minusDays(20))));
-                saksId = list.get(index.get(++i)).getSakId();
-                journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OMS", new DateTime().minusDays(40))));
-                saksId = list.get(index.get(++i)).getSakId();
-                journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OPP", new DateTime().minusDays(19))));
-                saksId = list.get(index.get(++i)).getSakId();
-                journalPoster.put(saksId, asList(
-                        soknadUnderBehandling(saksId, "DAG", new DateTime().minusDays(100)),
-                        mottattSoknad(saksId, "DAG", new DateTime()),
-                        mottattBekreftelse(saksId, "DAG", new DateTime().minusDays(200)),
-                        forvaltningsnotat(saksId, "DAG", new DateTime())
-                ));
-
-                list.stream()
-                        .forEach(sak -> {
-                            if (journalPoster.containsKey(sak.getSakId())) {
-                                journalposts.addAll(journalPoster.get(sak.getSakId()));
-                            }
-                        });
+                leggTilJournalposterSomHarSaksidIResponse(journalposts, journalPoster, saker);
 
                 response.getJournalpostListe().addAll(journalposts);
                 return response;
@@ -83,6 +60,35 @@ public class JoarkPortTypeMock {
         }
 
                 ;
+    }
+
+    private static void leggTilJournalposterSomHarSaksidIResponse(List<Journalpost> journalposts, Map<String, List<Journalpost>> journalPoster, List<Sak> saker) {
+        saker.stream()
+                .forEach(sak -> {
+                    if (journalPoster.containsKey(sak.getSakId())) {
+                        journalposts.addAll(journalPoster.get(sak.getSakId()));
+                    }
+                });
+    }
+
+    private static void getRandomGeneratedJournalposter(Map<String, List<Journalpost>> journalPoster, List<Sak> saker) {
+        Random randomJournalpostIndex = new Random();
+        IntStream indexJournalpostIndexer = randomJournalpostIndex.ints(0, saker.size()).distinct().limit(4);
+        List<Integer> index = indexJournalpostIndexer.boxed().collect(Collectors.toList());
+        int i = 0;
+        String saksId = saker.get(index.get(i)).getSakId();
+        journalPoster.put(saksId, asList(mottattSoknad(saksId, "DAG", new DateTime().minusDays(20))));
+        saksId = saker.get(index.get(++i)).getSakId();
+        journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OMS", new DateTime().minusDays(40))));
+        saksId = saker.get(index.get(++i)).getSakId();
+        journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OPP", new DateTime().minusDays(19))));
+        saksId = saker.get(index.get(++i)).getSakId();
+        journalPoster.put(saksId, asList(
+                soknadUnderBehandling(saksId, "DAG", new DateTime().minusDays(100)),
+                mottattSoknad(saksId, "DAG", new DateTime()),
+                mottattBekreftelse(saksId, "DAG", new DateTime().minusDays(200)),
+                forvaltningsnotat(saksId, "DAG", new DateTime())
+        ));
     }
 
 
