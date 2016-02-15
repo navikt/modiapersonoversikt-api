@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service;
 
+import no.nav.sbl.dialogarena.sak.service.interfaces.InnsynJournalService;
 import no.nav.sbl.dialogarena.sak.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
