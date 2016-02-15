@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -34,8 +33,7 @@ public class CmsEndpointConfig {
     public static final String DEFAULT_LOCALE = "nb";
     private static final String INNHOLDSTEKSTER_NB_NO_SAKSOVERSIKT_REMOTE = "/app/modia-saksoversikt/nb/tekster";
     private static final String INNHOLDSTEKSTER_NB_NO_MODIA_REMOTE = "/app/modiabrukerdialog/nb/tekster";
-    private static final String ARTIKLER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/saksinformasjon";
-    private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.innholdstekster";
+    private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.saksoversikt";
     private static final String MODIABRUKERDIALOG_NB_NO_LOCAL = "content.modiabrukerdialog";
 
     @Value("${appres.cms.url}")
@@ -49,7 +47,6 @@ public class CmsEndpointConfig {
         CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
         cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
         cmsContentRetriever.setTeksterRetriever(siteContentRetriever());
-        cmsContentRetriever.setArtikkelRetriever(siteArtikkelRetriever());
         return cmsContentRetriever;
     }
 
@@ -122,13 +119,5 @@ public class CmsEndpointConfig {
                 DEFAULT_LOCALE);
     }
 
-    private ValueRetriever siteArtikkelRetriever() throws URISyntaxException {
-        Map<String, List<URI>> uris = new HashMap<>();
-        uris.put(DEFAULT_LOCALE, singletonList(new URI(appresUrl + ARTIKLER_NB_NO_REMOTE)));
-        return new ValuesFromContentWithResourceBundleFallback(asList(INNHOLDSTEKSTER_NB_NO_LOCAL,
-                MODIABRUKERDIALOG_NB_NO_LOCAL),
-                contentRetriever(),
-                uris,
-                DEFAULT_LOCALE);
-    }
+
 }
