@@ -1,14 +1,23 @@
 package no.nav.sbl.dialogarena.sak.viewdomain.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
+import no.nav.sbl.dialogarena.sak.service.interfaces.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 
+import javax.inject.Inject;
 import java.io.Serializable;
+
+import static no.nav.sbl.dialogarena.sak.service.interfaces.BulletProofKodeverkService.ARKIVTEMA;
 
 public class TemaVM implements FeedItemVM, Serializable {
 
     public String temakode;
     public GenerellBehandling sistoppdaterteBehandling;
+    public String temanavn;
+
+
+    @Inject
+    private BulletProofKodeverkService kodeverk;
 
     @Override
     public String getType() {
@@ -22,6 +31,7 @@ public class TemaVM implements FeedItemVM, Serializable {
 
     public TemaVM withTemaKode(String temakode) {
         this.temakode = temakode;
+        this.temanavn =  kodeverk.getTemanavnForTemakode(temakode, ARKIVTEMA);
         return this;
     }
 
