@@ -6,7 +6,8 @@ window.ModiaJS = {
         VelgSakPanel: require('./velg-sak-panel/velg-sak-panel-module'),
         VarselLerret: require('./varsel-lerret/varsel-lerret-module'),
         FeilmeldingsModaler: require('./feilmeldingsmodaler/feilmeldingsmodaler-module'),
-        SaksoversiktLerret: require('./saksoversikt-lerret/saksoversikt-lerret-module')
+        SaksoversiktLerret: require('./saksoversikt-lerret/saksoversikt-lerret-module'),
+        SaksoversiktWidget: require('./saksoversikt-widget/saksoversikt-widget-module')
     },
     InitializedComponents: {},
     React: require('./nav-react')
