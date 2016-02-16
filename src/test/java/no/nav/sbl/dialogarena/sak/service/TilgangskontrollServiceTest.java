@@ -2,27 +2,20 @@ package no.nav.sbl.dialogarena.sak.service;
 
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.GSakService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
-import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
-import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 //@RunWith(MockitoJUnitRunner.class)

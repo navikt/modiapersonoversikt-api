@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
+import no.nav.sbl.dialogarena.sak.service.interfaces.HenvendelseService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 

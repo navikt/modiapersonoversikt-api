@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
 import no.nav.sbl.dialogarena.sak.service.SaksService;
-import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;

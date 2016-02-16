@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service;
 
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
 import org.junit.Before;
 import org.mockito.InjectMocks;

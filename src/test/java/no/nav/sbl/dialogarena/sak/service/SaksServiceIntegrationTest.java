@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.sbl.dialogarena.sak.config.IntegrationTestOverridesConfig;
 import no.nav.sbl.dialogarena.sak.config.KodeverkConfig;
 import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
+import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;

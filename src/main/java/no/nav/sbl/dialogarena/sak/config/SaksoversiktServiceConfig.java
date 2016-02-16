@@ -1,12 +1,14 @@
 package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.sbl.dialogarena.sak.service.*;
+import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({KodeverkConfig.class})
+@Import({KodeverkConfig.class, EnonicConfig.class})
 public class SaksoversiktServiceConfig {
 
     @Bean
@@ -49,6 +51,7 @@ public class SaksoversiktServiceConfig {
         return new InnsynJournalServiceImpl();
     }
 
+
     @Bean
     public DataFletter dataFletter() {
         return new DataFletterImpl();
@@ -69,5 +72,11 @@ public class SaksoversiktServiceConfig {
     public GsakSakerService gsakSakerService() {
         return new GsakSakerService();
     }
+
+    @Bean
+    public MiljovariablerService miljovariablerService() {
+        return new MiljovariablerService();
+    }
+
 
 }

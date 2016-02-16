@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.service;
+package no.nav.sbl.dialogarena.sak.service.interfaces;
 
 public interface BulletproofCmsService {
     String hentTekst(String key);
