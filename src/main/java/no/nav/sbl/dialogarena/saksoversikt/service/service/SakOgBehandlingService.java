@@ -32,7 +32,7 @@ public class SakOgBehandlingService {
     @Inject
     private FodselnummerAktorService fnrAktor;
 
-    protected List<WSSak> hentAlleSaker(String fnr) {
+    public List<WSSak> hentAlleSaker(String fnr) {
         try {
             String aktorId = fnrAktor.hentAktorIdForFnr(fnr);
             List<WSSak> sobSaker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
