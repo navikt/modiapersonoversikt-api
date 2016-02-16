@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
@@ -34,7 +33,6 @@ public class SakstemaGruppererTest {
 
     @Before
     public void setup() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         when(temagrupperHenter.genererTemagrupperMedTema()).thenReturn(new HashMap<String, List<String>>() {
             {
                 put(TEMAGRUPPE_ARBEID, asList(DAGPENGER, OPPFOLGING, ARBEIDSAVKLARINGSPENGER));

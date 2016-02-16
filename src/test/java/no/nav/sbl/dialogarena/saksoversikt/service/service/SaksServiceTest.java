@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
@@ -85,8 +84,6 @@ public class SaksServiceTest {
 
     @Before
     public void setup() {
-        setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-
         Future<Object> futurePesys = getFuturePesys();
         when(executorService.submit(any(Callable.class))).thenReturn(futurePesys);
         when(request.getSession()).thenReturn(new MockHttpSession());
