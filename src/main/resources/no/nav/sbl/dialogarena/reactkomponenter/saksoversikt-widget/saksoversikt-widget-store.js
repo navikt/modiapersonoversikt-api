@@ -9,14 +9,12 @@ class SaksoversiktWidgetStore extends Store {
     constructor(fnr) {
         super();
         this._resourcesResolved = this._resourcesResolved.bind(this);
-        //const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
-        //const behandlingerByTema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/behandlinger-by-tema');
-        //
-        //this.state = {
-        //    behandlingerByTema: {},
-        //    temaer: [],
-        //    promise: Q.all([temaer, behandlingerByTema])
-        //};
+        const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
+
+        this.state = {
+            temaer: [],
+            promise: Q.all([temaer])
+        };
         this.state.promise.done(this._resourcesResolved);
     }
 
@@ -36,14 +34,8 @@ class SaksoversiktWidgetStore extends Store {
         return this.state.resources;
     }
 
-    _resourcesResolved([temaer, behandlingerByTema]) {
-        //this.state.temaer = temaer;
-        //this.state.behandlingerByTema = Object.keys(behandlingerByTema).reduce((temaMapping, tema)=> {
-        //    const temaNavn = behandlingerByTema[tema][0].sakstema;
-        //    temaMapping[temaNavn] = behandlingerByTema[tema];
-        //    return temaMapping;
-        //}, {});
-
+    _resourcesResolved([temaer]) {
+        this.state.temaer = temaer;
         this.fireUpdate();
     }
 }
