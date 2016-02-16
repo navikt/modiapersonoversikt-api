@@ -8,15 +8,13 @@ import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
+import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -70,6 +68,16 @@ public class SaksService {
     @Inject
     private SakstemaGrupperer sakstemaGrupperer;
 
+    @Inject
+    private InnsynJournalService innsynJournalService;
+
+
+    public Optional<Stream<Journalpost>> hentJournalpostListe(String fnr) {
+        Optional<Stream<Journalpost>> alleSaker = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(hentAlleSaker(fnr));
+
+        return alleSaker;
+    }
+
     public List<Record<Soknad>> hentPaabegynteSoknader(String fnr) {
         return on(henvendelseService.hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus.UNDER_ARBEID, fnr)).collect();
     }
@@ -107,7 +115,7 @@ public class SaksService {
         return grupperteSakstema.entrySet().stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, dokumentMetadata, fnr))
                 .flatMap(Collection::stream)
-                .sorted(comparing(NYESTE_DATO,reverseOrder()));
+                .sorted(comparing(NYESTE_DATO, reverseOrder()));
     }
 
     protected List<Sakstema> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, String fnr) {
@@ -149,17 +157,17 @@ public class SaksService {
     }
 
     private Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
-        return dokumentMetadata1 ->  tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dokumentMetadata1.getTilhorendeSakid());
+        return dokumentMetadata1 -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dokumentMetadata1.getTilhorendeSakid());
     }
 
     private Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
-        return dm ->  dm.getBaksystem().equals(Baksystem.HENVENDELSE)
+        return dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE)
                 && (dm.getTemakode().equals(temakode)
                 || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));
     }
 
     private boolean tilhorerSakTemagruppe(Sak sak, String temakode) {
-            return temakode.equals(sak.getTemakode());
+        return temakode.equals(sak.getTemakode());
 
     }
 }

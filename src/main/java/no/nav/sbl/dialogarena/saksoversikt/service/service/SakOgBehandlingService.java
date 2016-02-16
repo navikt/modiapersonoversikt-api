@@ -32,6 +32,14 @@ public class SakOgBehandlingService {
     @Inject
     private FodselnummerAktorService fnrAktor;
 
+    public List<WSSak> hentSakerForAktor(String aktorId) {
+        try {
+            return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
+        } catch (RuntimeException ex) {
+            throw new SystemException("Feil ved kall til sakogbehandling", ex);
+        }
+    }
+
     public List<WSSak> hentAlleSaker(String fnr) {
         try {
             String aktorId = fnrAktor.hentAktorIdForFnr(fnr);
