@@ -1,0 +1,10 @@
+.classpath
+.project
+target
+*.iml
+.idea
+.settings
+*.log
+
+/.tgitconfig
+

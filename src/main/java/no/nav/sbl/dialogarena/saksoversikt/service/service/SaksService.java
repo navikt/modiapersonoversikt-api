@@ -1,0 +1,165 @@
+package no.nav.sbl.dialogarena.saksoversikt.service.service;
+
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
+import org.slf4j.Logger;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import static java.util.Collections.emptyList;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.reverseOrder;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.empty;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter.hentTemagruppenavnForTemagruppe;
+import static org.slf4j.LoggerFactory.getLogger;
+
+public class SaksService {
+
+    private static final Logger LOGGER = getLogger(SaksService.class);
+    public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
+
+    public static final Function<Sakstema, LocalDate> NYESTE_DATO = (st) -> st.dokumentMetadata.stream()
+            .map(DokumentMetadata::getDato)
+            .sorted(reverseOrder())
+            .findFirst()
+            .orElse(LocalDate.MIN);
+
+    @Inject
+    private HttpServletRequest request;
+
+    @Inject
+    private DokumentMetadataService dokumentMetadataService;
+
+    @Inject
+    private SakOgBehandlingService sakOgBehandlingService;
+
+    @Inject
+    private GsakSakerService gsakSakerService;
+
+    @Inject
+    private HenvendelseService henvendelseService;
+
+    @Inject
+    private ExecutorService executorService;
+
+    @Inject
+    private BulletproofKodeverkService kodeverk;
+
+    @Inject
+    private SakstemaGrupperer sakstemaGrupperer;
+
+    public List<Record<Soknad>> hentPaabegynteSoknader(String fnr) {
+        return on(henvendelseService.hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus.UNDER_ARBEID, fnr)).collect();
+    }
+
+    public List<Sak> hentAlleSaker(String fnr) {
+        Callable pesysCallable = new PesysCallable(fnr, request.getSession().getId());
+
+        Stream<Sak> fraGsak = gsakSakerService.hentSaker(fnr).orElse(Stream.empty());
+
+
+        /*
+        Ikke gjør dette andre steder. Dette er kun en hack pga. Pensjon må kalles med SystemSAML.
+        Oppslaget mot STS for å hente SAML caches basert på fnr og authlevel.
+        Dermed får kallet mot Pensjon EksternSAML hvis f. eks. SakOgBehandling-tjenesten kalles først.
+
+        For å omgå dette gjøres kallet i en spawnet tråd som ikke har tilgang til sikkerhetskonteksten.
+        Dermed blir key'en i oppslaget mot STS "SystemSAML" og det cachete, EksternSAML-tokenet blir ikke satt på requesten.
+        */
+        Future<Stream<Sak>> futurePesys = executorService.submit(pesysCallable);
+        Stream<Sak> fraPesys;
+        try {
+            fraPesys = futurePesys.get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOGGER.error("Tråden som henter saker fra Pesys ble avbrutt! Setter tomt resultat. Undersøk hvorfor dette inntraff.", e);
+            fraPesys = empty();
+        }
+
+        return Java8Utils.concat(fraGsak, fraPesys).collect(toList());
+    }
+
+    public Stream<Sakstema> hentSakstema(List<Sak> saker, String fnr) {
+        List<DokumentMetadata> dokumentMetadata = dokumentMetadataService.hentDokumentMetadata(saker, fnr);
+        Map<String, Set<String>> grupperteSakstema = sakstemaGrupperer.grupperSakstema(saker, dokumentMetadata);
+
+        return grupperteSakstema.entrySet().stream()
+                .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, dokumentMetadata, fnr))
+                .flatMap(Collection::stream)
+                .sorted(comparing(NYESTE_DATO,reverseOrder()));
+    }
+
+    protected List<Sakstema> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, String fnr) {
+
+        Predicate<String> finnesTemaKodeIKodeverk = temaKode -> kodeverk.finnesTemaKodeIKodeverk(temaKode, BulletproofKodeverkService.ARKIVTEMA);
+        Predicate<String> ikkeGruppertOppfolingssak = temakode -> (RESTERENDE_TEMA.equals(temagruppe.getKey()) || !OPPFOLGING.equals(temakode));
+
+        Map<String, List<Behandlingskjede>> behandlingskjederGruppertPaaTema = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);
+
+        return temagruppe.getValue().stream()
+                .filter(finnesTemaKodeIKodeverk)
+                .filter(ikkeGruppertOppfolingssak)
+                .map(temakode -> {
+                    List<Sak> tilhorendeSaker = alleSaker.stream()
+                            .filter(sak -> tilhorerSakTemagruppe(sak, temakode))
+                            .collect(toList());
+
+                    List<DokumentMetadata> tilhorendeDokumentMetadata = alleDokumentMetadata
+                            .stream()
+                            .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
+                            .collect(toList());
+
+                    return new Sakstema()
+                            .withTemakode(temakode)
+                            .withBehandlingskjeder(Java8Utils.optional(behandlingskjederGruppertPaaTema.get(temakode)).orElse(emptyList()))
+                            .withTilhorendeSaker(tilhorendeSaker)
+                            .withTemanavn(temanavn(temagruppe, temakode))
+                            .withDokumentMetadata(tilhorendeDokumentMetadata);
+                })
+                .collect(toList());
+    }
+
+    private String temanavn(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+        if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
+            return kodeverk.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
+        } else {
+            return hentTemagruppenavnForTemagruppe(temagruppe.getKey()) + " → " + kodeverk.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
+        }
+    }
+
+    private Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
+        return dokumentMetadata1 ->  tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dokumentMetadata1.getTilhorendeSakid());
+    }
+
+    private Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+        return dm ->  dm.getBaksystem().equals(Baksystem.HENVENDELSE)
+                && (dm.getTemakode().equals(temakode)
+                || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));
+    }
+
+    private boolean tilhorerSakTemagruppe(Sak sak, String temakode) {
+            return temakode.equals(sak.getTemakode());
+
+    }
+}
