@@ -24,14 +24,10 @@ import static java.util.Arrays.asList;
 public class JoarkPortTypeMock {
     public static InnsynJournalV1 createInnsynJournalV1Mock() {
 
-
         return new InnsynJournalV1() {
 
-
             @Override
-            public void ping() {
-
-            }
+            public void ping() {}
 
             @Override
             public HentTilgjengeligJournalpostListeResponse hentTilgjengeligJournalpostListe(HentTilgjengeligJournalpostListeRequest hentTilgjengeligJournalpostListeRequest)
@@ -57,9 +53,7 @@ public class JoarkPortTypeMock {
                     HentDokumentDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning {
                 return new HentDokumentResponse();
             }
-        }
-
-                ;
+        };
     }
 
     private static void leggTilJournalposterSomHarSaksidIResponse(List<Journalpost> journalposts, Map<String, List<Journalpost>> journalPoster, List<Sak> saker) {
