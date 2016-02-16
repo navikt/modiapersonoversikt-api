@@ -3,10 +3,10 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.service.interfaces.DataFletter;
-import no.nav.sbl.dialogarena.sak.service.interfaces.Filter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -30,11 +30,11 @@ public class DataFletterImpl implements DataFletter {
     @Override
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(List<WSSak> saker, List<WSSoknad> soknader) {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
-        for (WSSak sak : filter.filtrerSaker(saker)) {
-            TemaVM tema = temaVMTransformer(filter).transform(sak);
-            List<GenerellBehandling> filtrertebehandlinger = filter.filtrerBehandlinger(hentSorterteBehandlinger(soknader, sak));
-            behandlingerByTema.put(tema, filtrertebehandlinger);
-        }
+//        for (WSSak sak : filter.filtrerSaker(saker)) {
+//            TemaVM tema = temaVMTransformer(filter).transform(sak);
+//            List<GenerellBehandling> filtrertebehandlinger = filter.filtrerBehandlinger(hentSorterteBehandlinger(soknader, sak));
+//            behandlingerByTema.put(tema, filtrertebehandlinger);
+//        }
         return behandlingerByTema;
     }
 

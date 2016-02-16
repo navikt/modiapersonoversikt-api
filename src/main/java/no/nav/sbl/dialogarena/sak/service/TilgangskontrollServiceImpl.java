@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sak.service.interfaces.GSakService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.viewdomain.detalj.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -15,7 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     @Inject
-    private GSakService gSakService;
+    private GsakSakerService gSakService;
 
     @Inject
     @Named("pep")

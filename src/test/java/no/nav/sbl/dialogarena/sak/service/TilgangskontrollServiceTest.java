@@ -5,8 +5,8 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sak.service.interfaces.GSakService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class TilgangskontrollServiceTest {
 
     @Mock
-    private GSakService gSakService;
+    private GsakSakerService gSakService;
     @Mock
     private EnforcementPoint pep;
     @Mock

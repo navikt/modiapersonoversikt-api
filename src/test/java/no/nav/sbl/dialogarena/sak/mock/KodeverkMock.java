@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.mock;
 
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
-import no.nav.sbl.dialogarena.sak.service.interfaces.BulletProofKodeverkService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,8 +11,8 @@ import static org.mockito.Mockito.mock;
 public class KodeverkMock {
 
     @Bean
-    public BulletProofKodeverkService bulletProofKodeverkService() {
-        return mock(BulletProofKodeverkService.class);
+    public BulletproofKodeverkService bulletProofKodeverkService() {
+        return mock(BulletproofKodeverkService.class);
     }
 
     @Bean

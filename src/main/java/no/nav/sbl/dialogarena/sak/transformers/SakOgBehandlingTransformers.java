@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
-import no.nav.sbl.dialogarena.sak.service.interfaces.Filter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
@@ -107,11 +107,13 @@ public class SakOgBehandlingTransformers {
                 return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak)) : tema;
             }
 
+            //TODO todo
             private GenerellBehandling hentSistOppdaterteLovligeBehandling(WSSak wsSak) {
                 List<GenerellBehandling> behandlinger = on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect();
-                List<GenerellBehandling> filtrerteBehandlinger = filter.filtrerBehandlinger(behandlinger);
-                List<GenerellBehandling> sorterteFiltrerteBehandlinger = on(filtrerteBehandlinger).collect(new OmvendtKronologiskBehandlingComparator());
-                return on(sorterteFiltrerteBehandlinger).head().getOrElse(null);
+//                List<GenerellBehandling> filtrerteBehandlinger = filter.filtrerBehandlinger(behandlinger);
+//                List<GenerellBehandling> sorterteFiltrerteBehandlinger = on(filtrerteBehandlinger).collect(new OmvendtKronologiskBehandlingComparator());
+//                return on(sorterteFiltrerteBehandlinger).head().getOrElse(null);
+                return null;
             }
         };
     }

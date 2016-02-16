@@ -1,13 +1,14 @@
 package no.nav.sbl.dialogarena.sak.config;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.sak.service.interfaces.DataFletter;
-import no.nav.sbl.dialogarena.sak.service.interfaces.GSakService;
-import no.nav.sbl.dialogarena.sak.service.interfaces.HenvendelseService;
-import no.nav.sbl.dialogarena.sak.service.interfaces.SakOgBehandlingService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
+import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.SanntidPdfKonvertererV1;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
@@ -17,6 +18,8 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.springframework.context.annotation.Bean;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static org.mockito.Matchers.any;
@@ -30,8 +33,18 @@ import static org.mockito.Mockito.when;
 public class ModiaStubConfig {
 
     @Bean
-    public AktoerPortType fodselnummerAktorService() {
+    public AktoerPortType aktoerPortType() {
         return mock(AktoerPortType.class);
+    }
+
+    @Bean
+    public SanntidPdfKonvertererV1 sanntidPdfKonvertererV1() {
+        return mock(SanntidPdfKonvertererV1.class);
+    }
+
+    @Bean
+    public HttpServletRequest request() {
+        return mock(HttpServletRequest.class);
     }
 
     @Bean
@@ -40,6 +53,11 @@ public class ModiaStubConfig {
         when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class)))
                 .thenReturn(new FinnSakOgBehandlingskjedeListeResponse().withSak(createWSSak()));
         return mock;
+    }
+
+    @Bean
+    public ContentRetriever contentRetriever() {
+        return mock(ContentRetriever.class);
     }
 
     @Bean
@@ -73,8 +91,8 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public GSakService gSakService() {
-        return mock(GSakService.class);
+    public GsakSakerService gSakService() {
+        return mock(GsakSakerService.class);
     }
 
     @Bean
@@ -95,34 +113,6 @@ public class ModiaStubConfig {
     @Bean
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
         return mock(SaksbehandlerInnstillingerService.class);
-    }
-
-    @Bean
-    public CmsContentRetriever cmsContentRetriever() {
-        CmsContentRetriever cmsMock = new CmsContentRetriever() {
-            @Override
-            public String hentTekst(String key) {
-                switch (key) {
-                    case "mange.saker":
-                        return "Vis alle {0} saker";
-                    case "ingen.saker":
-                        return "finnes ikke noen saker";
-                    case "saker.feilet":
-                        return "kan ikke vise saker'";
-                    default:
-                        return "default tekst fra CMS-mock";
-                }
-            }
-
-            @Override
-            public String hentArtikkel(String key) {
-                switch (key) {
-                    default:
-                        return "default tekst fra CMS-mock";
-                }
-            }
-        };
-        return cmsMock;
     }
 
 }

@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
 import no.nav.modig.modia.widget.async.AsyncWidget;
-import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
@@ -11,8 +10,6 @@ import java.util.List;
 
 public class SaksoversiktWidget extends AsyncWidget<TemaVM> {
 
-    @Inject
-    private SaksoversiktService saksoversiktService;
 
     private final String fnr;
 
@@ -23,7 +20,8 @@ public class SaksoversiktWidget extends AsyncWidget<TemaVM> {
 
     @Override
     public List<TemaVM> getFeedItems() {
-        return saksoversiktService.hentTemaer(fnr);
+
+        return null;
     }
 
     @Override
