@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sak.service.TilgangskontrollServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
+import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
 import no.nav.sbl.dialogarena.saksoversikt.service.config.ServiceConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,11 @@ public class SaksoversiktServiceConfig {
     @Bean
     public MiljovariablerService miljovariablerService() {
         return new MiljovariablerService();
+    }
+
+    @Bean
+    public FilterImpl filter() {
+        return new FilterImpl();
     }
 
 }

@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.sak.comparators;
 
-import java.time.LocalDate;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+
 import java.util.Comparator;
 
-public class OmvendtKronologiskBehandlingComparator implements Comparator<LocalDate> {
+public class OmvendtKronologiskBehandlingComparator implements Comparator<GenerellBehandling> {
 
     @Override
-    public int compare(LocalDate o1, LocalDate o2) {
-        return o2.compareTo(o1);
+    public int compare(GenerellBehandling o1, GenerellBehandling o2) {
+        return o2.behandlingDato.compareTo(o1.behandlingDato);
     }
 }

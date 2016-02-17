@@ -5,9 +5,9 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -29,21 +29,18 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
     @Inject
     private AktoerPortType fodselnummerAktorService;
     @Inject
-    private HenvendelseService henvendelseService;
-    @Inject
     private SakOgBehandlingService sakOgBehandlingService;
     @Inject
-    private Filter filter;
+    private FilterImpl filter;
+//    @Inject
+    private BulletproofKodeverkService kodeverk = new BulletproofKodeverkService();
 
-    /**
-     * Henter alle tema for en gitt person
-     */
     @Override
     @SuppressWarnings("PMD")
     public List<Tema> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
         List<WSSak> saker = on(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr))).collect();
-        PreparedIterable<Tema> temaer = on(filter.filtrerSaker(saker)).map(temaVMTransformer(filter));
+        PreparedIterable<Tema> temaer = on(filter.filtrerSaker(saker)).map(temaVMTransformer(filter, kodeverk));
         try {
             return temaer.collect(new SistOppdaterteBehandlingComparator());
         } catch (NullPointerException npe) {
