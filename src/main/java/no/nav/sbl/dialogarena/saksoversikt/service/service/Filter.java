@@ -39,7 +39,7 @@ public class Filter {
 
     private final static Logger log = getLogger(Filter.class);
 
-    public List<WSSak> filtrerSaker(List<WSSak> saker) {
+    public synchronized List<WSSak> filtrerSaker(List<WSSak> saker) {
         lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
         ulovligeSakstema = Arrays.asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
         return saker.stream()
@@ -48,7 +48,7 @@ public class Filter {
                 .filter(HAR_MINST_EN_LOVLIG_BEHANDLING).collect(toList());
     }
 
-    public List<Record<GenerellBehandling>> filtrerBehandlinger(List<Record<GenerellBehandling>> behandlinger) {
+    public synchronized List<Record<GenerellBehandling>> filtrerBehandlinger(List<Record<GenerellBehandling>> behandlinger) {
         lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
         Stream<Record<GenerellBehandling>> avsluttedeKvitteringer = behandlinger.stream().filter(ER_AVSLUTTET_KVITTERING);
         Stream<Record<GenerellBehandling>> lovligeBehandlinger = behandlinger.stream().filter(HAR_LOVLIG_BEHANDLINGSTYPE);

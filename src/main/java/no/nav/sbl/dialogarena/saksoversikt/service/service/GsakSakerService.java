@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class GsakSakerService {
 
-    public static String GSAK_FAGSYSTEM_ID = "FS22";
+    public static final String GSAK_FAGSYSTEM_ID = "FS22";
 
     @Inject
     private SakV1 gsakSakV1;
