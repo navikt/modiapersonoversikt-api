@@ -15,4 +15,12 @@ public class Behandlingskjede {
         this.sistOppdatert = sistOppdatert;
         return this;
     }
+
+    public BehandlingsStatus getStatus() {
+        return status;
+    }
+
+    public DateTime getSistOppdatert() {
+        return sistOppdatert;
+    }
 }

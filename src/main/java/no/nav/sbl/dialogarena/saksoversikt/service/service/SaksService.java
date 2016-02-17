@@ -83,8 +83,6 @@ public class SaksService {
     }
 
     public List<Sak> hentAlleSaker(String fnr) {
-        Callable pesysCallable = new PesysCallable(fnr, request.getSession().getId());
-
         Stream<Sak> fraGsak = gsakSakerService.hentSaker(fnr).orElse(Stream.empty());
 
 
@@ -96,16 +94,9 @@ public class SaksService {
         For å omgå dette gjøres kallet i en spawnet tråd som ikke har tilgang til sikkerhetskonteksten.
         Dermed blir key'en i oppslaget mot STS "SystemSAML" og det cachete, EksternSAML-tokenet blir ikke satt på requesten.
         */
-        Future<Stream<Sak>> futurePesys = executorService.submit(pesysCallable);
-        Stream<Sak> fraPesys;
-        try {
-            fraPesys = futurePesys.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Tråden som henter saker fra Pesys ble avbrutt! Setter tomt resultat. Undersøk hvorfor dette inntraff.", e);
-            fraPesys = empty();
-        }
 
-        return Java8Utils.concat(fraGsak, fraPesys).collect(toList());
+
+        return Java8Utils.concat(fraGsak).collect(toList());
     }
 
     public Stream<Sakstema> hentSakstema(List<Sak> saker, String fnr) {
