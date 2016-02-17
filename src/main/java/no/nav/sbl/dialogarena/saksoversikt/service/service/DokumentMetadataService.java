@@ -7,12 +7,12 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjons
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.*;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
@@ -53,8 +53,8 @@ public class DokumentMetadataService {
     @Inject
     private Kodeverk kodeverk;
 
-    @Inject
-    private BulletproofKodeverkService bulletproofKodeverkService;
+
+    private BulletproofKodeverkService bulletproofKodeverkService = new BulletproofKodeverkService();
 
     public List<DokumentMetadata> hentDokumentMetadata(List<Sak> saker, String fnr) {
         List<DokumentMetadata> joarkMetadata = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker)
