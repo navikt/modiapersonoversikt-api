@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.config;
 
+import no.nav.sbl.dialogarena.common.kodeverk.JsonKodeverk;
+import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
@@ -83,8 +85,13 @@ public class ServiceConfig {
     }
 
     @Bean
-    public BulletproofKodeverkService kodeverkService() {
+    public BulletproofKodeverkService bulletproofKodeverkService() {
         return new BulletproofKodeverkService();
+    }
+
+    @Bean
+    public Kodeverk kodeverk() {
+        return new JsonKodeverk(getClass().getResourceAsStream("/kodeverk.json"));
     }
 }
 
