@@ -1,14 +1,14 @@
 package no.nav.sbl.dialogarena.sak.comparators;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
 
 import java.util.Comparator;
 
-public class SistOppdaterteBehandlingComparator implements Comparator<TemaVM> {
+public class SistOppdaterteBehandlingComparator implements Comparator<Tema> {
 
     @Override
-    public int compare(TemaVM o1, TemaVM o2) {
-        return new OmvendtKronologiskBehandlingComparator().compare(o1.sistoppdaterteBehandling, o2.sistoppdaterteBehandling);
+    public int compare(Tema o1, Tema o2) {
+        return new OmvendtKronologiskBehandlingComparator().compare(o1.sistOppdaterteBehandling, o2.sistOppdaterteBehandling);
     }
 
 }

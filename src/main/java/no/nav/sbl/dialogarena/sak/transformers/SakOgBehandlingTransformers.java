@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -16,9 +15,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVBRUTT;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.*;
 
 public class SakOgBehandlingTransformers {
 
@@ -98,13 +95,14 @@ public class SakOgBehandlingTransformers {
         return Filter.AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue());
     }
 
-    public static Transformer<WSSak, TemaVM> temaVMTransformer(final Filter filter) {
-        return new Transformer<WSSak, TemaVM>() {
+    public static Transformer<WSSak, Tema> temaVMTransformer(final Filter filter) {
+        return new Transformer<WSSak, Tema>() {
 
             @Override
-            public TemaVM transform(WSSak wsSak) {
-                TemaVM tema = new TemaVM().withTemaKode(wsSak.getSakstema().getValue());
-                return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak)) : tema;
+            public Tema transform(WSSak wsSak) {
+                Tema tema = new Tema(wsSak.getSakstema().getValue(), "");
+                return tema;
+//                return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak)) : tema;
             }
 
             //TODO todo

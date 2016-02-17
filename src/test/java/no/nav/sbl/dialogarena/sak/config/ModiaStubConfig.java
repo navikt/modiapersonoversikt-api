@@ -4,7 +4,6 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.sak.service.interfaces.DataFletter;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
@@ -78,11 +77,6 @@ public class ModiaStubConfig {
     @Bean
     public SakOgBehandlingService sakOgBehandlingService() {
         return mock(SakOgBehandlingService.class);
-    }
-
-    @Bean
-    public DataFletter dataFletter() {
-        return mock(DataFletter.class);
     }
 
     @Bean

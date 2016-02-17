@@ -1,14 +1,11 @@
 package no.nav.sbl.dialogarena.sak.service.interfaces;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
 
 import java.util.List;
-import java.util.Map;
 
 public interface SaksoversiktService {
     @SuppressWarnings("PMD")
-    List<TemaVM> hentTemaer(String fnr);
+    List<Tema> hentTemaer(String fnr);
 
-    Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr);
 }

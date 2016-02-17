@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.System.*;
+import static java.lang.System.getProperty;
 
 @Configuration
 public class EnonicConfig {

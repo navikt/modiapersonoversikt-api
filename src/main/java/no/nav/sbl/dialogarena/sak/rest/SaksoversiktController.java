@@ -2,8 +2,7 @@ package no.nav.sbl.dialogarena.sak.rest;
 
 
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
@@ -14,7 +13,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -31,14 +29,8 @@ public class SaksoversiktController {
     SaksService saksService;
 
     @GET
-    @Path("/behandlinger-by-tema")
-    public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(@PathParam("fnr") String fnr) {
-        return saksoversiktService.hentBehandlingerByTema(fnr);
-    }
-
-    @GET
     @Path("/temaer")
-    public List<TemaVM> hentTemaer(@PathParam("fnr") String fnr) {
+    public List<Tema> hentTemaer(@PathParam("fnr") String fnr) {
         return saksoversiktService.hentTemaer(fnr);
     }
 
