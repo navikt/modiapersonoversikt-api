@@ -14,7 +14,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
-import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
@@ -63,7 +62,6 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String LAMELL_SAKSOVERSIKT = "saksoversikt";
-    public static final String WIDGET_SAKSOVERSIKT = "saksoversikt-widget";
     public static final String LAMELL_MELDINGER = "meldinger";
     public static final String LAMELL_VARSLING = "varsling";
     public static final String PANEL = "panel";
@@ -184,7 +182,6 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
         lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
-        lamellFactories.add(createSaksoversiktWidget(fnrFromRequest));
         lamellFactories.add(createVarslingsLamell(fnrFromRequest));
 
         return lamellFactories;
@@ -216,10 +213,6 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest) {
         return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest));
-    }
-
-    private static LamellFactory createSaksoversiktWidget(final String fnrFromRequest) {
-        return newLamellFactory(WIDGET_SAKSOVERSIKT, "SW", true, (LerretFactory) (id, name) -> new SaksoversiktWidget(id, fnrFromRequest));
     }
 
     private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {
