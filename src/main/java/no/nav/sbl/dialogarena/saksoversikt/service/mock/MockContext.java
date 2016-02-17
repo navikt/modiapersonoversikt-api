@@ -1,4 +1,5 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.config;
+package no.nav.sbl.dialogarena.saksoversikt.service.mock;
+
 
 import no.nav.sbl.dialogarena.saksoversikt.service.service.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
@@ -8,73 +9,73 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.mockito.Mockito.mock;
 
 @Configuration
-public class ServiceConfig {
-
+public class MockContext {
     @Bean
     public Filter sakOgBehandlingFilter() {
-        return new Filter();
+        return mock(Filter.class);
     }
 
     @Bean
     public SakOgBehandlingService sakOgBehandlingService() {
-        return new SakOgBehandlingService();
+        return mock(SakOgBehandlingService.class);
     }
 
     @Bean
     public HenvendelseService henvendelseService() {
-        return new HenvendelseService();
+        return mock(HenvendelseService.class);
     }
 
     @Bean
     public GsakSakerService gSakService() {
-        return new GsakSakerService();
+        return mock(GsakSakerService.class);
     }
 
     @Bean
     public InnsynJournalService joarkService() {
-        return new InnsynJournalService();
+        return mock(InnsynJournalService.class);
     }
 
     @Bean
     public PesysService pesysService() {
-        return new PesysService();
+        return mock(PesysService.class);
     }
 
     @Bean
     public SaksService saksService() {
-        return new SaksService();
+        return mock(SaksService.class);
     }
 
     @Bean
     public GsakSakerService gsakSakerService() {
-        return new GsakSakerService();
+        return mock(GsakSakerService.class);
     }
 
     @Bean
     public FodselnummerAktorService fodselnummerAktorService() {
-        return new FodselnummerAktorService();
+        return mock(FodselnummerAktorService.class);
     }
 
     @Bean
     public DataFletter dataFletter() {
-        return new DataFletter();
+        return mock(DataFletter.class);
     }
 
     @Bean
     public DokumentMetadataService dokumentMetadataService() {
-        return new DokumentMetadataService();
+        return mock(DokumentMetadataService.class);
     }
 
     @Bean
     public TemagrupperHenter temagrupperHenter() {
-        return new TemagrupperHenter();
+        return mock(TemagrupperHenter.class);
     }
 
     @Bean
     public SakstemaGrupperer sakstemaGrupperer() {
-        return new SakstemaGrupperer();
+        return mock(SakstemaGrupperer.class);
     }
 
     @Bean
@@ -83,9 +84,12 @@ public class ServiceConfig {
     }
 
     @Bean
+    public PDFConverterService pdfConverterService() {
+        return mock(PDFConverterService.class);
+    }
+
+    @Bean
     public BulletproofKodeverkService kodeverkService() {
-        return new BulletproofKodeverkService();
+        return mock(BulletproofKodeverkService.class);
     }
 }
-
-
