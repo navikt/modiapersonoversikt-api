@@ -78,14 +78,14 @@ public class ServiceConfig {
     }
 
     @Bean
-    public PDFConverterService pdfConverterService() {
-        return new PDFConverterService();
-    }
-
-    @Bean
     public ExecutorService executorService() {
         return Executors.newFixedThreadPool(50);
     }
+//
+//    @Bean
+//    public BulletproofKodeverkService kodeverkService() {
+//        return new BulletproofKodeverkService();
+//    }
 }
 
 
