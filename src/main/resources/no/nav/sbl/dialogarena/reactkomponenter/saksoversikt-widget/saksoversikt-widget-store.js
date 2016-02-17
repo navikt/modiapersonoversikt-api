@@ -4,7 +4,6 @@ import { sortBy } from 'lodash';
 import Ajax from './../utils/ajax';
 import Q from 'q';
 
-
 class SaksoversiktWidgetStore extends Store {
     constructor(fnr) {
         super();
@@ -30,8 +29,8 @@ class SaksoversiktWidgetStore extends Store {
         this.setState(this.store.getState());
     }
 
-    getResources() {
-        return this.state.resources;
+    getTemaer() {
+        return this.state.temaer;
     }
 
     _resourcesResolved([temaer]) {
