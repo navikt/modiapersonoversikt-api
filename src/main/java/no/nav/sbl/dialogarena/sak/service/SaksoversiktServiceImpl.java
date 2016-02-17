@@ -7,6 +7,9 @@ import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator
 import no.nav.sbl.dialogarena.sak.service.interfaces.*;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
@@ -57,7 +60,8 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
      */
     @Override
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr) {
-        return dataFletter.hentBehandlingerByTema(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr)), henvendelseService.hentInnsendteSoknader(fnr));
+        return null;
+//        return dataFletter.hentBehandlingerByTema(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr)), henvendelseService.hentInnsendteSoknader(fnr));
     }
 
     private String hentAktorId(String fnr) {
