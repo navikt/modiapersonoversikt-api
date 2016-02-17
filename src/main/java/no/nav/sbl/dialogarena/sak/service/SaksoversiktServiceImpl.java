@@ -32,8 +32,8 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
     private SakOgBehandlingService sakOgBehandlingService;
     @Inject
     private FilterImpl filter;
-//    @Inject
-    private BulletproofKodeverkService kodeverk = new BulletproofKodeverkService();
+    @Inject
+    private BulletproofKodeverkService kodeverk;
 
     @Override
     @SuppressWarnings("PMD")
