@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({KodeverkConfig.class, EnonicConfig.class, ServiceConfig.class})
+@Import({EnonicConfig.class, ServiceConfig.class})
 public class SaksoversiktServiceConfig {
 
     @Bean
