@@ -52,4 +52,5 @@ import org.springframework.context.annotation.Import;
         VarslingEndpointConfig.class
 })
 public class EndpointsConfig {
+
 }

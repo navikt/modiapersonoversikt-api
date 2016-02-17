@@ -1,6 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
-import no.nav.sbl.dialogarena.sak.service.interfaces.*;
+import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.DataFletter;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,19 +12,15 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 public class SaksoversiktMockContext {
+
     @Bean
     public SaksoversiktService saksoversiktService() {
         return mock(SaksoversiktService.class);
     }
 
     @Bean
-    public BulletproofCmsService bulletproofCmsService() {
-        return mock(BulletproofCmsService.class);
-    }
-
-    @Bean
-    public Filter sakOgBehandlingFilter() {
-        return mock(Filter.class);
+    public FilterImpl sakOgBehandlingFilter() {
+        return mock(FilterImpl.class);
     }
 
     @Bean
