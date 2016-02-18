@@ -4,21 +4,14 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
-import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -27,12 +20,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.empty;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter.hentTemagruppenavnForTemagruppe;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksService {
 
@@ -60,7 +51,7 @@ public class SaksService {
     private HenvendelseService henvendelseService;
 
     @Inject
-    private BulletproofKodeverkService kodeverk;
+    private BulletproofKodeverkService bulletproofKodeverkService;
 
     @Inject
     private SakstemaGrupperer sakstemaGrupperer;
@@ -97,7 +88,7 @@ public class SaksService {
 
     protected List<Sakstema> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, String fnr) {
 
-        Predicate<String> finnesTemaKodeIKodeverk = temaKode -> kodeverk.finnesTemaKodeIKodeverk(temaKode, BulletproofKodeverkService.ARKIVTEMA);
+        Predicate<String> finnesTemaKodeIKodeverk = temaKode -> bulletproofKodeverkService.finnesTemaKodeIKodeverk(temaKode, BulletproofKodeverkService.ARKIVTEMA);
         Predicate<String> ikkeGruppertOppfolingssak = temakode -> (RESTERENDE_TEMA.equals(temagruppe.getKey()) || !OPPFOLGING.equals(temakode));
 
         Map<String, List<Behandlingskjede>> behandlingskjederGruppertPaaTema = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);
@@ -127,9 +118,9 @@ public class SaksService {
 
     private String temanavn(Map.Entry<String, Set<String>> temagruppe, String temakode) {
         if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
-            return kodeverk.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
+            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
         } else {
-            return hentTemagruppenavnForTemagruppe(temagruppe.getKey()) + " → " + kodeverk.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
+            return hentTemagruppenavnForTemagruppe(temagruppe.getKey()) + " → " + bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
         }
     }
 
