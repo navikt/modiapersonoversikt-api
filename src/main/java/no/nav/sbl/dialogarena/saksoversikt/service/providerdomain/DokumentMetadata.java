@@ -3,13 +3,13 @@ package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class DokumentMetadata {
 
     private Kommunikasjonsretning retning;
-    private LocalDate dato;
+    private LocalDateTime dato;
     private String navn;
     private String journalpostId;
     private Dokument hoveddokument;
@@ -33,7 +33,7 @@ public class DokumentMetadata {
         return retning;
     }
 
-    public LocalDate getDato() {
+    public LocalDateTime getDato() {
         return dato;
     }
 
@@ -66,7 +66,7 @@ public class DokumentMetadata {
         return this;
     }
 
-    public DokumentMetadata withDato(final LocalDate dato) {
+    public DokumentMetadata withDato(final LocalDateTime dato) {
         this.dato = dato;
         return this;
     }

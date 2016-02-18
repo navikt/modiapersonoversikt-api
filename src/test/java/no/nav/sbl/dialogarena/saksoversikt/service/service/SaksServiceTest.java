@@ -22,12 +22,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Stream;
 
-import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
@@ -192,7 +191,7 @@ public class SaksServiceTest {
                         .withMottaker(Entitet.SLUTTBRUKER)
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
-                        .withDato(LocalDate.now())
+                        .withDato(LocalDateTime.now())
                         .withHoveddokument(
                                 new Dokument()
                                         .withTittel("TEST"))), anyString());
@@ -226,7 +225,7 @@ public class SaksServiceTest {
                         .withMottaker(Entitet.SLUTTBRUKER)
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
-                        .withDato(LocalDate.now())
+                        .withDato(LocalDateTime.now())
                         .withBaksystem(Baksystem.JOARK)
                         .withHoveddokument(
                                 new Dokument()
@@ -261,7 +260,7 @@ public class SaksServiceTest {
                         .withMottaker(Entitet.SLUTTBRUKER)
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
-                        .withDato(LocalDate.now())
+                        .withDato(LocalDateTime.now())
                         .withBaksystem(Baksystem.HENVENDELSE)
                         .withTemakode("OPP")
                         .withHoveddokument(
@@ -302,7 +301,7 @@ public class SaksServiceTest {
                         .withMottaker(Entitet.SLUTTBRUKER)
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
-                        .withDato(LocalDate.now())
+                        .withDato(LocalDateTime.now())
                         .withBaksystem(Baksystem.JOARK)
                         .withHoveddokument(
                                 new Dokument()

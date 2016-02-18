@@ -11,12 +11,14 @@ import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.time.LocalDateTime.*;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
@@ -30,11 +32,11 @@ public class SaksService {
 
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
 
-    public static final Function<Sakstema, LocalDate> NYESTE_DATO = (st) -> st.dokumentMetadata.stream()
+    public static final Function<Sakstema, LocalDateTime> NYESTE_DATO = (st) -> st.dokumentMetadata.stream()
             .map(DokumentMetadata::getDato)
             .sorted(reverseOrder())
             .findFirst()
-            .orElse(LocalDate.MIN);
+            .orElse(MIN);
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;

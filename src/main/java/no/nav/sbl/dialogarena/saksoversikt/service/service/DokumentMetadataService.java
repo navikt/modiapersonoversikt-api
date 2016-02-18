@@ -16,6 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static java.time.LocalDateTime.*;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -86,7 +88,7 @@ public class DokumentMetadataService {
         Stream<no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> vedlegg = finnVedlegg(opprettDokument, relasjoner);
         Stream<no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> logiskeVedlegg = finnLogiskeVedlegg(opprettLogiskDokument, relasjoner);
 
-        LocalDate dato = finnDato(journalpost);
+        LocalDateTime dato = finnDato(journalpost);
 
         Pair<Entitet, Entitet> avsenderMottaker = finnAvsenderMottaker(journalpost);
 
@@ -134,16 +136,16 @@ public class DokumentMetadataService {
         }
     }
 
-    private LocalDate finnDato(Journalpost journalpost) {
+    private LocalDateTime finnDato(Journalpost journalpost) {
         switch (journalpost.getKommunikasjonsretning().getValue()) {
             case JOURNALPOST_INNGAAENDE:
-                return journalpost.getMottatt().toGregorianCalendar().toZonedDateTime().toLocalDate();
+                return journalpost.getMottatt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             case JOURNALPOST_UTGAAENDE:
-                return journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDate();
+                return journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             case JOURNALPOST_INTERN:
-                return journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDate();
+                return journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             default:
-                return LocalDate.now();
+                return now();
         }
     }
 
@@ -214,7 +216,7 @@ public class DokumentMetadataService {
                 .withJournalpostId(soknadRecord.get(Soknad.JOURNALPOST_ID))
                 .withHoveddokument(hovedDokument)
                 .withVedlegg(vedlegg)
-                .withDato(soknadRecord.get(Soknad.INNSENDT_DATO).toGregorianCalendar().toZonedDateTime().toLocalDate())
+                .withDato(soknadRecord.get(Soknad.INNSENDT_DATO).toGregorianCalendar().toZonedDateTime().toLocalDateTime())
                 .withAvsender(Entitet.SLUTTBRUKER)
                 .withMottaker(Entitet.NAV)
                 .withTemakode(temakode)
