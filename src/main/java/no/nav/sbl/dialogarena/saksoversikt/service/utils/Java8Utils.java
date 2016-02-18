@@ -13,6 +13,7 @@ public class Java8Utils {
         return Optional.ofNullable(value);
     }
 
+    @SafeVarargs
     public static <T> Stream<T> concat(Stream<T>... streams) {
         return Stream.of(streams).flatMap(Function.identity());
     }
