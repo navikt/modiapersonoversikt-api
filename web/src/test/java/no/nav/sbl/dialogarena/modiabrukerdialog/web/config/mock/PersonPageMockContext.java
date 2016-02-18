@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
         SykepengerWidgetMockContext.class,
         UtbetalingerMockContext.class,
         SporsmalOgSvarMockContext.class,
-        SaksoversiktMockContext.class,
         ConsumerServicesMockContext.class,
         JacksonMockContext.class,
         VarslingMockContext.class

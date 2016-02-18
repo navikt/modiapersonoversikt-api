@@ -179,9 +179,4 @@
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="pesysCache" maxElementsInMemory="1000"
-		   eternal="false"
-		   timeToLiveSeconds="600"
-		   diskPersistent="false"
-		   overflowToDisk="false"/>
 </ehcache>
