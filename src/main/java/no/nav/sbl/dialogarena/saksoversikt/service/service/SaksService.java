@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
@@ -76,9 +77,23 @@ public class SaksService {
         return concat(fraGsak, fraPesys).collect(toList());
     }
 
-    public Stream<Sakstema> hentSakstema(List<Sak> saker, String fnr) {
+    private Map grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {
+        Set<String> sakstema = grupperteSakstema.entrySet().stream().map(stringSetEntry -> stringSetEntry.getValue())
+                .flatMap(Set::stream).collect(Collectors.toSet());
+        Map<String, Set<String>> map = new HashMap<>();
+        map.put(RESTERENDE_TEMA, sakstema);
+        return map;
+
+    }
+
+
+    public Stream<Sakstema> hentSakstema(List<Sak> saker, String fnr, boolean skalGruppere) {
         List<DokumentMetadata> dokumentMetadata = dokumentMetadataService.hentDokumentMetadata(saker, fnr);
         Map<String, Set<String>> grupperteSakstema = sakstemaGrupperer.grupperSakstema(saker, dokumentMetadata);
+
+        if (!skalGruppere) {
+            grupperteSakstema = grupperAlleSakstemaSomResterende(grupperteSakstema);
+        }
 
         return grupperteSakstema.entrySet().stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, dokumentMetadata, fnr))

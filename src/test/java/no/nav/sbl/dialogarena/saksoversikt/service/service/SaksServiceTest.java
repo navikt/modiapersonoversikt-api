@@ -121,7 +121,7 @@ public class SaksServiceTest {
             put("RESTERENDE_TEMA", new HashSet<>(asList(DAGPENGER)));
         }});
 
-        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901").collect(toList());
+        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).collect(toList());
 
         assertTrue(sakstema.size() == 1);
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
