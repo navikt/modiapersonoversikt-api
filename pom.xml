@@ -30,6 +30,7 @@
 
 
         <!-- Egenlagde dependencies  -->
+        <saksoversikt-service.version>1.2-SNAPSHOT</saksoversikt-service.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
         <modia-felleskomponenter.version>3.0.6-FAMOUS-SHADE</modia-felleskomponenter.version>
@@ -289,7 +290,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>saksoversikt-service</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${saksoversikt-service.version}</version>
         </dependency>
     </dependencies>
 
