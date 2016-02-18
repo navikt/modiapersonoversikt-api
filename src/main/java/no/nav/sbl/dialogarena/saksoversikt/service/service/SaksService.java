@@ -36,7 +36,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksService {
 
-    private static final Logger LOGGER = getLogger(SaksService.class);
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
 
     public static final Function<Sakstema, LocalDate> NYESTE_DATO = (st) -> st.dokumentMetadata.stream()
@@ -44,9 +43,6 @@ public class SaksService {
             .sorted(reverseOrder())
             .findFirst()
             .orElse(LocalDate.MIN);
-
-    @Inject
-    private HttpServletRequest request;
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -62,9 +58,6 @@ public class SaksService {
 
     @Inject
     private HenvendelseService henvendelseService;
-
-    @Inject
-    private ExecutorService executorService;
 
     @Inject
     private BulletproofKodeverkService kodeverk;
