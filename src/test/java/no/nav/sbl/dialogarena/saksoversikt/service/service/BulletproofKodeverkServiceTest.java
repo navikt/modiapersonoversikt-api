@@ -46,8 +46,8 @@ public class BulletproofKodeverkServiceTest {
     public void setupMocks() {
         when(lokaltKodeverk.getKode(SKJEMANUMMER_DAGPENGER, Kodeverk.Nokkel.TEMA)).thenReturn(TEMAKODE_DAGPENGER);
         when(lokaltKodeverk.getKode(SKJEMANUMMER_UFORE, Kodeverk.Nokkel.TEMA)).thenThrow(new RuntimeException());
-        when(lokaltKodeverk.getTittel(SOK_TITTEL)).thenReturn(TITTEL);
-        when(lokaltKodeverk.getTittel(EXCEPTION_TITTEL)).thenThrow(new RuntimeException());
+        when(lokaltKodeverk.getKode(SOK_TITTEL, Kodeverk.Nokkel.TITTEL)).thenReturn(TITTEL);
+        when(lokaltKodeverk.getKode(EXCEPTION_TITTEL, Kodeverk.Nokkel.TITTEL)).thenThrow(new RuntimeException());
         when(kodeverkClient.hentFoersteTermnavnForKode(TEMAKODE_DAGPENGER, BEHANDLINGSTEMA)).thenReturn(TEMANAVN_DAGPENGER);
         when(kodeverkClient.hentFoersteTermnavnForKode(TEMAKODE_UFORE, BEHANDLINGSTEMA)).thenThrow(new RuntimeException());
 

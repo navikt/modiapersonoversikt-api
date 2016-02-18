@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.empty;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter.hentTemagruppenavnForTemagruppe;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -55,6 +56,9 @@ public class SaksService {
 
     @Inject
     private GsakSakerService gsakSakerService;
+
+    @Inject
+    private PesysService pesysService;
 
     @Inject
     private HenvendelseService henvendelseService;
@@ -84,19 +88,8 @@ public class SaksService {
 
     public List<Sak> hentAlleSaker(String fnr) {
         Stream<Sak> fraGsak = gsakSakerService.hentSaker(fnr).orElse(Stream.empty());
-
-
-        /*
-        Ikke gjør dette andre steder. Dette er kun en hack pga. Pensjon må kalles med SystemSAML.
-        Oppslaget mot STS for å hente SAML caches basert på fnr og authlevel.
-        Dermed får kallet mot Pensjon EksternSAML hvis f. eks. SakOgBehandling-tjenesten kalles først.
-
-        For å omgå dette gjøres kallet i en spawnet tråd som ikke har tilgang til sikkerhetskonteksten.
-        Dermed blir key'en i oppslaget mot STS "SystemSAML" og det cachete, EksternSAML-tokenet blir ikke satt på requesten.
-        */
-
-
-        return Java8Utils.concat(fraGsak).collect(toList());
+        Stream<Sak> fraPesys = pesysService.hentSakstemaFraPesys(fnr).orElse(Stream.empty());
+        return concat(fraGsak, fraPesys).collect(toList());
     }
 
     public Stream<Sakstema> hentSakstema(List<Sak> saker, String fnr) {
@@ -131,7 +124,7 @@ public class SaksService {
 
                     return new Sakstema()
                             .withTemakode(temakode)
-                            .withBehandlingskjeder(Java8Utils.optional(behandlingskjederGruppertPaaTema.get(temakode)).orElse(emptyList()))
+                            .withBehandlingskjeder(optional(behandlingskjederGruppertPaaTema.get(temakode)).orElse(emptyList()))
                             .withTilhorendeSaker(tilhorendeSaker)
                             .withTemanavn(temanavn(temagruppe, temakode))
                             .withDokumentMetadata(tilhorendeDokumentMetadata);

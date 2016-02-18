@@ -38,7 +38,7 @@
         <!-- Tjenester -->
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <common-lokalt-kodeverk.version>1.6</common-lokalt-kodeverk.version>
+        <common-lokalt-kodeverk.version>1.11</common-lokalt-kodeverk.version>
         <common-kodeverk.version>1.0.3</common-kodeverk.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <pesys-pensjon-sak-version>1.0.3</pesys-pensjon-sak-version>

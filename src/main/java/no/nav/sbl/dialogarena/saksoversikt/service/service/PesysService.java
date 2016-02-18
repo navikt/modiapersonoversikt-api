@@ -13,8 +13,11 @@ import org.springframework.cache.annotation.Cacheable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.util.stream.Stream.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class PesysService {
@@ -25,26 +28,25 @@ public class PesysService {
     @Inject
     private PensjonSakV1 pensjonSakV1;
 
-    @Cacheable("pesysCache")
-    public List<Sak> hentSakstemaFraPesys(String uId, String sessionId) {
+    public Optional<Stream<Sak>> hentSakstemaFraPesys(String uId) {
         try {
             WSHentSakSammendragListeResponse wsHentSakSammendragListeResponse = pensjonSakV1.hentSakSammendragListe(
                     new WSHentSakSammendragListeRequest()
                             .withPersonident(uId));
-            return wsHentSakSammendragListeResponse.getSakSammendragListe()
+            return Optional.ofNullable(wsHentSakSammendragListeResponse.getSakSammendragListe()
                     .stream()
                     .map(sakssammendrag -> new Sak()
                                 .withSaksId(sakssammendrag.getSakId())
                                 .withTemakode(sakssammendrag.getArkivtema().getValue())
                                 .withBaksystem(Baksystem.PESYS)
-                                .withFagsystem(PESYS_FAGSYSTEM_ID))
-                    .collect(Collectors.toList());
+                                .withFagsystem(PESYS_FAGSYSTEM_ID)))
+                    ;
         } catch (HentSakSammendragListeSakManglerEierenhet | HentSakSammendragListePersonIkkeFunnet e) {
             LOGGER.info("Det skjedde en ventet exception ved henting av Sakstema fra Pesys");
-            return new ArrayList<>();
+            return Optional.empty();
         } catch (RuntimeException e) {
             LOGGER.error("Det skjedde en uventet feil mot Pesys", e);
-            return new ArrayList<>();
+            return Optional.empty();
         }
     }
 }
