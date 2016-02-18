@@ -40,7 +40,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public PesysService pesysService() {
+    public PesysService pensjonService() {
         return new PesysService();
     }
 

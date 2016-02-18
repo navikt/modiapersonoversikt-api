@@ -45,7 +45,7 @@ public class SaksService {
     private GsakSakerService gsakSakerService;
 
     @Inject
-    private PesysService pesysService;
+    private PesysService pensjonService;
 
     @Inject
     private HenvendelseService henvendelseService;
@@ -72,7 +72,7 @@ public class SaksService {
 
     public List<Sak> hentAlleSaker(String fnr) {
         Stream<Sak> fraGsak = gsakSakerService.hentSaker(fnr).orElse(Stream.empty());
-        Stream<Sak> fraPesys = pesysService.hentSakstemaFraPesys(fnr).orElse(Stream.empty());
+        Stream<Sak> fraPesys = pensjonService.hentSakstemaFraPesys(fnr).orElse(Stream.empty());
         return concat(fraGsak, fraPesys).collect(toList());
     }
 

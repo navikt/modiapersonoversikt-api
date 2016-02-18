@@ -8,16 +8,11 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.meldinger.WSHentSakSammendragListeRequest;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.meldinger.WSHentSakSammendragListeResponse;
 import org.slf4j.Logger;
-import org.springframework.cache.annotation.Cacheable;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Stream.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class PesysService {
