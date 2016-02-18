@@ -30,7 +30,7 @@
 
 
         <!-- Egenlagde dependencies  -->
-        <saksoversikt-service.version>1.2-SNAPSHOT</saksoversikt-service.version>
+        <saksoversikt-service.version>1.2</saksoversikt-service.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
         <modia-felleskomponenter.version>3.0.6-FAMOUS-SHADE</modia-felleskomponenter.version>
