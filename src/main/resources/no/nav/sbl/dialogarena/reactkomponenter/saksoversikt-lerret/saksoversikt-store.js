@@ -10,14 +10,14 @@ class SaksoversiktStore extends Store {
         super();
         this._resourcesResolved = this._resourcesResolved.bind(this);
         const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
-        const behandlingerByTema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/behandlinger-by-tema');
         const journalposter = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalposter');
+        const sakstema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/sakstema');
 
         this.state = {
-            behandlingerByTema: {},
             temaer: [],
             journalposter: [],
-            promise: Q.all([temaer, behandlingerByTema, journalposter])
+            sakstema: [],
+            promise: Q.all([temaer, journalposter, sakstema]),
         };
         this.state.promise.done(this._resourcesResolved);
     }
@@ -38,14 +38,10 @@ class SaksoversiktStore extends Store {
         return this.state.resources;
     }
 
-    _resourcesResolved([temaer, behandlingerByTema, journalposter]) {
+    _resourcesResolved([temaer, journalposter, sakstema]) {
         this.state.temaer = temaer;
-        this.state.behandlingerByTema = Object.keys(behandlingerByTema).reduce((temaMapping, tema)=> {
-            const temaNavn = behandlingerByTema[tema][0].sakstema;
-            temaMapping[temaNavn] = behandlingerByTema[tema];
-            return temaMapping;
-        }, {});
         this.state.journalposter = journalposter;
+        this.state.sakstema = sakstema;
 
         this.fireUpdate();
     }

@@ -1,23 +1,25 @@
 .saksoversikt-lerret {
+  margin-left:-30px;
   .saksoversikt-liste {
+    width: 40%;
     height: 100%;
     padding: 0 0rem 2rem 0;
     overflow-x: hidden;
     .saksoversikt-liste-element {
-      position: relative;
       padding: 16px 30px 16px 32px;
+      position: relative;
       border-bottom: solid 1px #d1d1d1;
+      border-right: solid 1px #d1d1d1;
       overflow: hidden;
-
       .saksoversikt-liste-label {
         margin: 0;
         font-size: 14px !important;
         color: #3e3832;
         font-weight: 600;
       }
-      input[type=radio] + label {
-        text-transform: none;
-      }
+    }
+    .saksoversikt-liste-element.valgt {
+        background-color:#226aa4;
     }
   }
 }

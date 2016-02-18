@@ -23,17 +23,29 @@ class SaksoversiktLerret extends React.Component {
         this.setState(this.store.getState());
     }
 
+    velgSak(tema) {
+        console.log("valgte " + tema);
+    }
+
     render() {
-        const temaListe = this.state.temaer.map((tema)=> {
-            return <TemaListeKomponent tema={tema.temakode}/>;
-        });
+
+        const dato = '20.10.2016';
+        const temaListe = [];
+        temaListe.push(<TemaListeKomponent tema="Alle temaer" dato={dato} valgt="true" onClickSakstema={this.velgSak}/>);
+
+        temaListe.push(this.state.sakstema.map((tema) => {
+            return <TemaListeKomponent tema={tema.temanavn} temakode={tema.temakode} dato={dato} valgt onClickSakstema={this.velgSak}/>
+        }));
 
         return (
-            <div className="saksoversikt-lerret">
+            <div className="saksoversikt-lerret"> 
                 <AsyncLoader promises={this.state.promise}>
-                    <div className="saksoversikt-liste">
+                    <section className="saksoversikt-liste" >
                         {temaListe}
-                    </div>
+                    </section>
+                    <section>
+
+                    </section>
                 </AsyncLoader>
             </div>
         );
