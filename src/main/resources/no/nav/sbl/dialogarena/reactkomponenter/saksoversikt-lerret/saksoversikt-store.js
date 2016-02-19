@@ -17,7 +17,7 @@ class SaksoversiktStore extends Store {
             temaer: [],
             journalposter: [],
             sakstema: [],
-            promise: Q.all([temaer, journalposter, sakstema]),
+            promise: Q.all([temaer, journalposter, sakstema])
         };
         this.state.promise.done(this._resourcesResolved);
     }

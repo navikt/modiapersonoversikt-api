@@ -9,7 +9,7 @@ class TemaListeKomponent extends React.Component {
         const tema = this.props.tema;
         const temakode = this.props.temakode;
         const dato = this.props.dato;
-        const valgt = true ? 'valgt' : ''
+        const valgt = true ? 'valgt' : '';
 
         return (
             <div className='saksoversikt-liste-element' onClick={this._onClick.bind(this)}>

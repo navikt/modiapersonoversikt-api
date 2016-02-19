@@ -2,6 +2,7 @@ import React from 'react';
 import SaksoversiktStore from './saksoversikt-store';
 import AsyncLoader from './../utils/async-loader';
 import TemaListeKomponent from './tema-liste-komponent';
+import Sakstema from './sakstema/sakstema';
 
 class SaksoversiktLerret extends React.Component {
     constructor(props) {
@@ -37,14 +38,19 @@ class SaksoversiktLerret extends React.Component {
             return <TemaListeKomponent tema={tema.temanavn} temakode={tema.temakode} dato={dato} valgt onClickSakstema={this.velgSak}/>
         }));
 
+        const valgtTema = this.state.sakstema.filter(tema => tema.temakode === tema.temakode)[0];
+        const sakstemapage = (typeof valgtTema === 'undefined') ? <div></div> : <Sakstema temakode={valgtTema.temakode}
+                                                                                 temanavn={valgtTema.temanavn}
+                                                                                 dokumentMetadata={valgtTema.dokumentMetadata}/>;
+
         return (
-            <div className="saksoversikt-lerret"> 
+            <div className="saksoversikt-lerret">
                 <AsyncLoader promises={this.state.promise}>
                     <section className="saksoversikt-liste" >
                         {temaListe}
                     </section>
                     <section>
-
+                        {sakstemapage}
                     </section>
                 </AsyncLoader>
             </div>
