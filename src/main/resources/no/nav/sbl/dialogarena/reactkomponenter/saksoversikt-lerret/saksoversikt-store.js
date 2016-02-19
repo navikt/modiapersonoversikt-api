@@ -3,6 +3,7 @@ import ResourceMap from './../utils/resource-map';
 import { sortBy } from 'lodash';
 import Ajax from './../utils/ajax';
 import Q from 'q';
+import { finnSisteOppdatering } from './finn-siste-oppdatering';
 
 
 class SaksoversiktStore extends Store {
@@ -10,18 +11,19 @@ class SaksoversiktStore extends Store {
         super();
         this._resourcesResolved = this._resourcesResolved.bind(this);
         const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
-        const behandlingerByTema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/behandlinger-by-tema');
         const journalposter = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalposter');
+        const sakstema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/sakstema');
         const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
         const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
 
         this.state = {
             tekster: {},
             miljovariabler: {},
-            behandlingerByTema: {},
             temaer: [],
             journalposter: [],
-            promise: Q.all([temaer, behandlingerByTema, journalposter])
+            sakstema: [],
+            promise: Q.all([temaer, journalposter, sakstema, tekster, miljovariabler]),
+            valgtTema: null
         };
         this.state.promise.done(this._resourcesResolved);
     }
@@ -42,19 +44,33 @@ class SaksoversiktStore extends Store {
         return this.state.resources;
     }
 
-    _resourcesResolved([temaer, behandlingerByTema, journalposter, tekster, miljovariabler]) {
+    velgTema(temakode) {
+        this.state.valgtTema = temakode;
+        this.fireUpdate();
+    }
+
+    _resourcesResolved([temaer, journalposter, sakstema, tekster, miljovariabler]) {
         this.state.temaer = temaer;
-        this.state.behandlingerByTema = Object.keys(behandlingerByTema).reduce((temaMapping, tema)=> {
-            const temaNavn = behandlingerByTema[tema][0].sakstema;
-            temaMapping[temaNavn] = behandlingerByTema[tema];
-            return temaMapping;
-        }, {});
         this.state.journalposter = journalposter;
+        this.state.sakstema = sakstema.filter(fjernTommeTema);
+        this.state.sakstema = sakstema.filter(fjernTommeTema)
+
+
+            .map((tema) => {
+                return {
+                    temakode: tema.temakode,
+                    dokumentmetadata: tema.dokumentMetadata,
+                    temanavn: tema.temanavn,
+                    sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata)
+                };
+            });
+
         this.state.tekster = tekster;
         this.state.miljovariabler = miljovariabler;
-
         this.fireUpdate();
     }
 }
+
+const fjernTommeTema = tema => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 
 export default SaksoversiktStore;
