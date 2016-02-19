@@ -9,7 +9,11 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
+import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;
+import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
 import javax.inject.Inject;
@@ -35,7 +39,7 @@ public class OversiktLerret extends Lerret {
 
         List<Widget<?>> widgets = new ArrayList<>(asList(
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
-//                new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
+                new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
                 new MeldingerWidget("meldinger", "M", fnr)
         )
         );
@@ -44,9 +48,9 @@ public class OversiktLerret extends Lerret {
         add(new VarslerOversiktLink("varsling-lenke", fnr));
 
         if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
-//            widgets.add(new UtbetalingWidget("utbetalinger", "U", fnr));
+            widgets.add(new UtbetalingWidget("utbetalinger", "U", fnr));
         } else {
-//            add(new WebMarkupContainer("utbetalinger").setVisibilityAllowed(false));
+            add(new WebMarkupContainer("utbetalinger").setVisibilityAllowed(false));
         }
 
         asyncWidgets = on(widgets).filter(isA(AsyncWidget.class)).map(castTo(AsyncWidget.class)).collect();
