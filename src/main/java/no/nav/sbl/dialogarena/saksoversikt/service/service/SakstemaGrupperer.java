@@ -63,10 +63,7 @@ public class SakstemaGrupperer {
         Map<String, List<String>> temagrupperMedTema = temagrupperHenter.genererTemagrupperMedTema();
 
         Map<String, List<Pair<String, String>>> parFraSaker = saker.stream()
-                .filter(ikkeOppfolgingsSak
-                                .or(oppfolgingssakMedDokumentMetadata(erOppfolgingsSak, harDokumentMetadata(dokumentMetadata)))
-                                .or(harInnholdIHenvendelse(dokumentMetadata))
-                )
+                .filter(harDokumentMetadata(dokumentMetadata))
                 .map(sak ->
                         finnTemagruppeForSak(temagrupperMedTema, sak))
                 .flatMap(List::stream)
@@ -123,14 +120,14 @@ public class SakstemaGrupperer {
     }
 
     private Predicate<Sak> harDokumentMetadata(List<DokumentMetadata> dokumentMetadata) {
+        return harInnholdIHenvendelse(dokumentMetadata).or(harInnholdIJoark(dokumentMetadata));
+    }
+
+    private Predicate<Sak> harInnholdIJoark(List<DokumentMetadata> dokumentMetadata) {
         return sak -> dokumentMetadata.stream().anyMatch(dm -> sak.getSaksId().equals(dm.getTilhorendeSakid()));
     }
 
-    private Predicate<Sak> oppfolgingssakMedDokumentMetadata(Predicate<Sak> erOppfolgingsSak, Predicate<Sak> harDokumentMetadata) {
-        return erOppfolgingsSak.and(harDokumentMetadata);
-    }
-
     private Predicate<Sak> harInnholdIHenvendelse(List<DokumentMetadata> dokumentMetadata) {
-        return sak -> dokumentMetadata.stream().anyMatch(dokumentMetadata1 -> dokumentMetadata1.getBaksystem().equals(Baksystem.HENVENDELSE) && dokumentMetadata1.getTemakode().equals("OPP"));
+        return sak -> dokumentMetadata.stream().anyMatch(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE) && dm.getTemakode().equals(sak.getTemakode()));
     }
 }

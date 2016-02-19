@@ -74,27 +74,6 @@ public class DokumentMetadataServiceTest {
         assertThat(dokumentMetadatas.get(0).getVedlegg().size(), is(4));
     }
 
-    @Test
-    public void finnerTittelIVedlegg() throws DatatypeConfigurationException {
-        Optional<String> s = dokumentMetadataService.finnTittelForDokumentReferanseIJournalpost(navMottattDokumentFraBruker(), "234VED");
-
-        assertEquals(s.get(), "Vedlegg1.tittel");
-    }
-
-    @Test
-    public void finnerTittelIHovedDokument() throws DatatypeConfigurationException {
-        Optional<String> s = dokumentMetadataService.finnTittelForDokumentReferanseIJournalpost(navMottattDokumentFraBruker(), "123Hoved");
-
-        assertEquals(s.get(), "Hoved.tittel");
-    }
-
-    @Test
-    public void returnererTomOptionalOmDokumentReferanseIdIkkeFinnes() throws DatatypeConfigurationException {
-        Optional<String> s = dokumentMetadataService.finnTittelForDokumentReferanseIJournalpost(navMottattDokumentFraBruker(), "NOE_SOM_IKKE_FINNES");
-
-        assertFalse(s.isPresent());
-    }
-
     private static Journalpost navMottattDokumentFraBruker() throws DatatypeConfigurationException {
         Journalpost journalpost = new Journalpost();
         journalpost.setJournalpostId("1");
