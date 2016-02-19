@@ -64,7 +64,7 @@ describe('Modal', () => {
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
-    it('Renders content til portal.content div', () => {
+    it.skip('Renders content til portal.content div', () => {
         const modal = createModal();
         const content = getContent(modal);
 

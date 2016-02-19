@@ -1,7 +1,21 @@
 /* eslint no-script-url:0 */
 import React from 'react';
-import { chain, mapValues, contains, partition, flatten } from 'lodash';
+import { chain, mapValues, partition, flatten } from 'lodash';
 import SakerForTema from './saker-for-tema';
+
+function contains(haystack, needle) {
+    return haystack.indexOf(needle) >= 0;
+}
+
+function toArray(object) {
+    return Object.keys(object)
+        .filter((key) => object.hasOwnProperty(key))
+        .sort()
+        .reduce((acc, key) => {
+            acc.push(object[key]);
+            return acc;
+        }, []);
+}
 
 function skillUtPrioriterteSaker(saker, temagruppe, temagruppeTemaMapping) {
     return partition(saker, sak => contains(temagruppeTemaMapping[temagruppe], sak.temaKode));
@@ -33,7 +47,7 @@ class SakerListe extends React.Component {
     render() {
         const grouped = grupperSaker.apply(this);
         const velgSak = this.props.velgSak;
-        const sakerGruppert = mapValues(grouped, (group) => {
+        const sakerGruppert = toArray(mapValues(grouped, (group) => {
             const saker = group.map((sak) => {
                 return (
                     <li className="text-row-list">
@@ -62,7 +76,7 @@ class SakerListe extends React.Component {
                 temaKode={temaKode}
                 erPesysSak={erPesysSak}
                 />);
-        });
+        }));
 
         return (
             <div className="alla-saker">

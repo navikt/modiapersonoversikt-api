@@ -51,6 +51,7 @@
     "lodash": "^4.5.0",
     "q": "^1.4.1",
     "react": "^0.14.7",
+    "react-dom": "^0.14.7",
     "string-format": "^0.5.0",
     "superagent": "^1.2.0"
   }
