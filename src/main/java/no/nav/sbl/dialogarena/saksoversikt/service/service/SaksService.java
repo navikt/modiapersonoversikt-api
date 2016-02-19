@@ -115,7 +115,7 @@ public class SaksService {
                 .filter(ikkeGruppertOppfolingssak)
                 .map(temakode -> {
                     List<Sak> tilhorendeSaker = alleSaker.stream()
-                            .filter(sak -> tilhorerSakTemagruppe(sak, temakode))
+                            .filter(sak -> tilhorerSakTemagruppe(sak, temakode, temagruppe))
                             .collect(toList());
 
                     List<DokumentMetadata> tilhorendeDokumentMetadata = alleDokumentMetadata
@@ -151,8 +151,11 @@ public class SaksService {
                 || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));
     }
 
-    private boolean tilhorerSakTemagruppe(Sak sak, String temakode) {
-        return temakode.equals(sak.getTemakode());
-
+    private boolean tilhorerSakTemagruppe(Sak sak, String temakode, Map.Entry<String, Set<String>> temagruppe) {
+        if(!RESTERENDE_TEMA.equals(temagruppe)){
+            return temakode.equals(sak.getTemakode()) || sak.temakode().equals(OPPFOLGING);
+        } else {
+            return temakode.equals(sak.getTemakode());
+        }
     }
 }
