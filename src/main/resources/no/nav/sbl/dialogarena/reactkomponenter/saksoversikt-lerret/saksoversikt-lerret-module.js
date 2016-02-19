@@ -31,25 +31,25 @@ class SaksoversiktLerret extends React.Component {
     }
 
     erValgt(tema) {
-        return this.state.valgtTema === tema;
+        return this.state.valgtTema.temakode === tema.temakode;
     }
 
     render() {
-
         const temaListe = [];
-        temaListe.push(<TemaListeKomponent tema="Alle temaer" temakode={"alle"} dato="" valgt={this.erValgt("alle")}
+        const alleTemaer = {temanavn: 'Alle temaer', temakode: 'alle', sistOppdatertDato: ''};
+        temaListe.push(<TemaListeKomponent tema={alleTemaer}
+                                           valgt={this.erValgt(alleTemaer)}
                                            onClickSakstema={this.velgSak}/>);
-        temaListe.push(this.state.sakstema.sort(function (a, b) {
-            return !a.sistOppdatertDato? 1 :  new Date(b.sistOppdatertDato) - new Date(a.sistOppdatertDato);
+        temaListe.push(this.state.sakstema.sort((a, b) => {
+            return !a.sistOppdatertDato ? 1 : new Date(b.sistOppdatertDato) - new Date(a.sistOppdatertDato);
         }).map((tema) => {
-            return <TemaListeKomponent tema={tema.temanavn} temakode={tema.temakode}
-                                       dato={tema.sistOppdatertDato} valgt={this.erValgt(tema.temakode)}
-                                       onClickSakstema={this.velgSak}/>
+            return (<TemaListeKomponent tema={tema} valgt={this.erValgt(tema)}
+                                        onClickSakstema={this.velgSak}/>);
         }));
-const tema = this.state.valgtTema;
-        const sakstemapage = (typeof valgtTema === 'undefined') ? <div></div> : <Sakstema temakode={valgtTema.temakode}
-                                                                                 temanavn={valgtTema.temanavn}
-                                                                                 dokumentMetadata={valgtTema.dokumentMetadata}/>;
+
+        const valgtTema = this.state.valgtTema;
+        const temaErValgt = Object.keys(valgtTema).length > 0;
+        const sakstemapage = temaErValgt ? <Sakstema dokumentMetadata={valgtTema.dokumentMetadata}/> : <div></div>;
 
         return (
             <div className="saksoversikt-lerret">

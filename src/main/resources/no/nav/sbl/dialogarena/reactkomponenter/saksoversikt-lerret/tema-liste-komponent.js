@@ -12,16 +12,17 @@ class TemaListeKomponent extends React.Component {
 
     render() {
         const tema = this.props.tema;
-        const temakode = this.props.temakode;
-        const dato = this.props.dato + "";
-        const valgt = this.props.valgt? 'valgt': '';
+        const temanavn = tema.temanavn;
+        const dato = tema.sistOppdatertDato + '';
+        const valgt = this.props.valgt ? 'valgt' : '';
 
         return (
-            <div className={'saksoversikt-liste-element' + " " + valgt} onClick={this._onClick(temakode).bind(this)}>
+            <div className={'saksoversikt-liste-element' + ' ' + valgt} onClick={this._onClick(tema).bind(this)}>
                 <div>{dato}</div>
-                <input className="vekk" id={'radio-' + tema} name="tema" type="radio" value={tema} checked={this.props.valgt}/>
-                <label className="saksoversikt-liste-label" htmlFor={'radio-' + tema}>
-                    {tema}
+                <input className="vekk" id={'radio-' + temanavn} name="temanavn" type="radio" value={temanavn}
+                       checked={this.props.valgt}/>
+                <label className="saksoversikt-liste-label" htmlFor={'radio-' + temanavn}>
+                    {temanavn}
                 </label>
             </div>
         );
@@ -29,10 +30,14 @@ class TemaListeKomponent extends React.Component {
 }
 
 TemaListeKomponent.propTypes = {
-    tema: React.PropTypes.string.isRequired,
-    temakode: React.PropTypes.string.isRequired,
-    dato: React.PropTypes.string.isRequired,
-    onClickSakstema: React.PropTypes.func.isRequired
+    tema: React.PropTypes.shape({
+        temanavn: React.PropTypes.string.isRequired,
+        temakode: React.PropTypes.string.isRequired,
+        sistOppdatertDato: React.PropTypes.date,
+        dokumentMetadata: React.PropTypes.array
+    }).isRequired,
+    onClickSakstema: React.PropTypes.func.isRequired,
+    valgt: React.PropTypes.bool.isRequired
 };
 
 export default TemaListeKomponent;

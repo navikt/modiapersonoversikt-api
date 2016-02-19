@@ -19,7 +19,7 @@ class SaksoversiktStore extends Store {
             journalposter: [],
             sakstema: [],
             promise: Q.all([temaer, journalposter, sakstema]),
-            valgtTema: null
+            valgtTema: {}
         };
         this.state.promise.done(this._resourcesResolved);
     }
@@ -40,29 +40,31 @@ class SaksoversiktStore extends Store {
         return this.state.resources;
     }
 
-    velgTema(temakode) {
-        this.state.valgtTema = temakode;
+    velgTema(tema) {
+        this.state.valgtTema = tema;
         this.fireUpdate();
+    }
+
+    _fjernTommeTema(tema) {
+        return tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
     }
 
     _resourcesResolved([temaer, journalposter, sakstema]) {
         this.state.temaer = temaer;
         this.state.journalposter = journalposter;
 
-        this.state.sakstema = sakstema.filter(fjernTommeTema);
-        this.state.sakstema = sakstema.filter(fjernTommeTema)
+        this.state.sakstema = sakstema.filter(this._fjernTommeTema)
             .map((tema) => {
                 return {
                     temakode: tema.temakode,
                     temanavn: tema.temanavn,
-                    sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata)
+                    sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata),
+                    dokumentMetadata: tema.dokumentMetadata
                 };
             });
-
         this.fireUpdate();
     }
 }
 
-const fjernTommeTema = tema => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 
 export default SaksoversiktStore;
