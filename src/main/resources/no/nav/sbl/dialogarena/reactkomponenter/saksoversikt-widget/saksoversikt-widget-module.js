@@ -24,7 +24,8 @@ class SaksoversiktWidget extends React.Component {
     }
 
     render() {
-        const goToSaksoversikt = () => window.location = '/modiabrukerdialog/person/${fnr}?#!saksoversikt';
+        const fnr = this.props.fnr;
+        const goToSaksoversikt = () => window.location = `/modiabrukerdialog/person/${fnr}#!saksoversikt`;
         const temaer = this.store.getTemaer();
 
         return (
@@ -33,7 +34,7 @@ class SaksoversiktWidget extends React.Component {
                     <div className="initial">S</div>
                     <h2 className="widget-header">Saksoversikt</h2>
                 </header>
-                <Temaliste temaer={temaer} fnr={this.props.fnr}/>
+                <Temaliste temaer={temaer} fnr={fnr}/>
             </div>
         );
     }
