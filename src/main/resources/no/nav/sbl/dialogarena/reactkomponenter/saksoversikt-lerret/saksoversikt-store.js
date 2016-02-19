@@ -3,6 +3,7 @@ import ResourceMap from './../utils/resource-map';
 import { sortBy } from 'lodash';
 import Ajax from './../utils/ajax';
 import Q from 'q';
+import { finnSisteOppdatering } from './finn-siste-oppdatering';
 
 
 class SaksoversiktStore extends Store {
@@ -17,7 +18,8 @@ class SaksoversiktStore extends Store {
             temaer: [],
             journalposter: [],
             sakstema: [],
-            promise: Q.all([temaer, journalposter, sakstema])
+            promise: Q.all([temaer, journalposter, sakstema]),
+            valgtTema: null
         };
         this.state.promise.done(this._resourcesResolved);
     }
@@ -38,13 +40,29 @@ class SaksoversiktStore extends Store {
         return this.state.resources;
     }
 
+    velgTema(temakode) {
+        this.state.valgtTema = temakode;
+        this.fireUpdate();
+    }
+
     _resourcesResolved([temaer, journalposter, sakstema]) {
         this.state.temaer = temaer;
         this.state.journalposter = journalposter;
-        this.state.sakstema = sakstema;
+
+        this.state.sakstema = sakstema.filter(fjernTommeTema);
+        this.state.sakstema = sakstema.filter(fjernTommeTema)
+            .map((tema) => {
+                return {
+                    temakode: tema.temakode,
+                    temanavn: tema.temanavn,
+                    sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata)
+                };
+            });
 
         this.fireUpdate();
     }
 }
+
+const fjernTommeTema = tema => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 
 export default SaksoversiktStore;

@@ -5,11 +5,13 @@ import TemaListeKomponent from './tema-liste-komponent';
 import Sakstema from './sakstema/sakstema';
 
 class SaksoversiktLerret extends React.Component {
+
     constructor(props) {
         super(props);
         this.store = new SaksoversiktStore(this.props.fnr);
         this.state = this.store.getState();
         this.updateState = this.updateState.bind(this);
+        this.velgSak = this.velgSak.bind(this);
     }
 
     componentDidMount() {
@@ -25,20 +27,26 @@ class SaksoversiktLerret extends React.Component {
     }
 
     velgSak(tema) {
-        console.log("valgte " + tema);
+        this.store.velgTema(tema);
+    }
+
+    erValgt(tema) {
+        return this.state.valgtTema === tema;
     }
 
     render() {
 
-        const dato = '20.10.2016';
         const temaListe = [];
-        temaListe.push(<TemaListeKomponent tema="Alle temaer" dato={dato} valgt="true" onClickSakstema={this.velgSak}/>);
-
-        temaListe.push(this.state.sakstema.map((tema) => {
-            return <TemaListeKomponent tema={tema.temanavn} temakode={tema.temakode} dato={dato} valgt onClickSakstema={this.velgSak}/>
+        temaListe.push(<TemaListeKomponent tema="Alle temaer" temakode={"alle"} dato="" valgt={this.erValgt("alle")}
+                                           onClickSakstema={this.velgSak}/>);
+        temaListe.push(this.state.sakstema.sort(function (a, b) {
+            return !a.sistOppdatertDato? 1 :  new Date(b.sistOppdatertDato) - new Date(a.sistOppdatertDato);
+        }).map((tema) => {
+            return <TemaListeKomponent tema={tema.temanavn} temakode={tema.temakode}
+                                       dato={tema.sistOppdatertDato} valgt={this.erValgt(tema.temakode)}
+                                       onClickSakstema={this.velgSak}/>
         }));
-
-        const valgtTema = this.state.sakstema.filter(tema => tema.temakode === tema.temakode)[0];
+const tema = this.state.valgtTema;
         const sakstemapage = (typeof valgtTema === 'undefined') ? <div></div> : <Sakstema temakode={valgtTema.temakode}
                                                                                  temanavn={valgtTema.temanavn}
                                                                                  dokumentMetadata={valgtTema.dokumentMetadata}/>;
@@ -46,10 +54,10 @@ class SaksoversiktLerret extends React.Component {
         return (
             <div className="saksoversikt-lerret">
                 <AsyncLoader promises={this.state.promise}>
-                    <section className="saksoversikt-liste" >
+                    <section className="saksoversikt-liste">
                         {temaListe}
                     </section>
-                    <section>
+                    <section className="saksoversikt-innhold">
                         {sakstemapage}
                     </section>
                 </AsyncLoader>
