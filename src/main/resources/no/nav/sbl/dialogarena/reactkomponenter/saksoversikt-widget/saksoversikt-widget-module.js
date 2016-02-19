@@ -1,6 +1,6 @@
 import React from 'react';
 import SaksoversiktWidgetStore from './saksoversikt-widget-store';
-import Sakstemaliste from './samstemaliste';
+import Temaliste from './temaliste';
 
 class SaksoversiktWidget extends React.Component {
 
@@ -24,14 +24,16 @@ class SaksoversiktWidget extends React.Component {
     }
 
     render() {
+        const goToSaksoversikt = () => window.location = '/modiabrukerdialog/person/${fnr}?#!saksoversikt';
         const temaer = this.store.getTemaer();
+
         return (
-            <div>
+            <div onClick={goToSaksoversikt}>
                 <header className="klikkbar-header" role="link">
                     <div className="initial">S</div>
                     <h2 className="widget-header">Saksoversikt</h2>
                 </header>
-                <Sakstemaliste temaer={temaer}/>
+                <Temaliste temaer={temaer} fnr={this.props.fnr}/>
             </div>
         );
     }

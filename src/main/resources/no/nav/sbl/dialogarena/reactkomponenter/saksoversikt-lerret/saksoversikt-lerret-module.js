@@ -24,8 +24,6 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-        console.log('render');
-        debugger;
         const temaListe = this.state.temaer.map((tema)=> {
             return <TemaListeKomponent tema={tema.temakode}/>;
         });
