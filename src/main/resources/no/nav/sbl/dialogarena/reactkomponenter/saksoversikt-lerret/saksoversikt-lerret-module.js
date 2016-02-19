@@ -49,7 +49,7 @@ class SaksoversiktLerret extends React.Component {
 
         const valgtTema = this.state.valgtTema;
         const temaErValgt = Object.keys(valgtTema).length > 0;
-        const sakstemapage = temaErValgt ? <Sakstema dokumentMetadata={valgtTema.dokumentMetadata}/> : <div></div>;
+        const sakstemapage = temaErValgt ? <Sakstema dokumentMetadata={valgtTema.dokumentMetadata}/> : <noscript></noscript>;
 
         return (
             <div className="saksoversikt-lerret">
