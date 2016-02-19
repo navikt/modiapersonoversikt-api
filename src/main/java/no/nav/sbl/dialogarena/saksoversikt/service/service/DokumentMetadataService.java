@@ -55,8 +55,8 @@ public class DokumentMetadataService {
     @Inject
     private Kodeverk kodeverk;
 
-
-    private BulletproofKodeverkService bulletproofKodeverkService = new BulletproofKodeverkService();
+    @Inject
+    private BulletproofKodeverkService bulletproofKodeverkService;
 
     public List<DokumentMetadata> hentDokumentMetadata(List<Sak> saker, String fnr) {
         List<DokumentMetadata> joarkMetadata = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker)
