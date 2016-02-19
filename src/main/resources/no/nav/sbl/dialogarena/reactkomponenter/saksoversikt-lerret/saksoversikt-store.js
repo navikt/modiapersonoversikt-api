@@ -12,8 +12,12 @@ class SaksoversiktStore extends Store {
         const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
         const behandlingerByTema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/behandlinger-by-tema');
         const journalposter = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalposter');
+        const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
+        const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
 
         this.state = {
+            tekster: {},
+            miljovariabler: {},
             behandlingerByTema: {},
             temaer: [],
             journalposter: [],
@@ -38,7 +42,7 @@ class SaksoversiktStore extends Store {
         return this.state.resources;
     }
 
-    _resourcesResolved([temaer, behandlingerByTema, journalposter]) {
+    _resourcesResolved([temaer, behandlingerByTema, journalposter, tekster, miljovariabler]) {
         this.state.temaer = temaer;
         this.state.behandlingerByTema = Object.keys(behandlingerByTema).reduce((temaMapping, tema)=> {
             const temaNavn = behandlingerByTema[tema][0].sakstema;
@@ -46,6 +50,8 @@ class SaksoversiktStore extends Store {
             return temaMapping;
         }, {});
         this.state.journalposter = journalposter;
+        this.state.tekster = tekster;
+        this.state.miljovariabler = miljovariabler;
 
         this.fireUpdate();
     }
