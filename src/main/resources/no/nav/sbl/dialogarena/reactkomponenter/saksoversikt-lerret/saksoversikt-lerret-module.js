@@ -1,16 +1,20 @@
 import React from 'react';
 import SaksoversiktStore from './saksoversikt-store';
 import AsyncLoader from './../utils/async-loader';
-import TemaListeKomponent from './tema-liste-komponent';
+import SakstemaListe from './SakstemaListe';
+import formats from './utils/formater/formats';
 
 class SaksoversiktLerret extends React.Component {
 
     constructor(props) {
         super(props);
+
+
         this.store = new SaksoversiktStore(this.props.fnr);
         this.state = this.store.getState();
         this.updateState = this.updateState.bind(this);
         this.velgSak = this.velgSak.bind(this);
+        this.wicketUrlBehandler(props.wicketurl);
     }
 
     componentDidMount() {
@@ -25,6 +29,11 @@ class SaksoversiktLerret extends React.Component {
         this.setState(this.store.getState());
     }
 
+    wicketUrlBehandler(wicketurl) {
+        const temakode = wicketurl.split('temakode=')[1];
+        this.store.velgTema(temakode);
+    }
+
     velgSak(tema) {
         this.store.velgTema(tema);
     }
@@ -34,23 +43,13 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-
-        const temaListe = [];
-        temaListe.push(<TemaListeKomponent tema="Alle temaer" temakode={"alle"} dato="" valgt={this.erValgt("alle")}
-                                           onClickSakstema={this.velgSak}/>);
-        temaListe.push(this.state.sakstema.sort(function (a, b) {
-            return !a.sistOppdatertDato? 1 :  new Date(b.sistOppdatertDato) - new Date(a.sistOppdatertDato);
-        }).map((tema) => {
-            return <TemaListeKomponent tema={tema.temanavn} temakode={tema.temakode}
-                                       dato={tema.sistOppdatertDato} valgt={this.erValgt(tema.temakode)}
-                                       onClickSakstema={this.velgSak}/>
-        }));
-
+        const sakstema = this.state.sakstema;
         return (
             <div className="saksoversikt-lerret">
                 <AsyncLoader promises={this.state.promise}>
                     <section className="saksoversikt-liste">
-                        {temaListe}
+                        <SakstemaListe sakstema={sakstema} erValgt={this.erValgt.bind(this)}
+                                       velgSak={this.velgSak} store={this.store}/>
                     </section>
                     <section className="saksoversikt-innhold">
                         <h2>Innhold</h2>

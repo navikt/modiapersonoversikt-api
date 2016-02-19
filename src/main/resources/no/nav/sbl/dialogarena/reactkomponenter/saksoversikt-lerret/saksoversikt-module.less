@@ -4,25 +4,42 @@
     width: 40%;
     height: 100%;
     padding: 0 0rem 2rem 0;
-    overflow-x: hidden;
-    .saksoversikt-liste-element {
-        text-transform: none;
-      padding: 16px 30px 16px 32px;
-      position: relative;
-      border-bottom: solid 1px #d1d1d1;
-      border-right: solid 1px #d1d1d1;
-      overflow: hidden;
-      .saksoversikt-liste-label {
-        font-size: 14px !important;
-        color: #3e3832;
-        font-weight: 600;
-      }
-      :hover {
-        cursor: pointer;
-      }
-    }
-    .saksoversikt-liste-element.valgt {
-      background-color: #226aa4;
-    }
+    float: left;
+    overflow-y: scroll;
+
   }
+}
+
+.sakstemaliste {
+  padding: 0;
+}
+
+
+.saksoversikt-liste-element {
+  padding: 15px 20px;
+  border-bottom: 1px solid #ccc;
+  display: block;
+}
+
+.saksoversikt-liste-element.valgt {
+  background: #226aa4;
+  .temaliste-label {
+    color: #f5f5f5;
+  }
+}
+
+.temaliste-label {
+  color: #3e3832;
+}
+
+.stortekst{
+  font-family: Modus, Arial, Helvetica, sans-serif;
+  font-size: 1.21rem;
+  font-weight: 600
+}
+
+.datotekst {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  font-weight: normal;
 }
