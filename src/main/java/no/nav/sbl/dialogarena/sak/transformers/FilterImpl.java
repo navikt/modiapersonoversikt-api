@@ -19,8 +19,8 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.erAvsluttet;
 import static no.nav.sbl.dialogarena.sak.util.KvitteringstypeUtils.erKvitteringstype;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.AVSLUTTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.OPPRETTET;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class FilterImpl {
