@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
-import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.SanntidPdfKonvertererV1;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
@@ -17,8 +16,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.springframework.context.annotation.Bean;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static org.mockito.Matchers.any;
@@ -34,16 +31,6 @@ public class ModiaStubConfig {
     @Bean
     public AktoerPortType aktoerPortType() {
         return mock(AktoerPortType.class);
-    }
-
-    @Bean
-    public SanntidPdfKonvertererV1 sanntidPdfKonvertererV1() {
-        return mock(SanntidPdfKonvertererV1.class);
-    }
-
-    @Bean
-    public HttpServletRequest request() {
-        return mock(HttpServletRequest.class);
     }
 
     @Bean

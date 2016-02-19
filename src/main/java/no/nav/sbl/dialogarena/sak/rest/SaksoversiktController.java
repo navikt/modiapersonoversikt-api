@@ -44,7 +44,7 @@ public class SaksoversiktController {
     @Path("/sakstema")
     public Response hentSakstema(@PathParam("fnr") String fnr) {
         return Response.ok(
-                saksService.hentSakstema(saksService.hentAlleSaker(fnr), fnr)
+                saksService.hentSakstema(saksService.hentAlleSaker(fnr), fnr, false)
                         .collect(toList())).build();
     }
 
