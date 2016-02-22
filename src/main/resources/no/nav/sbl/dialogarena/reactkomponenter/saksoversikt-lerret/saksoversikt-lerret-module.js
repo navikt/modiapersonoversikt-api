@@ -1,17 +1,20 @@
 import React from 'react';
 import SaksoversiktStore from './saksoversikt-store';
 import AsyncLoader from './../utils/async-loader';
-import TemaListeKomponent from './tema-liste-komponent';
-import Sakstema from './sakstema/sakstema';
+import SakstemaListe from './SakstemaListe';
+import formats from './utils/formater/formats';
 
 class SaksoversiktLerret extends React.Component {
 
     constructor(props) {
         super(props);
+
+
         this.store = new SaksoversiktStore(this.props.fnr);
         this.state = this.store.getState();
         this.updateState = this.updateState.bind(this);
         this.velgSak = this.velgSak.bind(this);
+        this.wicketUrlBehandler(props.wicketurl);
     }
 
     componentDidMount() {
@@ -26,15 +29,21 @@ class SaksoversiktLerret extends React.Component {
         this.setState(this.store.getState());
     }
 
+    wicketUrlBehandler(wicketurl) {
+        const temakode = wicketurl.split('temakode=')[1];
+        this.store.velgTema(temakode);
+    }
+
     velgSak(tema) {
         this.store.velgTema(tema);
     }
 
     erValgt(tema) {
-        return this.state.valgtTema.temakode === tema.temakode;
+        return this.state.valgtTema === tema;
     }
 
     render() {
+        const sakstema = this.state.sakstema;
         const temaListe = [];
         const alleTemaer = {temanavn: 'Alle temaer', temakode: 'alle', sistOppdatertDato: ''};
         temaListe.push(<TemaListeKomponent tema={alleTemaer}
@@ -55,7 +64,8 @@ class SaksoversiktLerret extends React.Component {
             <div className="saksoversikt-lerret">
                 <AsyncLoader promises={this.state.promise}>
                     <section className="saksoversikt-liste">
-                        {temaListe}
+                        <SakstemaListe sakstema={sakstema} erValgt={this.erValgt.bind(this)}
+                                       velgSak={this.velgSak} store={this.store}/>
                     </section>
                     <section className="saksoversikt-innhold">
                         {sakstemapage}

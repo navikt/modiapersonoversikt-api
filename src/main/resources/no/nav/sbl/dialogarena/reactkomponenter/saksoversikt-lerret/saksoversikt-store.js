@@ -13,13 +13,17 @@ class SaksoversiktStore extends Store {
         const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
         const journalposter = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalposter');
         const sakstema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/sakstema');
+        const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
+        const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
 
         this.state = {
+            tekster: {},
+            miljovariabler: {},
             temaer: [],
             journalposter: [],
             sakstema: [],
-            promise: Q.all([temaer, journalposter, sakstema]),
-            valgtTema: {}
+            promise: Q.all([temaer, journalposter, sakstema, tekster, miljovariabler]),
+            valgtTema: null
         };
         this.state.promise.done(this._resourcesResolved);
     }
@@ -45,26 +49,26 @@ class SaksoversiktStore extends Store {
         this.fireUpdate();
     }
 
-    _fjernTommeTema(tema) {
-        return tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
-    }
-
-    _resourcesResolved([temaer, journalposter, sakstema]) {
+    _resourcesResolved([temaer, journalposter, sakstema, tekster, miljovariabler]) {
         this.state.temaer = temaer;
         this.state.journalposter = journalposter;
-
-        this.state.sakstema = sakstema.filter(this._fjernTommeTema)
+        this.state.sakstema = sakstema.filter(fjernTommeTema)
             .map((tema) => {
                 return {
                     temakode: tema.temakode,
+                    dokumentmetadata: tema.dokumentMetadata,
                     temanavn: tema.temanavn,
                     sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata),
                     dokumentMetadata: tema.dokumentMetadata
                 };
             });
+
+        this.state.tekster = tekster;
+        this.state.miljovariabler = miljovariabler;
         this.fireUpdate();
     }
 }
 
+const fjernTommeTema = tema => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 
 export default SaksoversiktStore;
