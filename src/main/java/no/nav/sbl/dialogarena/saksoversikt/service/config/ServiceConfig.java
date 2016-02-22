@@ -93,7 +93,6 @@ public class ServiceConfig {
     public Kodeverk kodeverk() {
         return new JsonKodeverk(getClass().getResourceAsStream("/kodeverk.json"));
     }
-
 }
 
 

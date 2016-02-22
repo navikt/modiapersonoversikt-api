@@ -10,7 +10,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -20,7 +19,6 @@ import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.*;
 import static java.util.Collections.emptyList;
-import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -31,12 +29,6 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHente
 public class SaksService {
 
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
-
-    public static final Function<Sakstema, LocalDateTime> NYESTE_DATO = (st) -> st.dokumentMetadata.stream()
-            .map(DokumentMetadata::getDato)
-            .sorted(reverseOrder())
-            .findFirst()
-            .orElse(MIN);
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -99,8 +91,7 @@ public class SaksService {
 
         return grupperteSakstema.entrySet().stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, dokumentMetadata, fnr))
-                .flatMap(Collection::stream)
-                .sorted(comparing(NYESTE_DATO, reverseOrder()));
+                .flatMap(Collection::stream);
     }
 
     protected List<Sakstema> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, String fnr) {

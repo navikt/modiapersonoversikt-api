@@ -10,6 +10,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -64,7 +65,7 @@ public class SakOgBehandlingService {
 
     private static final Function<Record<GenerellBehandling>, Behandlingskjede> TIL_BEHANDLINGSKJEDE = generellBehandling -> new Behandlingskjede()
             .withStatus(finnBehandlingsstatus(generellBehandling))
-            .withSistOppdatert(generellBehandling.get(GenerellBehandling.BEHANDLING_DATO));
+            .withSistOppdatert(LocalDateTime.from(generellBehandling.get(GenerellBehandling.BEHANDLING_DATO).toGregorianCalendar().toZonedDateTime()));
 
     private final Function<WSSak, List<Behandlingskjede>> TIL_BEHANDLINGSKJEDER = sak -> behandlingskjederForSak(sak);
 
