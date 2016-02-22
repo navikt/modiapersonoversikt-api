@@ -3,7 +3,7 @@ import ResourceMap from './../utils/resource-map';
 import { sortBy } from 'lodash';
 import Ajax from './../utils/ajax';
 import Q from 'q';
-import { finnSisteOppdatering } from './finn-siste-oppdatering';
+import { finnSisteOppdatering } from './utils/finn-siste-oppdatering';
 
 
 class SaksoversiktStore extends Store {
