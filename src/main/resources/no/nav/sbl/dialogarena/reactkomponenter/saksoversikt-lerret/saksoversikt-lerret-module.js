@@ -1,15 +1,15 @@
 import React from 'react';
 import SaksoversiktStore from './saksoversikt-store';
 import AsyncLoader from './../utils/async-loader';
-import SakstemaListe from './SakstemaListe';
+import SakstemaPage from './sakstema/SakstemaPage';
+import ViktigAVitePage from './viktigavite/ViktigAVitePage';
+import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
 import formats from './utils/formater/formats';
 
 class SaksoversiktLerret extends React.Component {
 
     constructor(props) {
         super(props);
-
-
         this.store = new SaksoversiktStore(this.props.fnr);
         this.state = this.store.getState();
         this.updateState = this.updateState.bind(this);
@@ -30,7 +30,7 @@ class SaksoversiktLerret extends React.Component {
     }
 
     wicketUrlBehandler(wicketurl) {
-        const temakode = wicketurl.split('temakode=')[1];
+        const temakode = getUrlParameter(wicketurl, 'temakode');
         this.store.velgTema(temakode);
     }
 
@@ -43,23 +43,39 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-        const sakstema = this.state.sakstema;
+        const valgtside = getUrlParameter(this.props.wicketurl, 'valgtside');
+        const content = getContent(valgtside, this);
+
         return (
             <div className="saksoversikt-lerret">
                 <AsyncLoader promises={this.state.promise}>
-                    <section className="saksoversikt-liste">
-                        <SakstemaListe sakstema={sakstema} erValgt={this.erValgt.bind(this)}
-                                       velgSak={this.velgSak} store={this.store}/>
-                    </section>
-                    <section className="saksoversikt-innhold">
-                        <h2>Innhold</h2>
-                        {this.state.valgtTema}
-                    </section>
+                    {content}
                 </AsyncLoader>
             </div>
         );
     }
 }
+
+function getUrlParameter(wicketurl, urlparameter) {
+    try {
+        return wicketurl.split(urlparameter + '=')[1].split('&')[0];
+    } catch (error) {
+        return 'undefined';
+    }
+}
+
+function getContent(valgtside, that) {
+    if (valgtside === 'sakstema') {
+        return <SakstemaPage store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
+    } else if (valgtside === 'viktigavite') {
+        return <ViktigAVitePage />
+    }  else if (valgtside === 'dokumentvisning') {
+        return <DokumentVisningPage />
+    } else {
+        return <SakstemaPage store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
+    }
+}
+
 SaksoversiktLerret.propTypes = {
     'fnr': React.PropTypes.string.isRequired
 };
