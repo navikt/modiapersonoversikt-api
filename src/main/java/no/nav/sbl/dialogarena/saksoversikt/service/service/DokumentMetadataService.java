@@ -184,13 +184,16 @@ public class DokumentMetadataService {
 
     private DokumentMetadata dokumentMetadataFraHenvendelse(Record<Soknad> soknadRecord) {
 
+        String temakode = kodeverk.getKode(soknadRecord.get(Soknad.SKJEMANUMMER_REF), Kodeverk.Nokkel.TEMA);
+        boolean kanVises = !"BID".equals(temakode);
+
         no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument hovedDokument = soknadRecord.get(Soknad.DOKUMENTER)
                 .stream()
                 .filter(erHoveddokument)
                 .map(dokumentRecord ->
                         new no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument()
                                 .withTittel(kodeverk.getTittel(dokumentRecord.get(Dokument.KODEVERK_REF)))
-                                .withKanVises(true)
+                                .withKanVises(kanVises)
                                 .withLogiskDokument(false)
                                 .withDokumentreferanse(dokumentRecord.get(Dokument.ARKIVREFERANSE))
                 )
@@ -204,13 +207,11 @@ public class DokumentMetadataService {
                 .map(dokumentRecord ->
                         new no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument()
                                 .withTittel(kodeverk.getTittel(dokumentRecord.get(Dokument.KODEVERK_REF)))
-                                .withKanVises(true)
+                                .withKanVises(kanVises)
                                 .withLogiskDokument(false)
                                 .withDokumentreferanse(dokumentRecord.get(Dokument.ARKIVREFERANSE))
                 )
                 .collect(toList());
-
-        String temakode = kodeverk.getKode(soknadRecord.get(Soknad.SKJEMANUMMER_REF), Kodeverk.Nokkel.TEMA);
 
         return new DokumentMetadata()
                 .withJournalpostId(soknadRecord.get(Soknad.JOURNALPOST_ID))
