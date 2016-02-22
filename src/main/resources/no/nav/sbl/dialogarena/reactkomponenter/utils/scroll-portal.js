@@ -1,5 +1,5 @@
 /* globals $ */
-import React from 'react/addons';
+import React from 'react';
 import { omit } from './../utils/utils-module';
 
 // function oppdaterScrollbarEtterRenderingErFerdig(element) {

@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
 
 class DokumentInfoElm extends React.Component {

@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 /* eslint no-undef:0 */
-import React from 'react/addons';
+import React from 'react';
 import Q from 'q';
 const TestUtils = React.addons.TestUtils;
 

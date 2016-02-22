@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import {groupBy} from 'lodash';
 import DokumentInfoElm from './dokument-info-elm';
 

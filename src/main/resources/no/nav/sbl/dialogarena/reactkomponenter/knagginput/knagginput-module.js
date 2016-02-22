@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 
 function ariaLabel(props) {
     const knagger = props.knagger;
@@ -32,7 +32,7 @@ function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
 
 function IEHack() {
     // Dette er en IE hack.... Hvis man en gang i fremtiden ikke bruker IE 9, så kanskje man kan fjerne denne.
-    const $knaggcontainer = $(this.refs.knaggcontainer.getDOMNode());
+    const $knaggcontainer = $(React.findDOMNode(this.refs.knaggcontainer));
     if (!$knaggcontainer.is(':visible')) {
         return;
     }
@@ -75,7 +75,7 @@ const KnaggInput = React.createClass({
     },
     componentDidMount: function componentDidMount() {
         if (this.props['auto-focus']) {
-            this.refs.search.getDOMNode().focus();
+            React.findDOMNode(this.refs.search).focus();
         }
     },
     componentDidUpdate: function componentDidUpdate() {
@@ -83,8 +83,8 @@ const KnaggInput = React.createClass({
     },
     onKeyDownProxy: function onKeyDownProxy(event) {
         this.setState({
-            selectionStart: this.refs.search.getDOMNode().selectionStart,
-            selectionEnd: this.refs.search.getDOMNode().selectionEnd
+            selectionStart: React.findDOMNode(this.refs.search).selectionStart,
+            selectionEnd: React.findDOMNode(this.refs.search).selectionEnd
         });
         this.props.store.onKeyDown(document.getElementById(this.props.tablisteId), event);
     },
@@ -111,7 +111,7 @@ const KnaggInput = React.createClass({
         event.preventDefault();
 
         this.props.store.slettKnagg(knagg);
-        this.refs.search.getDOMNode().focus();
+        React.findDOMNode(this.refs.search).focus();
     },
     focusHighlighting: function focusHighlighting(event) {
         if (event.type === 'focus') {
@@ -130,9 +130,10 @@ const KnaggInput = React.createClass({
             );
         });
 
-        knagger = React.addons.createFragment({
-            knagger: knagger
-        });
+        //knagger = React.addons.createFragment({
+        //    knagger: knagger
+        //});
+
 
         return (
             <div ref="knaggcontainer" className="knagg-input">

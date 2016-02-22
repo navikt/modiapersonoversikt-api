@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import './../test-config';
 import { expect } from 'chai';
-import React from 'react/addons';
+import React from 'react';
 import AdvarselBoks from './advarsel-boks';
 const TestUtils = React.addons.TestUtils;
 

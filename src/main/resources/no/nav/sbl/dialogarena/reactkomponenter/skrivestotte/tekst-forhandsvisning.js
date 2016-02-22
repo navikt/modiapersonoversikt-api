@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import Utils from './../utils/utils-module';
 import ScrollPortal from './../utils/scroll-portal';
 import LocaleSelect from './locale-select';
@@ -17,9 +17,9 @@ class TekstForhandsvisning extends React.Component {
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        const paragraferFragment = React.addons.createFragment({
-            paragrafer: paragrafer
-        });
+        //const paragraferFragment = React.addons.createFragment({
+        //    paragrafer: paragrafer
+        //});
 
         const knagger = tekst.tags.map((tag) => {
             return (
@@ -32,7 +32,7 @@ class TekstForhandsvisning extends React.Component {
         return (
             <div>
                 <ScrollPortal className="tekstPanel" innerClassName="tekst-panel-wrapper">
-                    {paragraferFragment}
+                    {paragrafer}
                     {knagger}
                 </ScrollPortal>
                 <div className="velgPanel">
