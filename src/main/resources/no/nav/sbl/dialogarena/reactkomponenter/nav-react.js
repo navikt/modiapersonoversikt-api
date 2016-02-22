@@ -19,5 +19,4 @@
     window.console = con;
 })(window.console);
 
-
-module.exports = require('react/addons');
+module.exports = require('react');

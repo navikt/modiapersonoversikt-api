@@ -1,4 +1,4 @@
-const React = require('react/addons');
+const React = require('react');
 
 function createId(prefix) {
     return prefix + new Date().getTime() + '-' + Math.random();
@@ -53,7 +53,7 @@ const ModalPortal = React.createClass({
     },
     componentDidUpdate: function componentDidUpdate() {
         if (this.props.isOpen) {
-            if (!$.contains(this.refs.content.getDOMNode(), document.activeElement)) {
+            if (!$.contains(React.findDOMNode(this.refs.content), document.activeElement)) {
                 this.focusFirst();
             }
         } else {
@@ -81,7 +81,7 @@ const ModalPortal = React.createClass({
         event.stopPropagation();
     },
     handleTab: function handleTab(isShiftkey) {
-        const $content = $(this.refs.content.getDOMNode());
+        const $content = $(React.findDOMNode(this.refs.content));
         const focusable = $content.find(':tabbable');
         const lastValidIndex = isShiftkey ? 0 : focusable.length - 1;
 
@@ -97,7 +97,7 @@ const ModalPortal = React.createClass({
     },
     focusFirst: function focusFirst() {
         this.focusAfterClose = document.activeElement;
-        let tabbables = $(this.refs.content.getDOMNode()).find(':tabbable');
+        let tabbables = $(React.findDOMNode(this.refs.content)).find(':tabbable');
         this.props.skipFocus.forEach(function removeFromTabbables(skipFocusTag) {
             tabbables = tabbables.not(skipFocusTag);
         });
@@ -119,9 +119,7 @@ const ModalPortal = React.createClass({
         }
 
         children.map(function addModalProp(child) {
-            return React.addons.cloneWithProps(child, {
-                modal: this.props.modal
-            });
+            return React.cloneElement(child, {modal: this.props.modal});
         }.bind(this));
 
         const title = this.state.title;
@@ -157,4 +155,4 @@ const ModalPortal = React.createClass({
     }
 });
 
-module.exports = ModalPortal;
+export default ModalPortal;

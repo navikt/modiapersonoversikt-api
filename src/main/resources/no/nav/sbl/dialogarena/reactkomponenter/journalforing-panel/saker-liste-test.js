@@ -2,7 +2,7 @@
 /* eslint no-unused-expressions:0 */
 import './../test-config';
 import { expect } from 'chai';
-import React from 'react/addons';
+import React from 'react';
 import SakerListe from './saker-liste';
 import SakerForTema from './saker-for-tema';
 const TestUtils = React.addons.TestUtils;

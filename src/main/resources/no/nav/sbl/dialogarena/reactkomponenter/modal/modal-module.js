@@ -1,4 +1,5 @@
 import React from 'react';
+import { render } from 'react-dom';
 import Portal from './modal-portal';
 
 class Modal extends React.Component {
@@ -74,7 +75,7 @@ class Modal extends React.Component {
             close: () => this.close(false)
         };
 
-        this.modal = React.render(<Portal {...props} {...state} modal={modal}/>, this.portalElement);
+        this.modal = render(<Portal {...props} {...state} modal={modal}/>, this.portalElement);
     }
 
     render() {

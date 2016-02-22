@@ -24,6 +24,7 @@ public class ReactComponentPanel extends MarkupContainer {
     protected ObjectMapper mapper;
 
     protected static final String JS_REF_REACT = "window.ModiaJS.React";
+    protected static final String JS_REF_REACTDOM = "window.ModiaJS.ReactDOM";
     protected static final String JS_REF_COMPONENTS = "window.ModiaJS.Components";
     public static final String JS_REF_INITIALIZED_COMPONENTS = "window.ModiaJS.InitializedComponents";
 
@@ -104,7 +105,7 @@ public class ReactComponentPanel extends MarkupContainer {
     }
 
     String renderScript() {
-        return format("%s.%s = %s.render(%s.%s, document.getElementById('%s'));", JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), JS_REF_REACT, JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), this.getMarkupId());
+        return format("%s.%s = %s.render(%s.%s, document.getElementById('%s'));", JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), JS_REF_REACTDOM, JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), this.getMarkupId());
     }
 
     String createScript(String componentName, Map<String, Object> props) {

@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import Melding from './melding';
 import ScrollPortal from './../utils/scroll-portal';
 import format from 'string-format';

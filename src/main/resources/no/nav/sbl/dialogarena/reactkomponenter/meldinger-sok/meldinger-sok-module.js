@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import Modal from './../modal/modal-module';
 import ListevisningKomponent from './listevisning';
 import ForhandsvisningKomponent from './forhandsvisning';

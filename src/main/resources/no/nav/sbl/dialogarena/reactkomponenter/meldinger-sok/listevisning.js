@@ -1,9 +1,9 @@
-import React from 'react/addons';
+import React from 'react';
 import sanitize from 'sanitize-html';
 import format from 'string-format';
 
 function tekstChangedProxy() {
-    this.props.store.traadChanged(this.props.traad, this.getDOMNode().parentNode);
+    this.props.store.traadChanged(this.props.traad, React.findDOMNode(this).parentNode);
 }
 
 function erValgtTekst(traad, valgtTraad) {

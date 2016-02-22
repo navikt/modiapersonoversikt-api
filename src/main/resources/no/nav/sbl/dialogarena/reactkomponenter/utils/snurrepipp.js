@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import format from 'string-format';
 
 class Snurrepipp extends React.Component {

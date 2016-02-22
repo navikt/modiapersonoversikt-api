@@ -2,7 +2,7 @@
 /* eslint no-unused-expressions:0 */
 import './../test-config';
 import { expect } from 'chai';
-import React from 'react/addons';
+import React from 'react';
 import Modal from './modal-module';
 const TestUtils = React.addons.TestUtils;
 
@@ -33,7 +33,7 @@ describe('Modal', () => {
 
     it('default is closed and have the correct attributes', () => {
         const modal = createModal();
-        const portal = modal.modal.getDOMNode();
+        const portal = React.findDOMNode(modal.modal);
 
         expect(portal.hasAttribute('tabindex')).to.be.true;
         expect(portal.hasAttribute('class')).to.be.true;
@@ -60,7 +60,7 @@ describe('Modal', () => {
     it('repects the isOpen prop', () => {
         const modal = createModal({isOpen: true});
 
-        const portal = modal.modal.getDOMNode();
+        const portal = React.findDOMNode(modal.modal);
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
