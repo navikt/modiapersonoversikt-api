@@ -2,7 +2,7 @@
 /* eslint no-undef:0 */
 import React from 'react';
 import Q from 'q';
-const TestUtils = React.addons.TestUtils;
+import TestUtils from 'react-addons-test-utils';
 
 export function createTestPromise() {
     const deferred = Q.defer();
@@ -31,7 +31,7 @@ export function render(component) {
     const renderedComponent = TestUtils.renderIntoDocument(component);
     return {
         component: renderedComponent,
-        dom: React.findDOMNode(renderedComponent)
+        dom: React.findDOMNode(renderedComponent) // eslint-disable-line react/no-deprecated
     };
 }
 

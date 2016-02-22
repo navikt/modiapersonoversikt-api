@@ -4,7 +4,7 @@ import './../test-config';
 import { expect } from 'chai';
 import React from 'react';
 import Modal from './modal-module';
-const TestUtils = React.addons.TestUtils;
+import TestUtils from 'react-addons-test-utils';
 
 function createModal(props, children) {
     return TestUtils.renderIntoDocument(React.createElement(

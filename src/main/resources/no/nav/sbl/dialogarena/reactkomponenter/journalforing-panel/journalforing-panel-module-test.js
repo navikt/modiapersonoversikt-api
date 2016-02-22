@@ -5,7 +5,7 @@ import './../test-config';
 import { assert } from 'chai';
 import React from 'react';
 import JournalforingsPanel from './journalforing-panel-module';
-const TestUtils = React.addons.TestUtils;
+import TestUtils from 'react-addons-test-utils';
 
 describe('Journalforing', () => {
     it('Header should be "Journalføring"', () => {
