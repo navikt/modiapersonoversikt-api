@@ -33,7 +33,6 @@
             <artifactId>modiabrukerdialog-pip</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <!--Personsok-->
         <dependency>
             <groupId>no.nav</groupId>
@@ -150,7 +149,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>innsynjournal-tjenestespesifikasjon</artifactId>
+            <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
