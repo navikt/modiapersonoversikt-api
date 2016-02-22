@@ -25,18 +25,9 @@ class SaksoversiktWidget extends React.Component {
 
     render() {
         const fnr = this.props.fnr;
-        const goToSaksoversikt = () => window.location = `/modiabrukerdialog/person/${fnr}#!saksoversikt`;
         const temaer = this.store.getTemaer();
 
-        return (
-            <div onClick={goToSaksoversikt}>
-                <header className="klikkbar-header" role="link">
-                    <div className="initial">S</div>
-                    <h2 className="widget-header">Saksoversikt</h2>
-                </header>
-                <Temaliste temaer={temaer} fnr={fnr}/>
-            </div>
-        );
+        return <Temaliste temaer={temaer} fnr={fnr}/>;
     }
 }
 
