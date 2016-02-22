@@ -12,7 +12,7 @@ var chalk = require('chalk');
 
 var config = require('./buildConfig.json');
 
-function bundleJS(bundle) {
+function bundleJS(isDev) {
     // Our app bundler
     var props;
     var bundler;
