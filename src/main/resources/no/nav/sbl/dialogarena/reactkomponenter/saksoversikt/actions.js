@@ -7,7 +7,7 @@ export const hentTemaer = (fnr) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        dispatch(AT.LAST_DATA_START);
+        dispatch({ type: AT.LAST_DATA_START });
         return Ajax
             .get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer')
             .then(promisedDispatch(AT.LAST_DATA_OK))
