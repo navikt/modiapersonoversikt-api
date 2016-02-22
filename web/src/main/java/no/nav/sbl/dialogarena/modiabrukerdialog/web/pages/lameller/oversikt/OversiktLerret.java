@@ -44,7 +44,7 @@ public class OversiktLerret extends Lerret {
         )
         );
 
-        add(new SaksoversiktWidget("saksoversiktLerret", fnr));
+        add(new SaksoversiktWidget("saksoversikt", fnr));
         add(new VarslerOversiktLink("varsling-lenke", fnr));
 
         if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
