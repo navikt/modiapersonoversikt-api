@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import './../test-config';
 import { expect } from 'chai';
-import React from 'react/addons';
+import React from 'react';
 import LocaleSelect from './locale-select';
 const TestUtils = React.addons.TestUtils;
 

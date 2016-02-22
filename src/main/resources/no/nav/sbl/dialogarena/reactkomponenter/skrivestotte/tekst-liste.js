@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import Utils from './../utils/utils-module';
 
 class TekstListeKomponent extends React.Component {

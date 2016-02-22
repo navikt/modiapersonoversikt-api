@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import './../test-config';
-import React from 'react/addons';
+import React from 'react';
 import { render, strEndsWith } from './../test-utils';
 import { assert } from 'chai';
 import Snurrepipp from './snurrepipp';

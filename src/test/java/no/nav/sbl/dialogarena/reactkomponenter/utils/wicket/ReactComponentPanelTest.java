@@ -107,7 +107,7 @@ public class ReactComponentPanelTest {
                 script,
                 JS_REF_INITIALIZED_COMPONENTS, ".", wicketid,
                 " = ",
-                JS_REF_REACT, "render(", JS_REF_INITIALIZED_COMPONENTS, wicketid,
+                JS_REF_REACTDOM, "render(", JS_REF_INITIALIZED_COMPONENTS, wicketid,
                 "document.getElementById", "'", wicketid,
                 "'));"
         ));

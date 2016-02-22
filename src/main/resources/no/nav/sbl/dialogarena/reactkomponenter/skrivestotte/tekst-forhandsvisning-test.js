@@ -2,7 +2,7 @@
 import './../test-config';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import React from 'react/addons';
+import React from 'react';
 import Utils from './../utils/utils-module';
 import TekstForhandsvisning from './tekst-forhandsvisning';
 const TestUtils = React.addons.TestUtils;
