@@ -5,7 +5,7 @@ import VelgSakPanel from './velg-sak-panel/velg-sak-panel-module';
 import VarselLerret from './varsel-lerret/varsel-lerret-module';
 import FeilmeldingsModaler from './feilmeldingsmodaler/feilmeldingsmodaler-module';
 import SaksoversiktLerret from './saksoversikt-lerret/saksoversikt-lerret-module';
-import SaksoversiktWidget from './saksoversikt-widget/saksoversikt-widget-module';
+import SaksoversiktWidget from './saksoversikt/saksoversikt-widget-module';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
