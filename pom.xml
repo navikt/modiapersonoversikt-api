@@ -30,7 +30,7 @@
 
 
         <!-- Egenlagde dependencies  -->
-        <saksoversikt-service.version>1.2</saksoversikt-service.version>
+        <saksoversikt-service.version>1.7-SNAPSHOT</saksoversikt-service.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
         <modia-felleskomponenter.version>3.0.6-FAMOUS-SHADE</modia-felleskomponenter.version>
@@ -44,14 +44,13 @@
         <common-records.version>1.3</common-records.version>
 
         <!-- Tjenester  -->
+        <joark-tjenestespesifikasjon.version>2.0-SNAPSHOT</joark-tjenestespesifikasjon.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <common-lokalt-kodeverk.version>1.11</common-lokalt-kodeverk.version>
         <common-kodeverk.version>1.0.1</common-kodeverk.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <nav-innsynJournal-v1-tjenestespesifikasjon.version>1.0</nav-innsynJournal-v1-tjenestespesifikasjon.version>
-        <sanntidpdfkonverter.version>1.0</sanntidpdfkonverter.version>
 
         <!-- Java  -->
         <javax.inject.version>1</javax.inject.version>
@@ -71,7 +70,11 @@
             <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>joark-tjenestespesifikasjon</artifactId>
+            <version>${joark-tjenestespesifikasjon.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -125,11 +128,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>innsynjournal-tjenestespesifikasjon</artifactId>
-            <version>${nav-innsynJournal-v1-tjenestespesifikasjon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
             <version>${dial-nav-tjeneste-sak.version}</version>
         </dependency>
@@ -149,11 +147,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
             <version>${henvendelse-soknader-tjenestespesifikasjon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl</groupId>
-            <artifactId>sanntidpdfkonverter</artifactId>
-            <version>${sanntidpdfkonverter.version}</version>
         </dependency>
 
         <dependency>
