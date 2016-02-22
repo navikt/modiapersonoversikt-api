@@ -11,7 +11,7 @@
 
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>saksoversikt-service</artifactId>
-    <version>1.6</version>
+    <version>1.7-SNAPSHOT</version>
 
     <properties>
         <collections.generic.version>4.01</collections.generic.version>
@@ -298,7 +298,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/saksoversikt-service.git</developerConnection>
         <url>http://stash.devillo.no:7999/projects/sbl/repos/saksoversikt-service/browse</url>
-        <tag>1.6</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
