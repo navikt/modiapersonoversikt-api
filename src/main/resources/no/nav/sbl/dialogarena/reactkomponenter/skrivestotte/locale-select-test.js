@@ -1,9 +1,9 @@
 /* eslint-env mocha */
 import './../test-config';
 import { expect } from 'chai';
-import React from 'react/addons';
+import React from 'react';
 import LocaleSelect from './locale-select';
-const TestUtils = React.addons.TestUtils;
+import TestUtils from 'react-addons-test-utils';
 
 describe('LocaleSelect', () => {
     it('rendrer ingenting hvis kun ett locale', () => {

@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import Utils from './../utils/utils-module';
 import sanitize from 'sanitize-html';
 import format from 'string-format';
@@ -43,9 +43,9 @@ const Melding = React.createClass({
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        paragrafer = React.addons.createFragment({
-            paragrafer: paragrafer
-        });
+        //paragrafer = React.addons.createFragment({
+        //    paragrafer: paragrafer
+        //});
 
         const dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
         const skrevetMelding = format('Skrevet av: {} ({})',

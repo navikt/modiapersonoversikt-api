@@ -12,23 +12,7 @@ var chalk = require('chalk');
 
 var config = require('./buildConfig.json');
 
-function lint() {
-    return gulp.src('./src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/*.js')
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.results(function onComplete(results) {
-            if (results.warningCount === 0 && results.errorCount === 0) {
-                console.log('');// Newline
-                console.log(chalk.bold.green('Hurray linting was OK'));
-                console.log('');// Newline
-            } else {
-                notify('Linting failed');
-            }
-        }))
-        .on('error', notify.onError({message: '<%= error.message %>'}));
-}
-
-function browserifyTask(isDev) {
+function bundleJS(isDev) {
     // Our app bundler
     var props;
     var bundler;
@@ -45,12 +29,11 @@ function browserifyTask(isDev) {
 
     function rebundle() {
         var stream;
-        lint(isDev);
         stream = bundler.bundle();
         return stream.on('error', notify.onError({
-            title: 'Compile error',
-            message: '<%= error.message %>'
-        }))
+                title: 'Compile error',
+                message: '<%= error.message %>'
+            }))
             .pipe(source('reactkomponenter.js'))
             .pipe(gulp.dest(config.targetPath));
     }
@@ -68,7 +51,7 @@ function lessTask(options) {
     function run() {
         console.log('Building LESS');
         gulp.src(options.src)
-            .pipe(rename({dirname: ''}))
+            .pipe(rename({ dirname: '' }))
             .pipe(gulp.dest(options.dest));
         console.log('moved files: ', options.src);
     }
@@ -88,7 +71,7 @@ function test(options) {
 }
 
 gulp.task('dev', function runDev() {
-    browserifyTask(true);
+    bundleJS(true);
     lessTask({
         development: true,
         src: config.srcPath + '**/*.less',
@@ -97,7 +80,7 @@ gulp.task('dev', function runDev() {
 });
 
 gulp.task('default', function runDefault() {
-    browserifyTask(false);
+    bundleJS(false);
     lessTask({
         development: false,
         src: config.srcPath + '**/*.less',
@@ -106,9 +89,16 @@ gulp.task('default', function runDefault() {
 });
 
 gulp.task('test', function runTest() {
-    test({singleRun: true, file: '/karma.conf.js'});
+    test({ singleRun: true, file: '/karma.conf.js' });
 });
 
 gulp.task('tdd', function runTdd() {
-    test({singleRun: false, file: '/karma.conf.local.js'});
+    test({ singleRun: false, file: '/karma.conf.local.js' });
+});
+
+gulp.task('eslint', function () {
+    return gulp.src([config.srcPath + '*.{js,jsx}'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
 });

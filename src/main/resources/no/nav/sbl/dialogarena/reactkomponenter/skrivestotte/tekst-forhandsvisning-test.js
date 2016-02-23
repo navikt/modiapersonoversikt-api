@@ -2,10 +2,10 @@
 import './../test-config';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import React from 'react/addons';
+import React from 'react';
 import Utils from './../utils/utils-module';
 import TekstForhandsvisning from './tekst-forhandsvisning';
-const TestUtils = React.addons.TestUtils;
+import TestUtils from 'react-addons-test-utils';
 
 describe('TekstForhandsvisning', () => {
     const tekst = {innhold: {'nb_NO': 'tekst'}, tags: []};

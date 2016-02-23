@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import Modal from './../modal/modal-module';
 import Utils from './../utils/utils-module';
 import TekstForhandsvisning from './tekst-forhandsvisning';
@@ -43,7 +43,7 @@ const Skrivestotte = React.createClass({
         this.store.addListener(this.storeChanged);
         this.store.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
     },
-    componentDidUnmount: function componentDidUnmount() {
+    componentWillUnmount: function componentDidUnmount() {
         this.store.removeListener(this.storeChanged);
     },
     keyDownHandler: function keyDownHandler(event) {

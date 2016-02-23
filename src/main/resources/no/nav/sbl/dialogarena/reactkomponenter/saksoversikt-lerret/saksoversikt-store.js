@@ -42,8 +42,8 @@ class SaksoversiktStore extends Store {
         return this.state.resources;
     }
 
-    velgTema(temakode) {
-        this.state.valgtTema = temakode;
+    velgTema(tema) {
+        this.state.valgtTema = tema;
         this.fireUpdate();
     }
 
@@ -51,14 +51,13 @@ class SaksoversiktStore extends Store {
         this.state.temaer = temaer;
         this.state.sakstema = sakstema.filter(fjernTommeTema);
         this.state.sakstema = sakstema.filter(fjernTommeTema)
-
-
             .map((tema) => {
                 return {
                     temakode: tema.temakode,
                     dokumentmetadata: tema.dokumentMetadata,
                     temanavn: tema.temanavn,
-                    sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata)
+                    sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata),
+                    dokumentMetadata: tema.dokumentMetadata
                 };
             });
 
