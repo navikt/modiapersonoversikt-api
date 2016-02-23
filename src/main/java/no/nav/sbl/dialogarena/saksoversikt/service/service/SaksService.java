@@ -10,21 +10,16 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
 import javax.inject.Inject;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.time.LocalDateTime.*;
 import static java.util.Collections.emptyList;
-import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter.hentTemagruppenavnForTemagruppe;
 
 public class SaksService {
 
@@ -114,12 +109,15 @@ public class SaksService {
                             .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
                             .collect(toList());
 
+                    boolean erGruppert = RESTERENDE_TEMA.equals(temagruppe.getKey()) ? false : true;
+
                     return new Sakstema()
                             .withTemakode(temakode)
                             .withBehandlingskjeder(optional(behandlingskjederGruppertPaaTema.get(temakode)).orElse(emptyList()))
                             .withTilhorendeSaker(tilhorendeSaker)
                             .withTemanavn(temanavn(temagruppe, temakode))
-                            .withDokumentMetadata(tilhorendeDokumentMetadata);
+                            .withDokumentMetadata(tilhorendeDokumentMetadata)
+                            .withErGruppert(erGruppert);
                 })
                 .collect(toList());
     }
@@ -128,7 +126,7 @@ public class SaksService {
         if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
             return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
         } else {
-            return hentTemagruppenavnForTemagruppe(temagruppe.getKey()) + " → " + bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
+            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
         }
     }
 
