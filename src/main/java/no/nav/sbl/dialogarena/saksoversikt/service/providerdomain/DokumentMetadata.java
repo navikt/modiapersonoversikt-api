@@ -20,6 +20,16 @@ public class DokumentMetadata {
     private Baksystem baksystem;
     private String temakode;
     private String temakodeVisning;
+    private boolean ettersending;
+
+    public boolean isEttersending() {
+        return ettersending;
+    }
+
+    public DokumentMetadata withEttersending(boolean ettersending) {
+        this.ettersending = ettersending;
+        return this;
+    }
 
     public Baksystem getBaksystem() {
         return baksystem;

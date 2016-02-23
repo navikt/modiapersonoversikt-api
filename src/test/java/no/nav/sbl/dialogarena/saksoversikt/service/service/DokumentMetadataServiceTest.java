@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
+import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
+import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.InnsynJournalService;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.*;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -20,9 +20,16 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.SOKNADSINNSENDING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.HOVEDSKJEMA;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.KODEVERK_REF;
 import static org.hamcrest.core.Is.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -40,15 +47,15 @@ public class DokumentMetadataServiceTest {
     @Mock
     BulletproofKodeverkService bulletproofKodeverkService;
 
+    @Mock
+    Kodeverk kodeverk;
+
     @InjectMocks
     DokumentMetadataService dokumentMetadataService;
 
     @Test
     public void oversetterJournalposterTilDokumentMetadata() throws DatatypeConfigurationException {
-        when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any()))
-                .thenReturn(Optional.of(asList(
-                        navMottattDokumentFraBruker()
-                ).stream()));
+        mockJoark(navMottattDokumentFraBruker());
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(new ArrayList<>());
 
@@ -59,10 +66,7 @@ public class DokumentMetadataServiceTest {
 
     @Test
     public void oversettJournalpostMedLogiskeOgVanligeVedlegg() throws DatatypeConfigurationException {
-        when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any()))
-                .thenReturn(Optional.of(asList(
-                        brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg()
-                ).stream()));
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
 
@@ -73,6 +77,110 @@ public class DokumentMetadataServiceTest {
         assertThat(dokumentMetadatas.size(), is(1));
         assertThat(dokumentMetadatas.get(0).getVedlegg().size(), is(4));
     }
+
+    @Test
+    public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoark() throws DatatypeConfigurationException {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
+
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+
+        assertThat(dokumentMetadatas.size(), is(1));
+    }
+
+    @Test
+    public void hvisViFaarJournalpostFraHenvendelseSomIkkeFinnesIJoarkSkalDenneBrukesVidere() throws DatatypeConfigurationException {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("En annen journalpost")));
+
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+
+        assertThat(dokumentMetadatas.size(), is(2));
+    }
+
+    @Test
+    public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoarkMenTaMedInformasjonOmEttersendelseFraHenvendelse() throws DatatypeConfigurationException {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        String SAMME_JOURNALPOST = "2";
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse(SAMME_JOURNALPOST)));
+
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+
+        assertThat(dokumentMetadatas.size(), is(1));
+        assertTrue(dokumentMetadatas.get(0).isEttersending());
+    }
+
+    @Test
+    public void hvisViBareFaarJournalpostFraJoarkSkalIkkeDokumentetSettesTilFiktivtDokument() throws DatatypeConfigurationException {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(emptyList());
+
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+
+        assertFalse(dokumentMetadatas.get(0).isEttersending());
+    }
+
+    private void mockJoark(Journalpost... jp){
+        when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any()))
+                .thenReturn(optional(asList(jp).stream()));
+    }
+
+    private Record<Soknad> lagHenvendelse(String journalpostId) {
+        return new Record<Soknad>()
+                .with(Soknad.JOURNALPOST_ID, journalpostId)
+                .with(Soknad.BEHANDLINGS_ID, "12345")
+                .with(Soknad.BEHANDLINGSKJEDE_ID, "98765")
+                .with(Soknad.STATUS, Soknad.HenvendelseStatus.FERDIG)
+                .with(Soknad.OPPRETTET_DATO, now())
+                .with(Soknad.INNSENDT_DATO, now())
+                .with(Soknad.SISTENDRET_DATO, now())
+                .with(Soknad.SKJEMANUMMER_REF, "NAV---")
+                .with(Soknad.ETTERSENDING, true)
+                .with(Soknad.TYPE, SOKNADSINNSENDING)
+                .with(Soknad.DOKUMENTER, singletonList(new Record<Dokument>()
+                        .with(HOVEDSKJEMA, true)
+                        .with(KODEVERK_REF, "NAV 14-05.00")
+                ));
+    }
+
+    @Test
+    public void finnerTittelIVedlegg() throws DatatypeConfigurationException {
+        Optional<String> s = dokumentMetadataService.finnTittelForDokumentReferanseIJournalpost(navMottattDokumentFraBruker(), "234VED");
+
+        assertEquals(s.get(), "Vedlegg1.tittel");
+    }
+
+    @Test
+    public void finnerTittelIHovedDokument() throws DatatypeConfigurationException {
+        Optional<String> s = dokumentMetadataService.finnTittelForDokumentReferanseIJournalpost(navMottattDokumentFraBruker(), "123Hoved");
+
+        assertEquals(s.get(), "Hoved.tittel");
+    }
+
+    @Test
+    public void returnererTomOptionalOmDokumentReferanseIdIkkeFinnes() throws DatatypeConfigurationException {
+        Optional<String> s = dokumentMetadataService.finnTittelForDokumentReferanseIJournalpost(navMottattDokumentFraBruker(), "NOE_SOM_IKKE_FINNES");
+
+        assertFalse(s.isPresent());
+    }
+
+
 
     private static Journalpost navMottattDokumentFraBruker() throws DatatypeConfigurationException {
         Journalpost journalpost = new Journalpost();
