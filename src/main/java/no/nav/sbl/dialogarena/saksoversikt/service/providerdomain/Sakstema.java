@@ -8,6 +8,7 @@ public class Sakstema {
 
     public String temakode;
     public String temanavn;
+    public boolean erGruppert;
     public List<Behandlingskjede> behandlingskjeder;
     public List<DokumentMetadata> dokumentMetadata;
     public List<Sak> tilhorendeSaker;
@@ -59,7 +60,18 @@ public class Sakstema {
         this.feilkoder = feilkoder;
         return this;
     }
+
+    public boolean erGruppert() {
+        return this.erGruppert;
+    }
+
+    public Sakstema withErGruppert(final boolean erGruppert) {
+        this.erGruppert = erGruppert;
+        return this;
+    }
 }
+
+
 
 
 

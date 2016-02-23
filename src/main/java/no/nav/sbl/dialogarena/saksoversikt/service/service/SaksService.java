@@ -10,33 +10,20 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.time.LocalDateTime.*;
 import static java.util.Collections.emptyList;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter.hentTemagruppenavnForTemagruppe;
 
 public class SaksService {
 
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
-
-    public static final Function<Sakstema, LocalDateTime> NYESTE_DATO = (st) -> st.dokumentMetadata.stream()
-            .map(DokumentMetadata::getDato)
-            .sorted(reverseOrder())
-            .findFirst()
-            .orElse(MIN);
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -99,8 +86,7 @@ public class SaksService {
 
         return grupperteSakstema.entrySet().stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, dokumentMetadata, fnr))
-                .flatMap(Collection::stream)
-                .sorted(comparing(NYESTE_DATO, reverseOrder()));
+                .flatMap(Collection::stream);
     }
 
     protected List<Sakstema> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, String fnr) {
@@ -123,12 +109,15 @@ public class SaksService {
                             .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
                             .collect(toList());
 
+                    boolean erGruppert = RESTERENDE_TEMA.equals(temagruppe.getKey()) ? false : true;
+
                     return new Sakstema()
                             .withTemakode(temakode)
                             .withBehandlingskjeder(optional(behandlingskjederGruppertPaaTema.get(temakode)).orElse(emptyList()))
                             .withTilhorendeSaker(tilhorendeSaker)
                             .withTemanavn(temanavn(temagruppe, temakode))
-                            .withDokumentMetadata(tilhorendeDokumentMetadata);
+                            .withDokumentMetadata(tilhorendeDokumentMetadata)
+                            .withErGruppert(erGruppert);
                 })
                 .collect(toList());
     }
@@ -137,7 +126,7 @@ public class SaksService {
         if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
             return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
         } else {
-            return hentTemagruppenavnForTemagruppe(temagruppe.getKey()) + " → " + bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
+            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
         }
     }
 

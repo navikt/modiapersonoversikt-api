@@ -29,16 +29,4 @@ public class TemagrupperHenter {
             return new ArrayList<>();
         }
     }
-
-    public static String hentTemagruppenavnForTemagruppe(String temagruppe) {
-        if (temagruppe != null) {
-            String tema = System.getProperty("saksoversikt.temagrupper." + temagruppe + ".navn");
-            if (tema != null) {
-                return tema;
-            } else {
-                return temagruppe;
-            }
-        }
-        return "";
-    }
 }

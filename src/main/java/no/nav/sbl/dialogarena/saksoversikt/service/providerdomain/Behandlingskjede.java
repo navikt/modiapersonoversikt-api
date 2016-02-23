@@ -1,17 +1,17 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
 
 public class Behandlingskjede {
     private BehandlingsStatus status;
-    private DateTime sistOppdatert;
+    private LocalDateTime sistOppdatert;
 
     public Behandlingskjede withStatus(BehandlingsStatus status){
         this.status = status;
         return this;
     }
 
-    public Behandlingskjede withSistOppdatert(DateTime sistOppdatert) {
+    public Behandlingskjede withSistOppdatert(LocalDateTime sistOppdatert) {
         this.sistOppdatert = sistOppdatert;
         return this;
     }
@@ -20,7 +20,7 @@ public class Behandlingskjede {
         return status;
     }
 
-    public DateTime getSistOppdatert() {
+    public LocalDateTime getSistOppdatert() {
         return sistOppdatert;
     }
 }
