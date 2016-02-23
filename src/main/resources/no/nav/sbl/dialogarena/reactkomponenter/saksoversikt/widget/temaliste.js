@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Sakstema from './tema';
-import { hentTemaer } from './../actions';
+import { hentWidgetData } from './../actions';
 import { take } from 'lodash';
 
 const ANTALL_TEMAER = 6;
 
 class Temaliste extends React.Component {
     componentWillMount() {
-        this.props.hentTemaer(this.props.fnr);
+        this.props.hentWidgetData(this.props.fnr);
     }
 
     render() {
@@ -32,10 +32,10 @@ Temaliste.PropTypes = {
 };
 
 const mapStateToProps = (state) => {
-    return ({
-        temaer: state.temaer.data
-    })
+    return {
+        temaer: state.widget.data
+    };
 };
 
-export default connect(mapStateToProps, { hentTemaer })(Temaliste);
+export default connect(mapStateToProps, { hentWidgetData })(Temaliste);
 

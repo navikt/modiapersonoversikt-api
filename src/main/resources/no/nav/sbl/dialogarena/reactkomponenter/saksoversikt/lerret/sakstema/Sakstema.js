@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedDate } from 'react-intl';
-import { dokumentMetadataTilJSDate } from './../utils/DatoUtils';
+import { dokumentMetadataTilJSDate } from './../../utils/dato-utils';
 
 class Sakstema extends React.Component {
 

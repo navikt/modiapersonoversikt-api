@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import temaReducer from './temaReducers';
+import widgetReducer from './widget/widgetReducer';
+import lerretReducer from './lerret/lerretReducer';
 
 export default combineReducers({
-    temaer: temaReducer
+    widget: widgetReducer,
+    lerret: lerretReducer
 });

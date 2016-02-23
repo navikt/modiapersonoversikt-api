@@ -1,5 +1,5 @@
 import React from 'react';
-import { wrapWithProvider } from './../utils';
+import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 
 import Temaliste from './temaliste';
