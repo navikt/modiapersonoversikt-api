@@ -9,7 +9,7 @@ class SakstemaPage extends React.Component {
         return (
             <div>
                 <section className="saksoversikt-liste">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak}/>
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold">
                     <h2>Innhold</h2>
