@@ -20,7 +20,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter.hentTemagruppenavnForTemagruppe;
 
 public class SaksService {
 
@@ -110,12 +109,15 @@ public class SaksService {
                             .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
                             .collect(toList());
 
+                    boolean erGruppert = RESTERENDE_TEMA.equals(temagruppe.getKey()) ? false : true;
+
                     return new Sakstema()
                             .withTemakode(temakode)
                             .withBehandlingskjeder(optional(behandlingskjederGruppertPaaTema.get(temakode)).orElse(emptyList()))
                             .withTilhorendeSaker(tilhorendeSaker)
                             .withTemanavn(temanavn(temagruppe, temakode))
-                            .withDokumentMetadata(tilhorendeDokumentMetadata);
+                            .withDokumentMetadata(tilhorendeDokumentMetadata)
+                            .withErGruppert(erGruppert);
                 })
                 .collect(toList());
     }
@@ -124,7 +126,7 @@ public class SaksService {
         if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
             return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
         } else {
-            return hentTemagruppenavnForTemagruppe(temagruppe.getKey()) + " → " + bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
+            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
         }
     }
 

@@ -11,7 +11,7 @@
 
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>saksoversikt-service</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
 
     <properties>
         <collections.generic.version>4.01</collections.generic.version>

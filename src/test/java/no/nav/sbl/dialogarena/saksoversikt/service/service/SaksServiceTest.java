@@ -146,7 +146,7 @@ public class SaksServiceTest {
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>("Arbeid", new HashSet<>(Arrays.asList(DAGPENGER, OPPFOLGING)));
         List<Sakstema> sakstema = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), anyString());
 
-        assertThat(sakstema.get(0).temanavn, equalTo("Arbeid → Dagpenger og oppfølging"));
+        assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class SaksServiceTest {
         List<Sakstema> sakstema = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, sak2), new ArrayList<>(), anyString());
 
         assertThat(sakstema.size(), equalTo(1));
-        assertThat(sakstema.get(0).temanavn, equalTo("Arbeid → Dagpenger og oppfølging"));
+        assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
     }
 
     @Test
@@ -231,7 +231,7 @@ public class SaksServiceTest {
                                 new Dokument()
                                         .withTittel("TEST"))), anyString());
 
-        assertThat(sakstema.get(0).temanavn, equalTo("Arbeid → Dagpenger og oppfølging"));
+        assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
         assertThat(sakstema.size(), is(1));
     }
 
@@ -307,8 +307,8 @@ public class SaksServiceTest {
                                 new Dokument()
                                         .withTittel("TEST"))), anyString());
 
-        assertThat(sakstema.get(0).temanavn, equalTo("Arbeid → Arbeidsavklaringspenger og oppfølging"));
-        assertThat(sakstema.get(1).temanavn, equalTo("Arbeid → Dagpenger og oppfølging"));
+        assertThat(sakstema.get(0).temanavn, equalTo("Arbeidsavklaringspenger og oppfølging"));
+        assertThat(sakstema.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
         assertThat(sakstema.size(), is(2));
     }
 
