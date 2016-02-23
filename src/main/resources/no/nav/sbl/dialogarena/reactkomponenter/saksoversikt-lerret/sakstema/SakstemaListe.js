@@ -31,7 +31,7 @@ class SakstemaListe extends React.Component {
 }
 
 
-Sakstema.propTypes = {
+SakstemaListe.propTypes = {
     tema: React.PropTypes.string.isRequired,
     temakode: React.PropTypes.string.isRequired,
     dokumentmetadata: React.PropTypes.shape({
