@@ -1,26 +1,28 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
 
 class SakstemaPage extends React.Component {
     render() {
-        const {store} = this.props;
-        const sakstema = store.state.sakstema;
-        const tekster = store.state.tekster;
+        const { sakstema, valgtTema, velgSak } = this.props;
+        console.log('this.props', this.props);
 
         return (
             <div>
                 <section className="saksoversikt-liste">
-                    <SakstemaListe tekster={tekster} sakstema={sakstema} erValgt={this.props.erValgt.bind(this)}
-                                   velgSak={this.props.velgSak} />
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak}/>
                 </section>
                 <section className="saksoversikt-innhold">
                     <h2>Innhold</h2>
-                    {store.state.valgtTema}
+                    {valgtTema}
                 </section>
             </div>
         )
     };
 }
+
+SakstemaPage.propTypes = {
+    sakstema: PT.array.isRequired
+};
 
 export default SakstemaPage;
 

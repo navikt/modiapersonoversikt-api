@@ -14,7 +14,7 @@ class Temaliste extends React.Component {
     render() {
         const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
-        const temaliste = redusertAntallTemaer.map(tema => <li><Sakstema tema={tema} fnr={fnr}/></li>);
+        const temaliste = redusertAntallTemaer.map(tema => <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr}/></li>);
 
         return (
             <ul>

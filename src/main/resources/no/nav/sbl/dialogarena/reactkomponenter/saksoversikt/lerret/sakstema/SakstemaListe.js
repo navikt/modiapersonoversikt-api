@@ -1,29 +1,39 @@
+import React, { PropTypes as PT } from 'react';
 import Sakstema from './Sakstema';
-import React from 'react';
+
+const sakstemaComparator = (sakstema1, sakstema2) => {
+    if (!sakstema1.hasOwnProperty('sistOppdatertDato')) {
+        return 1;
+    } else {
+        return new Date(sakstema2.sistOppdatertDato) - new Date(sakstema1.sistOppdatertDato);
+    }
+};
 
 
 class SakstemaListe extends React.Component {
-
+    _erValgt(tema) {
+        return tema === this.props.valgtTema;
+    }
 
     render() {
-        const temaListe = this.props.sakstema.sort(function (a, b) {
-            return !a.sistOppdatertDato ? 1 : new Date(b.sistOppdatertDato) - new Date(a.sistOppdatertDato);
-        });
+        const temaListe = this.props.sakstema.sort(sakstemaComparator);
 
-        const temalisteelementer = temaListe.map(tema => <Sakstema tema={tema.temanavn} temakode={tema.temakode}
-                                                                   dokumentmetadata={tema.dokumentmetadata}
-                                                                   valgt={this.props.erValgt(tema.temakode)}
-                                                                   onClickSakstema={this.props.velgSak}/>);
+        const temalisteelementer = temaListe.map((tema) => (
+            <Sakstema tema={tema} velgSak={this.props.velgSak}/>
+        ));
 
-        const alleSakstemaElement = temalisteelementer.length > 1 ?
-            <Sakstema tema={this.props.tekster["sakslamell.alletemaer"]} temakode={"alle"} dokumentmetadata={temaListe[0].dokumentmetadata}
-                      valgt={this.props.erValgt("alle")}
-                      onClickSakstema={this.props.velgSak}/> : <div />;
+        //<Sakstema tema="Alle temaer"
+        //          temakode={"alle"}
+        //          dokumentmetadata={temaListe[0].dokumentmetadata}
+        //          valgt={this._erValgt("alle")}
+        //          velgSak={this.props.velgSak}
+        ///>
+        //{temalisteelementer}
+
         return (
             <div>
                 <ul className="sakstemaliste">
-                    {alleSakstemaElement}
-                    {temalisteelementer}
+                    <li>Test</li>
                 </ul>
             </div>
         );
@@ -32,20 +42,8 @@ class SakstemaListe extends React.Component {
 
 
 Sakstema.propTypes = {
-    tema: React.PropTypes.string.isRequired,
-    temakode: React.PropTypes.string.isRequired,
-    dokumentmetadata: React.PropTypes.shape({
-        dato: React.PropTypes.shape({
-            month: React.PropTypes.string.isRequired,
-            dayOfMonth: React.PropTypes.string.isRequired,
-            year: React.PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired,
-    dato: React.PropTypes.shape({
-        month: React.PropTypes.string.isRequired,
-        dayOfMonth: React.PropTypes.string.isRequired,
-        year: React.PropTypes.string.isRequired
-    }).isRequired
+    sakstema: PT.array.isRequired,
+    velgSak: PT.func.isRequired
 };
 
 export default SakstemaListe;

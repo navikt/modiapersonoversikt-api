@@ -13,7 +13,7 @@ class Snurrepipp extends React.Component {
 }
 
 Snurrepipp.propTypes = {
-    'storrelse': React.PropTypes.integer,
+    'storrelse': React.PropTypes.number,
     'farge': React.PropTypes.string
 };
 

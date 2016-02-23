@@ -2,13 +2,14 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgTema } from './../actions';
+import { hentLerretData, velgSak } from './../actions';
 import * as Const from './../konstanter';
 
 import AsyncLoader from './../../utils/async-loader';
 import SakstemaPage from './sakstema/SakstemaPage';
 import ViktigAVitePage from './viktigavite/ViktigAVitePage';
 import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
+import Snurrepipp from './../../utils/snurrepipp';
 
 const contextRoutes = {
     'sakstema': (props) => <SakstemaPage {...props} />,
@@ -33,22 +34,22 @@ class SaksoversiktLerret extends React.Component {
     componentWillMount() {
         const temakode = getUrlParameter(this.props.wicketurl);
         this.props.hentLerretData(this.props.fnr);
-        this.props.velgTema(temakode);
+        this.props.velgSak(temakode);
     }
 
     render() {
+        console.log('hits.props', this.props);
+
+        if (this.props.status !== Const.LASTET) {
+            return <Snurrepipp />;
+        }
+
         const valgtside = getUrlParameter(this.props.wicketurl, 'valgtside');
         const content = getContent(valgtside, this.props);
 
-        console.log('this.props', this.props);
-
-        if (this.props.status !== Const.LASTET) {
-            return <noscript />;
-        }
-
         return (
             <div className="saksoversikt-lerret">
-                    {content}
+                {content}
             </div>
         );
     }
@@ -61,10 +62,12 @@ SaksoversiktLerret.propTypes = {
 const mapStateToProps = (state) => {
     console.log('state', state);
 
+
     return {
+        sakstema: state.lerret.data.sakstema,
         status: state.lerret.status,
-        valgtTema: state.lerret.valgtTema,
+        valgtTema: state.lerret.valgtTema
     };
 };
 
-export default wrapWithProvider(connect(mapStateToProps, { velgTema, hentLerretData })(SaksoversiktLerret), store);
+export default wrapWithProvider(connect(mapStateToProps, { velgSak, hentLerretData })(SaksoversiktLerret), store);

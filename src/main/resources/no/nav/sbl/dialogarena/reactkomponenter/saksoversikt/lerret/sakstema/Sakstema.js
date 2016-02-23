@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 import { FormattedDate } from 'react-intl';
 import { dokumentMetadataTilJSDate } from './../../utils/dato-utils';
 
@@ -19,7 +19,8 @@ class Sakstema extends React.Component {
 
         return (
             <li>
-                <a className={'saksoversikt-liste-element' + " " + valgt} href="#" onClick={this._onClick(temakode).bind(this)}>
+                <a className={'saksoversikt-liste-element' + " " + valgt} href="#"
+                   onClick={this._onClick(temakode).bind(this)}>
                     <label className="temaliste-label datotekst">{datostreng}</label>
                     <label className="temaliste-label stortekst">{tema}</label>
                 </a>
@@ -42,14 +43,8 @@ function hentDatostreng(dokumentmetadata) {
 };
 
 Sakstema.propTypes = {
-    tema: React.PropTypes.string.isRequired,
-    temakode: React.PropTypes.string.isRequired,
-    dato: React.PropTypes.shape({
-        monthValue: React.PropTypes.string.isRequired,
-        dayOfMonth: React.PropTypes.string.isRequired,
-        year: React.PropTypes.string.isRequired
-    }).isRequired,
-    onClickSakstema: React.PropTypes.func.isRequired
+    tema: PT.object.isRequired,
+    velgSak: PT.func.isRequired
 };
 
 export default Sakstema;
