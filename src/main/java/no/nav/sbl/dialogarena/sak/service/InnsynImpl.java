@@ -46,7 +46,7 @@ public class InnsynImpl implements Innsyn {
                     .stream()
                     .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp));
 
-            return new TjenesteResultatWrapper(optional(dokumentMetadataStream));
+            return new TjenesteResultatWrapper(dokumentMetadataStream);
         } catch (HentJournalpostListeSikkerhetsbegrensning e) {
             logger.warn("Sikkerhetsbegrensning ved henting av dokument! {}", e.getMessage());
             return new TjenesteResultatWrapper(SIKKERHETSBEGRENSNING);

@@ -30,7 +30,7 @@
 
 
         <!-- Egenlagde dependencies  -->
-        <saksoversikt-service.version>1.7-SNAPSHOT</saksoversikt-service.version>
+        <saksoversikt-service.version>1.9-SNAPSHOT</saksoversikt-service.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
         <modia-felleskomponenter.version>3.0.6-FAMOUS-SHADE</modia-felleskomponenter.version>
@@ -40,11 +40,11 @@
         <modig-content.version>2.0.13</modig-content.version>
         <modig-core.version>1.0.1</modig-core.version>
         <modig.security.version>1.0.24</modig.security.version>
-        <reactkomponenter.version>1.28.1-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.7.1-SNAPSHOT</reactkomponenter.version>
         <common-records.version>1.3</common-records.version>
 
         <!-- Tjenester  -->
-        <joark-tjenestespesifikasjon.version>2.0-SNAPSHOT</joark-tjenestespesifikasjon.version>
+        <joark-tjenestespesifikasjon.version>2.1-SNAPSHOT</joark-tjenestespesifikasjon.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
