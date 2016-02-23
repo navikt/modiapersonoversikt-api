@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Sakstema from './tema';
-import { hentTemaer } from './actions';
+import { hentTemaer } from './../actions';
 import { take } from 'lodash';
 
 const ANTALL_TEMAER = 6;
@@ -15,8 +15,6 @@ class Temaliste extends React.Component {
         const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
         const temaliste = redusertAntallTemaer.map(tema => <li><Sakstema tema={tema} fnr={fnr}/></li>);
-        console.log('temaliste', temaliste);
-
 
         return (
             <ul>
