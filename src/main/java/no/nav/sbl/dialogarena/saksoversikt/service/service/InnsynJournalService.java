@@ -21,7 +21,7 @@ public class InnsynJournalService {
         TjenesteResultatWrapper result = innsyn.hentTilgjengeligJournalpostListe(saker);
 
         if (result.result.isPresent()) {
-            return (Optional<Stream<DokumentMetadata>>) result.result.get();
+            return Optional.of((Stream<DokumentMetadata>) result.result.get());
         } else {
             return empty();
         }

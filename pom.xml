@@ -40,7 +40,6 @@
         <common-kodeverk.version>1.0.3</common-kodeverk.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <pesys-pensjon-sak-version>1.0.3</pesys-pensjon-sak-version>
-        <nav-innsynJournal-v1-tjenestespesifikasjon.version>1.1</nav-innsynJournal-v1-tjenestespesifikasjon.version>
         <henvendelse-informasjon-v2.version>0.7</henvendelse-informasjon-v2.version>
         <dialogarena.behandlingsinformasjon.version>0.0.47</dialogarena.behandlingsinformasjon.version>
         <sanntidpdfkonverter.version>1.0</sanntidpdfkonverter.version>
@@ -246,12 +245,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
             <version>${dial-nav-tjeneste-sak.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>innsynjournal-tjenestespesifikasjon</artifactId>
-            <version>${nav-innsynJournal-v1-tjenestespesifikasjon.version}</version>
         </dependency>
 
         <dependency>
