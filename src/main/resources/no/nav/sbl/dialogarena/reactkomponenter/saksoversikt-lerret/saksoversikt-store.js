@@ -11,7 +11,6 @@ class SaksoversiktStore extends Store {
         super();
         this._resourcesResolved = this._resourcesResolved.bind(this);
         const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
-        const journalposter = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalposter');
         const sakstema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/sakstema');
         const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
         const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
@@ -20,9 +19,8 @@ class SaksoversiktStore extends Store {
             tekster: {},
             miljovariabler: {},
             temaer: [],
-            journalposter: [],
             sakstema: [],
-            promise: Q.all([temaer, journalposter, sakstema, tekster, miljovariabler]),
+            promise: Q.all([temaer, sakstema, tekster, miljovariabler]),
             valgtTema: null
         };
         this.state.promise.done(this._resourcesResolved);
@@ -49,9 +47,9 @@ class SaksoversiktStore extends Store {
         this.fireUpdate();
     }
 
-    _resourcesResolved([temaer, journalposter, sakstema, tekster, miljovariabler]) {
+    _resourcesResolved([temaer, sakstema, tekster, miljovariabler]) {
         this.state.temaer = temaer;
-        this.state.journalposter = journalposter;
+        this.state.sakstema = sakstema.filter(fjernTommeTema);
         this.state.sakstema = sakstema.filter(fjernTommeTema)
             .map((tema) => {
                 return {
