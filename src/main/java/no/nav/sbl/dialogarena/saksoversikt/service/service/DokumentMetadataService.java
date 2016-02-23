@@ -13,10 +13,12 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static java.util.stream.Stream.empty;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.FERDIG;
 
 public class DokumentMetadataService {
     public static final String JOURNALPOST_INNGAAENDE = "I";
@@ -42,26 +44,41 @@ public class DokumentMetadataService {
     @Inject
     private BulletproofKodeverkService bulletproofKodeverkService;
 
+    private Predicate<DokumentMetadata> finnesIJoark(List<DokumentMetadata> joarkMetadata) {
+        return henvendelseMetadata -> joarkMetadata.stream()
+                .anyMatch(jp -> jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId()));
+    }
+
+    private Predicate<DokumentMetadata> finnesIkkeIJoark(List<DokumentMetadata> joarkMetadata){
+        return finnesIJoark(joarkMetadata).negate();
+    }
+
+
     public List<DokumentMetadata> hentDokumentMetadata(List<Sak> saker, String fnr) {
         List<DokumentMetadata> joarkMetadata = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker)
                 .orElseGet(() -> empty())
                 .collect(toList());
 
-        Predicate<DokumentMetadata> finnesIJoark = henvendelseMetadata ->
-                joarkMetadata
-                        .stream().anyMatch(jp -> jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId()));
-
-        Predicate<DokumentMetadata> finnesIkkeIJoark = finnesIJoark.negate();
-
-        return concat(
-                joarkMetadata.stream(),
-                henvendelseService.hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus.FERDIG, fnr)
-                        .stream()
-                        .map(record -> dokumentMetadataFraHenvendelse(record))
-                        .filter(finnesIkkeIJoark)
-        )
+        List<DokumentMetadata> innsendteSoknaderIHenvendelse = henvendelseService.hentHenvendelsessoknaderMedStatus(FERDIG, fnr)
+                .stream()
+                .map(this::dokumentMetadataFraHenvendelse)
                 .collect(toList());
+
+        Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse.stream().filter(finnesIkkeIJoark(joarkMetadata));
+        return concat(
+                populerEttersendelserFraHenvendelse(joarkMetadata, innsendteSoknaderIHenvendelse),
+                innsendteSoknaderSomBareFinnesIHenvendelse).collect(toList());
     }
+
+    private Stream<DokumentMetadata> populerEttersendelserFraHenvendelse(List<DokumentMetadata> joarkMetadata, List<DokumentMetadata> ferdigeHenvendelser) {
+        return joarkMetadata.stream().map(joarkDokumentMetadata -> {
+            boolean erEttersending = ferdigeHenvendelser.stream().anyMatch(henvendelse -> joarkDokumentMetadata.getJournalpostId().equals(henvendelse.getJournalpostId())
+                    && henvendelse.isEttersending());
+            return joarkDokumentMetadata.withEttersending(erEttersending);
+        });
+    }
+
+
 
     private DokumentMetadata dokumentMetadataFraHenvendelse(Record<Soknad> soknadRecord) {
 
@@ -97,6 +114,7 @@ public class DokumentMetadataService {
         return new DokumentMetadata()
                 .withJournalpostId(soknadRecord.get(Soknad.JOURNALPOST_ID))
                 .withHoveddokument(hovedDokument)
+                .withEttersending(soknadRecord.get(Soknad.ETTERSENDING))
                 .withVedlegg(vedlegg)
                 .withDato(soknadRecord.get(Soknad.INNSENDT_DATO).toGregorianCalendar().toZonedDateTime().toLocalDateTime())
                 .withAvsender(Entitet.SLUTTBRUKER)
