@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
+import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
 import no.nav.sbl.dialogarena.saksoversikt.service.config.ServiceConfig;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +42,11 @@ public class SaksoversiktServiceConfig {
     @Bean
     public Innsyn innsyn() {
         return new InnsynImpl();
+    }
+
+    @Bean
+    public JournalpostTransformer journalpostTransformer() {
+        return new JournalpostTransformer();
     }
 
 }

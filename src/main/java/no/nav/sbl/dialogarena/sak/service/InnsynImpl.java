@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.sak.service;
 
+import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentDokumentIkkeFunnet;
@@ -17,17 +18,20 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper.Feilmelding.DOKUMENT_IKKE_FUNNET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper.Feilmelding.SIKKERHETSBEGRENSNING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper.Feilmelding.UKJENT_FEIL;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper.Feilmelding.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class InnsynImpl implements Innsyn {
 
     @Inject
     private Journal_v2PortType joarkV2;
+
+    @Inject
+    private JournalpostTransformer journalpostTransformer;
 
     private static final Logger logger = getLogger(InnsynImpl.class);
 
@@ -37,7 +41,12 @@ public class InnsynImpl implements Innsyn {
         wsRequest.getSakListe().addAll(sakerTilJoarkSak(saker));
 
         try {
-            return new TjenesteResultatWrapper(Java8Utils.optional(joarkV2.hentJournalpostListe(wsRequest).getJournalpostListe().stream()));
+            Stream<DokumentMetadata> dokumentMetadataStream = joarkV2.hentJournalpostListe(wsRequest)
+                    .getJournalpostListe()
+                    .stream()
+                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp));
+
+            return new TjenesteResultatWrapper(optional(dokumentMetadataStream));
         } catch (HentJournalpostListeSikkerhetsbegrensning e) {
             logger.warn("Sikkerhetsbegrensning ved henting av dokument! {}", e.getMessage());
             return new TjenesteResultatWrapper(SIKKERHETSBEGRENSNING);
