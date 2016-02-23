@@ -5,25 +5,22 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskje
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.WSJournalpost;
 
 import javax.inject.Inject;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.time.LocalDateTime.*;
 import static java.util.Collections.emptyList;
-import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter.hentTemagruppenavnForTemagruppe;
 
 public class SaksService {
@@ -55,8 +52,8 @@ public class SaksService {
     private InnsynJournalService innsynJournalService;
 
 
-    public Optional<Stream<Journalpost>> hentJournalpostListe(String fnr) {
-        Optional<Stream<Journalpost>> alleSaker = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(hentAlleSaker(fnr));
+    public Optional<Stream<WSJournalpost>> hentJournalpostListe(String fnr) {
+        Optional<Stream<WSJournalpost>> alleSaker = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(hentAlleSaker(fnr));
 
         return alleSaker;
     }

@@ -15,7 +15,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static java.time.LocalDateTime.*;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -80,9 +79,9 @@ public class DokumentMetadataService {
                 .collect(toList());
     }
 
-    public DokumentMetadata dokumentMetadataFraJournalPost(Journalpost journalpost) throws RuntimeException {
+    public DokumentMetadata dokumentMetadataFraJournalPost(WSJournalpost journalpost) throws RuntimeException {
 
-        Map<String, List<DokumentinfoRelasjon>> relasjoner = byggRelasjonsMap(journalpost);
+        Map<String, List<WSDokumentinfoRelasjon>> relasjoner = byggRelasjonsMap(journalpost);
 
         no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument hoveddokument = finnHoveddokument(opprettDokument, relasjoner);
         Stream<no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> vedlegg = finnVedlegg(opprettDokument, relasjoner);
@@ -109,7 +108,7 @@ public class DokumentMetadataService {
                 .withTemakodeVisning(bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA));
     }
 
-    public Optional<String> finnTittelForDokumentReferanseIJournalpost(Journalpost journalpost, String dokumentreferanse) {
+    public Optional<String> finnTittelForDokumentReferanseIJournalpost(WSJournalpost journalpost, String dokumentreferanse) {
         DokumentMetadata metadata = dokumentMetadataFraJournalPost(journalpost);
         return concat(
                 singletonList(metadata.getHoveddokument()).stream(),
@@ -119,7 +118,7 @@ public class DokumentMetadataService {
                 .map(d -> d.getTittel());
     }
 
-    private Pair<Entitet, Entitet> finnAvsenderMottaker(Journalpost journalpost) {
+    private Pair<Entitet, Entitet> finnAvsenderMottaker(WSJournalpost journalpost) {
 
         if (meldingFraBrukerTilNAV(journalpost)) {
             return new ImmutablePair<>(Entitet.SLUTTBRUKER, Entitet.NAV);
@@ -136,7 +135,7 @@ public class DokumentMetadataService {
         }
     }
 
-    private LocalDateTime finnDato(Journalpost journalpost) {
+    private LocalDateTime finnDato(WSJournalpost journalpost) {
         switch (journalpost.getKommunikasjonsretning().getValue()) {
             case JOURNALPOST_INNGAAENDE:
                 return journalpost.getMottatt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
@@ -149,7 +148,7 @@ public class DokumentMetadataService {
         }
     }
 
-    private Stream<no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> finnLogiskeVedlegg(Function<SkannetInnhold, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettLogiskDokument, Map<String, List<DokumentinfoRelasjon>> relasjoner) {
+    private Stream<no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> finnLogiskeVedlegg(Function<WSSkannetInnhold, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettLogiskDokument, Map<String, List<WSDokumentinfoRelasjon>> relasjoner) {
         return Optional.ofNullable(relasjoner.get(DOKTYPE_HOVEDDOKUMENT)).orElse(new ArrayList<>())
                 .stream()
                 .map(dokumentRel -> dokumentRel.getJournalfoertDokument().getSkannetInnholdListe())
@@ -157,13 +156,13 @@ public class DokumentMetadataService {
                 .map(opprettLogiskDokument);
     }
 
-    private Stream<no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> finnVedlegg(Function<DokumentinfoRelasjon, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettDokument, Map<String, List<DokumentinfoRelasjon>> relasjoner) {
+    private Stream<no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> finnVedlegg(Function<WSDokumentinfoRelasjon, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettDokument, Map<String, List<WSDokumentinfoRelasjon>> relasjoner) {
         return Optional.ofNullable(relasjoner.get(DOKTYPE_VEDLEGG)).orElse(new ArrayList<>())
                 .stream()
                 .map(opprettDokument);
     }
 
-    private no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument finnHoveddokument(Function<DokumentinfoRelasjon, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettDokument, Map<String, List<DokumentinfoRelasjon>> relasjoner) {
+    private no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument finnHoveddokument(Function<WSDokumentinfoRelasjon, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettDokument, Map<String, List<WSDokumentinfoRelasjon>> relasjoner) {
         return Optional.ofNullable(relasjoner.get(DOKTYPE_HOVEDDOKUMENT)).orElse(new ArrayList<>())
                 .stream()
                 .findFirst()
@@ -171,7 +170,7 @@ public class DokumentMetadataService {
                 .orElseThrow(() -> new RuntimeException("Fant sak uten hoveddokument!"));
     }
 
-    private Map<String, List<DokumentinfoRelasjon>> byggRelasjonsMap(Journalpost journalpost) throws RuntimeException {
+    private Map<String, List<WSDokumentinfoRelasjon>> byggRelasjonsMap(WSJournalpost journalpost) throws RuntimeException {
         return journalpost.getDokumentinfoRelasjonListe()
                 .stream()
                 .collect(
@@ -225,36 +224,36 @@ public class DokumentMetadataService {
                 .withTemakodeVisning(bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA));
     }
 
-    Function<DokumentinfoRelasjon, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettDokument = (dokumentRel) -> new no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument().withTittel(dokumentRel.getJournalfoertDokument().getTittel())
-            .withKanVises(dokumentRel.getJournalfoertDokument().getInnsynDokument().equals(InnsynDokument.JA))
+    Function<WSDokumentinfoRelasjon, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettDokument = (dokumentRel) -> new no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument().withTittel(dokumentRel.getJournalfoertDokument().getTittel())
+            .withKanVises(dokumentRel.getJournalfoertDokument().getInnsynDokument().equals(WSInnsynDokument.JA))
             .withLogiskDokument(false)
             .withDokumentreferanse(dokumentRel.getJournalfoertDokument().getDokumentId());
 
-    Function<SkannetInnhold, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettLogiskDokument = skannetInnhold ->
+    Function<WSSkannetInnhold, no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument> opprettLogiskDokument = skannetInnhold ->
             new no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument()
                     .withTittel(skannetInnhold.getVedleggInnhold())
                     .withDokumentreferanse(skannetInnhold.getSkannetInnholdId())
                     .withLogiskDokument(true)
                     .withKanVises(true);
 
-    private static boolean meldingFraNAVtilBruker(Journalpost journalpost) {
-        return JOURNALPOST_UTGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(AvsenderMottaker.JA);
+    private static boolean meldingFraNAVtilBruker(WSJournalpost journalpost) {
+        return JOURNALPOST_UTGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(WSAvsenderMottaker.JA);
     }
 
-    private static boolean meldingFraBrukerTilNAV(Journalpost journalpost) {
-        return JOURNALPOST_INNGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(AvsenderMottaker.JA);
+    private static boolean meldingFraBrukerTilNAV(WSJournalpost journalpost) {
+        return JOURNALPOST_INNGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(WSAvsenderMottaker.JA);
     }
 
-    private static boolean meldingFraNavTilEksternPart(Journalpost journalpost) {
-        return JOURNALPOST_UTGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(AvsenderMottaker.NEI);
+    private static boolean meldingFraNavTilEksternPart(WSJournalpost journalpost) {
+        return JOURNALPOST_UTGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(WSAvsenderMottaker.NEI);
     }
 
-    private static boolean meldingFraEksternPartTilNAV(Journalpost journalpost) {
-        return JOURNALPOST_INNGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(AvsenderMottaker.NEI);
+    private static boolean meldingFraEksternPartTilNAV(WSJournalpost journalpost) {
+        return JOURNALPOST_INNGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(WSAvsenderMottaker.NEI);
     }
 
-    private static boolean meldingIntern(Journalpost journalpost) {
-        return JOURNALPOST_INTERN.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(AvsenderMottaker.NEI);
+    private static boolean meldingIntern(WSJournalpost journalpost) {
+        return JOURNALPOST_INTERN.equals(journalpost.getKommunikasjonsretning().getValue()) && journalpost.getBrukerErAvsenderMottaker().equals(WSAvsenderMottaker.NEI);
     }
 
 
