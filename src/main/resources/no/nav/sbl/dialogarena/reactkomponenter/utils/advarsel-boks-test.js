@@ -3,7 +3,7 @@ import './../test-config';
 import { expect } from 'chai';
 import React from 'react';
 import AdvarselBoks from './advarsel-boks';
-const TestUtils = React.addons.TestUtils;
+import TestUtils from 'react-addons-test-utils';
 
 describe('AdvarselBoks test', () => {
     it('Skal vise tekst og ha klassen warn', () => {

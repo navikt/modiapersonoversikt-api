@@ -2,7 +2,7 @@
 /* eslint no-undef:0 */
 import React from 'react';
 import Q from 'q';
-const TestUtils = React.addons.TestUtils;
+import TestUtils from 'react-addons-test-utils';
 
 export function createTestPromise() {
     const deferred = Q.defer();
