@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.WSJournalpost;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -52,8 +51,8 @@ public class SaksService {
     private InnsynJournalService innsynJournalService;
 
 
-    public Optional<Stream<WSJournalpost>> hentJournalpostListe(String fnr) {
-        Optional<Stream<WSJournalpost>> alleSaker = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(hentAlleSaker(fnr));
+    public Optional<Stream<DokumentMetadata>> hentJournalpostListe(String fnr) {
+        Optional<Stream<DokumentMetadata>> alleSaker = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(hentAlleSaker(fnr));
 
         return alleSaker;
     }

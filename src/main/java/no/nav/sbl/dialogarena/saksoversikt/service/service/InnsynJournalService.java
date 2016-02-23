@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.WSJournalpost;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -17,11 +17,11 @@ public class InnsynJournalService {
     @Inject
     private Innsyn innsyn;
 
-    public Optional<Stream<WSJournalpost>> joarkSakhentTilgjengeligeJournalposter(List<Sak> saker) {
+    public Optional<Stream<DokumentMetadata>> joarkSakhentTilgjengeligeJournalposter(List<Sak> saker) {
         TjenesteResultatWrapper result = innsyn.hentTilgjengeligJournalpostListe(saker);
 
         if (result.result.isPresent()) {
-            return (Optional<Stream<WSJournalpost>>) result.result.get();
+            return (Optional<Stream<DokumentMetadata>>) result.result.get();
         } else {
             return empty();
         }
@@ -30,4 +30,5 @@ public class InnsynJournalService {
     public TjenesteResultatWrapper hentDokument(String dokumentId, String journalpostId) {
         return innsyn.hentDokument(journalpostId, dokumentId);
     }
+
 }
