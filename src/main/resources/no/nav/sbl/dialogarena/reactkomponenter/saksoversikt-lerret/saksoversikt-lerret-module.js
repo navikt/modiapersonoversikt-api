@@ -66,13 +66,13 @@ function getUrlParameter(wicketurl, urlparameter) {
 
 function getContent(valgtside, that) {
     if (valgtside === 'sakstema') {
-        return <SakstemaPage store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
+        return <SakstemaPage tekster={that.state.tekster} store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
     } else if (valgtside === 'viktigavite') {
         return <ViktigAVitePage />
     }  else if (valgtside === 'dokumentvisning') {
         return <DokumentVisningPage />
     } else {
-        return <SakstemaPage store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
+        return <SakstemaPage tekster={that.state.tekster} store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
     }
 }
 

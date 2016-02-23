@@ -49,7 +49,6 @@ class SaksoversiktStore extends Store {
 
     _resourcesResolved([temaer, sakstema, tekster, miljovariabler]) {
         this.state.temaer = temaer;
-        this.state.sakstema = sakstema.filter(fjernTommeTema);
         this.state.sakstema = sakstema.filter(fjernTommeTema)
             .map((tema) => {
                 return {
