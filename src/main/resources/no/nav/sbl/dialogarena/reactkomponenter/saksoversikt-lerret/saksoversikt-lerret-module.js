@@ -68,9 +68,9 @@ function getContent(valgtside, that) {
     if (valgtside === 'sakstema') {
         return <SakstemaPage tekster={that.state.tekster} store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
     } else if (valgtside === 'viktigavite') {
-        return <ViktigAVitePage />
+        return <ViktigAVitePage tekster={that.state.tekster} store={that.store} />
     }  else if (valgtside === 'dokumentvisning') {
-        return <DokumentVisningPage />
+        return <DokumentVisningPage tekster={that.state.tekster} store={that.store} />
     } else {
         return <SakstemaPage tekster={that.state.tekster} store={that.store} erValgt={that.erValgt.bind(that)} velgSak={that.velgSak} />;
     }
