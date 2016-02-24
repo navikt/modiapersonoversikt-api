@@ -7,7 +7,7 @@ import { finnSisteOppdatering } from './utils/finn-siste-oppdatering';
 
 
 class SaksoversiktStore extends Store {
-    constructor(fnr) {
+    constructor(fnr, brukerNavn) {
         super();
         this._resourcesResolved = this._resourcesResolved.bind(this);
         const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
@@ -16,6 +16,7 @@ class SaksoversiktStore extends Store {
         const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
 
         this.state = {
+            brukerNavn: brukerNavn,
             tekster: {},
             miljovariabler: {},
             temaer: [],

@@ -1,6 +1,6 @@
 import React from 'react';
 import {groupBy} from 'lodash';
-import DokumentInfoElm from './dokument-info-elm';
+import DokumentInfoElm from './dokument/dokument-info-elm';
 
 const nyesteForst = (a, b) => a.dato.dayOfYear < b.dato.dayOfYear ? 1 : -1;
 const nyesteAarForst = (a, b) => a < b ? 1 : -1;
@@ -21,7 +21,7 @@ class DokumentListe extends React.Component {
                     acc.push(<li className="aarstall">{aarstall}</li>);
                 }
                 return acc.concat(
-                    dokumenter.map((dokument) => <DokumentInfoElm visTema={this.props.visTema}
+                    dokumenter.map((dokument) => <DokumentInfoElm brukerNavn={this.props.brukerNavn} visTema={this.props.visTema}
                                                                   dokumentinfo={dokument}/>)
                 );
             }, []);

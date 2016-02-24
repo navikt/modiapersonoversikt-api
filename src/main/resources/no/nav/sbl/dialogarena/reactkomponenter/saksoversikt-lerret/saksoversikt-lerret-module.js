@@ -10,7 +10,7 @@ class SaksoversiktLerret extends React.Component {
 
     constructor(props) {
         super(props);
-        this.store = new SaksoversiktStore(this.props.fnr);
+        this.store = new SaksoversiktStore(this.props.fnr, this.props.brukerNavn);
         this.state = this.store.getState();
         this.updateState = this.updateState.bind(this);
         this.velgSak = this.velgSak.bind(this);

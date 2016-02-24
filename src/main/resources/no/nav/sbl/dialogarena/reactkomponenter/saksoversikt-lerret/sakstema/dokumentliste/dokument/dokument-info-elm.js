@@ -1,5 +1,6 @@
 import React from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
+import DokumentAvsender from './dokument-avsender';
 
 class DokumentInfoElm extends React.Component {
     render() {
@@ -7,7 +8,7 @@ class DokumentInfoElm extends React.Component {
         const temaHvisAlleTemaer = this.props.visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
         return (
             <li className="dokumentlisteelement">
-                <p>Fra {dokumentinfo.avsender}</p>
+                <DokumentAvsender retning={dokumentinfo.retning} avsender={dokumentinfo.avsender} navn={this.props.brukerNavn}/>
                 <a>{dokumentinfo.hoveddokument.tittel}</a>
                 {temaHvisAlleTemaer}
                 <div className="typo-info">
