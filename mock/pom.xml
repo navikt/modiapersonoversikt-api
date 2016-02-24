@@ -131,7 +131,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>innsynjournal-tjenestespesifikasjon</artifactId>
+            <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl</groupId>

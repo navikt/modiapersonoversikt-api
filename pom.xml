@@ -117,7 +117,7 @@
         <nav-fellessystemer-environment.version>4.4.78</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
-        <nav-innsynJournal-v1-tjenestespesifikasjon.version>1.0</nav-innsynJournal-v1-tjenestespesifikasjon.version>
+        <joark-tjenestespesifikasjon.version>2.1-SNAPSHOT</joark-tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
@@ -370,6 +370,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>joark-tjenestespesifikasjon</artifactId>
+                <version>${joark-tjenestespesifikasjon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
                 <version>${utbetaling.tjenestespesifikasjon.version}</version>
             </dependency>
@@ -387,11 +392,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
                 <version>${sakogbehandling-tjenestespesifikasjon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>innsynjournal-tjenestespesifikasjon</artifactId>
-                <version>${nav-innsynJournal-v1-tjenestespesifikasjon.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

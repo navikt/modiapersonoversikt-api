@@ -1,17 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.HentDokumentDokumentIkkeFunnet;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.HentDokumentSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.HentTilgjengeligJournalpostListeSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.meldinger.HentDokumentRequest;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.meldinger.HentDokumentResponse;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.meldinger.HentTilgjengeligJournalpostListeRequest;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.meldinger.HentTilgjengeligJournalpostListeResponse;
+import no.nav.tjeneste.virksomhet.journal.v2.*;
+import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
+import no.nav.tjeneste.virksomhet.journal.v2.meldinger.*;
 import org.joda.time.DateTime;
-import org.springframework.context.annotation.Configuration;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.util.*;
@@ -20,26 +12,19 @@ import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 
-@Configuration
 public class JoarkPortTypeMock {
-    public static InnsynJournalV1 createInnsynJournalV1Mock() {
+    public static Journal_v2PortType createInnsynJournalV1Mock() {
 
-        return new InnsynJournalV1() {
-
-            @Override
-            public void ping() {
-            }
+        return new Journal_v2PortType() {
 
             @Override
-            public HentTilgjengeligJournalpostListeResponse hentTilgjengeligJournalpostListe(HentTilgjengeligJournalpostListeRequest hentTilgjengeligJournalpostListeRequest)
-                    throws HentTilgjengeligJournalpostListeSikkerhetsbegrensning {
+            public WSHentJournalpostListeResponse hentJournalpostListe(WSHentJournalpostListeRequest request) throws HentJournalpostListeSikkerhetsbegrensning {
+                WSHentJournalpostListeResponse response = new WSHentJournalpostListeResponse();
 
-                HentTilgjengeligJournalpostListeResponse response = new HentTilgjengeligJournalpostListeResponse();
+                List<WSJournalpost> journalposts = new ArrayList<>();
+                Map<String, List<WSJournalpost>> journalPoster = new HashMap<>();
 
-                List<Journalpost> journalposts = new ArrayList<>();
-                Map<String, List<Journalpost>> journalPoster = new HashMap<>();
-
-                List<Sak> saker = hentTilgjengeligJournalpostListeRequest.getSakListe();
+                List<WSSak> saker = request.getSakListe();
 
                 getRandomGeneratedJournalposter(journalPoster, saker);
 
@@ -50,14 +35,23 @@ public class JoarkPortTypeMock {
             }
 
             @Override
-            public HentDokumentResponse hentDokument(HentDokumentRequest hentDokumentRequest) throws
-                    HentDokumentDokumentIkkeFunnet, HentDokumentSikkerhetsbegrensning {
-                return new HentDokumentResponse();
+            public WSHentDokumentURLResponse hentDokumentURL(WSHentDokumentURLRequest request) throws HentDokumentURLSikkerhetsbegrensning, HentDokumentURLDokumentIkkeFunnet {
+                return null;
             }
+
+            @Override
+            public WSHentDokumentResponse hentDokument(WSHentDokumentRequest request) throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet {
+                return new WSHentDokumentResponse();
+            }
+
+            @Override
+            public void ping() {}
+
         };
     }
 
-    private static void leggTilJournalposterSomHarSaksidIResponse(List<Journalpost> journalposts, Map<String, List<Journalpost>> journalPoster, List<Sak> saker) {
+
+    private static void leggTilJournalposterSomHarSaksidIResponse(List<WSJournalpost> journalposts, Map<String, List<WSJournalpost>> journalPoster, List<WSSak> saker) {
         saker.stream()
                 .forEach(sak -> {
                     if (journalPoster.containsKey(sak.getSakId())) {
@@ -66,7 +60,7 @@ public class JoarkPortTypeMock {
                 });
     }
 
-    private static void getRandomGeneratedJournalposter(Map<String, List<Journalpost>> journalPoster, List<Sak> saker) {
+    private static void getRandomGeneratedJournalposter(Map<String, List<WSJournalpost>> journalPoster, List<WSSak> saker) {
         Random randomJournalpostIndex = new Random();
         IntStream indexJournalpostIndexer = randomJournalpostIndex.ints(0, saker.size()).distinct().limit(4);
         List<Integer> index = indexJournalpostIndexer.boxed().collect(Collectors.toList());
@@ -87,20 +81,18 @@ public class JoarkPortTypeMock {
     }
 
 
-    private static Journalpost mottattSoknad(String id, String tema, DateTime mottattDato) {
-        Journalpost journalpost = new Journalpost();
+    private static WSJournalpost mottattSoknad(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId(id);
-        journalpost.setBrukerErAvsenderMottaker(AvsenderMottaker.JA);
-        Arkivtemaer arkivtemaer = new Arkivtemaer();
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
         arkivtemaer.setValue(tema);
         journalpost.setArkivtema(arkivtemaer);
-        journalpost.setEksternPart("");
-        Sak sak = new Sak();
+        WSRegistertSak sak = new WSRegistertSak();
         sak.setSakId(id);
         journalpost.setGjelderSak(sak);
         journalpost.getDokumentinfoRelasjonListe()
                 .add(dokumentInfoRelasjonMedTittel("Dagpengesøknad"));
-        Kommunikasjonsretninger kommunikasjonsretninger = new Kommunikasjonsretninger();
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
         kommunikasjonsretninger.setValue("I");
         journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
         try {
@@ -111,18 +103,16 @@ public class JoarkPortTypeMock {
         return journalpost;
     }
 
-    private static Journalpost soknadUnderBehandling(String id, String tema, DateTime mottattDato) {
-        Journalpost journalpost = new Journalpost();
+    private static WSJournalpost soknadUnderBehandling(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId(id);
-        journalpost.setBrukerErAvsenderMottaker(AvsenderMottaker.JA);
-        Arkivtemaer arkivtemaer = new Arkivtemaer();
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
         arkivtemaer.setValue(tema);
         journalpost.setArkivtema(arkivtemaer);
-        journalpost.setEksternPart("");
-        Sak sak = new Sak();
+        WSRegistertSak sak = new WSRegistertSak();
         sak.setSakId(id);
         journalpost.setGjelderSak(sak);
-        Kommunikasjonsretninger kommunikasjonsretninger = new Kommunikasjonsretninger();
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
         kommunikasjonsretninger.setValue("I");
         journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
         journalpost.getDokumentinfoRelasjonListe().add(dokumentInfoRelasjonMedTittel("Klage om behandling av dagpenger"));
@@ -135,18 +125,16 @@ public class JoarkPortTypeMock {
     }
 
 
-    private static Journalpost mottattBekreftelse(String id, String tema, DateTime mottattDato) {
-        Journalpost journalpost = new Journalpost();
+    private static WSJournalpost mottattBekreftelse(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId(id);
-        journalpost.setBrukerErAvsenderMottaker(AvsenderMottaker.NEI);
-        Arkivtemaer arkivtemaer = new Arkivtemaer();
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
         arkivtemaer.setValue(tema);
         journalpost.setArkivtema(arkivtemaer);
-        journalpost.setEksternPart("");
-        Sak sak = new Sak();
+        WSRegistertSak sak = new WSRegistertSak();
         sak.setSakId(id);
         journalpost.setGjelderSak(sak);
-        Kommunikasjonsretninger kommunikasjonsretninger = new Kommunikasjonsretninger();
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
         kommunikasjonsretninger.setValue("U");
         journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
         journalpost.getDokumentinfoRelasjonListe().add(dokumentInfoRelasjonMedTittel("Testdata dagpenger"));
@@ -159,18 +147,16 @@ public class JoarkPortTypeMock {
     }
 
 
-    private static Journalpost forvaltningsnotat(String id, String tema, DateTime mottattDato) {
-        Journalpost journalpost = new Journalpost();
+    private static WSJournalpost forvaltningsnotat(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId(id);
-        journalpost.setBrukerErAvsenderMottaker(AvsenderMottaker.NEI);
-        Arkivtemaer arkivtemaer = new Arkivtemaer();
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
         arkivtemaer.setValue(tema);
         journalpost.setArkivtema(arkivtemaer);
-        journalpost.setEksternPart("");
-        Sak sak = new Sak();
+        WSRegistertSak sak = new WSRegistertSak();
         sak.setSakId(id);
         journalpost.setGjelderSak(sak);
-        Kommunikasjonsretninger kommunikasjonsretninger = new Kommunikasjonsretninger();
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
         kommunikasjonsretninger.setValue("N");
         journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
         journalpost.getDokumentinfoRelasjonListe().add(dokumentInfoRelasjonMedTittel("Tittel på forvaltningsnotat"));
@@ -185,37 +171,35 @@ public class JoarkPortTypeMock {
         return journalpost;
     }
 
-    private static DokumentinfoRelasjon dokumentInfoRelasjonMedTittel(String tittel) {
-        JournalfoertDokumentInfo dokumentInfo = new JournalfoertDokumentInfo();
+    private static WSDokumentinfoRelasjon dokumentInfoRelasjonMedTittel(String tittel) {
+        WSJournalfoertDokumentInfo dokumentInfo = new WSJournalfoertDokumentInfo();
         dokumentInfo.setTittel(tittel);
         dokumentInfo.setDokumentId("123");
-        dokumentInfo.setInnsynDokument(InnsynDokument.JA);
-        DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
+        WSDokumentinfoRelasjon dokumentinfoRelasjon = new WSDokumentinfoRelasjon();
         dokumentinfoRelasjon.setJournalfoertDokument(dokumentInfo);
         dokumentinfoRelasjon.setDokumentTilknyttetJournalpost(lagTilknyttetJournalpostSom());
         return dokumentinfoRelasjon;
     }
 
-    private static TilknyttetJournalpostSom lagTilknyttetJournalpostSom() {
-        TilknyttetJournalpostSom tilknyttetJournalpostSom = new TilknyttetJournalpostSom();
+    private static WSTilknyttetJournalpostSom lagTilknyttetJournalpostSom() {
+        WSTilknyttetJournalpostSom tilknyttetJournalpostSom = new WSTilknyttetJournalpostSom();
         tilknyttetJournalpostSom.setValue("HOVEDDOKUMENT");
 
         return tilknyttetJournalpostSom;
     }
 
-    private static DokumentinfoRelasjon vedleggInfoRelasjonMedTittel(String tittel) {
-        JournalfoertDokumentInfo dokumentInfo = new JournalfoertDokumentInfo();
+    private static WSDokumentinfoRelasjon vedleggInfoRelasjonMedTittel(String tittel) {
+        WSJournalfoertDokumentInfo dokumentInfo = new WSJournalfoertDokumentInfo();
         dokumentInfo.setTittel(tittel);
         dokumentInfo.setDokumentId("456");
-        dokumentInfo.setInnsynDokument(InnsynDokument.JA);
-        DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
+        WSDokumentinfoRelasjon dokumentinfoRelasjon = new WSDokumentinfoRelasjon();
         dokumentinfoRelasjon.setJournalfoertDokument(dokumentInfo);
         dokumentinfoRelasjon.setDokumentTilknyttetJournalpost(lagTilknyttetJournalpostSomVedlegg());
         return dokumentinfoRelasjon;
     }
 
-    private static TilknyttetJournalpostSom lagTilknyttetJournalpostSomVedlegg() {
-        TilknyttetJournalpostSom tilknyttetJournalpostSom = new TilknyttetJournalpostSom();
+    private static WSTilknyttetJournalpostSom lagTilknyttetJournalpostSomVedlegg() {
+        WSTilknyttetJournalpostSom tilknyttetJournalpostSom = new WSTilknyttetJournalpostSom();
         tilknyttetJournalpostSom.setValue("VEDLEGG");
 
         return tilknyttetJournalpostSom;
