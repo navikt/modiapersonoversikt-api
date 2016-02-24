@@ -9,7 +9,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2PortType;
+import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
@@ -52,8 +52,8 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public Journal_v2PortType joarkV2() {
-        return mock(Journal_v2PortType.class);
+    public Journal_v2 joarkV2() {
+        return mock(Journal_v2.class);
     }
 
     @Bean

@@ -8,7 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteRes
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentDokumentIkkeFunnet;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.journal.v2.HentJournalpostListeSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2PortType;
+import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSFagsystemer;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSSak;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentRequest;
@@ -28,7 +28,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class InnsynImpl implements Innsyn {
 
     @Inject
-    private Journal_v2PortType joarkV2;
+    private Journal_v2 joarkV2;
 
     @Inject
     private JournalpostTransformer journalpostTransformer;
