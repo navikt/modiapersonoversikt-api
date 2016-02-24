@@ -40,5 +40,10 @@ actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
     return { ...state, status: Const.FEILET, feil: action.data };
 };
 
+actionHandlers[AT.VELG_SAK] = (state, action) => {
+    return { ...state, valgtTema: action.data };
+};
+
+
 // -------
 export default basicReducer(initalState, actionHandlers);

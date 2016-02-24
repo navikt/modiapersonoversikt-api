@@ -42,4 +42,4 @@ export const hentLerretData = (fnr) => {
     }
 };
 
-export const velgSak = (sak) => ({ type: 'VOID' });
+export const velgSak = (sak) => ({ type: 'VELG_SAK', data: sak });

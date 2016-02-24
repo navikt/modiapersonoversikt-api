@@ -38,8 +38,6 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-        console.log('hits.props', this.props);
-
         if (this.props.status !== Const.LASTET) {
             return <Snurrepipp />;
         }
@@ -61,7 +59,6 @@ SaksoversiktLerret.propTypes = {
 
 const mapStateToProps = (state) => {
     console.log('state', state);
-
 
     return {
         sakstema: state.lerret.data.sakstema,

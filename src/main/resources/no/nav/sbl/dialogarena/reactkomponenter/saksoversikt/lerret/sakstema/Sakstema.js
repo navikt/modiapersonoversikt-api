@@ -17,20 +17,22 @@ function hentDatostreng(dokumentmetadata) {
 
 class Sakstema extends React.Component {
     render() {
-        const { tema, dokumentmetadata, valgtTema } = this.props;
-        const erValgt = tema === valgtTema ? 'valgt' : '';
-        const datostreng = hentDatostreng(dokumentmetadata);
+        const { tema, valgtTema, velgSak } = this.props;
+        // Sjekk på temakode ettersom 'alletemaet' blir laget på nytt ved rerender.
+        const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
+        const datostreng = hentDatostreng(tema.dokumentmetadata);
+        const id = `sakstemaRadioListe--${tema.temakode}`;
 
         return (
-            <li>
-                <a className={`saksoversikt-liste-element ${erValgt}`}
-                   href="javascript:void(0)"
-                   onClick={() => this.props.velgSak(tema.temakode)}
-                >
-                    <label className="temaliste-label datotekst">{datostreng}</label>
-                    <label className="temaliste-label stortekst">{tema.temanavn}</label>
-                </a>
-            </li>
+            <div className={`saksoversikt-liste-element ${erValgt}`}>
+                <input type="radio" id={id} readOnly checked={erValgt} name="sakstemaRadioListe"
+                       onClick={() => velgSak(tema)}
+                />
+                <label htmlFor={id}>
+                    <p className="temaliste-label datotekst">{datostreng}</p>
+                    <p className="temaliste-label stortekst">{tema.temanavn}</p>
+                </label>
+            </div>
         );
     }
 }

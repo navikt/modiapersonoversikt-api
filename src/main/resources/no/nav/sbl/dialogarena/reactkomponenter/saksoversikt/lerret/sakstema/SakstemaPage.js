@@ -4,7 +4,6 @@ import SakstemaListe from './SakstemaListe';
 class SakstemaPage extends React.Component {
     render() {
         const { sakstema, valgtTema, velgSak } = this.props;
-        console.log('this.props', this.props);
 
         return (
             <div>
@@ -13,7 +12,7 @@ class SakstemaPage extends React.Component {
                 </section>
                 <section className="saksoversikt-innhold">
                     <h2>Innhold</h2>
-                    {valgtTema}
+                    {valgtTema.temakode}
                 </section>
             </div>
         )
