@@ -54,7 +54,8 @@ class SaksoversiktLerret extends React.Component {
 }
 
 SaksoversiktLerret.propTypes = {
-    'fnr': React.PropTypes.string.isRequired
+    'fnr': React.PropTypes.string.isRequired,
+    'brukerNavn': React.PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => {

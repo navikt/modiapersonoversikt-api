@@ -9,11 +9,12 @@ class SakstemaPage extends React.Component {
         const dokumenter = sakstema.reduce((acc, tema) => {
             return acc.concat(tema.dokumentMetadata);
         }, []);
-        const dokumentliste = typeof valgtTema === 'undefined' ?
-            <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                           brukerNavn={brukerNavn}></DokumentListe> :
+
+        const dokumentliste = valgtTema.temakode !== 'alle' ?
             <DokumentListe visTema="false"
                            dokumentMetadata={valgtTema.dokumentMetadata}
+                           brukerNavn={brukerNavn}></DokumentListe> :
+            <DokumentListe visTema="true" dokumentMetadata={dokumenter}
                            brukerNavn={brukerNavn}></DokumentListe>;
 
         return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
-import DokumentAvsender from './dokument-avsender';
+import DokumentAvsender from './dokument/dokument-avsender';
 
 class DokumentInfoElm extends React.Component {
     render() {
