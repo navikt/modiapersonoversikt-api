@@ -12,8 +12,7 @@ class SakstemaPage extends React.Component {
             return acc.concat(tema.dokumentMetadata);
         }, []);
         const dokumentliste = typeof valgtTema === 'undefined' ?
-            <DokumentListe visTema="true" dokumentMetadata={dokumenter}></DokumentListe>
-            :
+            <DokumentListe visTema="true" dokumentMetadata={dokumenter}></DokumentListe> :
             <DokumentListe visTema="false" dokumentMetadata={valgtTema.dokumentMetadata}></DokumentListe>;
 
         return (

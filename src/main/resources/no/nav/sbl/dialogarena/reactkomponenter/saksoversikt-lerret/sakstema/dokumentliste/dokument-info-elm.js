@@ -6,10 +6,10 @@ class DokumentInfoElm extends React.Component {
         const dokumentinfo = this.props.dokumentinfo;
         const temaHvisAlleTemaer = this.props.visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
         return (
-            <li>
-                {temaHvisAlleTemaer}
+            <li className="dokumentlisteelement">
                 <p>Fra {dokumentinfo.avsender}</p>
                 <a>{dokumentinfo.hoveddokument.tittel}</a>
+                {temaHvisAlleTemaer}
                 <div className="typo-info">
                     <DokumentinfoVedlegg vedlegg={dokumentinfo.vedlegg}/>
                 </div>

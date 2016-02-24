@@ -26,7 +26,7 @@ class DokumentListe extends React.Component {
                 );
             }, []);
 
-        return (<ul className="ustilet">{dokumentListeForAarstall}</ul>);
+        return (<ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>);
     }
 }
 
