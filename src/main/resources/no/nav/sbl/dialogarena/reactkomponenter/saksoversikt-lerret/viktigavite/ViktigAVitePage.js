@@ -11,15 +11,15 @@ class ViktigAVitePage extends React.Component {
         const tekster = props.tekster;
 
         const tittel = tekster['saksinformasjon.tittel'];
-        const innhold = tekster[`saksinformasjon.${temakode}`] ;
+        const innhold = tekster[`saksinformasjon.${temakode}`];
 
         return (
-            <div>
-                <h1>{tittel} - {temanavn}</h1>
+            <panel className="panel side-innhold">
+                <h1 className="decorated typo-innholdstittel">{tittel} - {temanavn}</h1>
                 <section>
                     <div dangerouslySetInnerHTML={createMarkup(innhold)}/>
                 </section>
-            </div>
+            </panel>
         )
     };
 }
