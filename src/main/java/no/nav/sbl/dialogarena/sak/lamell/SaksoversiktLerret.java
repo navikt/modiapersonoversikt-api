@@ -14,11 +14,12 @@ public class SaksoversiktLerret extends Lerret {
             .less(new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less"))
             .done();
 
-    public SaksoversiktLerret(String id, final String fnr) {
+    public SaksoversiktLerret(String id, final String fnr, String brukerNavn) {
         super(id);
 
         add(new ReactComponentPanel("saksoversiktLerret", "SaksoversiktLerret", new HashMap<String, Object>() {{
             put("fnr", fnr);
+            put("brukerNavn", brukerNavn);
         }}));
     }
 }
