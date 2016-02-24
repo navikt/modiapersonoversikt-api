@@ -76,11 +76,9 @@ public class DialogPanel extends Panel {
     private Optional<String> henvendelsesIdFraParametere = none();
     private Boolean besvaresFraParametere = false;
 
-    public DialogPanel(String id, String fnr) {
+    public DialogPanel(String id, String fnr, GrunnInfo grunnInfo) {
         super(id);
-        grunnInfo = new GrunnInfo(
-                hentBrukerInfo(fnr),
-                hentSaksbehandlerInfo());
+
         settOppVerdierFraParameterePaaSession();
         aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
@@ -98,39 +96,11 @@ public class DialogPanel extends Panel {
         besvaresFraParametere = !isBlank(besvares) && Boolean.valueOf(besvares);
     }
 
-    private Bruker hentBrukerInfo(String fnr) {
-        try {
-            HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
-            request.setBegrunnet(true);
-            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(request).getPerson().getPersonfakta();
 
-            return new Bruker(fnr)
-                    .withPersonnavn(personfakta.getPersonnavn())
-                    .withEnhet(hentEnhet(personfakta));
-        } catch (Exception e) {
-            return new Bruker(fnr, "", "", "");
-        }
-    }
 
-    private String hentEnhet(Personfakta personfakta) {
-        try {
-            AnsattEnhet enhet = enhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
-            return enhet.enhetNavn;
-        } catch (Exception e) {
-            return "";
-        }
-    }
 
-    private Saksbehandler hentSaksbehandlerInfo() {
-        Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
-        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
-        return new Saksbehandler(
-                optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
-                saksbehandler.fornavn,
-                saksbehandler.etternavn
-        );
-    }
+
 
     private void settOppRiktigMeldingPanel() {
         if (henvendelsesIdFraParametere.isSome() && oppgaveIdFraParametere.isSome()) {

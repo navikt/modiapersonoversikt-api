@@ -3,16 +3,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.JacksonMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,10 +30,13 @@ public class LamellContainerTest extends WicketPageTest {
 
     private LamellContainer lamellContainer;
 
+    @InjectMocks
+    private GrunnInfo grunnInfo;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        lamellContainer = new LamellContainer("lameller", "22222222222", wicket.tester.getSession());
+        lamellContainer = new LamellContainer("lameller", "22222222222", wicket.tester.getSession(), grunnInfo);
     }
 
     @Test(expected = ApplicationException.class)

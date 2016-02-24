@@ -13,6 +13,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -78,12 +79,13 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     private InnboksVM innboksVM;
 
+
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, String fnrFromRequest, Session session) {
-        super(id, createLamellFactories(fnrFromRequest));
+    public LamellContainer(String id, String fnrFromRequest, Session session, GrunnInfo grunnInfo) {
+        super(id, createLamellFactories(fnrFromRequest, grunnInfo));
         this.fnrFromRequest = fnrFromRequest;
 
         if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
@@ -176,12 +178,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
+    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest, final GrunnInfo grunnInfo) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(fnrFromRequest));
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
-        lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
+        lamellFactories.add(createSaksoversiktLamell(fnrFromRequest, grunnInfo));
         lamellFactories.add(createVarslingsLamell(fnrFromRequest));
 
         return lamellFactories;
@@ -211,8 +213,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-    private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest));
+    private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest, GrunnInfo grunnInfo) {
+        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest, grunnInfo.bruker.navn));
     }
 
     private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {
