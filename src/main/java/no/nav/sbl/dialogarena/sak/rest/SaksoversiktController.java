@@ -2,9 +2,10 @@ package no.nav.sbl.dialogarena.sak.rest;
 
 
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.informasjon.Journalpost;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -13,7 +14,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -23,10 +23,13 @@ import static java.util.stream.Collectors.toList;
 public class SaksoversiktController {
 
     @Inject
-    SaksoversiktService saksoversiktService;
+    private SaksoversiktService saksoversiktService;
 
     @Inject
-    SaksService saksService;
+    private SaksService saksService;
+
+    @Inject
+    private TilgangskontrollService tilgangskontrollService;
 
     @GET
     @Path("/temaer")
@@ -35,17 +38,12 @@ public class SaksoversiktController {
     }
 
     @GET
-    @Path("/journalposter")
-    public List<Journalpost> hentJournalpostListe(@PathParam("fnr") String fnr) {
-        return saksService.hentJournalpostListe(fnr).get().collect(Collectors.toList());
-    }
-
-    @GET
     @Path("/sakstema")
     public Response hentSakstema(@PathParam("fnr") String fnr) {
-        return Response.ok(
-                saksService.hentSakstema(saksService.hentAlleSaker(fnr), fnr, false)
-                        .collect(toList())).build();
+        List<Sakstema> sakstemaliste = saksService.hentSakstema(saksService.hentAlleSaker(fnr), fnr, false)
+                .collect(toList());
+        List<Sakstema> tilgangskontrollertSakstemaListe = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaliste);
+        return Response.ok(tilgangskontrollertSakstemaListe).build();
     }
 
 }
