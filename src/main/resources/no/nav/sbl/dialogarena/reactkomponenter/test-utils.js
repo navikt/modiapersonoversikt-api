@@ -31,7 +31,7 @@ export function render(component) {
     const renderedComponent = TestUtils.renderIntoDocument(component);
     return {
         component: renderedComponent,
-        dom: React.findDOMNode(renderedComponent)
+        dom: React.findDOMNode(renderedComponent) // eslint-disable-line react/no-deprecated
     };
 }
 

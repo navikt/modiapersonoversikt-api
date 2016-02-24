@@ -6,12 +6,15 @@ import React from 'react';
 import Modal from './modal-module';
 import TestUtils from 'react-addons-test-utils';
 
+const SPAN_CONTENT = 'span-content';
+
 function createModal(props, children) {
     return TestUtils.renderIntoDocument(React.createElement(
             Modal, props || {},
-            children || React.createElement('span', {className: 'forReference'}, 'test'))
+            children || React.createElement('span', {className: 'forReference'}, SPAN_CONTENT))
     );
 }
+
 function getContent(modal) {
     return modal.modal.refs.content;
 }
@@ -64,11 +67,10 @@ describe('Modal', () => {
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
-    it.skip('Renders content til portal.content div', () => {
+    it('Renders content til portal.content div', () => {
         const modal = createModal();
         const content = getContent(modal);
 
-        const span = TestUtils.findRenderedDOMComponentWithClass(content, 'forReference');
-        expect(span).not.to.be.null;
+        expect(content.textContent).to.be.eql(SPAN_CONTENT);
     });
 });
