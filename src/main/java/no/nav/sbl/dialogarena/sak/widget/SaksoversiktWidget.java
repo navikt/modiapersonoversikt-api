@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
+import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -11,9 +12,10 @@ import org.apache.wicket.event.Broadcast;
 
 import java.util.HashMap;
 
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 
-public class SaksoversiktWidget extends Widget {
+public class SaksoversiktWidget extends Widget<Object> {
 
     public SaksoversiktWidget(String id, final String fnr) {
         super(id, "S", null);
@@ -26,16 +28,35 @@ public class SaksoversiktWidget extends Widget {
         );
 
         // Bare listen er laget i react
-        add(new ReactComponentPanel("saksoversiktWidget", "SaksoversiktWidget", new HashMap<String, Object>() {{
+        ReactComponentPanel feeditemListe = new ReactComponentPanel("saksoversiktWidget", "SaksoversiktWidget", new HashMap<String, Object>() {{
             put("fnr", fnr);
-        }}));
+        }});
+
+        feeditemListe.addCallback("ITEM_CLICK", String.class, (target, data) -> {
+            System.out.println("ITEM_CLICK: " + data);
+            send(this, Broadcast.BUBBLE, new NamedEventPayload(
+                    FEED_ITEM_CLICKED,
+                    new FeedItemPayload(this.getId(), data, "tema"))
+            );
+        });
+
+        feeditemListe.addCallback("VIS_ALLE_CLICK", Void.class, (target, data) -> {
+            System.out.println("HEADER_CLICK");
+            apneSaksoversiktLamell();
+        });
+
+        add(feeditemListe);
+    }
+
+    public final void apneSaksoversiktLamell() {
+        send(this, Broadcast.BUBBLE, new NamedEventPayload(WIDGET_HEADER_CLICKED, new WidgetHeaderPayload(this.getId())));
     }
 
     private AjaxEventBehavior createHeaderClickBehavior() {
         return new AjaxEventBehavior("click") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
-                send(SaksoversiktWidget.this, Broadcast.BUBBLE, new NamedEventPayload(WIDGET_HEADER_CLICKED, new WidgetHeaderPayload(SaksoversiktWidget.this.getId())));
+                apneSaksoversiktLamell();
             }
         };
     }
