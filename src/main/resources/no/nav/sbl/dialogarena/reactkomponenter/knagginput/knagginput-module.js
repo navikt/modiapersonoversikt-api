@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 function ariaLabel(props) {
     const knagger = props.knagger;
@@ -32,7 +33,7 @@ function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
 
 function IEHack() {
     // Dette er en IE hack.... Hvis man en gang i fremtiden ikke bruker IE 9, så kanskje man kan fjerne denne.
-    const $knaggcontainer = $(React.findDOMNode(this.refs.knaggcontainer));
+    const $knaggcontainer = $(ReactDOM.findDOMNode(this.refs.knaggcontainer));
     if (!$knaggcontainer.is(':visible')) {
         return;
     }
@@ -75,7 +76,7 @@ const KnaggInput = React.createClass({
     },
     componentDidMount: function componentDidMount() {
         if (this.props['auto-focus']) {
-            React.findDOMNode(this.refs.search).focus();
+            ReactDOM.findDOMNode(this.refs.search).focus();
         }
     },
     componentDidUpdate: function componentDidUpdate() {
@@ -83,8 +84,8 @@ const KnaggInput = React.createClass({
     },
     onKeyDownProxy: function onKeyDownProxy(event) {
         this.setState({
-            selectionStart: React.findDOMNode(this.refs.search).selectionStart,
-            selectionEnd: React.findDOMNode(this.refs.search).selectionEnd
+            selectionStart: ReactDOM.findDOMNode(this.refs.search).selectionStart,
+            selectionEnd: ReactDOM.findDOMNode(this.refs.search).selectionEnd
         });
         this.props.store.onKeyDown(document.getElementById(this.props.tablisteId), event);
     },
@@ -111,7 +112,7 @@ const KnaggInput = React.createClass({
         event.preventDefault();
 
         this.props.store.slettKnagg(knagg);
-        React.findDOMNode(this.refs.search).focus();
+        ReactDOM.findDOMNode(this.refs.search).focus();
     },
     focusHighlighting: function focusHighlighting(event) {
         if (event.type === 'focus') {

@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
 import DokumentListe from './dokumentliste/dokumentliste'
 
 class SakstemaPage extends React.Component {
     render() {
-        const {store} = this.props;
-        const sakstema = store.state.sakstema;
+        const { sakstema, valgtTema, velgSak } = this.props;
 
-        const valgtTema = sakstema.find((tema)=>tema.temakode === store.state.valgtTema);
         const dokumenter = sakstema.reduce((acc, tema) => {
             return acc.concat(tema.dokumentMetadata);
         }, []);
@@ -15,13 +13,10 @@ class SakstemaPage extends React.Component {
             <DokumentListe visTema="true" dokumentMetadata={dokumenter}></DokumentListe> :
             <DokumentListe visTema="false" dokumentMetadata={valgtTema.dokumentMetadata}></DokumentListe>;
 
-        const tekster = store.state.tekster;
-
         return (
             <div>
                 <section className="saksoversikt-liste">
-                    <SakstemaListe tekster={tekster} sakstema={sakstema} erValgt={this.props.erValgt.bind(this)}
-                                   velgSak={this.props.velgSak} />
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold">
                     {dokumentliste}
@@ -30,6 +25,10 @@ class SakstemaPage extends React.Component {
         )
     };
 }
+
+SakstemaPage.propTypes = {
+    sakstema: PT.array.isRequired
+};
 
 export default SakstemaPage;
 

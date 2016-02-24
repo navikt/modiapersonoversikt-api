@@ -1,6 +1,6 @@
 window.ModiaJS = {};
 window.ModiaJS.Components = {};
-(function bindPolyfill() {
+((function bindPolyfill() {
     const Ap = Array.prototype;
     const slice = Ap.slice;
     const Fp = Function.prototype;
@@ -20,7 +20,7 @@ window.ModiaJS.Components = {};
 
         return bound;
     };
-})();
+})());
 
 // jQuery
 window.$ = require('jquery');
@@ -28,9 +28,8 @@ window.$ = require('jquery');
 // shim for $(':focusable') since it is part of jQuery UI and we dont need that.
 // SONAR:OFF
 function visible(element) {
-    return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(() => {
-        return $.css(this, 'visibility') === 'hidden';
-    }).length;
+    return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(() =>
+        $.css(this, 'visibility') === 'hidden').length;
 }
 
 function _focusableForNonAreaNode(element, isTabIndexNotNaN, nodeName) {
@@ -57,7 +56,7 @@ function focusable(element, isTabIndexNotNaN) {
         if (!element.href || !mapName || map.nodeName.toLocaleLowerCase() !== 'map') {
             return false;
         }
-        img = $('img[usemap=#' + mapName + ']')[0];
+        img = $(`img[usemap=#${mapName}]`)[0];
         return !!img && visible(img);
     }
 
@@ -78,7 +77,7 @@ $.extend($.expr[':'], {
     focusable: function focusableExtention(element) {
         return focusable(element, !isNaN($.attr(element, 'tabindex')));
     },
-    tabbable: tabbable
+    tabbable
 });
 // SONAR:ON
 
