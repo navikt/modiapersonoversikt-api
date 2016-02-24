@@ -3,23 +3,26 @@ import { connect } from 'react-redux';
 import Sakstema from './tema';
 import { hentWidgetData } from './../actions';
 import { take } from 'lodash';
+import WicketSender from './../../react-wicket-mixin/wicket-sender';
 
 const ANTALL_TEMAER = 6;
 
 class Temaliste extends React.Component {
     componentWillMount() {
         this.props.hentWidgetData(this.props.fnr);
+        this.sendToWidget = WicketSender.bind(this, this.props.wicketurl, this.props.wicketcomponent);
     }
-
     render() {
         const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
-        const temaliste = redusertAntallTemaer.map(tema => <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr}/></li>);
+        const temaliste = redusertAntallTemaer.map((tema) =>
+            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
+        );
 
         return (
             <ul>
                 {temaliste}
-                <li><a href="#">Se flere saker</a></li>
+                <li><a href="#" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}>Se flere saker</a></li>
             </ul>
         );
     }
