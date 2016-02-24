@@ -112,7 +112,7 @@
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>3.0.6-FAMOUS-SHADE</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>3.1-SNAPSHOT</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.78</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
