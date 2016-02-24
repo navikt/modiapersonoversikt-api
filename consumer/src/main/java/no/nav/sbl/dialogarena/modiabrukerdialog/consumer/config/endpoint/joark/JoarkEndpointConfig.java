@@ -6,7 +6,8 @@ import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2PortType;
+import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2;
+import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,22 +21,22 @@ public class JoarkEndpointConfig {
     public static final String JOARK_KEY = "start.joark.withmock";
 
     @Bean
-    public Journal_v2PortType joarkV2() {
-        Journal_v2PortType prod = createJournalV2PortType(new UserSAMLOutInterceptor());
-        Journal_v2PortType mock = createInnsynJournalV1Mock();
-        return createSwitcher(prod, mock, JOARK_KEY, Journal_v2PortType.class);
+    public Journal_v2 joarkV2() {
+        Journal_v2 prod = createJournalV2PortType(new UserSAMLOutInterceptor());
+        Journal_v2 mock = createInnsynJournalV1Mock();
+        return createSwitcher(prod, mock, JOARK_KEY, Journal_v2.class);
     }
 
     @Bean
     public Pingable pingJoark() {
-        Journal_v2PortType ws = createJournalV2PortType(new SystemSAMLOutInterceptor());
+        Journal_v2 ws = createJournalV2PortType(new SystemSAMLOutInterceptor());
         return new PingableWebService("Joark", ws);
     }
 
 
-    private static Journal_v2PortType createJournalV2PortType(AbstractSAMLOutInterceptor interceptor) {
-        return new CXFClient<>(Journal_v2PortType.class)
-                .address(getProperty("joark.v2.url"))
+    private static Journal_v2 createJournalV2PortType(AbstractSAMLOutInterceptor interceptor) {
+        return new CXFClient<>(Journal_v2.class)
+                .address(getProperty("journal.v2.url"))
                 .withOutInterceptor(interceptor)
                 .build();
     }
