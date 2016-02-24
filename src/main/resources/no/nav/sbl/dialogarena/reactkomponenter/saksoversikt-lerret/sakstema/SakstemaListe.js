@@ -16,7 +16,7 @@ class SakstemaListe extends React.Component {
                                                                    onClickSakstema={this.props.velgSak}/>);
 
         const alleSakstemaElement = temalisteelementer.length > 1 ?
-            <Sakstema tema="Alle temaer" temakode={"alle"} dokumentmetadata={temaListe[0].dokumentmetadata}
+            <Sakstema tema={this.props.tekster["sakslamell.alletemaer"]} temakode={"alle"} dokumentmetadata={temaListe[0].dokumentmetadata}
                       valgt={this.props.erValgt("alle")}
                       onClickSakstema={this.props.velgSak}/> : <div />;
         return (

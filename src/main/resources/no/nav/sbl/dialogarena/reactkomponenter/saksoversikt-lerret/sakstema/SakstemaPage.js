@@ -15,11 +15,13 @@ class SakstemaPage extends React.Component {
             <DokumentListe visTema="true" dokumentMetadata={dokumenter}></DokumentListe> :
             <DokumentListe visTema="false" dokumentMetadata={valgtTema.dokumentMetadata}></DokumentListe>;
 
+        const tekster = store.state.tekster;
+
         return (
             <div>
                 <section className="saksoversikt-liste">
-                    <SakstemaListe sakstema={sakstema} erValgt={this.props.erValgt.bind(this)}
-                                   velgSak={this.props.velgSak}/>
+                    <SakstemaListe tekster={tekster} sakstema={sakstema} erValgt={this.props.erValgt.bind(this)}
+                                   velgSak={this.props.velgSak} />
                 </section>
                 <section className="saksoversikt-innhold">
                     {dokumentliste}
