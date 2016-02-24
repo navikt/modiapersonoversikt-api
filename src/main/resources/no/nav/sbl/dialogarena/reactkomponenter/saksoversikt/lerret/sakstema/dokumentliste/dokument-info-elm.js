@@ -4,10 +4,12 @@ import DokumentinfoVedlegg from './dokument-info-vedlegg';
 class DokumentInfoElm extends React.Component {
     render() {
         const dokumentinfo = this.props.dokumentinfo;
+        const temaHvisAlleTemaer = this.props.visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
         return (
-            <li>
+            <li className="dokumentlisteelement">
                 <p>Fra {dokumentinfo.avsender}</p>
                 <a>{dokumentinfo.hoveddokument.tittel}</a>
+                {temaHvisAlleTemaer}
                 <div className="typo-info">
                     <DokumentinfoVedlegg vedlegg={dokumentinfo.vedlegg}/>
                 </div>

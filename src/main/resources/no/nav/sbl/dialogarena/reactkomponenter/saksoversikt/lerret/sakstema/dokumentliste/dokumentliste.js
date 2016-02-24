@@ -21,11 +21,12 @@ class DokumentListe extends React.Component {
                     acc.push(<li className="aarstall">{aarstall}</li>);
                 }
                 return acc.concat(
-                    dokumenter.map((dokument) => <DokumentInfoElm dokumentinfo={dokument}/>)
+                    dokumenter.map((dokument) => <DokumentInfoElm visTema={this.props.visTema}
+                                                                  dokumentinfo={dokument}/>)
                 );
             }, []);
 
-        return (<ul className="ustilet">{dokumentListeForAarstall}</ul>);
+        return (<ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>);
     }
 }
 
