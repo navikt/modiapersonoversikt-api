@@ -29,6 +29,10 @@ class ViktigAVitePage extends React.Component {
     };
 }
 
+export const skalViseViktigAViteSideForTema = (miljovariabler, tema) => {
+    return miljovariabler['temasider.viktigavitelenke'].split(',').some(temaMedViktigAVite => temaMedViktigAVite === tema);
+};
+
 function createMarkup(markuptekst) {
     return {
         __html: markuptekst
