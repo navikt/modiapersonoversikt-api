@@ -131,7 +131,7 @@ public class SaksService {
     }
 
     private Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
-        return dokumentMetadata1 -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dokumentMetadata1.getTilhorendeSakid());
+        return dm -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dm.getTilhorendeSakid());
     }
 
     private Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
@@ -141,7 +141,7 @@ public class SaksService {
     }
 
     private boolean tilhorerSakTemagruppe(Sak sak, String temakode, Map.Entry<String, Set<String>> temagruppe) {
-        if(!RESTERENDE_TEMA.equals(temagruppe)){
+        if (!RESTERENDE_TEMA.equals(temagruppe.getKey())) {
             return temakode.equals(sak.getTemakode()) || sak.temakode().equals(OPPFOLGING);
         } else {
             return temakode.equals(sak.getTemakode());
