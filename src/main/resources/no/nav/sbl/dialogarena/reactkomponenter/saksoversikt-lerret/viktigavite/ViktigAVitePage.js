@@ -3,23 +3,28 @@ import React from 'react';
 class ViktigAVitePage extends React.Component {
     render() {
 
-
         const props = this.props.store.state;
-        const temakode = props.valgtTema;
-        const temanavn = props.sakstema.filter(tema => tema.temakode === temakode)[0].temanavn;
+        const valgttema = props.valgtTema;
+        const temanavn = props.sakstema.filter(tema => tema.temakode === valgttema)[0].temanavn;
 
         const tekster = props.tekster;
 
         const tittel = tekster['saksinformasjon.tittel'];
-        const innhold = tekster[`saksinformasjon.${temakode}`];
+        const innhold = tekster[`saksinformasjon.${valgttema}`];
 
+        const tilbakelenke = `/modiabrukerdialog/person/${props.fnr}?temakode=${valgttema}#!saksoversikt`;
         return (
-            <panel className="panel side-innhold">
-                <h1 className="decorated typo-innholdstittel">{tittel} - {temanavn}</h1>
-                <section>
-                    <div dangerouslySetInnerHTML={createMarkup(innhold)}/>
-                </section>
-            </panel>
+            <div className="viktigavitepanel side-innhold">
+                <div className="blokk-s">
+                    <a href={tilbakelenke}>{tekster['tilbake.viktigavite']}</a>
+                </div>
+                <panel className="panel">
+                    <h1 className="decorated typo-innholdstittel">{tittel} - {temanavn}</h1>
+                    <section>
+                        <div dangerouslySetInnerHTML={createMarkup(innhold)}/>
+                    </section>
+                </panel>
+            </div>
         )
     };
 }

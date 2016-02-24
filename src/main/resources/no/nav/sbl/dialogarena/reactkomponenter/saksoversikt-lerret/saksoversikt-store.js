@@ -18,6 +18,7 @@ class SaksoversiktStore extends Store {
         this.state = {
             tekster: {},
             miljovariabler: {},
+            fnr: fnr,
             temaer: [],
             sakstema: [],
             promise: Q.all([temaer, sakstema, tekster, miljovariabler]),
