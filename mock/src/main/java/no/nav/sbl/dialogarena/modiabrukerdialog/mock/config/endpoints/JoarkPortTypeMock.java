@@ -27,7 +27,8 @@ public class JoarkPortTypeMock {
         return new InnsynJournalV1() {
 
             @Override
-            public void ping() {}
+            public void ping() {
+            }
 
             @Override
             public HentTilgjengeligJournalpostListeResponse hentTilgjengeligJournalpostListe(HentTilgjengeligJournalpostListeRequest hentTilgjengeligJournalpostListeRequest)
@@ -173,6 +174,9 @@ public class JoarkPortTypeMock {
         kommunikasjonsretninger.setValue("N");
         journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
         journalpost.getDokumentinfoRelasjonListe().add(dokumentInfoRelasjonMedTittel("Tittel på forvaltningsnotat"));
+        journalpost.getDokumentinfoRelasjonListe().add(vedleggInfoRelasjonMedTittel("Tittel på vedlegg for forvaltningsnotat"));
+
+
         try {
             journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(mottattDato.toGregorianCalendar()));
         } catch (DatatypeConfigurationException e) {
@@ -195,6 +199,25 @@ public class JoarkPortTypeMock {
     private static TilknyttetJournalpostSom lagTilknyttetJournalpostSom() {
         TilknyttetJournalpostSom tilknyttetJournalpostSom = new TilknyttetJournalpostSom();
         tilknyttetJournalpostSom.setValue("HOVEDDOKUMENT");
+
+        return tilknyttetJournalpostSom;
+    }
+
+    private static DokumentinfoRelasjon vedleggInfoRelasjonMedTittel(String tittel) {
+        JournalfoertDokumentInfo dokumentInfo = new JournalfoertDokumentInfo();
+        dokumentInfo.setTittel(tittel);
+        dokumentInfo.setDokumentId("456");
+        dokumentInfo.setInnsynDokument(InnsynDokument.JA);
+        DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
+        dokumentinfoRelasjon.setJournalfoertDokument(dokumentInfo);
+        dokumentinfoRelasjon.setDokumentTilknyttetJournalpost(lagTilknyttetJournalpostSomVedlegg());
+        return dokumentinfoRelasjon;
+    }
+
+    private static TilknyttetJournalpostSom lagTilknyttetJournalpostSomVedlegg() {
+        TilknyttetJournalpostSom tilknyttetJournalpostSom = new TilknyttetJournalpostSom();
+        tilknyttetJournalpostSom.setValue("VEDLEGG");
+
         return tilknyttetJournalpostSom;
     }
 }
