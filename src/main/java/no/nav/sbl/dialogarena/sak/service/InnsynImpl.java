@@ -8,7 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteRes
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentDokumentIkkeFunnet;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.journal.v2.HentJournalpostListeSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.journal.v2.Journal_v2;
+import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSFagsystemer;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSSak;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentRequest;
@@ -21,14 +21,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper.Feilmelding.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class InnsynImpl implements Innsyn {
 
     @Inject
-    private Journal_v2 joarkV2;
+    private JournalV2 joarkV2;
 
     @Inject
     private JournalpostTransformer journalpostTransformer;
