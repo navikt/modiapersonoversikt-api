@@ -3,20 +3,6 @@ import { FormattedDate } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 import { dokumentMetadataTilJSDate } from './../../utils/dato-utils';
 
-function formaterBehandlingsstatus(behandlingsstatus) {
-
-    const statuser = behandlingsstatus.props.values;
-    if(statuser) {
-        const antallFerdige = statuser.antallSoknaderFerdigBehandlet.props.values.antall;
-        const antallFerdigeTekst = antallFerdige > 1? antallFerdige + " søknader ferdig behandlet" : antallFerdige == 1? "Søknad ferdig behandlet": "" ;
-        const antallUnderBehandling = statuser.antallSoknaderUnderBehandling.props.values.antall;
-        const antallUnderbehandlingTekst = antallUnderBehandling > 1? antallUnderBehandling + " søknader ferdig behandlet" : antallUnderBehandling == 1? "Søknad ferdig behandlet": "" ;
-
-        return antallUnderBehandling  >=  antallFerdige? antallUnderbehandlingTekst : antallFerdigeTekst;
-    }
-    return "";
-}
-
 class Sakstema extends React.Component {
     render() {
         const { tema, valgtTema, velgSak, nokkelinfo} = this.props;
@@ -24,7 +10,8 @@ class Sakstema extends React.Component {
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
         const id = `sakstemaRadioListe--${tema.temakode}`;
         const sisteOppdatering = nokkelinfo.sisteOppdatering? nokkelinfo.sisteOppdatering : "";
-        const statusTekst = nokkelinfo.behandlingsstatus? formaterBehandlingsstatus(nokkelinfo.behandlingsstatus) : "";
+        const behandlingsstatus = nokkelinfo.behandlingsstatus? nokkelinfo.behandlingsstatus : "";
+        const sisteOppdateringTekst =  <FormattedDate value={sisteOppdatering} />
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt}`}>
@@ -32,9 +19,9 @@ class Sakstema extends React.Component {
                        onClick={() => velgSak(tema)}
                 />
                 <label htmlFor={id}>
-                    <p className="temaliste-label datotekst">{sisteOppdatering.toString()}</p>
+                    <p className="temaliste-label datotekst">{sisteOppdateringTekst}</p>
                     <p className="temaliste-label stortekst">{tema.temanavn}</p>
-                    <p className="temaliste-label datotekst">{statusTekst}</p>
+                    <p className="temaliste-label datotekst">{behandlingsstatus}</p>
                 </label>
             </div>
         );
