@@ -2,21 +2,18 @@ import React from 'react';
 
 class ViktigAVitePage extends React.Component {
     render() {
+        const { tekster, valgtTema, sakstema, fnr } = this.props;
 
-        const props = this.props.store.state;
-        const valgttema = props.valgtTema;
-        const temanavn = props.sakstema.filter(tema => tema.temakode === valgttema)[0].temanavn;
+        const valgttema = "DAG";
+        const temanavn = sakstema.filter(tema => tema.temakode === valgttema)[0].temanavn;
+        const tittel = "Viktig å vite"; //tekster['saksinformasjon.tittel'];
+        const innhold = "Innhold"; //tekster[`saksinformasjon.${valgttema}`];
 
-        const tekster = props.tekster;
-
-        const tittel = tekster['saksinformasjon.tittel'];
-        const innhold = tekster[`saksinformasjon.${valgttema}`];
-
-        const tilbakelenke = `/modiabrukerdialog/person/${props.fnr}?temakode=${valgttema}#!saksoversikt`;
+        const tilbakelenke = `/modiabrukerdialog/person/${fnr}?temakode=${valgttema}#!saksoversikt`;
         return (
             <div className="viktigavitepanel side-innhold">
                 <div className="blokk-s">
-                    <a href={tilbakelenke}>{tekster['tilbake.viktigavite']}</a>
+                    <a href={tilbakelenke}>Tilbake til sakstema</a>
                 </div>
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">{tittel} - {temanavn}</h1>
