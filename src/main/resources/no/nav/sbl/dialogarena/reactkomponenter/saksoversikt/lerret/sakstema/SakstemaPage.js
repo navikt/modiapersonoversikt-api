@@ -1,6 +1,7 @@
 import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
 import DokumentListe from './dokumentliste/dokumentliste'
+import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
 
 class SakstemaPage extends React.Component {
     render() {
@@ -16,7 +17,6 @@ class SakstemaPage extends React.Component {
                            brukerNavn={brukerNavn}></DokumentListe> :
             <DokumentListe visTema="true" dokumentMetadata={dokumenter}
                            brukerNavn={brukerNavn}></DokumentListe>;
-
         return (
             <div>
                 <section className="saksoversikt-liste">
@@ -24,6 +24,7 @@ class SakstemaPage extends React.Component {
                 </section>
                 <section className="saksoversikt-innhold">
                     {dokumentliste}
+                    <TidligereDokumenter />
                 </section>
             </div>
         )
