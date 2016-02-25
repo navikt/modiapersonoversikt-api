@@ -4,14 +4,10 @@ class DokumentAvsender extends React.Component {
     render() {
         const {retning, avsender , navn} = this.props;
 
-        if (retning === 'INN') {
-            return <p>{'Fra ' + navn}</p>
-        }
-        else (retning === 'UT')
-        {
-            return <p>{'Fra ' + avsender}</p>
+        const thisAvsender = retning === 'INN' ? <span className="avsenderbrukertext">{navn}</span> :
+            <span className="avsendernavtext">{avsender}</span>
 
-        }
+        return <div className="avsendertext"><span>Fra </span>{thisAvsender}</div>;
     }
 }
 
