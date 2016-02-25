@@ -32,7 +32,7 @@ function getUrlParameter(wicketurl, urlparameter) {
 
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        const temakode = getUrlParameter(this.props.wicketurl);
+        const temakode = getUrlParameter(this.props.wicketurl, 'temakode');
         this.props.hentLerretData(this.props.fnr);
         this.props.velgSak(temakode);
     }
@@ -54,11 +54,11 @@ class SaksoversiktLerret extends React.Component {
 }
 
 SaksoversiktLerret.propTypes = {
-    'fnr': React.PropTypes.string.isRequired
+    'fnr': React.PropTypes.string.isRequired,
+    'brukerNavn': React.PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => {
-    console.log('state', state);
 
     return {
         sakstema: state.lerret.data.sakstema,

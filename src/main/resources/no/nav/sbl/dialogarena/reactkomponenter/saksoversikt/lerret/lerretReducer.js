@@ -13,7 +13,7 @@ actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
     return { ...state, status: Const.LASTER };
 };
 actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
-    const [temaer, sakstema, tekster, miljovariabler] = action.data;
+    const [temaer, sakstema, tekster, miljovariabler, fnr] = action.data;
 
     const _sakstema = sakstema
         .filter(fjernTommeTema)
@@ -32,7 +32,8 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
             temaer,
             sakstema: _sakstema,
             tekster,
-            miljovariabler
+            miljovariabler,
+            fnr
         }
     };
 };
