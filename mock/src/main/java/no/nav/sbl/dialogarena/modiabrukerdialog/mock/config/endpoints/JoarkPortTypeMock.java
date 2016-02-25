@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 import static java.util.Arrays.asList;
 
 public class JoarkPortTypeMock {
-    public static Journal_v2 createInnsynJournalV1Mock() {
+    public static JournalV2 createInnsynJournalV1Mock() {
         Map<String, List<WSJournalpost>> journalPoster = new HashMap<>();
 
         journalPoster.put("1", asList(mottattSoknad("1", "DAG", new DateTime().minusDays(20))));
@@ -28,7 +28,7 @@ public class JoarkPortTypeMock {
                 forvaltningsnotat("444", "DAG", new DateTime())
         ));
 
-        return new Journal_v2() {
+        return new JournalV2() {
 
             @Override
             public WSHentJournalpostListeResponse hentJournalpostListe(WSHentJournalpostListeRequest request) throws HentJournalpostListeSikkerhetsbegrensning {
