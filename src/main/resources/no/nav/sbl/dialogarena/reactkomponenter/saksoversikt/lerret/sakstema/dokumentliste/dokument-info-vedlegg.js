@@ -7,12 +7,12 @@ class DokumentinfoVedlegg extends React.Component {
             return <div></div>;
         }
 
-        const vedleggListe = vedlegg.map(dokumentVedlegg => (<a>{dokumentVedlegg.tittel}</a>));
+        const vedleggListe = vedlegg.map(dokumentVedlegg => (<li ><a className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
 
         return (
             <div>
                 <p>Med følgende vedlegg</p>
-                <ul className="liste-normalisert venstrestill-punkt">{vedleggListe}</ul>
+                <ul className="vedleggliste">{vedleggListe}</ul>
             </div>
         );
     }

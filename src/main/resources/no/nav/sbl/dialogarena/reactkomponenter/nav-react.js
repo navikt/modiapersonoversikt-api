@@ -1,5 +1,5 @@
 // Vår egen polyfill for console
-(function consolepolyfill(con = {}) {
+((function consolepolyfill(con = {}) {
     if (con) {
         return;
     }
@@ -11,12 +11,12 @@
     'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
     'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn').split(',');
     properties.forEach((prop) => {
-        con[prop] = empty;
+        con[prop] = empty; // eslint-disable-line no-param-reassign
     });
     methods.forEach((method) => {
-        con[method] = dummy;
+        con[method] = dummy; // eslint-disable-line no-param-reassign
     });
     window.console = con;
-})(window.console);
+})(window.console));
 
 module.exports = require('react');

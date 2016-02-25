@@ -5,7 +5,46 @@
     padding: 0 0rem 2rem 0;
     float: left;
     overflow-y: scroll;
+  }
 
+  .saksoversikt-innhold {
+    float: left;
+    margin-left: 3rem;
+
+    .dokumentliste {
+      list-style: none;
+
+      .dokumentlisteelement {
+        margin-bottom: 3rem;
+
+        .avsendertext{
+          font-size: medium;
+          margin-bottom: 1rem;
+
+          .avsenderbrukertext {
+
+          }
+          .avsendernavtext {
+            color: #c30000;
+          }
+        }
+
+
+        .hoveddokumenttext {
+          font-size: large;
+          font-weight: bolder;
+          border-bottom: solid 2px #cccccc;
+
+        }
+
+        .vedleggliste {
+          list-style: disc;
+          .vedleggtext{
+            border-bottom: solid 2px #cccccc;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -34,7 +73,7 @@
   color: #3e3832;
 }
 
-.stortekst{
+.stortekst {
   font-family: Modus, Arial, Helvetica, sans-serif;
   font-size: 1.21rem;
   font-weight: 600
