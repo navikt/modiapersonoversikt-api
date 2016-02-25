@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 class DokumentinfoVedlegg extends React.Component {
     render() {
@@ -11,7 +12,7 @@ class DokumentinfoVedlegg extends React.Component {
 
         return (
             <div>
-                <p>Med følgende vedlegg</p>
+                <FormattedMessage id="dokumentinfo.vedlegg"></FormattedMessage>
                 <ul className="vedleggliste">{vedleggListe}</ul>
             </div>
         );

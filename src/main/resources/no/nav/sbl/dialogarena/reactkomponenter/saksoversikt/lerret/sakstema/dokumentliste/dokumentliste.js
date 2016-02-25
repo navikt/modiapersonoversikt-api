@@ -2,7 +2,6 @@ import React from 'react';
 import {groupBy} from 'lodash';
 import DokumentInfoElm from './dokument-info-elm';
 
-
 const nyesteForst = (a, b) => a.dato.dayOfYear < b.dato.dayOfYear ? 1 : -1;
 const nyesteAarForst = (a, b) => a < b ? 1 : -1;
 
