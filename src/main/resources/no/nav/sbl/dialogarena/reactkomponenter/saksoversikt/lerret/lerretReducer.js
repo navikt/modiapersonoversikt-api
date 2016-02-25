@@ -2,6 +2,7 @@ import * as AT from './../actionTypes';
 import * as Const from './../konstanter';
 import { basicReducer } from './../utils/redux-utils';
 import { finnSisteOppdatering } from './../utils/finn-siste-oppdatering';
+import { nyesteSakstema } from './../utils/dato-sortering';
 
 const fjernTommeTema = (tema) => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 
@@ -16,14 +17,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     const [temaer, sakstema, tekster, miljovariabler] = action.data;
 
     const _sakstema = sakstema
-        .filter(fjernTommeTema)
-        .map((tema) => ({
-            temakode: tema.temakode,
-            dokumentmetadata: tema.dokumentMetadata,
-            temanavn: tema.temanavn,
-            sistOppdatertDato: finnSisteOppdatering(tema.behandlingskjeder, tema.dokumentMetadata),
-            dokumentMetadata: tema.dokumentMetadata
-        }));
+        .filter(fjernTommeTema).sort(nyesteSakstema);
 
     return {
         ...state,

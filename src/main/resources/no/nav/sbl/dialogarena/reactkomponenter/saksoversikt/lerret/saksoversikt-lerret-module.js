@@ -32,7 +32,7 @@ function getUrlParameter(wicketurl, urlparameter) {
 
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        const temakode = getUrlParameter(this.props.wicketurl);
+        const temakode = getUrlParameter(this.props.wicketurl, "temakode");
         this.props.hentLerretData(this.props.fnr);
         this.props.velgSak(temakode);
     }
@@ -59,7 +59,6 @@ SaksoversiktLerret.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    console.log('state', state);
 
     return {
         sakstema: state.lerret.data.sakstema,
