@@ -1,15 +1,16 @@
 .saksoversikt-lerret {
-  .saksoversikt-liste  {
-    width: 40%;
+  padding:0 !important;
+  .saksoversikt-liste {
+    width: 35%;
     height: 100%;
-    padding: 0 0rem 2rem 0;
     float: left;
     overflow-y: scroll;
   }
 
   .saksoversikt-innhold {
     float: left;
-    width: 60%;
+    width:65%;
+
     .dokumentliste {
       list-style: none;
       padding-left: 3rem;
@@ -53,9 +54,22 @@
 }
 
 .saksoversikt-liste-element {
-  padding: 15px 20px;
   border-bottom: 1px solid #ccc;
   display: block;
+
+  label {
+    width: 100%;
+  }
+
+  label:before{
+    display: none !important;
+  }
+
+  input[type=radio]:focus + label {
+    outline: none;
+    box-shadow: inset 0 0 0 2px #ffbd66;
+    border: 1px solid #ffbd66;
+  }
 }
 
 .saksoversikt-liste-element.valgt {

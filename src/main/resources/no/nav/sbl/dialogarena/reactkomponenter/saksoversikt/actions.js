@@ -5,8 +5,9 @@ import Q from 'q';
 function rethrow(fn) {
     return (data) => {
         debugger;
+        console.error(data);
+
         fn(data);
-        throw data;
     }
 }
 

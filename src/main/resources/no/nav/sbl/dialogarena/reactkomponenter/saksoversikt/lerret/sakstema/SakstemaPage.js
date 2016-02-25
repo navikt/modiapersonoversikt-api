@@ -2,6 +2,7 @@ import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
 import DokumentListe from './dokumentliste/dokumentliste'
 import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
+import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
 
 class SakstemaPage extends React.Component {
     render() {
@@ -16,7 +17,6 @@ class SakstemaPage extends React.Component {
                            brukerNavn={brukerNavn}></DokumentListe> :
             <DokumentListe visTema="true" dokumentMetadata={dokumenter}
                            brukerNavn={brukerNavn}></DokumentListe>;
-
         return (
             <div>
                 <section className="saksoversikt-liste">
@@ -25,6 +25,7 @@ class SakstemaPage extends React.Component {
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} fnr={fnr} />
                     {dokumentliste}
+                    <TidligereDokumenter />
                 </section>
             </div>
         )

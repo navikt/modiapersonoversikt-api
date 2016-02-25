@@ -10,6 +10,9 @@ import SakstemaPage from './sakstema/SakstemaPage';
 import ViktigAVitePage from './viktigavite/ViktigAVitePage';
 import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
 import Snurrepipp from './../../utils/snurrepipp';
+import { IntlProvider, addLocaleData, FormattedMessage } from 'react-intl';
+import nbLocale from 'react-intl/dist/locale-data/nb';
+addLocaleData(nbLocale);
 
 const contextRoutes = {
     'sakstema': (props) => <SakstemaPage {...props} />,
@@ -46,9 +49,11 @@ class SaksoversiktLerret extends React.Component {
         const content = getContent(valgtside, this.props);
 
         return (
-            <div className="saksoversikt-lerret">
-                {content}
-            </div>
+            <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
+                <div className="saksoversikt-lerret">
+                    {content}
+                </div>
+            </IntlProvider>
         );
     }
 }
@@ -63,8 +68,9 @@ const mapStateToProps = (state) => {
     return {
         sakstema: state.lerret.data.sakstema,
         status: state.lerret.status,
-        valgtTema: state.lerret.valgtTema
+        valgtTema: state.lerret.valgtTema,
+        tekster: state.lerret.data.tekster
     };
 };
 
-export default wrapWithProvider(connect(mapStateToProps, { velgSak, hentLerretData })(SaksoversiktLerret), store);
+export default wrapWithProvider(connect(mapStateToProps, {velgSak, hentLerretData})(SaksoversiktLerret), store);

@@ -1,34 +1,28 @@
 import React, { PropTypes as PT } from 'react';
 import Sakstema from './Sakstema';
-
-const sakstemaComparator = (sakstema1, sakstema2) => {
-    if (!sakstema1.hasOwnProperty('sistOppdatertDato')) {
-        return 1;
-    } else {
-        return new Date(sakstema2.sistOppdatertDato) - new Date(sakstema1.sistOppdatertDato);
-    }
-};
-
+import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering'
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaListe extends React.Component {
     _lagAlleTema(temaliste) {
         return [{
-            temanavn: 'Alle temaer',
+            temanavn: <FormattedMessage id="sakslamell.alletemaer"/>,
             temakode: 'alle',
-            dokumentmetadata: (temaliste[0] || {}).dokumentmetadata
+            behandlingskjeder: temaliste[0].behandlingskjeder,
+            dokumentMetadata: temaliste[0].dokumentMetadata
         }];
     }
 
     render() {
-        const temaListe = this.props.sakstema.sort(sakstemaComparator);
+        const temaListe = this.props.sakstema;
 
         const temalisteelementer = this._lagAlleTema(temaListe)
             .concat(temaListe)
             .map((tema) => (
-                <Sakstema tema={tema} velgSak={this.props.velgSak} valgtTema={this.props.valgtTema}/>
+                <Sakstema tema={tema} velgSak={this.props.velgSak}
+                          nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder, tema.dokumentMetadata, 28)}
+                          valgtTema={this.props.valgtTema}/>
             ));
-
-        console.log('temalisteelementer', temalisteelementer);
 
         return (
             <div className="sakstemaliste">

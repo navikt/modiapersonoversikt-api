@@ -1,27 +1,17 @@
 import React, { PropTypes as PT } from 'react';
 import { FormattedDate } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { dokumentMetadataTilJSDate } from './../../utils/dato-utils';
-
-function hentDatostreng(dokumentmetadata) {
-    //Hack enn så lenge. Bør bruke FormattedDate.
-    if (!dokumentmetadata || dokumentmetadata.length === 0) {
-        return "";
-    } else {
-        const dato = dokumentmetadata[0].dato;
-        const day = dato.dayOfMonth;
-        const year = dato.year;
-        const month = dato.monthValue;
-        return day + "." + month + "." + year;
-    }
-}
 
 class Sakstema extends React.Component {
     render() {
-        const { tema, valgtTema, velgSak } = this.props;
+        const { tema, valgtTema, velgSak, nokkelinfo} = this.props;
         // Sjekk på temakode ettersom 'alletemaet' blir laget på nytt ved rerender.
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
-        const datostreng = hentDatostreng(tema.dokumentmetadata);
         const id = `sakstemaRadioListe--${tema.temakode}`;
+        const sisteOppdatering = nokkelinfo.sisteOppdatering? nokkelinfo.sisteOppdatering : "";
+        const behandlingsstatus = tema.temakode === 'alle'? "": nokkelinfo.behandlingsstatus? nokkelinfo.behandlingsstatus : "";
+        const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering} />
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt}`}>
@@ -29,8 +19,9 @@ class Sakstema extends React.Component {
                        onClick={() => velgSak(tema)}
                 />
                 <label htmlFor={id}>
-                    <p className="temaliste-label datotekst">{datostreng}</p>
+                    <p className="temaliste-label datotekst">{sisteOppdateringTekst}</p>
                     <p className="temaliste-label stortekst">{tema.temanavn}</p>
+                    <p className="temaliste-label datotekst">{behandlingsstatus}</p>
                 </label>
             </div>
         );
