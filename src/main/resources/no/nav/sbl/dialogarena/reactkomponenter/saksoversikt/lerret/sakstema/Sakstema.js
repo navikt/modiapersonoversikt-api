@@ -10,8 +10,8 @@ class Sakstema extends React.Component {
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
         const id = `sakstemaRadioListe--${tema.temakode}`;
         const sisteOppdatering = nokkelinfo.sisteOppdatering? nokkelinfo.sisteOppdatering : "";
-        const statusTekst = nokkelinfo.behandlingsstatus? nokkelinfo.behandlingsstatus : "";
-        const datoOppdatert =  <FormattedDate value={sisteOppdatering} />
+        const behandlingsstatus = nokkelinfo.behandlingsstatus? nokkelinfo.behandlingsstatus : "";
+        const sisteOppdateringTekst =  <FormattedDate value={sisteOppdatering} />
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt}`}>
@@ -19,9 +19,9 @@ class Sakstema extends React.Component {
                        onClick={() => velgSak(tema)}
                 />
                 <label htmlFor={id}>
-                    <p className="temaliste-label datotekst">{datoOppdatert}</p>
+                    <p className="temaliste-label datotekst">{sisteOppdateringTekst}</p>
                     <p className="temaliste-label stortekst">{tema.temanavn}</p>
-                    <p className="temaliste-label datotekst">{statusTekst}</p>
+                    <p className="temaliste-label datotekst">{behandlingsstatus}</p>
                 </label>
             </div>
         );
