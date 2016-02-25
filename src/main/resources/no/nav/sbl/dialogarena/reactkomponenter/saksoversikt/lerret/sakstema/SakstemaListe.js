@@ -1,12 +1,12 @@
 import React, { PropTypes as PT } from 'react';
 import Sakstema from './Sakstema';
 import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering'
-
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaListe extends React.Component {
     _lagAlleTema(temaliste) {
         return [{
-            temanavn: 'Alle temaer',
+            temanavn: <FormattedMessage id="sakslamell.alletemaer"/>,
             temakode: 'alle',
             behandlingskjeder: temaliste[0].behandlingskjeder,
             dokumentMetadata: temaliste[0].dokumentMetadata
@@ -23,8 +23,6 @@ class SakstemaListe extends React.Component {
                           nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder, tema.dokumentMetadata, 28)}
                           valgtTema={this.props.valgtTema}/>
             ));
-
-        console.log('temalisteelementer', temalisteelementer);
 
         return (
             <div className="sakstemaliste">
