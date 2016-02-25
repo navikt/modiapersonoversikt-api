@@ -4,7 +4,6 @@ import no.nav.tjeneste.virksomhet.journal.v2.*;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.*;
 import org.joda.time.DateTime;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.util.*;
@@ -15,37 +14,23 @@ import static java.util.Arrays.asList;
 
 public class JoarkPortTypeMock {
     public static JournalV2 createInnsynJournalV1Mock() {
-        Map<String, List<WSJournalpost>> journalPoster = new HashMap<>();
-
-        journalPoster.put("1", asList(mottattSoknad("1", "DAG", new DateTime().minusDays(20))));
-        journalPoster.put("368274526", asList(mottattSoknad("368274526", "DAG", new DateTime().minusDays(20))));
-        journalPoster.put("2", asList(soknadUnderBehandling("2", "OMS", new DateTime().minusDays(40))));
-        journalPoster.put("123", asList(soknadUnderBehandling("123", "OPP", new DateTime().minusDays(19))));
-        journalPoster.put("444", asList(
-                soknadUnderBehandling("444", "DAG", new DateTime().minusDays(100)),
-                mottattSoknad("444", "DAG", new DateTime()),
-                mottattBekreftelse("444", "DAG", new DateTime().minusDays(200)),
-                forvaltningsnotat("444", "DAG", new DateTime())
-        ));
 
         return new JournalV2() {
 
             @Override
             public WSHentJournalpostListeResponse hentJournalpostListe(WSHentJournalpostListeRequest request) throws HentJournalpostListeSikkerhetsbegrensning {
                 WSHentJournalpostListeResponse response = new WSHentJournalpostListeResponse();
-                List<WSJournalpost> journalposts = new ArrayList<>();
 
-                request.getSakListe()
-                        .stream()
-                        .forEach(sak -> {
-                            if (journalPoster.containsKey(sak.getSakId())) {
-                                journalposts.addAll(journalPoster.get(sak.getSakId()));
-                            }
-                        });
+                List<WSJournalpost> journalposts = new ArrayList<>();
+                Map<String, List<WSJournalpost>> journalPoster = new HashMap<>();
+
+                List<WSSak> saker = request.getSakListe();
+
+                getRandomGeneratedJournalposter(journalPoster, saker);
+
+                leggTilJournalposterSomHarSaksidIResponse(journalposts, journalPoster, saker);
 
                 response.getJournalpostListe().addAll(journalposts);
-
-
                 return response;
             }
 
@@ -60,8 +45,7 @@ public class JoarkPortTypeMock {
             }
 
             @Override
-            public void ping() {
-            }
+            public void ping() {}
 
         };
     }
