@@ -21,11 +21,12 @@ public class SaksoversiktLerret extends Lerret {
             .done();
     private final ReactComponentPanel lerret;
 
-    public SaksoversiktLerret(String id, final String fnr) {
+    public SaksoversiktLerret(String id, final String fnr, String brukerNavn) {
         super(id);
 
         lerret = new ReactComponentPanel("saksoversiktLerret", "SaksoversiktLerret", new HashMap<String, Object>() {{
             put("fnr", fnr);
+            put("brukerNavn", brukerNavn);
         }});
 
         add(lerret);
