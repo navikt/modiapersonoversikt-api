@@ -9,7 +9,9 @@ class DokumentInfoElm extends React.Component {
         return (
             <li className="dokumentlisteelement">
                 <DokumentAvsender retning={dokumentinfo.retning} avsender={dokumentinfo.avsender}
-                                  navn={this.props.brukerNavn}/>
+                                  mottaker={dokumentinfo.mottaker}
+                                  brukerNavn={this.props.brukerNavn} navn={dokumentinfo.navn}/>
+
                 <a className="hoveddokumenttext">{dokumentinfo.hoveddokument.tittel}</a>
                 {temaHvisAlleTemaer}
                 <div className="typo-info">

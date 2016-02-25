@@ -51,7 +51,6 @@ class SaksoversiktLerret extends React.Component {
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
                 <div className="saksoversikt-lerret">
-                    <FormattedMessage id="baksystem.behandlinger.feil" defaultMessage="Fant ingenting"/>
                     {content}
                 </div>
             </IntlProvider>

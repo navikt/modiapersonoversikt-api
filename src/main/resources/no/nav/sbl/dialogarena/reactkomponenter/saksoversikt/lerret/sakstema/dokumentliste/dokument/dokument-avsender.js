@@ -1,15 +1,20 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
+import Inngaaende from './dokumentavsender/inngaaende';
+import Utgaaende from './dokumentavsender/utgaaende';
+import Intern from './dokumentavsender/intern';
 
-class DokumentAvsender extends React.Component {
-    render() {
-        const {retning, avsender , navn} = this.props;
+const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn}) => {
+    const UKJENT = <span className={retning }>/ <FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: <FormattedMessage id="dokumentinfo.avsender.ukjent"/> } }/></span>;
 
-        const thisAvsender = retning === 'INN' ? <span className="avsenderbrukertext">{navn}</span> :
-            <span className="avsendernavtext">{avsender}</span>
+    const tekstBasertPaaRetning = {
+        INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsenderInn={avsender}/>,
+        UT: <Utgaaende avsenderUT={avsender} mottakerUT={mottaker}/>,
+        INTERN: <Intern />
+    };
 
-        return <div className="avsendertext"><span>Fra </span>{thisAvsender}</div>;
-    }
-}
+    return tekstBasertPaaRetning[retning] || UKJENT;
+};
 
 DokumentAvsender.propTypes = {
     avsender: React.PropTypes.string.isRequired,
