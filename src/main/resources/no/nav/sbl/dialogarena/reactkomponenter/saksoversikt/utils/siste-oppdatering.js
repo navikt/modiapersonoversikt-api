@@ -31,8 +31,31 @@ const underBehandlingEllerNyereEnnGrenseverdi = (antallDager) => (behandlingskje
     return behandlingskjede.status === 'UNDER_BEHANDLING' || datoNyereEnnAntallDager(new Date(behandlingskjede.sistOppdatert.millis), antallDager);
 };
 
+const behandlingskjedeTilJSDate = (kjede) => new Date(kjede.sistOppdatert.millis);
+const sluttbrukerEllerTredjepart = (dokument) => dokument.avsender === 'SLUTTBRUKER' ? tekster('dokumentinfo.deg') : dokument.navn;
+const fjernEldreEnn = (antallDager) => (dokument) => datoNyereEnnAntallDager(javaLocalDateTimeToJSDate(dokument.dato), antallDager);
 const nyesteDokumentForst = (dok1, dok2) => javaLocalDateTimeToJSDate(dok1.dato) < javaLocalDateTimeToJSDate(dok2.dato) ? 1 : -1;
+
+//const nyesteBehandlingskjedeForst = (b1, b2) => new Date(b1.sistOppdatert.millis) < new Date(b2.sistOppdatert.millis) ? 1 : -1;
 const nyesteBehandlingskjedeForst = (b1, b2) => javaLocalDateTimeToJSDate(b1.sistOppdatert) < javaLocalDateTimeToJSDate(b2.sistOppdatert) ? 1 : -1;
+
+
+
+const tilDokumentinfoTekst = (dokument) => {
+    const values = {
+        sak: dokument.hoveddokument.tittel,
+        dato: javaLocalDateTimeToJSDate(dokument.dato),
+        avsender: sluttbrukerEllerTredjepart(dokument)
+    };
+
+    const keyBasertPaaRetning = {
+        INN: 'dokumentinfo.inngaaende',
+        UT: 'dokumentinfo.utgaaende',
+        INTERN: 'dokumentinfo.samtalereferat'
+    };
+
+    return <FormattedMessage id={keyBasertPaaRetning[dokument.retning]} values={values}/>;
+};
 
 const sisteOppdatering = (nyesteDokument, nyesteBehandlingskjede) => {
     const harDokument = !!nyesteDokument;
@@ -41,12 +64,14 @@ const sisteOppdatering = (nyesteDokument, nyesteBehandlingskjede) => {
     let sisteOppdateringISaken;
 
     if(harBehandlingskjede && !harDokument) {
+        //sisteOppdateringISaken = behandlingskjedeTilJSDate(nyesteBehandlingskjede);
         sisteOppdateringISaken = javaLocalDateTimeToJSDate(nyesteBehandlingskjede.sistOppdatert);
     } else if(harDokument && !harBehandlingskjede) {
         sisteOppdateringISaken = javaLocalDateTimeToJSDate(nyesteDokument.dato);
     } else if(!nyesteBehandlingskjede && !nyesteDokument){
         sisteOppdateringISaken = null;
     } else {
+        //const sistOppdatertBehandlingskjedeDate = behandlingskjedeTilJSDate(nyesteBehandlingskjede);
         const sistOppdatertBehandlingskjedeDate = javaLocalDateTimeToJSDate(nyesteBehandlingskjede.sistOppdatert);
         const sistOppdatertDokumentDate = javaLocalDateTimeToJSDate(nyesteDokument.dato);
         sisteOppdateringISaken = sistOppdatertDokumentDate > sistOppdatertBehandlingskjedeDate ? sistOppdatertDokumentDate : sistOppdatertBehandlingskjedeDate;
