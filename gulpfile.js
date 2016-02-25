@@ -97,7 +97,7 @@ gulp.task('tdd', function runTdd() {
 });
 
 gulp.task('eslint', function () {
-    return gulp.src([config.srcPath + '*.{js,jsx}'])
+    return gulp.src([config.srcPath + '**/*.{js,jsx}'])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
