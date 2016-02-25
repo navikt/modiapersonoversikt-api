@@ -59,7 +59,6 @@ SaksoversiktLerret.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    console.log('state', state);
 
     return {
         sakstema: state.lerret.data.sakstema,

@@ -2,21 +2,24 @@ import React from 'react';
 
 class ViktigAVitePage extends React.Component {
     render() {
-        const { tekster, valgtTema, sakstema, fnr } = this.props;
+        const { valgtTema, fnr, sakstema } = this.props;
 
-        const valgttema = "DAG";
-        const temanavn = sakstema.filter(tema => tema.temakode === valgttema)[0].temanavn;
-        const tittel = "Viktig å vite"; //tekster['saksinformasjon.tittel'];
+        const temanavn = sakstema.filter(tema => tema.temakode === valgtTema)[0].temanavn;
+        //TODO Tekster fra enonic. Avventer react-intl
+        const titteltekst = "Viktig å vite"; //tekster['saksinformasjon.tittel'];
         const innhold = "Innhold"; //tekster[`saksinformasjon.${valgttema}`];
 
-        const tilbakelenke = `/modiabrukerdialog/person/${fnr}?temakode=${valgttema}#!saksoversikt`;
+        const tilbakelenke = `/modiabrukerdialog/person/${fnr}?temakode=${valgtTema}#!saksoversikt`;
+        const sidetittel  = `${titteltekst} - ${temanavn}`;
+
+        //TODO A-lenka forårsaker full re-rendering av Modia. Må se på alternativ løsning
         return (
             <div className="viktigavitepanel side-innhold">
                 <div className="blokk-s">
                     <a href={tilbakelenke}>Tilbake til sakstema</a>
                 </div>
                 <panel className="panel">
-                    <h1 className="decorated typo-innholdstittel">{tittel} - {temanavn}</h1>
+                    <h1 className="decorated typo-innholdstittel">{sidetittel}</h1>
                     <section>
                         <div dangerouslySetInnerHTML={createMarkup(innhold)}/>
                     </section>
@@ -25,10 +28,6 @@ class ViktigAVitePage extends React.Component {
         )
     };
 }
-
-export const skalViseViktigAViteSideForTema = (miljovariabler, tema) => {
-    return miljovariabler['temasider.viktigavitelenke'].split(',').some(temaMedViktigAVite => temaMedViktigAVite === tema);
-};
 
 function createMarkup(markuptekst) {
     return {
