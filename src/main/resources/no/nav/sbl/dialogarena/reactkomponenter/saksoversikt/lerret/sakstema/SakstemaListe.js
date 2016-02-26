@@ -15,9 +15,7 @@ class SakstemaListe extends React.Component {
 
     render() {
         const temaListe = this.props.sakstema;
-
-        const temalisteelementer = this._lagAlleTema(temaListe)
-            .concat(temaListe)
+        const temalisteelementer = (temaListe.length > 1 ? this._lagAlleTema(temaListe).concat(temaListe) : temaListe)
             .map((tema) => (
                 <Sakstema tema={tema} velgSak={this.props.velgSak}
                           nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder, tema.dokumentMetadata, 28)}
