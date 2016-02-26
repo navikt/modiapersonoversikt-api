@@ -8,7 +8,7 @@ const Utgaaende = ({ avsenderUT, mottakerUT }) => {
         return fra;
     }
     const til = < FormattedMessage id="dokumentinfo.avsender.til" values={{mottaker:mottakerUT}}/>;
-    return <span>{ut}{til}</span>;
+    return <span>{fra}{til}</span>;
 }
 
 export default Utgaaende;
