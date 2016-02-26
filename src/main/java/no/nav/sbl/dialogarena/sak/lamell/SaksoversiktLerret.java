@@ -35,7 +35,7 @@ public class SaksoversiktLerret extends Lerret {
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         String tema = feedItemPayload.getItemId();
-        //TODO lerret.call("visTema", tema);
+        lerret.call("callAction", "visTema", tema);
     }
 }
 

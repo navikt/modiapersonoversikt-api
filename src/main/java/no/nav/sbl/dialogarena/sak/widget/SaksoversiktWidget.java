@@ -33,7 +33,6 @@ public class SaksoversiktWidget extends Widget<Object> {
         }});
 
         feeditemListe.addCallback("ITEM_CLICK", String.class, (target, data) -> {
-            System.out.println("ITEM_CLICK: " + data);
             send(this, Broadcast.BUBBLE, new NamedEventPayload(
                     FEED_ITEM_CLICKED,
                     new FeedItemPayload(this.getId(), data, "tema"))
@@ -41,7 +40,6 @@ public class SaksoversiktWidget extends Widget<Object> {
         });
 
         feeditemListe.addCallback("VIS_ALLE_CLICK", Void.class, (target, data) -> {
-            System.out.println("HEADER_CLICK");
             apneSaksoversiktLamell();
         });
 
