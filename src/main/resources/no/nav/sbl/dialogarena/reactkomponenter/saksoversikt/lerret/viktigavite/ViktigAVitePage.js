@@ -2,20 +2,22 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 class ViktigAVitePage extends React.Component {
+    _redirect(e) {
+        e.preventDefault();
+        this.props.visSide('sakstema');
+    }
     render() {
-        const { valgtTema, fnr, sakstema } = this.props;
+        const { valgtTema, sakstema } = this.props;
 
-        const temanavn = sakstema.filter(tema => tema.temakode === valgtTema)[0].temanavn;
+        const temanavn = sakstema.find(tema => tema.temakode === valgtTema.temakode).temanavn;
         const sidetittel = <FormattedMessage id="saksinformasjon.vikigavite.tittel" values={{tema: temanavn}}/>;
-        const innhold =  this.props.intl.formatMessage({id:`saksinformasjon.${valgtTema}`});
-
-        const tilbakelenke = `/modiabrukerdialog/person/${fnr}?temakode=${valgtTema}#!saksoversikt`;
+        const innhold =  this.props.intl.formatMessage({id:`saksinformasjon.${valgtTema.temakode}`});
 
         //TODO A-lenka forårsaker full re-rendering av Modia. Må se på alternativ løsning
         return (
             <div className="viktigavitepanel side-innhold">
                 <div className="blokk-s">
-                    <a href={tilbakelenke}>Tilbake til sakstema</a>
+                    <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
                 </div>
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">{sidetittel}</h1>

@@ -6,7 +6,7 @@ import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
 
 class SakstemaPage extends React.Component {
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, fnr } = this.props;
+        const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
         const dokumenter = sakstema.reduce((acc, tema) => {
             return acc.concat(tema.dokumentMetadata);
         }, []);
@@ -23,7 +23,7 @@ class SakstemaPage extends React.Component {
                     <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
-                    <ViktigAViteLenke valgtTema={valgtTema} fnr={fnr} />
+                    <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide} />
                     {dokumentliste}
                     <TidligereDokumenter />
                 </section>
@@ -33,7 +33,8 @@ class SakstemaPage extends React.Component {
 }
 
 SakstemaPage.propTypes = {
-    sakstema: PT.array.isRequired
+    sakstema: PT.array.isRequired,
+    visSide: PT.func.isRequired
 };
 
 export default SakstemaPage;

@@ -2,7 +2,7 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak } from './../actions';
+import { hentLerretData, velgSak, visSide } from './../actions';
 import * as Const from './../konstanter';
 
 import AsyncLoader from './../../utils/async-loader';
@@ -20,9 +20,10 @@ const contextRoutes = {
     'dokumentvisning': (props) => <DokumentVisningPage {...props} />
 };
 
-function getContent(valgtside, props) {
+function getContent(props) {
+    const { valgtside, ...componentProps } = props;
     const fn = contextRoutes[valgtside] || contextRoutes['sakstema'];
-    return fn(props);
+    return fn(componentProps);
 }
 
 function getUrlParameter(wicketurl, urlparameter) {
@@ -45,13 +46,10 @@ class SaksoversiktLerret extends React.Component {
             return <Snurrepipp />;
         }
 
-        const valgtside = getUrlParameter(this.props.wicketurl, 'valgtside');
-        const content = getContent(valgtside, this.props);
-
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
                 <div className="saksoversikt-lerret">
-                    {content}
+                    { getContent(this.props) }
                 </div>
             </IntlProvider>
         );
@@ -66,6 +64,7 @@ SaksoversiktLerret.propTypes = {
 const mapStateToProps = (state) => {
 
     return {
+        valgtside: state.lerret.valgtside,
         sakstema: state.lerret.data.sakstema,
         status: state.lerret.status,
         valgtTema: state.lerret.valgtTema,
@@ -73,4 +72,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default wrapWithProvider(connect(mapStateToProps, {velgSak, hentLerretData})(SaksoversiktLerret), store);
+export default wrapWithProvider(connect(mapStateToProps, {velgSak, visSide, hentLerretData})(SaksoversiktLerret), store);

@@ -1,14 +1,19 @@
 import React from 'react';
 
 class ViktigAViteLenke extends React.Component {
+    _redirect(e) {
+        e.preventDefault();
+        this.props.visSide('viktigavite');
+    }
+
     render() {
-        const { valgtTema, fnr } = this.props;
+        const { valgtTema } = this.props;
 
         if (skalViseViktigAViteSideForTema(valgtTema.temakode)) {
             const linktekst = `Viktig å vite om ${valgtTema.temanavn}`;
             return (
                 <div className="listepanel">
-                    <a href={`/modiabrukerdialog/person/${fnr}?temakode=${valgtTema.temakode}&valgtside=viktigavite#!saksoversikt`}>{linktekst}</a>
+                    <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>{linktekst}</a>
                 </div>
             );
         } else {

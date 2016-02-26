@@ -15,7 +15,14 @@ const lagAlleTema = (temaliste) => [{
 }];
 
 const actionHandlers = {};
-const initalState = {status: Const.VOID, data: {}, feil: '', valgtTema: null, widgetValgtTemakode: null};
+const initalState = {
+    valgtside: 'sakstema',
+    status: Const.VOID,
+    data: {},
+    feil: '',
+    valgtTema: null,
+    widgetValgtTemakode: null
+};
 // ------- Your handler here
 
 actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
@@ -57,6 +64,8 @@ actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
 
 actionHandlers[AT.VELG_SAK] = (state, action) => ({...state, valgtTema: action.data});
 actionHandlers[AT.VIS_TEMA] = (state, action) => ({...state, widgetValgtTemakode: action.data});
+actionHandlers[AT.VIS_SIDE] = (state, action) => ({...state, valgtside: action.data});
+
 
 // -------
 export default basicReducer(initalState, actionHandlers);
