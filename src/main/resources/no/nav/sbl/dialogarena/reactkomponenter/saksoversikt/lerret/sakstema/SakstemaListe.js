@@ -3,33 +3,19 @@ import Sakstema from './Sakstema';
 import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering'
 import { FormattedMessage } from 'react-intl';
 
-class SakstemaListe extends React.Component {
-    _lagAlleTema(temaliste) {
-        return [{
-            temanavn: <FormattedMessage id="sakslamell.alletemaer"/>,
-            temakode: 'alle',
-            behandlingskjeder: temaliste[0].behandlingskjeder,
-            dokumentMetadata: temaliste[0].dokumentMetadata
-        }];
-    }
+const SakstemaListe = ({sakstema, valgtTema, velgSak}) => {
+    const temaListe = sakstema.map((tema) => (
+        <Sakstema tema={tema} velgSak={velgSak}
+                  nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder, tema.dokumentMetadata, 28)}
+                  valgtTema={valgtTema}/>
+    ));
 
-    render() {
-        const temaListe = this.props.sakstema;
-        const temalisteelementer = (temaListe.length > 1 ? this._lagAlleTema(temaListe).concat(temaListe) : temaListe)
-            .map((tema) => (
-                <Sakstema tema={tema} velgSak={this.props.velgSak}
-                          nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder, tema.dokumentMetadata, 28)}
-                          valgtTema={this.props.valgtTema}/>
-            ));
-
-        return (
-            <div className="sakstemaliste">
-                {temalisteelementer}
-            </div>
-        );
-    }
-}
-
+    return (
+        <div className="sakstemaliste">
+            {temaListe}
+        </div>
+    );
+};
 
 Sakstema.propTypes = {
     sakstema: PT.array.isRequired,

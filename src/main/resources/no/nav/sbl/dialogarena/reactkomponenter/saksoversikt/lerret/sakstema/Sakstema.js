@@ -4,18 +4,27 @@ import { FormattedMessage } from 'react-intl';
 import { dokumentMetadataTilJSDate } from './../../utils/dato-utils';
 
 class Sakstema extends React.Component {
+
+    componentDidMount() {
+        const { tema, valgtTema } = this.props;
+        const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
+        if (erValgt && tema.temakode !== 'alle') {
+            setTimeout(() => this.refs.radio.focus(), 0);
+        }
+    }
+
     render() {
         const { tema, valgtTema, velgSak, nokkelinfo} = this.props;
         // Sjekk på temakode ettersom 'alletemaet' blir laget på nytt ved rerender.
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
         const id = `sakstemaRadioListe--${tema.temakode}`;
-        const sisteOppdatering = nokkelinfo.sisteOppdatering? nokkelinfo.sisteOppdatering : "";
-        const behandlingsstatus = tema.temakode === 'alle'? "": nokkelinfo.behandlingsstatus? nokkelinfo.behandlingsstatus : "";
-        const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering} />
+        const sisteOppdatering = nokkelinfo.sisteOppdatering ? nokkelinfo.sisteOppdatering : "";
+        const behandlingsstatus = tema.temakode === 'alle' ? "" : nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : "";
+        const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering}/>
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt}`}>
-                <input type="radio" id={id} readOnly checked={erValgt} name="sakstemaRadioListe"
+                <input type="radio" id={id} ref="radio" readOnly checked={erValgt} name="sakstemaRadioListe"
                        onClick={() => velgSak(tema)}
                 />
                 <label htmlFor={id}>
