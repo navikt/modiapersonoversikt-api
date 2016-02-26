@@ -1,16 +1,15 @@
 import React from 'react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 class ViktigAVitePage extends React.Component {
     render() {
         const { valgtTema, fnr, sakstema } = this.props;
 
         const temanavn = sakstema.filter(tema => tema.temakode === valgtTema)[0].temanavn;
-        //TODO Tekster fra enonic. Avventer react-intl
-        const titteltekst = "Viktig å vite"; //tekster['saksinformasjon.tittel'];
-        const innhold = "Innhold"; //tekster[`saksinformasjon.${valgttema}`];
+        const sidetittel = <FormattedMessage id="saksinformasjon.vikigavite.tittel" values={{tema: temanavn}}/>;
+        const innhold =  this.props.intl.formatMessage({id:`saksinformasjon.${valgtTema}`});
 
         const tilbakelenke = `/modiabrukerdialog/person/${fnr}?temakode=${valgtTema}#!saksoversikt`;
-        const sidetittel  = `${titteltekst} - ${temanavn}`;
 
         //TODO A-lenka forårsaker full re-rendering av Modia. Må se på alternativ løsning
         return (
@@ -35,5 +34,5 @@ function createMarkup(markuptekst) {
     };
 };
 
-export default ViktigAVitePage;
+export default injectIntl(ViktigAVitePage);
 
