@@ -137,7 +137,10 @@
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>sanntidpdfkonverter</artifactId>
+        </dependency>
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
