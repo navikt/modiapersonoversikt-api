@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>7.1-HL2-SNAPSHOT</version>
+        <version>6.47.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -33,6 +33,7 @@
             <artifactId>modiabrukerdialog-pip</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!--Personsok-->
         <dependency>
             <groupId>no.nav</groupId>
@@ -180,10 +181,7 @@
             <artifactId>varsler</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl</groupId>
-            <artifactId>sanntidpdfkonverter</artifactId>
-        </dependency>
+
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
