@@ -4,8 +4,9 @@ import Inngaaende from './dokumentavsender/inngaaende';
 import Utgaaende from './dokumentavsender/utgaaende';
 import Intern from './dokumentavsender/intern';
 
-const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn}) => {
-    const UKJENT = <span className={retning }>/ <FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: <FormattedMessage id="dokumentinfo.avsender.ukjent"/> } }/></span>;
+const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn }) => {
+    const UKJENT = (<span className={retning}>/ <FormattedMessage id="dokumentinfo.avsender.fra"
+                                                                   values={ { avsender: <FormattedMessage id="dokumentinfo.avsender.ukjent"/> } }/></span>);
 
     const tekstBasertPaaRetning = {
         INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsenderInn={avsender}/>,

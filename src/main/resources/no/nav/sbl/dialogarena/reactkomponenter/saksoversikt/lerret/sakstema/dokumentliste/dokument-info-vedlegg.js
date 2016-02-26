@@ -8,11 +8,12 @@ class DokumentinfoVedlegg extends React.Component {
             return <div></div>;
         }
 
-        const vedleggListe = vedlegg.map(dokumentVedlegg => (<li ><a className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
+        const vedleggListe = vedlegg.map(dokumentVedlegg => (
+            <li ><a className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
 
         return (
             <div>
-                <FormattedMessage id="dokumentinfo.vedlegg"></FormattedMessage>
+                <div className="vedleggheader"><FormattedMessage id="dokumentinfo.vedlegg"/></div>
                 <ul className="vedleggliste">{vedleggListe}</ul>
             </div>
         );

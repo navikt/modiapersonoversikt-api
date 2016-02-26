@@ -8,11 +8,13 @@ class DokumentInfoElm extends React.Component {
         const temaHvisAlleTemaer = this.props.visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
         return (
             <li className="dokumentlisteelement">
-                <DokumentAvsender retning={dokumentinfo.retning} avsender={dokumentinfo.avsender}
+                <DokumentAvsender className="avsendertext" retning={dokumentinfo.retning}
+                                  avsender={dokumentinfo.avsender}
                                   mottaker={dokumentinfo.mottaker}
                                   brukerNavn={this.props.brukerNavn} navn={dokumentinfo.navn}/>
 
-                <a className="hoveddokumenttext">{dokumentinfo.hoveddokument.tittel}</a>
+                <div className="hoveddokumenttextwrapper"> <a
+                    className="hoveddokumenttext">{dokumentinfo.hoveddokument.tittel}</a></div>
                 {temaHvisAlleTemaer}
                 <div className="typo-info">
                     <DokumentinfoVedlegg vedlegg={dokumentinfo.vedlegg}/>

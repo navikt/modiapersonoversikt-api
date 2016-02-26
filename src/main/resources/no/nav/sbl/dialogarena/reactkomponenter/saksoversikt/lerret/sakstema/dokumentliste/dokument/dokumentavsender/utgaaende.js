@@ -1,14 +1,14 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-
 const Utgaaende = ({ avsenderUT, mottakerUT }) => {
-    const fra = < FormattedMessage id="dokumentinfo.avsender.fra" values={{avsender:avsenderUT}}/>;
-    if (mottakerUT === 'SLUTTBRUKER') {
-        return fra;
-    }
-    const til = < FormattedMessage id="dokumentinfo.avsender.til" values={{mottaker:mottakerUT}}/>;
-    return <span>{fra}{til}</span>;
-}
+    const fra = < FormattedMessage id="dokumentinfo.avsender.fra"
+                                   values={  { avsender: <strong className={'avsendernavtext'}>{avsenderUT}</strong> }}/>
+        ;
+    const til = mottakerUT === 'SLUTTBRUKER' ? <noscript/> :
+        < FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: mottakerUT } }/>;
+
+    return <div className="avsendertext">{fra}{til}</div>;
+};
 
 export default Utgaaende;

@@ -1,5 +1,5 @@
 .saksoversikt-lerret {
-  padding:0 !important;
+  padding: 0 !important;
   .saksoversikt-liste {
     width: 35%;
     height: 100%;
@@ -9,18 +9,22 @@
 
   .saksoversikt-innhold {
     float: left;
-    width:65%;
+    width: 65%;
 
     .dokumentliste {
       list-style: none;
       padding-left: 3rem;
+      margin-top: 3rem;
 
       .dokumentlisteelement {
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: solid 2px lightgrey;
 
-        .avsendertext{
+        .avsendertext {
           font-size: medium;
           margin-bottom: 1rem;
+          display: block;
 
           .avsenderbrukertext {
 
@@ -30,20 +34,25 @@
           }
         }
 
-
+        .hoveddokumenttextwrapper{
+          margin-bottom: 1rem;
+        }
         .hoveddokumenttext {
           font-size: large;
           font-weight: bolder;
-          border-bottom: solid 2px #cccccc;
+          border-bottom: 2px solid #b7b1a9;
 
         }
 
-        .vedleggliste {
-          list-style: disc;
-          .vedleggtext{
-            border-bottom: solid 2px #cccccc;
-          }
-        }
+      }
+    }
+    .vedleggheader{
+      margin-bottom: 0.5rem;
+    }
+    .vedleggliste {
+      list-style: disc;
+      .vedleggtext {
+        border-bottom: 2px solid #b7b1a9;
       }
     }
   }
@@ -61,7 +70,7 @@
     width: 100%;
   }
 
-  label:before{
+  label:before {
     display: none !important;
   }
 
@@ -108,7 +117,7 @@
 .typo-innholdstittel {
   font-size: 2.5rem;
   font-weight: 600;
-  font-family: Modus,Arial,sans-serif;
+  font-family: Modus, Arial, sans-serif;
 }
 
 .panel {
