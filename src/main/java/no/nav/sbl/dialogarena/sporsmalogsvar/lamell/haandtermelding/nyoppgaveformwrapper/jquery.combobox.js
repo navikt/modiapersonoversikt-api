@@ -187,7 +187,7 @@
             this.input
                 .val("")
                 .attr("title", value + " didn't match any item");
-            this.element.children('option').attr('selected', 'selected')
+            this.element.children('option').removeAttr('selected', 'selected');
             this.element.trigger('change');
             this.input.autocomplete("instance").term = "";
         },
