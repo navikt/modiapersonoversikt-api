@@ -2,17 +2,23 @@
 
 .saksoversikt-lerret {
   padding: 0 !important;
+  height: 100%;
   .saksoversikt-liste {
     width: 35%;
     height: 100%;
     float: left;
     background-color: #f1f1f1;
     border-right: 1px solid #ccc;
+    overflow-x: hidden;
+    overflow-y: visible;
   }
 
   .saksoversikt-innhold {
     float: left;
     width: 65%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
 
     .dokumentliste {
       list-style: none;
@@ -81,8 +87,13 @@
   }
 }
 
+.sakstema-container {
+  height: 100%;
+}
+
 .sakstemaliste {
   padding: 0;
+  height: 100%;
 }
 
 .saksoversikt-liste-element {
@@ -155,6 +166,9 @@
 .viktigavitepanel {
   background: #e1e1e1;
   padding: 2rem 5rem 5rem 5rem;
+  overflow-x: hidden;
+  overflow-y: visible;
+  height: 100%;
 }
 
 .side-innhold a {
@@ -165,13 +179,17 @@
   }
 }
 
-.saksoversikt-lerret {
-  padding: 0 !important;
-}
-
 .listepanel {
   height: 4rem;
   border-bottom: 1px solid #e1e1e1;
   padding: 1.5rem;
   margin-bottom: 1rem
+}
+
+.saksoversiktLerret-container {
+  height: 100%;
+}
+
+.lerret.saksoversikt-lerret {
+  overflow-y: hidden !important;
 }

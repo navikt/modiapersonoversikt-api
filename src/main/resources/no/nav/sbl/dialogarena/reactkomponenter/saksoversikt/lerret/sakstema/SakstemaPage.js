@@ -18,7 +18,7 @@ class SakstemaPage extends React.Component {
             <DokumentListe visTema="true" dokumentMetadata={dokumenter}
                            brukerNavn={brukerNavn}></DokumentListe>;
         return (
-            <div>
+            <div className="sakstema-container">
                 <section className="saksoversikt-liste">
                     <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
