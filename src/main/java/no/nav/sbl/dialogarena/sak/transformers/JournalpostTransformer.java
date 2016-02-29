@@ -141,7 +141,7 @@ public class JournalpostTransformer {
             case JOURNALPOST_UTGAAENDE:
                 return journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             case JOURNALPOST_INTERN:
-                return journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
+                return journalpost.getFerdigstilt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             default:
                 return now();
         }
