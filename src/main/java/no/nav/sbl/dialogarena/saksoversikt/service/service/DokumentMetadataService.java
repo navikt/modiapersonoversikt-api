@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static java.util.stream.Stream.empty;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.FERDIG;
 
 public class DokumentMetadataService {
@@ -49,13 +50,13 @@ public class DokumentMetadataService {
                 .anyMatch(jp -> jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId()));
     }
 
-    private Predicate<DokumentMetadata> finnesIkkeIJoark(List<DokumentMetadata> joarkMetadata){
+    private Predicate<DokumentMetadata> finnesIkkeIJoark(List<DokumentMetadata> joarkMetadata) {
         return finnesIJoark(joarkMetadata).negate();
     }
 
 
     public List<DokumentMetadata> hentDokumentMetadata(List<Sak> saker, String fnr) {
-        List<DokumentMetadata> joarkMetadata = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker)
+        List<DokumentMetadata> joarkMetadataListe = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker)
                 .orElseGet(() -> empty())
                 .collect(toList());
 
@@ -64,10 +65,27 @@ public class DokumentMetadataService {
                 .map(this::dokumentMetadataFraHenvendelse)
                 .collect(toList());
 
-        Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse.stream().filter(finnesIkkeIJoark(joarkMetadata));
-        return concat(
-                populerEttersendelserFraHenvendelse(joarkMetadata, innsendteSoknaderIHenvendelse),
-                innsendteSoknaderSomBareFinnesIHenvendelse).collect(toList());
+
+        Stream<DokumentMetadata> soknaderSomHarEndretTema = innsendteSoknaderIHenvendelse
+                .stream()
+                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, joarkMetadataListe))
+                .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(JOURNALFORT_ANNET_TEMA));
+
+        Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse.stream().filter(finnesIkkeIJoark(joarkMetadataListe));
+        return concat(concat(
+                populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),
+                innsendteSoknaderSomBareFinnesIHenvendelse),
+                soknaderSomHarEndretTema).collect(toList());
+    }
+
+
+    private boolean harJournalforingEndretTema(DokumentMetadata henvendelseDokumentMetadata, List<DokumentMetadata> joarkDokumentMetadataListe) {
+        return joarkDokumentMetadataListe
+                .stream()
+                .filter(dokumentMetadata -> dokumentMetadata.getJournalpostId().equals(henvendelseDokumentMetadata.getJournalpostId()))
+                .filter(dokumentMetadata -> !dokumentMetadata.getTemakode().equals(henvendelseDokumentMetadata.getTemakode()))
+                .findAny()
+                .isPresent();
     }
 
     private Stream<DokumentMetadata> populerEttersendelserFraHenvendelse(List<DokumentMetadata> joarkMetadata, List<DokumentMetadata> ferdigeHenvendelser) {
@@ -77,7 +95,6 @@ public class DokumentMetadataService {
             return joarkDokumentMetadata.withEttersending(erEttersending);
         });
     }
-
 
 
     private DokumentMetadata dokumentMetadataFraHenvendelse(Record<Soknad> soknadRecord) {
