@@ -6,23 +6,29 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-//@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class TilgangskontrollServiceTest {
 
-    @Mock
-    private GsakSakerService gSakService;
     @Mock
     private EnforcementPoint pep;
     @Mock
@@ -42,10 +48,37 @@ public class TilgangskontrollServiceTest {
     public void setup() throws HentAktoerIdForIdentPersonIkkeFunnet {
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("0219");
 
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+    }
+
+    @Test
+    public void harTilgangTilAlleTema() {
+        List<Sakstema> sakstemaList = lagSakstemaListe();
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
+
+        List<ModiaSakstema> modiaSakstemaList = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaList);
+
+        assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> modiaSakstema.harTilgang == true), is(true));
+    }
+
+
+    @Test
+    public void harIkkeTilgangTilNoenTema() {
+        List<Sakstema> sakstemaList = lagSakstemaListe();
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
+
+        List<ModiaSakstema> modiaSakstemaList = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaList);
+
+        assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> modiaSakstema.harTilgang == false), is(true));
+    }
+
+    private List<Sakstema> lagSakstemaListe() {
+        return Arrays.asList(
+                new Sakstema().withTemakode("PEN"),
+                new Sakstema().withTemakode("TEST")
+        );
     }
 
 //    @Test
