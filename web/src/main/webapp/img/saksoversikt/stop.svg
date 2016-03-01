@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 25.4 25.4" style="enable-background:new 0 0 25.4 25.4;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#313031;}
+	.st1{fill:#F1F0F0;}
+	.st2{fill:#B7B1A8;}
+	.st3{fill:#3EB54A;}
+	.st4{fill:#FFFFFF;}
+	.st5{fill:#1999D6;}
+	.st6{fill:#B5B6AD;}
+	.st7{fill:#EEBE1C;}
+	.st8{fill:#8C4A9D;}
+	.st9{fill:none;stroke:#231F20;stroke-miterlimit:10;}
+	.st10{fill:#FFFFFF;stroke:#B7B1A9;stroke-miterlimit:10;}
+	.st11{fill:#231F20;}
+	.st12{fill:#2668B2;}
+	.st13{fill:#7F756C;}
+	.st14{fill:#777677;}
+	.st15{fill:#B7B1A9;}
+	.st16{fill:#2198D5;}
+	.st17{fill:#C6C3C2;}
+	.st18{fill:none;stroke:#B7B1A9;stroke-miterlimit:10;}
+	.st19{fill:#D9D9D8;}
+	.st20{fill:none;stroke:#CDCCCC;stroke-miterlimit:10;}
+	.st21{fill:#3F3933;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
+	.st22{fill:#FFFFFF;stroke:#B7B1A9;stroke-width:0.8554;stroke-miterlimit:10;}
+	.st23{fill:#3E3832;}
+	.st24{fill:#236BA5;}
+	.st25{fill:#3F3933;}
+	.st26{fill:#3E3831;}
+	.st27{fill:#F0EFEF;}
+	.st28{fill:#2968B2;}
+	.st29{opacity:0.7;}
+	.st30{fill:none;stroke:#80766C;stroke-miterlimit:10;}
+	.st31{fill:none;stroke:#80766C;stroke-miterlimit:10;stroke-dasharray:1,3;}
+	.st32{opacity:0.7;fill:none;stroke:#B8B1A9;stroke-miterlimit:10;}
+	.st33{fill:#F9F9FA;}
+	.st34{fill:#3A3733;}
+	.st35{opacity:0.58;}
+	.st36{fill:none;stroke:#B8B1A9;stroke-miterlimit:10;}
+	.st37{fill:#1C75BC;}
+	.st38{fill:#685B54;}
+	.st39{fill:#3B74BA;}
+	.st40{fill:#3F3931;}
+	.st41{opacity:0.5;}
+	.st42{fill:#E1DFD9;stroke:#E1DFD9;stroke-miterlimit:10;}
+	.st43{fill:#C22026;}
+	.st44{opacity:0.8;fill:#B8B1A9;}
+	.st45{fill:#2768B2;}
+	.st46{fill:none;stroke:#B7B1A9;stroke-width:1.106;stroke-miterlimit:10;}
+	.st47{fill:none;stroke:#B7B1A9;stroke-width:1.1279;stroke-miterlimit:10;}
+	.st48{fill:none;stroke:#B7B1A9;stroke-width:1.1187;stroke-miterlimit:10;}
+	.st49{fill:#63478A;}
+	.st50{fill:#B8B1A9;}
+	.st51{fill:#BB3B26;}
+	.st52{fill:#F7911E;}
+	.st53{fill:none;stroke:#3F3933;stroke-miterlimit:10;}
+	.st54{fill:none;stroke:#3F3933;stroke-width:0.9998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st55{fill:none;stroke:#7F756C;stroke-width:0.9998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st56{fill:none;stroke:#B7B1A9;stroke-width:1.3063;stroke-miterlimit:10;}
+	.st57{fill:#E1DFD9;stroke:#7F756C;stroke-miterlimit:10;}
+	.st58{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st59{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
+	.st60{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.4706,3.6471;}
+	.st61{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:7.0938,4.7292;}
+	.st62{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4.7812,3.1875;}
+	.st63{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4.9062,3.2708;}
+	.st64{fill:none;stroke:#7F756C;stroke-miterlimit:10;}
+	.st65{fill:none;stroke:#7F756C;stroke-linecap:round;stroke-linejoin:round;}
+	.st66{fill:none;stroke:#7F756C;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.4706,3.6471;}
+	.st67{fill:none;stroke:#7F756C;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:7.0938,4.7292;}
+	.st68{fill:none;stroke:#7F756C;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4.7812,3.1875;}
+	.st69{fill:none;stroke:#7F756C;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4.9062,3.2708;}
+	.st70{fill:none;stroke:#BB3B26;stroke-miterlimit:10;}
+	.st71{fill:none;stroke:#000000;stroke-width:0.9309;stroke-linecap:round;stroke-linejoin:round;}
+	.st72{fill:none;stroke:#000000;stroke-width:0.9309;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.0925,3.395;}
+	.st73{fill:none;stroke:#000000;stroke-width:0.9309;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6.6034,4.4023;}
+	.st74{fill:none;stroke:#000000;stroke-width:0.9309;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4.4508,2.9672;}
+	.st75{fill:none;stroke:#000000;stroke-width:0.9309;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4.5671,3.0448;}
+	.st76{fill-rule:evenodd;clip-rule:evenodd;fill:none;}
+	.st77{fill-rule:evenodd;clip-rule:evenodd;fill:#231F20;}
+	.st78{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}
+	.st79{fill:none;stroke:#7F756C;stroke-width:0.9811;stroke-miterlimit:10;}
+	.st80{clip-path:url(#SVGID_2_);}
+	.st81{clip-path:url(#SVGID_4_);}
+	.st82{opacity:0.2;clip-path:url(#SVGID_6_);}
+	.st83{clip-path:url(#SVGID_8_);fill:#B8529E;}
+	.st84{clip-path:url(#SVGID_6_);fill:#FF00FF;}
+	.st85{fill:#FFFFFF;stroke:#67CBEC;stroke-width:1.8824;stroke-miterlimit:10;}
+	.st86{fill:none;}
+	.st87{fill:none;stroke:#BB3B26;stroke-width:1.8551;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st88{fill:#0067C5;}
+	.st89{fill:none;stroke:#EFEFEF;stroke-width:1.4225;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st90{clip-path:url(#SVGID_10_);}
+	.st91{clip-path:url(#SVGID_12_);}
+	.st92{opacity:0.2;clip-path:url(#SVGID_14_);}
+	.st93{clip-path:url(#SVGID_16_);fill:#B8529E;}
+	.st94{clip-path:url(#SVGID_14_);fill:#FF00FF;}
+	.st95{clip-path:url(#SVGID_18_);}
+	.st96{clip-path:url(#SVGID_20_);}
+	.st97{opacity:0.2;clip-path:url(#SVGID_22_);}
+	.st98{clip-path:url(#SVGID_24_);fill:#B8529E;}
+	.st99{clip-path:url(#SVGID_22_);fill:#FF00FF;}
+	.st100{clip-path:url(#SVGID_26_);}
+	.st101{clip-path:url(#SVGID_28_);}
+	.st102{opacity:0.2;clip-path:url(#SVGID_30_);}
+	.st103{clip-path:url(#SVGID_32_);fill:#B8529E;}
+	.st104{clip-path:url(#SVGID_30_);fill:#FF00FF;}
+	.st105{clip-path:url(#SVGID_34_);}
+	.st106{clip-path:url(#SVGID_36_);}
+	.st107{opacity:0.2;clip-path:url(#SVGID_38_);}
+	.st108{clip-path:url(#SVGID_40_);fill:#B8529E;}
+	.st109{clip-path:url(#SVGID_38_);fill:#FF00FF;}
+	.st110{clip-path:url(#SVGID_42_);}
+	.st111{clip-path:url(#SVGID_44_);}
+	.st112{opacity:0.2;clip-path:url(#SVGID_46_);}
+	.st113{clip-path:url(#SVGID_48_);fill:#FBB03B;}
+	.st114{clip-path:url(#SVGID_46_);fill:#FBB03B;}
+	.st115{clip-path:url(#SVGID_50_);}
+	.st116{clip-path:url(#SVGID_52_);}
+	.st117{opacity:0.2;clip-path:url(#SVGID_54_);}
+	.st118{clip-path:url(#SVGID_56_);fill:#FBB03B;}
+	.st119{clip-path:url(#SVGID_54_);fill:#FBB03B;}
+</style>
+<g id="Layer_5">
+</g>
+<g id="Layer_1">
+</g>
+<g id="Layer_2">
+</g>
+<g id="Layer_4">
+	<g id="Info">
+	</g>
+	<g>
+		<circle class="st89" cx="12.7" cy="12.7" r="12"/>
+		<line class="st89" x1="20.9" y1="4" x2="4" y2="20.9"/>
+	</g>
+</g>
+<g id="Guides">
+</g>
+</svg>
