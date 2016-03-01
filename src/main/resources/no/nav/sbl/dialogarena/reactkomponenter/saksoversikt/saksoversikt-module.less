@@ -54,8 +54,15 @@
       background-image: url("@{imgDir}/dokument_hover.png");
     }
   }
-  .dokument-kan-ikke-vises {
 
+  .dokument-kan-ikke-vises {
+    background-repeat: no-repeat;
+    background-image: url("@{imgDir}/dokument_stop.png");
+    background-position: 1.2rem 1.2rem;
+    background-size: 3em;
+    &:hover {
+      background-image: url("@{imgDir}/dokument_stop_hover.png");
+    }
   }
 
   .vedleggheader {

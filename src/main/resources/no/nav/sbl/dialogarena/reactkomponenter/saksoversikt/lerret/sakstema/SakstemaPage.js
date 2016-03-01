@@ -14,9 +14,11 @@ class SakstemaPage extends React.Component {
         const dokumentliste = valgtTema.temakode !== 'alle' ?
             <DokumentListe visTema="false"
                            dokumentMetadata={valgtTema.dokumentMetadata}
-                           brukerNavn={brukerNavn}></DokumentListe> :
+                           harTilgang={valgtTema.harTilgang}
+                           brukerNavn={brukerNavn}/> :
             <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                           brukerNavn={brukerNavn}></DokumentListe>;
+                           harTilgang={valgtTema.harTilgang}
+                           brukerNavn={brukerNavn}/>;
         return (
             <div>
                 <section className="saksoversikt-liste">

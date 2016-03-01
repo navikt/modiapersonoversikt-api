@@ -1,33 +1,41 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
 import DokumentAvsender from './dokument/dokument-avsender';
 
-class DokumentInfoElm extends React.Component {
-    render() {
-        const { dokumentinfo, visTema, brukerNavn } = this.props;
-        const temaHvisAlleTemaer = visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
-        return (
-            <li className="dokumentliste-element dokument-kan-vises">
-                <DokumentAvsender retning={dokumentinfo.retning}
-                                  avsender={dokumentinfo.avsender}
-                                  mottaker={dokumentinfo.mottaker}
-                                  brukerNavn={brukerNavn} navn={dokumentinfo.navn}/>
+const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
+const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
 
-                <a className="hoveddokument-tittel">{dokumentinfo.hoveddokument.tittel}</a>
-                {temaHvisAlleTemaer}
-                <div className="typo-info">
-                    <DokumentinfoVedlegg vedlegg={dokumentinfo.vedlegg}/>
-                </div>
-            </li>);
-    }
-}
+const DokumentInfoElm = ({ dokumentinfo, visTema, brukerNavn, harTilgang }) => {
+    const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning } = dokumentinfo;
+    const temaHvisAlleTemaer = visTema === 'true' ? <p>{temakodeVisning}</p> : <noscript/>;
+    const kanViseDokument = (harTilgang && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
+
+    return (
+        <li className={`dokumentliste-element ${kanViseDokument}`}>
+            <DokumentAvsender retning={retning} avsender={avsender} navn={navn}
+                              mottaker={mottaker} brukerNavn={brukerNavn}/>
+
+            <a className="hoveddokument-tittel">{hoveddokument.tittel}</a>
+            {temaHvisAlleTemaer}
+            <div className="typo-info">
+                <DokumentinfoVedlegg vedlegg={vedlegg}/>
+            </div>
+        </li>);
+};
 
 DokumentInfoElm.propTypes = {
-    dokumentinfo: React.PropTypes.shape({
-        avsender: React.PropTypes.string,
-        hoveddokument: React.PropTypes.object.isRequired,
-        vedlegg: React.PropTypes.array
-    }).isRequired
+    dokumentinfo: pt.shape({
+        retning: pt.string.isRequired,
+        avsender: pt.string.isRequired,
+        mottaker: pt.string.isRequired,
+        navn: pt.string,
+        hoveddokument: pt.object.isRequired,
+        vedlegg: pt.array,
+        temakodeVisning: pt.string
+    }).isRequired,
+    visTema: pt.string,
+    brukerNavn: pt.string,
+    harTilgang: pt.bool.isRequired
 };
 
 export default DokumentInfoElm;

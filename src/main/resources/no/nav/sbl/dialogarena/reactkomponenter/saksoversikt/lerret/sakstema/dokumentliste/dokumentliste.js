@@ -8,7 +8,7 @@ const nyesteAarForst = (a, b) => a < b ? 1 : -1;
 class DokumentListe extends React.Component {
 
     render() {
-        const dokumentMetadata = this.props.dokumentMetadata;
+        const { dokumentMetadata, brukerNavn, visTema, harTilgang } = this.props;
         const dokumenterGruppertPaaAar = groupBy(dokumentMetadata, dokument => dokument.dato.year);
 
         const gjeldendeAar = new Date().getFullYear().toString();
@@ -21,8 +21,8 @@ class DokumentListe extends React.Component {
                     acc.push(<li className="aarstall">{aarstall}</li>);
                 }
                 return acc.concat(
-                    dokumenter.map((dokument) => <DokumentInfoElm brukerNavn={this.props.brukerNavn} visTema={this.props.visTema}
-                                                                  dokumentinfo={dokument}/>)
+                    dokumenter.map((dokument) => <DokumentInfoElm brukerNavn={brukerNavn} dokumentinfo={dokument}
+                                                                  visTema={visTema} harTilgang={harTilgang}/>)
                 );
             }, []);
 
