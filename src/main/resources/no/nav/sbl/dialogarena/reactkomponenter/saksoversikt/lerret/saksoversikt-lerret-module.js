@@ -1,4 +1,5 @@
 import React from 'react';
+import 'babel-polyfill';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
