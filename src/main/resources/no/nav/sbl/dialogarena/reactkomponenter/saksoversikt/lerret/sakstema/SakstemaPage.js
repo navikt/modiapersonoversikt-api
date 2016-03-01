@@ -33,12 +33,13 @@ class SakstemaPage extends React.Component {
     }
 
     _visningDokumentliste(valgtTema, dokumentliste) {
-        if (valgtTema.dokumentMetadata.length > 0) {
-            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
-        }
-        else if (valgtTema.temakode === 'BID') {
+        if (valgtTema.temakode === 'BID') {
             return <p> Modia viser ikke dokumenter på temaet Bidrag. </p>;
         }
+        else if (valgtTema.dokumentMetadata.length > 0) {
+            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
+        }
+
         return (<p> Det finnes ingen dokumenter på dette temaet. Modia viser kun dokumenter etter dd.måned åååå
             (prodsettingsdato). Du kan gå til Gosys for å se eldre dokumenter</p>);
     }
