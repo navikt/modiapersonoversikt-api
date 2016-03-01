@@ -5,12 +5,11 @@ import { connect } from 'react-redux';
 import { hentLerretData, velgSak, visSide } from './../actions';
 import * as Const from './../konstanter';
 
-import AsyncLoader from './../../utils/async-loader';
 import SakstemaPage from './sakstema/SakstemaPage';
 import ViktigAVitePage from './viktigavite/ViktigAVitePage';
 import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
 import Snurrepipp from './../../utils/snurrepipp';
-import { IntlProvider, addLocaleData, FormattedMessage } from 'react-intl';
+import { IntlProvider, addLocaleData } from 'react-intl';
 import nbLocale from 'react-intl/dist/locale-data/nb';
 addLocaleData(nbLocale);
 
@@ -58,11 +57,15 @@ class SaksoversiktLerret extends React.Component {
 
 SaksoversiktLerret.propTypes = {
     'fnr': React.PropTypes.string.isRequired,
-    'brukerNavn': React.PropTypes.string.isRequired
+    'brukerNavn': React.PropTypes.string.isRequired,
+    'wicketurl': React.PropTypes.string.isRequired,
+    'hentLerretData': React.PropTypes.func,
+    'velgSak': React.PropTypes.func,
+    'status': React.PropTypes.string,
+    'tekster': React.PropTypes.object
 };
 
 const mapStateToProps = (state) => {
-
     return {
         valgtside: state.lerret.valgtside,
         sakstema: state.lerret.data.sakstema,
@@ -72,4 +75,8 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default wrapWithProvider(connect(mapStateToProps, {velgSak, visSide, hentLerretData})(SaksoversiktLerret), store);
+export default wrapWithProvider(connect(mapStateToProps, {
+    velgSak,
+    visSide,
+    hentLerretData
+})(SaksoversiktLerret), store);
