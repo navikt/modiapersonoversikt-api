@@ -3,7 +3,6 @@ import * as Const from './../konstanter';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { basicReducer } from './../utils/redux-utils';
-import { finnSisteOppdatering } from './../utils/finn-siste-oppdatering';
 import { nyesteSakstema } from './../utils/dato-sortering';
 
 const fjernTommeTema = (tema) => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
@@ -27,7 +26,7 @@ const initalState = {
 // ------- Your handler here
 
 actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
-    return {...state, status: Const.LASTER};
+    return { ...state, status: Const.LASTER };
 };
 actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     const [temaer, sakstema, tekster, miljovariabler, fnr] = action.data;
@@ -60,12 +59,12 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     };
 };
 actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
-    return {...state, status: Const.FEILET, feil: action.data};
+    return { ...state, status: Const.FEILET, feil: action.data };
 };
 
-actionHandlers[AT.VELG_SAK] = (state, action) => ({...state, valgtTema: action.data});
-actionHandlers[AT.VIS_TEMA] = (state, action) => ({...state, widgetValgtTemakode: action.data});
-actionHandlers[AT.VIS_SIDE] = (state, action) => ({...state, valgtside: action.data});
+actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data });
+actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
+actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
 
 
 // -------

@@ -1,40 +1,63 @@
 @imgDir: "/modiabrukerdialog/img/saksoversikt";
 
-.saksoversikt-lerret {
+.saksoversikt-lerret-container {
   padding: 0 !important;
+  height: 100%;
   .saksoversikt-liste {
     width: 35%;
     height: 100%;
     float: left;
     border-right: 1px solid #ccc;
+    overflow-x: hidden;
+    overflow-y: visible;
   }
 
   .saksoversikt-innhold {
     float: left;
     width: 65%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
 
     .dokumentliste {
       list-style: none;
       padding-left: 3rem;
       margin-top: 3rem;
     }
-    .dokumentliste-element {
+    .dokumentliste-element {       
+      margin-top: 2rem;
       padding-left: 7em;
-      margin-bottom: 2rem;
       padding-bottom: 2rem;
       border-bottom: solid 2px lightgrey;
     }
-
+    
     .dokument-avsender {
       font-size: medium;
       margin-bottom: 1rem;
       display: block;
 
-      .avsenderbrukertext {
+        .avsendertext {
+          font-size: medium;
+          margin-bottom: 1rem;
+          display: block;
 
-      }
-      .avsendernavtext {
-        color: #c30000;
+          .avsenderbrukertext {
+
+          }
+          .avsendernavtext {
+            color: #c30000;
+          }
+        }
+
+        .hoveddokumenttextwrapper {
+          margin-bottom: 1rem;
+        }
+        .hoveddokumenttext {
+          font-size: large;
+          font-weight: bolder;
+          border-bottom: 2px solid #b7b1a9;
+
+        }
       }
     }
 
@@ -85,10 +108,23 @@
     font-size: x-large;
     margin-bottom: 0.5em;
   }
+
+.gamle-dokumenter {
+  box-shadow: none;
+}
+.aarstall {
+  background-color: #b7b1a9;
+  padding: 0.5rem 2rem;
+  font-weight: 600;
+}
+
+.sakstema-container {
+  height: 100%;
 }
 
 .sakstemaliste {
   padding: 0;
+  height: 100%;
 }
 
 .tema-ikke-tilgang {
@@ -168,6 +204,9 @@
 .viktigavitepanel {
   background: #e1e1e1;
   padding: 2rem 5rem 5rem 5rem;
+  overflow-x: hidden;
+  overflow-y: visible;
+  height: 100%;
 }
 
 .side-innhold a {
@@ -178,13 +217,18 @@
   }
 }
 
-.saksoversikt-lerret {
-  padding: 0 !important;
-}
-
 .listepanel {
   height: 4rem;
   border-bottom: 1px solid #e1e1e1;
   padding: 1.5rem;
   margin-bottom: 1rem
+}
+
+.saksoversiktLerret-container {
+  height: 100%;
+}
+
+.lerret.saksoversikt-lerret {
+  overflow-y: hidden !important;
+  padding: 0 !important
 }

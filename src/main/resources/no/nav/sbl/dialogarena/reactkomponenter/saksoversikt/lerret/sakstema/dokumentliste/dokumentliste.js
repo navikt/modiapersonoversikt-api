@@ -15,7 +15,7 @@ class DokumentListe extends React.Component {
 
         const dokumentListeForAarstall = Object.keys(dokumenterGruppertPaaAar)
             .sort(nyesteAarForst)
-            .map(aarstall => ({aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst)}))
+            .map(aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) }))
             .reduce((acc, {aarstall, dokumenter}) => {
                 if (aarstall !== gjeldendeAar) {
                     acc.push(<li className="aarstall">{aarstall}</li>);

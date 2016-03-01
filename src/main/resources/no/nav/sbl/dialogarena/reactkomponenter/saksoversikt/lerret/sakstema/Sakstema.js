@@ -20,9 +20,9 @@ class Sakstema extends React.Component {
         const id = `sakstemaRadioListe--${tema.temakode}`;
         const sisteOppdatering = nokkelinfo.sisteOppdatering ? nokkelinfo.sisteOppdatering : "";
         const behandlingsstatus = tema.temakode === 'alle' ? "" : nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : "";
-        const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering}/>;
+        const sisteOppdateringTekst = <FormattedDate day="2-digit" month="2-digit" year="2-digit" value={sisteOppdatering}/>
         const harTilgang = tema.harTilgang ? '' : 'tema-ikke-tilgang';
-
+        
         return (
             <div className={`saksoversikt-liste-element ${erValgt} ${harTilgang}`}>
                 <input type="radio" id={id} ref="radio" readOnly checked={erValgt} name="sakstemaRadioListe"
