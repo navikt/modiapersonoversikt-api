@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { javaLocalDateTimeToJSDate } from './dato-utils';
 
-const finnTekst = (antallUnderBehandling, antallFerdigBehandlet, langTekst) => {
+const finnTekst = (antallUnderBehandling, antallFerdigBehandlet) => {
     const tallSomTekstUnderBehandling = <FormattedMessage id="behandlingsstatus.telling" values={{antall: antallUnderBehandling}}/>;
     const tallSomTekstFerdigBehandlet = <FormattedMessage id="behandlingsstatus.telling" values={{antall: antallFerdigBehandlet}}/>;
     const values = {
@@ -11,11 +11,15 @@ const finnTekst = (antallUnderBehandling, antallFerdigBehandlet, langTekst) => {
     };
     let key;
     if (antallUnderBehandling > 0 && antallFerdigBehandlet > 0) {
-        key = langTekst ? 'behandlingsstatus.under.og.ferdig.behandlet.lang' : 'behandlingsstatus.under.og.ferdig.behandlet';
+        return (
+            <div>
+            <p className="temaliste-label datotekst"><FormattedMessage id={'behandlingsstatus.underbehandling'} values={values}/></p>
+            <p className="temaliste-label datotekst"><FormattedMessage id={'behandlingsstatus.ferdigbehandlet'} values={values}/></p>
+            </div>);
     } else if (antallUnderBehandling > 0) {
-        key = langTekst ? 'behandlingsstatus.under.behandling.lang' : 'behandlingsstatus.underbehandling';
+        key = 'behandlingsstatus.underbehandling';
     } else if (antallFerdigBehandlet > 0) {
-        key = langTekst ? 'behandlingsstatus.ferdig.behandlet.lang' : 'behandlingsstatus.ferdigbehandlet';
+        key = 'behandlingsstatus.ferdigbehandlet';
     }
 
     return key ? <FormattedMessage id={key} values={values}/> : null;
@@ -28,7 +32,7 @@ const datoNyereEnnAntallDager = (date, antallDager) => {
 };
 
 const underBehandlingEllerNyereEnnGrenseverdi = (antallDager) => (behandlingskjede) => {
-    return behandlingskjede.status === 'UNDER_BEHANDLING' || datoNyereEnnAntallDager(new Date(behandlingskjede.sistOppdatert.millis), antallDager);
+    return behandlingskjede.status === 'UNDER_BEHANDLING' || datoNyereEnnAntallDager(new Date(javaLocalDateTimeToJSDate(behandlingskjede.sistOppdatert)), antallDager);
 };
 
 const nyesteDokumentForst = (dok1, dok2) => javaLocalDateTimeToJSDate(dok1.dato) < javaLocalDateTimeToJSDate(dok2.dato) ? 1 : -1;
@@ -55,18 +59,18 @@ const sisteOppdatering = (nyesteDokument, nyesteBehandlingskjede) => {
     return sisteOppdateringISaken;
 };
 
-export const finnBehandlingsstatus = (behandlingskjeder, antallDagerFerdigBehandletStatusErGyldig, langTekst) => {
+export const finnBehandlingsstatus = (behandlingskjeder, antallDagerFerdigBehandletStatusErGyldig) => {
     const gyldigeBehandlingskjeder = behandlingskjeder.filter(underBehandlingEllerNyereEnnGrenseverdi(antallDagerFerdigBehandletStatusErGyldig));
     const antallUnderBehandling = gyldigeBehandlingskjeder.filter(kjede => kjede.status === 'UNDER_BEHANDLING').length;
     const antallFerdigBehandlet = gyldigeBehandlingskjeder.filter(kjede => kjede.status === 'FERDIG_BEHANDLET').length;
-    return finnTekst(antallUnderBehandling, antallFerdigBehandlet, langTekst);
+    return finnTekst(antallUnderBehandling, antallFerdigBehandlet);
 };
 
-export const finnNokkelinfoForSakstema = (behandlingskjeder, dokumenter, antallDagerFerdigBehandletStatusErGyldig, langBehandlingsstatusTekst = false) => {
+export const finnNokkelinfoForSakstema = (behandlingskjeder, dokumenter, antallDagerFerdigBehandletStatusErGyldig) => {
     const sorterteBehandlingskjeder = behandlingskjeder.sort(nyesteBehandlingskjedeForst);
     const nyesteBehandlingskjede = sorterteBehandlingskjeder[0];
 
-    const behandlingsstatus = finnBehandlingsstatus(sorterteBehandlingskjeder, antallDagerFerdigBehandletStatusErGyldig, langBehandlingsstatusTekst);
+    const behandlingsstatus = finnBehandlingsstatus(sorterteBehandlingskjeder, antallDagerFerdigBehandletStatusErGyldig);
 
     const sorterteDokumenter = dokumenter.sort(nyesteDokumentForst);
     const nyesteDokument = sorterteDokumenter[0];
