@@ -14,16 +14,17 @@ class Sakstema extends React.Component {
     }
 
     render() {
-        const { tema, valgtTema, velgSak, nokkelinfo} = this.props;
+        const { tema, valgtTema, velgSak, nokkelinfo } = this.props;
         // Sjekk på temakode ettersom 'alletemaet' blir laget på nytt ved rerender.
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
         const id = `sakstemaRadioListe--${tema.temakode}`;
         const sisteOppdatering = nokkelinfo.sisteOppdatering ? nokkelinfo.sisteOppdatering : "";
         const behandlingsstatus = tema.temakode === 'alle' ? "" : nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : "";
-        const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering}/>
+        const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering}/>;
+        const harTilgang = tema.harTilgang ? '' : 'tema-ikke-tilgang';
 
         return (
-            <div className={`saksoversikt-liste-element ${erValgt}`}>
+            <div className={`saksoversikt-liste-element ${erValgt} ${harTilgang}`}>
                 <input type="radio" id={id} ref="radio" readOnly checked={erValgt} name="sakstemaRadioListe"
                        onClick={() => velgSak(tema)}
                 />

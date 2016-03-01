@@ -11,7 +11,8 @@ const lagAlleTema = (temaliste) => [{
     temanavn: <FormattedMessage id="sakslamell.alletemaer"/>,
     temakode: 'alle',
     behandlingskjeder: temaliste[0].behandlingskjeder,
-    dokumentMetadata: temaliste[0].dokumentMetadata
+    dokumentMetadata: temaliste[0].dokumentMetadata,
+    harTilgang: true
 }];
 
 const actionHandlers = {};
