@@ -34,7 +34,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
         <modia-felleskomponenter.version>3.1-SNAPSHOT</modia-felleskomponenter.version>
-        <modiabrukerdialog-api.version>4.4-2016_HL2-SNAPSHOT</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>4.3-FAMOUS-SHADE</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.5</modig-lang.version>
         <modig-content.version>2.0.13</modig-content.version>

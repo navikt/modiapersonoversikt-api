@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
@@ -23,13 +22,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
-
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
-
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
@@ -38,28 +33,28 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     @Override
-    public List<ModiaSakstema> harSaksbehandlerTilgangTilSakstema(List<Sakstema> sakstemaList) {
+    public List<ModiaSakstema> harSaksbehandlerTilgangTilSakstema(List<Sakstema> sakstemaList, String valgtEnhet) {
         return sakstemaList.stream()
-                .map(sakstema -> createModiaSakstema(sakstema))
+                .map(sakstema -> createModiaSakstema(sakstema, valgtEnhet))
                 .collect(Collectors.toList());
     }
 
-    private ModiaSakstema createModiaSakstema(Sakstema sakstema) {
+    private ModiaSakstema createModiaSakstema(Sakstema sakstema, String valgtEnhet) {
         return new ModiaSakstema(sakstema)
-                .withTilgang(harEnhetTilgangTilTema(sakstema.temakode));
+                .withTilgang(harEnhetTilgangTilTema(sakstema.temakode, valgtEnhet));
     }
 
-    private boolean harEnhetTilgangTilTema(String temakode) {
+    private boolean harEnhetTilgangTilTema(String temakode, String valgtEnhet) {
         PolicyRequest temagruppePolicyRequest = forRequest(
                 actionId("temagruppe"),
                 resourceId(""),
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
+                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
                 resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(temakode))
         );
         if (isNotBlank(temakode) && !pep.hasAccess(temagruppePolicyRequest)) {
             logger.warn("Saksbehandler med ident '{}' og valgt enhet '{}' har ikke tilgang til tema '{}'",
                     getSubjectHandler().getUid(),
-                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(),
+                    valgtEnhet,
                     temakode);
             return false;
         }

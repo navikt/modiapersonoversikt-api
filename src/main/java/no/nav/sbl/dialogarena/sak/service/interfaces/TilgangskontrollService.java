@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface TilgangskontrollService {
     TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode);
-    List<ModiaSakstema> harSaksbehandlerTilgangTilSakstema(List<Sakstema> sakstema);
+    List<ModiaSakstema> harSaksbehandlerTilgangTilSakstema(List<Sakstema> sakstema, String valgtEnhet);
 }

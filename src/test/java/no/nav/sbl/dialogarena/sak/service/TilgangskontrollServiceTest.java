@@ -58,9 +58,9 @@ public class TilgangskontrollServiceTest {
         List<Sakstema> sakstemaList = lagSakstemaListe();
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
-        List<ModiaSakstema> modiaSakstemaList = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaList);
+        List<ModiaSakstema> modiaSakstemaList = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaList, "0000");
 
-        assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> modiaSakstema.harTilgang == true), is(true));
+        assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> modiaSakstema.harTilgang), is(true));
     }
 
 
@@ -69,9 +69,9 @@ public class TilgangskontrollServiceTest {
         List<Sakstema> sakstemaList = lagSakstemaListe();
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
 
-        List<ModiaSakstema> modiaSakstemaList = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaList);
+        List<ModiaSakstema> modiaSakstemaList = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaList, "0000");
 
-        assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> modiaSakstema.harTilgang == false), is(true));
+        assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> !modiaSakstema.harTilgang), is(true));
     }
 
     private List<Sakstema> lagSakstemaListe() {
