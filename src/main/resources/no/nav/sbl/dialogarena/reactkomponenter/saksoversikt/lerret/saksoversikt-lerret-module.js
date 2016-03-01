@@ -11,6 +11,7 @@ import ViktigAVitePage from './viktigavite/ViktigAVitePage';
 import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
 import Snurrepipp from './../../utils/snurrepipp';
 import { IntlProvider, addLocaleData, FormattedMessage } from 'react-intl';
+import MiljovariablerProvider from './../miljovariabler-provider';
 import nbLocale from 'react-intl/dist/locale-data/nb';
 addLocaleData(nbLocale);
 
@@ -47,11 +48,13 @@ class SaksoversiktLerret extends React.Component {
         }
 
         return (
-            <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
-                <div className="saksoversikt-lerret-container">
-                    { getContent(this.props) }
-                </div>
-            </IntlProvider>
+            <MiljovariablerProvider miljovariabler={this.props.miljovariabler}>
+                <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
+                    <div className="saksoversikt-lerret-container">
+                        { getContent(this.props) }
+                    </div>
+                </IntlProvider>
+            </MiljovariablerProvider>
         );
     }
 }
@@ -61,6 +64,7 @@ SaksoversiktLerret.propTypes = {
     'brukerNavn': React.PropTypes.string.isRequired
 };
 
+
 const mapStateToProps = (state) => {
 
     return {
@@ -68,8 +72,13 @@ const mapStateToProps = (state) => {
         sakstema: state.lerret.data.sakstema,
         status: state.lerret.status,
         valgtTema: state.lerret.valgtTema,
-        tekster: state.lerret.data.tekster
+        tekster: state.lerret.data.tekster,
+        miljovariabler: state.lerret.data.miljovariabler
     };
 };
 
-export default wrapWithProvider(connect(mapStateToProps, {velgSak, visSide, hentLerretData})(SaksoversiktLerret), store);
+export default wrapWithProvider(connect(mapStateToProps, {
+    velgSak,
+    visSide,
+    hentLerretData
+})(SaksoversiktLerret), store);

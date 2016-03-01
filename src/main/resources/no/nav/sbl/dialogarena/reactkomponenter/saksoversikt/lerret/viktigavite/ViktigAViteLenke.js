@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
+
+export const skalViseViktigAViteSideForTema = (godkjenteTemakoder, valgtTemakode) => {
+    return godkjenteTemakoder.split(',').some(temaMedViktigAVite => temaMedViktigAVite === valgtTemakode);
+};
 
 class ViktigAViteLenke extends React.Component {
     _redirect(e) {
@@ -8,8 +12,9 @@ class ViktigAViteLenke extends React.Component {
 
     render() {
         const { valgtTema } = this.props;
+        const { miljovariabler } = this.context;
 
-        if (skalViseViktigAViteSideForTema(valgtTema.temakode)) {
+        if (skalViseViktigAViteSideForTema(miljovariabler['temasider.viktigavitelenke'], valgtTema.temakode)) {
             const linktekst = `Viktig å vite om ${valgtTema.temanavn}`;
             return (
                 <div className="listepanel">
@@ -25,9 +30,8 @@ class ViktigAViteLenke extends React.Component {
     };
 }
 
-//TODO Dette må hentes fra miljovariabler
-export const skalViseViktigAViteSideForTema = (tema) => {
-    return "DAG,AAP,IND".split(',').some(temaMedViktigAVite => temaMedViktigAVite === tema);
+ViktigAViteLenke.contextTypes = {
+    miljovariabler: PT.object.isRequired
 };
 
 export default ViktigAViteLenke;
