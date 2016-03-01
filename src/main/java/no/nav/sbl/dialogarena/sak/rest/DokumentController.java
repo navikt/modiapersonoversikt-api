@@ -57,7 +57,8 @@ public class DokumentController {
     @Path("/dokumentmetadata/{journalpostId}/{dokumentreferanse}")
     public Response hentDokumentMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @PathParam("dokumentreferanse") String dokumentreferanse, @QueryParam("temakode") String temakode) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return ok(mockDokumentReferanserResponse(journalpostId, dokumentreferanse, fnr)).build();
+            return blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostId, dokumentreferanse, "Foreldrepenger"));
+//            return ok(mockDokumentReferanserResponse(journalpostId, dokumentreferanse, fnr)).build();
         }
 
         if (DOKUMENTID_IKKE_FUNNET.equals(dokumentreferanse)) {
@@ -117,7 +118,7 @@ public class DokumentController {
     }
 
     private Response blurretDokumentReferanseResponse(Feilmelding feilmelding, Map ekstrafeilinfo) {
-        return ok(new DokumentFeilmelding(feilmelding.feilmeldingKey, BLURRED_DOKUMENT)).build();
+        return ok(new DokumentFeilmelding(feilmelding.feilmeldingKey, BLURRED_DOKUMENT, ekstrafeilinfo)).build();
     }
 
     private Map journalfortAnnetTemaEktraFeilInfo(String journalpostId, String dokumentreferanse, String temanavn) {
