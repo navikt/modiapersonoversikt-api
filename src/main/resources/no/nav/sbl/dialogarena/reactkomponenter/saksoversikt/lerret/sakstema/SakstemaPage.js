@@ -14,9 +14,10 @@ class SakstemaPage extends React.Component {
         const dokumentliste = valgtTema.temakode !== 'alle' ?
             <DokumentListe visTema="false"
                            dokumentMetadata={valgtTema.dokumentMetadata}
-                           brukerNavn={brukerNavn}></DokumentListe> :
+                           brukerNavn={brukerNavn}/> :
             <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                           brukerNavn={brukerNavn}></DokumentListe>;
+                           brukerNavn={brukerNavn}/>;
+
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
@@ -25,12 +26,22 @@ class SakstemaPage extends React.Component {
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                    {dokumentliste}
-                    <TidligereDokumenter />
+                    {this._visningDokumentliste(valgtTema, dokumentliste)}
                 </section>
             </div>
-        )
-    };
+        );
+    }
+
+    _visningDokumentliste(valgtTema, dokumentliste) {
+        if (valgtTema.dokumentMetadata.length > 0) {
+            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
+        }
+        else if (valgtTema.temakode === 'BID') {
+            return <p> Modia viser ikke dokumenter på temaet Bidrag. </p>;
+        }
+        return (<p> Det finnes ingen dokumenter på dette temaet. Modia viser kun dokumenter etter dd.måned åååå
+            (prodsettingsdato). Du kan gå til Gosys for å se eldre dokumenter</p>);
+    }
 }
 
 SakstemaPage.propTypes = {
@@ -39,4 +50,3 @@ SakstemaPage.propTypes = {
 };
 
 export default SakstemaPage;
-
