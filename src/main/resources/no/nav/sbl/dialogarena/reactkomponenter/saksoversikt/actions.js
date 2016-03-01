@@ -42,6 +42,23 @@ export const hentLerretData = (fnr) => {
     }
 };
 
+
+export const hentDokumentData = (fnr, journalpostid, dokumentreferanse) => {
+    return (dispatch) => {
+        const promisedDispatch = dataDispatch.bind(null, dispatch);
+
+        const dokumentmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/dokumentmetadata/' + journalpostid + '/' + dokumentreferanse);
+        const journalpostmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalpostmetadata/' + journalpostid);
+
+        dispatch({type: AT.LAST_DOKUMENT_DATA_START});
+        return Q
+            .all([dokumentmetadata, journalpostmetadata])
+            .then(promisedDispatch(AT.LAST_DOKUMENT_DATA_OK))
+            .catch(rethrow(promisedDispatch(AT.LAST_DOKUMENT_DATA_FEIL)));
+    }
+};
+
+
 export const velgSak = (sak) => ({type: AT.VELG_SAK, data: sak});
 export const visSide = (side) => ({type: AT.VIS_SIDE, data: side});
 //Benyttes av Wicketklassen SaksoversiktLerret

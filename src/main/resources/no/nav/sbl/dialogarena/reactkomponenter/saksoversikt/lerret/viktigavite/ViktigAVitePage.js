@@ -13,9 +13,8 @@ class ViktigAVitePage extends React.Component {
         const sidetittel = <FormattedMessage id="saksinformasjon.vikigavite.tittel" values={{tema: temanavn}}/>;
         const innhold =  this.props.intl.formatMessage({id:`saksinformasjon.${valgtTema.temakode}`});
 
-        //TODO A-lenka forårsaker full re-rendering av Modia. Må se på alternativ løsning
         return (
-            <div className="viktigavitepanel side-innhold">
+            <div className="grattpanel side-innhold">
                 <div className="blokk-s">
                     <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
                 </div>
