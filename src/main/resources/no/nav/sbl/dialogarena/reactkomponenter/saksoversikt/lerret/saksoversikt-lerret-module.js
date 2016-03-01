@@ -48,7 +48,7 @@ class SaksoversiktLerret extends React.Component {
 
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
-                <div className="saksoversikt-lerret">
+                <div className="saksoversikt-lerret-container">
                     { getContent(this.props) }
                 </div>
             </IntlProvider>
