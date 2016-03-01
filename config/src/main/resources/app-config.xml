@@ -28,6 +28,7 @@
         <ldap alias="ldap" mapToProperty="ldap"/>
         <!-- Slutt felles -->
         <baseUrl alias="tjenestebuss" mapToProperty="tjenestebuss"/>
+        <baseUrl alias="tjenester" mapToProperty="tjenester"/>
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss"/>
         <localFiles name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
