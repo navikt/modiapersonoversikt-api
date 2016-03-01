@@ -23,7 +23,7 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.RestUtils.hentValgtEnhet;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/meldinger/{fnr}")
