@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 const Utgaaende = ({ avsenderUT, mottakerUT }) => {
     const fra = < FormattedMessage id="dokumentinfo.avsender.fra"
-                                   values={  { avsender: <strong className={'avsendernavtext'}>{avsenderUT}</strong> }}/>
+                                   values={ { avsender: <strong className="dokument-avsender-nav">{avsenderUT}</strong> } }/>
         ;
     const til = mottakerUT === 'SLUTTBRUKER' ? <noscript/> :
         < FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: mottakerUT } }/>;
