@@ -6,7 +6,7 @@ const Inngaaende = ({ brukerNavn, navn, avsenderInn }) => {
     const ingaandeMessage = <FormattedMessage className="avsendertext" id="dokumentinfo.avsender.fra"
                                               values={{ avsender: fraAvsender }}/>;
 
-    return <div className="avsendertext">{ingaandeMessage}</div>;
+    return <div className="dokument-avsender">{ingaandeMessage}</div>;
 };
 
 export default Inngaaende;

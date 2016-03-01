@@ -4,17 +4,16 @@ import DokumentAvsender from './dokument/dokument-avsender';
 
 class DokumentInfoElm extends React.Component {
     render() {
-        const dokumentinfo = this.props.dokumentinfo;
-        const temaHvisAlleTemaer = this.props.visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
+        const { dokumentinfo, visTema, brukerNavn } = this.props;
+        const temaHvisAlleTemaer = visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
         return (
-            <li className="dokumentlisteelement">
-                <DokumentAvsender className="avsendertext" retning={dokumentinfo.retning}
+            <li className="dokumentliste-element dokument-kan-vises">
+                <DokumentAvsender retning={dokumentinfo.retning}
                                   avsender={dokumentinfo.avsender}
                                   mottaker={dokumentinfo.mottaker}
-                                  brukerNavn={this.props.brukerNavn} navn={dokumentinfo.navn}/>
+                                  brukerNavn={brukerNavn} navn={dokumentinfo.navn}/>
 
-                <div className="hoveddokumenttextwrapper"> <a
-                    className="hoveddokumenttext">{dokumentinfo.hoveddokument.tittel}</a></div>
+                <a className="hoveddokument-tittel">{dokumentinfo.hoveddokument.tittel}</a>
                 {temaHvisAlleTemaer}
                 <div className="typo-info">
                     <DokumentinfoVedlegg vedlegg={dokumentinfo.vedlegg}/>

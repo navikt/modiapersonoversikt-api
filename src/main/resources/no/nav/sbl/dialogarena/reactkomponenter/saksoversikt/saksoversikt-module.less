@@ -17,66 +17,66 @@
       list-style: none;
       padding-left: 3rem;
       margin-top: 3rem;
-
-      .dokumentlisteelement {
-        padding-left: 7em;
-        margin-bottom: 2rem;
-        padding-bottom: 2rem;
-        border-bottom: solid 2px lightgrey;
-
-        background-repeat: no-repeat;
-        background-image: url("@{imgDir}/dokument.png");
-        background-position: 1.2rem 1.2rem;
-        background-size: 3em;
-        &:hover {
-          background-image: url("@{imgDir}/dokument_hover.png");
-        }
-
-        .avsendertext {
-          font-size: medium;
-          margin-bottom: 1rem;
-          display: block;
-
-          .avsenderbrukertext {
-
-          }
-          .avsendernavtext {
-            color: #c30000;
-          }
-        }
-
-        .hoveddokumenttextwrapper {
-          margin-bottom: 1rem;
-        }
-        .hoveddokumenttext {
-          font-size: large;
-          font-weight: bolder;
-          border-bottom: 2px solid #b7b1a9;
-
-        }
-      }
+    }
+    .dokumentliste-element {
+      padding-left: 7em;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: solid 2px lightgrey;
     }
 
-    .vedleggheader {
-      margin-bottom: 0.5rem;
-    }
-    .vedleggliste {
-      list-style: disc;
-      .vedleggtext {
-        border-bottom: 2px solid #b7b1a9;
-      }
-    }
-    .tidligaredokumentimage {
+    .dokument-avsender {
+      font-size: medium;
+      margin-bottom: 1rem;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 1em;
+
+      .avsenderbrukertext {
+
+      }
+      .avsendernavtext {
+        color: #c30000;
+      }
     }
 
-    .tidligaredokumentheader {
-      font-size: x-large;
-      margin-bottom: 0.5em;
+    .hoveddokument-tittel {
+      font-size: large;
+      font-weight: bolder;
+      border-bottom: 2px solid #b7b1a9;
     }
+  }
+
+  .dokument-kan-vises {
+    background-repeat: no-repeat;
+    background-image: url("@{imgDir}/dokument.png");
+    background-position: 1.2rem 1.2rem;
+    background-size: 3em;
+    &:hover {
+      background-image: url("@{imgDir}/dokument_hover.png");
+    }
+  }
+  .dokument-kan-ikke-vises {
+
+  }
+
+  .vedleggheader {
+    margin-bottom: 0.5rem;
+  }
+  .vedleggliste {
+    list-style: disc;
+    .vedleggtext {
+      border-bottom: 2px solid #b7b1a9;
+    }
+  }
+  .tidligaredokumentimage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+  }
+
+  .tidligaredokumentheader {
+    font-size: x-large;
+    margin-bottom: 0.5em;
   }
 }
 

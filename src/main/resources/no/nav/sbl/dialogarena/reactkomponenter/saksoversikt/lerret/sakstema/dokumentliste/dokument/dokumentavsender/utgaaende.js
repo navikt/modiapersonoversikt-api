@@ -8,7 +8,7 @@ const Utgaaende = ({ avsenderUT, mottakerUT }) => {
     const til = mottakerUT === 'SLUTTBRUKER' ? <noscript/> :
         < FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: mottakerUT } }/>;
 
-    return <div className="avsendertext">{fra}{til}</div>;
+    return <div className="dokument-avsender">{fra}{til}</div>;
 };
 
 export default Utgaaende;
