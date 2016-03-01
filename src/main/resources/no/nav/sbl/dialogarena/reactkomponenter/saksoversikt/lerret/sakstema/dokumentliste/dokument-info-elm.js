@@ -20,7 +20,9 @@ const DokumentInfoElm = ({ dokumentinfo, visTema, brukerNavn, harTilgang }) => {
             <DokumentAvsender retning={retning} avsender={avsender} navn={navn}
                               mottaker={mottaker} brukerNavn={brukerNavn}/>
 
-            <a className="hoveddokument-tittel">{hoveddokument.tittel}</a>
+            <div className="hoveddokument-tittel-wrapper">
+                <a className="hoveddokument-tittel" to="#">{hoveddokument.tittel}</a>
+            </div>
             {temaHvisAlleTemaer}
             <div className="typo-info">
                 <DokumentinfoVedlegg vedlegg={vedlegg}/>
