@@ -11,6 +11,7 @@ import no.nav.tjeneste.virksomhet.journal.v2.HentJournalpostListeSikkerhetsbegre
 import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSFagsystemer;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSSak;
+import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSSoekeFilter;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentRequest;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentResponse;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentJournalpostListeRequest;
@@ -21,7 +22,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper.Feilmelding.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
+import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class InnsynImpl implements Innsyn {
@@ -37,6 +39,7 @@ public class InnsynImpl implements Innsyn {
     @Override
     public TjenesteResultatWrapper hentTilgjengeligJournalpostListe(List<Sak> saker) {
         WSHentJournalpostListeRequest wsRequest = new WSHentJournalpostListeRequest();
+        wsRequest.setSoekeFilter(new WSSoekeFilter().withJournalFiltrering(KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER));
         wsRequest.getSakListe().addAll(sakerTilJoarkSak(saker));
 
         try {
