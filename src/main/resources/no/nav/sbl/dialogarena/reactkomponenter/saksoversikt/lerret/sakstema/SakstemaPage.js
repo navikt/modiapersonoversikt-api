@@ -1,34 +1,19 @@
 import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
-import DokumentListe from './dokumentliste/dokumentliste'
 import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
-import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
+import VisningDokumentliste from './dokumentliste/visning-dokumentliste'
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
-    _visningDokumentliste(valgtTema, dokumentliste) {
-        if (valgtTema.temakode === 'BID') {
-            return <p> Modia viser ikke dokumenter på temaet Bidrag. </p>;
-        }
-        else if (valgtTema.dokumentMetadata.length > 0) {
-            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
-        }
-
-        return (<p>Det finnes ingen dokumenter på dette temaet. Modia viser kun dokumenter etter dd.måned åååå
-            (prodsettingsdato). Du kan gå til Gosys for å se eldre dokumenter</p>);
-    }
-
     render() {
         const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
-        const dokumenter = sakstema.reduce((acc, tema) => {
-            return acc.concat(tema.dokumentMetadata);
-        }, []);
 
-        const dokumentliste = valgtTema.temakode !== 'alle' ?
-            <DokumentListe visTema="false"
-                           dokumentMetadata={valgtTema.dokumentMetadata}
-                           brukerNavn={brukerNavn}/> :
-            <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                           brukerNavn={brukerNavn}/>;
+        if(this.props.sakstema.length === 0) {
+            return (
+                <div className="ingen-sakstemaer">
+                    <FormattedMessage id="sakslamell.ingensaker"/>
+                </div>);
+        }
 
         return (
             <div className="sakstema-container">
@@ -37,7 +22,7 @@ class SakstemaPage extends React.Component {
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                    {this._visningDokumentliste(valgtTema, dokumentliste)}
+                    <VisningDokumentliste sakstema={sakstema} valgtTema={valgtTema} brukerNavn={brukerNavn}/>
                 </section>
             </div>
         );
@@ -47,6 +32,7 @@ class SakstemaPage extends React.Component {
 SakstemaPage.propTypes = {
     sakstema: PT.array.isRequired,
     visSide: PT.func.isRequired
+
 };
 
 export default SakstemaPage;
