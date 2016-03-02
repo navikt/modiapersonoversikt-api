@@ -1,42 +1,38 @@
 import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
-import DokumentListe from './dokumentliste/dokumentliste'
 import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
-import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
+import VisningDokumentliste from './dokumentliste/visning-dokumentliste'
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
-        const dokumenter = sakstema.reduce((acc, tema) => {
-            return acc.concat(tema.dokumentMetadata);
-        }, []);
+        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost } = this.props;
 
-        const dokumentliste = valgtTema.temakode !== 'alle' ?
-            <DokumentListe visTema="false"
-                           dokumentMetadata={valgtTema.dokumentMetadata}
-                           brukerNavn={brukerNavn}></DokumentListe> :
-            <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                           brukerNavn={brukerNavn}></DokumentListe>;
+        if(this.props.sakstema.length === 0) {
+            return (
+                <div className="ingen-sakstemaer">
+                    <FormattedMessage id="sakslamell.ingensaker"/>
+                </div>);
+        }
+
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak}
-                                   valgtTema={valgtTema}/>
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                    {dokumentliste}
-                    <TidligereDokumenter />
+                    <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema} brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}/>
                 </section>
             </div>
-        )
-    };
+        );
+    }
 }
 
 SakstemaPage.propTypes = {
     sakstema: PT.array.isRequired,
     visSide: PT.func.isRequired
+
 };
 
 export default SakstemaPage;
-

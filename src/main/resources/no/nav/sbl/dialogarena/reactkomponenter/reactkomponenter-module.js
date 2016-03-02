@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import MeldingerSok from './meldinger-sok/meldinger-sok-module';
 import Skrivestotte from './skrivestotte/skrivestotte-module';
 import JournalforingsPanel from './journalforing-panel/journalforing-panel-module';

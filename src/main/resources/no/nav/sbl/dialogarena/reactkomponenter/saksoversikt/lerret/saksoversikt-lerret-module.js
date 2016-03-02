@@ -1,9 +1,8 @@
 import React from 'react';
-import 'babel-polyfill';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak, visSide } from './../actions';
+import { hentLerretData, velgSak, visSide, velgJournalpost } from './../actions';
 import * as Const from './../konstanter';
 
 import SakstemaPage from './sakstema/SakstemaPage';
@@ -27,19 +26,9 @@ function getContent(props) {
     return fn(componentProps);
 }
 
-function getUrlParameter(wicketurl, urlparameter) {
-    try {
-        return wicketurl.split(urlparameter + '=')[1].split('&')[0];
-    } catch (error) {
-        return 'undefined';
-    }
-}
-
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        const temakode = getUrlParameter(this.props.wicketurl, 'temakode');
         this.props.hentLerretData(this.props.fnr);
-        this.props.velgSak(temakode);
     }
 
     render() {
@@ -62,7 +51,6 @@ class SaksoversiktLerret extends React.Component {
 SaksoversiktLerret.propTypes = {
     'fnr': React.PropTypes.string.isRequired,
     'brukerNavn': React.PropTypes.string.isRequired,
-    'wicketurl': React.PropTypes.string.isRequired,
     'hentLerretData': React.PropTypes.func,
     'velgSak': React.PropTypes.func,
     'status': React.PropTypes.string,
@@ -83,5 +71,6 @@ const mapStateToProps = (state) => {
 export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,
     visSide,
+    velgJournalpost,
     hentLerretData
 })(SaksoversiktLerret), store);

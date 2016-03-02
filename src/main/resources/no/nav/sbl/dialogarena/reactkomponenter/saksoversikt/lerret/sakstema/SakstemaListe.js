@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 const SakstemaListe = ({sakstema, valgtTema, velgSak}) => {
     const temaListe = sakstema.map((tema) => (
-        <Sakstema tema={tema} velgSak={velgSak}
+        <Sakstema key={tema.temakode} tema={tema} velgSak={velgSak}
                   nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder, tema.dokumentMetadata, 411)}
                   valgtTema={valgtTema}/>
     ));
@@ -17,7 +17,7 @@ const SakstemaListe = ({sakstema, valgtTema, velgSak}) => {
     );
 };
 
-Sakstema.propTypes = {
+SakstemaListe.propTypes = {
     sakstema: PT.array.isRequired,
     velgSak: PT.func.isRequired
 };
