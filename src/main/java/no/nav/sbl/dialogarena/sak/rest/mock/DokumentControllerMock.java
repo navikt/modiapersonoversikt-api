@@ -1,15 +1,20 @@
 package no.nav.sbl.dialogarena.sak.rest.mock;
 
+import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 import static java.util.Arrays.asList;
 import static javax.ws.rs.core.Response.ok;
+import static no.nav.sbl.dialogarena.sak.rest.DokumentController.BLURRED_DOKUMENT;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.INN;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.EKSTERN_PART;
 import static org.apache.commons.io.IOUtils.toByteArray;
@@ -26,6 +31,14 @@ public class DokumentControllerMock {
         return new DokumentResultat(pdfUrl, "Oppdragsbeskrivelse", 1);
     }
 
+    public static JournalpostResultat mockJournalpost() {
+        return new JournalpostResultat()
+                .withTittel("Hoveddokumenttittel")
+                .withDokumentFeilmelding(asList(
+                        new DokumentFeilmelding(DOKUMENT_IKKE_FUNNET.feilmeldingKey, BLURRED_DOKUMENT, new HashMap())
+                ));
+    }
+
     public static DokumentMetadata mockDokumentMetaData(String journalpostId) {
         return new DokumentMetadata()
                 .withNavn("Andreas")
@@ -36,7 +49,8 @@ public class DokumentControllerMock {
                 .withJournalpostId(journalpostId)
                 .withMottaker(EKSTERN_PART)
                 .withHoveddokument(new Dokument()
-                        .withTittel("Søknad om dagpenger ved arbeidsledighet"))
+                        .withTittel("Søknad om dagpenger ved arbeidsledighet")
+                        .withDokumentreferanse("12321"))
                 .withVedlegg(asList(
                         new Dokument()
                                 .withTittel("Dokument 1")

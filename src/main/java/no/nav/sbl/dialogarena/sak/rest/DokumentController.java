@@ -54,38 +54,12 @@ public class DokumentController {
     }
 
     @GET
-    @Path("/dokumentmetadata/{journalpostId}/{dokumentreferanse}")
-    public Response hentDokumentMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @PathParam("dokumentreferanse") String dokumentreferanse, @QueryParam("temakode") String temakode) {
-        if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostId, dokumentreferanse, "Foreldrepenger"));
-//            return ok(mockDokumentReferanserResponse(journalpostId, dokumentreferanse, fnr)).build();
-        }
-
-        if (DOKUMENTID_IKKE_FUNNET.equals(dokumentreferanse)) {
-            return blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET);
-        }
-
-        DokumentMetadata dokumentMetadata = hentDokumentMetadata(journalpostId, fnr);
-        if (!finnesDokumentReferansenIMetadata(dokumentMetadata, dokumentreferanse)) {
-            return blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET);
-        }
-
-        if (erJournalfortPaAnnetTema(temakode, dokumentMetadata)) {
-            return blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostId, dokumentreferanse, dokumentMetadata.getTemakodeVisning()));
-        }
-
-        String tittel = dokumentMetadata.getHoveddokument().getTittel();
-        String pdfUrl = getProperty("tjenester.url") + "/modiabrukerdialog/rest/saksoversikt/" + fnr + "/dokument/" + journalpostId + "/" + dokumentreferanse;
-        Integer antallsider = 1;
-        return Response.ok(new DokumentResultat(pdfUrl, tittel, antallsider)).build();
-    }
-
-    @GET
     @Path("/journalpostmetadata/{journalpostId}")
     public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return ok(mockDokumentMetaData(journalpostId)).build();
+            return ok(mockJournalpost()).build();
         }
+
         return ok(hentDokumentMetadata(journalpostId, fnr)).build();
     }
 
