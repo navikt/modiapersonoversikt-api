@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
@@ -18,7 +19,6 @@ import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
-import static java.util.Arrays.asList;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.*;
@@ -37,6 +37,9 @@ public class DokumentController {
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
+
+    @Inject
+    private TilgangskontrollService tilgangskontrollService;
 
     private final String DOKUMENTID_IKKE_FUNNET = "x";
     public final static String BLURRED_DOKUMENT = getProperty("tjenester.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
@@ -58,7 +61,7 @@ public class DokumentController {
     @Path("/journalpostmetadata/{journalpostId}")
     public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @QueryParam("temakode") String temakode) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET))).build();
+            return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
@@ -66,7 +69,7 @@ public class DokumentController {
                 .withTittel(journalpostMetadata.getHoveddokument().getTittel());
 
         if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
         }
 
         Set<String> dokumentreferanser = new HashSet<>();
@@ -108,12 +111,12 @@ public class DokumentController {
         return temakode != null && !dokumentMetadata.getTemakode().equals(temakode);
     }
 
-    private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding) {
-        return blurretDokumentReferanseResponse(feilmelding, new HashMap<String, String>());
+    private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding, String tittel) {
+        return blurretDokumentReferanseResponse(feilmelding, tittel, new HashMap<String, String>());
     }
 
-    private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding, Map ekstrafeilinfo) {
-        return new DokumentFeilmelding(feilmelding.feilmeldingKey, BLURRED_DOKUMENT, ekstrafeilinfo);
+    private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding, String tittel, Map ekstrafeilinfo) {
+        return new DokumentFeilmelding(tittel, feilmelding.feilmeldingKey, BLURRED_DOKUMENT, ekstrafeilinfo);
     }
 
     private Map journalfortAnnetTemaEktraFeilInfo(String journalpostId, String temanavn) {
