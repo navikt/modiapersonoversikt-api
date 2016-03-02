@@ -2,7 +2,7 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak, visSide } from './../actions';
+import { hentLerretData, velgSak, visSide, velgJournalpost } from './../actions';
 import * as Const from './../konstanter';
 
 import SakstemaPage from './sakstema/SakstemaPage';
@@ -48,7 +48,6 @@ class SaksoversiktLerret extends React.Component {
 SaksoversiktLerret.propTypes = {
     'fnr': React.PropTypes.string.isRequired,
     'brukerNavn': React.PropTypes.string.isRequired,
-    'wicketurl': React.PropTypes.string.isRequired,
     'hentLerretData': React.PropTypes.func,
     'velgSak': React.PropTypes.func,
     'status': React.PropTypes.string,
@@ -68,5 +67,6 @@ const mapStateToProps = (state) => {
 export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,
     visSide,
+    velgJournalpost,
     hentLerretData
 })(SaksoversiktLerret), store);
