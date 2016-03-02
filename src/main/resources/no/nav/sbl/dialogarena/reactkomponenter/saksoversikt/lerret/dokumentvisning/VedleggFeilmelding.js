@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 
 class VedleggFeilmelding extends React.Component {
     render() {
-        const { dokumentmetadata: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo } } = this.props;
+        const { feilmelding: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo } } = this.props;
 
         const enonicFeilmeldingstekstKey = feilmeldingEnonicKey.concat('.tekst');
         const innhold =  this.props.intl.formatMessage({id:enonicFeilmeldingstekstKey}, ekstrafeilinfo);
@@ -30,7 +30,7 @@ function createMarkup(markuptekst) {
 
 
 VedleggFeilmelding.propTypes = {
-    dokumentmetadata: React.PropTypes.shape({
+    feilmelding: React.PropTypes.shape({
         feilmeldingEnonicKey: React.PropTypes.string.isRequired,
         kanVises: React.PropTypes.bool.isRequired,
         ekstrafeilinfo: React.PropTypes.object,

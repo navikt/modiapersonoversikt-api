@@ -47,7 +47,6 @@ export const hentDokumentData = (fnr, valgtjournalpost) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        console.log(valgtjournalpost);
         const journalpostmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalpostmetadata/' + valgtjournalpost.journalpostId);
 
         dispatch({type: AT.LAST_DOKUMENT_DATA_START});

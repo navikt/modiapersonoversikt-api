@@ -3,7 +3,7 @@ import { hentDokumentData, hentLerretData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
 import { connect } from 'react-redux';
-import VedleggFeilmelding from './feilmelding/VedleggFeilmelding';
+import VedleggFeilmeldingListe from './VedleggFeilmeldingListe';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 
@@ -23,8 +23,6 @@ class DokumentVisningPage extends React.Component {
         }
         const { journalpostmetadata } = this.props;
 
-        console.log(journalpostmetadata);
-
         return (
             <div className="grattpanel side-innhold">
                 <div className="blokk-s">
@@ -33,7 +31,7 @@ class DokumentVisningPage extends React.Component {
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">Dokumentvisning</h1>
                     <section>
-                        <VedleggFeilmelding dokumentmetadata={dokumentmetadata}/>
+                        <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
                     </section>
                 </panel>
             </div>
