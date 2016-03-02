@@ -49,7 +49,7 @@ const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost,
 
 function openGosys(e) {
     e.preventDefault();
-    $('.hiddenGosysLenkePanel').click();
+    document.querySelector('.hiddenGosysLenkePanel').click();
 }
 
 

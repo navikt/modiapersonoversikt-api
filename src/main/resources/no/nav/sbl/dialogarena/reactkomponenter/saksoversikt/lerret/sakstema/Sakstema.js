@@ -20,7 +20,7 @@ class Sakstema extends React.Component {
         const id = `sakstemaRadioListe--${tema.temakode}`;
         const sisteOppdatering = nokkelinfo.sisteOppdatering ? nokkelinfo.sisteOppdatering : "";
         const behandlingsstatus = tema.temakode === 'alle' ? "" : nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : "";
-        const sisteOppdateringTekst = <FormattedDate day="2-digit" month="2-digit" year="2-digit" value={sisteOppdatering}/>
+        const sisteOppdateringTekst = <FormattedDate day="2-digit" month="2-digit" year="2-digit" value={sisteOppdatering}/>;
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt}`}>
@@ -30,7 +30,7 @@ class Sakstema extends React.Component {
                 <label htmlFor={id}>
                     <p className="temaliste-label datotekst">{sisteOppdateringTekst}</p>
                     <p className="temaliste-label stortekst">{tema.temanavn}</p>
-                    <p className="temaliste-label datotekst">{behandlingsstatus}</p>
+                    {behandlingsstatus}
                 </label>
             </div>
         );

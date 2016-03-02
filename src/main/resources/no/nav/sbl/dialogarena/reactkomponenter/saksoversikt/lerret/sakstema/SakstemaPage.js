@@ -2,6 +2,7 @@ import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
 import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
 import VisningDokumentliste from './dokumentliste/visning-dokumentliste'
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
     render() {
