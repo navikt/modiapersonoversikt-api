@@ -3,6 +3,7 @@ import React from 'react';
 function Tema({ tema, sendToWicket }) {
     return (
         <a
+            tabIndex="-1"
             className="subject"
             href="#"
             onClick={() => sendToWicket('ITEM_CLICK', tema.temakode)}
