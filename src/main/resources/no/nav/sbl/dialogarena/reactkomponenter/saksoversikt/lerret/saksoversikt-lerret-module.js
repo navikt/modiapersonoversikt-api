@@ -2,7 +2,7 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak, visSide } from './../actions';
+import { hentLerretData, velgSak, visSide, velgJournalpost } from './../actions';
 import * as Const from './../konstanter';
 
 import SakstemaPage from './sakstema/SakstemaPage';
@@ -36,6 +36,7 @@ function getUrlParameter(wicketurl, urlparameter) {
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
         const temakode = getUrlParameter(this.props.wicketurl, 'temakode');
+        const valgtside = getUrlParameter(this.props.wicketurl, 'valgtside');
         this.props.hentLerretData(this.props.fnr);
         this.props.velgSak(temakode);
     }
@@ -78,5 +79,6 @@ const mapStateToProps = (state) => {
 export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,
     visSide,
+    velgJournalpost,
     hentLerretData
 })(SaksoversiktLerret), store);

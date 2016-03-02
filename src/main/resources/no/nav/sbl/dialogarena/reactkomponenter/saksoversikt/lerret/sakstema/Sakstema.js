@@ -14,7 +14,7 @@ class Sakstema extends React.Component {
     }
 
     render() {
-        const { tema, valgtTema, velgSak, nokkelinfo} = this.props;
+        const { tema, valgtTema, velgSak, nokkelinfo, velgJournalpost} = this.props;
         // Sjekk på temakode ettersom 'alletemaet' blir laget på nytt ved rerender.
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
         const id = `sakstemaRadioListe--${tema.temakode}`;

@@ -3,7 +3,7 @@ import TidligereDokumenter from './tidligere-dokumenter';
 import { FormattedMessage } from 'react-intl';
 import DokumentListe from './dokumentliste'
 
-const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn})=> {
+const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost, visSide})=> {
 
     const dokumenter = sakstema.reduce((acc, tema) => {
         return acc.concat(tema.dokumentMetadata);
@@ -12,9 +12,13 @@ const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn})=> {
     const dokumentliste = valgtTema.temakode !== 'alle' ?
         <DokumentListe visTema="false"
                        dokumentMetadata={valgtTema.dokumentMetadata}
-                       brukerNavn={brukerNavn}/> :
+                       brukerNavn={brukerNavn}
+                       visSide={visSide}
+                       velgJournalpost={velgJournalpost}/> :
         <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                       brukerNavn={brukerNavn}/>;
+                       brukerNavn={brukerNavn}
+                       visSide={visSide}
+                       velgJournalpost={velgJournalpost}/>;
 
     const ingenDokumenterBidrag = valgtTema.temakode === 'BID' ?
         <p className="ingendokumenterforklaring"><FormattedMessage

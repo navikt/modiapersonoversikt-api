@@ -24,7 +24,7 @@ class DokumentListe extends React.Component {
                 return acc.concat(
                     dokumenter.map((dokument, index) => (
                         <DokumentInfoElm key={`dokument-${aarstall}-${index}`} brukerNavn={this.props.brukerNavn} visTema={this.props.visTema}
-                                         dokumentinfo={dokument}/>
+                                         velgJournalpost={this.props.velgJournalpost} visSide={this.props.visSide} dokumentinfo={dokument}/>
                     ))
                 );
             }, []);

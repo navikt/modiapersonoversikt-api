@@ -3,16 +3,22 @@ import { FormattedMessage } from 'react-intl';
 
 // TODO stateless function
 class DokumentinfoVedlegg extends React.Component {
-    render() {
-        const { vedlegg } = this.props;
 
-        if (!vedlegg || vedlegg.length === 0) {
+    _redirect(e) {
+        e.preventDefault();
+        this.props.visSide('dokumentvisning');
+        this.props.velgJournalpost(this.props.dokumentinfo);
+    }
+
+    render() {
+        const { dokumentinfo } = this.props;
+
+        if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {
             return <noscript />;
         }
 
-        const vedleggListe = vedlegg.map((dokumentVedlegg) => (
-            <li ><a href="javascript:void(0)" className="vedleggtext">{dokumentVedlegg.tittel}</a></li>)
-        );
+        const vedleggListe = dokumentinfo.vedlegg.map(dokumentVedlegg => (
+            <li><a href="javascript:void(0);" onClick={this._redirect.bind(this)} className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
 
         return (
             <div>
@@ -24,7 +30,7 @@ class DokumentinfoVedlegg extends React.Component {
 }
 
 DokumentinfoVedlegg.propTypes = {
-    vedlegg: React.PropTypes.array.isRequired
+    dokumentinfo: React.PropTypes.object.isRequired
 };
 
 export default DokumentinfoVedlegg;
