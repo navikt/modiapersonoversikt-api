@@ -33,7 +33,7 @@ class DokumentInfoElm extends React.Component {
                 </div>
                 {temaHvisAlleTemaer}
                 <div className="typo-info">
-                    <DokumentinfoVedlegg visSide={this.props.visSide} vedlegg={dokumentinfo.vedlegg}/>
+                    <DokumentinfoVedlegg visSide={this.props.visSide} velgJournalpost={this.props.velgJournalpost} dokumentinfo={dokumentinfo}/>
                 </div>
             </li>
         );

@@ -7,16 +7,17 @@ class DokumentinfoVedlegg extends React.Component {
     _redirect(e) {
         e.preventDefault();
         this.props.visSide('dokumentvisning');
+        this.props.velgJournalpost(this.props.dokumentinfo);
     }
 
     render() {
-        const { vedlegg } = this.props;
+        const { dokumentinfo } = this.props;
 
-        if (!vedlegg || vedlegg.length === 0) {
+        if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {
             return <noscript />;
         }
 
-        const vedleggListe = vedlegg.map(dokumentVedlegg => (
+        const vedleggListe = dokumentinfo.vedlegg.map(dokumentVedlegg => (
             <li><a href="javascript:void(0);" onClick={this._redirect.bind(this)} className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
 
         return (
@@ -29,7 +30,7 @@ class DokumentinfoVedlegg extends React.Component {
 }
 
 DokumentinfoVedlegg.propTypes = {
-    vedlegg: React.PropTypes.array.isRequired
+    dokumentinfo: React.PropTypes.object.isRequired
 };
 
 export default DokumentinfoVedlegg;

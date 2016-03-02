@@ -43,11 +43,11 @@ export const hentLerretData = (fnr) => {
 };
 
 
-export const hentDokumentData = (fnr, valgtjournalpost) => {
+export const hentDokumentData = (fnr, valgtjournalpost, temakode) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const journalpostmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalpostmetadata/' + valgtjournalpost.journalpostId + '?temakode=' + valgtjournalpost.temakode);
+        const journalpostmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalpostmetadata/' + valgtjournalpost + '?temakode=' + temakode);
 
         dispatch({type: AT.LAST_DOKUMENT_DATA_START});
         return Q
