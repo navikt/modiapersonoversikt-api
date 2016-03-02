@@ -9,7 +9,7 @@ class Sakstema extends React.Component {
         const { tema, valgtTema } = this.props;
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
         if (erValgt && tema.temakode !== 'alle') {
-            setTimeout(() => this.refs.radio.focus(), 0);
+            setTimeout(() => this.refs.radio && this.refs.radio.focus(), 0);
         }
     }
 

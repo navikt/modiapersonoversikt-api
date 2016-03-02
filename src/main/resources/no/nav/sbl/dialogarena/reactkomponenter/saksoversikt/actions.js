@@ -44,5 +44,7 @@ export const hentLerretData = (fnr) => {
 
 export const velgSak = (sak) => ({type: AT.VELG_SAK, data: sak});
 export const visSide = (side) => ({type: AT.VIS_SIDE, data: side});
+
 //Benyttes av Wicketklassen SaksoversiktLerret
 export const visTema = (tema) => ({type: AT.VIS_TEMA, data: tema});
+export const purgeState = () => ({type: AT.PURGE_STATE});

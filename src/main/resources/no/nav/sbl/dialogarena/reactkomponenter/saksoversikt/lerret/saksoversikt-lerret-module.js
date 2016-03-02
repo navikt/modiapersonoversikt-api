@@ -25,19 +25,9 @@ function getContent(props) {
     return fn(componentProps);
 }
 
-function getUrlParameter(wicketurl, urlparameter) {
-    try {
-        return wicketurl.split(urlparameter + '=')[1].split('&')[0];
-    } catch (error) {
-        return 'undefined';
-    }
-}
-
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        const temakode = getUrlParameter(this.props.wicketurl, 'temakode');
         this.props.hentLerretData(this.props.fnr);
-        this.props.velgSak(temakode);
     }
 
     render() {

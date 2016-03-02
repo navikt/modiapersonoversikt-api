@@ -11,4 +11,5 @@ export const LAST_LERRET_DATA_FEIL = 'LAST_LERRET_DATA_FEIL';
 // Funksjonalitet
 export const VELG_SAK = 'VELG_SAK';
 export const VIS_TEMA = 'VIS_TEMA';
-export const VIS_SIDE = 'VIS_SIDEA';
+export const VIS_SIDE = 'VIS_SIDE';
+export const PURGE_STATE= 'PURGE_STATE';

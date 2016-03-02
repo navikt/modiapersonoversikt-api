@@ -39,7 +39,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     if (state.widgetValgtTemakode !== null) {
         valgtTema = _sakstema.find((tema) => tema.temakode === widgetValgtTemakode);
         widgetValgtTemakode = null;
-    } else {
+    } else if (valgtTema === null) {
         valgtTema = _sakstema[0];
     }
 
@@ -64,7 +64,7 @@ actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
 actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data });
 actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
-
+actionHandlers[AT.PURGE_STATE] = (state, action) => ({ ...initalState });
 
 // -------
 export default basicReducer(initalState, actionHandlers);
