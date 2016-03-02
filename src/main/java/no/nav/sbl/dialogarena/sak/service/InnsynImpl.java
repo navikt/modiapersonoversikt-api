@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper.Feilmelding.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
