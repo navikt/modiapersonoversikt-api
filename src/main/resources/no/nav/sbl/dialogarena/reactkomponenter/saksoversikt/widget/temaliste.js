@@ -24,9 +24,7 @@ class Temaliste extends React.Component {
         return (
             <ul>
                 {temaliste}
-                <li>
-                    <a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}>Se flere saker</a>
-                </li>
+                <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')} tabIndex="-1" >Se flere saker</a></li>
             </ul>
         );
     }

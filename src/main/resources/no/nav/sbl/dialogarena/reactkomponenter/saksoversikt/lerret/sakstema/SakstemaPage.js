@@ -3,22 +3,49 @@ import SakstemaListe from './SakstemaListe';
 import DokumentListe from './dokumentliste/dokumentliste'
 import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
 import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
     _visningDokumentliste(valgtTema, dokumentliste) {
-        if (valgtTema.temakode === 'BID') {
-            return <p> Modia viser ikke dokumenter på temaet Bidrag. </p>;
-        }
-        else if (valgtTema.dokumentMetadata.length > 0) {
+        if (valgtTema.dokumentMetadata.length > 0) {
             return <div>{ dokumentliste }<TidligereDokumenter /></div>;
         }
+        const ingendokumenter = (
+            <h1 className="robust-ikon-feil-strek ingendokumenterheader">
+                <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.header"/>
+            </h1>
+        );
 
-        return (<p>Det finnes ingen dokumenter på dette temaet. Modia viser kun dokumenter etter dd.måned åååå
-            (prodsettingsdato). Du kan gå til Gosys for å se eldre dokumenter</p>);
+        if (valgtTema.temakode === 'BID') {
+            return (
+                <div className="default-error ingendokumenter">
+                    {ingendokumenter}
+                    <p className="ingendokumenterforklaring">
+                        <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/>
+                    </p>
+                </div>
+            );
+        }
+        return (
+            <div className="default-error ingendokumenter">
+                {ingendokumenter}
+                <p className="ingendokumenterforklaring">
+                    <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.forklaring"/>
+                </p>
+                <a><FormattedMessage id="dokumentinfo.sakstema.lenke.gosys"/></a>
+            </div>);
     }
 
     render() {
         const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
+
+        if(this.props.sakstema.length === 0) {
+            return (
+                <div className="ingen-sakstemaer">
+                    <FormattedMessage id="sakslamell.ingensaker"/>
+                </div>);
+        }
+
         const dokumenter = sakstema.reduce((acc, tema) => {
             return acc.concat(tema.dokumentMetadata);
         }, []);
