@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+// TODO stateless function
 class DokumentinfoVedlegg extends React.Component {
 
     _redirect(e) {
@@ -9,14 +10,14 @@ class DokumentinfoVedlegg extends React.Component {
     }
 
     render() {
-        const vedlegg = this.props.vedlegg;
+        const { vedlegg } = this.props;
+
         if (!vedlegg || vedlegg.length === 0) {
-            return <div/>;
+            return <noscript />;
         }
 
         const vedleggListe = vedlegg.map(dokumentVedlegg => (
-            <li><a href="javascript:void(0);"
-                    onClick={this._redirect.bind(this)} className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
+            <li><a href="javascript:void(0);" onClick={this._redirect.bind(this)} className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
 
         return (
             <div>

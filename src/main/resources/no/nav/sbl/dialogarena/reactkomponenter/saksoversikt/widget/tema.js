@@ -5,7 +5,7 @@ function Tema({ tema, sendToWicket }) {
         <a
             tabIndex="-1"
             className="subject"
-            href="#"
+            href="javascript:void(0)"
             onClick={() => sendToWicket('ITEM_CLICK', tema.temakode)}
         >
             {tema.temanavn}
