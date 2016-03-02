@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sak.rest;
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
+import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
@@ -13,11 +14,11 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.*;
@@ -55,12 +56,32 @@ public class DokumentController {
 
     @GET
     @Path("/journalpostmetadata/{journalpostId}")
-    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId) {
+    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @QueryParam("temakode") String temakode) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return ok(mockJournalpost()).build();
+            return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET))).build();
         }
 
-        return ok(hentDokumentMetadata(journalpostId, fnr)).build();
+        DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
+        JournalpostResultat resultat = new JournalpostResultat()
+                .withTittel(journalpostMetadata.getHoveddokument().getTittel());
+
+        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
+        }
+
+        Set<String> dokumentreferanser = new HashSet<>();
+        dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
+
+        journalpostMetadata.getVedlegg()
+                .stream()
+                .forEach(dokument -> dokumentreferanser.add(dokument.getDokumentreferanse()));
+
+        //TODO
+        //1. Gå igjennom alle dokumentreferanser. Gjør kall til innsyn.hentDokument(dokumenreferenase, journalpostId).
+        //2. Dersom feilmelding: Legg til i resultat.withDokumentFeilmelding med riktig feilmelding.
+        //3. Ellers: Finn antall sider ved å bruke en ny dependency (muligens vet Nicklas / Joanna / Torstein hvilken). Legg til i resultat.withDokument
+
+        return ok(resultat).build();
     }
 
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
@@ -87,18 +108,17 @@ public class DokumentController {
         return temakode != null && !dokumentMetadata.getTemakode().equals(temakode);
     }
 
-    private Response blurretDokumentReferanseResponse(Feilmelding feilmelding) {
+    private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding) {
         return blurretDokumentReferanseResponse(feilmelding, new HashMap<String, String>());
     }
 
-    private Response blurretDokumentReferanseResponse(Feilmelding feilmelding, Map ekstrafeilinfo) {
-        return ok(new DokumentFeilmelding(feilmelding.feilmeldingKey, BLURRED_DOKUMENT, ekstrafeilinfo)).build();
+    private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding, Map ekstrafeilinfo) {
+        return new DokumentFeilmelding(feilmelding.feilmeldingKey, BLURRED_DOKUMENT, ekstrafeilinfo);
     }
 
-    private Map journalfortAnnetTemaEktraFeilInfo(String journalpostId, String dokumentreferanse, String temanavn) {
+    private Map journalfortAnnetTemaEktraFeilInfo(String journalpostId, String temanavn) {
         Map map = new HashMap<>();
         map.put("temanavn", temanavn);
-        map.put("dokumentreferanse", dokumentreferanse);
         map.put("journalpostid", journalpostId);
         return map;
     }

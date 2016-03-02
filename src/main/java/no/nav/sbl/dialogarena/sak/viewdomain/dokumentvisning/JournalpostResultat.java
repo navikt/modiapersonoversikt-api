@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JournalpostResultat {
 
     private String tittel;
-    private List<DokumentResultat> dokumenter;
-    private List<DokumentFeilmelding> feilendeDokumenter;
+    private List<DokumentResultat> dokumenter = new ArrayList<>();
+    private List<DokumentFeilmelding> feilendeDokumenter = new ArrayList<>();
 
     public String getTittel() {
         return tittel;
@@ -20,8 +21,13 @@ public class JournalpostResultat {
         return feilendeDokumenter;
     }
 
-    public JournalpostResultat withDokumentFeilmelding(List<DokumentFeilmelding> dokumentFeilmelding) {
-        this.feilendeDokumenter = dokumentFeilmelding;
+    public JournalpostResultat withDokumentFeilmeldinger(List<DokumentFeilmelding> dokumentFeilmeldinger) {
+        this.feilendeDokumenter = dokumentFeilmeldinger;
+        return this;
+    }
+
+    public JournalpostResultat withDokumentFeilmelding(DokumentFeilmelding dokumentFeilmelding) {
+        this.feilendeDokumenter.add(dokumentFeilmelding);
         return this;
     }
 
@@ -30,8 +36,13 @@ public class JournalpostResultat {
         return this;
     }
 
-    public JournalpostResultat withDokument(List<DokumentResultat> dokumenter) {
+    public JournalpostResultat withDokumenter(List<DokumentResultat> dokumenter) {
         this.dokumenter = dokumenter;
+        return this;
+    }
+
+    public JournalpostResultat withDokument(DokumentResultat dokument) {
+        this.dokumenter.add(dokument);
         return this;
     }
 }

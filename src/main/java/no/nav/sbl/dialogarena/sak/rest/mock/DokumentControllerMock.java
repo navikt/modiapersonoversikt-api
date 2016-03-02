@@ -33,10 +33,8 @@ public class DokumentControllerMock {
 
     public static JournalpostResultat mockJournalpost() {
         return new JournalpostResultat()
-                .withTittel("Hoveddokumenttittel")
-                .withDokumentFeilmelding(asList(
-                        new DokumentFeilmelding(DOKUMENT_IKKE_FUNNET.feilmeldingKey, BLURRED_DOKUMENT, new HashMap())
-                ));
+                .withTittel("Hoveddokumenttittel");
+//                .withDokumentFeilmelding(new DokumentFeilmelding(DOKUMENT_IKKE_FUNNET.feilmeldingKey, BLURRED_DOKUMENT, new HashMap()));
     }
 
     public static DokumentMetadata mockDokumentMetaData(String journalpostId) {
