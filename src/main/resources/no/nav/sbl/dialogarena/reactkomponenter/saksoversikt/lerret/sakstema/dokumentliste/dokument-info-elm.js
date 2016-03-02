@@ -14,11 +14,8 @@ const DokumentInfoElm = ({ dokumentinfo, visTema, brukerNavn }) => {
 
     return (
         <li className={`dokumentliste-element ${kanViseDokument}`}>
-            <p className="datodokumentliste"><FormattedDate value={javaLocalDateTimeToJSDate(dokumentinfo.dato)}
-                                                            day="2-digit" month="2-digit"
-                                                            year="numeric"/></p>
-            <DokumentAvsender retning={retning} avsender={avsender} navn={navn}
-                              mottaker={mottaker} brukerNavn={brukerNavn}/>
+            <p className="datodokumentliste"><FormattedDate value={javaLocalDateTimeToJSDate(dokumentinfo.dato)} day="2-digit" month="2-digit" year="numeric"/></p>
+            <DokumentAvsender retning={retning} avsender={avsender} navn={navn} mottaker={mottaker} brukerNavn={brukerNavn}/>
 
             <div className="hoveddokument-tittel-wrapper">
                 <a className="hoveddokument-tittel" to="#">{hoveddokument.tittel}</a>
