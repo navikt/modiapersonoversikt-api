@@ -7,10 +7,10 @@ import { javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
 const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
 const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
 
-const DokumentInfoElm = ({ dokumentinfo, visTema, brukerNavn, harTilgang }) => {
-    const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning } = dokumentinfo;
+const DokumentInfoElm = ({ dokumentinfo, visTema, brukerNavn }) => {
+    const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper } = dokumentinfo;
     const temaHvisAlleTemaer = visTema === 'true' ? <p>{temakodeVisning}</p> : <noscript/>;
-    const kanViseDokument = (harTilgang && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
+    const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
 
     return (
         <li className={`dokumentliste-element ${kanViseDokument}`}>
@@ -38,11 +38,11 @@ DokumentInfoElm.propTypes = {
         navn: pt.string,
         hoveddokument: pt.object.isRequired,
         vedlegg: pt.array,
-        temakodeVisning: pt.string
+        temakodeVisning: pt.string,
+        feilWrapper: pt.object.isRequired
     }).isRequired,
     visTema: pt.string,
-    brukerNavn: pt.string,
-    harTilgang: pt.bool.isRequired
+    brukerNavn: pt.string
 };
 
 export default DokumentInfoElm;

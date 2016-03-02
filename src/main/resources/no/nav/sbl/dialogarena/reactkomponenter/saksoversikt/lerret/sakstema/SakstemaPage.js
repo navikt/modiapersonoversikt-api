@@ -1,7 +1,7 @@
 import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
-import DokumentListe from './dokumentliste/dokumentliste'
-import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
+import DokumentListe from './dokumentliste/dokumentliste';
+import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke';
 import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
 
 class SakstemaPage extends React.Component {
@@ -11,14 +11,13 @@ class SakstemaPage extends React.Component {
             return acc.concat(tema.dokumentMetadata);
         }, []);
 
-        const dokumentliste = valgtTema.temakode !== 'alle' ?
+        const dokumentliste = valgtTema.temakode === 'alle' ?
+            <DokumentListe visTema="true"
+                           dokumentMetadata={dokumenter}
+                           brukerNavn={brukerNavn} /> :
             <DokumentListe visTema="false"
                            dokumentMetadata={valgtTema.dokumentMetadata}
-                           harTilgang={valgtTema.harTilgang}
-                           brukerNavn={brukerNavn}/> :
-            <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                           harTilgang={valgtTema.harTilgang}
-                           brukerNavn={brukerNavn}/>;
+                           brukerNavn={brukerNavn} />;
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
