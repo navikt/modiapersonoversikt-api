@@ -12,18 +12,18 @@ class Temaliste extends React.Component {
         this.props.hentWidgetData(this.props.fnr);
         this.sendToWidget = WicketSender.bind(this, this.props.wicketurl, this.props.wicketcomponent);
     }
+
     render() {
         const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
         const temaliste = redusertAntallTemaer.map((tema) =>
-            <li><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
+            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
         );
-        const linkSaksoversikt = `/modiabrukerdialog/person/${fnr}#!saksoversikt`;
 
         return (
             <ul>
                 {temaliste}
-                <li><a href="#" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}>Se flere saker</a></li>
+                <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')} tabIndex="-1" >Se flere saker</a></li>
             </ul>
         );
     }

@@ -1,6 +1,8 @@
 @imgDir: "/modiabrukerdialog/img/saksoversikt";
 
 .saksoversikt-lerret-container {
+  @graa: #b7b1a9;
+
   padding: 0 !important;
   height: 100%;
   .saksoversikt-liste {
@@ -51,7 +53,6 @@
   .hoveddokument-tittel {
     font-size: large;
     font-weight: bolder;
-    border-bottom: 2px solid #b7b1a9;
   }
 }
 
@@ -82,7 +83,49 @@
 .vedleggliste {
   list-style: disc;
   .vedleggtext {
-    border-bottom: 2px solid #b7b1a9;
+    border-bottom: 2px solid @graa;
+  }
+  .ingen-sakstemaer {
+    width: 80%;
+    padding: 10rem;
+    margin: 6rem;
+    border: 1px solid;
+  }
+  .ingendokumenterheader {
+    margin-top: 2em;
+    text-transform: none;
+    font-size: 1.5em;
+  }
+
+  .ingendokumenterforklaring {
+    text-transform: none;
+    line-height: 2em;
+    padding-bottom: 1em;
+  }
+
+  .ingendokumenter {
+    padding: 2em 4em;
+    text-align: center;
+  }
+  a {
+    color: #0067c5;
+    text-decoration: none;
+    background-color: transparent;
+  }
+  .lenke-fremhevet, .side-innhold, & {
+    a:not(.knapp) {
+      border-bottom: 1px solid @graa;
+      &:active, &:hover {
+        outline: none
+      }
+      &:active {
+        color: #634689;
+        border-bottom-color: #634689;
+      }
+      &:hover {
+        border-bottom-color: #0067c5;
+      }
+    }
   }
 }
 
@@ -97,13 +140,11 @@
   font-size: x-large;
   margin-bottom: 0.5em;
 }
-
 .gamle-dokumenter {
   box-shadow: none;
 }
-
 .aarstall {
-  background-color: #b7b1a9;
+  background-color: @graa;
   padding: 0.5rem 2rem;
   font-weight: 600;
 }
@@ -191,7 +232,7 @@
   box-shadow: 0 0px 13px -2px #d1d1d1;
 }
 
-.viktigavitepanel {
+.grattpanel {
   background: #e1e1e1;
   padding: 2rem 5rem 5rem 5rem;
   overflow-x: hidden;
@@ -221,4 +262,24 @@
 .lerret.saksoversikt-lerret {
   overflow-y: hidden !important;
   padding: 0 !important
+}
+
+.feilmelding-container {
+  position: relative;
+}
+
+.feilmelding {
+  position: absolute;
+  top: 135px;
+  left: 75px;
+  z-index: 1000;
+  width: 80%;
+}
+
+.feilmelding-bakgrunn {
+  border: 1px solid black;
+}
+
+.text-center {
+  text-align: center;
 }

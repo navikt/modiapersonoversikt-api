@@ -67,9 +67,9 @@ export function leggTilLenkerTags(innhold) {
     });
 }
 
-export function tilParagraf(avsnitt) {
+export function tilParagraf(avsnitt, key) {
     const sanitizedAvsnitt = sanitize(avsnitt, { allowedTags: ['a', 'em'] });
-    return <p dangerouslySetInnerHTML={{__html: sanitizedAvsnitt}}></p>;
+    return <p key={key} dangerouslySetInnerHTML={{__html: sanitizedAvsnitt}}></p>;
 }
 
 export function omit(obj, filterkeys) {

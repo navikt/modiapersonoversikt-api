@@ -22,7 +22,7 @@ const finnTekst = (antallUnderBehandling, antallFerdigBehandlet) => {
         key = 'behandlingsstatus.ferdigbehandlet';
     }
 
-    return key ? <FormattedMessage id={key} values={values}/> : null;
+    return key ? <p className="temaliste-label datotekst"><FormattedMessage id={key} values={values}/></p> : null;
 };
 
 const datoNyereEnnAntallDager = (date, antallDager) => {

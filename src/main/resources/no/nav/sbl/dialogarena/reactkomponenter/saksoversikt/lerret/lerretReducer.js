@@ -21,6 +21,7 @@ const initalState = {
     data: {},
     feil: '',
     valgtTema: null,
+    valgtJournalpost: null,
     widgetValgtTemakode: null
 };
 // ------- Your handler here
@@ -31,11 +32,12 @@ actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
 actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     const [temaer, sakstema, tekster, miljovariabler, fnr] = action.data;
 
-    let _sakstema = sakstema
-        .filter(fjernTommeTema).sort(nyesteSakstema);
+    let _sakstema = sakstema && sakstema.length > 0? sakstema
+            .filter(fjernTommeTema).sort(nyesteSakstema) : [];
+
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
-    let { valgtTema, widgetValgtTemakode } = state;
+    let { valgtTema, widgetValgtTemakode, valgtJournalpost } = state;
 
     if (state.widgetValgtTemakode !== null) {
         valgtTema = _sakstema.find((tema) => tema.temakode === widgetValgtTemakode);
@@ -43,6 +45,8 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     } else {
         valgtTema = _sakstema[0];
     }
+
+
 
     return {
         ...state,
@@ -55,6 +59,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
             fnr
         },
         valgtTema,
+        valgtJournalpost,
         widgetValgtTemakode
     };
 };
@@ -63,6 +68,7 @@ actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
 };
 
 actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data });
+actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJournalpost: action.data });
 actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
 

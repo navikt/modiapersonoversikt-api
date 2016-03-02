@@ -2,30 +2,42 @@ import React, { PropTypes as pt } from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
 import DokumentAvsender from './dokument/dokument-avsender';
 import { FormattedDate } from 'react-intl';
-import { javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
+import { datoformat, javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
 
-const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
-const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
+class DokumentInfoElm extends React.Component {
 
-const DokumentInfoElm = ({ dokumentinfo, visTema, brukerNavn }) => {
-    const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper } = dokumentinfo;
-    const temaHvisAlleTemaer = visTema === 'true' ? <p>{temakodeVisning}</p> : <noscript/>;
-    const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
+    _redirect(e) {
+        e.preventDefault();
+        this.props.velgJournalpost(this.props.dokumentinfo);
+        this.props.visSide('dokumentvisning');
+    }
 
-    return (
-        <li className={`dokumentliste-element ${kanViseDokument}`}>
-            <p className="datodokumentliste"><FormattedDate value={javaLocalDateTimeToJSDate(dokumentinfo.dato)} day="2-digit" month="2-digit" year="numeric"/></p>
-            <DokumentAvsender retning={retning} avsender={avsender} navn={navn} mottaker={mottaker} brukerNavn={brukerNavn}/>
+    render() {
+        const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
+        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper } = dokumentinfo;
+        const temaHvisAlleTemaer = visTema === 'true' ? <p>{temakodeVisning}</p> : <noscript/>;
+        const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
+        const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
 
-            <div className="hoveddokument-tittel-wrapper">
-                <a className="hoveddokument-tittel" to="#">{hoveddokument.tittel}</a>
-            </div>
-            {temaHvisAlleTemaer}
-            <div className="typo-info">
-                <DokumentinfoVedlegg vedlegg={vedlegg}/>
-            </div>
-        </li>);
-};
+
+        return (
+            <li className={`dokumentliste-element ${kanViseDokument}`}>
+                <p className="datodokumentliste">
+                    <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
+                </p>
+                <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker} brukerNavn={brukerNavn} navn={navn}/>
+
+                <div className="hoveddokument-tittel-wrapper">
+                    <a href="javascript:void(0)" className="hoveddokument-tittel" onClick={this._redirect.bind(this)}>{hoveddokument.tittel}</a>
+                </div>
+                {temaHvisAlleTemaer}
+                <div className="typo-info">
+                    <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost} dokumentinfo={dokumentinfo}/>
+                </div>
+            </li>
+        );
+    }
+}
 
 DokumentInfoElm.propTypes = {
     dokumentinfo: pt.shape({

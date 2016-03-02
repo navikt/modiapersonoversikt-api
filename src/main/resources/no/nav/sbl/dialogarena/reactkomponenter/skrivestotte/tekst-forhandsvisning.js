@@ -17,10 +17,6 @@ class TekstForhandsvisning extends React.Component {
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        //const paragraferFragment = React.addons.createFragment({
-        //    paragrafer: paragrafer
-        //});
-
         const knagger = tekst.tags.map((tag) => {
             return (
                 <button key={tag} className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>

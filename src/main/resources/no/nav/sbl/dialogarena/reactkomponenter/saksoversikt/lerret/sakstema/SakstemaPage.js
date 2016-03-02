@@ -1,8 +1,8 @@
 import React, { PropTypes as pt } from 'react';
 import SakstemaListe from './SakstemaListe';
-import DokumentListe from './dokumentliste/dokumentliste';
-import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke';
-import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
+import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
+import VisningDokumentliste from './dokumentliste/visning-dokumentliste'
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
     _visningDokumentliste(valgtTema, dokumentliste) {
@@ -17,12 +17,15 @@ class SakstemaPage extends React.Component {
     }
 
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
-        const dokumenter = sakstema.reduce((acc, tema) => acc.concat(tema.dokumentMetadata), []);
+        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost } = this.props;
 
-        const dokumentliste = valgtTema.temakode === 'alle' ?
-            <DokumentListe visTema="true" dokumentMetadata={dokumenter} brukerNavn={brukerNavn} /> :
-            <DokumentListe visTema="false" dokumentMetadata={valgtTema.dokumentMetadata} brukerNavn={brukerNavn} />;
+        if(this.props.sakstema.length === 0) {
+            return (
+                <div className="ingen-sakstemaer">
+                    <FormattedMessage id="sakslamell.ingensaker"/>
+                </div>);
+        }
+
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
@@ -30,7 +33,7 @@ class SakstemaPage extends React.Component {
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                    {this._visningDokumentliste(valgtTema, dokumentliste)}
+                    <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema} brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}/>
                 </section>
             </div>
         );
@@ -38,11 +41,9 @@ class SakstemaPage extends React.Component {
 }
 
 SakstemaPage.propTypes = {
-    sakstema: pt.array.isRequired,
-    valgtTema: pt.string.isRequired,
-    velgSak: pt.string,
-    brukerNavn: pt.string,
-    visSide: pt.func.isRequired
+    sakstema: PT.array.isRequired,
+    visSide: PT.func.isRequired
+
 };
 
 export default SakstemaPage;
