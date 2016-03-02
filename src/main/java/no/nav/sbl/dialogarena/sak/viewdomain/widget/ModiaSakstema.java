@@ -28,6 +28,9 @@ public class ModiaSakstema extends Sakstema {
     }
 
     private void harIkkeTilgang() {
+        if (dokumentMetadata == null){
+            return;
+        }
         for (DokumentMetadata dokument : dokumentMetadata) {
             dokument.withFeilWrapper(Feilmelding.SIKKERHETSBEGRENSNING);
         }
