@@ -12,7 +12,7 @@ const Utgaaende = ({ avsenderUT, mottakerUT }) => {
 
 Utgaaende.propTypes = {
     mottakerUT: pt.string.isRequired,
-    mottakerUT: pt.string.isRequired
+    avsenderUT: pt.string.isRequired
 };
 
 export default Utgaaende;

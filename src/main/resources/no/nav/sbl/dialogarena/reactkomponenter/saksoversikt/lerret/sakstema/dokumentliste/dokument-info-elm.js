@@ -54,7 +54,9 @@ DokumentInfoElm.propTypes = {
         feilWrapper: pt.object.isRequired
     }).isRequired,
     visTema: pt.string,
-    brukerNavn: pt.string
+    brukerNavn: pt.string,
+    velgJournalpost: pt.func.isRequired,
+    visSide: pt.func.isRequired
 };
 
 export default DokumentInfoElm;
