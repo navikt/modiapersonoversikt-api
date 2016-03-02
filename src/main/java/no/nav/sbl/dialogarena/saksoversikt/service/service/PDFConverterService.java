@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.System.getProperty;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.KORRUPT_PDF;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.UKJENT_FEIL;
 import static no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.informasjon.WSKonverterFra.FOERSTE_SIDE;
 
 public class PDFConverterService {
@@ -37,10 +39,10 @@ public class PDFConverterService {
             return new TjenesteResultatWrapper(pdfURLer);
         } catch (PdfErKorruptFault e) {
             logger.warn("PDF er korrupt!", e);
-            return new TjenesteResultatWrapper(TjenesteResultatWrapper.Feilmelding.KORRUPT_PDF);
+            return new TjenesteResultatWrapper(KORRUPT_PDF);
         } catch (RuntimeException e) {
             logger.error("Feil mot konverteringstjenesten", e);
-            return new TjenesteResultatWrapper(TjenesteResultatWrapper.Feilmelding.UKJENT_FEIL);
+            return new TjenesteResultatWrapper(UKJENT_FEIL);
         }
     }
 }

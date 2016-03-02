@@ -21,6 +21,7 @@ public class DokumentMetadata {
     private String temakode;
     private String temakodeVisning;
     private boolean ettersending;
+    private FeilWrapper feilWrapper = new FeilWrapper();
 
     public boolean isEttersending() {
         return ettersending;
@@ -137,5 +138,14 @@ public class DokumentMetadata {
     public DokumentMetadata withTemakodeVisning(final String temakodeVisning) {
         this.temakodeVisning = temakodeVisning;
         return this;
+    }
+
+    public DokumentMetadata withFeilWrapper(final Feilmelding feilmelding) {
+        this.feilWrapper = new FeilWrapper(feilmelding);
+        return this;
+    }
+
+    public FeilWrapper getFeilWrapper() {
+        return feilWrapper;
     }
 }

@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -53,6 +54,27 @@ public class DokumentMetadataServiceTest {
     @InjectMocks
     private DokumentMetadataService dokumentMetadataService;
 
+    @Before
+    public void setup() {
+        when(kodeverk.getKode(anyString(), any())).thenReturn("DAG");
+    }
+
+    @Test
+    public void hvisEndretTemaFarViToDokumentMetadataOgEnMedFeilmelding() throws DatatypeConfigurationException {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+        when(kodeverk.getKode(anyString(), any())).thenReturn("FOR");
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
+
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+
+        assertThat(dokumentMetadatas.size(), is(2));
+        assertFalse(dokumentMetadatas.get(0).getFeilWrapper().getInneholderFeil());
+        assertTrue(dokumentMetadatas.get(1).getFeilWrapper().getInneholderFeil());
+    }
+
     @Test
     public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoark() throws DatatypeConfigurationException {
 
@@ -60,7 +82,6 @@ public class DokumentMetadataServiceTest {
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
-
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
         List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
@@ -71,6 +92,7 @@ public class DokumentMetadataServiceTest {
     private DokumentMetadata brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg() {
         return new DokumentMetadata()
                 .withJournalpostId("2")
+                .withTemakode("DAG")
                 .withAvsender(Entitet.NAV)
                 .withMottaker(Entitet.SLUTTBRUKER)
                 .withDato(LocalDateTime.now());
