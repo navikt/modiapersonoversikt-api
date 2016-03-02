@@ -45,7 +45,7 @@ const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn})=> {
 
 function openGosys(e) {
     e.preventDefault();
-    $('.hiddenGosysLenkePanel').click();
+    document.querySelector('.hiddenGosysLenkePanel').click();
 }
 
 
