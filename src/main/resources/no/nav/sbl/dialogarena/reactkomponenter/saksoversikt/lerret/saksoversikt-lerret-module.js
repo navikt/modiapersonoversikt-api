@@ -37,6 +37,7 @@ function getUrlParameter(wicketurl, urlparameter) {
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
         const temakode = getUrlParameter(this.props.wicketurl, 'temakode');
+        const valgtside = getUrlParameter(this.props.wicketurl, 'valgtside');
         this.props.hentLerretData(this.props.fnr);
         this.props.velgSak(temakode);
     }

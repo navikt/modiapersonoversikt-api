@@ -12,7 +12,6 @@ class DokumentInfoElm extends React.Component {
         this.props.visSide('dokumentvisning');
     }
 
-
     render() {
         const dokumentinfo = this.props.dokumentinfo;
         const temaHvisAlleTemaer = this.props.visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
