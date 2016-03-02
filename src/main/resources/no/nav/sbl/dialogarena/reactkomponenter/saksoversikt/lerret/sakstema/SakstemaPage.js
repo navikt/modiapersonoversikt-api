@@ -3,6 +3,7 @@ import SakstemaListe from './SakstemaListe';
 import DokumentListe from './dokumentliste/dokumentliste'
 import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
 import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
+import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
     render() {
@@ -33,21 +34,30 @@ class SakstemaPage extends React.Component {
     }
 
     _visningDokumentliste(valgtTema, dokumentliste) {
-        if (valgtTema.temakode === 'BID') {
-            return <p> Modia viser ikke dokumenter på temaet Bidrag. </p>;
-        }
-        else if (valgtTema.dokumentMetadata.length > 0) {
+        const ingendokumenter = <h1 className="robust-ikon-feil-strek ingendokumenterheader">
+            <FormattedMessage
+                id="dokumentinfo.sakstema.ingen.dokumenter.header"/></h1>;
+
+        if (valgtTema.dokumentMetadata.length > 0) {
             return <div>{ dokumentliste }<TidligereDokumenter /></div>;
         }
+        else if (valgtTema.temakode === 'BID') {
+            return <div>{ingendokumenter}<p> Modia viser ikke dokumenter på temaet Bidrag. </p></div>;
+        }
 
-        return (<p> Det finnes ingen dokumenter på dette temaet. Modia viser kun dokumenter etter dd.måned åååå
-            (prodsettingsdato). Du kan gå til Gosys for å se eldre dokumenter</p>);
+        return (
+            <div className="default-error ingendokumenter">{ingendokumenter}
+                <p className="ingendokumenterforklaring"><FormattedMessage
+                    id="dokumentinfo.sakstema.ingen.dokumenter.forklaring"/></p>
+                <a>Lenke til Gosys</a>
+            </div >);
     }
 }
 
 SakstemaPage.propTypes = {
     sakstema: PT.array.isRequired,
     visSide: PT.func.isRequired
+
 };
 
 export default SakstemaPage;
