@@ -40,7 +40,7 @@
         <modig-content.version>2.0.13</modig-content.version>
         <modig-core.version>1.0.1</modig-core.version>
         <modig.security.version>1.0.24</modig.security.version>
-        <reactkomponenter.version>2.7.4</reactkomponenter.version>
+        <reactkomponenter.version>2.7.5-SNAPSHOT</reactkomponenter.version>
         <common-records.version>1.3</common-records.version>
 
         <!-- Tjenester  -->
