@@ -1,6 +1,8 @@
 @imgDir: "/modiabrukerdialog/img/saksoversikt";
 
 .saksoversikt-lerret-container {
+  @graa: #b7b1a9;
+
   padding: 0 !important;
   height: 100%;
   .saksoversikt-liste {
@@ -58,8 +60,6 @@
         .hoveddokumenttext {
           font-size: large;
           font-weight: bolder;
-          border-bottom: 2px solid #b7b1a9;
-
         }
       }
     }
@@ -70,7 +70,7 @@
     .vedleggliste {
       list-style: disc;
       .vedleggtext {
-        border-bottom: 2px solid #b7b1a9;
+        border-bottom: 2px solid @graa;
       }
     }
     .tidligaredokumentimage {
@@ -88,9 +88,29 @@
       box-shadow: none;
     }
     .aarstall {
-      background-color: #b7b1a9;
+      background-color: @graa;
       padding: 0.5rem 2rem;
       font-weight: 600;
+    }
+  }
+  a {
+    color: #0067c5;
+    text-decoration: none;
+    background-color: transparent;
+  }
+  .lenke-fremhevet, .side-innhold, & {
+    a:not(.knapp) {
+      border-bottom: 1px solid @graa;
+      &:active, &:hover {
+        outline: none
+      }
+      &:active {
+        color: #634689;
+        border-bottom-color: #634689;
+      }
+      &:hover {
+        border-bottom-color: #0067c5;
+      }
     }
   }
 }
