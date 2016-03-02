@@ -34,22 +34,23 @@ class SakstemaPage extends React.Component {
     }
 
     _visningDokumentliste(valgtTema, dokumentliste) {
+        if (valgtTema.dokumentMetadata.length > 0) {
+            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
+        }
         const ingendokumenter = <h1 className="robust-ikon-feil-strek ingendokumenterheader">
             <FormattedMessage
                 id="dokumentinfo.sakstema.ingen.dokumenter.header"/></h1>;
 
-        if (valgtTema.dokumentMetadata.length > 0) {
-            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
+        if (valgtTema.temakode === 'BID') {
+            return (<div className="default-error ingendokumenter">{ingendokumenter}
+                <p className="ingendokumenterforklaring"><FormattedMessage
+                    id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></p></div>);
         }
-        else if (valgtTema.temakode === 'BID') {
-            return <div>{ingendokumenter}<p> Modia viser ikke dokumenter på temaet Bidrag. </p></div>;
-        }
-
         return (
             <div className="default-error ingendokumenter">{ingendokumenter}
                 <p className="ingendokumenterforklaring"><FormattedMessage
                     id="dokumentinfo.sakstema.ingen.dokumenter.forklaring"/></p>
-                <a>Lenke til Gosys</a>
+                <a><FormattedMessage id="dokumentinfo.sakstema.lenke.gosys"/></a>
             </div >);
     }
 }
