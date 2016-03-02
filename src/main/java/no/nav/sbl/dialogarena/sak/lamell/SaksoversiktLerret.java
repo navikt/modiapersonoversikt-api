@@ -32,6 +32,13 @@ public class SaksoversiktLerret extends Lerret {
         add(lerret);
     }
 
+    @Override
+    public void onClosing(AjaxRequestTarget target, boolean isMinimizing) {
+        if (!isMinimizing) {
+            lerret.call("callAction", "purgeState");
+        }
+    }
+
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         String tema = feedItemPayload.getItemId();
