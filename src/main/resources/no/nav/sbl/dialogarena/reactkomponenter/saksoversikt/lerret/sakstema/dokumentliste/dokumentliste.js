@@ -18,11 +18,14 @@ class DokumentListe extends React.Component {
             .map(aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) }))
             .reduce((acc, {aarstall, dokumenter}) => {
                 if (aarstall !== gjeldendeAar) {
-                    acc.push(<li className="aarstall">{aarstall}</li>);
+                    acc.push(<li key={'aarstall-' + aarstall} className="aarstall">{aarstall}</li>);
                 }
+
                 return acc.concat(
-                    dokumenter.map((dokument) => <DokumentInfoElm brukerNavn={this.props.brukerNavn} visTema={this.props.visTema}
-                                                                  dokumentinfo={dokument}/>)
+                    dokumenter.map((dokument, index) => (
+                        <DokumentInfoElm key={`dokument-${aarstall}-${index}`} brukerNavn={this.props.brukerNavn} visTema={this.props.visTema}
+                                         dokumentinfo={dokument}/>
+                    ))
                 );
             }, []);
 

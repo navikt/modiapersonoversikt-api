@@ -17,9 +17,8 @@ class Temaliste extends React.Component {
         const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
         const temaliste = redusertAntallTemaer.map((tema) =>
-            <li><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
+            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
         );
-        const linkSaksoversikt = `/modiabrukerdialog/person/${fnr}#!saksoversikt`;
 
         return (
             <ul>
