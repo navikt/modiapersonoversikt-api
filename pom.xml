@@ -12,7 +12,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>7.2-HL2-SNAPSHOT</version>
+    <version>7.3-HL2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -112,7 +112,7 @@
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>3.1-SNAPSHOT</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>3.2-SNAPSHOT</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>4.4.78</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
