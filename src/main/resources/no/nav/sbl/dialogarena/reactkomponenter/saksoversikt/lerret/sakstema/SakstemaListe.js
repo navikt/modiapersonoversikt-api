@@ -3,10 +3,13 @@ import Sakstema from './Sakstema';
 import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering'
 import { FormattedMessage } from 'react-intl';
 
-const SakstemaListe = ({sakstema, valgtTema, velgSak}) => {
+const SakstemaListe = ({sakstema, valgtTema, velgSak, miljovariabler}) => {
+
     const temaListe = sakstema.map((tema) => (
         <Sakstema key={tema.temakode} tema={tema} velgSak={velgSak}
-                  nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder, tema.dokumentMetadata, 411)}
+                  nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder,
+                  tema.dokumentMetadata,
+                  miljovariabler['behandlingsstatus.synlig.antallDager'])}
                   valgtTema={valgtTema}/>
     ));
 
