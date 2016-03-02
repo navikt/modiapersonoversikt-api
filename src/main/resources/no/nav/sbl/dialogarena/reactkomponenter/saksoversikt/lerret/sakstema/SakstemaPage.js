@@ -8,6 +8,14 @@ import { FormattedMessage } from 'react-intl';
 class SakstemaPage extends React.Component {
     render() {
         const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
+
+        if(this.props.sakstema.length === 0) {
+            return (
+                <div className="ingen-sakstemaer">
+                    <FormattedMessage id="sakslamell.ingensaker"/>
+                </div>);
+        }
+
         const dokumenter = sakstema.reduce((acc, tema) => {
             return acc.concat(tema.dokumentMetadata);
         }, []);
@@ -58,7 +66,6 @@ class SakstemaPage extends React.Component {
 SakstemaPage.propTypes = {
     sakstema: PT.array.isRequired,
     visSide: PT.func.isRequired
-
 };
 
 export default SakstemaPage;
