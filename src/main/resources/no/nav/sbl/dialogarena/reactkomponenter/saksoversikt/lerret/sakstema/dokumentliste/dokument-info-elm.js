@@ -4,6 +4,9 @@ import DokumentAvsender from './dokument/dokument-avsender';
 import { FormattedDate } from 'react-intl';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
 
+const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
+const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
+
 class DokumentInfoElm extends React.Component {
 
     _redirect(e) {

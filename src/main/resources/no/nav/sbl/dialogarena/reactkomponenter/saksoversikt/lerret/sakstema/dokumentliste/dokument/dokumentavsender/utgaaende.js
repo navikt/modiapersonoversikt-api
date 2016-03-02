@@ -11,9 +11,8 @@ const Utgaaende = ({ avsenderUT, mottakerUT }) => {
 };
 
 Utgaaende.propTypes = {
-    brukerNavn: pt.string,
-    navn: pt.string,
-    avsenderInn: pt.string.isRequired
+    mottakerUT: pt.string.isRequired,
+    mottakerUT: pt.string.isRequired
 };
 
 export default Utgaaende;
