@@ -28,8 +28,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
-public class SaksoversiktController { @Inject
-private AnsattService ansattService;
+public class SaksoversiktController {
+
+    @Inject
+    private AnsattService ansattService;
 
     @Inject
     private SaksoversiktService saksoversiktService;
