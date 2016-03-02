@@ -14,7 +14,7 @@ class DokumentInfoElm extends React.Component {
         return (
             <li className="dokumentlisteelement">
                 <p className="datodokumentliste">
-                    <FormattedDate value={javaLocalDateTimeToJSDate(dokumentdato)} {...datoformat.NUMERISK_KORT} />
+                    <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                 </p>
                 <DokumentAvsender className="avsendertext" retning={dokumentinfo.retning}
                                   avsender={dokumentinfo.avsender}
