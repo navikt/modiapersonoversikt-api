@@ -25,20 +25,9 @@ function getContent(props) {
     return fn(componentProps);
 }
 
-function getUrlParameter(wicketurl, urlparameter) {
-    try {
-        return wicketurl.split(urlparameter + '=')[1].split('&')[0];
-    } catch (error) {
-        return 'undefined';
-    }
-}
-
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        const temakode = getUrlParameter(this.props.wicketurl, 'temakode');
-        const valgtside = getUrlParameter(this.props.wicketurl, 'valgtside');
         this.props.hentLerretData(this.props.fnr);
-        this.props.velgSak(temakode);
     }
 
     render() {
@@ -59,7 +48,6 @@ class SaksoversiktLerret extends React.Component {
 SaksoversiktLerret.propTypes = {
     'fnr': React.PropTypes.string.isRequired,
     'brukerNavn': React.PropTypes.string.isRequired,
-    'wicketurl': React.PropTypes.string.isRequired,
     'hentLerretData': React.PropTypes.func,
     'velgSak': React.PropTypes.func,
     'status': React.PropTypes.string,
