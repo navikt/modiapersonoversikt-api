@@ -9,7 +9,7 @@ import Snurrepipp from './../../../utils/snurrepipp';
 
 class DokumentVisningPage extends React.Component {
     componentWillMount() {
-        this.props.hentDokumentData(this.props.fnr, '123', '123');
+        this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
 
     _redirect(e) {
@@ -17,12 +17,14 @@ class DokumentVisningPage extends React.Component {
         this.props.visSide('sakstema');
     }
 
-
     render() {
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
             return <Snurrepipp />;
         }
-        const { dokumentmetadata } = this.props;
+        const { journalpostmetadata } = this.props;
+
+        console.log(journalpostmetadata);
+
         return (
             <div className="grattpanel side-innhold">
                 <div className="blokk-s">
@@ -31,7 +33,7 @@ class DokumentVisningPage extends React.Component {
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">Dokumentvisning</h1>
                     <section>
-                        <VedleggFeilmelding dokumentmetadata={dokumentmetadata} />
+                        <VedleggFeilmelding dokumentmetadata={dokumentmetadata}/>
                     </section>
                 </panel>
             </div>
@@ -42,13 +44,16 @@ class DokumentVisningPage extends React.Component {
 const mapStateToProps = (state) => {
     return {
         valgtside: state.lerret.valgtside,
-        dokumentmetadata: state.dokument.data[0],
-        journalpostmetadata: state.dokument.data[1],
+        journalpostmetadata: state.dokument.data[0],
         lerretstatus: state.lerret.status,
         dokumentstatus: state.dokument.status,
         valgtTema: state.lerret.valgtTema,
+        valgtJournalpost: state.lerret.valgtJournalpost,
         tekster: state.lerret.data.tekster
     };
 };
 
-export default wrapWithProvider(connect(mapStateToProps, {hentDokumentData, hentLerretData})(DokumentVisningPage), store);
+export default wrapWithProvider(connect(mapStateToProps, {
+    hentDokumentData,
+    hentLerretData
+})(DokumentVisningPage), store);

@@ -3,7 +3,7 @@ import 'babel-polyfill';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak, visSide } from './../actions';
+import { hentLerretData, velgSak, visSide, velgJournalpost } from './../actions';
 import * as Const from './../konstanter';
 
 import SakstemaPage from './sakstema/SakstemaPage';
@@ -79,5 +79,6 @@ const mapStateToProps = (state) => {
 export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,
     visSide,
+    velgJournalpost,
     hentLerretData
 })(SaksoversiktLerret), store);

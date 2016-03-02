@@ -43,16 +43,16 @@ export const hentLerretData = (fnr) => {
 };
 
 
-export const hentDokumentData = (fnr, journalpostid, dokumentreferanse) => {
+export const hentDokumentData = (fnr, valgtjournalpost) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const dokumentmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/dokumentmetadata/' + journalpostid + '/' + dokumentreferanse);
-        const journalpostmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalpostmetadata/' + journalpostid);
+        console.log(valgtjournalpost);
+        const journalpostmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalpostmetadata/' + valgtjournalpost.journalpostId);
 
         dispatch({type: AT.LAST_DOKUMENT_DATA_START});
         return Q
-            .all([dokumentmetadata, journalpostmetadata])
+            .all([journalpostmetadata])
             .then(promisedDispatch(AT.LAST_DOKUMENT_DATA_OK))
             .catch(rethrow(promisedDispatch(AT.LAST_DOKUMENT_DATA_FEIL)));
     }
@@ -60,6 +60,7 @@ export const hentDokumentData = (fnr, journalpostid, dokumentreferanse) => {
 
 
 export const velgSak = (sak) => ({type: AT.VELG_SAK, data: sak});
+export const velgJournalpost = (journalpost) => ({type: AT.VELG_JOURNALPOST, data: journalpost});
 export const visSide = (side) => ({type: AT.VIS_SIDE, data: side});
 //Benyttes av Wicketklassen SaksoversiktLerret
 export const visTema = (tema) => ({type: AT.VIS_TEMA, data: tema});

@@ -2,14 +2,21 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 class DokumentinfoVedlegg extends React.Component {
+
+    _redirect(e) {
+        e.preventDefault();
+        this.props.visSide('dokumentvisning');
+    }
+
     render() {
         const vedlegg = this.props.vedlegg;
         if (!vedlegg || vedlegg.length === 0) {
-            return <div></div>;
+            return <div/>;
         }
 
         const vedleggListe = vedlegg.map(dokumentVedlegg => (
-            <li ><a className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
+            <li><a href="javascript:void(0);"
+                    onClick={this._redirect.bind(this)} className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
 
         return (
             <div>

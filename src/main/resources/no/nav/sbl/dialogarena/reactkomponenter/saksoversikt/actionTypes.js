@@ -16,5 +16,6 @@ export const LAST_DOKUMENT_DATA_FEIL = 'LAST_DOKUMENT_DATA_FEIL';
 
 // Funksjonalitet
 export const VELG_SAK = 'VELG_SAK';
+export const VELG_JOURNALPOST = 'VELG_JOURNALPOST';
 export const VIS_TEMA = 'VIS_TEMA';
 export const VIS_SIDE = 'VIS_SIDEA';

@@ -6,17 +6,18 @@ import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
 
 class SakstemaPage extends React.Component {
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
+        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost } = this.props;
         const dokumenter = sakstema.reduce((acc, tema) => {
             return acc.concat(tema.dokumentMetadata);
         }, []);
 
         const dokumentliste = valgtTema.temakode !== 'alle' ?
-            <DokumentListe visTema="false"
+            <DokumentListe visSide={visSide} visTema="false"
                            dokumentMetadata={valgtTema.dokumentMetadata}
-                           brukerNavn={brukerNavn}/> :
-            <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                           brukerNavn={brukerNavn}/>;
+                           brukerNavn={brukerNavn}
+                           velgJournalpost={velgJournalpost}/> :
+            <DokumentListe visSide={visSide} visTema="true" dokumentMetadata={dokumenter}
+                           brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}/>;
 
         return (
             <div className="sakstema-container">
