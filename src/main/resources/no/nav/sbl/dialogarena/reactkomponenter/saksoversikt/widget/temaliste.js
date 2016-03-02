@@ -12,6 +12,7 @@ class Temaliste extends React.Component {
         this.props.hentWidgetData(this.props.fnr);
         this.sendToWidget = WicketSender.bind(this, this.props.wicketurl, this.props.wicketcomponent);
     }
+
     render() {
         const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
@@ -23,7 +24,9 @@ class Temaliste extends React.Component {
         return (
             <ul>
                 {temaliste}
-                <li><a href="#" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}>Se flere saker</a></li>
+                <li>
+                    <a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}>Se flere saker</a>
+                </li>
             </ul>
         );
     }
