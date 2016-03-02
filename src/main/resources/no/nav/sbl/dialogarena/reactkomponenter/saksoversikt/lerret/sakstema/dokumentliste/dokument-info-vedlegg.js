@@ -1,15 +1,18 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+// TODO stateless function
 class DokumentinfoVedlegg extends React.Component {
     render() {
-        const vedlegg = this.props.vedlegg;
+        const { vedlegg } = this.props;
+
         if (!vedlegg || vedlegg.length === 0) {
-            return <div></div>;
+            return <noscript />;
         }
 
-        const vedleggListe = vedlegg.map(dokumentVedlegg => (
-            <li ><a className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
+        const vedleggListe = vedlegg.map((dokumentVedlegg) => (
+            <li ><a href="javascript:void(0)" className="vedleggtext">{dokumentVedlegg.tittel}</a></li>)
+        );
 
         return (
             <div>
