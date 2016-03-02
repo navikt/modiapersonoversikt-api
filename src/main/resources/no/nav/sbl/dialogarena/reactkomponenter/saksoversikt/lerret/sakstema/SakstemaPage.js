@@ -6,6 +6,36 @@ import TidligereDokumenter from './dokumentliste/tidligere-dokumenter';
 import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
+    _visningDokumentliste(valgtTema, dokumentliste) {
+        if (valgtTema.dokumentMetadata.length > 0) {
+            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
+        }
+        const ingendokumenter = (
+            <h1 className="robust-ikon-feil-strek ingendokumenterheader">
+                <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.header"/>
+            </h1>
+        );
+
+        if (valgtTema.temakode === 'BID') {
+            return (
+                <div className="default-error ingendokumenter">
+                    {ingendokumenter}
+                    <p className="ingendokumenterforklaring">
+                        <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/>
+                    </p>
+                </div>
+            );
+        }
+        return (
+            <div className="default-error ingendokumenter">
+                {ingendokumenter}
+                <p className="ingendokumenterforklaring">
+                    <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.forklaring"/>
+                </p>
+                <a><FormattedMessage id="dokumentinfo.sakstema.lenke.gosys"/></a>
+            </div>);
+    }
+
     render() {
         const { sakstema, valgtTema, velgSak, brukerNavn, visSide } = this.props;
 
@@ -30,8 +60,7 @@ class SakstemaPage extends React.Component {
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak}
-                                   valgtTema={valgtTema}/>
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
@@ -39,27 +68,6 @@ class SakstemaPage extends React.Component {
                 </section>
             </div>
         );
-    }
-
-    _visningDokumentliste(valgtTema, dokumentliste) {
-        if (valgtTema.dokumentMetadata.length > 0) {
-            return <div>{ dokumentliste }<TidligereDokumenter /></div>;
-        }
-        const ingendokumenter = <h1 className="robust-ikon-feil-strek ingendokumenterheader">
-            <FormattedMessage
-                id="dokumentinfo.sakstema.ingen.dokumenter.header"/></h1>;
-
-        if (valgtTema.temakode === 'BID') {
-            return (<div className="default-error ingendokumenter">{ingendokumenter}
-                <p className="ingendokumenterforklaring"><FormattedMessage
-                    id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></p></div>);
-        }
-        return (
-            <div className="default-error ingendokumenter">{ingendokumenter}
-                <p className="ingendokumenterforklaring"><FormattedMessage
-                    id="dokumentinfo.sakstema.ingen.dokumenter.forklaring"/></p>
-                <a><FormattedMessage id="dokumentinfo.sakstema.lenke.gosys"/></a>
-            </div >);
     }
 }
 
