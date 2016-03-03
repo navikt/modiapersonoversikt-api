@@ -177,9 +177,11 @@
   border-bottom: 1px solid #ccc;
   display: block;
 
-  label {
-    width: 100%;
+  input[type=radio] + label {
+    padding-top: 16px;
+    padding-bottom: 16px;
     margin-top: 0;
+    width: 100%;
     border: 1px solid transparent;
   }
 
@@ -188,6 +190,9 @@
   }
 
   input[type=radio]:focus + label {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    margin-top: 0;
     outline: none;
     box-shadow: inset 0 0 0 2px #ffbd66;
     border: 1px solid #ffbd66;
@@ -199,6 +204,9 @@
   .temaliste-label {
     color: #f5f5f5;
   }
+  .datotekst {
+    color: #f5f5f5;
+  }
 
   &:focus {
     background-color: #226aa4 !important;
@@ -207,18 +215,32 @@
 
 .temaliste-label {
   color: #3e3832;
+  text-transform: none;
+}
+
+.behandlingsstatus-tekst {
+  p {
+    margin:0;
+    font-size: 0.9rem;
+  }
 }
 
 .stortekst {
   font-family: Modus, Arial, Helvetica, sans-serif;
   font-size: 1.21rem;
-  font-weight: 600
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 8px;
 }
 
 .datotekst {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.9rem;
   font-weight: normal;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-bottom: 8px;
 }
 
 .decorated {
