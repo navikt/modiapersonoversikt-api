@@ -28,7 +28,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode) {
+    public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String valgtEnhet) {
         return new TjenesteResultatWrapper(true);
     }
 

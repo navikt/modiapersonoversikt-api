@@ -21,11 +21,12 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.now;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.*;
 
 public class JournalpostTransformer {
 
@@ -42,7 +43,7 @@ public class JournalpostTransformer {
 
         LocalDateTime dato = finnDato(journalpost);
 
-        Pair<Entitet, Entitet> avsenderMottaker = finnAvsenderMottaker(journalpost);
+        Pair<Entitet, Entitet> avsenderMottaker = finnAvsenderMottaker(journalpost.getKommunikasjonsretning());
 
         return new DokumentMetadata()
                 .withJournalpostId(journalpost.getJournalpostId())
@@ -56,7 +57,7 @@ public class JournalpostTransformer {
                 .withNavn(finnNavn(journalpost.getEksternPart()))
                 .withTemakode(journalpost.getArkivtema().getValue())
                 .withRetning(Kommunikasjonsretning.fraJournalpostretning(journalpost.getKommunikasjonsretning().getValue()))
-                .withBaksystem(Baksystem.JOARK)
+                .withBaksystem(JOARK)
                 .withTilhorendeSakid(journalpost.getGjelderSak().getSakId())
                 .withTemakodeVisning(bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA));
     }
@@ -65,9 +66,9 @@ public class JournalpostTransformer {
         if (aktoer instanceof WSPerson) {
             return ((WSPerson) aktoer).getNavn();
         } else if (aktoer instanceof WSOrganisasjon) {
-            ((WSOrganisasjon) aktoer).getNavn();
+            return ((WSOrganisasjon) aktoer).getNavn();
         }
-        return "";
+        return "ukjent";
     }
 
     private Map<String, List<WSDokumentinfoRelasjon>> byggRelasjonsMap(WSJournalpost journalpost) throws RuntimeException {
@@ -107,30 +108,16 @@ public class JournalpostTransformer {
                 .orElseThrow(() -> new RuntimeException("Fant sak uten hoveddokument!"));
     }
 
-    public Optional<String> finnTittelForDokumentReferanseIJournalpost(WSJournalpost journalpost, String dokumentreferanse) {
-        DokumentMetadata metadata = dokumentMetadataFraJournalPost(journalpost);
-        return concat(
-                singletonList(metadata.getHoveddokument()).stream(),
-                metadata.getVedlegg().stream())
-                .filter(d -> d.getDokumentreferanse().equals(dokumentreferanse))
-                .findFirst()
-                .map(d -> d.getTittel());
-    }
-
-    private Pair<Entitet, Entitet> finnAvsenderMottaker(WSJournalpost journalpost) {
-
-        if (inngaende(journalpost)) {
-            return new ImmutablePair<>(Entitet.SLUTTBRUKER, Entitet.NAV);
-        } else if (utgaende(journalpost)) {
-            return new ImmutablePair<>(Entitet.NAV, Entitet.SLUTTBRUKER);
-        } else if (inngaende(journalpost)) {
-            return new ImmutablePair<>(Entitet.EKSTERN_PART, Entitet.NAV);
-        } else if (utgaende(journalpost)) {
-            return new ImmutablePair<>(Entitet.NAV, Entitet.EKSTERN_PART);
-        } else if (intern(journalpost)) {
-            return new ImmutablePair<>(Entitet.NAV, Entitet.NAV);
-        } else {
-            return new ImmutablePair<>(Entitet.UKJENT, Entitet.UKJENT);
+    private Pair<Entitet, Entitet> finnAvsenderMottaker(WSKommunikasjonsretninger kommunikasjonsretninger) {
+        switch (kommunikasjonsretninger.getValue()) {
+            case JOURNALPOST_INNGAAENDE:
+                return new ImmutablePair<>(EKSTERN_PART, NAV);
+            case JOURNALPOST_UTGAAENDE:
+                return new ImmutablePair<>(NAV, EKSTERN_PART);
+            case JOURNALPOST_INTERN:
+                return new ImmutablePair<>(NAV, NAV);
+            default:
+                return new ImmutablePair<>(UKJENT, UKJENT);
         }
     }
 
@@ -153,17 +140,5 @@ public class JournalpostTransformer {
                 .map(dokumentRel -> dokumentRel.getJournalfoertDokument().getSkannetInnholdListe())
                 .flatMap(List::stream)
                 .map(opprettLogiskDokument);
-    }
-
-    private static boolean utgaende(WSJournalpost journalpost) {
-        return JOURNALPOST_UTGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue());
-    }
-
-    private static boolean inngaende(WSJournalpost journalpost) {
-        return JOURNALPOST_INNGAAENDE.equals(journalpost.getKommunikasjonsretning().getValue());
-    }
-
-    private static boolean intern(WSJournalpost journalpost) {
-        return JOURNALPOST_INTERN.equals(journalpost.getKommunikasjonsretning().getValue());
     }
 }
