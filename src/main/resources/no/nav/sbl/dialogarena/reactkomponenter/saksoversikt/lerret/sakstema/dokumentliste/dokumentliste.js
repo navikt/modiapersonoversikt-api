@@ -5,7 +5,7 @@ import DokumentInfoElm from './dokument-info-elm';
 const nyesteForst = (a, b) => a.dato.dayOfYear < b.dato.dayOfYear ? 1 : -1;
 const nyesteAarForst = (a, b) => a < b ? 1 : -1;
 
-const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost, visSide }) => {
+const DokumentListe = ({ dokumentMetadata, visTema, velgJournalpost, visSide }) => {
     const dokumenterGruppertPaaAar = groupBy(dokumentMetadata, dokument => dokument.dato.year);
     const gjeldendeAar = new Date().getFullYear().toString();
 
@@ -19,7 +19,7 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
 
             return acc.concat(
                 dokumenter.map((dokument, index) => (
-                    <DokumentInfoElm key={`dokument-${aarstall}-${index}`} brukerNavn={brukerNavn} visTema={visTema}
+                    <DokumentInfoElm key={`dokument-${aarstall}-${index}`} visTema={visTema}
                                      velgJournalpost={velgJournalpost} visSide={visSide} dokumentinfo={dokument}/>
                 ))
             );
@@ -32,7 +32,6 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
 
 DokumentListe.propTypes = {
     dokumentMetadata: pt.array.isRequired,
-    brukerNavn: pt.string.isRequired,
     visTema: pt.string
 };
 

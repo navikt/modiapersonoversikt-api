@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 class SakstemaPage extends React.Component {
 
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost } = this.props;
+        const { sakstema, valgtTema, velgSak, visSide, velgJournalpost } = this.props;
 
         if (this.props.sakstema.length === 0) {
             return (
@@ -23,7 +23,7 @@ class SakstemaPage extends React.Component {
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                    <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema} brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}/>
+                    <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema} velgJournalpost={velgJournalpost}/>
                 </section>
             </div>
         );
@@ -34,7 +34,6 @@ SakstemaPage.propTypes = {
     sakstema: PT.array.isRequired,
     valgtTema: PT.object,
     velgSak: PT.func,
-    brukerNavn: PT.string,
     visSide: PT.func.isRequired,
     velgJournalpost: PT.func
 };
