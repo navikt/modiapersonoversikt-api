@@ -7,7 +7,7 @@ import Intern from './dokumentavsender/intern';
 const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn }) => {
     const ukjentAvsender = <FormattedMessage id="dokumentinfo.avsender.ukjent"/>;
     const ukjentMessage = <FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: ukjentAvsender } }/>;
-    const UKJENT = (<span className={retning}>/ {ukjentMessage}</span>);
+    const ukjent = (<span className={retning}>/ {ukjentMessage}</span>);
 
     const tekstBasertPaaRetning = {
         INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsender={avsender}/>,
@@ -15,7 +15,7 @@ const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn }) => 
         INTERN: <Intern />
     };
 
-    return tekstBasertPaaRetning[retning] || UKJENT;
+    return tekstBasertPaaRetning[retning] || ukjent;
 };
 
 DokumentAvsender.propTypes = {
