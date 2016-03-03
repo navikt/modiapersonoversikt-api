@@ -57,7 +57,8 @@ public class SaksoversiktController {
                 .collect(toList());
 
         String valgtEnhet = hentValgtEnhet(request);
-        if (on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect().contains(valgtEnhet)) {
+        List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
+        if (enhetsListe.contains(valgtEnhet)) {
             List<ModiaSakstema> tilgangskontrollertSakstemaListe = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaliste, valgtEnhet);
             return Response.ok(tilgangskontrollertSakstemaListe).build();
         } else {
