@@ -16,6 +16,8 @@
     <properties>
         <spring.version>3.2.9.RELEASE</spring.version>
         <jackson.version>2.3.2</jackson.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
+        <modig.security.version>1.0.24</modig.security.version>
     </properties>
 
     <dependencies>
@@ -46,6 +48,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
+            <version>${modig.security.version}</version>
+        </dependency>
+        <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
             <scope>provided</scope>
@@ -56,6 +63,12 @@
             <artifactId>commons-lang3</artifactId>
             <scope>provided</scope>
             <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
