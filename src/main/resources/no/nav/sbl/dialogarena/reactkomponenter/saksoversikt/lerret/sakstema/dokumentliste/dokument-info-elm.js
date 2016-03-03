@@ -3,6 +3,7 @@ import DokumentinfoVedlegg from './dokument-info-vedlegg';
 import DokumentAvsender from './dokument/dokument-avsender';
 import { FormattedDate } from 'react-intl';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
+import dokumentinfoShape from './dokumentinfo-shape';
 
 const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
 const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
@@ -43,16 +44,7 @@ class DokumentInfoElm extends React.Component {
 }
 
 DokumentInfoElm.propTypes = {
-    dokumentinfo: pt.shape({
-        retning: pt.string.isRequired,
-        avsender: pt.string.isRequired,
-        mottaker: pt.string.isRequired,
-        navn: pt.string,
-        hoveddokument: pt.object.isRequired,
-        vedlegg: pt.array,
-        temakodeVisning: pt.string,
-        feilWrapper: pt.object.isRequired
-    }).isRequired,
+    dokumentinfo: dokumentinfoShape.isRequired,
     visTema: pt.string,
     brukerNavn: pt.string,
     velgJournalpost: pt.func.isRequired,
