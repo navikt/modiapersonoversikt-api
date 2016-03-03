@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost, miljovariabler } = this.props;
+        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost } = this.props;
 
         if(this.props.sakstema.length === 0) {
             return (
@@ -18,7 +18,7 @@ class SakstemaPage extends React.Component {
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema} miljovariabler={miljovariabler}/>
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema} />
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>

@@ -3,7 +3,7 @@ import Sakstema from './Sakstema';
 import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering'
 import { FormattedMessage } from 'react-intl';
 
-const SakstemaListe = ({sakstema, valgtTema, velgSak, miljovariabler}) => {
+const SakstemaListe = ({sakstema, valgtTema, velgSak}, { miljovariabler }) => {
 
     const temaListe = sakstema.map((tema) => (
         <Sakstema key={tema.temakode} tema={tema} velgSak={velgSak}
@@ -23,6 +23,10 @@ const SakstemaListe = ({sakstema, valgtTema, velgSak, miljovariabler}) => {
 SakstemaListe.propTypes = {
     sakstema: PT.array.isRequired,
     velgSak: PT.func.isRequired
+};
+
+SakstemaListe.contextTypes = {
+    miljovariabler: PT.object.isRequired
 };
 
 export default SakstemaListe;
