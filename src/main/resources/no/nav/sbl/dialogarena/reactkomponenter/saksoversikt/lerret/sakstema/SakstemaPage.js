@@ -1,14 +1,15 @@
 import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
-import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke'
-import VisningDokumentliste from './dokumentliste/visning-dokumentliste'
+import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke';
+import VisningDokumentliste from './dokumentliste/visning-dokumentliste';
 import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
+
     render() {
         const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost } = this.props;
 
-        if(this.props.sakstema.length === 0) {
+        if (this.props.sakstema.length === 0) {
             return (
                 <div className="ingen-sakstemaer">
                     <FormattedMessage id="sakslamell.ingensaker"/>
@@ -31,8 +32,11 @@ class SakstemaPage extends React.Component {
 
 SakstemaPage.propTypes = {
     sakstema: PT.array.isRequired,
-    visSide: PT.func.isRequired
-
+    valgtTema: PT.object,
+    velgSak: PT.func,
+    brukerNavn: PT.string,
+    visSide: PT.func.isRequired,
+    velgJournalpost: PT.func
 };
 
 export default SakstemaPage;

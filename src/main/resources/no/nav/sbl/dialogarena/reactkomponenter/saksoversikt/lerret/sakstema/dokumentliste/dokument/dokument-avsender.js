@@ -1,26 +1,29 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import { FormattedMessage } from 'react-intl';
 import Inngaaende from './dokumentavsender/inngaaende';
 import Utgaaende from './dokumentavsender/utgaaende';
 import Intern from './dokumentavsender/intern';
 
 const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn }) => {
-    const UKJENT = (<span className={retning}>/ <FormattedMessage id="dokumentinfo.avsender.fra"
-                                                                   values={ { avsender: <FormattedMessage id="dokumentinfo.avsender.ukjent"/> } }/></span>);
+    const ukjentAvsender = <FormattedMessage id="dokumentinfo.avsender.ukjent"/>;
+    const ukjentMessage = <FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: ukjentAvsender } }/>;
+    const ukjent = (<span className={retning}>/ {ukjentMessage}</span>);
 
     const tekstBasertPaaRetning = {
-        INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsenderInn={avsender}/>,
-        UT: <Utgaaende avsenderUT={avsender} mottakerUT={mottaker}/>,
+        INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsender={avsender}/>,
+        UT: <Utgaaende avsender={avsender} mottaker={mottaker}/>,
         INTERN: <Intern />
     };
 
-    return tekstBasertPaaRetning[retning] || UKJENT;
+    return tekstBasertPaaRetning[retning] || ukjent;
 };
 
 DokumentAvsender.propTypes = {
-    avsender: React.PropTypes.string.isRequired,
-    retning: React.PropTypes.string.isRequired,
-    navn: React.PropTypes.string
+    retning: pt.string.isRequired,
+    avsender: pt.string.isRequired,
+    mottaker: pt.string,
+    brukerNavn: pt.string,
+    navn: pt.string
 };
 
 export default DokumentAvsender;

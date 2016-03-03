@@ -1,7 +1,6 @@
 import React, { PropTypes as PT } from 'react';
 import { FormattedDate } from 'react-intl';
-import { FormattedMessage } from 'react-intl';
-import { dokumentMetadataTilJSDate } from './../../utils/dato-utils';
+import { datoformat } from './../../utils/dato-utils';
 
 class Sakstema extends React.Component {
 
@@ -14,16 +13,18 @@ class Sakstema extends React.Component {
     }
 
     render() {
-        const { tema, valgtTema, velgSak, nokkelinfo, velgJournalpost} = this.props;
+        const { tema, valgtTema, velgSak, nokkelinfo } = this.props;
+
         // Sjekk på temakode ettersom 'alletemaet' blir laget på nytt ved rerender.
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
         const id = `sakstemaRadioListe--${tema.temakode}`;
-        const sisteOppdatering = nokkelinfo.sisteOppdatering ? nokkelinfo.sisteOppdatering : "";
-        const behandlingsstatus = tema.temakode === 'alle' ? "" : nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : "";
-        const sisteOppdateringTekst = <FormattedDate day="2-digit" month="2-digit" year="2-digit" value={sisteOppdatering}/>;
+        const sisteOppdatering = nokkelinfo.sisteOppdatering || '';
+        const behandlingsstatus = tema.temakode !== 'alle' && nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : '';
+        const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering} {...datoformat.NUMERISK_2_DIGIT} />;
+        const harTilgang = tema.harTilgang ? '' : 'tema-ikke-tilgang';
 
         return (
-            <div className={`saksoversikt-liste-element ${erValgt}`}>
+            <div className={`saksoversikt-liste-element ${erValgt} ${harTilgang}`}>
                 <input type="radio" id={id} ref="radio" readOnly checked={erValgt} name="sakstemaRadioListe"
                        onClick={() => velgSak(tema)}
                 />
@@ -40,7 +41,8 @@ class Sakstema extends React.Component {
 Sakstema.propTypes = {
     tema: PT.object.isRequired,
     valgtTema: PT.object.isRequired,
-    velgSak: PT.func.isRequired
+    velgSak: PT.func.isRequired,
+    nokkelinfo: PT.object.isRequired
 };
 
 export default Sakstema;

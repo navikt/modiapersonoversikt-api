@@ -11,7 +11,7 @@
     top: 0;
     width: 35%;
     height: 100%;
-    background-color: #f1f1f1;
+    float: left;
     border-right: 1px solid #ccc;
     overflow-x: hidden;
     overflow-y: visible;
@@ -24,119 +24,134 @@
     height: 100%;
     overflow-x: hidden;
     overflow-y: visible;
+  }
+  .dokumentliste {
+    list-style: none;
+    padding-left: 3rem;
+    margin-top: 3rem;
+  }
+  .dokumentliste-element {
+    margin-top: 2rem;
+    padding-left: 7em;
+    padding-bottom: 2rem;
+    border-bottom: solid 2px lightgrey;
+  }
 
-    .dokumentliste {
-      list-style: none;
-      padding-left: 3rem;
-      margin-top: 3rem;
+  .dokument-avsender {
+    font-size: medium;
+    margin-bottom: 1rem;
+    display: block;
 
-      .dokumentlisteelement {
-        margin-top: 2rem;
-        padding-left: 7em;
-        padding-bottom: 2rem;
-        border-bottom: solid 2px lightgrey;
+    .avsenderbrukertext {
 
-        background-repeat: no-repeat;
-        background-image: url("@{imgDir}/dokument.png");
-        background-position: 1.2rem 1.2rem;
-        background-size: 3em;
+    }
+    .dokument-avsender-nav {
+      color: #c30000;
+    }
+  }
+
+  .hoveddokument-tittel-wrapper {
+    margin-bottom: 1rem;
+  }
+
+  .hoveddokument-tittel {
+    font-size: large;
+    font-weight: bolder;
+  }
+
+  .dokument-kan-vises {
+    background-repeat: no-repeat;
+    background-image: url("@{imgDir}/dokument.png");
+    background-position: 1.2rem 1.2rem;
+    background-size: 3em;
+    &:hover {
+      background-image: url("@{imgDir}/dokument_hover.png");
+    }
+  }
+
+  .dokument-kan-ikke-vises {
+    background-repeat: no-repeat;
+    background-image: url("@{imgDir}/dokument_stop.png");
+    background-position: 1.2rem 1.2rem;
+    background-size: 3em;
+    &:hover {
+      background-image: url("@{imgDir}/dokument_stop_hover.png");
+    }
+  }
+
+  .vedleggheader {
+    margin-bottom: 0.5rem;
+  }
+
+  .vedleggliste {
+    list-style: disc;
+    .vedleggtext {
+      border-bottom: 2px solid @graa;
+    }
+    .ingen-sakstemaer {
+      width: 80%;
+      padding: 10rem;
+      margin: 6rem;
+      border: 1px solid;
+    }
+    .ingendokumenterheader {
+      margin-top: 2em;
+      text-transform: none;
+      font-size: 1.5em;
+    }
+
+    .ingendokumenterforklaring {
+      text-transform: none;
+      line-height: 2em;
+      padding-bottom: 1em;
+    }
+
+    .ingendokumenter {
+      padding: 2em 4em;
+      text-align: center;
+    }
+    a {
+      color: #0067c5;
+      text-decoration: none;
+      background-color: transparent;
+    }
+    .lenke-fremhevet, .side-innhold, & {
+      a:not(.knapp) {
+        border-bottom: 1px solid @graa;
+        &:active, &:hover {
+          outline: none
+        }
+        &:active {
+          color: #634689;
+          border-bottom-color: #634689;
+        }
         &:hover {
-          background-image: url("@{imgDir}/dokument_hover.png");
-        }
-
-        .avsendertext {
-          font-size: medium;
-          margin-bottom: 1rem;
-          display: block;
-
-          .avsenderbrukertext {
-
-          }
-          .avsendernavtext {
-            color: #c30000;
-          }
-        }
-
-        .hoveddokumenttextwrapper {
-          margin-bottom: 1rem;
-        }
-        .hoveddokumenttext {
-          font-size: large;
-          font-weight: bolder;
+          border-bottom-color: #0067c5;
         }
       }
     }
-
-    .vedleggheader {
-      margin-bottom: 0.5rem;
-    }
-    .vedleggliste {
-      list-style: disc;
-      .vedleggtext {
-        border-bottom: 2px solid @graa;
-      }
-    }
-    .tidligaredokumentimage {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 1em;
-    }
-
-    .tidligaredokumentheader {
-      font-size: x-large;
-      margin-bottom: 0.5em;
-    }
-    .gamle-dokumenter {
-      box-shadow: none;
-    }
-    .aarstall {
-      background-color: @graa;
-      padding: 0.5rem 2rem;
-      font-weight: 600;
-    }
-  }
-  .ingen-sakstemaer {
-    width: 80%;
-    padding: 10rem;
-    margin: 6rem;
-    border: 1px solid;
-  }
-  .ingendokumenterheader {
-    margin-top: 2em;
-    text-transform: none;
-    font-size: 1.5em;
   }
 
-  .ingendokumenterforklaring {
-    text-transform: none;
-    line-height: 2em;
-    padding-bottom: 1em;
+  .tidligaredokumentimage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
   }
 
-  .ingendokumenter {
-    padding: 2em 4em;
-    text-align: center;
+  .tidligaredokumentheader {
+    font-size: x-large;
+    margin-bottom: 0.5em;
   }
-  a {
-    color: #0067c5;
-    text-decoration: none;
-    background-color: transparent;
+
+  .gamle-dokumenter {
+    box-shadow: none;
   }
-  .lenke-fremhevet, .side-innhold, & {
-    a:not(.knapp) {
-      border-bottom: 1px solid @graa;
-      &:active, &:hover {
-        outline: none
-      }
-      &:active {
-        color: #634689;
-        border-bottom-color: #634689;
-      }
-      &:hover {
-        border-bottom-color: #0067c5;
-      }
-    }
+
+  .aarstall {
+    background-color: @graa;
+    padding: 0.5rem 2rem;
+    font-weight: 600;
   }
 }
 
@@ -148,6 +163,13 @@
 .sakstemaliste {
   padding: 0;
   height: 100%;
+}
+
+.tema-ikke-tilgang {
+  background-repeat: no-repeat;
+  background-image: url("@{imgDir}/stop.svg");
+  background-position: 18rem 1.2rem;;
+  background-size: 2.5em;
 }
 
 .saksoversikt-liste-element {
@@ -172,7 +194,7 @@
 }
 
 .saksoversikt-liste-element.valgt {
-  background: #226aa4;
+  background-color: #226aa4;
   .temaliste-label {
     color: #f5f5f5;
   }

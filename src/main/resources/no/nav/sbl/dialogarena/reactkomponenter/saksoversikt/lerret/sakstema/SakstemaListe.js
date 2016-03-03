@@ -1,9 +1,8 @@
 import React, { PropTypes as PT } from 'react';
 import Sakstema from './Sakstema';
-import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering'
-import { FormattedMessage } from 'react-intl';
+import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering';
 
-const SakstemaListe = ({sakstema, valgtTema, velgSak}, { miljovariabler }) => {
+const SakstemaListe = ({ sakstema, valgtTema, velgSak}, { miljovariabler }) => {
 
     const temaListe = sakstema.map((tema) => (
         <Sakstema key={tema.temakode} tema={tema} velgSak={velgSak}

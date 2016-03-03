@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
 import DokumentAvsender from './dokument/dokument-avsender';
 import { FormattedDate } from 'react-intl';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
+import dokumentinfoShape from './dokumentinfo-shape';
 
-// TODO stateless function
+const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
+const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
+
 class DokumentInfoElm extends React.Component {
 
     _redirect(e) {
@@ -14,26 +17,26 @@ class DokumentInfoElm extends React.Component {
     }
 
     render() {
-        const { dokumentinfo, visTema, brukerNavn } = this.props;
-        const temaHvisAlleTemaer = visTema === 'true' ? <p>{dokumentinfo.temakodeVisning}</p> : <noscript/>;
+        const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
+        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper } = dokumentinfo;
+        const temaHvisAlleTemaer = visTema === 'true' ? <p>{temakodeVisning}</p> : <noscript/>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
+        const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
+
 
         return (
-            <li className="dokumentlisteelement">
+            <li className={`dokumentliste-element ${kanViseDokument}`} >
                 <p className="datodokumentliste">
                     <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                 </p>
-                <DokumentAvsender className="avsendertext" retning={dokumentinfo.retning}
-                                  avsender={dokumentinfo.avsender}
-                                  mottaker={dokumentinfo.mottaker}
-                                  brukerNavn={brukerNavn} navn={dokumentinfo.navn}/>
+                <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker} brukerNavn={brukerNavn} navn={navn}/>
 
-                <div className="hoveddokumenttextwrapper">
-                    <a href="javascript:void(0)" className="hoveddokumenttext" onClick={this._redirect.bind(this)}>{dokumentinfo.hoveddokument.tittel}</a>
+                <div className="hoveddokument-tittel-wrapper">
+                    <a href="javascript:void(0)" className="hoveddokument-tittel" onClick={this._redirect.bind(this)}>{hoveddokument.tittel}</a>
                 </div>
                 {temaHvisAlleTemaer}
                 <div className="typo-info">
-                    <DokumentinfoVedlegg visSide={this.props.visSide} velgJournalpost={this.props.velgJournalpost} dokumentinfo={dokumentinfo}/>
+                    <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost} dokumentinfo={dokumentinfo}/>
                 </div>
             </li>
         );
@@ -41,11 +44,11 @@ class DokumentInfoElm extends React.Component {
 }
 
 DokumentInfoElm.propTypes = {
-    dokumentinfo: React.PropTypes.shape({
-        avsender: React.PropTypes.string,
-        hoveddokument: React.PropTypes.object.isRequired,
-        vedlegg: React.PropTypes.array
-    }).isRequired
+    dokumentinfo: dokumentinfoShape.isRequired,
+    visTema: pt.string,
+    brukerNavn: pt.string,
+    velgJournalpost: pt.func.isRequired,
+    visSide: pt.func.isRequired
 };
 
 export default DokumentInfoElm;
