@@ -25,7 +25,7 @@ class DokumentInfoElm extends React.Component {
 
 
         return (
-            <li className={`dokumentliste-element ${kanViseDokument}`}>
+            <li className={`dokumentliste-element ${kanViseDokument}`} >
                 <p className="datodokumentliste">
                     <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                 </p>

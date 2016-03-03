@@ -10,6 +10,7 @@ import ViktigAVitePage from './viktigavite/ViktigAVitePage';
 import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
 import Snurrepipp from './../../utils/snurrepipp';
 import { IntlProvider, addLocaleData } from 'react-intl';
+import MiljovariablerProvider from './../miljovariabler-provider';
 import nbLocale from 'react-intl/dist/locale-data/nb';
 addLocaleData(nbLocale);
 
@@ -25,20 +26,9 @@ function getContent(props) {
     return fn(componentProps);
 }
 
-function getUrlParameter(wicketurl, urlparameter) {
-    try {
-        return wicketurl.split(urlparameter + '=')[1].split('&')[0];
-    } catch (error) {
-        return 'undefined';
-    }
-}
-
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        const temakode = getUrlParameter(this.props.wicketurl, 'temakode');
-        const valgtside = getUrlParameter(this.props.wicketurl, 'valgtside');
         this.props.hentLerretData(this.props.fnr);
-        this.props.velgSak(temakode);
     }
 
     render() {
@@ -47,11 +37,13 @@ class SaksoversiktLerret extends React.Component {
         }
 
         return (
-            <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
-                <div className="saksoversikt-lerret-container">
-                    { getContent(this.props) }
-                </div>
-            </IntlProvider>
+            <MiljovariablerProvider miljovariabler={this.props.miljovariabler}>
+                <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
+                    <div className="saksoversikt-lerret-container">
+                        { getContent(this.props) }
+                    </div>
+                </IntlProvider>
+            </MiljovariablerProvider>
         );
     }
 }
@@ -59,7 +51,6 @@ class SaksoversiktLerret extends React.Component {
 SaksoversiktLerret.propTypes = {
     'fnr': React.PropTypes.string.isRequired,
     'brukerNavn': React.PropTypes.string.isRequired,
-    'wicketurl': React.PropTypes.string.isRequired,
     'hentLerretData': React.PropTypes.func,
     'velgSak': React.PropTypes.func,
     'status': React.PropTypes.string,
@@ -72,7 +63,8 @@ const mapStateToProps = (state) => {
         sakstema: state.lerret.data.sakstema,
         status: state.lerret.status,
         valgtTema: state.lerret.valgtTema,
-        tekster: state.lerret.data.tekster
+        tekster: state.lerret.data.tekster,
+        miljovariabler: state.lerret.data.miljovariabler
     };
 };
 

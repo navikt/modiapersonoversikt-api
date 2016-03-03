@@ -19,7 +19,7 @@ class SakstemaPage extends React.Component {
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema} />
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
