@@ -45,7 +45,7 @@ public class DokumentController {
     private TilgangskontrollService tilgangskontrollService;
 
     private final String DOKUMENTID_IKKE_FUNNET = "x";
-    public final static String BLURRED_DOKUMENT = getProperty("tjenester.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
+    public final static String BLURRED_DOKUMENT = getProperty("modapp.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
 
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
@@ -73,6 +73,7 @@ public class DokumentController {
 
         if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
             resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
+            return ok(resultat).build();
         }
 
         Set<String> dokumentreferanser = new HashSet<>();
@@ -87,6 +88,7 @@ public class DokumentController {
         //2. Dersom feilmelding: Legg til i resultat.withDokumentFeilmelding med riktig feilmelding.
         //3. Ellers: Finn antall sider ved å bruke en ny dependency (muligens vet Nicklas / Joanna / Torstein hvilken). Legg til i resultat.withDokument
 
+        resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, journalpostMetadata.getHoveddokument().getTittel()));
         return ok(resultat).build();
     }
 
