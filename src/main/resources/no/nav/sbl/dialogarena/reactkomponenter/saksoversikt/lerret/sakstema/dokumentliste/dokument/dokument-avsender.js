@@ -11,7 +11,7 @@ const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn }) => 
 
     const tekstBasertPaaRetning = {
         INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsender={avsender}/>,
-        UT: <Utgaaende avsender={avsender} mottaker={mottaker}/>,
+        UT: <Utgaaende avsender={avsender} mottaker={mottaker} mottakerNavn={navn}/>,
         INTERN: <Intern />
     };
 

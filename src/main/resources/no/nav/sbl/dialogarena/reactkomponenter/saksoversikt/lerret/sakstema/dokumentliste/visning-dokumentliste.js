@@ -29,7 +29,7 @@ const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost,
             id="dokumentinfo.sakstema.ingen.dokumenter.header"/></h1>;
 
     if (valgtTema.dokumentMetadata.length > 0) {
-        return <div>{ dokumentliste }{ ingenDokumenterBidrag }<TidligereDokumenter /></div>;
+        return <div>{ ingenDokumenterBidrag }{ dokumentliste }<TidligereDokumenter /></div>;
     }
 
     if (valgtTema.temakode === 'BID') {
