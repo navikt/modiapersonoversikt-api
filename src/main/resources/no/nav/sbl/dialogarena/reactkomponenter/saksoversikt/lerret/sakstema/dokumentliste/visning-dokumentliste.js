@@ -5,7 +5,7 @@ import DokumentListe from './dokumentliste'
 
 const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost, visSide})=> {
 
-    const dokumenter = sakstema.reduce((acc, tema) => {
+    const dokumenter = sakstema.slice(1).reduce((acc, tema) => {
         return acc.concat(tema.dokumentMetadata);
     }, []);
 
