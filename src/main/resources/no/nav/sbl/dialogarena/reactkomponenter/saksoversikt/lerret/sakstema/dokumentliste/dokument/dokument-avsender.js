@@ -10,8 +10,8 @@ const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn }) => 
     const UKJENT = (<span className={retning}>/ {ukjentMessage}</span>);
 
     const tekstBasertPaaRetning = {
-        INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsenderInn={avsender}/>,
-        UT: <Utgaaende avsenderUT={avsender} mottakerUT={mottaker}/>,
+        INN: <Inngaaende brukerNavn={brukerNavn} navn={navn} avsender={avsender}/>,
+        UT: <Utgaaende avsender={avsender} mottaker={mottaker}/>,
         INTERN: <Intern />
     };
 
