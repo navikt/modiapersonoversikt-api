@@ -9,4 +9,9 @@ public class DokumentMetadataResultatWrapper {
 
     public List<DokumentMetadata> dokumentMetadata;
     public Set<Baksystem> feiledeSystemer;
+
+    public DokumentMetadataResultatWrapper(List<DokumentMetadata> dokumentMetadata, Set<Baksystem> feiledeSystemer) {
+        this.dokumentMetadata = dokumentMetadata;
+        this.feiledeSystemer = feiledeSystemer;
+    }
 }

@@ -7,4 +7,9 @@ public class AlleSakerResultatWrapper {
 
     public List<Sak> alleSaker;
     public Set<Baksystem> feilendeSystemer;
+
+    public AlleSakerResultatWrapper(List<Sak> alleSaker, Set<Baksystem> feilendeSystemer) {
+        this.alleSaker = alleSaker;
+        this.feilendeSystemer = feilendeSystemer;
+    }
 }

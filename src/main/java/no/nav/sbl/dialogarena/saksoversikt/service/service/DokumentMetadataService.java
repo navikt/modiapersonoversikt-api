@@ -4,10 +4,9 @@ import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,6 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
@@ -57,19 +57,19 @@ public class DokumentMetadataService {
         return finnesIJoark(joarkMetadata).negate();
     }
 
-    public Pair<List<DokumentMetadata>,Set<Baksystem>> hentDokumentMetadata(List<Sak> saker, String fnr) {
+    public DokumentMetadataResultatWrapper hentDokumentMetadata(List<Sak> saker, String fnr) {
         Set<Baksystem> feilendeBaksystem = new HashSet<>();
 
         List<DokumentMetadata> joarkMetadataListe;
         List<DokumentMetadata> innsendteSoknaderIHenvendelse;
 
         try {
-            List<DokumentMetadata> joarkMetadataListe = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr)
+            joarkMetadataListe = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr)
                     .orElseGet(() -> empty())
                     .collect(toList());
         } catch (FeilendeBaksystemException e) {
             feilendeBaksystem.add(e.getBaksystem());
-            joarkMetadata = emptyList();
+            joarkMetadataListe = emptyList();
         }
         try {
             innsendteSoknaderIHenvendelse = henvendelseService.hentHenvendelsessoknaderMedStatus(FERDIG, fnr)
@@ -81,22 +81,22 @@ public class DokumentMetadataService {
             innsendteSoknaderIHenvendelse = emptyList();
         }
 
+        final List<DokumentMetadata> temp = joarkMetadataListe;
+
         Stream<DokumentMetadata> soknaderSomHarEndretTema = innsendteSoknaderIHenvendelse
                 .stream()
-                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, joarkMetadataListe))
+                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, temp))
                 .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(JOURNALFORT_ANNET_TEMA));
 
         Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse
                 .stream()
                 .filter(finnesIkkeIJoark(joarkMetadataListe));
 
-
-        Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse.stream().filter(finnesIkkeIJoark(joarkMetadata));
-        return new ImmutablePair<>(
-                (concat(
-                        populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),
-                        innsendteSoknaderSomBareFinnesIHenvendelse),
-                soknaderSomHarEndretTema).collect(toList()),feilendeBaksystem);
+        return new DokumentMetadataResultatWrapper(Java8Utils.concat(
+                populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),
+                innsendteSoknaderSomBareFinnesIHenvendelse,
+                soknaderSomHarEndretTema
+        ).collect(Collectors.toList()), feilendeBaksystem);
     }
 
     private boolean harJournalforingEndretTema(DokumentMetadata henvendelseDokumentMetadata, List<DokumentMetadata> joarkDokumentMetadataListe) {
