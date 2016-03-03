@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sak.rest;
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
-import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
@@ -15,13 +14,17 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.*;
+import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
+import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
 
@@ -42,7 +45,7 @@ public class DokumentController {
     private TilgangskontrollService tilgangskontrollService;
 
     private final String DOKUMENTID_IKKE_FUNNET = "x";
-    public final static String BLURRED_DOKUMENT = getProperty("tjenester.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
+    public final static String BLURRED_DOKUMENT = getProperty("modapp.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
 
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
@@ -70,6 +73,7 @@ public class DokumentController {
 
         if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
             resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
+            return ok(resultat).build();
         }
 
         Set<String> dokumentreferanser = new HashSet<>();
@@ -84,6 +88,7 @@ public class DokumentController {
         //2. Dersom feilmelding: Legg til i resultat.withDokumentFeilmelding med riktig feilmelding.
         //3. Ellers: Finn antall sider ved å bruke en ny dependency (muligens vet Nicklas / Joanna / Torstein hvilken). Legg til i resultat.withDokument
 
+        resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, journalpostMetadata.getHoveddokument().getTittel()));
         return ok(resultat).build();
     }
 
