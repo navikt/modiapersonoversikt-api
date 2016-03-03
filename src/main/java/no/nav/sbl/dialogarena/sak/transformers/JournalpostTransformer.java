@@ -137,11 +137,11 @@ public class JournalpostTransformer {
     private LocalDateTime finnDato(WSJournalpost journalpost) {
         switch (journalpost.getKommunikasjonsretning().getValue()) {
             case JOURNALPOST_INNGAAENDE:
-                return journalpost.getMottatt() == null ? now() : journalpost.getMottatt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
+                return journalpost.getMottatt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             case JOURNALPOST_UTGAAENDE:
-                return journalpost.getSendt() == null ? now() : journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
+                return journalpost.getSendt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             case JOURNALPOST_INTERN:
-                return journalpost.getFerdigstilt() == null ? now() : journalpost.getFerdigstilt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
+                return journalpost.getFerdigstilt().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
             default:
                 return now();
         }
