@@ -50,7 +50,6 @@ class SaksoversiktLerret extends React.Component {
 
 SaksoversiktLerret.propTypes = {
     'fnr': React.PropTypes.string.isRequired,
-    'brukerNavn': React.PropTypes.string.isRequired,
     'hentLerretData': React.PropTypes.func,
     'velgSak': React.PropTypes.func,
     'status': React.PropTypes.string,
