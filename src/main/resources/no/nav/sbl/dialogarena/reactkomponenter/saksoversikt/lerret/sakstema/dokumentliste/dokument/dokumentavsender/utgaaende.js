@@ -2,7 +2,7 @@ import React, { PropTypes as pt } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 const Utgaaende = ({ avsender, mottakerNavn}) => {
-    const dokumentAvsender = <strong className="dokument-avsender-nav">{avsender}</strong>;
+    const dokumentAvsender = <strong className="dokument-avsender-nav">NAV</strong>;
     const fra = < FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: dokumentAvsender } }/>;
     const til = <FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: mottakerNavn } }/>;
 
@@ -10,7 +10,7 @@ const Utgaaende = ({ avsender, mottakerNavn}) => {
 };
 
 Utgaaende.propTypes = {
-    mottaker: pt.string.isRequired,
+    mottakerNavn: pt.string.isRequired,
     avsender: pt.string.isRequired
 };
 
