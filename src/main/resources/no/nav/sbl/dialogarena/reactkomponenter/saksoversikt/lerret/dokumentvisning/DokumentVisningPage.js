@@ -9,7 +9,7 @@ import Snurrepipp from './../../../utils/snurrepipp';
 
 class DokumentVisningPage extends React.Component {
     componentWillMount() {
-        this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost, this.props.valgtTema.temakode);
+        this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
 
     _redirect(e) {
