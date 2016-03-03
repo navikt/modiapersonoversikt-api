@@ -12,9 +12,9 @@ const finnTekst = (antallUnderBehandling, antallFerdigBehandlet) => {
     let key;
     if (antallUnderBehandling > 0 && antallFerdigBehandlet > 0) {
         return (
-            <div>
-            <p className="temaliste-label datotekst"><FormattedMessage id={'behandlingsstatus.underbehandling'} values={values}/></p>
-            <p className="temaliste-label datotekst"><FormattedMessage id={'behandlingsstatus.ferdigbehandlet'} values={values}/></p>
+            <div className="behandlingsstatus-tekst">
+            <p className="temaliste-label"><FormattedMessage id={'behandlingsstatus.underbehandling'} values={values}/></p>
+            <p className="temaliste-label"><FormattedMessage id={'behandlingsstatus.ferdigbehandlet'} values={values}/></p>
             </div>);
     } else if (antallUnderBehandling > 0) {
         key = 'behandlingsstatus.underbehandling';
@@ -22,7 +22,7 @@ const finnTekst = (antallUnderBehandling, antallFerdigBehandlet) => {
         key = 'behandlingsstatus.ferdigbehandlet';
     }
 
-    return key ? <p className="temaliste-label datotekst"><FormattedMessage id={key} values={values}/></p> : null;
+    return key ? <div className="behandlingsstatus-tekst"><p className="temaliste-label"><FormattedMessage id={key} values={values}/></p></div> : null;
 };
 
 const datoNyereEnnAntallDager = (date, antallDager) => {

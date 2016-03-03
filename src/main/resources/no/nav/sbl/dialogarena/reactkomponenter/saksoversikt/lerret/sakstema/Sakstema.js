@@ -29,7 +29,7 @@ class Sakstema extends React.Component {
                        onClick={() => velgSak(tema)}
                 />
                 <label htmlFor={id}>
-                    <p className="temaliste-label datotekst">{sisteOppdateringTekst}</p>
+                    <p className="datotekst">{sisteOppdateringTekst}</p>
                     <p className="temaliste-label stortekst">{tema.temanavn}</p>
                     {behandlingsstatus}
                 </label>
