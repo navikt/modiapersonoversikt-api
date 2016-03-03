@@ -11,7 +11,7 @@ import javax.ws.rs.core.Context;
 import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.RestUtils.hentValgtEnhet;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 
 @Path("/journalforing/{fnr}")
 @Produces(APPLICATION_JSON)
