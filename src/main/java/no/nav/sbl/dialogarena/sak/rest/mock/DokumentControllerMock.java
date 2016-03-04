@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sak.rest.mock;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
@@ -9,12 +8,9 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
 import static java.util.Arrays.asList;
 import static javax.ws.rs.core.Response.ok;
-import static no.nav.sbl.dialogarena.sak.rest.DokumentController.BLURRED_DOKUMENT;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.INN;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.EKSTERN_PART;
 import static org.apache.commons.io.IOUtils.toByteArray;

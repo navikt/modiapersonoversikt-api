@@ -5,7 +5,6 @@ import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -28,8 +27,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode) {
-        return new TjenesteResultatWrapper(true);
+    public boolean harSaksbehandlerTilgangTilDokument(String sakstemakode, String enhet) {
+        return harEnhetTilgangTilTema(sakstemakode, enhet);
     }
 
     @Override
