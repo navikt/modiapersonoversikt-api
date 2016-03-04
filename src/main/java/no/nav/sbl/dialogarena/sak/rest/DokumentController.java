@@ -31,7 +31,8 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.h
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
-import static org.slf4j.LoggerFactory.getLogger;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
@@ -59,10 +60,35 @@ public class DokumentController {
 
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
-    public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @PathParam("dokumentreferanse") String dokumentreferanse) throws IOException {
+    public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
+                                 @PathParam("dokumentreferanse") String dokumentreferanse, @Context HttpServletRequest request) throws IOException {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return mockDokumentResponse();
         }
+
+        DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
+        String temakode = journalpostMetadata.getTemakode();
+
+        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
+            return status(403).build();
+        }
+
+
+        /*
+        String valgtEnhet = hentValgtEnhet(request);
+        List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
+
+        if (!enhetsListe.contains(valgtEnhet)) {
+            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        if (TEMAKODE_BIDRAG.equals(journalpostMetadata.getTemakode())) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(TEMAKODE_ER_BIDRAG, journalpostMetadata.getHoveddokument().getTittel()));
+            return ok(resultat).build();
+        }
+        */
+
 
         TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(dokumentreferanse, journalpostId);
         return hentDokumentResultat.result
@@ -80,6 +106,7 @@ public class DokumentController {
 
         String valgtEnhet = hentValgtEnhet(request);
         List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
+
         if (!enhetsListe.contains(valgtEnhet)) {
             logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -105,6 +132,12 @@ public class DokumentController {
             return ok(resultat).build();
         }
 
+        //Dette betyr at den enten ikke er journalfort eller er journalfort pa en annen bruker
+        if (finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, journalpostMetadata.getHoveddokument().getTittel()));
+            return ok(resultat).build();
+        }
+
         Set<String> dokumentreferanser = new HashSet<>();
         dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
 
@@ -119,6 +152,22 @@ public class DokumentController {
 
         resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, journalpostMetadata.getHoveddokument().getTittel()));
         return ok(resultat).build();
+    }
+
+    private boolean saksbehanderHarTilgangTilValgtEnhet(HttpServletRequest request) {
+        String valgtEnhet = hentValgtEnhet(request);
+        List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
+
+        return !enhetsListe.contains(valgtEnhet)
+
+        if (!enhetsListe.contains(valgtEnhet)) {
+            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
+        return !journalpostMetadata.isErJournalfort();
     }
 
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
