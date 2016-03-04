@@ -86,7 +86,7 @@ public class DokumentController {
 
         //Dette betyr at den enten ikke er journalfort eller er journalfort pa en annen bruker
         if (finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, journalpostMetadata.getHoveddokument().getTittel()));
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel()));
             return ok(resultat).build();
         }
 
