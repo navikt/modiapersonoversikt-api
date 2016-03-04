@@ -18,8 +18,9 @@
     color: @graa
   }
   .ingensakstemaerimage {
-    height: 4em;
-    margin-top: 5em;
+    height: 45px;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
   .saksoversikt-liste {
     position: absolute;
@@ -43,19 +44,24 @@
   }
   .dokumentliste {
     list-style: none;
-    padding-left: 3rem;
     margin-top: 3rem;
   }
   .dokumentliste-element {
-    margin-top: 2rem;
-    padding-left: 7em;
-    padding-bottom: 2rem;
+    margin-top: 20px;
+    padding-left: 90px;
+    padding-bottom: 20px;
     border-bottom: solid 2px lightgrey;
   }
 
+  .datodokumentliste {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
   .dokument-avsender {
-    font-size: medium;
-    margin-bottom: 1rem;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
     display: block;
 
     .avsenderbrukertext {
@@ -71,15 +77,15 @@
   }
 
   .hoveddokument-tittel {
-    font-size: large;
+    font-size: 16px;
     font-weight: bolder;
   }
 
   .dokument-kan-vises {
     background-repeat: no-repeat;
     background-image: url("@{imgDir}/dokument.png");
-    background-position: 1.2rem 1.2rem;
-    background-size: 3em;
+    background-position: 30px 30px;
+    background-size: 32px;
     &:hover {
       background-image: url("@{imgDir}/dokument_hover.png");
     }
@@ -88,21 +94,24 @@
   .dokument-kan-ikke-vises {
     background-repeat: no-repeat;
     background-image: url("@{imgDir}/dokument_stop.png");
-    background-position: 1.2rem 1.2rem;
-    background-size: 3em;
+    background-position: 30px 30px;
+    background-size: 45px;
     &:hover {
       background-image: url("@{imgDir}/dokument_stop_hover.png");
     }
   }
 
   .vedleggheader {
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
   }
 
   .vedleggliste {
     list-style: disc;
     .vedleggtext {
       border-bottom: 2px solid @graa;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      margin-bottom: 8px;
     }
     .ingen-sakstemaer {
       width: 80%;
@@ -153,16 +162,19 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1em;
+    height: 45px;
+    margin-top: 20px;
+    margin-bottom: 16px;
   }
 
   .tidligaredokumentheader {
-    font-size: x-large;
-    margin-bottom: 0.5em;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
   }
 
   .gamle-dokumenter {
     box-shadow: none;
+    text-align: center;
   }
 
   .aarstall {

@@ -49,7 +49,7 @@ const VisningDokumentliste = ({ sakstema, valgtTema, velgJournalpost, visSide })
         </div >);
 };
 
-SakstemaPage.propTypes = {
+VisningDokumentliste.propTypes = {
     sakstema: PT.array.isRequired,
     valgtTema: PT.object,
     visSide: PT.func.isRequired,
