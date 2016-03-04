@@ -19,7 +19,7 @@ export const hentWidgetData = (fnr) => {
 
         dispatch({type: AT.LAST_WIDGET_DATA_START});
         return Ajax
-            .get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer')
+            .get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`)
             .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
             .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)));
     }
@@ -29,8 +29,8 @@ export const hentLerretData = (fnr) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
-        const sakstema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/sakstema');
+        const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
+        const sakstema = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/sakstema`);
         const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
         const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
 
@@ -47,7 +47,7 @@ export const hentDokumentData = (fnr, valgtjournalpost) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const journalpostmetadata = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/journalpostmetadata/' + valgtjournalpost.journalpostId + '?temakode=' + valgtjournalpost.temakode);
+        const journalpostmetadata = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/journalpostmetadata/${valgtjournalpost.journalpostId}?temakode=${valgtjournalpost.temakode}`);
 
         dispatch({type: AT.LAST_DOKUMENT_DATA_START});
         return Q
