@@ -2,15 +2,14 @@ import React, { PropTypes as pt } from 'react';
 import { groupBy } from 'lodash';
 import DokumentInfoElm from './dokument-info-elm';
 
-const nyesteForst = (a, b) => a.dato.dayOfYear < b.dato.dayOfYear ? 1 : -1;
-const nyesteAarForst = (a, b) => a < b ? 1 : -1;
+const nyesteForst = (a, b) => b.dato.dayOfYear - a.dato.dayOfYear;
 
 const DokumentListe = ({ dokumentMetadata, visTema, velgJournalpost, visSide }) => {
     const dokumenterGruppertPaaAar = groupBy(dokumentMetadata, dokument => dokument.dato.year);
     const gjeldendeAar = new Date().getFullYear().toString();
 
     const dokumentListeForAarstall = Object.keys(dokumenterGruppertPaaAar)
-        .sort(nyesteAarForst)
+        .slice(0).sort().reverse()
         .map(aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) }))
         .reduce((acc, { aarstall, dokumenter }) => {
             if (aarstall !== gjeldendeAar) {

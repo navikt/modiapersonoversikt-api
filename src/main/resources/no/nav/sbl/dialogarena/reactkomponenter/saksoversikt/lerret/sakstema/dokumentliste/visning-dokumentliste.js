@@ -3,8 +3,12 @@ import TidligereDokumenter from './tidligere-dokumenter';
 import { FormattedMessage } from 'react-intl';
 import DokumentListe from './dokumentliste'
 
-const VisningDokumentliste = ({sakstema, valgtTema, velgJournalpost, visSide})=> {
+function openGosys(e) {
+    e.preventDefault();
+    document.querySelector('.hiddenGosysLenkePanel').click();
+}
 
+const VisningDokumentliste = ({ sakstema, valgtTema, velgJournalpost, visSide }) => {
     const dokumenter = sakstema.slice(1).reduce((acc, tema) => {
         return acc.concat(tema.dokumentMetadata);
     }, []);
@@ -31,10 +35,10 @@ const VisningDokumentliste = ({sakstema, valgtTema, velgJournalpost, visSide})=>
     }
 
     if (valgtTema.temakode === 'BID') {
-        return (<div className="default-error ingendokumenter">{ingendokumenter}{ingenDokumenterBidrag}
-        </div>);
+        return (
+            <div className="default-error ingendokumenter">{ingendokumenter}{ingenDokumenterBidrag}
+            </div>);
     }
-
 
     return (
         <div className="default-error ingendokumenter">{ingendokumenter}
@@ -43,12 +47,13 @@ const VisningDokumentliste = ({sakstema, valgtTema, velgJournalpost, visSide})=>
             <a href="javascript:void(0);" onClick={openGosys}><FormattedMessage
                 id="dokumentinfo.sakstema.lenke.gosys"/></a>
         </div >);
-}
+};
 
-function openGosys(e) {
-    e.preventDefault();
-    document.querySelector('.hiddenGosysLenkePanel').click();
-}
-
+SakstemaPage.propTypes = {
+    sakstema: PT.array.isRequired,
+    valgtTema: PT.object,
+    visSide: PT.func.isRequired,
+    velgJournalpost: PT.func
+};
 
 export default VisningDokumentliste;
