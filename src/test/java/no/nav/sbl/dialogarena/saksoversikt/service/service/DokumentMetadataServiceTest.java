@@ -68,7 +68,7 @@ public class DokumentMetadataServiceTest {
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertThat(dokumentMetadatas.size(), is(2));
         assertFalse(dokumentMetadatas.get(0).getFeilWrapper().getInneholderFeil());
@@ -84,7 +84,7 @@ public class DokumentMetadataServiceTest {
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertThat(dokumentMetadatas.size(), is(1));
     }
@@ -107,7 +107,7 @@ public class DokumentMetadataServiceTest {
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("En annen journalpost")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertThat(dokumentMetadatas.size(), is(2));
     }
@@ -122,7 +122,7 @@ public class DokumentMetadataServiceTest {
         String SAMME_JOURNALPOST = "2";
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse(SAMME_JOURNALPOST)));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertThat(dokumentMetadatas.size(), is(1));
         assertTrue(dokumentMetadatas.get(0).isEttersending());
@@ -137,7 +137,7 @@ public class DokumentMetadataServiceTest {
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(emptyList());
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString());
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertFalse(dokumentMetadatas.get(0).isEttersending());
     }
