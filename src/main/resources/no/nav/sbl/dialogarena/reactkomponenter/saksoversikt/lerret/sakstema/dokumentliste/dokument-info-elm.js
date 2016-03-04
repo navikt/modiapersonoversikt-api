@@ -17,8 +17,8 @@ class DokumentInfoElm extends React.Component {
     }
 
     render() {
-        const { dokumentinfo, visTema, velgJournalpost, visSide } = this.props;
-        const { retning, avsender, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper } = dokumentinfo;
+        const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
+        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper } = dokumentinfo;
         const temaHvisAlleTemaer = visTema === 'true' ? <p>{temakodeVisning}</p> : <noscript/>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
@@ -29,7 +29,7 @@ class DokumentInfoElm extends React.Component {
                 <p className="datodokumentliste">
                     <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                 </p>
-                <DokumentAvsender retning={retning} avsender={avsender} navn={navn}/>
+                <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker} brukerNavn={brukerNavn} navn={navn}/>
 
                 <div className="hoveddokument-tittel-wrapper">
                     <a href="javascript:void(0)" className="hoveddokument-tittel" onClick={this._redirect.bind(this)}>{hoveddokument.tittel}</a>
@@ -46,6 +46,7 @@ class DokumentInfoElm extends React.Component {
 DokumentInfoElm.propTypes = {
     dokumentinfo: dokumentinfoShape.isRequired,
     visTema: pt.string,
+    brukerNavn: pt.string,
     velgJournalpost: pt.func.isRequired,
     visSide: pt.func.isRequired
 };

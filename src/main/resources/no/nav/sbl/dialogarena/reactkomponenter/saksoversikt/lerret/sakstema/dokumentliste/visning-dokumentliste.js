@@ -3,12 +3,14 @@ import TidligereDokumenter from './tidligere-dokumenter';
 import { FormattedMessage } from 'react-intl';
 import DokumentListe from './dokumentliste'
 
+
 function openGosys(e) {
     e.preventDefault();
     document.querySelector('.hiddenGosysLenkePanel').click();
 }
 
-const VisningDokumentliste = ({ sakstema, valgtTema, velgJournalpost, visSide }) => {
+const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost, visSide})=> {
+
     const dokumenter = sakstema.slice(1).reduce((acc, tema) => {
         return acc.concat(tema.dokumentMetadata);
     }, []);
@@ -16,9 +18,11 @@ const VisningDokumentliste = ({ sakstema, valgtTema, velgJournalpost, visSide })
     const dokumentliste = valgtTema.temakode !== 'alle' ?
         <DokumentListe visTema="false"
                        dokumentMetadata={valgtTema.dokumentMetadata}
+                       brukerNavn={brukerNavn}
                        visSide={visSide}
                        velgJournalpost={velgJournalpost}/> :
         <DokumentListe visTema="true" dokumentMetadata={dokumenter}
+                       brukerNavn={brukerNavn}
                        visSide={visSide}
                        velgJournalpost={velgJournalpost}/>;
 
