@@ -51,9 +51,7 @@ public class SaksService {
 
 
     public Optional<Stream<DokumentMetadata>> hentJournalpostListe(String fnr) {
-        Optional<Stream<DokumentMetadata>> alleSaker = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(hentAlleSaker(fnr));
-
-        return alleSaker;
+        return innsynJournalService.joarkSakhentTilgjengeligeJournalposter(hentAlleSaker(fnr), fnr);
     }
 
     public List<Record<Soknad>> hentPaabegynteSoknader(String fnr) {

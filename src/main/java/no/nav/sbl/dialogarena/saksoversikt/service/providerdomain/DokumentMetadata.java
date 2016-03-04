@@ -6,6 +6,8 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.lang.Boolean.*;
+
 public class DokumentMetadata {
 
     private Kommunikasjonsretning retning;
@@ -21,6 +23,7 @@ public class DokumentMetadata {
     private String temakode;
     private String temakodeVisning;
     private boolean ettersending;
+    private boolean erJournalfort = TRUE;
     private FeilWrapper feilWrapper = new FeilWrapper();
 
     public boolean isEttersending() {
@@ -117,6 +120,11 @@ public class DokumentMetadata {
         return this;
     }
 
+    public DokumentMetadata withIsJournalfort(final boolean erJournalfort) {
+        this.erJournalfort = erJournalfort;
+        return this;
+    }
+
     public String getTilhorendeSakid() {
         return tilhorendeSakid;
     }
@@ -147,5 +155,9 @@ public class DokumentMetadata {
 
     public FeilWrapper getFeilWrapper() {
         return feilWrapper;
+    }
+
+    public boolean isErJournalfort() {
+        return erJournalfort;
     }
 }

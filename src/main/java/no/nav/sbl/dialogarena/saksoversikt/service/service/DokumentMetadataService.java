@@ -56,7 +56,7 @@ public class DokumentMetadataService {
 
 
     public List<DokumentMetadata> hentDokumentMetadata(List<Sak> saker, String fnr) {
-        List<DokumentMetadata> joarkMetadataListe = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker)
+        List<DokumentMetadata> joarkMetadataListe = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr)
                 .orElseGet(() -> empty())
                 .collect(toList());
 
@@ -71,7 +71,10 @@ public class DokumentMetadataService {
                 .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, joarkMetadataListe))
                 .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(JOURNALFORT_ANNET_TEMA));
 
-        Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse.stream().filter(finnesIkkeIJoark(joarkMetadataListe));
+        Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse
+                .stream()
+                .filter(finnesIkkeIJoark(joarkMetadataListe));
+
         return concat(concat(
                 populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),
                 innsendteSoknaderSomBareFinnesIHenvendelse),

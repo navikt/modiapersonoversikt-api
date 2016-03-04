@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface Innsyn {
 
-    TjenesteResultatWrapper hentTilgjengeligJournalpostListe(List<Sak> saker);
+    TjenesteResultatWrapper hentTilgjengeligJournalpostListe(List<Sak> saker, String fnr);
     TjenesteResultatWrapper hentDokument(String journalpostid, String dokumentreferanse);
 }
