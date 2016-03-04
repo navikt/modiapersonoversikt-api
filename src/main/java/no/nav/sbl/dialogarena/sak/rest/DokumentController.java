@@ -25,6 +25,7 @@ import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
 
@@ -54,6 +55,13 @@ public class DokumentController {
             return mockDokumentResponse();
         }
 
+        DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
+        String temakode = journalpostMetadata.getTemakode();
+
+        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
+            return status(403).build();
+        }
+
         TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(dokumentreferanse, journalpostId);
         return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
@@ -76,6 +84,12 @@ public class DokumentController {
             return ok(resultat).build();
         }
 
+        //Dette betyr at den enten ikke er journalfort eller er journalfort pa en annen bruker
+        if (finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, journalpostMetadata.getHoveddokument().getTittel()));
+            return ok(resultat).build();
+        }
+
         Set<String> dokumentreferanser = new HashSet<>();
         dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
 
@@ -90,6 +104,10 @@ public class DokumentController {
 
         resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, journalpostMetadata.getHoveddokument().getTittel()));
         return ok(resultat).build();
+    }
+
+    private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
+        return !journalpostMetadata.isErJournalfort();
     }
 
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
