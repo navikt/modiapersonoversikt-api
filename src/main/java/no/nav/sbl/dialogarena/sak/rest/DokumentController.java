@@ -13,6 +13,8 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteRes
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -38,6 +40,8 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmel
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
 public class DokumentController {
+
+    public static final Logger logger = LoggerFactory.getLogger(DokumentController.class);
 
     @Inject
     private InnsynImpl innsyn;
@@ -123,23 +127,21 @@ public class DokumentController {
                     .parallelStream()
                     .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
                     .map((Pair<String, TjenesteResultatWrapper> data) -> {
-                        try {
-                            byte[] dokumentdata = ((byte[]) data.getRight().result.get());
-                            InputStream is = new ByteArrayInputStream(dokumentdata);
-                            int antallSider = PDDocument.load(is).getNumberOfPages();
-
-                            String pdfUrl = format("/modiabrukerdialog/rest/saksoversikt/%s/dokument/%s/%s",
-                                    fnr,
-                                    journalpostId,
-                                    data.getLeft()
-                            );
-
-                            return new DokumentResultat(pdfUrl, journalpostMetadata.getHoveddokument().getTittel(), antallSider);
-                        } catch (IOException e) {
-                            throw new RuntimeException("Kunne ikke laste inn pdf", e);
-                        }
+                        int antallSider = hentAntallSiderIDokument(data);
+                        return new DokumentResultat(journalpostMetadata.getHoveddokument().getTittel(), antallSider, fnr, journalpostId, data.getLeft());
                     }).collect(toList());
         }).get();
+    }
+
+    private int hentAntallSiderIDokument(Pair<String, TjenesteResultatWrapper> data) {
+        byte[] dokumentdata = ((byte[]) data.getRight().result.get());
+        InputStream is = new ByteArrayInputStream(dokumentdata);
+        try {
+            return PDDocument.load(is).getNumberOfPages();
+        } catch (IOException e) {
+            logger.error("Kunne ikke finne ut hvor mange sider dokumentet innehold", e);
+            return 0;
+        }
     }
 
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
