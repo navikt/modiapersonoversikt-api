@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -25,7 +24,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.JOARK;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.*;
 
 public class JournalpostTransformer {
@@ -33,7 +32,7 @@ public class JournalpostTransformer {
     @Inject
     private BulletproofKodeverkService bulletproofKodeverkService;
 
-    public DokumentMetadata dokumentMetadataFraJournalPost(WSJournalpost journalpost) throws RuntimeException {
+    public DokumentMetadata dokumentMetadataFraJournalPost(WSJournalpost journalpost, String fnr) throws RuntimeException {
 
         Map<String, List<WSDokumentinfoRelasjon>> relasjoner = byggRelasjonsMap(journalpost);
 
@@ -43,8 +42,7 @@ public class JournalpostTransformer {
 
         LocalDateTime dato = finnDato(journalpost);
 
-        Pair<Entitet, Entitet> avsenderMottaker = finnAvsenderMottaker(journalpost.getKommunikasjonsretning());
-
+        Pair<Entitet, Entitet> avsenderMottaker = finnAvsenderMottaker(journalpost.getKommunikasjonsretning(), isErSluttbruker(journalpost, fnr));
         return new DokumentMetadata()
                 .withJournalpostId(journalpost.getJournalpostId())
                 .withHoveddokument(hoveddokument)
@@ -54,7 +52,7 @@ public class JournalpostTransformer {
                 .withDato(dato)
                 .withAvsender(avsenderMottaker.getLeft())
                 .withMottaker(avsenderMottaker.getRight())
-                .withNavn(finnNavn(journalpost.getEksternPart()))
+                .withNavn(finnNavn(journalpost.getEksternPart(), fnr))
                 .withTemakode(journalpost.getArkivtema().getValue())
                 .withRetning(Kommunikasjonsretning.fraJournalpostretning(journalpost.getKommunikasjonsretning().getValue()))
                 .withBaksystem(JOARK)
@@ -62,9 +60,21 @@ public class JournalpostTransformer {
                 .withTemakodeVisning(bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA));
     }
 
-    private String finnNavn(WSAktoer aktoer) {
+    private boolean isErSluttbruker(WSJournalpost journalpost, String fnr) {
+        boolean erSluttbruker = false;
+        if (journalpost.getEksternPart() instanceof WSPerson && ((WSPerson) journalpost.getEksternPart()).getIdent().equals(fnr)) {
+            erSluttbruker = true;
+        }
+        return erSluttbruker;
+    }
+
+    private String finnNavn(WSAktoer aktoer, String fnr) {
         if (aktoer instanceof WSPerson) {
-            return ((WSPerson) aktoer).getNavn();
+            WSPerson wsPerson = (WSPerson) aktoer;
+            if (!fnr.equals(wsPerson.getIdent())) {
+                return wsPerson.getIdent();
+            }
+            return wsPerson.getNavn();
         } else if (aktoer instanceof WSOrganisasjon) {
             return ((WSOrganisasjon) aktoer).getNavn();
         }
@@ -108,16 +118,19 @@ public class JournalpostTransformer {
                 .orElseThrow(() -> new RuntimeException("Fant sak uten hoveddokument!"));
     }
 
-    private Pair<Entitet, Entitet> finnAvsenderMottaker(WSKommunikasjonsretninger kommunikasjonsretninger) {
-        switch (kommunikasjonsretninger.getValue()) {
-            case JOURNALPOST_INNGAAENDE:
-                return new ImmutablePair<>(EKSTERN_PART, NAV);
-            case JOURNALPOST_UTGAAENDE:
-                return new ImmutablePair<>(NAV, EKSTERN_PART);
-            case JOURNALPOST_INTERN:
-                return new ImmutablePair<>(NAV, NAV);
-            default:
-                return new ImmutablePair<>(UKJENT, UKJENT);
+    private Pair<Entitet, Entitet> finnAvsenderMottaker(WSKommunikasjonsretninger kommunikasjonsretninger, boolean sluttbruker) {
+        if (meldingFraBrukerTilNAV(kommunikasjonsretninger, sluttbruker)) {
+            return new ImmutablePair<>(SLUTTBRUKER, NAV);
+        } else if (meldingFraNAVtilBruker(kommunikasjonsretninger, sluttbruker)) {
+            return new ImmutablePair<>(NAV, SLUTTBRUKER);
+        } else if (meldingFraEksternPartTilNAV(kommunikasjonsretninger, sluttbruker)) {
+            return new ImmutablePair<>(EKSTERN_PART, NAV);
+        } else if (meldingFraNavTilEksternPart(kommunikasjonsretninger, sluttbruker)) {
+            return new ImmutablePair<>(NAV, EKSTERN_PART);
+        } else if (meldingIntern(kommunikasjonsretninger, sluttbruker)) {
+            return new ImmutablePair<>(NAV, NAV);
+        } else {
+            return new ImmutablePair<>(UKJENT, UKJENT);
         }
     }
 
@@ -140,5 +153,25 @@ public class JournalpostTransformer {
                 .map(dokumentRel -> dokumentRel.getJournalfoertDokument().getSkannetInnholdListe())
                 .flatMap(List::stream)
                 .map(opprettLogiskDokument);
+    }
+
+    private static boolean meldingFraNAVtilBruker(WSKommunikasjonsretninger kommunikasjonsretning, boolean erSluttbruker) {
+        return JOURNALPOST_UTGAAENDE.equals(kommunikasjonsretning.getValue()) && erSluttbruker;
+    }
+
+    private static boolean meldingFraBrukerTilNAV(WSKommunikasjonsretninger kommunikasjonsretning, boolean erSluttbruker) {
+        return JOURNALPOST_INNGAAENDE.equals(kommunikasjonsretning.getValue()) && erSluttbruker;
+    }
+
+    private static boolean meldingFraNavTilEksternPart(WSKommunikasjonsretninger kommunikasjonsretning, boolean erSluttbruker) {
+        return JOURNALPOST_UTGAAENDE.equals(kommunikasjonsretning.getValue()) && !erSluttbruker;
+    }
+
+    private static boolean meldingFraEksternPartTilNAV(WSKommunikasjonsretninger kommunikasjonsretning, boolean erSluttbruker) {
+        return JOURNALPOST_INNGAAENDE.equals(kommunikasjonsretning.getValue()) && !erSluttbruker;
+    }
+
+    private static boolean meldingIntern(WSKommunikasjonsretninger kommunikasjonsretning, boolean erSluttbruker) {
+        return JOURNALPOST_INTERN.equals(kommunikasjonsretning.getValue()) && !erSluttbruker;
     }
 }

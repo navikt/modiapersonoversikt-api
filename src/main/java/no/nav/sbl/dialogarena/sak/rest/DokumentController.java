@@ -76,11 +76,6 @@ public class DokumentController {
             return ok(resultat).build();
         }
 
-        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
-            return ok(resultat).build();
-        }
-
         Set<String> dokumentreferanser = new HashSet<>();
         dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
 
