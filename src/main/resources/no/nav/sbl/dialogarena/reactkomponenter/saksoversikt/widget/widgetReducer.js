@@ -10,7 +10,17 @@ actionHandlers[AT.LAST_WIDGET_DATA_START] = (state) => {
     return { ...state, status: Const.LASTER };
 };
 actionHandlers[AT.LAST_WIDGET_DATA_OK] = (state, action) => {
-    return { ...state, status: Const.LASTET, data: action.data };
+    const [temaer, tekster, fnr] = action.data;
+
+    return {
+        ...state,
+        status: Const.LASTET,
+        data: {
+            temaer,
+            tekster,
+            fnr
+        }
+    };
 };
 actionHandlers[AT.LAST_WIDGET_DATA_FEIL] = (state, action) => {
     return { ...state, status: Const.FEILET, feil: action.data };
