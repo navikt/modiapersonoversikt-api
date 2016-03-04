@@ -36,7 +36,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
 
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
-    let { valgtTema, widgetValgtTemakode, valgtJournalpost } = state;
+    let { valgtTema, widgetValgtTemakode } = state;
 
     if (state.widgetValgtTemakode !== null) {
         valgtTema = _sakstema.find((tema) => tema.temakode === widgetValgtTemakode);
@@ -58,7 +58,6 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
             fnr
         },
         valgtTema,
-        valgtJournalpost,
         widgetValgtTemakode
     };
 };
