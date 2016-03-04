@@ -47,7 +47,7 @@ public class InnsynImpl implements Innsyn {
             Stream<DokumentMetadata> dokumentMetadataStream = joarkV2.hentJournalpostListe(wsRequest)
                     .getJournalpostListe()
                     .stream()
-                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp));
+                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp, fnr));
 
             return new TjenesteResultatWrapper(dokumentMetadataStream);
         } catch (HentJournalpostListeSikkerhetsbegrensning e) {

@@ -65,6 +65,13 @@ public class DokumentController {
             return mockDokumentResponse();
         }
 
+        DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
+        String temakode = journalpostMetadata.getTemakode();
+
+        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
+            return status(403).build();
+        }
+
         TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse);
         return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
@@ -73,7 +80,7 @@ public class DokumentController {
 
     @GET
     @Path("/journalpostmetadata/{journalpostId}")
-    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @QueryParam("temakode") String temakode) throws ExecutionException, InterruptedException {
+    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @QueryParam("temakode") String temakode) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
         }
@@ -84,6 +91,13 @@ public class DokumentController {
 
         if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
             resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
+            return ok(resultat).build();
+        }
+
+        //Dette betyr at den enten ikke er journalfort eller er journalfort pa en annen bruker
+        if (finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel()));
+            return ok(resultat).build();
         }
 
         Set<String> dokumentreferanser = new HashSet<>();
@@ -116,21 +130,30 @@ public class DokumentController {
         return ok(resultat).build();
     }
 
+    private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
+        return !journalpostMetadata.isErJournalfort();
+    }
+
     private boolean harFeil(TjenesteResultatWrapper tjenesteResultat) {
         return tjenesteResultat.feilmelding != null || !tjenesteResultat.result.isPresent();
     }
 
-    private List<DokumentResultat> hentDokumentResultater(String fnr, String journalpostId, DokumentMetadata journalpostMetadata, List<Pair<String, TjenesteResultatWrapper>> dokumenter) throws InterruptedException, ExecutionException {
-        ForkJoinPool forkJoinPool = new ForkJoinPool(4);
-        return forkJoinPool.submit(() -> {
-            return dokumenter
-                    .parallelStream()
-                    .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
-                    .map((Pair<String, TjenesteResultatWrapper> data) -> {
-                        int antallSider = hentAntallSiderIDokument(data);
-                        return new DokumentResultat(journalpostMetadata.getHoveddokument().getTittel(), antallSider, fnr, journalpostId, data.getLeft());
-                    }).collect(toList());
-        }).get();
+    private List<DokumentResultat> hentDokumentResultater(String fnr, String journalpostId, DokumentMetadata journalpostMetadata, List<Pair<String, TjenesteResultatWrapper>> dokumenter) {
+        try {
+            ForkJoinPool forkJoinPool = new ForkJoinPool(4);
+            return forkJoinPool.submit(() -> {
+                return dokumenter
+                        .parallelStream()
+                        .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
+                        .map((Pair<String, TjenesteResultatWrapper> data) -> {
+                            int antallSider = hentAntallSiderIDokument(data);
+                            return new DokumentResultat(journalpostMetadata.getHoveddokument().getTittel(), antallSider, fnr, journalpostId, data.getLeft());
+                        }).collect(toList());
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Kunne ikke håndtere alle pdfer", e);
+            return Collections.emptyList();
+        }
     }
 
     private int hentAntallSiderIDokument(Pair<String, TjenesteResultatWrapper> data) {
