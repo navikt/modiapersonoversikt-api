@@ -4,6 +4,9 @@ import Sakstema from './tema';
 import { hentWidgetData } from './../actions';
 import { take } from 'lodash';
 import WicketSender from './../../react-wicket-mixin/wicket-sender';
+import nbLocale from 'react-intl/dist/locale-data/nb';
+import { IntlProvider, addLocaleData,FormattedMessage } from 'react-intl';
+addLocaleData(nbLocale);
 
 const ANTALL_TEMAER = 6;
 
@@ -21,10 +24,12 @@ class Temaliste extends React.Component {
         );
 
         return (
-            <ul>
-                {temaliste}
-                <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')} tabIndex="-1" >Se flere saker</a></li>
-            </ul>
+            <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
+                <ul>
+                    {temaliste}
+                    <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')} tabIndex="-1" ><FormattedMessage id="sakswidget.sefleresaker" /></a></li>
+                </ul>
+            </IntlProvider>
         );
     }
 }
@@ -37,7 +42,8 @@ Temaliste.PropTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        temaer: state.widget.data
+        temaer: state.widget.data.temaer,
+        tekster: state.widget.data.tekster
     };
 };
 

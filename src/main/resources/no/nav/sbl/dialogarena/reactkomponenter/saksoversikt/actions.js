@@ -17,9 +17,12 @@ export const hentWidgetData = (fnr) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        dispatch({ type: AT.LAST_WIDGET_DATA_START });
-        return Ajax
-            .get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer')
+        const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer');
+        const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
+
+        dispatch({type: AT.LAST_WIDGET_DATA_START});
+        return Q
+            .all([temaer, tekster, fnr])
             .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
             .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)));
     }
@@ -29,8 +32,8 @@ export const hentLerretData = (fnr) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/temaer');
-        const sakstema = Ajax.get('/modiabrukerdialog/rest/saksoversikt/' + fnr + '/sakstema');
+        const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
+        const sakstema = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/sakstema`);
         const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
         const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
 
@@ -43,7 +46,7 @@ export const hentLerretData = (fnr) => {
 };
 
 
-export const hentDokumentData = (fnr, valgtjournalpost, temakode) => {
+export const hentDokumentData = (fnr, valgtjournalpost) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 

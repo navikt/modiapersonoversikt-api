@@ -1,40 +1,38 @@
-import React from 'react';
-import {groupBy} from 'lodash';
+import React, { PropTypes as pt } from 'react';
+import { groupBy } from 'lodash';
 import DokumentInfoElm from './dokument-info-elm';
 
-const nyesteForst = (a, b) => a.dato.dayOfYear < b.dato.dayOfYear ? 1 : -1;
-const nyesteAarForst = (a, b) => a < b ? 1 : -1;
+const nyesteForst = (a, b) => b.dato.dayOfYear - a.dato.dayOfYear;
 
-class DokumentListe extends React.Component {
+const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost, visSide }) => {
+    const dokumenterGruppertPaaAar = groupBy(dokumentMetadata, dokument => dokument.dato.year);
+    const gjeldendeAar = new Date().getFullYear().toString();
 
-    render() {
-        const dokumentMetadata = this.props.dokumentMetadata;
-        const dokumenterGruppertPaaAar = groupBy(dokumentMetadata, dokument => dokument.dato.year);
+    const dokumentListeForAarstall = Object.keys(dokumenterGruppertPaaAar)
+        .slice(0).sort().reverse()
+        .map(aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) }))
+        .reduce((acc, { aarstall, dokumenter }) => {
+            if (aarstall !== gjeldendeAar) {
+                acc.push(<li key={`aarstall-'${aarstall}`} className="aarstall">{aarstall}</li>);
+            }
 
-        const gjeldendeAar = new Date().getFullYear().toString();
+            return acc.concat(
+                dokumenter.map((dokument, index) => (
+                    <DokumentInfoElm key={`dokument-${aarstall}-${index}`} brukerNavn={brukerNavn} visTema={visTema}
+                                     velgJournalpost={velgJournalpost} visSide={visSide} dokumentinfo={dokument}/>
+                ))
+            );
+        }, []);
 
-        const dokumentListeForAarstall = Object.keys(dokumenterGruppertPaaAar)
-            .sort(nyesteAarForst)
-            .map(aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) }))
-            .reduce((acc, {aarstall, dokumenter}) => {
-                if (aarstall !== gjeldendeAar) {
-                    acc.push(<li key={'aarstall-' + aarstall} className="aarstall">{aarstall}</li>);
-                }
 
-                return acc.concat(
-                    dokumenter.map((dokument, index) => (
-                        <DokumentInfoElm key={`dokument-${aarstall}-${index}`} brukerNavn={this.props.brukerNavn} visTema={this.props.visTema}
-                                         velgJournalpost={this.props.velgJournalpost} visSide={this.props.visSide} dokumentinfo={dokument}/>
-                    ))
-                );
-            }, []);
+    return (<ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>);
+};
 
-        return (<ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>);
-    }
-}
 
 DokumentListe.propTypes = {
-    dokumentMetadata: React.PropTypes.array.isRequired
+    dokumentMetadata: pt.array.isRequired,
+    brukerNavn: pt.string.isRequired,
+    visTema: pt.string
 };
 
 export default DokumentListe;
