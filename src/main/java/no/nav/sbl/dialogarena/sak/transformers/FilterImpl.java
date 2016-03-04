@@ -55,33 +55,22 @@ public class FilterImpl {
                 .collect();
     }
 
-    private static final Predicate<GenerellBehandling> HAR_LOVLIG_BEHANDLINGSSTATUS = new Predicate<GenerellBehandling>() {
-        @Override
-        public boolean evaluate(GenerellBehandling record) {
-            BehandlingsStatus status = record.behandlingsStatus;
-            if (status.equals(BehandlingsStatus.AVSLUTTET) || status.equals(BehandlingsStatus.OPPRETTET)) {
-                return true;
-            }
-            return false;
+    private static final Predicate<GenerellBehandling> HAR_LOVLIG_BEHANDLINGSSTATUS = record -> {
+        BehandlingsStatus status = record.behandlingsStatus;
+        if (status.equals(BehandlingsStatus.AVSLUTTET) || status.equals(BehandlingsStatus.OPPRETTET)) {
+            return true;
         }
+        return false;
     };
 
-    private static final Predicate<GenerellBehandling> ER_AVSLUTTET_KVITTERING = new Predicate<GenerellBehandling>() {
-        @Override
-        public boolean evaluate(GenerellBehandling generellBehandling) {
-            if (erKvitteringstype(generellBehandling.behandlingsType) && BehandlingsStatus.AVSLUTTET.equals(generellBehandling.behandlingsStatus)) {
-                return true;
-            }
-            return false;
+    private static final Predicate<GenerellBehandling> ER_AVSLUTTET_KVITTERING = generellBehandling -> {
+        if (erKvitteringstype(generellBehandling.behandlingsType) && BehandlingsStatus.AVSLUTTET.equals(generellBehandling.behandlingsStatus)) {
+            return true;
         }
+        return false;
     };
 
-    private static final Predicate<GenerellBehandling> HAR_LOVLIG_PREFIX = new Predicate<GenerellBehandling>() {
-        @Override
-        public boolean evaluate(GenerellBehandling behandling) {
-            return !ULOVLIG_PREFIX.equals(behandling.prefix);
-        }
-    };
+    private static final Predicate<GenerellBehandling> HAR_LOVLIG_PREFIX = behandling -> !ULOVLIG_PREFIX.equals(behandling.prefix);
 
     private static final Predicate<GenerellBehandling> HAR_LOVLIG_BEHANDLINGSTYPE = new Predicate<GenerellBehandling>() {
         @Override
@@ -127,34 +116,23 @@ public class FilterImpl {
         }
     };
 
-    private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_STATUS_PAA_BEHANDLING = new Predicate<WSBehandlingskjede>() {
-        @Override
-        public boolean evaluate(WSBehandlingskjede kjede) {
-            if (kjede.getSisteBehandlingsstatus().getValue() != null &&
-                    (kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) && !erKvitteringstype(kjede.getSisteBehandlingstype().getValue())
-                            || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET))) {
-                return true;
-            }
-            return false;
+    private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_STATUS_PAA_BEHANDLING = kjede -> {
+        if (kjede.getSisteBehandlingsstatus().getValue() != null &&
+                (kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) && !erKvitteringstype(kjede.getSisteBehandlingstype().getValue())
+                        || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET))) {
+            return true;
         }
+        return false;
     };
 
-    private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_PREFIX_PAA_BEHANDLING = new Predicate<WSBehandlingskjede>() {
-        @Override
-        public boolean evaluate(WSBehandlingskjede kjede) {
-            return !kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX);
-        }
-    };
+    private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_PREFIX_PAA_BEHANDLING = kjede -> !kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX);
 
-    private static final Predicate<WSSak> HAR_BEHANDLINGER = new Predicate<WSSak>() {
-        @Override
-        public boolean evaluate(WSSak wsSak) {
-            boolean harBehandlinger = !wsSak.getBehandlingskjede().isEmpty();
-            if (!harBehandlinger) {
-                log.info(format("Filtrerer bort sak uten behandlinger. Sakstema var %s", wsSak.getSakstema().getValue()));
-            }
-            return harBehandlinger;
+    private static final Predicate<WSSak> HAR_BEHANDLINGER = wsSak -> {
+        boolean harBehandlinger = !wsSak.getBehandlingskjede().isEmpty();
+        if (!harBehandlinger) {
+            log.info(format("Filtrerer bort sak uten behandlinger. Sakstema var %s", wsSak.getSakstema().getValue()));
         }
+        return harBehandlinger;
     };
 
 }

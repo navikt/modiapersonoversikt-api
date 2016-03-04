@@ -37,7 +37,7 @@ public class InnsynImpl implements Innsyn {
     private static final Logger logger = getLogger(InnsynImpl.class);
 
     @Override
-    public TjenesteResultatWrapper hentTilgjengeligJournalpostListe(List<Sak> saker) {
+    public TjenesteResultatWrapper hentTilgjengeligJournalpostListe(List<Sak> saker, String fnr) {
         WSHentJournalpostListeRequest wsRequest = new WSHentJournalpostListeRequest();
         wsRequest.setSoekeFilter(new WSSoekeFilter().withJournalFiltrering(KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER));
         wsRequest.getSakListe().addAll(sakerTilJoarkSak(saker));
@@ -46,7 +46,7 @@ public class InnsynImpl implements Innsyn {
             Stream<DokumentMetadata> dokumentMetadataStream = joarkV2.hentJournalpostListe(wsRequest)
                     .getJournalpostListe()
                     .stream()
-                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp));
+                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp, fnr));
 
             return new TjenesteResultatWrapper(dokumentMetadataStream);
         } catch (HentJournalpostListeSikkerhetsbegrensning e) {
