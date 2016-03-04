@@ -12,4 +12,5 @@ public class AlleSakerResultatWrapper {
         this.alleSaker = alleSaker;
         this.feilendeSystemer = feilendeSystemer;
     }
+
 }

@@ -8,8 +8,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemExcept
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -81,11 +79,11 @@ public class DokumentMetadataService {
             innsendteSoknaderIHenvendelse = emptyList();
         }
 
-        final List<DokumentMetadata> temp = joarkMetadataListe;
+        final List<DokumentMetadata> finalListe = joarkMetadataListe;
 
         Stream<DokumentMetadata> soknaderSomHarEndretTema = innsendteSoknaderIHenvendelse
                 .stream()
-                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, temp))
+                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, finalListe))
                 .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(JOURNALFORT_ANNET_TEMA));
 
         Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse
