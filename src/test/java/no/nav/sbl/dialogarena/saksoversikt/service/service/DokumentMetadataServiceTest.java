@@ -143,7 +143,7 @@ public class DokumentMetadataServiceTest {
     }
 
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
-        when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any()))
+        when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any(), anyString()))
                 .thenReturn(optional(asList(joarkDokumentMetadata).stream()));
     }
 

@@ -17,8 +17,8 @@ public class InnsynJournalService {
     @Inject
     private Innsyn innsyn;
 
-    public Optional<Stream<DokumentMetadata>> joarkSakhentTilgjengeligeJournalposter(List<Sak> saker) {
-        TjenesteResultatWrapper result = innsyn.hentTilgjengeligJournalpostListe(saker);
+    public Optional<Stream<DokumentMetadata>> joarkSakhentTilgjengeligeJournalposter(List<Sak> saker, String fnr) {
+        TjenesteResultatWrapper result = innsyn.hentTilgjengeligJournalpostListe(saker, fnr);
 
         if (result.result.isPresent()) {
             return Optional.of((Stream<DokumentMetadata>) result.result.get());
