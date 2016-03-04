@@ -6,10 +6,11 @@ import { connect } from 'react-redux';
 import VedleggFeilmeldingListe from './VedleggFeilmeldingListe';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
+import DokumentVisningListe from './DokumentVisningListe'
 
 class DokumentVisningPage extends React.Component {
     componentWillMount() {
-        this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost, this.props.valgtTema.temakode);
+        this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
 
     _redirect(e) {
@@ -31,6 +32,7 @@ class DokumentVisningPage extends React.Component {
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">Dokumentvisning</h1>
                     <section>
+                        <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter} />
                         <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
                     </section>
                 </panel>
@@ -42,7 +44,7 @@ class DokumentVisningPage extends React.Component {
 const mapStateToProps = (state) => {
     return {
         valgtside: state.lerret.valgtside,
-        journalpostmetadata: state.dokument.data[0],
+        journalpostmetadata: state.dokument.data,
         lerretstatus: state.lerret.status,
         dokumentstatus: state.dokument.status,
         valgtTema: state.lerret.valgtTema,
