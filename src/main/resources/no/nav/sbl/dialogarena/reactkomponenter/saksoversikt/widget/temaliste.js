@@ -6,9 +6,16 @@ import { take } from 'lodash';
 import WicketSender from './../../react-wicket-mixin/wicket-sender';
 import nbLocale from 'react-intl/dist/locale-data/nb';
 import { IntlProvider, addLocaleData,FormattedMessage } from 'react-intl';
+import * as Const from './../konstanter';
 addLocaleData(nbLocale);
 
+const LASTER = 'initial loading';
+const LASTET = 'initial';
 const ANTALL_TEMAER = 6;
+
+function widgetSnurrepipp (status) {
+    document.querySelector('.widget-saksoversikt header div').className = status;
+}
 
 class Temaliste extends React.Component {
     componentWillMount() {
@@ -17,11 +24,19 @@ class Temaliste extends React.Component {
     }
 
     render() {
+
+        if (this.props.status !== Const.LASTET) {
+            widgetSnurrepipp(LASTER);
+            return <div></div>;
+        }
+
         const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
         const temaliste = redusertAntallTemaer.map((tema) =>
             <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
         );
+
+        widgetSnurrepipp(LASTET);
 
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
@@ -43,7 +58,8 @@ Temaliste.PropTypes = {
 const mapStateToProps = (state) => {
     return {
         temaer: state.widget.data.temaer,
-        tekster: state.widget.data.tekster
+        tekster: state.widget.data.tekster,
+        status: state.widget.status,
     };
 };
 
