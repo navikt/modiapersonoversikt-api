@@ -20,6 +20,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.Cookie;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -57,6 +58,10 @@ public class DokumentControllerTest {
     private final String TEMA_KODE = "temakode";
     private final String ANNEN_TEMAKODE = "annentemakode";
 
+    private final String FNR = "1234567810";
+    private final String JOURNALPOSTID = "123";
+    private final String DOKUMENTREFERANSE = "321";
+
     @Before
     public void setup() {
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
@@ -68,7 +73,7 @@ public class DokumentControllerTest {
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(false);
         when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(ANNEN_ENHET, "enhetsnavn")));
 
-        Response response = dokumentController.hentJournalpostMetadata("11111111111", "123", "temakode", httpServletRequest);
+        Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
 
         assertThat(response.getStatus(), is(401));
     }
@@ -79,18 +84,18 @@ public class DokumentControllerTest {
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
         when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
 
-        Response response = dokumentController.hentJournalpostMetadata("11111111111", "123", "temakode", httpServletRequest);
+        Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
 
         assertThat(((JournalpostResultat) response.getEntity()).getFeilendeDokumenter().get(0).getFeilmeldingEnonicKey(), is("feilmelding.saksbehandlerikketilgang"));
     }
 
     @Test
     public void returnererDokumentOmSaksbehandlerHarTilgangTilTema() {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet("0000", "enhetsnavn")));
+        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(true);
 
-        Response response = dokumentController.hentJournalpostMetadata("11111111111", "123", "temakode", httpServletRequest);
+        Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
 
         assertThat(response.getStatus(), is(200));
     }
@@ -101,7 +106,7 @@ public class DokumentControllerTest {
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(true);
 
-        Response response = dokumentController.hentJournalpostMetadata("11111111111", "123", ANNEN_TEMAKODE, httpServletRequest);
+        Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, ANNEN_TEMAKODE, httpServletRequest);
 
         assertThat(((JournalpostResultat) response.getEntity()).getFeilendeDokumenter().get(0).getFeilmeldingEnonicKey(), is("feilmelding.journalfortannettema"));
     }
@@ -112,15 +117,78 @@ public class DokumentControllerTest {
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMAKODE_BIDRAG));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(true);
 
-        Response response = dokumentController.hentJournalpostMetadata("11111111111", "123", TEMAKODE_BIDRAG, httpServletRequest);
+        Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMAKODE_BIDRAG, httpServletRequest);
 
         assertThat(((JournalpostResultat) response.getEntity()).getFeilendeDokumenter().get(0).getFeilmeldingEnonicKey(), is("feilmelding.temakode.bidrag"));
+    }
+
+    @Test
+    public void returnerFeilmeldingHvisSaksbehandlerIkkeHarTilgangTilVlagtEnhet() throws IOException {
+        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(ANNEN_ENHET, "enhetsnavn")));
+
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE ,httpServletRequest);
+
+        assertThat(response.getStatus(), is(401));
+    }
+
+    @Test
+    public void returnererFeilmeldingHvisTemaErJournalforstPaaAnnetTema() throws IOException {
+        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
+        when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
+
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, ANNEN_TEMAKODE, httpServletRequest);
+
+        assertThat(response.getStatus(), is(403));
+    }
+
+    @Test
+    public void returnererFeilmeldingHvisJournalpostMetadataIkkeFinnesIJoarkPaaBruker() throws IOException {
+        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
+        when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataIkkeJournalfortListe(TEMA_KODE));
+
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE, httpServletRequest);
+
+        assertThat(response.getStatus(), is(403));
+    }
+
+    @Test
+    public void returnererFeilmeldingHvisTemaErBidrag() throws IOException {
+        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
+        when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMAKODE_BIDRAG));
+
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE, httpServletRequest);
+
+        assertThat(response.getStatus(), is(403));
+    }
+
+
+    @Test
+    public void returnererFeilmeldingHvisSaksbehandlerIkkeHarTilgangTilTema() throws IOException {
+        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
+        when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(false);
+
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE, httpServletRequest);
+
+        assertThat(response.getStatus(), is(403));
     }
 
     private List<DokumentMetadata> lagDokumentMetadataListe(String temakode) {
         return asList(
                 new DokumentMetadata()
                         .withJournalpostId("123")
+                        .withHoveddokument(new Dokument().withTittel("Tittel for hoveddokument"))
+                        .withTemakode(temakode)
+                        .withVedlegg(asList())
+
+        );
+    }
+
+    private List<DokumentMetadata> lagDokumentMetadataIkkeJournalfortListe(String temakode) {
+        return asList(
+                new DokumentMetadata()
+                        .withJournalpostId("123")
+                        .withIsJournalfort(false)
                         .withHoveddokument(new Dokument().withTittel("Tittel for hoveddokument"))
                         .withTemakode(temakode)
                         .withVedlegg(asList())

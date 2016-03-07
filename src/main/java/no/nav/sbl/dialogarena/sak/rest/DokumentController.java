@@ -31,8 +31,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.h
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
@@ -61,20 +60,12 @@ public class DokumentController {
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
     public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
-                                 @PathParam("dokumentreferanse") String dokumentreferanse, @Context HttpServletRequest request) throws IOException {
+                                 @PathParam("dokumentreferanse") String dokumentreferanse, @PathParam("temakode") String valgtTema,
+                                 @Context HttpServletRequest request) throws IOException {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return mockDokumentResponse();
         }
 
-        DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
-        String temakode = journalpostMetadata.getTemakode();
-
-        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
-            return status(403).build();
-        }
-
-
-        /*
         String valgtEnhet = hentValgtEnhet(request);
         List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
 
@@ -83,12 +74,17 @@ public class DokumentController {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        if (TEMAKODE_BIDRAG.equals(journalpostMetadata.getTemakode())) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(TEMAKODE_ER_BIDRAG, journalpostMetadata.getHoveddokument().getTittel()));
-            return ok(resultat).build();
-        }
-        */
+        DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
+        String temakode = journalpostMetadata.getTemakode();
 
+        if (erJournalfortPaAnnetTema(valgtTema, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata) || temakodeErBidrag(temakode)) {
+            return status(403).build();
+        }
+
+        boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
+        if (!harSaksbehandlerTilgang) {
+            return status(403).build();
+        }
 
         TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(dokumentreferanse, journalpostId);
         return hentDokumentResultat.result
@@ -116,7 +112,7 @@ public class DokumentController {
         JournalpostResultat resultat = new JournalpostResultat()
                 .withTittel(journalpostMetadata.getHoveddokument().getTittel());
 
-        if (TEMAKODE_BIDRAG.equals(journalpostMetadata.getTemakode())) {
+        if (temakodeErBidrag(journalpostMetadata.getTemakode())) {
             resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(TEMAKODE_ER_BIDRAG, journalpostMetadata.getHoveddokument().getTittel()));
             return ok(resultat).build();
         }
@@ -154,16 +150,8 @@ public class DokumentController {
         return ok(resultat).build();
     }
 
-    private boolean saksbehanderHarTilgangTilValgtEnhet(HttpServletRequest request) {
-        String valgtEnhet = hentValgtEnhet(request);
-        List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
-
-        return !enhetsListe.contains(valgtEnhet)
-
-        if (!enhetsListe.contains(valgtEnhet)) {
-            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+    private boolean temakodeErBidrag(String temakode) {
+        return TEMAKODE_BIDRAG.equals(temakode);
     }
 
     private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
