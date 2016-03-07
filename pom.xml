@@ -70,6 +70,7 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
             <version>${dialogarena.behandlingsinformasjon.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -114,6 +115,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <version>${hamcrest.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!--har med denne i dependency-management, hvis ikke blir det dependency convergence warnings herifra til Lillestr�m-->
@@ -121,6 +123,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <version>${hamcrest.version}</version>
+            <scope>test</scope>
         </dependency>
 
 
@@ -263,6 +266,7 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
             <version>${henvendelse-informasjon-v2.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class PesysService {
@@ -33,7 +35,7 @@ public class PesysService {
                     .map(sakssammendrag -> new Sak()
                                 .withSaksId(sakssammendrag.getSakId())
                                 .withTemakode(sakssammendrag.getArkivtema().getValue())
-                                .withBaksystem(Baksystem.PESYS)
+                                .withBaksystem(PESYS)
                                 .withFagsystem(PESYS_FAGSYSTEM_ID)))
                     ;
         } catch (HentSakSammendragListeSakManglerEierenhet | HentSakSammendragListePersonIkkeFunnet e) {
@@ -41,7 +43,7 @@ public class PesysService {
             return Optional.empty();
         } catch (RuntimeException e) {
             LOGGER.error("Det skjedde en uventet feil mot Pesys", e);
-            return Optional.empty();
+            throw new FeilendeBaksystemException(PESYS);
         }
     }
 }

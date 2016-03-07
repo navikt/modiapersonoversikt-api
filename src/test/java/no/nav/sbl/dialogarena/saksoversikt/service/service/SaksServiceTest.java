@@ -7,11 +7,13 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.DokumentMetadataResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,8 @@ import java.util.concurrent.*;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
@@ -114,13 +118,13 @@ public class SaksServiceTest {
 
         when(kodeverk.getTemanavnForTemakode(anyString(), anyString())).thenReturn("Dagpenger");
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(dokumentmetadata);
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new DokumentMetadataResultatWrapper(dokumentmetadata, emptySet()));
 
         when(sakstemaGrupperer.grupperSakstema(saker, dokumentmetadata)).thenReturn(new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet<>(asList(DAGPENGER)));
         }});
 
-        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).collect(toList());
+        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).sakstema;
 
         assertTrue(sakstema.size() == 1);
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
@@ -131,7 +135,7 @@ public class SaksServiceTest {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
         when(kodeverk.finnesTemaKodeIKodeverk(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(true);
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ArrayList<>());
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new DokumentMetadataResultatWrapper(emptyList(), emptySet()));
 
         Sak sak = new Sak()
                 .withSaksId("123")
@@ -155,7 +159,7 @@ public class SaksServiceTest {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
         when(kodeverk.finnesTemaKodeIKodeverk(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(true);
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ArrayList<>());
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new DokumentMetadataResultatWrapper(emptyList(), emptySet()));
 
         Sak sak = new Sak()
                 .withSaksId("123")

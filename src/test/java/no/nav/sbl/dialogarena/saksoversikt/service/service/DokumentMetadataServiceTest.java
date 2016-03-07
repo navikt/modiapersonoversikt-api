@@ -3,9 +3,12 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.DokumentMetadataResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +20,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -68,11 +72,11 @@ public class DokumentMetadataServiceTest {
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        DokumentMetadataResultatWrapper dokumentMetadataResultatWrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
-        assertThat(dokumentMetadatas.size(), is(2));
-        assertFalse(dokumentMetadatas.get(0).getFeilWrapper().getInneholderFeil());
-        assertTrue(dokumentMetadatas.get(1).getFeilWrapper().getInneholderFeil());
+        assertThat(dokumentMetadataResultatWrapper.dokumentMetadata.size(), is(2));
+        assertFalse(dokumentMetadataResultatWrapper.dokumentMetadata.get(0).getFeilWrapper().getInneholderFeil());
+        assertTrue(dokumentMetadataResultatWrapper.dokumentMetadata.get(1).getFeilWrapper().getInneholderFeil());
     }
 
     @Test
@@ -82,9 +86,10 @@ public class DokumentMetadataServiceTest {
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").dokumentMetadata;
 
         assertThat(dokumentMetadatas.size(), is(1));
     }
@@ -107,7 +112,7 @@ public class DokumentMetadataServiceTest {
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("En annen journalpost")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").dokumentMetadata;
 
         assertThat(dokumentMetadatas.size(), is(2));
     }
@@ -122,7 +127,7 @@ public class DokumentMetadataServiceTest {
         String SAMME_JOURNALPOST = "2";
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse(SAMME_JOURNALPOST)));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").dokumentMetadata;
 
         assertThat(dokumentMetadatas.size(), is(1));
         assertTrue(dokumentMetadatas.get(0).isEttersending());
@@ -137,9 +142,9 @@ public class DokumentMetadataServiceTest {
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(emptyList());
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        DokumentMetadataResultatWrapper dokumentMetadataResultatWrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
-        assertFalse(dokumentMetadatas.get(0).isEttersending());
+        assertFalse(dokumentMetadataResultatWrapper.dokumentMetadata.get(0).isEttersending());
     }
 
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
