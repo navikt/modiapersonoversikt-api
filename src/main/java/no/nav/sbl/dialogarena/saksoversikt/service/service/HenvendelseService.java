@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.apache.commons.collections15.Predicate;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,8 +25,11 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.So
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.UNDER_ARBEID;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.valueOf;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.SOKNADSINNSENDING;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class HenvendelseService {
+
+    private static final Logger LOGGER = getLogger(HenvendelseService.class);
 
     @Inject
     @Named("henvendelseSoknaderPortType")
@@ -34,7 +38,8 @@ public class HenvendelseService {
     public List<Record<Soknad>> hentHenvendelsessoknader(String fnr) {
         try {
             return on(henvendelse.hentSoknadListe(fnr)).filter(IKKE_PAABEGYNT_ETTERSENDING_FRA_SEND_SOKNAD).map(SOKNAD).collect();
-        } catch (RuntimeException ex) {
+        } catch (RuntimeException e) {
+            LOGGER.error("Det skjedde en uventet feil mot Henvendelse", e);
             throw new FeilendeBaksystemException(HENVENDELSE);
         }
     }

@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
@@ -39,7 +38,7 @@ public class PesysService {
                                 .withFagsystem(PESYS_FAGSYSTEM_ID)))
                     ;
         } catch (HentSakSammendragListeSakManglerEierenhet | HentSakSammendragListePersonIkkeFunnet e) {
-            LOGGER.info("Det skjedde en ventet exception ved henting av Sakstema fra Pesys");
+            LOGGER.warn("Det skjedde en ventet exception ved henting av Sakstema fra Pesys");
             return Optional.empty();
         } catch (RuntimeException e) {
             LOGGER.error("Det skjedde en uventet feil mot Pesys", e);
