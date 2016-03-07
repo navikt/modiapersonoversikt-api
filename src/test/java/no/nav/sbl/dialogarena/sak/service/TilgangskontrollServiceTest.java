@@ -4,6 +4,8 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
@@ -16,11 +18,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.util.Arrays;
+import javax.servlet.http.Cookie;
+import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
@@ -33,9 +39,13 @@ public class TilgangskontrollServiceTest {
     private EnforcementPoint pep;
     @Mock
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Mock
+    private AnsattService ansattService;
 
     @InjectMocks
     private TilgangskontrollService tilgangskontrollService = new TilgangskontrollServiceImpl();
+
+    private final MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
     private static Random idGenerator = new Random();
     public static final String SAKSTYPE_GENERELL = "GEN";
@@ -43,9 +53,14 @@ public class TilgangskontrollServiceTest {
     public static final String IKKE_BRUKERS_IDENT = "12345678902";
     public static final String SAKSTEMAKODE = "FOR";
 
+    private static final String GODKJENT_ENHET = "0000";
+    private static final String ANNEN_ENHET = "1000";
+
 
     @Before
     public void setup() throws HentAktoerIdForIdentPersonIkkeFunnet {
+        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        httpServletRequest.setCookies(lagSaksbehandlerCookie(GODKJENT_ENHET));
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("0219");
@@ -74,12 +89,47 @@ public class TilgangskontrollServiceTest {
         assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> !modiaSakstema.harTilgang), is(true));
     }
 
+    @Test
+    public void returnererFeilmeldingSaksbehandlerHarValgtGodkjentEnhet() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(ANNEN_ENHET, httpServletRequest);
+
+        assertThat(response.isPresent(), is(true));
+    }
+
+    @Test
+    public void returnererResponseMedFeilmeldingOmSaksbehandlerHarValgtGodkjentEnhet() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(GODKJENT_ENHET, httpServletRequest);
+
+        assertThat(response.isPresent(), is(false));
+    }
+
+
+
+    private Cookie[] lagSaksbehandlerCookie(String valgtEnhet) {
+        Cookie[] cookies = new Cookie[1];
+        cookies[0] = new Cookie("saksbehandlerinnstillinger-null", valgtEnhet);
+        return cookies;
+    }
+
+    private List<AnsattEnhet> mockEnhetsListe() {
+        return asList(
+                new AnsattEnhet(GODKJENT_ENHET, "ansattenhet-1"),
+                new AnsattEnhet("0001", "ansattenhet-2")
+        );
+    }
+
+
     private List<Sakstema> lagSakstemaListe() {
-        return Arrays.asList(
+        return asList(
                 new Sakstema().withTemakode("PEN"),
                 new Sakstema().withTemakode("TEST")
         );
     }
+
 
 //    @Test
 //    public void harTilgangHvisAlleSjekkerOk() throws HentSakSakIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {

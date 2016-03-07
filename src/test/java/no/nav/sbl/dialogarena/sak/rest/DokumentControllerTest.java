@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
@@ -19,11 +17,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static no.nav.sbl.dialogarena.sak.rest.DokumentController.TEMAKODE_BIDRAG;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,9 +43,6 @@ public class DokumentControllerTest {
     private SaksService saksService;
 
     @Mock
-    private AnsattService ansattService;
-
-    @Mock
     private DokumentMetadataService dokumentMetadataService;
 
     @Mock
@@ -54,7 +53,6 @@ public class DokumentControllerTest {
 
     private final MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
     private final String VALGT_ENHET = "0000";
-    private final String ANNEN_ENHET = "0002";
     private final String TEMA_KODE = "temakode";
     private final String ANNEN_TEMAKODE = "annentemakode";
 
@@ -66,12 +64,12 @@ public class DokumentControllerTest {
     public void setup() {
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
+        when(tilgangskontrollService.harGodkjentEnhet(any(String.class), any(HttpServletRequest.class))).thenReturn(empty());
     }
 
     @Test
     public void returnererFeilmeldingStatusOmSaksbehandlerIkkeHarTilgangTilValgtEnhet() {
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(false);
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(ANNEN_ENHET, "enhetsnavn")));
+        when(tilgangskontrollService.harGodkjentEnhet(any(String.class), any(HttpServletRequest.class))).thenReturn(mockIkkeTomHttpServletResponse());
 
         Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
 
@@ -82,7 +80,6 @@ public class DokumentControllerTest {
     public void returnererFeilmeldingOmSaksbehandlerIkkeHarTilgangTilTema() {
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(false);
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
 
         Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
 
@@ -91,7 +88,6 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererDokumentOmSaksbehandlerHarTilgangTilTema() {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(true);
 
@@ -102,7 +98,6 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererFeilmeldingOmDokumentErJournalfortPaAnnetTema() {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(true);
 
@@ -113,7 +108,6 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererFeilmeldingOmTemaErBidrag() {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMAKODE_BIDRAG));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(true);
 
@@ -123,17 +117,16 @@ public class DokumentControllerTest {
     }
 
     @Test
-    public void returnerFeilmeldingHvisSaksbehandlerIkkeHarTilgangTilVlagtEnhet() throws IOException {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(ANNEN_ENHET, "enhetsnavn")));
+    public void returnerFeilmeldingHvisSaksbehandlerIkkeHarTilgangTilValgtEnhet() throws IOException {
+        when(tilgangskontrollService.harGodkjentEnhet(any(String.class), any(HttpServletRequest.class))).thenReturn(mockIkkeTomHttpServletResponse());
 
-        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE ,httpServletRequest);
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, httpServletRequest);
 
         assertThat(response.getStatus(), is(401));
     }
 
     @Test
     public void returnererFeilmeldingHvisJournalpostMetadataIkkeFinnesIJoarkPaaBruker() throws IOException {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataIkkeJournalfortListe(TEMA_KODE));
 
         Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, httpServletRequest);
@@ -143,7 +136,6 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererFeilmeldingHvisTemaErBidrag() throws IOException {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMAKODE_BIDRAG));
 
         Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, httpServletRequest);
@@ -154,7 +146,6 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererFeilmeldingHvisSaksbehandlerIkkeHarTilgangTilTema() throws IOException {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(false);
 
@@ -189,6 +180,10 @@ public class DokumentControllerTest {
         Cookie[] cookies = new Cookie[1];
         cookies[0] = new Cookie("saksbehandlerinnstillinger-null", valgtEnhet);
         return cookies;
+    }
+
+    private Optional<Response> mockIkkeTomHttpServletResponse() {
+        return of(Response.status(Response.Status.UNAUTHORIZED).build());
     }
 
 }
