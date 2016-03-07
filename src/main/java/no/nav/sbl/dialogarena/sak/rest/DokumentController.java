@@ -24,13 +24,10 @@ import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/saksoversikt/{fnr}")
@@ -100,12 +97,9 @@ public class DokumentController {
             return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
         }
 
-        String valgtEnhet = hentValgtEnhet(request);
-        List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
-
-        if (!enhetsListe.contains(valgtEnhet)) {
-            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(request);
+        if (response.isPresent()) {
+            return response.get();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
