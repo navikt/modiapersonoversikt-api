@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
@@ -10,7 +9,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
-import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -24,11 +22,10 @@ import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
-import static org.slf4j.LoggerFactory.getLogger;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
@@ -41,15 +38,10 @@ public class DokumentController {
     private SaksService saksService;
 
     @Inject
-    private AnsattService ansattService;
-
-    @Inject
     private DokumentMetadataService dokumentMetadataService;
 
     @Inject
     private TilgangskontrollService tilgangskontrollService;
-
-    private static final Logger logger = getLogger(DokumentController.class);
 
     public final static String TEMAKODE_BIDRAG = "BID";
     public final static String BLURRED_DOKUMENT = getProperty("modapp.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
@@ -64,29 +56,28 @@ public class DokumentController {
         }
 
         String valgtEnhet = hentValgtEnhet(request);
-        List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
 
-        if (!enhetsListe.contains(valgtEnhet)) {
-            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
+        if (response.isPresent()) {
+            return response.get();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         String temakode = journalpostMetadata.getTemakode();
 
         if (finnesIkkeIJoarkPaBruker(journalpostMetadata) || temakodeErBidrag(temakode)) {
-            return status(403).build();
+            return status(Response.Status.FORBIDDEN).build();
         }
 
         boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
         if (!harSaksbehandlerTilgang) {
-            return status(403).build();
+            return status(Response.Status.FORBIDDEN).build();
         }
 
         TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(dokumentreferanse, journalpostId);
         return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
-                .orElse(status(404).build());
+                .orElse(status(Response.Status.NOT_FOUND).build());
     }
 
     @GET
@@ -97,7 +88,9 @@ public class DokumentController {
             return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
         }
 
-        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(request);
+        String valgtEnhet = hentValgtEnhet(request);
+
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
         if (response.isPresent()) {
             return response.get();
         }

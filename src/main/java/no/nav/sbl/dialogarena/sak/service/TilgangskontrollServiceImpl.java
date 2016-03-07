@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -72,16 +70,13 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         }
         return true;
     }
-
-    public Optional<Response> harGodkjentEnhet(HttpServletRequest request) {
-        String valgtEnhet = hentValgtEnhet(request);
+    public Optional<Response> harGodkjentEnhet(String valgtEnhet, HttpServletRequest request) {
         List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
+
         if (!enhetsListe.contains(valgtEnhet)) {
             logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
-
             return of(Response.status(Response.Status.UNAUTHORIZED).build());
         }
-
         return empty();
     }
 
