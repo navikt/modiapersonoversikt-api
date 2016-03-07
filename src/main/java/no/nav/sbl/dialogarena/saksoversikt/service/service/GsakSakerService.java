@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
@@ -12,6 +13,8 @@ import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
 
 public class GsakSakerService {
 
@@ -28,12 +31,14 @@ public class GsakSakerService {
                     .map(gsakSak -> new Sak()
                                         .withSaksId(gsakSak.getSakId())
                                         .withTemakode(gsakSak.getFagomraade().getValue())
-                                        .withBaksystem(Baksystem.GSAK)
+                                        .withBaksystem(GSAK)
                                         .withFagsystem(gsakSak.getFagsystem().getValue())
                                         .withFagsystem(GSAK_FAGSYSTEM_ID))
                     );
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
             return Optional.empty();
+        } catch (RuntimeException e) {
+            throw new FeilendeBaksystemException(GSAK);
         }
     }
 }

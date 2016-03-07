@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -114,13 +115,13 @@ public class SaksServiceTest {
 
         when(kodeverk.getTemanavnForTemakode(anyString(), anyString())).thenReturn("Dagpenger");
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(dokumentmetadata);
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ImmutablePair<>(dokumentmetadata,new HashSet<>()));
 
         when(sakstemaGrupperer.grupperSakstema(saker, dokumentmetadata)).thenReturn(new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet<>(asList(DAGPENGER)));
         }});
 
-        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).collect(toList());
+        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).getLeft().collect(toList());
 
         assertTrue(sakstema.size() == 1);
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
@@ -131,7 +132,7 @@ public class SaksServiceTest {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
         when(kodeverk.finnesTemaKodeIKodeverk(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(true);
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ArrayList<>());
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ImmutablePair<>(new ArrayList<>(), new HashSet<>()));
 
         Sak sak = new Sak()
                 .withSaksId("123")
@@ -155,7 +156,7 @@ public class SaksServiceTest {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
         when(kodeverk.finnesTemaKodeIKodeverk(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(true);
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ArrayList<>());
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ImmutablePair<>(new ArrayList<>(), new HashSet<>()));
 
         Sak sak = new Sak()
                 .withSaksId("123")
