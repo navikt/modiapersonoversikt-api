@@ -9,40 +9,46 @@ import { IntlProvider, addLocaleData,FormattedMessage } from 'react-intl';
 import * as Const from './../konstanter';
 addLocaleData(nbLocale);
 
-const LASTER = 'initial loading';
-const LASTET = 'initial';
 const ANTALL_TEMAER = 6;
 
-function widgetSnurrepipp (status) {
-    document.querySelector('.widget-saksoversikt header div').className = status;
+function widgetSnurrepipp(status) {
+    const initial = document.querySelector('.widget-saksoversikt .klikkbar-header .initial');
+    if (status === Const.LASTER) {
+        initial.classList.add('loading');
+    } else {
+        initial.classList.remove('loading');
+    }
 }
 
 class Temaliste extends React.Component {
     componentWillMount() {
         this.props.hentWidgetData(this.props.fnr);
         this.sendToWidget = WicketSender.bind(this, this.props.wicketurl, this.props.wicketcomponent);
+        widgetSnurrepipp(this.props.status)
+    }
+
+    componentDidUpdate() {
+        widgetSnurrepipp(this.props.status);
     }
 
     render() {
+        const { temaer, fnr, tekster, status } = this.props;
 
-        if (this.props.status !== Const.LASTET) {
-            widgetSnurrepipp(LASTER);
-            return <div></div>;
+        if (status !== Const.LASTET) {
+            return <noscript></noscript>;
         }
 
-        const { temaer, fnr } = this.props;
         const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
         const temaliste = redusertAntallTemaer.map((tema) =>
             <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
         );
 
-        widgetSnurrepipp(LASTET);
-
         return (
-            <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
+            <IntlProvider defaultLocale="nb" locale="nb" messages={tekster}>
                 <ul>
                     {temaliste}
-                    <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')} tabIndex="-1" ><FormattedMessage id="sakswidget.sefleresaker" /></a></li>
+                    <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}
+                           tabIndex="-1"><FormattedMessage id="sakswidget.sefleresaker"/></a></li>
                 </ul>
             </IntlProvider>
         );
