@@ -12,12 +12,10 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
 import static java.util.stream.Stream.empty;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.FERDIG;
@@ -94,7 +92,7 @@ public class DokumentMetadataService {
                 populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),
                 innsendteSoknaderSomBareFinnesIHenvendelse,
                 soknaderSomHarEndretTema
-        ).collect(Collectors.toList()), feilendeBaksystem);
+        ).collect(toList()), feilendeBaksystem);
     }
 
     private boolean harJournalforingEndretTema(DokumentMetadata henvendelseDokumentMetadata, List<DokumentMetadata> joarkDokumentMetadataListe) {
