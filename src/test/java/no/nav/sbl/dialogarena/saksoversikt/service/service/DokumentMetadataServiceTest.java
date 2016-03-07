@@ -89,7 +89,7 @@ public class DokumentMetadataServiceTest {
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString()).dokumentMetadata;
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").dokumentMetadata;
 
         assertThat(dokumentMetadatas.size(), is(1));
     }
@@ -112,7 +112,7 @@ public class DokumentMetadataServiceTest {
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("En annen journalpost")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString()).dokumentMetadata;
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").dokumentMetadata;
 
         assertThat(dokumentMetadatas.size(), is(2));
     }
@@ -127,7 +127,7 @@ public class DokumentMetadataServiceTest {
         String SAMME_JOURNALPOST = "2";
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse(SAMME_JOURNALPOST)));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString()).dokumentMetadata;
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").dokumentMetadata;
 
         assertThat(dokumentMetadatas.size(), is(1));
         assertTrue(dokumentMetadatas.get(0).isEttersending());
@@ -142,9 +142,9 @@ public class DokumentMetadataServiceTest {
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(emptyList());
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), anyString()).dokumentMetadata;
+        DokumentMetadataResultatWrapper dokumentMetadataResultatWrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
-        assertFalse(dokumentMetadatas.get(0).isEttersending());
+        assertFalse(dokumentMetadataResultatWrapper.dokumentMetadata.get(0).isEttersending());
     }
 
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
