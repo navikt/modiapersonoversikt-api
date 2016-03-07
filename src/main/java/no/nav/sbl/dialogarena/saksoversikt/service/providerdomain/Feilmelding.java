@@ -7,9 +7,10 @@ public enum Feilmelding {
     DOKUMENT_SLETTET("feilmelding.dokumentslettet"),
     SIKKERHETSBEGRENSNING("feilmelding.sikkerhetsbegrensning"),
     JOURNALFORT_ANNET_TEMA("feilmelding.journalfortannettema"),
-    KORRUPT_PDF("feilmelding.korruptpdf"),
+    IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER("feilmelding.journalfortfeil"),
     SAKSBEHANDLER_IKKE_TILGANG("feilmelding.saksbehandlerikketilgang"),
-    TEMAKODE_ER_BIDRAG("feilmelding.temakode.bidrag");
+    TEMAKODE_ER_BIDRAG("feilmelding.temakode.bidrag"),
+    KORRUPT_PDF("feilmelding.korruptpdf");
 
     public final String feilmeldingKey;
 
