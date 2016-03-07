@@ -60,7 +60,7 @@ public class DokumentController {
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
     public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
-                                 @PathParam("dokumentreferanse") String dokumentreferanse, @PathParam("temakode") String valgtTema,
+                                 @PathParam("dokumentreferanse") String dokumentreferanse,
                                  @Context HttpServletRequest request) throws IOException {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return mockDokumentResponse();
@@ -77,7 +77,7 @@ public class DokumentController {
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         String temakode = journalpostMetadata.getTemakode();
 
-        if (erJournalfortPaAnnetTema(valgtTema, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata) || temakodeErBidrag(temakode)) {
+        if (finnesIkkeIJoarkPaBruker(journalpostMetadata) || temakodeErBidrag(temakode)) {
             return status(403).build();
         }
 

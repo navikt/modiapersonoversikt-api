@@ -126,19 +126,9 @@ public class DokumentControllerTest {
     public void returnerFeilmeldingHvisSaksbehandlerIkkeHarTilgangTilVlagtEnhet() throws IOException {
         when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(ANNEN_ENHET, "enhetsnavn")));
 
-        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE ,httpServletRequest);
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE ,httpServletRequest);
 
         assertThat(response.getStatus(), is(401));
-    }
-
-    @Test
-    public void returnererFeilmeldingHvisTemaErJournalforstPaaAnnetTema() throws IOException {
-        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
-        when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
-
-        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, ANNEN_TEMAKODE, httpServletRequest);
-
-        assertThat(response.getStatus(), is(403));
     }
 
     @Test
@@ -146,7 +136,7 @@ public class DokumentControllerTest {
         when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataIkkeJournalfortListe(TEMA_KODE));
 
-        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE, httpServletRequest);
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, httpServletRequest);
 
         assertThat(response.getStatus(), is(403));
     }
@@ -156,7 +146,7 @@ public class DokumentControllerTest {
         when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet(VALGT_ENHET, "enhetsnavn")));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMAKODE_BIDRAG));
 
-        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE, httpServletRequest);
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, httpServletRequest);
 
         assertThat(response.getStatus(), is(403));
     }
@@ -168,7 +158,7 @@ public class DokumentControllerTest {
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(String.class), any(String.class))).thenReturn(false);
 
-        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, TEMA_KODE, httpServletRequest);
+        Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, httpServletRequest);
 
         assertThat(response.getStatus(), is(403));
     }
