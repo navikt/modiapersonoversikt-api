@@ -17,10 +17,10 @@ export const hentWidgetData = (fnr) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const temaer = Ajax.get('/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer');
+        const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
         const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
 
-        dispatch({type: AT.LAST_WIDGET_DATA_START});
+        dispatch({ type: AT.LAST_WIDGET_DATA_START });
         return Q
             .all([temaer, tekster, fnr])
             .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
