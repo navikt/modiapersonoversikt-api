@@ -5,7 +5,7 @@ const Inngaaende = ({ brukerNavn, navn, avsender }) => {
     const dokumentAvsender = avsender === 'SLUTTBRUKER' ? brukerNavn : navn;
     const ingaandeMessage = <FormattedMessage id="dokumentinfo.avsender.fra" values={{ avsender: dokumentAvsender }}/>;
 
-    return <div className="dokument-avsender">{ingaandeMessage}</div>;
+    return <span className="dokument-avsender">{ingaandeMessage}</span>;
 };
 
 Inngaaende.propTypes = {
