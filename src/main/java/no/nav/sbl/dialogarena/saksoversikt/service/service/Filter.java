@@ -96,7 +96,7 @@ public class Filter {
         return (erKvitteringstype(type) && erAvsluttet(kjede)) || lovligeBehandlingstyper.contains(type);
     };
 
-    private static Predicate<WSBehandlingskjede> LOVLIG_BEHANDLING = wsBehandlingskjede -> HAR_LOVLIG_STATUS_PAA_BEHANDLING
+    private static final Predicate<WSBehandlingskjede> LOVLIG_BEHANDLING = wsBehandlingskjede -> HAR_LOVLIG_STATUS_PAA_BEHANDLING
             .and(HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING)
             .and(HAR_LOVLIG_PREFIX_PAA_BEHANDLING).test(wsBehandlingskjede);
 
@@ -119,7 +119,9 @@ public class Filter {
         return harBehandlinger;
     };
 
-    private static final Predicate<Record<GenerellBehandling>> ER_AVSLUTTET_KVITTERING = record -> KVITTERING.equals(record.get(GenerellBehandling.BEHANDLINGKVITTERING)) && record.get(GenerellBehandling.BEHANDLING_STATUS).equals(BehandlingsStatus.AVSLUTTET);
+    private static final Predicate<Record<GenerellBehandling>> ER_AVSLUTTET_KVITTERING
+            = record -> KVITTERING.equals(record.get(GenerellBehandling.BEHANDLINGKVITTERING))
+            && record.get(GenerellBehandling.BEHANDLING_STATUS).equals(BehandlingsStatus.AVSLUTTET);
 
     private static final Predicate<Record<GenerellBehandling>> HAR_LOVLIG_PREFIX = record -> !ULOVLIG_PREFIX.equals(record.get(GenerellBehandling.PREFIX));
 

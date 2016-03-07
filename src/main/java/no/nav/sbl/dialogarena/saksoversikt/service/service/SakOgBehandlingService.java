@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBeh
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
@@ -20,9 +21,11 @@ import static java.util.stream.Collectors.toMap;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DataFletter.hentBehandlingerFraBehandlingskjeder;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BEHANDLING_STATUS;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsStatus.OPPRETTET;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingService {
 
+    private static final Logger logger = getLogger(SakOgBehandlingService.class);
 
     @Inject
     private SakOgBehandling_v1PortType sakOgBehandlingPortType;
@@ -37,6 +40,7 @@ public class SakOgBehandlingService {
         try {
             return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
         } catch (RuntimeException ex) {
+            logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex);
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
     }
@@ -47,6 +51,7 @@ public class SakOgBehandlingService {
             List<WSSak> sobSaker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
             return filter.filtrerSaker(sobSaker);
         } catch (RuntimeException ex) {
+            logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex);
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
     }

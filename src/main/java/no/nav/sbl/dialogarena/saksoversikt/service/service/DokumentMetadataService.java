@@ -20,6 +20,7 @@ import static java.util.stream.Stream.empty;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.FERDIG;
 
+@SuppressWarnings("squid:S1166")
 public class DokumentMetadataService {
     public static final String JOURNALPOST_INNGAAENDE = "I";
     public static final String JOURNALPOST_UTGAAENDE = "U";
@@ -28,9 +29,12 @@ public class DokumentMetadataService {
     public static final String DOKTYPE_VEDLEGG = "VEDLEGG";
 
     public static final String DOKUMENT_LASTET_OPP = "LASTET_OPP";
-    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erVedlegg = dokumentRecord -> !dokumentRecord.get(Dokument.HOVEDSKJEMA);
-    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erHoveddokument = dokumentRecord -> dokumentRecord.get(Dokument.HOVEDSKJEMA);
-    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erLastetOpp = dokumentRecord -> DOKUMENT_LASTET_OPP.equals(dokumentRecord.get(Dokument.INNSENDINGSVALG).name());
+    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erVedlegg
+            = dokumentRecord -> !dokumentRecord.get(Dokument.HOVEDSKJEMA);
+    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erHoveddokument
+            = dokumentRecord -> dokumentRecord.get(Dokument.HOVEDSKJEMA);
+    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erLastetOpp
+            = dokumentRecord -> DOKUMENT_LASTET_OPP.equals(dokumentRecord.get(Dokument.INNSENDINGSVALG).name());
 
     @Inject
     private InnsynJournalService innsynJournalService;
@@ -70,7 +74,7 @@ public class DokumentMetadataService {
         try {
             innsendteSoknaderIHenvendelse = henvendelseService.hentHenvendelsessoknaderMedStatus(FERDIG, fnr)
                     .stream()
-                    .map(this::dokumentMetadataFraHenvendelse)
+                    .map(soknadRecord ->  dokumentMetadataFraHenvendelse(soknadRecord))
                     .collect(toList());
         } catch (FeilendeBaksystemException e) {
             feilendeBaksystem.add(e.getBaksystem());

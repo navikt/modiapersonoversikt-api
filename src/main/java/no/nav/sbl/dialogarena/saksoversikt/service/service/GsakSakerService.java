@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
@@ -9,6 +8,8 @@ import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -17,6 +18,8 @@ import java.util.stream.Stream;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
 
 public class GsakSakerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(GsakSakerService.class);
 
     public static final String GSAK_FAGSYSTEM_ID = "FS22";
 
@@ -36,8 +39,10 @@ public class GsakSakerService {
                                         .withFagsystem(GSAK_FAGSYSTEM_ID))
                     );
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
+            logger.warn("Det skjedde en ventet exception ved henting av Sakstema fra Gsak");
             return Optional.empty();
         } catch (RuntimeException e) {
+            logger.error("Det skjedde en uventet feil mot Gsak", e);
             throw new FeilendeBaksystemException(GSAK);
         }
     }

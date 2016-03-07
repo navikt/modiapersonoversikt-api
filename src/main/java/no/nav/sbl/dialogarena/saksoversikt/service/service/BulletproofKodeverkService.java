@@ -15,6 +15,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 /**
  * Wrapper for lokalt lokaltKodeverk som returnerer standardverdier for ukjent kodeverksID
  */
+@SuppressWarnings("squid:S1166")
 public class BulletproofKodeverkService {
 
     private static final Logger LOG = getLogger(BulletproofKodeverkService.class);
@@ -45,7 +46,7 @@ public class BulletproofKodeverkService {
             }
 
             if (tittel == null) {
-                throw new RuntimeException();
+                throw new ApplicationException("Tittel er null!");
             }
 
             return tittel;
@@ -59,6 +60,7 @@ public class BulletproofKodeverkService {
         try {
             return !isEmpty(kodeverkClient.hentFoersteTermnavnForKode(temakode, kodeverknavn));
         } catch(ApplicationException e) {
+            LOG.warn("Fant ikke temakode i kodeverk");
             return false;
         }
     }
