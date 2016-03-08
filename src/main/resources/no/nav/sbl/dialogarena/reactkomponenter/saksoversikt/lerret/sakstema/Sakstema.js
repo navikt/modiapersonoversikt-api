@@ -22,6 +22,7 @@ class Sakstema extends React.Component {
         const behandlingsstatus = tema.temakode !== 'alle' && nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : '';
         const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering} {...datoformat.NUMERISK_2_DIGIT} />;
         const harTilgang = tema.harTilgang ? '' : 'tema-ikke-tilgang';
+        const skjultIngenTilgangTekst = !tema.harTilgang? <p className="vekk">Ikke tilgang til sakstema</p>:'';
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt} ${harTilgang}`}>
@@ -29,6 +30,7 @@ class Sakstema extends React.Component {
                        onClick={() => velgSak(tema)}
                 />
                 <label htmlFor={id}>
+                    {skjultIngenTilgangTekst}
                     <p className="datotekst">{sisteOppdateringTekst}</p>
                     <p className="temaliste-label stortekst">{tema.temanavn}</p>
                     {behandlingsstatus}

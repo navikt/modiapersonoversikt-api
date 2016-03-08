@@ -22,10 +22,12 @@ class DokumentInfoElm extends React.Component {
         const temaHvisAlleTemaer = visTema === 'true' ? <p>{temakodeVisning}</p> : <noscript/>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
-
+        const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
+            <p className="vekk">Ikke tilgang til dokument</p> : '';
 
         return (
             <li className={`dokumentliste-element ${kanViseDokument}`} >
+                {skjultIngenTilgangTekst}
                 <p className="datodokumentliste">
                     <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                 </p>
