@@ -5,7 +5,6 @@ import no.nav.components.NOKAmountLabel;
 import no.nav.kjerneinfo.Kjerneinfo;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.frontend.ConditionalCssResource;
-import no.nav.modig.frontend.FrontendModule;
 import no.nav.modig.modia.metrics.TimingMetricsBehaviour;
 import no.nav.modig.wicket.errorhandling.ExceptionHandlingBehavior;
 import no.nav.personsok.PersonsokPanel;
@@ -50,6 +49,7 @@ public class BasePage extends WebPage {
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(BasePage.class, "lokal.js");
     public static final JavaScriptResourceReference JS_SESSION_TIMEOUT = new JavaScriptResourceReference(BasePage.class, "sessionTimeout.js");
     public static final JavaScriptResourceReference JS_TAB_POPUP_RESOURCE = new JavaScriptResourceReference(BasePage.class, "tabPopup.js");
+    public static final JavaScriptResourceReference JS_AUTO_SCROLL_RESOURCE = new JavaScriptResourceReference(BasePage.class, "auto-scroll.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
     public static final CssResourceReference PERSONSOKSEARCH = new CssResourceReference(PersonsokSearchPanel.class, "PersonsokSearchPanel.css");
@@ -77,16 +77,6 @@ public class BasePage extends WebPage {
     public static final PackageResourceReference OVERSIKT = new PackageResourceReference(BasePage.class, "less/komponenter/oversikt.less");
     public static final PackageResourceReference VARSLING = new PackageResourceReference(BasePage.class, "less/komponenter/varsling.less");
     public static final PackageResourceReference SYKEPENGER_FORELDREPENGER = new PackageResourceReference(SykmeldingsperiodePanel.class, "sykepenger_foreldrepenger.less");
-
-    public static final FrontendModule SCROLL = new FrontendModule.With()
-            .stylesheets(new CssResourceReference(BasePage.class, "jquery.mCustomScrollbar.css"))
-            .less(new PackageResourceReference(BasePage.class, "less/felles/scrollstyling.less"))
-            .scripts(
-                    new JavaScriptResourceReference(BasePage.class, "jquery.mousewheel.js"),
-                    new JavaScriptResourceReference(BasePage.class, "jquery.mousewheel-3.0.6.js"),
-                    new JavaScriptResourceReference(BasePage.class, "jquery.mCustomScrollbar.HACK.js")
-            )
-            .done();
 
     private final WebMarkupContainer body;
 

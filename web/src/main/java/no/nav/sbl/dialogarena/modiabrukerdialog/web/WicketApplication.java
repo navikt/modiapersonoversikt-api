@@ -152,7 +152,7 @@ public class WicketApplication extends WebApplication {
 
     private void configureFrontend() {
         new FrontendConfigurator()
-                .withModules(MODIA, BasePage.SCROLL)
+                .withModules(MODIA)
                 .addMetas(
                         MetaTag.XUA_IE_EDGE,
                         MetaTag.CHARSET_UTF8,
@@ -204,6 +204,7 @@ public class WicketApplication extends WebApplication {
                         BasePage.JS_RESOURCE,
                         BasePage.JS_SESSION_TIMEOUT,
                         BasePage.JS_TAB_POPUP_RESOURCE,
+                        BasePage.JS_AUTO_SCROLL_RESOURCE,
                         ShortcutListenerResourceReference.get(),
                         KeyNavigationResourceReference.get(),
                         Widget.JS_RESOURCE,
