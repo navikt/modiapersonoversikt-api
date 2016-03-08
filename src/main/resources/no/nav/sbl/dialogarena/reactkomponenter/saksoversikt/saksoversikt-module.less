@@ -5,6 +5,23 @@
 
   padding: 0 !important;
   height: 100%;
+
+  .ingen-sakstemaer {
+    height: 25em;
+    width: 45em;
+    margin: 2em auto;
+    border: 1px solid @graa;
+    text-align: center;
+  }
+  .ingen-sakstemaer-tekst {
+    margin-top: 1em;
+    color: @graa
+  }
+  .ingensakstemaerimage {
+    height: 45px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
   .saksoversikt-liste {
     position: absolute;
     left: 0;
@@ -21,33 +38,38 @@
     position: absolute;
     top: 0;
     left: 35%;
+    width: 65%;
     height: 100%;
     overflow-x: hidden;
     overflow-y: visible;
   }
   .dokumentliste {
     list-style: none;
-    padding-left: 3rem;
     margin-top: 3rem;
   }
   .dokumentliste-element {
-    margin-top: 2rem;
-    padding-left: 7em;
-    padding-bottom: 2rem;
+    margin-top: 20px;
+    padding-left: 90px;
+    padding-bottom: 20px;
     border-bottom: solid 2px lightgrey;
   }
 
+  .datodokumentliste {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
   .dokument-avsender {
-    font-size: medium;
-    margin-bottom: 1rem;
-    display: block;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
 
-    .avsenderbrukertext {
-
-    }
     .dokument-avsender-nav {
       color: #c30000;
     }
+  }
+  .tema-dokument {
+    font-weight: bold;
   }
 
   .hoveddokument-tittel-wrapper {
@@ -55,15 +77,15 @@
   }
 
   .hoveddokument-tittel {
-    font-size: large;
+    font-size: 16px;
     font-weight: bolder;
   }
 
   .dokument-kan-vises {
     background-repeat: no-repeat;
     background-image: url("@{imgDir}/dokument.png");
-    background-position: 1.2rem 1.2rem;
-    background-size: 3em;
+    background-position: 30px 5px;
+    background-size: 32px;
     &:hover {
       background-image: url("@{imgDir}/dokument_hover.png");
     }
@@ -72,21 +94,29 @@
   .dokument-kan-ikke-vises {
     background-repeat: no-repeat;
     background-image: url("@{imgDir}/dokument_stop.png");
-    background-position: 1.2rem 1.2rem;
-    background-size: 3em;
+    background-position: 30px 5px;
+    background-size: 45px;
     &:hover {
       background-image: url("@{imgDir}/dokument_stop_hover.png");
     }
   }
 
   .vedleggheader {
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
   }
 
   .vedleggliste {
     list-style: disc;
+
+    .vedlegg-element {
+      margin-bottom: 8px;
+    }
+
     .vedleggtext {
       border-bottom: 2px solid @graa;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      margin-bottom: 8px;
     }
     .ingen-sakstemaer {
       width: 80%;
@@ -132,27 +162,60 @@
     padding: 2em 4em;
     text-align: center;
   }
+  .infoingenbidrag {
+    width: 100%;
+    border-bottom: solid 2px lightgrey;
+    background-repeat: no-repeat;
+    background-image: url("@{imgDir}/information-circle.svg");
+    background-size: 1.8rem;
+    padding-left: 6.2rem;
+    padding-bottom: 1rem;
+    background-position: 3rem;
+    padding-top: 1rem;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+  }
 
   .tidligaredokumentimage {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1em;
+    height: 45px;
+    margin-top: 20px;
+    margin-bottom: 16px;
   }
 
   .tidligaredokumentheader {
-    font-size: x-large;
-    margin-bottom: 0.5em;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
   }
 
   .gamle-dokumenter {
     box-shadow: none;
+    text-align: center;
   }
 
   .aarstall {
     background-color: @graa;
     padding: 0.5rem 2rem;
     font-weight: 600;
+  }
+
+  .dokumentheader {
+    padding: 20px;
+
+    .typo-element {
+      display: inline;
+      font-family: Arial,sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .lokal-linker {
+      float: right
+    }
+    a:not(:last-child) {
+      margin-right: 1rem;
+    }
   }
 }
 
@@ -178,8 +241,8 @@
   display: block;
 
   input[type=radio] + label {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 18px;
+    padding-bottom: 18px;
     margin-top: 0;
     width: 100%;
     border: 1px solid transparent;
@@ -220,27 +283,26 @@
 
 .behandlingsstatus-tekst {
   p {
-    margin:0;
+    margin: 0;
     font-size: 0.9rem;
   }
 }
 
 .stortekst {
-  font-family: Modus, Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 1.21rem;
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 0;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
 }
 
 .datotekst {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 0.9rem;
   font-weight: normal;
   margin-bottom: 0;
   margin-top: 0;
-  padding-bottom: 8px;
 }
 
 .decorated {

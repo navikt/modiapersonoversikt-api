@@ -17,8 +17,11 @@ class DokumentinfoVedlegg extends React.Component {
             return <noscript />;
         }
 
-        const vedleggListe = dokumentinfo.vedlegg.map(dokumentVedlegg => (
-            <li><a href="javascript:void(0);" onClick={this._redirect.bind(this)} className="vedleggtext">{dokumentVedlegg.tittel}</a></li>));
+        const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg) => (
+            <li className="vedlegg-element">
+                <a href="javascript:void(0);" onClick={this._redirect.bind(this)}
+                   className="vedleggtext">{dokumentVedlegg.tittel}</a>
+            </li>));
 
         return (
             <div>
