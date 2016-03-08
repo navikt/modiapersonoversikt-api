@@ -32,9 +32,10 @@
     padding: 0 0rem 2rem 0;
     overflow: scroll;
     overflow-x: hidden;
+    position: relative;
     input[type=radio] {
       &:focus, &:hover, &:active {
-        & + label{
+        & + label {
           background-image: none !important;
         }
       }
@@ -49,20 +50,24 @@
       line-height: 1rem;
       margin: 0;
     }
-
   }
+
+  .meldingsliste, .traadDetaljer, .traad-liste-traad-liste-scroll {
+    float: left;
+    height: 100%;
+  }
+
   .traadDetaljer {
+    padding: 0;
     width: 60%;
     overflow-y: visible;
     .traadvisning {
       height: 100%;
+      padding: 22px @sidemargin 0 @sidemargin;
       overflow-y: scroll;
       overflow-x: hidden;
+      position: relative;
     }
-  }
-  .meldingsliste, .traadDetaljer, .traad-liste-traad-liste-scroll {
-    float: left;
-    height: 100%;
   }
 
   a.knapp-hoved-stor {
@@ -93,10 +98,6 @@
   }
 
   .traadDetaljer {
-    padding: 0;
-    .traadvisning {
-      padding: 22px @sidemargin 0 @sidemargin;
-    }
     h2 {
       margin: 0;
     }
