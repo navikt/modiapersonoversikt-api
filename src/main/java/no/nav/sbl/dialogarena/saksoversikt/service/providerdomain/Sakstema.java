@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
-
 import java.util.List;
 
 public class Sakstema {

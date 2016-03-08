@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
 
 public class GsakSakerService {
 

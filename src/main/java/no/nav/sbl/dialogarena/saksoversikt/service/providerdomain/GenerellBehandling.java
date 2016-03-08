@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj;
+package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
 import no.nav.sbl.dialogarena.common.records.Key;
 import org.joda.time.DateTime;

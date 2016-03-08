@@ -4,7 +4,7 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -19,8 +19,8 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DataFletter.hentBehandlingerFraBehandlingskjeder;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BEHANDLING_STATUS;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsStatus.OPPRETTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_STATUS;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus.OPPRETTET;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingService {

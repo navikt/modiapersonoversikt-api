@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator;
 
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Tema;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
 
 import java.util.Comparator;
 

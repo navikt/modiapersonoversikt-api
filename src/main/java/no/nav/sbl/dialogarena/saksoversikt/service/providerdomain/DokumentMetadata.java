@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

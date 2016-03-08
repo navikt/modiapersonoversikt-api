@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain;
 
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.StatiskeLenker;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 
 public enum HenvendelseType {

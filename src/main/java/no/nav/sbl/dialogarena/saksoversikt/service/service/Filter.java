@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator.OmvendtKronologiskHendelseComparator;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.slf4j.Logger;
@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsStatus;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Filter {

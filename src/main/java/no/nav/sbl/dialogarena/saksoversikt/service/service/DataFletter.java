@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.apache.commons.collections15.Predicate;
@@ -15,7 +15,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
 
 public class DataFletter {
 

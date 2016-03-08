@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import org.joda.time.DateMidnight;
 import org.junit.Test;
@@ -11,18 +11,18 @@ import org.junit.Test;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.SOKNAD_TIL_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.Innsendingsvalg.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsType.KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.ETTERSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.SKJEMANUMMER_REF;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.BEHANDLINGSKJEDE_ID;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.BEHANDLINGS_ID;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.Innsendingsvalg.INNSENDT;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.INNSENDT;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -96,9 +96,9 @@ public class TransformersTest {
 
     @Test
     public void skalTransformereEnSoknadTilKvittering() {
-        Record<Dokument> innsendtHovedskjema = new Record<Dokument>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, LASTET_OPP).with(KODEVERK_REF, "kodeverk1");
-        Record<Dokument> innsendtVedlegg = new Record<Dokument>().with(HOVEDSKJEMA, false).with(INNSENDINGSVALG, INNSENDT).with(KODEVERK_REF, "kodeverk2");
-        Record<Dokument> sendSenereVedlegg = new Record<Dokument>().with(HOVEDSKJEMA, false).with(INNSENDINGSVALG, SEND_SENERE).with(KODEVERK_REF, "kodeverk3");
+        Record<DokumentFraHenvendelse> innsendtHovedskjema = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, LASTET_OPP).with(KODEVERK_REF, "kodeverk1");
+        Record<DokumentFraHenvendelse> innsendtVedlegg = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, false).with(INNSENDINGSVALG, INNSENDT).with(KODEVERK_REF, "kodeverk2");
+        Record<DokumentFraHenvendelse> sendSenereVedlegg = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, false).with(INNSENDINGSVALG, SEND_SENERE).with(KODEVERK_REF, "kodeverk3");
 
         Record<Soknad> soknad = new Record<Soknad>()
                 .with(BEHANDLINGS_ID, "123-behandlingsid")
@@ -125,7 +125,7 @@ public class TransformersTest {
 
     @Test
     public void skalLeggeTilHovedskjemaPaaKvitteringHvisHovedskjemaErInnsendt() {
-        Record<Dokument> innsendtHovedskjema = new Record<Dokument>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, LASTET_OPP).with(KODEVERK_REF, "kodeverk1");
+        Record<DokumentFraHenvendelse> innsendtHovedskjema = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, LASTET_OPP).with(KODEVERK_REF, "kodeverk1");
 
         Record<Soknad> soknad = new Record<Soknad>()
                 .with(DOKUMENTER, asList(innsendtHovedskjema));
@@ -138,7 +138,7 @@ public class TransformersTest {
 
     @Test
     public void skalIkkeLeggeTilHovedskjemaPaaKvitteringHvisHovedskjemaIkkeErInnsendt() {
-        Record<Dokument> innsendtHovedskjema = new Record<Dokument>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, SEND_SENERE).with(KODEVERK_REF, "kodeverk1");
+        Record<DokumentFraHenvendelse> innsendtHovedskjema = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, SEND_SENERE).with(KODEVERK_REF, "kodeverk1");
 
         Record<Soknad> soknad = new Record<Soknad>()
                 .with(DOKUMENTER, asList(innsendtHovedskjema));

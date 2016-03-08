@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj;
+package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
 import org.joda.time.DateTime;
 

@@ -3,12 +3,10 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.DokumentMetadataResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.DokumentMetadataResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +18,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -30,8 +27,8 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKod
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.SOKNADSINNSENDING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.HOVEDSKJEMA;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.KODEVERK_REF;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.HOVEDSKJEMA;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.KODEVERK_REF;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -164,7 +161,7 @@ public class DokumentMetadataServiceTest {
                 .with(Soknad.SKJEMANUMMER_REF, "NAV---")
                 .with(Soknad.ETTERSENDING, true)
                 .with(Soknad.TYPE, SOKNADSINNSENDING)
-                .with(Soknad.DOKUMENTER, singletonList(new Record<Dokument>()
+                .with(Soknad.DOKUMENTER, singletonList(new Record<DokumentFraHenvendelse>()
                         .with(HOVEDSKJEMA, true)
                         .with(KODEVERK_REF, "NAV 14-05.00")
                 ));

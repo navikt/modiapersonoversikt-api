@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;

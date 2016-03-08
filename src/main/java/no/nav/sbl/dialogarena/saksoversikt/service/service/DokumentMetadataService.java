@@ -2,11 +2,11 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.DokumentMetadataResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.*;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 
 import javax.inject.Inject;
@@ -29,12 +29,12 @@ public class DokumentMetadataService {
     public static final String DOKTYPE_VEDLEGG = "VEDLEGG";
 
     public static final String DOKUMENT_LASTET_OPP = "LASTET_OPP";
-    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erVedlegg
-            = dokumentRecord -> !dokumentRecord.get(Dokument.HOVEDSKJEMA);
-    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erHoveddokument
-            = dokumentRecord -> dokumentRecord.get(Dokument.HOVEDSKJEMA);
-    public static final Predicate<Record<no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument>> erLastetOpp
-            = dokumentRecord -> DOKUMENT_LASTET_OPP.equals(dokumentRecord.get(Dokument.INNSENDINGSVALG).name());
+    public static final Predicate<Record<DokumentFraHenvendelse>> erVedlegg
+            = dokumentRecord -> !dokumentRecord.get(DokumentFraHenvendelse.HOVEDSKJEMA);
+    public static final Predicate<Record<DokumentFraHenvendelse>> erHoveddokument
+            = dokumentRecord -> dokumentRecord.get(DokumentFraHenvendelse.HOVEDSKJEMA);
+    public static final Predicate<Record<DokumentFraHenvendelse>> erLastetOpp
+            = dokumentRecord -> DOKUMENT_LASTET_OPP.equals(dokumentRecord.get(DokumentFraHenvendelse.INNSENDINGSVALG).name());
 
     @Inject
     private InnsynJournalService innsynJournalService;
@@ -127,10 +127,10 @@ public class DokumentMetadataService {
                 .filter(erHoveddokument)
                 .map(dokumentRecord ->
                         new no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument()
-                                .withTittel(kodeverk.getTittel(dokumentRecord.get(Dokument.KODEVERK_REF)))
+                                .withTittel(kodeverk.getTittel(dokumentRecord.get(DokumentFraHenvendelse.KODEVERK_REF)))
                                 .withKanVises(kanVises)
                                 .withLogiskDokument(false)
-                                .withDokumentreferanse(dokumentRecord.get(Dokument.ARKIVREFERANSE))
+                                .withDokumentreferanse(dokumentRecord.get(DokumentFraHenvendelse.ARKIVREFERANSE))
                 )
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Respons fra henvendelse inneholdt ikke hoveddokument"));
@@ -141,10 +141,10 @@ public class DokumentMetadataService {
                 .filter(erLastetOpp)
                 .map(dokumentRecord ->
                         new no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument()
-                                .withTittel(kodeverk.getTittel(dokumentRecord.get(Dokument.KODEVERK_REF)))
+                                .withTittel(kodeverk.getTittel(dokumentRecord.get(DokumentFraHenvendelse.KODEVERK_REF)))
                                 .withKanVises(kanVises)
                                 .withLogiskDokument(false)
-                                .withDokumentreferanse(dokumentRecord.get(Dokument.ARKIVREFERANSE))
+                                .withDokumentreferanse(dokumentRecord.get(DokumentFraHenvendelse.ARKIVREFERANSE))
                 )
                 .collect(toList());
 

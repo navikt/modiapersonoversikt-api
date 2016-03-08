@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.PdfErKorruptFault;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.SanntidPdfKonvertererV1;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.meldinger.KonverterPdf2BildeRequest;
@@ -15,7 +15,7 @@ import java.util.List;
 
 import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.KORRUPT_PDF;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.PDF_KONVERTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.PDF_KONVERTERING;
 import static no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.informasjon.WSKonverterFra.FOERSTE_SIDE;
 
 public class PDFConverterService {

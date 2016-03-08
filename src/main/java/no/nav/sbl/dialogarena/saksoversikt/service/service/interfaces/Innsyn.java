@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 
 import java.util.List;
 

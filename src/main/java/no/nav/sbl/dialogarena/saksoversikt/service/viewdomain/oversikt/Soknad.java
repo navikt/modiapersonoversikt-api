@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt;
 import no.nav.sbl.dialogarena.common.records.Key;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class Soknad {
     public static final Key<DateTime> SISTENDRET_DATO = new Key<>("SISTENDRET_DATO");
     public static final Key<String> SKJEMANUMMER_REF = new Key<>("SKJEMANUMMER_REF");
     public static final Key<Boolean> ETTERSENDING = new Key<>("ETTERSENDING");
-    public static final Key<List<Record<Dokument>>> DOKUMENTER = new Key<>("DOKUMENTER");
+    public static final Key<List<Record<DokumentFraHenvendelse>>> DOKUMENTER = new Key<>("DOKUMENTER");
     public static final Key<HenvendelseType> TYPE = new Key<>("TYPE");
 
 }

@@ -6,9 +6,9 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHovedskje
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Tema;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -18,17 +18,17 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.Innsendingsvalg.LASTET_OPP;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.Innsendingsvalg.SEND_SENERE;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BEHANDLINGKVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BEHANDLING_DATO;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BEHANDLING_STATUS;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsStatus.OPPRETTET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsType.BEHANDLING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BehandlingsType.KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering.JOURNALPOST_ID;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.LASTET_OPP;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.SEND_SENERE;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLINGKVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_DATO;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_STATUS;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus.OPPRETTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.JOURNALPOST_ID;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.BEHANDLINGS_ID;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.ETTERSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.UNDER_ARBEID;
@@ -65,13 +65,13 @@ public class MockCreationUtil {
                 .with(ETTERSENDING, false)
                 .with(KVITTERINGSTYPE, DOKUMENTINNSENDING)
                 .with(INNSENDTE_DOKUMENTER, asList(
-                        new Record<Dokument>()
+                        new Record<DokumentFraHenvendelse>()
                                 .with(KODEVERK_REF, "bla")
                                 .with(INNSENDINGSVALG, LASTET_OPP)
                                 .with(ARKIVREFERANSE, "1234")
                                 .with(UUID, "123-abc")
                                 .with(HOVEDSKJEMA, false),
-                        new Record<Dokument>()
+                        new Record<DokumentFraHenvendelse>()
                                 .with(KODEVERK_REF, "bla2")
                                 .with(INNSENDINGSVALG, LASTET_OPP)
                                 .with(ARKIVREFERANSE, "4321")
@@ -79,7 +79,7 @@ public class MockCreationUtil {
                                 .with(HOVEDSKJEMA, false)
                 ))
                 .with(Kvittering.MANGLENDE_DOKUMENTER, asList(
-                        new Record<Dokument>()
+                        new Record<DokumentFraHenvendelse>()
                                 .with(KODEVERK_REF, "bla3")
                                 .with(INNSENDINGSVALG, SEND_SENERE)
                                 .with(HOVEDSKJEMA, false)

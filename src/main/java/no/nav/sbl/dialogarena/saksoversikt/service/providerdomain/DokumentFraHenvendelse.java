@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj;
+package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
 import no.nav.sbl.dialogarena.common.records.Key;
 import no.nav.sbl.dialogarena.common.records.Record;
@@ -6,7 +6,7 @@ import org.apache.commons.collections15.Predicate;
 
 import static java.util.Arrays.asList;
 
-public class Dokument {
+public class DokumentFraHenvendelse {
 
     public static final Key<String> KODEVERK_REF = new Key<>("KODEVERK_REF");
     public static final Key<String> TILLEGGSTITTEL = new Key<>("TILLEGGSTITTEL");
@@ -16,11 +16,11 @@ public class Dokument {
     public static final Key<Boolean> HOVEDSKJEMA = new Key<>("HOVEDSKJEMA");
 
 
-    public static final Predicate<Record<Dokument>> INNSENDT = dokument -> asList(Innsendingsvalg.INNSENDT, Innsendingsvalg.LASTET_OPP).contains(dokument.get(INNSENDINGSVALG));
+    public static final Predicate<Record<DokumentFraHenvendelse>> INNSENDT = dokument -> asList(Innsendingsvalg.INNSENDT, Innsendingsvalg.LASTET_OPP).contains(dokument.get(INNSENDINGSVALG));
 
-    public static final Predicate<Record<Dokument>> ER_HOVEDSKJEMA = dokument -> dokument.get(HOVEDSKJEMA);
+    public static final Predicate<Record<DokumentFraHenvendelse>> ER_HOVEDSKJEMA = dokument -> dokument.get(HOVEDSKJEMA);
 
-    public static final Predicate<Record<Dokument>> ER_KVITTERING = dokument -> dokument.get(KODEVERK_REF).equals("L7");
+    public static final Predicate<Record<DokumentFraHenvendelse>> ER_KVITTERING = dokument -> dokument.get(KODEVERK_REF).equals("L7");
 
     public enum Innsendingsvalg {
         IKKE_VALGT, SEND_SENERE, LASTET_OPP, SENDES_IKKE, VEDLEGG_SENDES_IKKE, VEDLEGG_SENDES_AV_ANDRE, INNSENDT, VEDLEGG_ALLEREDE_SENDT

@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt;
 
 import no.nav.sbl.dialogarena.common.records.Key;
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
 
 public class Tema {
 

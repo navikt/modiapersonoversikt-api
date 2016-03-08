@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
 
 public class FeilendeBaksystemException extends RuntimeException {
 

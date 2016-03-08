@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator;
 
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator.OmvendtKronologiskHendelseComparator;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -10,8 +9,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling.BEHANDLING_DATO;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering.SKJEMANUMMER_REF;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_DATO;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.SKJEMANUMMER_REF;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 

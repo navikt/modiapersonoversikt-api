@@ -1,4 +1,7 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj;
+package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere;
+
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 
 import java.util.List;
 import java.util.Set;

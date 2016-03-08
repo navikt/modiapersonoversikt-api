@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
@@ -13,13 +13,13 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class PesysService {
     private static final Logger LOGGER = getLogger(PesysService.class);
 
-    public static String PESYS_FAGSYSTEM_ID = "PEN";
+    public static final String PESYS_FAGSYSTEM_ID = "PEN";
 
     @Inject
     private PensjonSakV1 pensjonSakV1;

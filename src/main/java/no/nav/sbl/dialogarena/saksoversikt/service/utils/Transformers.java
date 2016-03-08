@@ -4,9 +4,9 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
@@ -27,9 +27,9 @@ import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Dokument.Innsendingsvalg;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering.BehandlingsStatus;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Kvittering.BehandlingsType;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.BehandlingsStatus;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.BehandlingsType;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
 
@@ -50,19 +50,19 @@ public class Transformers {
                     .with(GenerellBehandling.BEHANDLINGKVITTERING, BehandlingsType.KVITTERING)
                     .with(Kvittering.ETTERSENDING, soknadRecord.get(Soknad.ETTERSENDING))
                     .with(Kvittering.ARKIVREFERANSE_ORIGINALKVITTERING, arkivreferanseOriginalkvittering(soknadRecord))
-                    .with(Kvittering.INNSENDTE_DOKUMENTER, filtrerVedlegg(soknadRecord, Dokument.INNSENDT))
-                    .with(Kvittering.MANGLENDE_DOKUMENTER, filtrerVedlegg(soknadRecord, both(not(Dokument.INNSENDT)).and(not(Dokument.ER_HOVEDSKJEMA))));
+                    .with(Kvittering.INNSENDTE_DOKUMENTER, filtrerVedlegg(soknadRecord, DokumentFraHenvendelse.INNSENDT))
+                    .with(Kvittering.MANGLENDE_DOKUMENTER, filtrerVedlegg(soknadRecord, both(not(DokumentFraHenvendelse.INNSENDT)).and(not(DokumentFraHenvendelse.ER_HOVEDSKJEMA))));
         }
 
         private Optional<String> arkivreferanseOriginalkvittering(Record<Soknad> soknad) {
             return on(soknad.get(Soknad.DOKUMENTER))
-                    .filter(Dokument.ER_KVITTERING)
+                    .filter(DokumentFraHenvendelse.ER_KVITTERING)
                     .map(arkivreveranse())
                     .head();
         }
 
-        private Transformer<Record<Dokument>, String> arkivreveranse() {
-            return dokument -> dokument.get(Dokument.ARKIVREFERANSE);
+        private Transformer<Record<DokumentFraHenvendelse>, String> arkivreveranse() {
+            return dokument -> dokument.get(DokumentFraHenvendelse.ARKIVREFERANSE);
         }
 
     };
@@ -137,21 +137,21 @@ public class Transformers {
                         .map(tilDokument(wsSoknad.getHovedskjemaKodeverkId())).collect());
     };
 
-    public static Transformer<WSDokumentforventning, Record<Dokument>> tilDokument(final String hovedskjemaId) {
-        return wsDokumentforventning -> new Record<Dokument>()
-                .with(Dokument.KODEVERK_REF, wsDokumentforventning.getKodeverkId())
-                .with(Dokument.TILLEGGSTITTEL, wsDokumentforventning.getTilleggsTittel())
-                .with(Dokument.UUID, wsDokumentforventning.getUuid())
-                .with(Dokument.ARKIVREFERANSE, wsDokumentforventning.getArkivreferanse())
-                .with(Dokument.INNSENDINGSVALG, Innsendingsvalg.valueOf(wsDokumentforventning.getInnsendingsvalg()))
-                .with(Dokument.HOVEDSKJEMA, hovedskjemaId.equals(wsDokumentforventning.getKodeverkId()));
+    public static Transformer<WSDokumentforventning, Record<DokumentFraHenvendelse>> tilDokument(final String hovedskjemaId) {
+        return wsDokumentforventning -> new Record<DokumentFraHenvendelse>()
+                .with(DokumentFraHenvendelse.KODEVERK_REF, wsDokumentforventning.getKodeverkId())
+                .with(DokumentFraHenvendelse.TILLEGGSTITTEL, wsDokumentforventning.getTilleggsTittel())
+                .with(DokumentFraHenvendelse.UUID, wsDokumentforventning.getUuid())
+                .with(DokumentFraHenvendelse.ARKIVREFERANSE, wsDokumentforventning.getArkivreferanse())
+                .with(DokumentFraHenvendelse.INNSENDINGSVALG, Innsendingsvalg.valueOf(wsDokumentforventning.getInnsendingsvalg()))
+                .with(DokumentFraHenvendelse.HOVEDSKJEMA, hovedskjemaId.equals(wsDokumentforventning.getKodeverkId()));
     }
 
     public static final Transformer<WSSak, String> TEMAKODE_FOR_SAK = wsSak -> wsSak.getSakstema().getValue();
     
-    private static List<Record<Dokument>> filtrerVedlegg(Record<Soknad> soknad, Predicate<Record<Dokument>> betingelse) {
+    private static List<Record<DokumentFraHenvendelse>> filtrerVedlegg(Record<Soknad> soknad, Predicate<Record<DokumentFraHenvendelse>> betingelse) {
         return on(soknad.get(Soknad.DOKUMENTER))
-                .filter(both(betingelse).and(not(Dokument.ER_KVITTERING)))
+                .filter(both(betingelse).and(not(DokumentFraHenvendelse.ER_KVITTERING)))
                 .collect();
     }
 }
