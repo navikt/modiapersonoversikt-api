@@ -33,20 +33,23 @@ class DokumentVisningPage extends React.Component {
         };
 
         return (
-            <div className="grattpanel side-innhold">
-                <div className="blokk-s">
+            <div className="dokument-visning-page">
+                <div className="fixed-header blokk-s">
                     <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
                 </div>
-                <panel className="panel">
-                    <h1 className="decorated typo-innholdstittel">
-                        <FormattedMessage id="dokumentvisning.retningsstatus" values={values} />
-                        <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
-                    </h1>
-                    <section>
-                        <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter} />
-                        <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
-                    </section>
-                </panel>
+
+                <div className="grattpanel side-innhold">
+                    <panel className="panel">
+                        <h1 className="decorated typo-innholdstittel">
+                            <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
+                            <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
+                        </h1>
+                        <section>
+                            <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter}/>
+                            <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
+                        </section>
+                    </panel>
+                </div>
             </div>
         )
     };

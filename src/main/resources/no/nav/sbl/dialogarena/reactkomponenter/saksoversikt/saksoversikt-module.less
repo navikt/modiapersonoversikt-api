@@ -202,13 +202,13 @@
   }
 
   .dokumentheader {
-    padding: 20px;
+    margin-bottom: 20px;
 
     .typo-element {
       display: inline;
-      font-family: Arial,sans-serif;
+      font-family: Arial, sans-serif;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 16px;
     }
     .lokal-linker {
       float: right
@@ -216,6 +216,18 @@
     a:not(:last-child) {
       margin-right: 1rem;
     }
+  }
+  .dokument-visning-page {
+    height: 100%;
+  }
+  .fixed-header {
+    background-color: #E1E1E1;
+    padding: 2rem 3rem 1rem 3rem;
+    margin: 0;
+    position: absolute;
+    left: 0;
+    right: 17px;
+    z-index: 1100;
   }
 }
 
@@ -253,8 +265,8 @@
   }
 
   input[type=radio]:focus + label {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 18px;
+    padding-bottom: 18px;
     margin-top: 0;
     outline: none;
     box-shadow: inset 0 0 0 2px #ffbd66;
@@ -307,14 +319,14 @@
 
 .decorated {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   display: block;
 }
 
 .typo-innholdstittel {
-  font-size: 2.5rem;
-  font-weight: 600;
+  font-size: 2.15rem;
   font-family: Modus, Arial, sans-serif;
+  font-weight: 600;
 }
 
 .panel {
@@ -326,7 +338,7 @@
 
 .grattpanel {
   background: #e1e1e1;
-  padding: 2rem 5rem 5rem 5rem;
+  padding: 4rem 3rem 5rem 3rem;
   overflow-x: hidden;
   overflow-y: visible;
   height: 100%;
@@ -370,6 +382,7 @@
 
 .feilmelding-bakgrunn {
   border: 1px solid black;
+  width: 100%;
 }
 
 .text-center {
