@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.DokumentMetadataResultatWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -154,26 +155,26 @@ public class DokumentControllerTest {
         assertThat(response.getStatus(), is(403));
     }
 
-    private List<DokumentMetadata> lagDokumentMetadataListe(String temakode) {
-        return asList(
+    private DokumentMetadataResultatWrapper lagDokumentMetadataListe(String temakode) {
+        return new DokumentMetadataResultatWrapper(asList(
                 new DokumentMetadata()
                         .withJournalpostId("123")
                         .withHoveddokument(new Dokument().withTittel("Tittel for hoveddokument"))
                         .withTemakode(temakode)
                         .withVedlegg(asList())
 
-        );
+        ), null);
     }
 
-    private List<DokumentMetadata> lagDokumentMetadataIkkeJournalfortListe(String temakode) {
-        return asList(
+    private DokumentMetadataResultatWrapper lagDokumentMetadataIkkeJournalfortListe(String temakode) {
+        return new DokumentMetadataResultatWrapper(asList(
                 new DokumentMetadata()
                         .withJournalpostId("123")
                         .withIsJournalfort(false)
                         .withHoveddokument(new Dokument().withTittel("Tittel for hoveddokument"))
                         .withTemakode(temakode)
                         .withVedlegg(asList())
-        );
+        ), null);
     }
 
     private Cookie[] lagSaksbehandlerCookie(String valgtEnhet) {

@@ -18,7 +18,6 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 
 @Path("/saksoversikt/{fnr}")
@@ -43,8 +42,9 @@ public class SaksoversiktController {
     @GET
     @Path("/sakstema")
     public Response hentSakstema(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
-        List<Sakstema> sakstemaliste = saksService.hentSakstema(saksService.hentAlleSaker(fnr), fnr, false)
-                .collect(toList());
+        List<Sakstema> sakstemaliste = saksService
+                .hentSakstema(saksService.hentAlleSaker(fnr).alleSaker, fnr, false)
+                .sakstema;
 
         String valgtEnhet = hentValgtEnhet(request);
         Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);

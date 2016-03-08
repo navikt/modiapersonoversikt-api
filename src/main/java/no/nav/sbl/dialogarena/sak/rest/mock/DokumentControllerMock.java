@@ -29,7 +29,8 @@ public class DokumentControllerMock {
 
     public static JournalpostResultat mockJournalpost() {
         return new JournalpostResultat()
-                .withTittel("Hoveddokumenttittel");
+                .withTittel("Hoveddokumenttittel")
+                .withDokument(new DokumentResultat("Fancy dokument", 7, "101080003987", "123456", "123456"));
 //                .withDokumentFeilmelding(new DokumentFeilmelding(DOKUMENT_IKKE_FUNNET.feilmeldingKey, BLURRED_DOKUMENT, new HashMap()));
     }
 
