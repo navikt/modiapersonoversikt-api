@@ -36,6 +36,7 @@ import org.apache.commons.collections15.Closure;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -62,6 +63,7 @@ import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveB
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
@@ -147,12 +149,14 @@ public class PersonPage extends BasePage {
     }
 
     private void clearSession() {
+        final Session session = getSession();
         on(URL_TIL_SESSION_PARAMETERE).forEach(new Closure<String>() {
             @Override
             public void execute(String param) {
-                getSession().removeAttribute(param);
+                session.removeAttribute(param);
             }
         });
+        session.removeAttribute(BESVARMODUS);
     }
 
     @Override
@@ -231,6 +235,7 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, PageParameters pageParameters) {
+        clearSession();
         handleRedirect(target, pageParameters, PersonPage.class);
     }
 
@@ -334,7 +339,7 @@ public class PersonPage extends BasePage {
 
         @Override
         public void onClick(AjaxRequestTarget target) {
-            getSession().setAttribute(HENT_PERSON_BEGRUNNET, "");
+            clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }
     }
