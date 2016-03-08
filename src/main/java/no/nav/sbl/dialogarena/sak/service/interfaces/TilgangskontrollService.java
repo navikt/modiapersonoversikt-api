@@ -3,11 +3,14 @@ package no.nav.sbl.dialogarena.sak.service.interfaces;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 public interface TilgangskontrollService {
-    TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(String journalpostId, String fnr, String sakstemakode);
+    boolean harSaksbehandlerTilgangTilDokument(String sakstemakode, String valgtEnhet);
     List<ModiaSakstema> harSaksbehandlerTilgangTilSakstema(List<Sakstema> sakstema, String valgtEnhet);
+    Optional<Response> harGodkjentEnhet(String valgtEnhet, HttpServletRequest request);
 }
