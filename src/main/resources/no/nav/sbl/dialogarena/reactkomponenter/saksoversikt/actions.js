@@ -52,8 +52,7 @@ export const hentDokumentData = (fnr, valgtjournalpost) => {
         const journalpostmetadata = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/journalpostmetadata/${valgtjournalpost.journalpostId}?temakode=${valgtjournalpost.temakode}`);
 
         dispatch({ type: AT.LAST_DOKUMENT_DATA_START });
-        return Q
-            .all([journalpostmetadata])
+        return journalpostmetadata
             .then(promisedDispatch(AT.LAST_DOKUMENT_DATA_OK))
             .catch(rethrow(promisedDispatch(AT.LAST_DOKUMENT_DATA_FEIL)));
     }
