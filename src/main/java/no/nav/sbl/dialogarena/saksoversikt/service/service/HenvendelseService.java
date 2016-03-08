@@ -21,6 +21,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.SOKNAD;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.HENVENDELSE;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.FERDIG;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.STATUS;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.UNDER_ARBEID;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.valueOf;
@@ -45,7 +46,7 @@ public class HenvendelseService {
     }
 
     public List<Record<Kvittering>> hentKvitteringer(String fnr) {
-        return hentHenvendelsessoknader(fnr).stream().map(SOKNAD_TIL_KVITTERING::transform).collect(toList());
+        return hentHenvendelsessoknaderMedStatus(FERDIG, fnr).stream().map(SOKNAD_TIL_KVITTERING::transform).collect(toList());
     }
 
     public List<Record<Soknad>> hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus status, String fnr) {
