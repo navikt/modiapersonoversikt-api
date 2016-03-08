@@ -12,6 +12,7 @@ import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSFagsystemer;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSSak;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSSoekeFilter;
+import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSVariantformater;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentRequest;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentResponse;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentJournalpostListeRequest;
@@ -63,15 +64,19 @@ public class InnsynImpl implements Innsyn {
         WSHentDokumentRequest wsRequest = new WSHentDokumentRequest();
         wsRequest.setDokumentId(dokumentreferanse);
         wsRequest.setJournalpostId(journalpostid);
+        wsRequest.setVariantformat(new WSVariantformater()
+                .withKodeRef("http://nav.no/kodeverk/Term/Variantformater/ARKIV/nb/Arkiv?v=1")
+                .withValue("ARKIV")
+        );
 
         try {
             WSHentDokumentResponse wsResponse = joarkV2.hentDokument(wsRequest);
             return new TjenesteResultatWrapper(wsResponse.getDokument());
         } catch (HentDokumentSikkerhetsbegrensning e) {
-            logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke funnet. {}", journalpostid, dokumentreferanse, e.getMessage());
+            logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke hentet grunnet en sikkerhetsbegrensning. {}", journalpostid, dokumentreferanse, e.getMessage());
             return new TjenesteResultatWrapper(DOKUMENT_IKKE_FUNNET);
         } catch (HentDokumentDokumentIkkeFunnet e) {
-            logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke hentet grunnet en sikkerhetsbegrensning. {}", journalpostid, dokumentreferanse, e.getMessage());
+            logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke funnet. {}", journalpostid, dokumentreferanse, e.getMessage());
             return new TjenesteResultatWrapper(SIKKERHETSBEGRENSNING);
         } catch (RuntimeException e) {
             logger.error("Det skjedde en ukjent feil under henting av dokumentet med journalpostid '{}' og dokumentid '{}'.", journalpostid, dokumentreferanse, e);
