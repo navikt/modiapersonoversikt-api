@@ -11,7 +11,7 @@ const Utgaaende = ({ mottaker, mottakerNavn}) => {
     const til = mottaker === 'SLUTTBRUKER' ? <noscript/> :
         <FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: mottakerNavn } }/>;
 
-    return <div className="dokument-avsender">{fra} {til}</div>;
+    return <span className="dokument-avsender">{fra} {til}</span>;
 };
 
 Utgaaende.propTypes = {

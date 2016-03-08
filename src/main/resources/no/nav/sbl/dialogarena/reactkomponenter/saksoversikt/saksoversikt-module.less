@@ -38,6 +38,7 @@
     position: absolute;
     top: 0;
     left: 35%;
+    width: 65%;
     height: 100%;
     overflow-x: hidden;
     overflow-y: visible;
@@ -62,14 +63,13 @@
     font-size: 14px;
     font-family: Arial, sans-serif;
     margin-bottom: 8px;
-    display: block;
 
-    .avsenderbrukertext {
-
-    }
     .dokument-avsender-nav {
       color: #c30000;
     }
+  }
+  .tema-dokument {
+    font-weight: bold;
   }
 
   .hoveddokument-tittel-wrapper {
@@ -84,7 +84,7 @@
   .dokument-kan-vises {
     background-repeat: no-repeat;
     background-image: url("@{imgDir}/dokument.png");
-    background-position: 30px 30px;
+    background-position: 30px 5px;
     background-size: 32px;
     &:hover {
       background-image: url("@{imgDir}/dokument_hover.png");
@@ -94,7 +94,7 @@
   .dokument-kan-ikke-vises {
     background-repeat: no-repeat;
     background-image: url("@{imgDir}/dokument_stop.png");
-    background-position: 30px 30px;
+    background-position: 30px 5px;
     background-size: 45px;
     &:hover {
       background-image: url("@{imgDir}/dokument_stop_hover.png");
@@ -107,6 +107,11 @@
 
   .vedleggliste {
     list-style: disc;
+
+    .vedlegg-element {
+      margin-bottom: 8px;
+    }
+
     .vedleggtext {
       border-bottom: 2px solid @graa;
       font-size: 14px;
@@ -223,8 +228,8 @@
   display: block;
 
   input[type=radio] + label {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 18px;
+    padding-bottom: 18px;
     margin-top: 0;
     width: 100%;
     border: 1px solid transparent;
@@ -271,21 +276,20 @@
 }
 
 .stortekst {
-  font-family: Modus, Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 1.21rem;
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 0;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
 }
 
 .datotekst {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 0.9rem;
   font-weight: normal;
   margin-bottom: 0;
   margin-top: 0;
-  padding-bottom: 8px;
 }
 
 .decorated {
