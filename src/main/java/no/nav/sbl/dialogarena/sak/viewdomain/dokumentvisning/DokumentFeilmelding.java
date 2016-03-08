@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning;
 
 import java.util.Map;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 
 public class DokumentFeilmelding {
 

@@ -11,23 +11,21 @@ import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
@@ -45,42 +43,75 @@ public class DokumentController {
     @Inject
     private TilgangskontrollService tilgangskontrollService;
 
-    private final String DOKUMENTID_IKKE_FUNNET = "x";
+    public final static String TEMAKODE_BIDRAG = "BID";
     public final static String BLURRED_DOKUMENT = getProperty("modapp.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
 
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
-    public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @PathParam("dokumentreferanse") String dokumentreferanse) throws IOException {
+    public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
+                                 @PathParam("dokumentreferanse") String dokumentreferanse,
+                                 @Context HttpServletRequest request) throws IOException {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return mockDokumentResponse();
+        }
+
+        String valgtEnhet = hentValgtEnhet(request);
+
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
+        if (response.isPresent()) {
+            return response.get();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         String temakode = journalpostMetadata.getTemakode();
 
-        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
-            return status(403).build();
+        if (finnesIkkeIJoarkPaBruker(journalpostMetadata) || temakodeErBidrag(temakode)) {
+            return status(Response.Status.FORBIDDEN).build();
+        }
+
+        boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
+        if (!harSaksbehandlerTilgang) {
+            return status(Response.Status.FORBIDDEN).build();
         }
 
         TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(dokumentreferanse, journalpostId);
         return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
-                .orElse(status(404).build());
+                .orElse(status(Response.Status.NOT_FOUND).build());
     }
 
     @GET
     @Path("/journalpostmetadata/{journalpostId}")
-    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @QueryParam("temakode") String temakode) {
+    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
+                                            @QueryParam("temakode") String temakode, @Context HttpServletRequest request) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
+        }
+
+        String valgtEnhet = hentValgtEnhet(request);
+
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
+        if (response.isPresent()) {
+            return response.get();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         JournalpostResultat resultat = new JournalpostResultat()
                 .withTittel(journalpostMetadata.getHoveddokument().getTittel());
 
+        if (temakodeErBidrag(journalpostMetadata.getTemakode())) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(TEMAKODE_ER_BIDRAG, journalpostMetadata.getHoveddokument().getTittel()));
+            return ok(resultat).build();
+        }
+
         if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
             resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
+            return ok(resultat).build();
+        }
+
+        boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
+        if (!harSaksbehandlerTilgang) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(SAKSBEHANDLER_IKKE_TILGANG, journalpostMetadata.getHoveddokument().getTittel()));
             return ok(resultat).build();
         }
 
@@ -104,6 +135,10 @@ public class DokumentController {
 
         resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, journalpostMetadata.getHoveddokument().getTittel()));
         return ok(resultat).build();
+    }
+
+    private boolean temakodeErBidrag(String temakode) {
+        return TEMAKODE_BIDRAG.equals(temakode);
     }
 
     private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
