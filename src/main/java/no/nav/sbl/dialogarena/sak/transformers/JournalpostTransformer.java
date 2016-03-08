@@ -72,7 +72,7 @@ public class JournalpostTransformer {
         if (aktoer instanceof WSPerson) {
             WSPerson wsPerson = (WSPerson) aktoer;
             if (!fnr.equals(wsPerson.getIdent())) {
-                return wsPerson.getIdent();
+                return wsPerson.getNavn();
             }
             return wsPerson.getNavn();
         } else if (aktoer instanceof WSOrganisasjon) {
@@ -92,8 +92,10 @@ public class JournalpostTransformer {
                 );
     }
 
-    Function<WSDokumentinfoRelasjon, Dokument> opprettDokument = (dokumentRel) -> new Dokument().withTittel(dokumentRel.getJournalfoertDokument().getTittel())
+    Function<WSDokumentinfoRelasjon, Dokument> opprettDokument = (dokumentRel) -> new Dokument()
+            .withTittel(dokumentRel.getJournalfoertDokument().getTittel())
             .withLogiskDokument(false)
+            .withKanVises(dokumentRel.getJournalfoertDokument() != null && dokumentRel.getJournalfoertDokument().isErBegrensetPartsInnsyn() ? false : true)
             .withDokumentreferanse(dokumentRel.getJournalfoertDokument().getDokumentId());
 
     Function<WSSkannetInnhold, Dokument> opprettLogiskDokument = skannetInnhold ->

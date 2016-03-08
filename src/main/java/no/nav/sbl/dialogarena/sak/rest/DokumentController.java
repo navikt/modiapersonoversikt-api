@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
 
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJo
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.*;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
@@ -86,7 +88,7 @@ public class DokumentController {
 
         //Dette betyr at den enten ikke er journalfort eller er journalfort pa en annen bruker
         if (finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, journalpostMetadata.getHoveddokument().getTittel()));
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(Feilmelding.JOURNALFORT_FEIL, journalpostMetadata.getHoveddokument().getTittel()));
             return ok(resultat).build();
         }
 
@@ -107,7 +109,7 @@ public class DokumentController {
     }
 
     private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
-        return !journalpostMetadata.isErJournalfort();
+        return !journalpostMetadata.isErJournalfort() && journalpostMetadata.getAvsender() == SLUTTBRUKER;
     }
 
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {

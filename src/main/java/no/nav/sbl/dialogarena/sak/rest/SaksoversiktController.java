@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -26,6 +27,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/saksoversikt/{fnr}")
@@ -57,13 +59,6 @@ public class SaksoversiktController {
     public Response hentSakstema(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         List<Sakstema> sakstemaliste = saksService.hentSakstema(saksService.hentAlleSaker(fnr), fnr, false)
                 .collect(toList());
-
-        sakstemaliste.stream()
-                .forEach(sakstema -> sakstema.dokumentMetadata
-                        .stream()
-                        .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
-                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER))
-                        .collect(toList()));
 
         String valgtEnhet = hentValgtEnhet(request);
         List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
