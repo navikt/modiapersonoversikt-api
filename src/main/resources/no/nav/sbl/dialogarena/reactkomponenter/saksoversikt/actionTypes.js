@@ -1,5 +1,6 @@
 // Brukes for å hente ut bare temaer
 export const LAST_WIDGET_DATA_START = 'LAST_WIDGET_DATA_START';
+export const LAST_WIDGET_DATA_TEKSTER_OK = 'LAST_WIDGET_DATA_TEKSTER_OK';
 export const LAST_WIDGET_DATA_OK = 'LAST_WIDGET_DATA_OK';
 export const LAST_WIDGET_DATA_FEIL = 'LAST_WIDGET_DATA_FEIL';
 

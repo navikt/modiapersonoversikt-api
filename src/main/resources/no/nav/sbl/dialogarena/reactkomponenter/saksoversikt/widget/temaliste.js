@@ -13,7 +13,7 @@ const ANTALL_TEMAER = 6;
 
 function widgetSnurrepipp(status) {
     const initial = document.querySelector('.widget-saksoversikt .klikkbar-header .initial');
-    if (status === Const.LASTER) {
+    if (status === Const.LASTER || status === Const.TEKST_OK) {
         initial.classList.add('loading');
     } else {
         initial.classList.remove('loading');
@@ -34,14 +34,13 @@ class Temaliste extends React.Component {
     render() {
         const { temaer, fnr, tekster, status } = this.props;
 
-        if (status !== Const.LASTET) {
+        if (status === Const.LASTER || status === 'VOID' || status === Const.TEKST_OK) {
             return <noscript></noscript>;
         }
 
-        const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
-        const temaliste = redusertAntallTemaer.map((tema) =>
-            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
-        );
+        const temaliste = status === Const.FEILET ? <li className="widget-feilmelding"><FormattedMessage id="sakswidget.feilmelding.sakogbehandling" /></li>
+            :  take(temaer, ANTALL_TEMAER).map((tema) =>
+            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
 
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={tekster}>

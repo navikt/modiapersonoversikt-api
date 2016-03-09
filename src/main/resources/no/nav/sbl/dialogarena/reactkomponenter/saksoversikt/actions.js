@@ -16,14 +16,18 @@ export const hentWidgetData = (fnr) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
         const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
+        const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
 
         dispatch({ type: AT.LAST_WIDGET_DATA_START });
-        return Q
-            .all([temaer, tekster, fnr])
-            .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
-            .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)));
+
+        return tekster
+            .then(fnr)
+            .then(promisedDispatch(AT.LAST_WIDGET_DATA_TEKSTER_OK))
+            .then(temaer
+                .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
+                .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)))
+            .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL))));
     }
 };
 
