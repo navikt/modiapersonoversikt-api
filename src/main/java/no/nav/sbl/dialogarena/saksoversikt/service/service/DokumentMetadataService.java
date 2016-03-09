@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static java.lang.Boolean.*;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.empty;
@@ -90,7 +91,8 @@ public class DokumentMetadataService {
 
         Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse
                 .stream()
-                .filter(finnesIkkeIJoark(joarkMetadataListe));
+                .filter(finnesIkkeIJoark(joarkMetadataListe))
+                .map(dokumentMetadata -> dokumentMetadata.withIsJournalfort(FALSE));
 
         return new DokumentMetadataResultatWrapper(Java8Utils.concat(
                 populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),
