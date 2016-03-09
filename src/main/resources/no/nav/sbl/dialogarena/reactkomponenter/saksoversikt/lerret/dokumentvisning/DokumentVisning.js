@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { debounce, autobind } from './../../../utils/utils-module';
+import { Element } from 'react-scroll';
 
 const a4Ratio = 2 / Math.sqrt(2);
 const stylingFn = (antallSider, width = 750) => ({
@@ -67,7 +68,7 @@ class DokumentVisning extends Component {
         const style = { ...this.state };
 
         return (
-            <section key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
+            <Element name={dokument.dokumentreferanse} key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
                 <div className="dokumentheader blokk-xxxs">
                     <h2 className="typo-element">{dokument.tittel}</h2>
                     <div className="lokal-linker">
@@ -87,7 +88,7 @@ class DokumentVisning extends Component {
                         Åpne i egen fane
                     </a>
                 </object>
-            </section>
+            </Element>
         );
     }
 }
