@@ -95,7 +95,7 @@ public class JournalpostTransformer {
     Function<WSDokumentinfoRelasjon, Dokument> opprettDokument = (dokumentRel) -> new Dokument()
             .withTittel(dokumentRel.getJournalfoertDokument().getTittel())
             .withLogiskDokument(false)
-            .withKanVises(dokumentRel.getJournalfoertDokument() != null && dokumentRel.getJournalfoertDokument().isErBegrensetPartsInnsyn() ? false : true)
+            .withKanVises(true)
             .withDokumentreferanse(dokumentRel.getJournalfoertDokument().getDokumentId());
 
     Function<WSSkannetInnhold, Dokument> opprettLogiskDokument = skannetInnhold ->
