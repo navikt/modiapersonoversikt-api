@@ -1,6 +1,16 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-const Intern = () => <div className="dokument-avsender"><FormattedMessage id="dokumentinfo.forvaltningsnotat"/></div>;
+const Intern = ({ kategoriNotat }) => {
+    const notat = kategoriNotat === 'FORVALTNINGSNOTAT' ?
+        <FormattedMessage id="dokumentinfo.forvaltningsnotat"/> :
+        <FormattedMessage id="dokumentinfo.internnotat"/>;
+
+    return (
+        <span className="dokument-avsender">
+            {notat}
+        </span>
+    );
+};
 
 export default Intern;
