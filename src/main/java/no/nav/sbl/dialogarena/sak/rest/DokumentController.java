@@ -70,7 +70,7 @@ public class DokumentController {
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
-        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata);
+        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata, fnr, journalpostMetadata.getTemakode());
 
         if (harIkkeTilgang(tilgangskontrollResult) || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
             return status(FORBIDDEN).build();
@@ -97,7 +97,7 @@ public class DokumentController {
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         String hovedtittel = journalpostMetadata.getHoveddokument().getTittel();
 
-        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata);
+        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata, fnr, temakode);
         if (harIkkeTilgang(tilgangskontrollResult)) {
             JournalpostResultat feilside = new JournalpostResultat().withDokumentFeilmelding(blurretDokumentReferanseResponse(tilgangskontrollResult.feilmelding, hovedtittel, tilgangskontrollResult.ekstraFeilInfo));
             return ok(feilside).build();

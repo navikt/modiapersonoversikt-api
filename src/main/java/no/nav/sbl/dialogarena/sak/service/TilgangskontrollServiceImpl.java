@@ -41,7 +41,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
 
-    public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata) {
+    public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode) {
         String valgtEnhet = hentValgtEnhet(request);
         String temakode = journalpostMetadata.getTemakode();
 
@@ -49,10 +49,10 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             return new TjenesteResultatWrapper(SAKSBEHANDLER_IKKE_TILGANG);
         } else if (temakodeErBidrag(temakode)) {
             return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
-        } else if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
-            return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakode()));
+        } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
+            return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning()));
         } else if (!journalpostMetadata.isErJournalfort()) {
-            return new TjenesteResultatWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER);
+            return new TjenesteResultatWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, ikkeJournalfortEkstraFeilInfo(fnr));
         } else if (journalpostMetadata.getFeilWrapper().getInneholderFeil()) {
             return new TjenesteResultatWrapper(journalpostMetadata.getFeilWrapper().getFeilmelding());
         }
@@ -108,6 +108,12 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     private Map journalfortAnnetTemaEktraFeilInfo(String temanavn) {
         Map map = new HashMap<>();
         map.put("temanavn", temanavn);
+        return map;
+    }
+
+    private Map ikkeJournalfortEkstraFeilInfo(String fnr) {
+        Map map = new HashMap<>();
+        map.put("fnr", fnr);
         return map;
     }
 }

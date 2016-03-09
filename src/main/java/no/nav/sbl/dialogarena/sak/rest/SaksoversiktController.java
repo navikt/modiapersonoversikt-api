@@ -4,10 +4,9 @@ import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -18,11 +17,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
-import static javax.ws.rs.core.Response.*;
+import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.core.Response.ok;
+import static javax.ws.rs.core.Response.status;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")

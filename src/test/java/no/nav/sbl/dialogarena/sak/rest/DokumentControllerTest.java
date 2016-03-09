@@ -72,14 +72,14 @@ public class DokumentControllerTest {
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
         when(tilgangskontrollService.harGodkjentEnhet(any(HttpServletRequest.class))).thenReturn(false);
         when(dokumentMetadataService.hentDokumentMetadata(anyList(), anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class))).thenReturn(new TjenesteResultatWrapper("result"));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("result"));
         when(saksService.hentAlleSaker(anyString())).thenReturn(new AlleSakerResultatWrapper(asList(new Sak()), null));
         when(innsyn.hentDokument(anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("null"));
     }
 
     @Test
     public void returnererFeilmeldingOmSaksbehandlerIkkeHarTilgangTilTema() {
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class))).thenReturn(new TjenesteResultatWrapper(SAKSBEHANDLER_IKKE_TILGANG));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper(SAKSBEHANDLER_IKKE_TILGANG));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
 
         Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
@@ -89,7 +89,7 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererDokumentOmSaksbehandlerHarTilgangTilTema() {
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class))).thenReturn(new TjenesteResultatWrapper(TRUE));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper(TRUE));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
 
         Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
@@ -99,7 +99,7 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererFeilmeldingOmDokumentErJournalfortPaAnnetTema() {
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class))).thenReturn(new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
 
         Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, ANNEN_TEMAKODE, httpServletRequest);
@@ -109,7 +109,7 @@ public class DokumentControllerTest {
 
     @Test
     public void returnererFeilmeldingOmTemaErBidrag() {
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class))).thenReturn(new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG));
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMAKODE_BIDRAG));
 
         Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMAKODE_BIDRAG, httpServletRequest);
@@ -148,7 +148,7 @@ public class DokumentControllerTest {
     @Test
     public void returnererFeilmeldingHvisSaksbehandlerIkkeHarTilgangTilTema() throws IOException {
         when(dokumentMetadataService.hentDokumentMetadata(any(List.class), any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
-        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class))).thenReturn(new TjenesteResultatWrapper(FALSE));
+        when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper(FALSE));
 
         Response response = dokumentController.hentDokument(FNR, JOURNALPOSTID, DOKUMENTREFERANSE, httpServletRequest);
 
