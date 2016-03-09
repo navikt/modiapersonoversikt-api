@@ -31,9 +31,9 @@ const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost,
             <FormattedMessage
                 id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></div> : <noscript/>;
 
-    const ingendokumenter = <h1 className="robust-ikon-feil-strek ingendokumenterheader">
+    const ingendokumenter = <h2 className="robust-ikon-feil-strek ingendokumenterheader">
         <FormattedMessage
-            id="dokumentinfo.sakstema.ingen.dokumenter.header"/></h1>;
+            id="dokumentinfo.sakstema.ingen.dokumenter.header"/></h2>;
 
     if (valgtTema.dokumentMetadata.length > 0) {
         return <div>{ ingenDokumenterBidrag }{ dokumentliste }<TidligereDokumenter /></div>;
