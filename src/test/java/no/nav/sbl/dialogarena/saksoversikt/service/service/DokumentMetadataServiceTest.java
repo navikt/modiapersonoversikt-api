@@ -21,10 +21,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.SOKNADSINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.HOVEDSKJEMA;
@@ -146,7 +146,7 @@ public class DokumentMetadataServiceTest {
 
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
         when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any(), anyString()))
-                .thenReturn(optional(asList(joarkDokumentMetadata).stream()));
+                .thenReturn(new DokumentMetadataResultatWrapper(asList(joarkDokumentMetadata),emptySet()));
     }
 
     private Record<Soknad> lagHenvendelse(String journalpostId) {

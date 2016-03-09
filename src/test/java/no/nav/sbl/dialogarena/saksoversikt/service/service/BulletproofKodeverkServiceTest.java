@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,8 +71,8 @@ public class BulletproofKodeverkServiceTest {
         assertThat(tema, is(TEMANAVN_DAGPENGER));
     }
 
-    @Test
-    public void getTemanavnForTemaKode_shouldNot_throwExceptionWhenErrorOccurs() {
+    @Test(expected = FeilendeBaksystemException.class )
+    public void getTemanavnForTemaKode_shouldThrowFeilendeBaksystemExceptionWhenRuntimeErrorOccours() {
         kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_UFORE, BEHANDLINGSTEMA);
     }
 

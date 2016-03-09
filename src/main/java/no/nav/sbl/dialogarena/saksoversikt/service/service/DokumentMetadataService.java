@@ -64,9 +64,9 @@ public class DokumentMetadataService {
         List<DokumentMetadata> innsendteSoknaderIHenvendelse;
 
         try {
-            joarkMetadataListe = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr)
-                    .orElseGet(() -> empty())
-                    .collect(toList());
+            DokumentMetadataResultatWrapper dokumentMetadataResultatWrapper = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr);
+            joarkMetadataListe = dokumentMetadataResultatWrapper.dokumentMetadata;
+            feilendeBaksystem.addAll(dokumentMetadataResultatWrapper.feiledeSystemer);
         } catch (FeilendeBaksystemException e) {
             feilendeBaksystem.add(e.getBaksystem());
             joarkMetadataListe = emptyList();
