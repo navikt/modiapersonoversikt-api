@@ -9,7 +9,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -32,9 +32,9 @@ import java.util.function.BiFunction;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.core.Response.Status.*;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
@@ -57,7 +57,7 @@ public class DokumentController {
     @Inject
     private TilgangskontrollService tilgangskontrollService;
 
-    public final static String TEMAKODE_BIDRAG = "BID";
+
     public final static String BLURRED_DOKUMENT = "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
 
     @GET
@@ -69,29 +69,21 @@ public class DokumentController {
             return mockDokumentResponse();
         }
 
-        String valgtEnhet = hentValgtEnhet(request);
-
-        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
-        if (response.isPresent()) {
-            return response.get();
-        }
-
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
-        String temakode = journalpostMetadata.getTemakode();
+        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata);
 
-        if (finnesIkkeIJoarkPaBruker(journalpostMetadata) || temakodeErBidrag(temakode)) {
-            return status(Response.Status.FORBIDDEN).build();
-        }
-
-        boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
-        if (!harSaksbehandlerTilgang) {
-            return status(Response.Status.FORBIDDEN).build();
+        if (harIkkeTilgang(tilgangskontrollResult) || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
+            return status(FORBIDDEN).build();
         }
 
         TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse);
         return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
-                .orElse(status(Response.Status.NOT_FOUND).build());
+                .orElse(status(NOT_FOUND).build());
+    }
+
+    private boolean harIkkeTilgang(TjenesteResultatWrapper tilgangskontrollResult) {
+        return !tilgangskontrollResult.result.isPresent();
     }
 
     @GET
@@ -102,36 +94,14 @@ public class DokumentController {
             return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
         }
 
-        String valgtEnhet = hentValgtEnhet(request);
-
-        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
-        if (response.isPresent()) {
-            return response.get();
-        }
-
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
+        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata);
+        String hovedtittel = journalpostMetadata.getHoveddokument().getTittel();
         JournalpostResultat resultat = new JournalpostResultat()
-                .withTittel(journalpostMetadata.getHoveddokument().getTittel());
+                .withTittel(hovedtittel);
 
-        if (temakodeErBidrag(journalpostMetadata.getTemakode())) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(TEMAKODE_ER_BIDRAG, journalpostMetadata.getHoveddokument().getTittel()));
-            return ok(resultat).build();
-        }
-
-        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
-            return ok(resultat).build();
-        }
-
-        boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
-        if (!harSaksbehandlerTilgang) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(SAKSBEHANDLER_IKKE_TILGANG, journalpostMetadata.getHoveddokument().getTittel()));
-            return ok(resultat).build();
-        }
-
-        //Dette betyr at den enten ikke er journalfort eller er journalfort pa en annen bruker
-        if (finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel()));
+        if (harIkkeTilgang(tilgangskontrollResult)) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(tilgangskontrollResult.feilmelding, hovedtittel, tilgangskontrollResult.ekstraFeilInfo));
             return ok(resultat).build();
         }
 
@@ -164,16 +134,8 @@ public class DokumentController {
         return ok(resultat).build();
     }
 
-    private boolean temakodeErBidrag(String temakode) {
-        return TEMAKODE_BIDRAG.equals(temakode);
-    }
-
-    private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
-        return !journalpostMetadata.isErJournalfort();
-    }
-
     private boolean harFeil(TjenesteResultatWrapper tjenesteResultat) {
-        return tjenesteResultat.feilmelding != null || !tjenesteResultat.result.isPresent();
+        return tjenesteResultat.feilmelding != null || harIkkeTilgang(tjenesteResultat);
     }
 
     private List<DokumentResultat> hentDokumentResultater(String fnr, String journalpostId, DokumentMetadata journalpostMetadata, List<Pair<String, TjenesteResultatWrapper>> dokumenter) {
@@ -226,23 +188,12 @@ public class DokumentController {
                 .isPresent();
     }
 
-    private boolean erJournalfortPaAnnetTema(String temakode, DokumentMetadata dokumentMetadata) {
-        return temakode != null && !dokumentMetadata.getTemakode().equals(temakode);
-    }
-
     private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding, String tittel) {
         return blurretDokumentReferanseResponse(feilmelding, tittel, new HashMap<String, String>());
     }
 
     private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding, String tittel, Map ekstrafeilinfo) {
         return new DokumentFeilmelding(tittel, feilmelding.feilmeldingKey, BLURRED_DOKUMENT, ekstrafeilinfo);
-    }
-
-    private Map journalfortAnnetTemaEktraFeilInfo(String journalpostId, String temanavn) {
-        Map map = new HashMap<>();
-        map.put("temanavn", temanavn);
-        map.put("journalpostid", journalpostId);
-        return map;
     }
 
     private static BiFunction<DokumentMetadata, Feilmelding, DokumentFeilmelding> TIL_FEIL = (dokumentMetadata, feilmelding) -> new DokumentFeilmelding(dokumentMetadata.getHoveddokument().getTittel(), feilmelding.feilmeldingKey, BLURRED_DOKUMENT, null);

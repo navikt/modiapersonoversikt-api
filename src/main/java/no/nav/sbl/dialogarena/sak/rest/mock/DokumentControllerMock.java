@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import static java.util.Arrays.asList;
 import static javax.ws.rs.core.Response.ok;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.INN;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.EKSTERN_PART;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.EKSTERN_PART;
 import static org.apache.commons.io.IOUtils.toByteArray;
 
 public class DokumentControllerMock {

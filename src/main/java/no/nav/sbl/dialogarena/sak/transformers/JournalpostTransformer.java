@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,8 +24,8 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Baksystem.JOARK;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.*;
 
 public class JournalpostTransformer {
 
