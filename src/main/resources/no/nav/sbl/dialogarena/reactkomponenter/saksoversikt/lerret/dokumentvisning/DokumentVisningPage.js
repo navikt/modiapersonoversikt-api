@@ -8,7 +8,6 @@ import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';
 import DokumentVisningListe from './DokumentVisningListe'
-import { Events } from 'react-scroll';
 import { FormattedMessage, FormattedDate } from 'react-intl';
 import KulemenyListe from './kulemeny/KulemenyListe';
 
@@ -35,16 +34,6 @@ class DokumentVisningPage extends React.Component {
         this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
 
-    componentDidMount() {
-        Events.scrollEvent.register('end', (to, element) => {
-            console.log('scroll', to, element);
-        });
-    }
-
-    componentWillUnmount() {
-        Events.scrollEvent.remove('end');
-    }
-
     render() {
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
             return <Snurrepipp />;
@@ -66,7 +55,7 @@ class DokumentVisningPage extends React.Component {
                     <KulemenyListe dokumentmetadata={kulelisteVM}/>
                 </div>
 
-                <div className="grattpanel side-innhold">
+                <div className="grattpanel side-innhold" id="js-kulemeny-scroll">
                     <panel className="panel">
                         <h1 className="decorated typo-innholdstittel">
                             <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>

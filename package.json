@@ -42,7 +42,7 @@
     "object-assign": "^2.0.0",
     "react-addons-test-utils": "^0.14.7",
     "react-intl": "^2.0.0-beta-2",
-    "react-scroll": "^1.0.3",
+    "react-scroll": "git+https://github.com/actorapp/react-scroll.git#7dbff2ddc57b84a5c9396b51c72f813817340a1d",
     "react-tools": "^0.13.3",
     "sanitize-html": "^1.9.0",
     "sinon": "^1.14.1",
