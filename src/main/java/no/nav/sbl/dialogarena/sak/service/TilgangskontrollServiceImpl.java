@@ -5,6 +5,7 @@ import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import org.slf4j.Logger;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
@@ -49,6 +51,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
         } else if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
             return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakode()));
+        } else if (!journalpostMetadata.isErJournalfort()) {
+            return new TjenesteResultatWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER);
         } else if (journalpostMetadata.getFeilWrapper().getInneholderFeil()) {
             return new TjenesteResultatWrapper(journalpostMetadata.getFeilWrapper().getFeilmelding());
         }
@@ -82,6 +86,15 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
             return false;
         }
         return true;
+    }
+
+    public void markerIkkeJournalforte(List<Sakstema> sakstemaList) {
+        sakstemaList.stream()
+                .forEach(sakstema -> sakstema.dokumentMetadata
+                        .stream()
+                        .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
+                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER))
+                        .collect(toList()));
     }
 
     private boolean temakodeErBidrag(String temakode) {

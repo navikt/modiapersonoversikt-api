@@ -55,13 +55,7 @@ public class SaksoversiktController {
                 .hentSakstema(saksService.hentAlleSaker(fnr).alleSaker, fnr, false)
                 .sakstema;
 
-
-        sakstemaliste.stream()
-                .forEach(sakstema -> sakstema.dokumentMetadata
-                        .stream()
-                        .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
-                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER))
-                        .collect(toList()));
+        tilgangskontrollService.markerIkkeJournalforte(sakstemaliste);
 
         return ok(mapTilModiaSakstema(sakstemaliste, hentValgtEnhet(request))).build();
     }
