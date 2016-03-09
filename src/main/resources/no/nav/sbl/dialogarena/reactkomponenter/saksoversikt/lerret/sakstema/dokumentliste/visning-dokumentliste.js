@@ -27,8 +27,9 @@ const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost,
                        velgJournalpost={velgJournalpost}/>;
 
     const ingenDokumenterBidrag = valgtTema.temakode === 'BID' ?
-        <p className="ingendokumenterforklaring"><FormattedMessage
-            id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></p> : <noscript/>;
+        <div className="infoingenbidrag">
+            <FormattedMessage
+                id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></div> : <noscript/>;
 
     const ingendokumenter = <h1 className="robust-ikon-feil-strek ingendokumenterheader">
         <FormattedMessage
@@ -40,7 +41,12 @@ const VisningDokumentliste = ({sakstema, valgtTema, brukerNavn, velgJournalpost,
 
     if (valgtTema.temakode === 'BID') {
         return (
-            <div className="default-error ingendokumenter">{ingendokumenter}{ingenDokumenterBidrag}
+            <div className="default-error ingendokumenter">
+                {ingendokumenter}
+                <p className="ingendokumenterforklaring">
+                    <FormattedMessage
+                        id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/>
+                </p>
             </div>);
     }
 

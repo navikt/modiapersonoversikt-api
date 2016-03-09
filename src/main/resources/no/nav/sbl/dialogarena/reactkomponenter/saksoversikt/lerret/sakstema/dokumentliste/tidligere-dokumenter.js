@@ -5,9 +5,9 @@ const TidligereDokumenter = () => (
     <section className="panel gamle-dokumenter">
         <img className="tidligaredokumentimage" src="/modiabrukerdialog/img/saksoversikt/dokument_stop.png"
              alt="Dokumentet kan ikke vises"/>
-        <h1 className="tidligaredokumentheader"><FormattedMessage
+        <p className="tidligaredokumentheader"><FormattedMessage
             id={'dokumentinfo.ikke.vise.tidligere.dokumenter.head'}/>
-        </h1>
+        </p>
     </section>
 );
 

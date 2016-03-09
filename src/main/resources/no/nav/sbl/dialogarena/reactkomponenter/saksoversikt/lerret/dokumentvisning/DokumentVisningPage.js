@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import VedleggFeilmeldingListe from './VedleggFeilmeldingListe';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
+import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';
+import DokumentVisningListe from './DokumentVisningListe'
+import { FormattedMessage, FormattedDate } from 'react-intl';
 
 class DokumentVisningPage extends React.Component {
     componentWillMount() {
@@ -23,14 +26,24 @@ class DokumentVisningPage extends React.Component {
         }
         const { journalpostmetadata } = this.props;
 
+        const values = {
+            retning: this.props.valgtJournalpost.retning,
+            navn: this.props.brukerNavn,
+            dato: javaLocalDateTimeToJSDate(this.props.valgtJournalpost.dato)
+        };
+
         return (
             <div className="grattpanel side-innhold">
                 <div className="blokk-s">
                     <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
                 </div>
                 <panel className="panel">
-                    <h1 className="decorated typo-innholdstittel">Dokumentvisning</h1>
+                    <h1 className="decorated typo-innholdstittel">
+                        <FormattedMessage id="dokumentvisning.retningsstatus" values={values} />
+                        <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
+                    </h1>
                     <section>
+                        <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter} />
                         <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
                     </section>
                 </panel>
@@ -41,11 +54,9 @@ class DokumentVisningPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        valgtside: state.lerret.valgtside,
-        journalpostmetadata: state.dokument.data[0],
+        journalpostmetadata: state.dokument.data,
         lerretstatus: state.lerret.status,
         dokumentstatus: state.dokument.status,
-        valgtTema: state.lerret.valgtTema,
         valgtJournalpost: state.lerret.valgtJournalpost,
         tekster: state.lerret.data.tekster
     };
