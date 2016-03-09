@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.FORVALTNINGSNOTAT;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.INTERN_NOTAT;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.REFERAT;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.*;
 
 public class DokumentMetadata {
 
@@ -22,6 +26,8 @@ public class DokumentMetadata {
     private boolean ettersending;
     private boolean erJournalfort = TRUE;
     private FeilWrapper feilWrapper = new FeilWrapper();
+    private KategoriNotat kategoriNotat;
+
 
     public boolean isEttersending() {
         return ettersending;
@@ -156,5 +162,20 @@ public class DokumentMetadata {
 
     public boolean isErJournalfort() {
         return erJournalfort;
+    }
+
+    public DokumentMetadata withKategoriNotat(String kategoriNotat) {
+        if (this.getRetning().equals(INTERN)) {
+            if (kategoriNotat.equals(FORVALTNINGSNOTAT.name()) || kategoriNotat.equals(REFERAT.name())) {
+                this.kategoriNotat = FORVALTNINGSNOTAT;
+            } else {
+                this.kategoriNotat = INTERN_NOTAT;
+            }
+        }
+        return this;
+    }
+
+    public KategoriNotat getKategoriNotat() {
+        return kategoriNotat;
     }
 }
