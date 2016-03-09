@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -18,6 +19,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DataFletter.hentBehandlingerFraBehandlingskjeder;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_STATUS;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus.OPPRETTET;
@@ -52,7 +54,7 @@ public class SakOgBehandlingService {
             return filter.filtrerSaker(sobSaker);
         } catch (RuntimeException ex) {
             logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex);
-            throw new SystemException("Feil ved kall til sakogbehandling", ex);
+            throw new FeilendeBaksystemException(SAK_OG_BEHANDLING);
         }
     }
 

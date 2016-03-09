@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.of;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
@@ -146,7 +147,7 @@ public class SaksServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>("Arbeid", new HashSet<>(Arrays.asList(DAGPENGER, OPPFOLGING)));
-        List<Sakstema> sakstema = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), anyString());
+        List<Sakstema> sakstema = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), emptyMap());
 
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
     }
@@ -170,7 +171,7 @@ public class SaksServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>("Arbeid", new HashSet<>(Arrays.asList("TIL", DAGPENGER)));
-        List<Sakstema> sakstema = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, sak2), new ArrayList<>(), anyString());
+        List<Sakstema> sakstema = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, sak2), new ArrayList<>(), emptyMap());
 
         assertThat(sakstema.size(), equalTo(1));
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
@@ -196,7 +197,7 @@ public class SaksServiceTest {
                         .withDato(LocalDateTime.now())
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), anyString());
+                                        .withTittel("TEST"))), emptyMap());
 
         assertThat(sakstema.get(0).temanavn, equalTo("Oppfølging"));
         assertThat(sakstema.size(), is(1));
@@ -231,7 +232,7 @@ public class SaksServiceTest {
                         .withBaksystem(Baksystem.JOARK)
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), anyString());
+                                        .withTittel("TEST"))), emptyMap());
 
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
         assertThat(sakstema.size(), is(1));
@@ -267,7 +268,7 @@ public class SaksServiceTest {
                         .withTemakode("OPP")
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("Tilhorende Oppfolging"))), anyString());
+                                        .withTittel("Tilhorende Oppfolging"))), emptyMap());
 
         assertThat(sakstema.size(), is(2));
     }
@@ -307,7 +308,7 @@ public class SaksServiceTest {
                         .withBaksystem(Baksystem.JOARK)
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), anyString());
+                                        .withTittel("TEST"))), emptyMap());
 
         assertThat(sakstema.get(0).temanavn, equalTo("Arbeidsavklaringspenger og oppfølging"));
         assertThat(sakstema.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
