@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sak.rest;
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
+import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
@@ -10,20 +11,31 @@ import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataServi
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.TjenesteResultatWrapper;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.InputStream;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.BiFunction;
 
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
+import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
@@ -34,6 +46,8 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.detalj.Enti
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
 public class DokumentController {
+
+    public static final Logger logger = LoggerFactory.getLogger(DokumentController.class);
 
     @Inject
     private InnsynImpl innsyn;
@@ -47,48 +61,81 @@ public class DokumentController {
     @Inject
     private TilgangskontrollService tilgangskontrollService;
 
-    private final String DOKUMENTID_IKKE_FUNNET = "x";
-    public final static String BLURRED_DOKUMENT = getProperty("modapp.url") + "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
+    public final static String TEMAKODE_BIDRAG = "BID";
+    public final static String BLURRED_DOKUMENT = "/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg";
 
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
-    public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @PathParam("dokumentreferanse") String dokumentreferanse) throws IOException {
+    public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
+                                 @PathParam("dokumentreferanse") String dokumentreferanse,
+                                 @Context HttpServletRequest request) throws IOException {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return mockDokumentResponse();
+        }
+
+        String valgtEnhet = hentValgtEnhet(request);
+
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
+        if (response.isPresent()) {
+            return response.get();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         String temakode = journalpostMetadata.getTemakode();
 
-        if (erJournalfortPaAnnetTema(temakode, journalpostMetadata) || finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
-            return status(403).build();
+        if (finnesIkkeIJoarkPaBruker(journalpostMetadata) || temakodeErBidrag(temakode)) {
+            return status(Response.Status.FORBIDDEN).build();
         }
 
-        TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(dokumentreferanse, journalpostId);
+        boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
+        if (!harSaksbehandlerTilgang) {
+            return status(Response.Status.FORBIDDEN).build();
+        }
+
+        TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse);
         return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
-                .orElse(status(404).build());
+                .orElse(status(Response.Status.NOT_FOUND).build());
     }
 
     @GET
     @Path("/journalpostmetadata/{journalpostId}")
-    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId, @QueryParam("temakode") String temakode) {
+    public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
+                                            @QueryParam("temakode") String temakode, @Context HttpServletRequest request) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
+        }
+
+        String valgtEnhet = hentValgtEnhet(request);
+
+        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
+        if (response.isPresent()) {
+            return response.get();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         JournalpostResultat resultat = new JournalpostResultat()
                 .withTittel(journalpostMetadata.getHoveddokument().getTittel());
 
+        if (temakodeErBidrag(journalpostMetadata.getTemakode())) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(TEMAKODE_ER_BIDRAG, journalpostMetadata.getHoveddokument().getTittel()));
+            return ok(resultat).build();
+        }
+
         if (erJournalfortPaAnnetTema(temakode, journalpostMetadata)) {
             resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel(), journalfortAnnetTemaEktraFeilInfo(journalpostId, journalpostMetadata.getTemakodeVisning())));
             return ok(resultat).build();
         }
 
+        boolean harSaksbehandlerTilgang = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(temakode, valgtEnhet);
+        if (!harSaksbehandlerTilgang) {
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(SAKSBEHANDLER_IKKE_TILGANG, journalpostMetadata.getHoveddokument().getTittel()));
+            return ok(resultat).build();
+        }
+
         //Dette betyr at den enten ikke er journalfort eller er journalfort pa en annen bruker
         if (finnesIkkeIJoarkPaBruker(journalpostMetadata)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(Feilmelding.JOURNALFORT_FEIL, journalpostMetadata.getHoveddokument().getTittel()));
+            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(JOURNALFORT_ANNET_TEMA, journalpostMetadata.getHoveddokument().getTittel()));
             return ok(resultat).build();
         }
 
@@ -99,21 +146,72 @@ public class DokumentController {
                 .stream()
                 .forEach(dokument -> dokumentreferanser.add(dokument.getDokumentreferanse()));
 
-        //TODO
         //1. Gå igjennom alle dokumentreferanser. Gjør kall til innsyn.hentDokument(dokumenreferenase, journalpostId).
-        //2. Dersom feilmelding: Legg til i resultat.withDokumentFeilmelding med riktig feilmelding.
-        //3. Ellers: Finn antall sider ved å bruke en ny dependency (muligens vet Nicklas / Joanna / Torstein hvilken). Legg til i resultat.withDokument
+        List<Pair<String, TjenesteResultatWrapper>> dokumenter = dokumentreferanser
+                .stream()
+                .map(dokumentreferanse -> new ImmutablePair<>(dokumentreferanse, innsyn.hentDokument(journalpostId, dokumentreferanse)))
+                .collect(toList());
 
-        resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, journalpostMetadata.getHoveddokument().getTittel()));
+        //2. Dersom feilmelding: Legg til i resultat.withDokumentFeilmelding med riktig feilmelding.
+        List<DokumentFeilmelding> feilmeldinger = dokumenter
+                .stream()
+                .filter((Pair<String, TjenesteResultatWrapper> data) -> harFeil(data.getRight()))
+                .map((Pair<String, TjenesteResultatWrapper> data) -> TIL_FEIL.apply(journalpostMetadata, data.getRight().feilmelding))
+                .collect(toList());
+
+        //3. Ellers: Finn antall sider ved å bruke en ny dependency. Legg til i resultat.withDokument
+        List<DokumentResultat> pdfer = hentDokumentResultater(fnr, journalpostId, journalpostMetadata, dokumenter);
+
+        resultat.withDokumentFeilmeldinger(feilmeldinger);
+        resultat.withDokumenter(pdfer);
+
         return ok(resultat).build();
+    }
+
+    private boolean temakodeErBidrag(String temakode) {
+        return TEMAKODE_BIDRAG.equals(temakode);
     }
 
     private boolean finnesIkkeIJoarkPaBruker(DokumentMetadata journalpostMetadata) {
         return !journalpostMetadata.isErJournalfort() && journalpostMetadata.getAvsender() == SLUTTBRUKER;
     }
 
+    private boolean harFeil(TjenesteResultatWrapper tjenesteResultat) {
+        return tjenesteResultat.feilmelding != null || !tjenesteResultat.result.isPresent();
+    }
+
+    private List<DokumentResultat> hentDokumentResultater(String fnr, String journalpostId, DokumentMetadata journalpostMetadata, List<Pair<String, TjenesteResultatWrapper>> dokumenter) {
+        try {
+            ForkJoinPool forkJoinPool = new ForkJoinPool(4);
+            return forkJoinPool.submit(() -> {
+                return dokumenter
+                        .parallelStream()
+                        .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
+                        .map((Pair<String, TjenesteResultatWrapper> data) -> {
+                            int antallSider = hentAntallSiderIDokument(data);
+                            return new DokumentResultat(journalpostMetadata.getHoveddokument().getTittel(), antallSider, fnr, journalpostId, data.getLeft());
+                        }).collect(toList());
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Kunne ikke håndtere alle pdfer", e);
+            return Collections.emptyList();
+        }
+    }
+
+    private int hentAntallSiderIDokument(Pair<String, TjenesteResultatWrapper> data) {
+        byte[] dokumentdata = ((byte[]) data.getRight().result.get());
+        InputStream is = new ByteArrayInputStream(dokumentdata);
+        try {
+            return PDDocument.load(is).getNumberOfPages();
+        } catch (IOException e) {
+            logger.error("Kunne ikke finne ut hvor mange sider dokumentet innehold", e);
+            return 0;
+        }
+    }
+
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
-        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr), fnr)
+        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).alleSaker, fnr)
+                .dokumentMetadata
                 .stream()
                 .filter(dokumentMetadata -> journalpostId.equals(dokumentMetadata.getJournalpostId()))
                 .findFirst()
@@ -150,4 +248,6 @@ public class DokumentController {
         map.put("journalpostid", journalpostId);
         return map;
     }
+
+    private static BiFunction<DokumentMetadata, Feilmelding, DokumentFeilmelding> TIL_FEIL = (dokumentMetadata, feilmelding) -> new DokumentFeilmelding(dokumentMetadata.getHoveddokument().getTittel(), feilmelding.feilmeldingKey, BLURRED_DOKUMENT, null);
 }
