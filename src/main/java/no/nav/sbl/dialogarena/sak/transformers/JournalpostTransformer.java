@@ -40,6 +40,11 @@ public class JournalpostTransformer {
         LocalDateTime dato = finnDato(journalpost);
 
         Pair<Entitet, Entitet> avsenderMottaker = finnAvsenderMottaker(journalpost.getKommunikasjonsretning(), isErSluttbruker(journalpost, fnr));
+
+        List<WSDokumentinfoRelasjon> dokumentinfoRelasjonListe = journalpost.getDokumentinfoRelasjonListe();
+        String kategori = dokumentinfoRelasjonListe.size() == 0 ? KategoriNotat.INTERN_NOTAT.name() :
+                dokumentinfoRelasjonListe.get(0).getJournalfoertDokument().getKategori().getValue();
+
         return new DokumentMetadata()
                 .withJournalpostId(journalpost.getJournalpostId())
                 .withHoveddokument(hoveddokument)
@@ -53,7 +58,7 @@ public class JournalpostTransformer {
                 .withTemakode(journalpost.getArkivtema().getValue())
                 .withRetning(Kommunikasjonsretning.fraJournalpostretning(journalpost.getKommunikasjonsretning().getValue()))
                 .withBaksystem(JOARK)
-                .withKategoriNotat(journalpost.getDokumentinfoRelasjonListe().get(0).getJournalfoertDokument().getKategori().getValue())
+                .withKategoriNotat(kategori)
                 .withTilhorendeSakid(journalpost.getGjelderSak().getSakId())
                 .withTemakodeVisning(bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA));
     }
