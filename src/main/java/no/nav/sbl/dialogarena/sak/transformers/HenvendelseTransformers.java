@@ -19,12 +19,7 @@ import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.He
 
 public class HenvendelseTransformers {
 
-    public static final Transformer<WSSoknad, Boolean> INNSENDT = new Transformer<WSSoknad, Boolean>() {
-        @Override
-        public Boolean transform(WSSoknad wsSoknad) {
-            return wsSoknad.getInnsendtDato() != null;
-        }
-    };
+    public static final Transformer<WSSoknad, Boolean> INNSENDT = wsSoknad -> wsSoknad.getInnsendtDato() != null;
 
     public static final Transformer<WSSoknad, Kvittering> KVITTERING = new Transformer<WSSoknad, Kvittering>() {
 
@@ -47,18 +42,15 @@ public class HenvendelseTransformers {
     };
 
     private static Transformer<WSDokumentforventning, Dokument> tilDokument(final String hovedskjemaId) {
-        return new Transformer<WSDokumentforventning, Dokument>() {
-            @Override
-            public Dokument transform(WSDokumentforventning wsDokumentforventning) {
-                boolean innsendt = wsDokumentforventning.getInnsendingsvalg().equals("INNSENDT") || wsDokumentforventning.getInnsendingsvalg().equals("LASTET_OPP");
-                return new Dokument()
-                        .withHovedskjema(wsDokumentforventning.getKodeverkId().equals(hovedskjemaId))
-                        .withInnsendt(innsendt)
-                        .withKodeverkRef(wsDokumentforventning.getKodeverkId())
-                        .withInnsendingsvalg(wsDokumentforventning.getInnsendingsvalg())
-                        .withArkivreferanse(wsDokumentforventning.getArkivreferanse())
-                        .withTilleggsTittel(wsDokumentforventning.getTilleggsTittel());
-            }
+        return wsDokumentforventning -> {
+            boolean innsendt = wsDokumentforventning.getInnsendingsvalg().equals("INNSENDT") || wsDokumentforventning.getInnsendingsvalg().equals("LASTET_OPP");
+            return new Dokument()
+                    .withHovedskjema(wsDokumentforventning.getKodeverkId().equals(hovedskjemaId))
+                    .withInnsendt(innsendt)
+                    .withKodeverkRef(wsDokumentforventning.getKodeverkId())
+                    .withInnsendingsvalg(wsDokumentforventning.getInnsendingsvalg())
+                    .withArkivreferanse(wsDokumentforventning.getArkivreferanse())
+                    .withTilleggsTittel(wsDokumentforventning.getTilleggsTittel());
         };
     }
 
@@ -70,25 +62,10 @@ public class HenvendelseTransformers {
     }
 
     private static Predicate<WSDokumentforventning> er_Hovedskjema(final String hovedskjemaId) {
-        return new Predicate<WSDokumentforventning>() {
-            @Override
-            public boolean evaluate(WSDokumentforventning dokumentforventning) {
-                return dokumentforventning.getKodeverkId().equals(hovedskjemaId);
-            }
-        };
+        return dokumentforventning -> dokumentforventning.getKodeverkId().equals(hovedskjemaId);
     }
 
-    private static final Predicate<WSDokumentforventning> ER_KVITTERING = new Predicate<WSDokumentforventning>() {
-        @Override
-        public boolean evaluate(WSDokumentforventning dokumentforventning) {
-            return dokumentforventning.getKodeverkId().equals("L7");
-        }
-    };
+    private static final Predicate<WSDokumentforventning> ER_KVITTERING = dokumentforventning -> dokumentforventning.getKodeverkId().equals("L7");
 
-    private static final Predicate<WSDokumentforventning> ER_DOKUMENT_INNSENDT = new Predicate<WSDokumentforventning>() {
-        @Override
-        public boolean evaluate(WSDokumentforventning dokumentforventning) {
-            return asList("INNSENDT", "LASTET_OPP").contains(dokumentforventning.getInnsendingsvalg());
-        }
-    };
+    private static final Predicate<WSDokumentforventning> ER_DOKUMENT_INNSENDT = dokumentforventning -> asList("INNSENDT", "LASTET_OPP").contains(dokumentforventning.getInnsendingsvalg());
 }
