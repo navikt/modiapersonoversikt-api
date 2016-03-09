@@ -240,6 +240,10 @@
   border-bottom: 1px solid #ccc;
   display: block;
 
+  label:before {
+    display: none !important;
+  }
+
   input[type=radio] + label {
     padding-top: 18px;
     padding-bottom: 18px;
@@ -248,14 +252,7 @@
     border: 1px solid transparent;
   }
 
-  label:before {
-    display: none !important;
-  }
-
   input[type=radio]:focus + label {
-    padding-top: 16px;
-    padding-bottom: 16px;
-    margin-top: 0;
     outline: none;
     box-shadow: inset 0 0 0 2px #ffbd66;
     border: 1px solid #ffbd66;
