@@ -95,16 +95,15 @@ public class DokumentController {
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
-        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata);
         String hovedtittel = journalpostMetadata.getHoveddokument().getTittel();
-        JournalpostResultat resultat = new JournalpostResultat()
-                .withTittel(hovedtittel);
 
+        TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata);
         if (harIkkeTilgang(tilgangskontrollResult)) {
-            resultat.withDokumentFeilmelding(blurretDokumentReferanseResponse(tilgangskontrollResult.feilmelding, hovedtittel, tilgangskontrollResult.ekstraFeilInfo));
-            return ok(resultat).build();
+            JournalpostResultat feilside = new JournalpostResultat().withDokumentFeilmelding(blurretDokumentReferanseResponse(tilgangskontrollResult.feilmelding, hovedtittel, tilgangskontrollResult.ekstraFeilInfo));
+            return ok(feilside).build();
         }
 
+        JournalpostResultat resultat = new JournalpostResultat().withTittel(hovedtittel);
         Set<String> dokumentreferanser = new HashSet<>();
         dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
 
@@ -112,25 +111,21 @@ public class DokumentController {
                 .stream()
                 .forEach(dokument -> dokumentreferanser.add(dokument.getDokumentreferanse()));
 
-        //1. Gå igjennom alle dokumentreferanser. Gjør kall til innsyn.hentDokument(dokumenreferenase, journalpostId).
         List<Pair<String, TjenesteResultatWrapper>> dokumenter = dokumentreferanser
                 .stream()
                 .map(dokumentreferanse -> new ImmutablePair<>(dokumentreferanse, innsyn.hentDokument(journalpostId, dokumentreferanse)))
                 .collect(toList());
 
-        //2. Dersom feilmelding: Legg til i resultat.withDokumentFeilmelding med riktig feilmelding.
         List<DokumentFeilmelding> feilmeldinger = dokumenter
                 .stream()
                 .filter((Pair<String, TjenesteResultatWrapper> data) -> harFeil(data.getRight()))
                 .map((Pair<String, TjenesteResultatWrapper> data) -> TIL_FEIL.apply(journalpostMetadata, data.getRight().feilmelding))
                 .collect(toList());
 
-        //3. Ellers: Finn antall sider ved å bruke en ny dependency. Legg til i resultat.withDokument
         List<DokumentResultat> pdfer = hentDokumentResultater(fnr, journalpostId, journalpostMetadata, dokumenter);
 
         resultat.withDokumentFeilmeldinger(feilmeldinger);
         resultat.withDokumenter(pdfer);
-
         return ok(resultat).build();
     }
 
