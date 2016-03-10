@@ -16,8 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.core.Response.ok;
+import static javax.ws.rs.core.Response.status;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 
 @Path("/saksoversikt/{fnr}")
@@ -42,19 +44,29 @@ public class SaksoversiktController {
     @GET
     @Path("/sakstema")
     public Response hentSakstema(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
+        boolean harManipulertCookie = !tilgangskontrollService.harGodkjentEnhet(request);
+        if (harManipulertCookie) {
+            return status(403).build();
+        }
+
         List<Sakstema> sakstemaliste = saksService
                 .hentSakstema(saksService.hentAlleSaker(fnr).alleSaker, fnr, false)
                 .sakstema;
 
-        String valgtEnhet = hentValgtEnhet(request);
-        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
-        if (response.isPresent()) {
-            return response.get();
-        }
+        tilgangskontrollService.markerIkkeJournalforte(sakstemaliste);
 
-        List<ModiaSakstema> tilgangskontrollertSakstemaListe = tilgangskontrollService.harSaksbehandlerTilgangTilSakstema(sakstemaliste, valgtEnhet);
-        return Response.ok(tilgangskontrollertSakstemaListe).build();
-
+        return ok(mapTilModiaSakstema(sakstemaliste, hentValgtEnhet(request))).build();
     }
 
+
+    public List<ModiaSakstema> mapTilModiaSakstema(List<Sakstema> sakstemaList, String valgtEnhet) {
+        return sakstemaList.stream()
+                .map(sakstema -> createModiaSakstema(sakstema, valgtEnhet))
+                .collect(toList());
+    }
+
+    private ModiaSakstema createModiaSakstema(Sakstema sakstema, String valgtEnhet) {
+        return new ModiaSakstema(sakstema)
+                .withTilgang(tilgangskontrollService.harEnhetTilgangTilTema(sakstema.temakode, valgtEnhet));
+    }
 }
