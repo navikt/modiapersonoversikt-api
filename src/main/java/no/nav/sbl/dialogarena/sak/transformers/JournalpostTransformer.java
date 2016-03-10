@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
@@ -23,9 +21,9 @@ import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService.*;
 
 public class JournalpostTransformer {
 
@@ -43,6 +41,11 @@ public class JournalpostTransformer {
         LocalDateTime dato = finnDato(journalpost);
 
         Pair<Entitet, Entitet> avsenderMottaker = finnAvsenderMottaker(journalpost.getKommunikasjonsretning(), isErSluttbruker(journalpost, fnr));
+
+        List<WSDokumentinfoRelasjon> dokumentinfoRelasjonListe = journalpost.getDokumentinfoRelasjonListe();
+        String kategori = dokumentinfoRelasjonListe.size() == 0 ? KategoriNotat.INTERN_NOTAT.name() :
+                dokumentinfoRelasjonListe.get(0).getJournalfoertDokument().getKategori().getValue();
+
         return new DokumentMetadata()
                 .withJournalpostId(journalpost.getJournalpostId())
                 .withHoveddokument(hoveddokument)
@@ -56,6 +59,7 @@ public class JournalpostTransformer {
                 .withTemakode(journalpost.getArkivtema().getValue())
                 .withRetning(Kommunikasjonsretning.fraJournalpostretning(journalpost.getKommunikasjonsretning().getValue()))
                 .withBaksystem(JOARK)
+                .withKategoriNotat(kategori)
                 .withTilhorendeSakid(journalpost.getGjelderSak().getSakId())
                 .withTemakodeVisning(bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA));
     }
