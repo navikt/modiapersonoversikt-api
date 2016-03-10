@@ -116,7 +116,8 @@ public class SaksService {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
                     return accumulator;
-                });
+                })
+                .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
     }
 
     private Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll() {
