@@ -61,7 +61,7 @@ public class SaksoversiktController {
 
         tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat);
 
-        return ok(new SakstemaResponse(mapTilModiaSakstema(sakstemaWrapper.resultat,
+        return ok(new ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat,
                 hentValgtEnhet(request)),
                 collectFeilendeSystemer(sakerWrapper, sakstemaWrapper ))).build();
 
