@@ -15,8 +15,6 @@ const KulemenyListe =
             return <noscript/>;
         }
 
-        console.log('dokumentmetadata', dokumentmetadata);
-
         const kulemenypunkter = dokumentmetadata.map(renderKulemeny);
         return <ul className="kulemeny">{kulemenypunkter}</ul>;
     };

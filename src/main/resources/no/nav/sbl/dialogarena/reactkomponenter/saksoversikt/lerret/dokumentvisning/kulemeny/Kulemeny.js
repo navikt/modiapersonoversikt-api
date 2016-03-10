@@ -3,7 +3,6 @@ import { Button } from 'react-scroll';
 
 const isInside = (y, elemTopBound, elemBottomBound, containerCoords, elementCoords) => {
     const midtpunktish = y + 650;
-    console.log(y, midtpunktish, elemTopBound, elemBottomBound, (midtpunktish >= elemTopBound && midtpunktish <= elemBottomBound));
     return (midtpunktish >= elemTopBound && midtpunktish <= elemBottomBound);
 };
 
