@@ -290,7 +290,6 @@ public class SaksServiceTest {
         assertThat(wrapper.resultat.size(), is(2));
     }
 
-    @SuppressWarnings("Duplicates")
     @Test
     public void sakstemaKontrollFiltreresBort() {
         when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Oppfølging");
