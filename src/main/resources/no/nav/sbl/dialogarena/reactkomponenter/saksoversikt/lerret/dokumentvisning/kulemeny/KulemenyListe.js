@@ -1,11 +1,12 @@
 import React from 'react';
 import Kulemeny from './Kulemeny';
 
-const renderKulemeny = (kulemenypunkt) =>
+const renderKulemeny = (kulemenypunkt, index) =>
     <Kulemeny
         dokref={kulemenypunkt.dokumentreferanse}
         tittel={kulemenypunkt.tittel}
         key={kulemenypunkt.dokumentreferanse}
+        initalState={index === 0}
     />;
 
 const KulemenyListe =
