@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,14 +17,15 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
 
 public class SaksService {
 
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
+    public static final String TEMAKODE_KONTROLL = "KTR";
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -106,18 +108,19 @@ public class SaksService {
     private ResultatWrapper<List<Sakstema>> OpprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        List<ResultatWrapper<List<Sakstema>>> sakstemaResultatWrapperListe = grupperteSakstema.entrySet()
+        return grupperteSakstema.entrySet()
                 .stream()
-                .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder)).collect(toList());
+                .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder))
+                .map(fjernSakstemaKontroll())
+                .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
+                    accumulator.resultat.addAll(resultatwrapper.resultat);
+                    accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
+                    return accumulator;
+                });
+    }
 
-        return new ResultatWrapper<>(
-                sakstemaResultatWrapperListe.stream().map(entry -> entry.resultat).flatMap(Collection::stream).collect(toList()),
-                concat(
-                        sakstemaResultatWrapperListe.stream()
-                                .map(entry -> entry.feilendeSystemer)
-                                .flatMap(Collection::stream),
-                        wrapper.feilendeSystemer.stream()
-                ).collect(Collectors.toSet()));
+    private Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll() {
+        return entry -> new ResultatWrapper<>(entry.resultat.stream().filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL)).collect(Collectors.toList()), entry.feilendeSystemer);
     }
 
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
