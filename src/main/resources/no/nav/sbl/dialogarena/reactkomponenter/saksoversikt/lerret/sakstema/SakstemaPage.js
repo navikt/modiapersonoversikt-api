@@ -12,18 +12,24 @@ class SakstemaPage extends React.Component {
         if (this.props.sakstema.length === 0) {
             return (
                 <div className="ingen-sakstemaer">
-                    <FormattedMessage id="sakslamell.ingensaker"/>
+                    <img className="ingensakstemaerimage"
+                         src="/modiabrukerdialog/img/saksoversikt/dokument_flyttet.svg"/>
+                    <h1 className="ingen-sakstemaer-tekst">
+                        <FormattedMessage id="sakslamell.ingensaker"/>
+                    </h1>
                 </div>);
         }
 
         return (
             <div className="sakstema-container">
                 <section className="saksoversikt-liste">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema} />
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                    <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema} brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}/>
+                    <h2 className="vekk">{valgtTema.temanavn}</h2>
+                    <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema}
+                                          brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}/>
                 </section>
             </div>
         );
