@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -68,6 +70,9 @@ public class BulletproofKodeverkService {
     public String getTemanavnForTemakode(String temakode, String kodeverknavn) {
         try {
             return kodeverkClient.hentFoersteTermnavnForKode(temakode, kodeverknavn);
+        } catch (RuntimeException e) {
+            LOG.error("Ukjent feil mot kall mot kodeverk", e);
+            throw new FeilendeBaksystemException(Baksystem.KODEVERK);
         } catch(Exception e) {
             LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
             LOG.warn("Fant ikke temanavn '" + kodeverknavn + "'. Bruker generisk tittel.", e);
