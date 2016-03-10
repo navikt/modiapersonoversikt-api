@@ -32,11 +32,11 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
                 id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></div> : <noscript/>;
 
     const ingendokumenter = (
-        <h1 className="robust-ikon-feil-strek ingendokumenterheader">
+        <h2 className="robust-ikon-feil-strek ingendokumenterheader">
             <FormattedMessage
                 id="dokumentinfo.sakstema.ingen.dokumenter.header"
             />
-        </h1>);
+        </h2>);
 
     if (valgtTema.dokumentMetadata.length > 0) {
         return <div>{ ingenDokumenterBidrag }{ dokumentliste }<TidligereDokumenter /></div>;
