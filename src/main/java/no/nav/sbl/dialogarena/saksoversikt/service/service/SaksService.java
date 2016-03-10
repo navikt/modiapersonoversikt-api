@@ -108,20 +108,21 @@ public class SaksService {
     private ResultatWrapper<List<Sakstema>> OpprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
+        Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll =
+                entry -> new ResultatWrapper<>(entry.resultat.stream()
+                        .filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL))
+                        .collect(Collectors.toList()), entry.feilendeSystemer);
+
         return grupperteSakstema.entrySet()
                 .stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder))
-                .map(fjernSakstemaKontroll())
+                .map(fjernSakstemaKontroll)
                 .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
                     return accumulator;
                 })
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
-    }
-
-    private Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll() {
-        return entry -> new ResultatWrapper<>(entry.resultat.stream().filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL)).collect(Collectors.toList()), entry.feilendeSystemer);
     }
 
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
