@@ -16,6 +16,7 @@ actionHandlers[AT.LAST_WIDGET_DATA_OK] = (state, action) => {
         status: Const.LASTET,
         data: {
             temaer,
+            tekster: state.data.tekster
         }
     };
 };
@@ -25,8 +26,7 @@ actionHandlers[AT.LAST_WIDGET_DATA_TEKSTER_OK] = (state, action) => {
         ...state,
         status: Const.TEKST_OK,
         data: {
-            tekster,
-            fnr
+            tekster
         }
     };
 };

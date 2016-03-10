@@ -34,7 +34,7 @@ class Temaliste extends React.Component {
     render() {
         const { temaer, fnr, tekster, status } = this.props;
 
-        if (status === Const.LASTER || status === 'VOID' || status === Const.TEKST_OK) {
+        if (status !== Const.FEILET && status !== Const.LASTET) {
             return <noscript></noscript>;
         }
 
