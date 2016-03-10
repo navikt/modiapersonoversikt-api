@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sak.transformers;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -95,7 +96,8 @@ public class JournalpostTransformer {
                 );
     }
 
-    Function<WSDokumentinfoRelasjon, Dokument> opprettDokument = (dokumentRel) -> new Dokument().withTittel(dokumentRel.getJournalfoertDokument().getTittel())
+    Function<WSDokumentinfoRelasjon, Dokument> opprettDokument = (dokumentRel) -> new Dokument()
+            .withTittel(dokumentRel.getJournalfoertDokument().getTittel())
             .withLogiskDokument(false)
             .withKanVises(true)
             .withDokumentreferanse(dokumentRel.getJournalfoertDokument().getDokumentId());

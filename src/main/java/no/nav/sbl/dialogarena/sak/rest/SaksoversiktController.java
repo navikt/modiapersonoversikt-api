@@ -19,11 +19,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.concat;
+import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.core.Response.ok;
+import static javax.ws.rs.core.Response.status;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 
 @Path("/saksoversikt/{fnr}")
@@ -48,25 +50,35 @@ public class SaksoversiktController {
     @GET
     @Path("/sakstema")
     public Response hentSakstema(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
+        boolean harManipulertCookie = !tilgangskontrollService.harGodkjentEnhet(request);
+        if (harManipulertCookie) {
+            return status(403).build();
+        }
+
         ResultatWrapper<List<Sak>> sakerWrapper = saksService.hentAlleSaker(fnr);
         ResultatWrapper<List<Sakstema>> sakstemaWrapper = saksService
                 .hentSakstema(sakerWrapper.resultat, fnr, false);
 
-        String valgtEnhet = hentValgtEnhet(request);
-        Optional<Response> response = tilgangskontrollService.harGodkjentEnhet(valgtEnhet, request);
+        tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat);
 
-        if (response.isPresent()) {
-            return response.get();
-        }
+        return ok(new SakstemaResponse(mapTilModiaSakstema(sakstemaWrapper.resultat,
+                hentValgtEnhet(request)),
+                collectFeilendeSystemer(sakerWrapper, sakstemaWrapper ))).build();
 
-        List<ModiaSakstema> tilgangskontrollertSakstemaListe = tilgangskontrollService
-                .harSaksbehandlerTilgangTilSakstema(sakstemaWrapper.resultat, valgtEnhet);
+    }
 
-        return Response.ok(new SakstemaResponse(tilgangskontrollertSakstemaListe,
-                collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))).build();
+    public List<ModiaSakstema> mapTilModiaSakstema(List<Sakstema> sakstemaList, String valgtEnhet) {
+        return sakstemaList.stream()
+                .map(sakstema -> createModiaSakstema(sakstema, valgtEnhet))
+                .collect(toList());
     }
 
     private Set<Baksystem> collectFeilendeSystemer(ResultatWrapper<List<Sak>> sakerWrapper, ResultatWrapper<List<Sakstema>> sakstemaWrapper) {
         return concat(sakerWrapper.feilendeSystemer.stream(), sakstemaWrapper.feilendeSystemer.stream()).collect(toSet());
+    }
+
+    private ModiaSakstema createModiaSakstema(Sakstema sakstema, String valgtEnhet) {
+        return new ModiaSakstema(sakstema)
+                .withTilgang(tilgangskontrollService.harEnhetTilgangTilTema(sakstema.temakode, valgtEnhet));
     }
 }
