@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import static java.util.Arrays.asList;
 import static javax.ws.rs.core.Response.ok;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.EKSTERN_PART;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.INN;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.EKSTERN_PART;
 import static org.apache.commons.io.IOUtils.toByteArray;
 
 public class DokumentControllerMock {

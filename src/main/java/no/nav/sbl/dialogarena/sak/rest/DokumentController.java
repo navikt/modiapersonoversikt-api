@@ -7,9 +7,9 @@ import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -32,12 +32,13 @@ import java.util.function.BiFunction;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
@@ -163,8 +164,8 @@ public class DokumentController {
     }
 
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
-        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).alleSaker, fnr)
-                .dokumentMetadata
+        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).resultat, fnr)
+                .resultat
                 .stream()
                 .filter(dokumentMetadata -> journalpostId.equals(dokumentMetadata.getJournalpostId()))
                 .findFirst()

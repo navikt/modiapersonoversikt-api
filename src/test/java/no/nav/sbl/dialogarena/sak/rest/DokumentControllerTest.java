@@ -4,9 +4,10 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.AlleSakerResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.DokumentMetadataResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
@@ -22,8 +23,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
@@ -33,9 +32,7 @@ import static no.nav.sbl.dialogarena.sak.service.TilgangskontrollServiceImpl.TEM
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -73,7 +70,7 @@ public class DokumentControllerTest {
         when(tilgangskontrollService.harGodkjentEnhet(any(HttpServletRequest.class))).thenReturn(false);
         when(dokumentMetadataService.hentDokumentMetadata(anyList(), anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("result"));
-        when(saksService.hentAlleSaker(anyString())).thenReturn(new AlleSakerResultatWrapper(asList(new Sak()), null));
+        when(saksService.hentAlleSaker(anyString())).thenReturn(new ResultatWrapper<>(asList(new Sak()), null));
         when(innsyn.hentDokument(anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("null"));
     }
 
@@ -155,8 +152,8 @@ public class DokumentControllerTest {
         assertThat(response.getStatus(), is(403));
     }
 
-    private DokumentMetadataResultatWrapper lagDokumentMetadataListe(String temakode) {
-        return new DokumentMetadataResultatWrapper(asList(
+    private ResultatWrapper<List<DokumentMetadata>> lagDokumentMetadataListe(String temakode) {
+        return new ResultatWrapper(asList(
                 new DokumentMetadata()
                         .withJournalpostId("123")
                         .withHoveddokument(new Dokument().withTittel("Tittel for hoveddokument").withDokumentreferanse("123"))
@@ -166,8 +163,8 @@ public class DokumentControllerTest {
         ), null);
     }
 
-    private DokumentMetadataResultatWrapper lagDokumentMetadataIkkeJournalfortListe(String temakode) {
-        return new DokumentMetadataResultatWrapper(asList(
+    private ResultatWrapper<List<DokumentMetadata>> lagDokumentMetadataIkkeJournalfortListe(String temakode) {
+        return new ResultatWrapper(asList(
                 new DokumentMetadata()
                         .withJournalpostId("123")
                         .withIsJournalfort(false)
