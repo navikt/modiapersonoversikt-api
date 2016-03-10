@@ -18,4 +18,9 @@ public class ResultatWrapper<T> {
         this.resultat = resultat;
         this.feilendeSystemer = feilendeSystemer;
     }
+
+    public ResultatWrapper withEkstraFeilendeBaksystemer(Set<Baksystem> baksystemer){
+        this.feilendeSystemer.addAll(baksystemer);
+        return this;
+    }
 }
