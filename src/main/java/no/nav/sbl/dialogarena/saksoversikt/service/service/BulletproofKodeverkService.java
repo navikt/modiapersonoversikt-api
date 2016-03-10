@@ -71,7 +71,7 @@ public class BulletproofKodeverkService {
         try {
             return kodeverkClient.hentFoersteTermnavnForKode(temakode, kodeverknavn);
         } catch (RuntimeException e) {
-            LOG.error("Ukjent feil mot kall mot kodeverk. Fallback til temakode", e);
+            LOG.error("Ukjent feil mot kall mot kodeverk", e);
             throw new FeilendeBaksystemException(Baksystem.KODEVERK);
         } catch(Exception e) {
             LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
