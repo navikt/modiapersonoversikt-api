@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.DokumentMetadataResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
@@ -13,7 +14,7 @@ public class InnsynJournalService {
     @Inject
     private Innsyn innsyn;
 
-    public DokumentMetadataResultatWrapper joarkSakhentTilgjengeligeJournalposter(List<Sak> saker, String fnr) {
+    public ResultatWrapper<List<DokumentMetadata>> joarkSakhentTilgjengeligeJournalposter(List<Sak> saker, String fnr) {
         return innsyn.hentTilgjengeligJournalpostListe(saker, fnr);
 
     }

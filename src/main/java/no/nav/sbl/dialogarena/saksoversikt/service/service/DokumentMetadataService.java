@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.DokumentMetadataResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.empty;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.FERDIG;
 
@@ -57,16 +56,16 @@ public class DokumentMetadataService {
         return finnesIJoark(joarkMetadata).negate();
     }
 
-    public DokumentMetadataResultatWrapper hentDokumentMetadata(List<Sak> saker, String fnr) {
+    public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
         Set<Baksystem> feilendeBaksystem = new HashSet<>();
 
         List<DokumentMetadata> joarkMetadataListe;
         List<DokumentMetadata> innsendteSoknaderIHenvendelse;
 
         try {
-            DokumentMetadataResultatWrapper dokumentMetadataResultatWrapper = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr);
-            joarkMetadataListe = dokumentMetadataResultatWrapper.dokumentMetadata;
-            feilendeBaksystem.addAll(dokumentMetadataResultatWrapper.feiledeSystemer);
+            ResultatWrapper<List<DokumentMetadata>> dokumentMetadataResultatWrapper = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr);
+            joarkMetadataListe = dokumentMetadataResultatWrapper.resultat;
+            feilendeBaksystem.addAll(dokumentMetadataResultatWrapper.feilendeSystemer);
         } catch (FeilendeBaksystemException e) {
             feilendeBaksystem.add(e.getBaksystem());
             joarkMetadataListe = emptyList();
@@ -92,7 +91,7 @@ public class DokumentMetadataService {
                 .stream()
                 .filter(finnesIkkeIJoark(joarkMetadataListe));
 
-        return new DokumentMetadataResultatWrapper(Java8Utils.concat(
+        return new ResultatWrapper<>(Java8Utils.concat(
                 populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),
                 innsendteSoknaderSomBareFinnesIHenvendelse,
                 soknaderSomHarEndretTema

@@ -7,10 +7,9 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetada
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.DokumentMetadataResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.SakstemaResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
@@ -118,13 +117,13 @@ public class SaksServiceTest {
 
         when(kodeverk.getTemanavnForTemakode(anyString(), anyString())).thenReturn("Dagpenger");
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new DokumentMetadataResultatWrapper(dokumentmetadata, emptySet()));
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(dokumentmetadata, emptySet()));
 
         when(sakstemaGrupperer.grupperSakstema(saker, dokumentmetadata)).thenReturn(new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet<>(asList(DAGPENGER)));
         }});
 
-        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).sakstema;
+        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).resultat;
 
         assertTrue(sakstema.size() == 1);
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
@@ -135,7 +134,7 @@ public class SaksServiceTest {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
         when(kodeverk.finnesTemaKodeIKodeverk(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(true);
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new DokumentMetadataResultatWrapper(emptyList(), emptySet()));
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(emptyList(), emptySet()));
 
         Sak sak = new Sak()
                 .withSaksId("123")
@@ -148,9 +147,9 @@ public class SaksServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>("Arbeid", new HashSet<>(Arrays.asList(DAGPENGER, OPPFOLGING)));
-        SakstemaResultatWrapper sakstemaResultatWrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), emptyMap());
+        ResultatWrapper<List<Sakstema>> wrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), emptyMap());
 
-        assertThat(sakstemaResultatWrapper.sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
+        assertThat(wrapper.resultat.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
     }
 
     @Test
@@ -164,7 +163,7 @@ public class SaksServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>(TEMAGRUPPE_RESTERENDE_TEMA, new HashSet<>(Arrays.asList(OPPFOLGING)));
-        SakstemaResultatWrapper sakstemaResultatWrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(oppfolinging), asList(
+        ResultatWrapper<List<Sakstema>> wrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(oppfolinging), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withMottaker(Entitet.SLUTTBRUKER)
@@ -175,8 +174,8 @@ public class SaksServiceTest {
                                 new Dokument()
                                         .withTittel("TEST"))), emptyMap());
 
-        assertThat(sakstemaResultatWrapper.sakstema.get(0).temanavn, equalTo("Oppfølging"));
-        assertThat(sakstemaResultatWrapper.sakstema.size(), is(1));
+        assertThat(wrapper.resultat.get(0).temanavn, equalTo("Oppfølging"));
+        assertThat(wrapper.resultat.size(), is(1));
     }
 
     @Test
@@ -198,7 +197,7 @@ public class SaksServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>(TEMAGRUPPE_ARBEID, new HashSet<>(Arrays.asList(DAGPENGER,OPPFOLGING)));
-        SakstemaResultatWrapper sakstemaResultatWrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(oppfolinging, sak), asList(
+        ResultatWrapper<List<Sakstema>> wrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(oppfolinging, sak), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withMottaker(Entitet.SLUTTBRUKER)
@@ -210,8 +209,8 @@ public class SaksServiceTest {
                                 new Dokument()
                                         .withTittel("TEST"))), emptyMap());
 
-        assertThat(sakstemaResultatWrapper.sakstema.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
-        assertThat(sakstemaResultatWrapper.sakstema.size(), is(1));
+        assertThat(wrapper.resultat.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
+        assertThat(wrapper.resultat.size(), is(1));
     }
 
     @Test
@@ -234,7 +233,7 @@ public class SaksServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>(TEMAGRUPPE_ARBEID, new HashSet<>(Arrays.asList(DAGPENGER,OPPFOLGING, ARBEIDSAVKLARINGSPENGER)));
-        SakstemaResultatWrapper sakstemaResultatWrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak2, sak), asList(
+        ResultatWrapper<List<Sakstema>> wrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak2, sak), asList(
                 new DokumentMetadata()
                         .withMottaker(Entitet.SLUTTBRUKER)
                         .withAvsender(Entitet.NAV)
@@ -246,7 +245,7 @@ public class SaksServiceTest {
                                 new Dokument()
                                         .withTittel("Tilhorende Oppfolging"))), emptyMap());
 
-        assertThat(sakstemaResultatWrapper.sakstema.size(), is(2));
+        assertThat(wrapper.resultat.size(), is(2));
     }
 
     @Test
@@ -274,7 +273,7 @@ public class SaksServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>(TEMAGRUPPE_ARBEID, new HashSet<>(Arrays.asList(DAGPENGER,OPPFOLGING, ARBEIDSAVKLARINGSPENGER)));
-        SakstemaResultatWrapper sakstemaResultatWrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(oppfolinging, sak, sak2), asList(
+        ResultatWrapper<List<Sakstema>> wrapper = saksService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(oppfolinging, sak, sak2), asList(
                 new DokumentMetadata()
                         .withTilhorendeSakid("321")
                         .withMottaker(Entitet.SLUTTBRUKER)
@@ -286,9 +285,9 @@ public class SaksServiceTest {
                                 new Dokument()
                                         .withTittel("TEST"))), emptyMap());
 
-        assertThat(sakstemaResultatWrapper.sakstema.get(0).temanavn, equalTo("Arbeidsavklaringspenger og oppfølging"));
-        assertThat(sakstemaResultatWrapper.sakstema.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
-        assertThat(sakstemaResultatWrapper.sakstema.size(), is(2));
+        assertThat(wrapper.resultat.get(0).temanavn, equalTo("Arbeidsavklaringspenger og oppfølging"));
+        assertThat(wrapper.resultat.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
+        assertThat(wrapper.resultat.size(), is(2));
     }
 
     private Future<Object> getFuturePesys() {
