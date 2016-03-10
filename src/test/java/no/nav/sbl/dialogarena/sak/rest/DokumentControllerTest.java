@@ -7,8 +7,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.AlleSakerResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.DokumentMetadataResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
@@ -71,7 +70,7 @@ public class DokumentControllerTest {
 //        System.setProperty("dokumentressurs.withmock", "true");
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
         when(tilgangskontrollService.harGodkjentEnhet(any(String.class), any(HttpServletRequest.class))).thenReturn(empty());
-        when(saksService.hentAlleSaker(anyString())).thenReturn(new AlleSakerResultatWrapper(asList(new Sak()), null));
+        when(saksService.hentAlleSaker(anyString())).thenReturn(new ResultatWrapper<>(asList(new Sak()), null));
         when(innsyn.hentDokument(anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("null"));
     }
 
@@ -162,8 +161,8 @@ public class DokumentControllerTest {
         assertThat(response.getStatus(), is(403));
     }
 
-    private DokumentMetadataResultatWrapper lagDokumentMetadataListe(String temakode) {
-        return new DokumentMetadataResultatWrapper(asList(
+    private ResultatWrapper<List<DokumentMetadata>> lagDokumentMetadataListe(String temakode) {
+        return new ResultatWrapper(asList(
                 new DokumentMetadata()
                         .withJournalpostId("123")
                         .withHoveddokument(new Dokument().withTittel("Tittel for hoveddokument"))
@@ -173,8 +172,8 @@ public class DokumentControllerTest {
         ), null);
     }
 
-    private DokumentMetadataResultatWrapper lagDokumentMetadataIkkeJournalfortListe(String temakode) {
-        return new DokumentMetadataResultatWrapper(asList(
+    private ResultatWrapper<List<DokumentMetadata>> lagDokumentMetadataIkkeJournalfortListe(String temakode) {
+        return new ResultatWrapper(asList(
                 new DokumentMetadata()
                         .withJournalpostId("123")
                         .withIsJournalfort(false)

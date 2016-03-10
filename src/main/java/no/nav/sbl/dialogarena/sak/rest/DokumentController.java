@@ -206,8 +206,8 @@ public class DokumentController {
     }
 
     private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
-        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).alleSaker, fnr)
-                .dokumentMetadata
+        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).resultat, fnr)
+                .resultat
                 .stream()
                 .filter(dokumentMetadata -> journalpostId.equals(dokumentMetadata.getJournalpostId()))
                 .findFirst()
