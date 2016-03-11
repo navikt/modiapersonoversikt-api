@@ -19,23 +19,25 @@ class DokumentInfoElm extends React.Component {
 
     render() {
         const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
-        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper, ettersending  } = dokumentinfo;
+        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper, ettersending, kategoriNotat  } = dokumentinfo;
         const temaHvisAlleTemaer = visTema === 'true' ? <p className="tema-dokument">{temakodeVisning}</p> :
             <noscript/>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
+        const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
+            <p className="vekk">Ikke tilgang til dokument</p> : '';
         const hoveddokumentTekst = ettersending ? ettersendelseTil(hoveddokument.tittel) : hoveddokument.tittel;
 
         return (
             <li className={`dokumentliste-element ${kanViseDokument}`}>
+                {skjultIngenTilgangTekst}
                 <div className="datodokumentliste">
                     <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                     <span> / </span>
                     <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker}
-                                      brukerNavn={brukerNavn} navn={navn}/>
+                                      brukerNavn={brukerNavn} navn={navn} kategoriNotat={kategoriNotat}
+                    />
                 </div>
-
-
                 <div className="hoveddokument-tittel-wrapper">
                     <a href="javascript:void(0)" className="hoveddokument-tittel"
                        onClick={this._redirect.bind(this)}>{hoveddokumentTekst}</a>
@@ -43,7 +45,8 @@ class DokumentInfoElm extends React.Component {
                 {temaHvisAlleTemaer}
                 <div className="typo-info">
                     <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost}
-                                         dokumentinfo={dokumentinfo}/>
+                                         dokumentinfo={dokumentinfo}
+                    />
                 </div>
             </li>
         );

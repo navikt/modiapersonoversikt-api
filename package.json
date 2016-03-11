@@ -42,6 +42,7 @@
     "object-assign": "^2.0.0",
     "react-addons-test-utils": "^0.14.7",
     "react-intl": "^2.0.0-beta-2",
+    "react-scroll": "git+https://github.com/nutgaard/react-scroll.git#2e4ce0c77a40d56d046616773548086b4f95bb3e",
     "react-tools": "^0.13.3",
     "sanitize-html": "^1.9.0",
     "sinon": "^1.14.1",

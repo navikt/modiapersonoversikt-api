@@ -202,19 +202,59 @@
   }
 
   .dokumentheader {
-    padding: 20px;
+    margin-bottom: 20px;
 
     .typo-element {
       display: inline;
-      font-family: Arial,sans-serif;
+      font-family: Arial, sans-serif;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 16px;
     }
     .lokal-linker {
       float: right
     }
     a:not(:last-child) {
       margin-right: 1rem;
+    }
+  }
+  .dokument-visning-page {
+    height: 100%;
+  }
+  .fixed-header {
+    background-color: #EFEFEF;
+    padding: 1rem 3rem 1rem 3rem;
+    margin: 0;
+    position: absolute;
+    left: 0;
+    right: 17px;
+    z-index: 1005;
+    box-shadow: -1px 1px 5px 0px #b7b1a9;
+  }
+  .kulemeny {
+    list-style: none;
+    padding: 0;
+    display: inline-block;
+    float: right;
+    margin: 0;
+
+    li {
+      display: inline-block;
+      margin-left: 16px;
+    }
+    input {
+      border: none;
+      border-radius: 50%;
+      background-color: #b7b1a9;
+      width: 14px;
+      height: 14px;
+
+      &.active {
+        background-color: #005b82;
+      }
+
+      &:hover {
+        background-color: #0067c5
+      }
     }
   }
 }
@@ -304,14 +344,14 @@
 
 .decorated {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   display: block;
 }
 
 .typo-innholdstittel {
-  font-size: 2.5rem;
-  font-weight: 600;
+  font-size: 2.15rem;
   font-family: Modus, Arial, sans-serif;
+  font-weight: 600;
 }
 
 .panel {
@@ -323,7 +363,7 @@
 
 .grattpanel {
   background: #e1e1e1;
-  padding: 2rem 5rem 5rem 5rem;
+  padding: 4rem 3rem 5rem 3rem;
   overflow-x: hidden;
   overflow-y: visible;
   height: 100%;
@@ -367,6 +407,7 @@
 
 .feilmelding-bakgrunn {
   border: 1px solid black;
+  width: 100%;
 }
 
 .text-center {
