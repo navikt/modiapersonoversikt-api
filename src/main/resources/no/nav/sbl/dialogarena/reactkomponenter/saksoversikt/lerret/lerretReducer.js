@@ -32,7 +32,7 @@ actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
 actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     const [temaer, sakstema, tekster, miljovariabler, fnr] = action.data;
 
-    let _sakstema = sakstema && sakstema.length > 0? sakstema
+    let _sakstema = sakstema.resultat && sakstema.resultat.length > 0? sakstema.resultat
             .filter(fjernTommeTema).sort(nyesteSakstema) : [];
 
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
