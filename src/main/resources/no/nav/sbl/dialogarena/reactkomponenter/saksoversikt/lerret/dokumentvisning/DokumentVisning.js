@@ -53,7 +53,9 @@ class DokumentVisning extends Component {
         window.addEventListener('resize', this.eventHandler);
         this._oppdaterPdfVisning();
 
-        setTimeout(this._oppdaterPdfVisning.bind(this), 1000); // FF hack, onload fungerer ikke via react
+        $(this.refs.pdf).ready(() => {
+            setTimeout(() => this._oppdaterPdfVisning(), 100);
+        });
     }
 
     componentDidUpdate() {
