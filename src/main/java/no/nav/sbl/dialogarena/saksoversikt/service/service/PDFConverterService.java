@@ -35,7 +35,7 @@ public class PDFConverterService {
             List<String> pdfURLer = new ArrayList<>();
 
             for (int i = 0; i < response.getPages(); i++) {
-                pdfURLer.add(getProperty("tjenester.url") + "/dokkonv/rest/dokcache/v1/hentdokumentside/" + response.getUid() + "/" + (i+1));
+                pdfURLer.add(getProperty("tjenester.url") + getProperty("pdfkonverterer.sti") + response.getUid() + "/" + (i+1));
             }
             return new TjenesteResultatWrapper(pdfURLer);
         } catch (PdfErKorruptFault e) {
