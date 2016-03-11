@@ -58,10 +58,16 @@ export const hentDokumentData = (fnr, valgtjournalpost) => {
     }
 };
 
+export const velgDefaultFiltreringAvsender = () => {
+    return (dispatch) => velgFiltreringAvsender(event.target.value)
+};
+
 
 export const velgSak = (sak) => ({ type: AT.VELG_SAK, data: sak });
 export const velgJournalpost = (journalpost) => ({ type: AT.VELG_JOURNALPOST, data: journalpost });
 export const visSide = (side) => ({ type: AT.VIS_SIDE, data: side });
+
+export const velgFiltreringAvsender = (filtreringsvalg) => ({ type: AT.VELG_FILTRERING_AVSENDER, filtreringsvalg });
 
 //Benyttes av Wicketklassen SaksoversiktLerret
 export const visTema = (tema) => ({ type: AT.VIS_TEMA, data: tema });

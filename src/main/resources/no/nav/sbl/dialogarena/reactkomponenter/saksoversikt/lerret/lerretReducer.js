@@ -17,6 +17,7 @@ const lagAlleTema = (temaliste) => [{
 const actionHandlers = {};
 const initalState = {
     valgtside: 'sakstema',
+    filtreringsvalg: 'ALLE',
     status: Const.VOID,
     data: {},
     feil: '',
@@ -32,7 +33,7 @@ actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
 actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     const [temaer, sakstema, tekster, miljovariabler, fnr] = action.data;
 
-    let _sakstema = sakstema && sakstema.length > 0? sakstema
+    let _sakstema = sakstema.resultat && sakstema.resultat.length > 0? sakstema.resultat
             .filter(fjernTommeTema).sort(nyesteSakstema) : [];
 
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
@@ -59,7 +60,8 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
             fnr
         },
         valgtTema,
-        widgetValgtTemakode
+        widgetValgtTemakode,
+        filtreringsvalg: 'ALLE'
     };
 };
 actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
@@ -71,6 +73,7 @@ actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJourn
 actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
 actionHandlers[AT.PURGE_STATE] = (state, action) => ({ ...initalState });
+actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({...state, filtreringsvalg: action.filtreringsvalg });
 
 // -------
 export default basicReducer(initalState, actionHandlers);

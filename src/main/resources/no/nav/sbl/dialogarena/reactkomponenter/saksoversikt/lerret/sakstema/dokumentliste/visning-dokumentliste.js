@@ -1,35 +1,31 @@
 import React, { PropTypes as PT } from 'react';
 import TidligereDokumenter from './tidligere-dokumenter';
 import { FormattedMessage } from 'react-intl';
-import DokumentListe from './dokumentliste';
-
+//import DokumentListe from './dokumentliste';
+import FiltrerteDokumenter from './dokument/filtrering/FiltrerteDokumenter';
 
 function openGosys(e) {
     e.preventDefault();
     document.querySelector('.hiddenGosysLenkePanel').click();
 }
 
-const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost, visSide }) => {
+const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost, visSide, filtreringsvalg }) => {
     const dokumenter = sakstema.slice(1).reduce((acc, tema) =>
         acc.concat(tema.dokumentMetadata), []);
 
+    const dokumentlisteParameter = { brukerNavn, visSide, velgJournalpost, filtreringsvalg };
+
     const dokumentliste = valgtTema.temakode !== 'alle' ?
-        <DokumentListe visTema="false"
-                       dokumentMetadata={valgtTema.dokumentMetadata}
-                       brukerNavn={brukerNavn}
-                       visSide={visSide}
-                       velgJournalpost={velgJournalpost}
-        /> :
-        <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                       brukerNavn={brukerNavn}
-                       visSide={visSide}
-                       velgJournalpost={velgJournalpost}
-        />;
+        <FiltrerteDokumenter visTema="false" dokumentMetadata={valgtTema.dokumentMetadata} {...dokumentlisteParameter} /> :
+        //<FiltrerteDokumenter {...dokumentlisteParameter} /> :
+        <FiltrerteDokumenter visTema="true" dokumentMetadata={dokumenter} {...dokumentlisteParameter} />;
+        //<FiltrerteDokumenter {...dokumentlisteParameter} />;
 
     const ingenDokumenterBidrag = valgtTema.temakode === 'BID' ?
         <div className="infoingenbidrag">
             <FormattedMessage
                 id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></div> : <noscript/>;
+
 
     const ingendokumenter = (
         <h2 className="robust-ikon-feil-strek ingendokumenterheader">
@@ -39,7 +35,11 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
         </h2>);
 
     if (valgtTema.dokumentMetadata.length > 0) {
-        return <div>{ ingenDokumenterBidrag }{ dokumentliste }<TidligereDokumenter /></div>;
+        return (
+            <div>
+                { ingenDokumenterBidrag }{ dokumentliste }
+                <TidligereDokumenter />
+            </div>);
     }
 
     if (valgtTema.temakode === 'BID') {

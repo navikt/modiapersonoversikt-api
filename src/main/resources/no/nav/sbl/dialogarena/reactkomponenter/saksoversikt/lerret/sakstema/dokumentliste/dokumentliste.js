@@ -1,6 +1,7 @@
 import React, { PropTypes as pt } from 'react';
 import { groupBy } from 'lodash';
 import DokumentInfoElm from './dokument-info-elm';
+import { FormattedMessage } from 'react-intl';
 
 const nyesteForst = (a, b) => b.dato.dayOfYear - a.dato.dayOfYear;
 
@@ -10,7 +11,7 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
 
     const dokumentListeForAarstall = Object.keys(dokumenterGruppertPaaAar)
         .slice(0).sort().reverse()
-        .map(aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) }))
+        .map(aarstall => ({aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst)}))
         .reduce((acc, { aarstall, dokumenter }) => {
             if (aarstall !== gjeldendeAar) {
                 acc.push(<li key={`aarstall-'${aarstall}`} className="aarstall">{aarstall}</li>);
@@ -25,7 +26,11 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
         }, []);
 
 
-    return (<ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>);
+    return (
+        <div>
+            <FormattedMessage id={'dokumentliste.filtrering.forklaring'}/>
+            <ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>
+        </div>);
 };
 
 

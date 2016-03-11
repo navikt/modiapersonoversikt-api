@@ -2,7 +2,7 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak, visSide, velgJournalpost } from './../actions';
+import { hentLerretData, velgSak, visSide, velgJournalpost, velgFiltreringAvsender, velgDefaultFiltreringAvsender } from './../actions';
 import * as Const from './../konstanter';
 
 import SakstemaPage from './sakstema/SakstemaPage';
@@ -28,6 +28,7 @@ function getContent(props) {
 
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
+        velgDefaultFiltreringAvsender();
         this.props.hentLerretData(this.props.fnr);
     }
 
@@ -64,7 +65,8 @@ const mapStateToProps = (state) => {
         status: state.lerret.status,
         valgtTema: state.lerret.valgtTema,
         tekster: state.lerret.data.tekster,
-        miljovariabler: state.lerret.data.miljovariabler
+        miljovariabler: state.lerret.data.miljovariabler,
+        filtreringsvalg: state.lerret.filtreringsvalg
     };
 };
 
@@ -72,5 +74,6 @@ export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,
     visSide,
     velgJournalpost,
-    hentLerretData
+    hentLerretData,
+    velgFiltreringAvsender
 })(SaksoversiktLerret), store);
