@@ -105,7 +105,7 @@ public class SaksService {
         }
     }
 
-    private ResultatWrapper<List<Sakstema>> OpprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
+    private ResultatWrapper OpprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
         Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll =
@@ -149,6 +149,9 @@ public class SaksService {
                     try {
                         temanavn = temanavn(temagruppe, temakode);
                     } catch (FeilendeBaksystemException e) {
+                        if (!temagruppe.equals(RESTERENDE_TEMA)){
+                            temanavn += " og oppfølging";
+                        }
                         feilendeBaksystemer.add(e.getBaksystem());
                     }
 
