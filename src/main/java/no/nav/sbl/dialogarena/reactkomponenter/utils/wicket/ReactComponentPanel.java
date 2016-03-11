@@ -95,9 +95,18 @@ public class ReactComponentPanel extends MarkupContainer {
         transmit(callScript(method, prepareArguments(args)));
     }
 
+    public void callFirst(String method, Object... args) {
+        transmitFirst(callScript(method, prepareArguments(args)));
+    }
+
     private void transmit(final String js) {
         AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
         target.appendJavaScript(js);
+    }
+
+    private void transmitFirst(final String js) {
+        AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
+        target.prependJavaScript(js);
     }
 
     String initializeScript(String componentName, Map<String, Object> props) {
