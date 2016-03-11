@@ -52,6 +52,8 @@ class DokumentVisning extends Component {
         this.eventHandler = debounce(this._oppdaterPdfVisning, 150);
         window.addEventListener('resize', this.eventHandler);
         this._oppdaterPdfVisning();
+
+        setTimeout(this._oppdaterPdfVisning.bind(this), 1000); // FF hack, onload fungerer ikke via react
     }
 
     componentDidUpdate() {
@@ -80,7 +82,8 @@ class DokumentVisning extends Component {
                         </a>
                     </div>
                 </div>
-                <object ref="pdf" data={pdfData} type="application/pdf" scrolling="no" style={style} key={style.height}>
+                <object ref="pdf" data={pdfData} type="application/pdf" scrolling="no" style={style}
+                        key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
                     <param name="view" value="FitV"/>
 
                     <p>Kunne ikke vise pdf inline</p>
