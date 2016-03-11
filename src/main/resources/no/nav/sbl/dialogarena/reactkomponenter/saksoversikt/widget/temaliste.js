@@ -13,6 +13,8 @@ const ANTALL_TEMAER = 6;
 
 function widgetSnurrepipp(status) {
     const initial = document.querySelector('.widget-saksoversikt .klikkbar-header .initial');
+    if (!initial)return;
+
     if (status === Const.LASTER) {
         initial.classList.add('loading');
     } else {
