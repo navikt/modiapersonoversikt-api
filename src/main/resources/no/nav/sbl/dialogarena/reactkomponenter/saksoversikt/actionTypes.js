@@ -4,9 +4,10 @@ export const LAST_WIDGET_DATA_TEKSTER_OK = 'LAST_WIDGET_DATA_TEKSTER_OK';
 export const LAST_WIDGET_DATA_OK = 'LAST_WIDGET_DATA_OK';
 export const LAST_WIDGET_DATA_FEIL = 'LAST_WIDGET_DATA_FEIL';
 
-// Brukes for å hente ut all informasjon
+// Brukes for å hente ut informasjon til lerret
 export const LAST_LERRET_DATA_START = 'LAST_LERRET_DATA_START';
-export const LAST_LERRET_DATA_OK = 'LAST_LERRET_DATA_OK';
+export const LAST_LERRET_DATA_INIT_OK = 'LAST_LERRET_DATA_INIT_OK';
+export const LAST_LERRET_DATA_ALLE_SAKER_OK = 'LAST_LERRET_DATA_ALLE_SAKER_OK';
 export const LAST_LERRET_DATA_FEIL = 'LAST_LERRET_DATA_FEIL';
 
 // Brukes for å hente ut dokumenter

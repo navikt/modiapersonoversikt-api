@@ -38,7 +38,7 @@ class Temaliste extends React.Component {
             return <noscript></noscript>;
         }
 
-        const temaliste = status === Const.FEILET ? <li className="widget-feilmelding"><FormattedMessage id="sakswidget.feilmelding.sakogbehandling" /></li>
+        const temaliste = status === Const.FEILET ? <li className="feederroritem"><p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding" /></p></li>
             :  take(temaer, ANTALL_TEMAER).map((tema) =>
             <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
 
