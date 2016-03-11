@@ -6,7 +6,7 @@ const isInside = (y, elemTopBound, elemBottomBound, containerCoords, elementCoor
     return (midtpunktish >= elemTopBound && midtpunktish <= elemBottomBound);
 };
 
-const Kulemeny = ({ dokref, tittel, initalState }) => (
+const Kulemeny = ({ dokref, tittel, initialState }) => (
     <li>
         <Button
             activeClass="active"
@@ -16,7 +16,7 @@ const Kulemeny = ({ dokref, tittel, initalState }) => (
             offset={-80}
             title={tittel}
             isInside={isInside}
-            initalState={initalState}
+            initialState={initialState}
             type="button"
             containerId="js-kulemeny-scroll"
         />
