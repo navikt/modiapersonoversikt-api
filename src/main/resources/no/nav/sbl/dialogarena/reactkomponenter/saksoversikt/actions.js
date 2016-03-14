@@ -23,9 +23,8 @@ export const hentWidgetData = (fnr) => {
 
         return tekster
             .then(promisedDispatch(AT.LAST_WIDGET_DATA_TEKSTER_OK))
-            .then(temaer
-                .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
-                .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL))))
+            .then(() => temaer)
+            .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
             .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)));
     }
 };
