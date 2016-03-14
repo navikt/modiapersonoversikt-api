@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>6.49-EARSPLITTING-BUCKET-SNAPSHOT</version>
+        <version>7.5-EARSPLITTING-BUCKET-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-mock</artifactId>
@@ -70,6 +70,10 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>dkif-consumer</artifactId>
         </dependency>
 
         <!--Kodeverk-->
@@ -136,6 +140,10 @@
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <!--Dialogarena-->
