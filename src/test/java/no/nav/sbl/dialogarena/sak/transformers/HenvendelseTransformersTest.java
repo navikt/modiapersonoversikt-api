@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
+import no.nav.sbl.dialogarena.sak.domain.lamell.Kvittering;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.joda.time.DateTime;

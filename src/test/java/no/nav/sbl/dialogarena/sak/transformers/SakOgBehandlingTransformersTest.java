@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
@@ -12,7 +12,7 @@ import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehan
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingskjedeTilBehandling;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
+import static no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 

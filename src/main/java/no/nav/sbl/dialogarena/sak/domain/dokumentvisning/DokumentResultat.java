@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning;
+package no.nav.sbl.dialogarena.sak.domain.dokumentvisning;
 
 import static java.lang.String.format;
 

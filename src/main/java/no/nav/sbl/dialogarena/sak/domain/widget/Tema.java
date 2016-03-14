@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.viewdomain.widget;
+package no.nav.sbl.dialogarena.sak.domain.widget;
 
 import org.joda.time.DateTime;
 

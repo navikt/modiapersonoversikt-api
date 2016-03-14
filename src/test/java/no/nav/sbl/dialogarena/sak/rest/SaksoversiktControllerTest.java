@@ -3,12 +3,8 @@ package no.nav.sbl.dialogarena.sak.rest;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
+import no.nav.sbl.dialogarena.sak.domain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.Cookie;
 import javax.ws.rs.core.Response;
 import java.util.List;
 

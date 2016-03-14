@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
+import no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.*;
+import static no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling.BehandlingsStatus.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 
 public class SakOgBehandlingTransformers {

@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sak.rest;
 
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
+import no.nav.sbl.dialogarena.sak.domain.widget.ModiaSakstema;
+import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;

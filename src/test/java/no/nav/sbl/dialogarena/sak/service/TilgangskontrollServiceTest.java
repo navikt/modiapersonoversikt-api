@@ -3,16 +3,12 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.Before;
@@ -24,10 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.Cookie;
-import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;

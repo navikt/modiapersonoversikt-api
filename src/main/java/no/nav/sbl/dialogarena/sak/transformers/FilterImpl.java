@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus;
+import no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling.BehandlingsStatus;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.slf4j.Logger;

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
+import no.nav.sbl.dialogarena.sak.domain.lamell.Dokument;
+import no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.domain.lamell.Kvittering;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
@@ -15,7 +15,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.both;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.HenvendelseType;
+import static no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling.HenvendelseType;
 
 public class HenvendelseTransformers {
 

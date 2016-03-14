@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service.interfaces;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
+import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 
 import java.util.List;
 

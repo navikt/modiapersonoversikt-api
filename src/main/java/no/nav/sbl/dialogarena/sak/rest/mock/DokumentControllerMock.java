@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.rest.mock;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
-import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
+import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.DokumentResultat;
+import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.JournalpostResultat;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;

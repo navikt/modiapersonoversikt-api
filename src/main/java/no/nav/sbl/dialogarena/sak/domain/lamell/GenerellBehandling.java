@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.viewdomain.lamell;
+package no.nav.sbl.dialogarena.sak.domain.lamell;
 
 import org.joda.time.DateTime;
 

@@ -4,7 +4,7 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
+import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
