@@ -33,6 +33,8 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmel
 import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER;
 import static org.slf4j.LoggerFactory.getLogger;
 
+//Preserve stacktrace
+@java.lang.SuppressWarnings("squid:S1166")
 public class InnsynImpl implements Innsyn {
 
     @Inject

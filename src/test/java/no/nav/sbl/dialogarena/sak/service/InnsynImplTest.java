@@ -1,237 +1,129 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
-import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
-import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSAktoer;
-import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSOrganisasjon;
-import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSPerson;
-import org.joda.time.DateTime;
+import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
+import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentDokumentIkkeFunnet;
+import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.journal.v2.HentJournalpostListeSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
+import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentRequest;
+import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentResponse;
+import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentJournalpostListeResponse;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.sak.mock.JoarkMock.navMottattDokumentFraBruker;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.SIKKERHETSBEGRENSNING;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class InnsynImplTest {
 
-    public static final String PERSON_NAVN = "TestPerson";
-    public static final String PERSON_FNR = "12345678901";
+    @Mock
+    private JournalV2 journalV2;
 
-    public static final String TREDJEPERSON_NAVN = "Doktor Proktor";
-    public static final String TREDJEPERSON_FNR = "09876543212";
+    @Mock
+    private JournalpostTransformer journalpostTransformer;
 
-    public static final String BEDRIFT_NAVN = "Testbedrift";
-    public static final String BEDRIFT_ORGNR = "098743212";
+    @InjectMocks
+    private InnsynImpl innsynImpl;
 
-    public static WSJournalpost navMottattDokumentFraBruker() throws DatatypeConfigurationException {
-        WSJournalpost journalpost = new WSJournalpost();
-        journalpost.setJournalpostId("1");
-        journalpost.setArkivtema(lagArkivtema("DAG"));
-        journalpost.setEksternPart(brukerenSelv());
-        journalpost.setGjelderSak(lagJoarkSak("1"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
-        journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
-
-        return journalpost;
+    @Test
+    public void hentDokumentGirDokumentNaarAltGaaBra() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet {
+        byte[] bytes = new byte[2];
+        when(journalV2.hentDokument(any(WSHentDokumentRequest.class))).thenReturn(new WSHentDokumentResponse().withDokument(bytes));
+        final TjenesteResultatWrapper resultatWrapper = innsynImpl.hentDokument("1", "2");
+        assertThat(resultatWrapper.result.get(), is(bytes));
     }
 
-    public static WSJournalpost navMottattDokumentFraBedrift() throws DatatypeConfigurationException {
-        WSJournalpost journalpost = new WSJournalpost();
-        journalpost.setJournalpostId("1");
-        journalpost.setArkivtema(lagArkivtema("DAG"));
-        journalpost.setEksternPart(tredjePartsOrganisasjon());
-        journalpost.setGjelderSak(lagJoarkSak("1"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
-        journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
-
-        return journalpost;
+    @Test
+    public void hentDokumentGirDokumentIkkeFunnet() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet {
+        when(journalV2.hentDokument(any(WSHentDokumentRequest.class))).thenThrow(new HentDokumentDokumentIkkeFunnet("Ikke funnet"));
+        final TjenesteResultatWrapper resultatWrapper = innsynImpl.hentDokument("1", "2");
+        assertThat(resultatWrapper.feilmelding, is(DOKUMENT_IKKE_FUNNET));
     }
 
-    public static WSJournalpost navMottattDokumentFraUkjent() throws DatatypeConfigurationException {
-        WSJournalpost journalpost = new WSJournalpost();
-        journalpost.setJournalpostId("1");
-        journalpost.setArkivtema(lagArkivtema("DAG"));
-        journalpost.setEksternPart(ingen());
-        journalpost.setGjelderSak(lagJoarkSak("1"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
-        journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
-
-        return journalpost;
+    @Test
+    public void hentDokumentGirSikkerhetsbegrensning() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet {
+        when(journalV2.hentDokument(any(WSHentDokumentRequest.class))).thenThrow(new HentDokumentSikkerhetsbegrensning("Du har ikke tilgang"));
+        final TjenesteResultatWrapper resultatWrapper = innsynImpl.hentDokument("1", "2");
+        assertThat(resultatWrapper.feilmelding, is(SIKKERHETSBEGRENSNING));
     }
 
-
-
-    public static WSJournalpost brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg() throws DatatypeConfigurationException {
-        WSJournalpost journalpost = new WSJournalpost();
-        journalpost.setJournalpostId("2");
-        journalpost.setArkivtema(lagArkivtema("DAG"));
-        journalpost.setEksternPart(tredjePartsPerson());
-        journalpost.setGjelderSak(lagJoarkSak("2"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("U"));
-        journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
-                        lagSkannetInnhold("23", "info"),
-                        lagSkannetInnhold("34", "annenInfo")
-                )));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("awd32", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "231VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("awd33", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "453VED", new ArrayList<>()));
-
-
-        return journalpost;
-    }
-
-    public static WSJournalpost internDokumentinfoRelasjonListe() throws DatatypeConfigurationException {
-        WSJournalpost journalpost = new WSJournalpost();
-        journalpost.setJournalpostId("1");
-        journalpost.setArkivtema(lagArkivtema("DAG"));
-        journalpost.setEksternPart(tredjePartsOrganisasjon());
-        journalpost.setGjelderSak(lagJoarkSak("1"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("N"));
-        journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
-                        lagSkannetInnhold("23", "info"),
-                        lagSkannetInnhold("34", "annenInfo")
-                )));
-        return journalpost;
-    }
-
-    public static WSJournalpost eksternDokumentinfoRelasjonListe() throws DatatypeConfigurationException {
-        WSJournalpost journalpost = new WSJournalpost();
-        journalpost.setJournalpostId("1");
-        journalpost.setArkivtema(lagArkivtema("DAG"));
-        journalpost.setEksternPart(tredjePartsOrganisasjon());
-        journalpost.setGjelderSak(lagJoarkSak("1"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
-        journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
-                        lagSkannetInnhold("23", "info"),
-                        lagSkannetInnhold("34", "annenInfo")
-                )));
-        return journalpost;
-    }
-
-    private static WSSkannetInnhold lagSkannetInnhold(String id, String vedleggInnhold) {
-        WSSkannetInnhold skannetInnhold = new WSSkannetInnhold();
-        skannetInnhold.setSkannetInnholdId(id);
-        skannetInnhold.setVedleggInnhold(vedleggInnhold);
-        return skannetInnhold;
-
-    }
-
-    private static WSAktoer tredjePartsPerson() {
-        return new WSPerson().withIdent(TREDJEPERSON_FNR).withNavn(TREDJEPERSON_NAVN);
-    }
-
-    private static WSAktoer tredjePartsOrganisasjon() {
-        return new WSOrganisasjon().withOrgnummer(BEDRIFT_ORGNR).withNavn(BEDRIFT_NAVN);
-    }
-
-    private static WSAktoer brukerenSelv() {
-
-        return new WSPerson().withIdent(PERSON_FNR).withNavn(PERSON_NAVN);
-    }
-
-    private static WSAktoer ingen() {
-        return null;
-    }
-
-    public static WSJournalpost navSendtDokumentTilEksternPart() {
-        WSJournalpost journalpost = new WSJournalpost();
-        journalpost.setJournalpostId("3");
-        journalpost.setArkivtema(lagArkivtema("DAG"));
-        journalpost.setEksternPart(tredjePartsPerson());
-        journalpost.setGjelderSak(lagJoarkSak("2"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(DokumentMetadataService.JOURNALPOST_UTGAAENDE));
+    //TODO når feilhåndtering kommer inn kan denne fikses
+    @Test
+    @Ignore
+    public void hentDokumentGirJoarkSomFeilendeBaksystemVedUkjentFeil() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet {
+        when(journalV2.hentDokument(any(WSHentDokumentRequest.class))).thenThrow(new RuntimeException("tjenesten er nede!!"));
+        Baksystem feilendeBaksystem = null;
         try {
-            journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
-            journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
+            innsynImpl.hentDokument("1", "2");
+        } catch (FeilendeBaksystemException e) {
+            feilendeBaksystem = e.getBaksystem();
         }
-        journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
-        return journalpost;
-    }
-
-    private static WSKommunikasjonsretninger lagKommunikasjonsrettning(String retning) {
-        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
-        kommunikasjonsretninger.setValue(retning);
-        return kommunikasjonsretninger;
-    }
-
-    private static WSDokumentinfoRelasjon lagDokumentinfoRelasjons(String relasjonsId, String dokumentType, String tittel, String dokumentReferanseId, List<WSSkannetInnhold> skannetInnhold) {
-        WSDokumentinfoRelasjon dokumentinfoRelasjon = new WSDokumentinfoRelasjon();
-        dokumentinfoRelasjon.setJournalfoertDokument(lagJournalfortDokumentInfo(tittel, dokumentReferanseId, skannetInnhold));
-        dokumentinfoRelasjon.setDokumentinfoRelasjonId(relasjonsId);
-        dokumentinfoRelasjon.setDokumentTilknyttetJournalpost(lagDokument(dokumentType));
-        dokumentinfoRelasjon.getJournalfoertDokument().setKategori(new WSKatagorier().withValue("INTERN_NOTAT"));
-        return dokumentinfoRelasjon;
-    }
-
-    private static WSTilknyttetJournalpostSom lagDokument(String dokumentType) {
-        WSTilknyttetJournalpostSom dokument = new WSTilknyttetJournalpostSom();
-        dokument.setValue(dokumentType);
-
-        return dokument;
-    }
-
-    private static WSJournalfoertDokumentInfo lagJournalfortDokumentInfo(String tittel, String id, List<WSSkannetInnhold> skannetInnhold) {
-        WSJournalfoertDokumentInfo journalfoertDokumentInfo = new WSJournalfoertDokumentInfo();
-        journalfoertDokumentInfo.setTittel(tittel);
-        journalfoertDokumentInfo.setDokumentId(id);
-        journalfoertDokumentInfo.getSkannetInnholdListe().addAll(skannetInnhold);
-        journalfoertDokumentInfo.setKategori(new WSKatagorier().withValue("kategori"));
-
-        return journalfoertDokumentInfo;
+        assertThat(feilendeBaksystem, is(JOARK));
     }
 
 
-    private static WSDokumentInnhold lagDokumentInnhold(String filtype, String variantFormat) {
-        WSDokumentInnhold dokumentInnhold = new WSDokumentInnhold();
-        dokumentInnhold.setVariantformat(lagVariantFormater(variantFormat));
-        dokumentInnhold.setFiltype(lagArkivfiltyper(filtype));
+    @Test
+    public void hentTilgjengeligJournalpostListeOK() throws HentJournalpostListeSikkerhetsbegrensning, DatatypeConfigurationException {
+        when(journalV2.hentJournalpostListe(any())).thenReturn(new WSHentJournalpostListeResponse().withJournalpostListe(
+                asList(
+                        navMottattDokumentFraBruker()
+                )
+        ));
 
-        return dokumentInnhold;
+        when(journalpostTransformer.dokumentMetadataFraJournalPost(any(), anyString())).thenReturn(new DokumentMetadata());
+        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
+
+        List<DokumentMetadata> dokumentmetadata = wrapper.resultat;
+
+        assertEquals(dokumentmetadata.size(), 1);
     }
 
-    private static WSArkivfiltyper lagArkivfiltyper(String filtype) {
-        WSArkivfiltyper arkivfiltyper = new WSArkivfiltyper();
-        arkivfiltyper.setValue(filtype);
+    @Test(expected = FeilendeBaksystemException.class)
+    public void hentTilgjengeligJournalpostRuntimeExceptionGirFeilendeBaksystemJoark() throws HentJournalpostListeSikkerhetsbegrensning, DatatypeConfigurationException {
+        when(journalV2.hentJournalpostListe(any())).thenThrow(new RuntimeException());
 
-        return arkivfiltyper;
+        innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
     }
 
-    private static WSVariantformater lagVariantFormater(String variant) {
-        WSVariantformater variantformater = new WSVariantformater();
-        variantformater.setValue(variant);
+    @Test
+    public void hentTilgjengeligJournalpostSikkerhetsbegrensningGirTomtResultatOgFeilendeSystem() throws HentJournalpostListeSikkerhetsbegrensning, DatatypeConfigurationException {
+        when(journalV2.hentJournalpostListe(any())).thenThrow(new HentJournalpostListeSikkerhetsbegrensning());
 
-        return variantformater;
+        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
+        assertThat(wrapper.resultat.size(), is(0));
+        assertThat(wrapper.feilendeSystemer.size(), is(1));
     }
 
-    private static WSRegistertSak lagJoarkSak(String saksId) {
-        WSRegistertSak sak = new WSRegistertSak();
-        sak.setSakId(saksId);
-        return sak;
+
+    @Test
+    public void feilWrappesiResultObjektet() throws HentJournalpostListeSikkerhetsbegrensning {
+        when(journalV2.hentJournalpostListe(any())).thenThrow(new HentJournalpostListeSikkerhetsbegrensning());
+
+        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
+        assertThat(wrapper.resultat.size(),is(0));
     }
 
-    private static WSArkivtemaer lagArkivtema(String temakode) {
-        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
-        arkivtemaer.setValue(temakode);
-        return arkivtemaer;
-    }
 }
