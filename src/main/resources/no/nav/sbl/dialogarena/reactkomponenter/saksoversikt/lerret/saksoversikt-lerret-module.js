@@ -33,11 +33,12 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-        if (this.props.status !== Const.LASTET && this.props.status !== Const.FEILET) {
+        if (this.props.status !== Const.LASTET) {
             return <Snurrepipp />;
         }
 
-        const feilmelding = this.props.feilendeSystemer && this.props.feilendeSystemer.length > 0 && this.props.valgtside !== 'dokumentvisning'?
+        const feilmelding = this.props.feilendeSystemer && this.props.feilendeSystemer.length > 0
+            && this.props.valgtside === 'sakstema'?
             (<div className="lamell-feilmelding">
                 <FormattedMessage id="sakslamell.feilmelding" />
             </div>): <noscript></noscript>;
@@ -46,7 +47,7 @@ class SaksoversiktLerret extends React.Component {
             <MiljovariablerProvider miljovariabler={this.props.miljovariabler}>
                 <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
                     <div className="saksoversikt-lerret-container">
-                        {feilmelding}
+                        { feilmelding }
                         { getContent(this.props) }
                     </div>
                 </IntlProvider>
