@@ -70,7 +70,6 @@ actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.
 actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJournalpost: action.data });
 actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
-actionHandlers[AT.PURGE_STATE] = (state, action) => ({ ...initalState });
 actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({...state, filtreringsvalg: action.filtreringsvalg });
 
 // -------

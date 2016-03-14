@@ -1,22 +1,23 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { Element } from 'react-scroll';
 
 
 class VedleggFeilmelding extends React.Component {
     render() {
-        const { feilmelding: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo } } = this.props;
+        const { feilmelding: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo }, name } = this.props;
 
         const enonicFeilmeldingstekstKey = feilmeldingEnonicKey.concat('.tekst');
         const innhold =  this.props.intl.formatMessage({id:enonicFeilmeldingstekstKey}, ekstrafeilinfo);
 
         return (
-            <div className="feilmelding-container">
+            <Element className="feilmelding-container" name={name}>
                 <img className="feilmelding-bakgrunn" src={bildeUrl} alt=""/>
                 <div className="feilmelding panel panel-ramme">
                     <h1 className="vanlig-ikon-feil-strek"><FormattedMessage id={feilmeldingEnonicKey.concat('.tittel')} /></h1>
                     <p className="text-center" dangerouslySetInnerHTML={createMarkup(innhold)}/>
                 </div>
-            </div>
+            </Element>
         )
     }
 }
