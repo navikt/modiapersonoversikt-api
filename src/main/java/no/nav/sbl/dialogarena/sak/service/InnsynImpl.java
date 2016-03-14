@@ -34,7 +34,7 @@ import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrer
 import static org.slf4j.LoggerFactory.getLogger;
 
 //Preserve stacktrace
-@java.lang.SuppressWarnings("squid:S1166")
+@SuppressWarnings("squid:S1166")
 public class InnsynImpl implements Innsyn {
 
     @Inject
