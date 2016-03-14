@@ -43,7 +43,6 @@ public class InnsynImpl implements Innsyn {
 
     private static final Logger logger = getLogger(InnsynImpl.class);
 
-    @Override
     public ResultatWrapper<List<DokumentMetadata>> hentTilgjengeligJournalpostListe(List<Sak> saker, String fnr) {
         WSHentJournalpostListeRequest wsRequest = new WSHentJournalpostListeRequest();
         wsRequest.setSoekeFilter(new WSSoekeFilter().withJournalFiltrering(KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER));
@@ -67,7 +66,6 @@ public class InnsynImpl implements Innsyn {
         }
     }
 
-    @Override
     public TjenesteResultatWrapper hentDokument(String journalpostid, String dokumentreferanse) {
         WSHentDokumentRequest wsRequest = new WSHentDokumentRequest();
         wsRequest.setDokumentId(dokumentreferanse);
