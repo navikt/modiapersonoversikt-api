@@ -1,20 +1,32 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.servlet.http.Cookie;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
+import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,8 +35,20 @@ public class SaksoversiktControllerTest {
     @Mock
     private TilgangskontrollService tilgangskontrollService;
 
+    @Mock
+    private SaksoversiktService saksoversiktService;
+
+    @Mock
+    private SaksService saksService;
+
+
     @InjectMocks
     private SaksoversiktController saksoversiktController;
+
+    @Before
+    public void before() {
+        setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+    }
 
     @Test
     public void harTilgangTilAlleTema() {
@@ -46,6 +70,16 @@ public class SaksoversiktControllerTest {
         List<ModiaSakstema> modiaSakstemaList = saksoversiktController.mapTilModiaSakstema(sakstemaList, "enhet");
 
         assertThat(modiaSakstemaList.stream().allMatch(modiaSakstema -> modiaSakstema.harTilgang), is(false));
+    }
+
+    @Test
+    public void blirBlokkertOmManipulertCookie() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        when(tilgangskontrollService.harGodkjentEnhet(request)).thenReturn(false);
+
+        Response response = saksoversiktController.hentSakstema("12345678901", request);
+
+        assertThat(response.getStatus(), is(403));
     }
 
     private List<Sakstema> lagSakstemaListe() {

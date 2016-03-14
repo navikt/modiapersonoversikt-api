@@ -10,6 +10,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
@@ -58,11 +60,28 @@ public class TilgangskontrollServiceTest {
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("0219");
-
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
+    @Test
+    public void markererIkkeJournalforteMedFeil() {
+        List<Sakstema> sakstema = asList(
+                new Sakstema().withDokumentMetadata(asList(new DokumentMetadata().withIsJournalfort(false)))
+        );
+        tilgangskontrollService.markerIkkeJournalforte(sakstema);
 
+        assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getInneholderFeil(), is(true));
+        assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getFeilmelding(), is(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER));
+    }
+
+    @Test
+    public void ikkeMarkererJournalforteMedFeil() {
+        List<Sakstema> sakstema = asList(
+                new Sakstema().withDokumentMetadata(asList(new DokumentMetadata().withIsJournalfort(true)))
+        );
+        tilgangskontrollService.markerIkkeJournalforte(sakstema);
+
+        assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getInneholderFeil(), is(false));
+    }
 
     @Test
     public void returnererFeilmeldingSaksbehandlerHarValgtGodkjentEnhet() {
