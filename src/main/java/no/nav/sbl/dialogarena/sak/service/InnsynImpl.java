@@ -82,10 +82,10 @@ public class InnsynImpl implements Innsyn {
             return new TjenesteResultatWrapper(wsResponse.getDokument());
         } catch (HentDokumentSikkerhetsbegrensning e) {
             logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke hentet grunnet en sikkerhetsbegrensning. {}", journalpostid, dokumentreferanse, e.getMessage());
-            return new TjenesteResultatWrapper(DOKUMENT_IKKE_FUNNET);
+            return new TjenesteResultatWrapper(SIKKERHETSBEGRENSNING);
         } catch (HentDokumentDokumentIkkeFunnet e) {
             logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke funnet. {}", journalpostid, dokumentreferanse, e.getMessage());
-            return new TjenesteResultatWrapper(SIKKERHETSBEGRENSNING);
+            return new TjenesteResultatWrapper(DOKUMENT_IKKE_FUNNET);
         } catch (RuntimeException e) {
             logger.error("Det skjedde en ukjent feil under henting av dokumentet med journalpostid '{}' og dokumentid '{}'.", journalpostid, dokumentreferanse, e);
             return new TjenesteResultatWrapper(UKJENT_FEIL);
