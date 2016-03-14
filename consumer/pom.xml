@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>6.47.1</version>
+        <version>7.4</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -93,6 +93,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Dkif -->
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>dkif-consumer</artifactId>
+        </dependency>
+
+
         <!--Kodeverk-->
         <dependency>
             <groupId>no.nav</groupId>
@@ -175,6 +182,10 @@
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
