@@ -19,10 +19,8 @@ import java.util.Map;
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -62,7 +60,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     public boolean harGodkjentEnhet(HttpServletRequest request) {
         String valgtEnhet = hentValgtEnhet(request);
-        List<String> enhetsListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
+        List<String> enhetsListe = ansattService.hentEnhetsliste().stream().map(ansattEnhet -> ansattEnhet.enhetId).collect(toList());
 
         if (!enhetsListe.contains(valgtEnhet)) {
             logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);

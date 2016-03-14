@@ -19,10 +19,9 @@ import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.He
 
 public class HenvendelseTransformers {
 
+    //TODO DERSOM DET IKKE BLIR NY TJENESTE FRA HENVENDELSE. SKRIV MODIG-LANG VEKK HERFRA OGSÅ. LA DET VÆRE ENN SÅ LENGE
     public static final Transformer<WSSoknad, Boolean> INNSENDT = wsSoknad -> wsSoknad.getInnsendtDato() != null;
-
     public static final Transformer<WSSoknad, Kvittering> KVITTERING = new Transformer<WSSoknad, Kvittering>() {
-
         @Override
         public Kvittering transform(WSSoknad wsSoknad) {
             GenerellBehandling.BehandlingsStatus status = wsSoknad.getInnsendtDato() != null ? GenerellBehandling.BehandlingsStatus.AVSLUTTET : GenerellBehandling.BehandlingsStatus.OPPRETTET;
