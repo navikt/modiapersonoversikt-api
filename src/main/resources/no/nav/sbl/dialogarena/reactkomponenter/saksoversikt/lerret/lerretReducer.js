@@ -47,8 +47,6 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
         valgtTema = _sakstema[0];
     }
 
-
-
     return {
         ...state,
         status: Const.LASTET,
@@ -68,7 +66,7 @@ actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
     return { ...state, status: Const.FEILET, feil: action.data };
 };
 
-actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data });
+actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data, filtreringsvalg: 'ALLE' });
 actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJournalpost: action.data });
 actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });

@@ -1,10 +1,8 @@
 import React, { PropTypes as pt } from 'react';
-import DokumentListe from './../../dokumentliste';
 import { ALLE, NAV, BRUKER, ANDRE } from './FiltreringAvsenderValg';
-import FiltrerAvsender from './FiltrerAvsender';
+import DokumentListe from './../../dokumentliste';
 
 const FiltrerteDokumenter = props => {
-
     const { dokumentMetadata, filtreringsvalg } = props;
 
     const valgtAlle = filtreringsvalg === ALLE;
@@ -12,51 +10,27 @@ const FiltrerteDokumenter = props => {
     const valgtBruker = filtreringsvalg === BRUKER;
     const valgtAndre = filtreringsvalg === ANDRE;
 
-    const filtrertPaaNav = (retning) => valgtNav && (retning === 'INN' || retning === 'NOTAT');
+    const filtrertPaaNav = (retning) => valgtNav && (retning === 'UT' || retning === 'INTERN');
     const filtrertPaaBruker = (retning, avsender) => valgtBruker && retning === 'INN' && avsender === 'SLUTTBRUKER';
-    const filtrertPaaAndre = (retning, avsender) => valgtAndre && retning === 'INN' && avsender != 'SLUTTBRUKER';
+    const filtrertPaaAndre = (retning, avsender) => valgtAndre && retning === 'INN' && avsender !== 'SLUTTBRUKER';
 
-    const skalViseDokument = ({ avsender, retning }) => {
-        return valgtAlle ||
-            filtrertPaaNav(retning) ||
-            filtrertPaaBruker(retning, avsender) ||
-            filtrertPaaAndre(retning, avsender);
-    };
-
+    const skalViseDokument = ({ avsender, retning }) => valgtAlle || filtrertPaaNav(retning) ||
+    filtrertPaaBruker(retning, avsender) || filtrertPaaAndre(retning, avsender);
 
     const filtrerteDokumenter = dokumentMetadata.filter(dokument => skalViseDokument(dokument));
+    const dokumentliste = filtrerteDokumenter.length === 0 ? <noscript/> : <DokumentListe {...props} />;
 
-    if (filtrerteDokumenter.length == 0) {
-        return (
-            <div>
-                <FiltrerAvsender />
-                <noscript/>
-            </div>);
-    }
-
-    console.log("Filtrerte dokumenter.");
-    console.log(filtrerteDokumenter);
-
-    /*
-     visTema="false"
-     dokumentMetadata={valgtTema.dokumentMetadata}
-     brukerNavn={brukerNavn}
-     visSide={visSide}
-     velgJournalpost={velgJournalpost}
-     */
-
-
-    return (
-        <div>
-            <FiltrerAvsender />
-            <DokumentListe {...props} />
-        </div>
-
-    );
-
+    return <div>{dokumentliste}</div>;
 };
 
-//<DokumentListe {...props} />
 
+FiltrerteDokumenter.propTypes = {
+    dokumentMetadata: pt.array.isRequired,
+    filtreringsvalg: pt.string.isRequired,
+    visTema: pt.string.isRequired,
+    brukerNavn: pt.string.isRequired,
+    visSide: pt.func.isRequired,
+    velgJournalpost: pt.func.isRequired
+};
 
 export default FiltrerteDokumenter;
