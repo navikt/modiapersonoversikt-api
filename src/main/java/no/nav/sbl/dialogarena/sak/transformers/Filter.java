@@ -22,9 +22,9 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.AVSLUTT
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.OPPRETTET;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class FilterImpl {
+public class Filter {
 
-    private final static Logger log = getLogger(FilterImpl.class);
+    private final static Logger log = getLogger(Filter.class);
     private static final String ULOVLIG_PREFIX = "17";
 
     @Inject
@@ -71,9 +71,9 @@ public class FilterImpl {
 
     private static final Predicate<WSSak> HAR_MINST_EN_LOVLIG_BEHANDLING =
             wsSak -> wsSak.getBehandlingskjede().stream()
-                    .filter(FilterImpl.HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING)
-                    .filter(FilterImpl.HAR_LOVLIG_STATUS_PAA_BEHANDLING)
-                    .filter(FilterImpl.HAR_LOVLIG_PREFIX_PAA_BEHANDLING)
+                    .filter(Filter.HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING)
+                    .filter(Filter.HAR_LOVLIG_STATUS_PAA_BEHANDLING)
+                    .filter(Filter.HAR_LOVLIG_PREFIX_PAA_BEHANDLING)
                     .findAny()
                     .isPresent();
 

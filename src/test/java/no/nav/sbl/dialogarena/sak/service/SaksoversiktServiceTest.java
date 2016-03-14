@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
+import no.nav.sbl.dialogarena.sak.transformers.Filter;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -22,7 +22,7 @@ public class SaksoversiktServiceTest {
     @Mock
     private SakOgBehandlingService sakOgBehandlingService;
     @Mock
-    private FilterImpl filter;
+    private Filter filter;
 
     @InjectMocks
     private SaksoversiktServiceImpl saksoversiktService = new SaksoversiktServiceImpl();

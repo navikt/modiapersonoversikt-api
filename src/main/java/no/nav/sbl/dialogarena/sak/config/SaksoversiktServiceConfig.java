@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.sak.service.TilgangskontrollServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
+import no.nav.sbl.dialogarena.sak.transformers.Filter;
 import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
 import no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers;
 import no.nav.sbl.dialogarena.saksoversikt.service.config.ServiceConfig;
@@ -35,8 +35,8 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public FilterImpl filter() {
-        return new FilterImpl();
+    public Filter filter() {
+        return new Filter();
     }
 
 
