@@ -9,11 +9,13 @@ import ViktigAViteLenke from './../../viktigavite/ViktigAViteLenke';
 
 const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost, visSide, filtreringsvalg }) => {
     const dokumenter = sakstema.slice(1).reduce((acc, tema) => acc.concat(tema.dokumentMetadata), []);
-    const dokumentlisteParam = { brukerNavn, visSide, velgJournalpost, filtreringsvalg };
+    const dokumentlisteParam = { brukerNavn, visSide, velgJournalpost };
+
+    valgtTema.temakode !== 'alle' ? dokumentlisteParam.visTema="false" : dokumentlisteParam.visTema="true";
 
     const dokumentliste = valgtTema.temakode !== 'alle' ?
-        <FiltrerteDokumenter visTema="false" dokumentMetadata={valgtTema.dokumentMetadata} {...dokumentlisteParam} /> :
-        <FiltrerteDokumenter visTema="true" dokumentMetadata={dokumenter} {...dokumentlisteParam} />;
+        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam}  /> :
+        <FiltrerteDokumenter dokumentMetadata={dokumenter} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam} />;
 
     const ingendokumenter = (
         <h2 className="robust-ikon-feil-strek ingendokumenterheader">
@@ -43,7 +45,7 @@ VisningDokumentliste.propTypes = {
     valgtTema: PT.object,
     visSide: PT.func.isRequired,
     velgJournalpost: PT.func,
-    filtreringsvalg: PT.string.isRequired
+    filtreringsvalg: PT.string
 };
 
 export default VisningDokumentliste;

@@ -3,7 +3,7 @@ import { ALLE, NAV, BRUKER, ANDRE } from './FiltreringAvsenderValg';
 import DokumentListe from './../../dokumentliste';
 
 const FiltrerteDokumenter = props => {
-    const { dokumentMetadata, filtreringsvalg } = props;
+    const { dokumentMetadata, filtreringsvalg, dokumentlisteParam } = props;
 
     const valgtAlle = filtreringsvalg === ALLE;
     const valgtNav = filtreringsvalg === NAV;
@@ -18,19 +18,24 @@ const FiltrerteDokumenter = props => {
     filtrertPaaBruker(retning, avsender) || filtrertPaaAndre(retning, avsender);
 
     const filtrerteDokumenter = dokumentMetadata.filter(dokument => skalViseDokument(dokument));
-    const dokumentliste = filtrerteDokumenter.length === 0 ? <noscript/> : <DokumentListe {...props} />;
+
+    const dokumentliste = filtrerteDokumenter.length === 0 ?
+        <noscript/> :
+        <DokumentListe dokumentMetadata={filtrerteDokumenter} {...dokumentlisteParam} />;
 
     return <div>{dokumentliste}</div>;
 };
 
 
 FiltrerteDokumenter.propTypes = {
+    dokumentlisteParam: pt.shape({
+        visTema: pt.string.isRequired,
+        brukerNavn: pt.string.isRequired,
+        visSide: pt.func.isRequired,
+        velgJournalpost: pt.func.isRequired
+    }).isRequired,
     dokumentMetadata: pt.array.isRequired,
-    filtreringsvalg: pt.string.isRequired,
-    visTema: pt.string.isRequired,
-    brukerNavn: pt.string.isRequired,
-    visSide: pt.func.isRequired,
-    velgJournalpost: pt.func.isRequired
+    filtreringsvalg: pt.string.isRequired
 };
 
 export default FiltrerteDokumenter;
