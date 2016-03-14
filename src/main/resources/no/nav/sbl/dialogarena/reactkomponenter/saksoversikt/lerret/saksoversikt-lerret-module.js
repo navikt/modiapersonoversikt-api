@@ -37,7 +37,7 @@ class SaksoversiktLerret extends React.Component {
             return <Snurrepipp />;
         }
 
-        const feilmelding = this.props.feilendeSystemer && this.props.feilendeSystemer.length > 0?
+        const feilmelding = this.props.feilendeSystemer && this.props.feilendeSystemer.length > 0 && this.props.valgtside !== 'dokumentvisning'?
             (<div className="lamell-feilmelding">
                 <FormattedMessage id="sakslamell.feilmelding" />
             </div>): <noscript></noscript>;
