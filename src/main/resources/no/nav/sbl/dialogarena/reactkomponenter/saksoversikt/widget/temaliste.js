@@ -15,7 +15,7 @@ function widgetSnurrepipp(status) {
     const initial = document.querySelector('.widget-saksoversikt .klikkbar-header .initial');
     if (!initial)return;
 
-    if (status === Const.LASTER || status === Const.TEKST_OK) {
+    if (status === Const.LASTER) {
         initial.classList.add('loading');
     } else {
         initial.classList.remove('loading');
@@ -36,7 +36,7 @@ class Temaliste extends React.Component {
     render() {
         const { temaer, fnr, tekster, status } = this.props;
 
-        if (status !== Const.FEILET && status !== Const.LASTET) {
+        if (status === Const.LASTER) {
             return <noscript></noscript>;
         }
 
