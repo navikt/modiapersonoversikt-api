@@ -11,7 +11,7 @@ const IngenDokumenterBidrag = ({ ingenDokumenterHeader }) =>
 
 
 IngenDokumenterBidrag.propTypes = {
-    ingenDokumenterHeader: pt.object.isRequired
+    ingenDokumenterHeader: pt.element.isRequired
 };
 
 export default IngenDokumenterBidrag;

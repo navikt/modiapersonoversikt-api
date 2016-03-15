@@ -6,7 +6,7 @@ import { ALLE, NAV, BRUKER, ANDRE } from './FiltreringAvsenderValg';
 
 const _onSelect = (dispatch) => (event) => dispatch(velgFiltreringAvsender(event.target.value));
 
-const FiltrerAvsender = ({ valgtValg, dispatch, intl: { formatMessage } }) =>
+const FiltrerAvsender = ({ valgtValg, dispatch, intl: { formatMessage } }) => (
         <div className="filtrering-container">
             <FormattedMessage id={'dokumentliste.filtrering.forklaring'}/>
             <select className="select-container" value={valgtValg} onChange={_onSelect(dispatch)}>
@@ -15,7 +15,8 @@ const FiltrerAvsender = ({ valgtValg, dispatch, intl: { formatMessage } }) =>
                 <option value={BRUKER}>{ formatMessage({ id: 'dokumentliste.filtrering.bruker' }) }</option>
                 <option value={ANDRE}>{ formatMessage({ id: 'dokumentliste.filtrering.andre' }) }</option>
             </select>
-        </div>;
+        </div>
+);
 
 FiltrerAvsender.propTypes = {
     valgtValg: pt.string.isRequired

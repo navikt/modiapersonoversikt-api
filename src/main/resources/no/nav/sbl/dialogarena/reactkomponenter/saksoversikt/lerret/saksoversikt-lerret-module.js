@@ -2,7 +2,7 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak, visSide, velgJournalpost, velgFiltreringAvsender, velgDefaultFiltreringAvsender } from './../actions';
+import { hentLerretData, velgSak, visSide, velgJournalpost, velgFiltreringAvsender } from './../actions';
 import * as Const from './../konstanter';
 
 import SakstemaPage from './sakstema/SakstemaPage';
@@ -28,7 +28,6 @@ function getContent(props) {
 
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        velgDefaultFiltreringAvsender();
         this.props.hentLerretData(this.props.fnr);
     }
 

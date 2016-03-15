@@ -15,12 +15,13 @@ const IngenDokumenter = ({ ingenDokumenterHeader }) => {
             <a href="javascript:void(0);" onClick={openGosys}>
                 <FormattedMessage id="dokumentinfo.sakstema.lenke.gosys"/>
             </a>
-        </div >);
+        </div >
+    );
 };
 
 
 IngenDokumenter.propTypes = {
-    ingenDokumenterHeader: pt.object.isRequired
+    ingenDokumenterHeader: pt.element.isRequired
 };
 
 export default IngenDokumenter;
