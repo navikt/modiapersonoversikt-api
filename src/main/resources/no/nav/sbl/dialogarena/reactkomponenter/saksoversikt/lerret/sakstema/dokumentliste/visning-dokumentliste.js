@@ -11,7 +11,7 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
     const dokumenter = sakstema.slice(1).reduce((acc, tema) => acc.concat(tema.dokumentMetadata), []);
     const dokumentlisteParam = { brukerNavn, visSide, velgJournalpost };
 
-    dokumentlisteParam.visTema = valgtTema.temakode !== 'alle' ? 'false' : 'true';
+    dokumentlisteParam.visTema = valgtTema.temakode === 'alle';
 
     const dokumentliste = valgtTema.temakode !== 'alle' ?
         <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam}  /> :

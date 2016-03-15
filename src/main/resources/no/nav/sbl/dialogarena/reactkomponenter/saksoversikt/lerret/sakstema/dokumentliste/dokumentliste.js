@@ -31,7 +31,7 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
 DokumentListe.propTypes = {
     dokumentMetadata: pt.array.isRequired,
     brukerNavn: pt.string.isRequired,
-    visTema: pt.string,
+    visTema: pt.bool.isRequired,
     velgJournalpost: pt.func.isRequired,
     visSide: pt.func.isRequired
 };

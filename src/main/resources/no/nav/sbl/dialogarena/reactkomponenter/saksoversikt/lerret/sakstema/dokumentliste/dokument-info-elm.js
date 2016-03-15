@@ -19,9 +19,8 @@ class DokumentInfoElm extends React.Component {
 
     render() {
         const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
-        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper, ettersending, kategoriNotat  } = dokumentinfo;
-        const temaHvisAlleTemaer = visTema === 'true' ? <p className="tema-dokument">{temakodeVisning}</p> :
-            <noscript/>;
+        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper, ettersending, kategoriNotat } = dokumentinfo;
+        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript/>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
         const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
@@ -55,7 +54,7 @@ class DokumentInfoElm extends React.Component {
 
 DokumentInfoElm.propTypes = {
     dokumentinfo: dokumentinfoShape.isRequired,
-    visTema: pt.string,
+    visTema: pt.bool.isRequired,
     brukerNavn: pt.string,
     velgJournalpost: pt.func.isRequired,
     visSide: pt.func.isRequired

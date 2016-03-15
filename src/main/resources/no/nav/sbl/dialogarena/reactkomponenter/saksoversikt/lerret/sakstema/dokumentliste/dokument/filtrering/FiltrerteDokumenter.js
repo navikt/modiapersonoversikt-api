@@ -29,7 +29,7 @@ const FiltrerteDokumenter = props => {
 
 FiltrerteDokumenter.propTypes = {
     dokumentlisteParam: pt.shape({
-        visTema: pt.string.isRequired,
+        visTema: pt.bool.isRequired,
         brukerNavn: pt.string.isRequired,
         visSide: pt.func.isRequired,
         velgJournalpost: pt.func.isRequired
