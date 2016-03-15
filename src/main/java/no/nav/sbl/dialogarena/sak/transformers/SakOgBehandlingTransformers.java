@@ -22,12 +22,6 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKod
 
 public class SakOgBehandlingTransformers {
 
-    @Inject
-    private static BulletproofKodeverkService bulletproofKodeverkService;
-
-    @Inject
-    private static Filter filter;
-
     public static final GenerellBehandling behandlingskjedeTilBehandling(WSBehandlingskjede WsBehandlingskjede) {
         GenerellBehandling generellBehandling = new GenerellBehandling()
                 .withBehandlingsDato(behandlingsDato(WsBehandlingskjede))
@@ -84,13 +78,13 @@ public class SakOgBehandlingTransformers {
         return no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue());
     }
 
-    public static Tema temaVMTransformer(WSSak wsSak) {
+    public static Tema temaVMTransformer(WSSak wsSak, BulletproofKodeverkService bulletproofKodeverkService, Filter filter) {
         String temakode = wsSak.getSakstema().getValue();
         Tema tema = new Tema(temakode).withTemanavn(bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA));
-        return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak)) : tema;
+        return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak, filter)) : tema;
     }
 
-    private static DateTime hentSistOppdaterteLovligeBehandling(WSSak wsSak) {
+    private static DateTime hentSistOppdaterteLovligeBehandling(WSSak wsSak, Filter filter) {
         List<GenerellBehandling> behandlinger = wsSak.getBehandlingskjede().stream()
                 .map(wsBehandlingskjede -> behandlingskjedeTilBehandling(wsBehandlingskjede))
                 .collect(toList());

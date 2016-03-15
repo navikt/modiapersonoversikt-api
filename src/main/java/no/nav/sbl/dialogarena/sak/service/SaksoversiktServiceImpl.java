@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.transformers.Filter;
 import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -25,12 +26,14 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
     private SakOgBehandlingService sakOgBehandlingService;
     @Inject
     private Filter filter;
+    @Inject
+    private BulletproofKodeverkService bulletproofKodeverkService;
 
 
     public List<Tema> hentTemaer(String fnr) {
         List<WSSak> saker = sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr));
         return filter.filtrerSaker(saker).stream()
-                .map(wsSak -> temaVMTransformer(wsSak))
+                .map(wsSak -> temaVMTransformer(wsSak, bulletproofKodeverkService, filter))
                 .sorted(new SistOppdaterteBehandlingComparator())
                 .collect(toList());
     }
