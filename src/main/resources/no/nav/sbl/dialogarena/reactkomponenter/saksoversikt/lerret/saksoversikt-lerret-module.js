@@ -26,6 +26,14 @@ function getContent(props) {
     return fn(componentProps);
 }
 
+function lagFeilmelding(props) {
+    return props.feilendeSystemer && props.feilendeSystemer.length > 0
+    && props.valgtside === 'sakstema'?
+        (<div className="lamell-feilmelding">
+            <FormattedMessage id="sakslamell.feilmelding" />
+        </div>): <noscript />;
+}
+
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
         this.props.hentLerretDataInit();
@@ -37,11 +45,7 @@ class SaksoversiktLerret extends React.Component {
             return <Snurrepipp />;
         }
 
-        const feilmelding = this.props.feilendeSystemer && this.props.feilendeSystemer.length > 0
-            && this.props.valgtside === 'sakstema'?
-            (<div className="lamell-feilmelding">
-                <FormattedMessage id="sakslamell.feilmelding" />
-            </div>): <noscript></noscript>;
+        const feilmelding = lagFeilmelding(this.props);
 
         return (
             <MiljovariablerProvider miljovariabler={this.props.miljovariabler}>
