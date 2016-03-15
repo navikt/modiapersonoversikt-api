@@ -25,7 +25,6 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optio
 public class SaksService {
 
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
-    public static final String TEMAKODE_KONTROLL = "KTR";
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -108,15 +107,9 @@ public class SaksService {
     private ResultatWrapper OpprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll =
-                entry -> new ResultatWrapper<>(entry.resultat.stream()
-                        .filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL))
-                        .collect(Collectors.toList()), entry.feilendeSystemer);
-
         return grupperteSakstema.entrySet()
                 .stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder))
-                .map(fjernSakstemaKontroll)
                 .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
