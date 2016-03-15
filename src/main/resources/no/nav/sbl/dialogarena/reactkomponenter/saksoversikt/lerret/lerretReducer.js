@@ -29,14 +29,27 @@ const initalState = {
 // ------- Your handler here
 
 actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
-    return {...state, status: Const.LASTER};
+    return { ...state, status: Const.LASTER };
 };
-actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
-    const [temaer, sakstema, tekster, miljovariabler, fnr] = action.data;
+actionHandlers[AT.LAST_LERRET_DATA_INIT_OK] = (state, action) => {
+    const [tekster, miljovariabler] = action.data;
 
-    let _sakstema = sakstema.resultat && sakstema.resultat.length > 0 ? sakstema.resultat
+    return {
+        ...state,
+        status: state.status === Const.LASTET? state.status : Const.INIT_OK,
+        data: {
+            sakstema: state.data.sakstema,
+            feilendeSystemer: state.data.feilendeSystemer,
+            tekster,
+            miljovariabler
+        }
+    };
+};
+actionHandlers[AT.LAST_LERRET_DATA_ALLE_SAKER_OK] = (state, action) => {
+    const { resultat, feilendeSystemer } = action.data;
+
+    let _sakstema = resultat && resultat.length > 0? resultat
         .filter(fjernTommeTema).sort(nyesteSakstema) : [];
-
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
     let { valgtTema, widgetValgtTemakode } = state;
@@ -50,13 +63,12 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
 
     return {
         ...state,
-        status: Const.LASTET,
+        status: state.status === Const.INIT_OK? Const.LASTET: Const.LASTER,
         data: {
-            temaer,
+            tekster: state.data.tekster,
+            miljovariabler: state.data.miljovariabler,
             sakstema: _sakstema,
-            tekster,
-            miljovariabler,
-            fnr
+            feilendeSystemer
         },
         valgtTema,
         widgetValgtTemakode,
@@ -64,7 +76,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     };
 };
 actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
-    return {...state, status: Const.FEILET, feil: action.data};
+    return { ...state, status: Const.FEILET, feil: action.data };
 };
 
 actionHandlers[AT.VELG_SAK] = (state, action) => ({...state, valgtTema: action.data, filtreringsvalg: ALLE});

@@ -36,14 +36,13 @@ class Temaliste extends React.Component {
     render() {
         const { temaer, fnr, tekster, status } = this.props;
 
-        if (status !== Const.LASTET) {
+        if (status === Const.LASTER) {
             return <noscript></noscript>;
         }
 
-        const redusertAntallTemaer = take(temaer, ANTALL_TEMAER);
-        const temaliste = redusertAntallTemaer.map((tema) =>
-            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>
-        );
+        const temaliste = status === Const.FEILET ? <li className="feederroritem"><p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding" /></p></li>
+            :  take(temaer, ANTALL_TEMAER).map((tema) =>
+            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
 
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={tekster}>
