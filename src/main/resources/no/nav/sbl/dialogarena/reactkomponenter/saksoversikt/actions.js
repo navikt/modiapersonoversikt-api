@@ -69,11 +69,6 @@ export const hentDokumentData = (fnr, valgtjournalpost) => {
     }
 };
 
-export const velgDefaultFiltreringAvsender = () => {
-    return (dispatch) => velgFiltreringAvsender(event.target.value)
-};
-
-
 export const velgSak = (sak) => ({ type: AT.VELG_SAK, data: sak });
 export const velgJournalpost = (journalpost) => ({ type: AT.VELG_JOURNALPOST, data: journalpost });
 export const visSide = (side) => ({ type: AT.VIS_SIDE, data: side });

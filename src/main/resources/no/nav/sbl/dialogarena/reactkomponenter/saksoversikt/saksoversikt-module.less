@@ -411,10 +411,20 @@
 .dokumentliste-container {
   .viktig-aa-vite-container {
     display: inline;
+    padding: 1rem;
   }
 
   .filtrering-container {
-    float: right;
+    padding: 1rem;
+  }
+  .filtreringsvalg {
+    display: inline;
+    input[type=checkbox] {
+      + label {
+        display: inline;
+        padding-right: 30%;
+      }
+    }
   }
   .clearfix;
   padding: 1rem;

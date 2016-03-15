@@ -44,7 +44,7 @@ SakstemaPage.propTypes = {
     brukerNavn: PT.string,
     visSide: PT.func.isRequired,
     velgJournalpost: PT.func,
-    filtreringsvalg: PT.string.isRequired
+    filtreringsvalg: PT.object.isRequired
 };
 
 export default connect()(SakstemaPage);

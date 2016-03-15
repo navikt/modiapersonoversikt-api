@@ -14,7 +14,7 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
     dokumentlisteParam.visTema = valgtTema.temakode === 'alle';
 
     const dokumentliste = valgtTema.temakode !== 'alle' ?
-        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam}  /> :
+        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam} /> :
         <FiltrerteDokumenter dokumentMetadata={dokumenter} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam} />;
 
     const ingendokumenter = (
@@ -33,7 +33,7 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
         <div>
             <div className="dokumentliste-container">
                 <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                <FiltrerAvsender valgtValg={filtreringsvalg}/>
+                <FiltrerAvsender alleredeValgt={filtreringsvalg}/>
             </div>
             { dokumentliste }
             <TidligereDokumenter />
@@ -45,7 +45,7 @@ VisningDokumentliste.propTypes = {
     valgtTema: PT.object,
     visSide: PT.func.isRequired,
     velgJournalpost: PT.func,
-    filtreringsvalg: PT.string
+    filtreringsvalg: PT.object.isRequired
 };
 
 export default VisningDokumentliste;
