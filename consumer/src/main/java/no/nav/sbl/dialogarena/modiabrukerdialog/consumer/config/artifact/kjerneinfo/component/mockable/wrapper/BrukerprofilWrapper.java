@@ -4,7 +4,7 @@ import no.nav.brukerprofil.config.spring.brukerprofil.BrukerprofilConsumerConfig
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.BrukerprofilConsumerConfigImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import no.nav.tjeneste.virksomhet.brukerprofil.v1.BrukerprofilPortType;
+import no.nav.tjeneste.virksomhet.brukerprofil.v3.BrukerprofilV3;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class BrukerprofilWrapper {
 
     @Inject
-    private BrukerprofilPortType brukerprofilPortType;
+    private BrukerprofilV3 brukerprofilPortType;
 
 
     @Bean

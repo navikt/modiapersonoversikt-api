@@ -4,8 +4,9 @@ import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilResponse;
 import no.nav.brukerprofil.domain.Bruker;
-import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserPersonIdentErUtgaatt;
+import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -19,7 +20,9 @@ public class BrukerprofilServiceBiMock {
 
         try {
             when(serviceMock.hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class))).thenReturn(mockReturnValue);
-        } catch (HentKontaktinformasjonOgPreferanserPersonIkkeFunnet | HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning e) {
+        } catch (HentKontaktinformasjonOgPreferanserPersonIkkeFunnet |
+                HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning |
+                HentKontaktinformasjonOgPreferanserPersonIdentErUtgaatt e) {
             throw new RuntimeException(e);
         }
         return serviceMock;

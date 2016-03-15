@@ -3,13 +3,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.support.DefaultBrukerprofilService;
 import no.nav.brukerprofil.consumer.support.mapping.BrukerprofilMapper;
-import no.nav.tjeneste.virksomhet.brukerprofil.v1.BrukerprofilPortType;
+import no.nav.tjeneste.virksomhet.brukerprofil.v3.BrukerprofilV3;
 
 public class BrukerprofilConsumerConfigImpl {
 
-    private BrukerprofilPortType brukerprofilPortType;
+    private BrukerprofilV3 brukerprofilPortType;
 
-    public BrukerprofilConsumerConfigImpl(BrukerprofilPortType brukerprofilPortType) {
+    public BrukerprofilConsumerConfigImpl(BrukerprofilV3 brukerprofilPortType) {
         this.brukerprofilPortType = brukerprofilPortType;
     }
 
