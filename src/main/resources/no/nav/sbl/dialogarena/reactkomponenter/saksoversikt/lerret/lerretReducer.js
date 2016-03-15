@@ -4,7 +4,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { basicReducer } from './../utils/redux-utils';
 import { nyesteSakstema } from './../utils/dato-sortering';
-import { ALLE } from './sakstema/dokumentliste/dokument/filtrering/FiltreringAvsenderValg';
+import { ALLE } from './sakstema/dokumentliste/filtrering/filtrering-avsender-valg';
 
 const fjernTommeTema = (tema) => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 const lagAlleTema = (temaliste) => [{

@@ -1,10 +1,10 @@
 import React, { PropTypes as pt } from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
-import DokumentAvsender from './dokument/dokument-avsender';
+import DokumentAvsender from './avsender/dokument-avsender';
 import { FormattedDate } from 'react-intl';
-import { datoformat, javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
+import { datoformat, javaLocalDateTimeToJSDate } from './../../../../utils/dato-utils';
 import dokumentinfoShape from './dokumentinfo-shape';
-import { ettersendelseTil } from './../../../utils/ettersending-utils';
+import { ettersendelseTil } from './../../../../utils/ettersending-utils';
 
 const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
 const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);

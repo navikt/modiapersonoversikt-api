@@ -1,10 +1,10 @@
 import React, { PropTypes as PT } from 'react';
 import { FormattedMessage } from 'react-intl';
-import IngenDokumenter from './ingen-dokumenter';
-import IngenDokumenterBidrag from './ingen-dokumenter-bidrag';
-import TidligereDokumenter from './tidligere-dokumenter';
-import FiltrerteDokumenter from './dokument/filtrering/FiltrerteDokumenter';
-import FiltrerAvsender from './dokument/filtrering/FiltrerAvsender';
+import IngenDokumenter from './info/ingen-dokumenter';
+import IngenDokumenterBidrag from './info/ingen-dokumenter-bidrag';
+import TidligereDokumenter from './info/tidligere-dokumenter';
+import FiltrerteDokumenter from './filtrering/filtrerte-dokumenter';
+import FiltrerAvsender from './filtrering/filtrer-avsender';
 import ViktigAViteLenke from './../../viktigavite/ViktigAViteLenke';
 
 const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost, visSide, filtreringsvalg }) => {

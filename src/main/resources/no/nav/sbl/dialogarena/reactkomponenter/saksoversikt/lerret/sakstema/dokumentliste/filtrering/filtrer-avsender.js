@@ -1,8 +1,8 @@
 import React, { PropTypes as pt } from 'react';
-import { velgFiltreringAvsender } from './../../../../../actions';
+import { velgFiltreringAvsender } from './../../../../actions';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { ALLE, NAV, BRUKER, ANDRE } from './FiltreringAvsenderValg';
+import { ALLE, NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
 
 const _onSelect = (dispatch) => (event) => dispatch(velgFiltreringAvsender(event.target.value));
 

@@ -1,6 +1,6 @@
 import React, { PropTypes as pt } from 'react';
-import { ALLE, NAV, BRUKER, ANDRE } from './FiltreringAvsenderValg';
-import DokumentListe from './../../dokumentliste';
+import { ALLE, NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
+import DokumentListe from './../dokumentliste';
 
 const FiltrerteDokumenter = props => {
     const { dokumentMetadata, filtreringsvalg, dokumentlisteParam } = props;

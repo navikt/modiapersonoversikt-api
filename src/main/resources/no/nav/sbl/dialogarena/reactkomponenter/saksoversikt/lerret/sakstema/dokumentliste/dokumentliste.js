@@ -1,6 +1,6 @@
 import React, { PropTypes as pt } from 'react';
 import { groupBy } from 'lodash';
-import DokumentInfoElm from './dokument-info-elm';
+import DokumentInfoElm from './dokument/dokument-info-elm';
 
 const nyesteForst = (a, b) => b.dato.dayOfYear - a.dato.dayOfYear;
 
