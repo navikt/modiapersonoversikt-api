@@ -1,79 +1,51 @@
 import React, { PropTypes as PT } from 'react';
-import TidligereDokumenter from './tidligere-dokumenter';
 import { FormattedMessage } from 'react-intl';
-import DokumentListe from './dokumentliste';
+import IngenDokumenter from './info/ingen-dokumenter';
+import IngenDokumenterBidrag from './info/ingen-dokumenter-bidrag';
+import TidligereDokumenter from './info/tidligere-dokumenter';
+import FiltrerteDokumenter from './filtrering/filtrerte-dokumenter';
+import FiltrerAvsender from './filtrering/filtrer-avsender';
+import ViktigAViteLenke from './../../viktigavite/ViktigAViteLenke';
 
+const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost, visSide, filtreringsvalg }) => {
+    const dokumenter = sakstema.slice(1).reduce((acc, tema) => acc.concat(tema.dokumentMetadata), []);
+    const dokumentlisteParam = { brukerNavn, visSide, velgJournalpost };
 
-function openGosys(e) {
-    e.preventDefault();
-    document.querySelector('.hiddenGosysLenkePanel').click();
-}
-
-const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost, visSide }) => {
-    const dokumenter = sakstema.slice(1).reduce((acc, tema) =>
-        acc.concat(tema.dokumentMetadata), []);
+    dokumentlisteParam.visTema = valgtTema.temakode === 'alle';
 
     const dokumentliste = valgtTema.temakode !== 'alle' ?
-        <DokumentListe visTema="false"
-                       dokumentMetadata={valgtTema.dokumentMetadata}
-                       brukerNavn={brukerNavn}
-                       visSide={visSide}
-                       velgJournalpost={velgJournalpost}
-        /> :
-        <DokumentListe visTema="true" dokumentMetadata={dokumenter}
-                       brukerNavn={brukerNavn}
-                       visSide={visSide}
-                       velgJournalpost={velgJournalpost}
-        />;
-
-    const ingenDokumenterBidrag = valgtTema.temakode === 'BID' ?
-        <div className="infoingenbidrag">
-            <FormattedMessage
-                id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/></div> : <noscript/>;
+        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam}  /> :
+        <FiltrerteDokumenter dokumentMetadata={dokumenter} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam} />;
 
     const ingendokumenter = (
         <h2 className="robust-ikon-feil-strek ingendokumenterheader">
-            <FormattedMessage
-                id="dokumentinfo.sakstema.ingen.dokumenter.header"
-            />
+            <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.header"/>
         </h2>);
 
-    if (valgtTema.dokumentMetadata.length > 0) {
-        return <div>{ ingenDokumenterBidrag }{ dokumentliste }<TidligereDokumenter /></div>;
-    }
-
     if (valgtTema.temakode === 'BID') {
-        return (
-            <div className="default-error ingendokumenter">
-                {ingendokumenter}
-                <p className="ingendokumenterforklaring">
-                    <FormattedMessage
-                        id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"
-                    />
-                </p>
-            </div>);
+        return <IngenDokumenterBidrag ingenDokumenterHeader={ingendokumenter}/>;
+    }
+    if (valgtTema.dokumentMetadata.length === 0) {
+        return <IngenDokumenter ingenDokumenterHeader={ingendokumenter}/>;
     }
 
     return (
-        <div className="default-error ingendokumenter">{ingendokumenter}
-            <p className="ingendokumenterforklaring">
-                <FormattedMessage
-                    id="dokumentinfo.sakstema.ingen.dokumenter.forklaring"
-                />
-            </p>
-            <a href="javascript:void(0);" onClick={openGosys}>
-                <FormattedMessage
-                    id="dokumentinfo.sakstema.lenke.gosys"
-                />
-            </a>
-        </div >);
+        <div>
+            <div className="dokumentliste-container">
+                <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
+                <FiltrerAvsender valgtValg={filtreringsvalg}/>
+            </div>
+            { dokumentliste }
+            <TidligereDokumenter />
+        </div>);
 };
 
 VisningDokumentliste.propTypes = {
     sakstema: PT.array.isRequired,
     valgtTema: PT.object,
     visSide: PT.func.isRequired,
-    velgJournalpost: PT.func
+    velgJournalpost: PT.func,
+    filtreringsvalg: PT.string
 };
 
 export default VisningDokumentliste;

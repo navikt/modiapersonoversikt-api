@@ -1,8 +1,8 @@
 import React, { PropTypes as pt } from 'react';
 import { FormattedMessage } from 'react-intl';
-import Inngaaende from './dokumentavsender/inngaaende';
-import Utgaaende from './dokumentavsender/utgaaende';
-import Intern from './dokumentavsender/intern';
+import Inngaaende from './inngaaende';
+import Utgaaende from './utgaaende';
+import Intern from './intern';
 
 const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn, kategoriNotat }) => {
     const ukjentAvsender = <FormattedMessage id="dokumentinfo.avsender.ukjent"/>;

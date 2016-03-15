@@ -1,6 +1,6 @@
 import React, { PropTypes as pt } from 'react';
 import { groupBy } from 'lodash';
-import DokumentInfoElm from './dokument-info-elm';
+import DokumentInfoElm from './dokument/dokument-info-elm';
 
 const nyesteForst = (a, b) => b.dato.dayOfYear - a.dato.dayOfYear;
 
@@ -24,15 +24,16 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
             );
         }, []);
 
-
-    return (<ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>);
+    return <ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>;
 };
 
 
 DokumentListe.propTypes = {
     dokumentMetadata: pt.array.isRequired,
     brukerNavn: pt.string.isRequired,
-    visTema: pt.string
+    visTema: pt.bool.isRequired,
+    velgJournalpost: pt.func.isRequired,
+    visSide: pt.func.isRequired
 };
 
 export default DokumentListe;
