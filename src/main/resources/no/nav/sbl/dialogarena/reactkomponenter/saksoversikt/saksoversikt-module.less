@@ -271,9 +271,13 @@
 
 .tema-ikke-tilgang {
   background-repeat: no-repeat;
-  background-image: url("@{imgDir}/stop.svg");
+  background-image: url("@{imgDir}/stop-graa.svg");
   background-position: 18rem 1.2rem;;
   background-size: 2.5em;
+
+  &.valgt {
+    background-image: url("@{imgDir}/stop-hvit.svg");
+  }
 }
 
 .saksoversikt-liste-element {
