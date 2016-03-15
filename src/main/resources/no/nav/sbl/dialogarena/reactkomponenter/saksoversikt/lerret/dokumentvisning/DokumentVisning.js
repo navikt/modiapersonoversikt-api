@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { debounce, autobind } from './../../../utils/utils-module';
 import { Element } from 'react-scroll';
+import { FormattedMessage } from 'react-intl';
 
 const a4Ratio = 2 / Math.sqrt(2);
 const stylingFn = (antallSider, width = 750) => ({
@@ -88,10 +89,14 @@ class DokumentVisning extends Component {
                         key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
                     <param name="view" value="FitV"/>
 
-                    <p>Kunne ikke vise pdf inline</p>
-                    <a href={dokument.pdfUrl} target="_blank">
-                        Åpne i egen fane
-                    </a>
+                    <div className="feilmelding-container">
+                        <img className="feilmelding-bakgrunn" src="/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg" alt=""/>
+                        <div className="feilmelding panel panel-ramme">
+                            <h1 className="-ikon-feil-strek teknisk-feil-ikon"><FormattedMessage id="dokumentvisning.pdf.feilmelding.tittel" /></h1>
+                            <p className="text-center"><FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold" /></p>
+                            <p className="text-center"><a href={dokument.pdfUrl} target="_blank">Åpne i egen fane</a></p>
+                        </div>
+                    </div>
                 </object>
             </Element>
         );
