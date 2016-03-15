@@ -1,10 +1,10 @@
 import React, { PropTypes as pt } from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
-import DokumentAvsender from './dokument/dokument-avsender';
+import DokumentAvsender from './avsender/dokument-avsender';
 import { FormattedDate } from 'react-intl';
-import { datoformat, javaLocalDateTimeToJSDate } from './../../../utils/dato-utils';
+import { datoformat, javaLocalDateTimeToJSDate } from './../../../../utils/dato-utils';
 import dokumentinfoShape from './dokumentinfo-shape';
-import { ettersendelseTil } from './../../../utils/ettersending-utils';
+import { ettersendelseTil } from './../../../../utils/ettersending-utils';
 
 const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
 const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
@@ -19,9 +19,8 @@ class DokumentInfoElm extends React.Component {
 
     render() {
         const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
-        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper, ettersending, kategoriNotat  } = dokumentinfo;
-        const temaHvisAlleTemaer = visTema === 'true' ? <p className="tema-dokument">{temakodeVisning}</p> :
-            <noscript/>;
+        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning, feilWrapper, ettersending, kategoriNotat } = dokumentinfo;
+        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript/>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ? 'dokument-kan-vises' : 'dokument-kan-ikke-vises';
         const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
@@ -55,7 +54,7 @@ class DokumentInfoElm extends React.Component {
 
 DokumentInfoElm.propTypes = {
     dokumentinfo: dokumentinfoShape.isRequired,
-    visTema: pt.string,
+    visTema: pt.bool.isRequired,
     brukerNavn: pt.string,
     velgJournalpost: pt.func.isRequired,
     visSide: pt.func.isRequired

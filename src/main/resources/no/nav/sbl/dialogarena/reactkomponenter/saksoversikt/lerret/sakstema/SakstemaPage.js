@@ -1,13 +1,13 @@
 import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './SakstemaListe';
-import ViktigAViteLenke from './../viktigavite/ViktigAViteLenke';
+import { connect } from 'react-redux';
 import VisningDokumentliste from './dokumentliste/visning-dokumentliste';
 import { FormattedMessage } from 'react-intl';
 
 class SakstemaPage extends React.Component {
 
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost } = this.props;
+        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost, filtreringsvalg } = this.props;
 
         if (this.props.sakstema.length === 0) {
             return (
@@ -26,10 +26,11 @@ class SakstemaPage extends React.Component {
                     <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
-                    <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
                     <h2 className="vekk">{valgtTema.temanavn}</h2>
+
                     <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema}
-                                          brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}/>
+                                          brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}
+                                          filtreringsvalg={filtreringsvalg}/>
                 </section>
             </div>
         );
@@ -42,7 +43,8 @@ SakstemaPage.propTypes = {
     velgSak: PT.func,
     brukerNavn: PT.string,
     visSide: PT.func.isRequired,
-    velgJournalpost: PT.func
+    velgJournalpost: PT.func,
+    filtreringsvalg: PT.string.isRequired
 };
 
-export default SakstemaPage;
+export default connect()(SakstemaPage);

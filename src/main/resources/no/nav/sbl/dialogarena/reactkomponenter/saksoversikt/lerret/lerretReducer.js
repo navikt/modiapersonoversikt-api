@@ -4,6 +4,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { basicReducer } from './../utils/redux-utils';
 import { nyesteSakstema } from './../utils/dato-sortering';
+import { ALLE } from './sakstema/dokumentliste/filtrering/filtrering-avsender-valg';
 
 const fjernTommeTema = (tema) => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 const lagAlleTema = (temaliste) => [{
@@ -17,6 +18,7 @@ const lagAlleTema = (temaliste) => [{
 const actionHandlers = {};
 const initalState = {
     valgtside: 'sakstema',
+    filtreringsvalg: ALLE,
     status: Const.VOID,
     data: {},
     feil: '',
@@ -69,21 +71,19 @@ actionHandlers[AT.LAST_LERRET_DATA_ALLE_SAKER_OK] = (state, action) => {
             feilendeSystemer
         },
         valgtTema,
-        widgetValgtTemakode
-    }
-};
-actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
-    return {
-        ...state,
-        status: Const.FEILET,
-        feil: action.data
+        widgetValgtTemakode,
+        filtreringsvalg: ALLE
     };
 };
+actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
+    return { ...state, status: Const.FEILET, feil: action.data };
+};
 
-actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data });
-actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJournalpost: action.data });
-actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
-actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
+actionHandlers[AT.VELG_SAK] = (state, action) => ({...state, valgtTema: action.data, filtreringsvalg: ALLE});
+actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({...state, valgtJournalpost: action.data});
+actionHandlers[AT.VIS_TEMA] = (state, action) => ({...state, widgetValgtTemakode: action.data});
+actionHandlers[AT.VIS_SIDE] = (state, action) => ({...state, valgtside: action.data});
+actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({...state, filtreringsvalg: action.filtreringsvalg});
 
 // -------
 export default basicReducer(initalState, actionHandlers);
