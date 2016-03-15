@@ -10,15 +10,23 @@ actionHandlers[AT.LAST_WIDGET_DATA_START] = (state) => {
     return { ...state, status: Const.LASTER };
 };
 actionHandlers[AT.LAST_WIDGET_DATA_OK] = (state, action) => {
-    const [temaer, tekster, fnr] = action.data;
-
+    const temaer = action.data;
     return {
         ...state,
         status: Const.LASTET,
         data: {
             temaer,
-            tekster,
-            fnr
+            tekster: state.data.tekster
+        }
+    };
+};
+actionHandlers[AT.LAST_WIDGET_DATA_TEKSTER_OK] = (state, action) => {
+    const tekster = action.data;
+    return {
+        ...state,
+        status: Const.LASTER,
+        data: {
+            tekster
         }
     };
 };

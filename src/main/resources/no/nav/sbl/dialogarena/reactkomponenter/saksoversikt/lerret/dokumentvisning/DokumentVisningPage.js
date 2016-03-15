@@ -1,5 +1,5 @@
 import React from 'react';
-import { hentDokumentData, hentLerretData } from './../../actions';
+import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
 import { connect } from 'react-redux';
@@ -83,6 +83,5 @@ const mapStateToProps = (state) => {
 };
 
 export default wrapWithProvider(connect(mapStateToProps, {
-    hentDokumentData,
-    hentLerretData
+    hentDokumentData
 })(DokumentVisningPage), store);
