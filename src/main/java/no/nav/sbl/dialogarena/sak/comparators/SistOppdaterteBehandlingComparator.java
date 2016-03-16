@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.comparators;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
+import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 
 import java.util.Comparator;
 

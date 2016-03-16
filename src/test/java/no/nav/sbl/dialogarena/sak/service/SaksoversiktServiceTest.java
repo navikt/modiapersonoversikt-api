@@ -19,10 +19,44 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksyst
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import no.nav.modig.core.exception.SystemException;
+import no.nav.sbl.dialogarena.sak.transformers.Filter;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
+import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
+import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SaksoversiktServiceTest {
 
+    @Mock
+    private AktoerPortType fodselnummerAktorService;
+    @Mock
+    private SakOgBehandlingService sakOgBehandlingService;
+    @Mock
+    private Filter filter;
+
+    @InjectMocks
+    private SaksoversiktServiceImpl saksoversiktService = new SaksoversiktServiceImpl();
+
+
+    @Test (expected = SystemException.class)
+    public void kasterSystemExceptionOmAktorIdIkkeFinnes() throws HentAktoerIdForIdentPersonIkkeFunnet {
+        when(fodselnummerAktorService.hentAktoerIdForIdent(any())).thenThrow(new HentAktoerIdForIdentPersonIkkeFunnet());
+        saksoversiktService.hentTemaer("12345678901");
+    }
+
+    @Test (expected = RuntimeException.class)
+    public void kasterRuntimeOmAktoerTjenesteErNede() throws HentAktoerIdForIdentPersonIkkeFunnet {
+        when(fodselnummerAktorService.hentAktoerIdForIdent(any())).thenThrow(new RuntimeException());
+        saksoversiktService.hentTemaer("12345678901");
     private static final String PROD_SETTNINGS_DATO = "2015-04-13";
 
     @Before

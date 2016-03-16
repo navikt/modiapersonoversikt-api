@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.comparators;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.domain.lamell.GenerellBehandling;
 
 import java.util.Comparator;
 

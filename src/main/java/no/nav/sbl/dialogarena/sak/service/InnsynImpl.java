@@ -33,6 +33,8 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmel
 import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER;
 import static org.slf4j.LoggerFactory.getLogger;
 
+//Preserve stacktrace
+@SuppressWarnings("squid:S1166")
 public class InnsynImpl implements Innsyn {
 
     @Inject
@@ -43,7 +45,6 @@ public class InnsynImpl implements Innsyn {
 
     private static final Logger logger = getLogger(InnsynImpl.class);
 
-    @Override
     public ResultatWrapper<List<DokumentMetadata>> hentTilgjengeligJournalpostListe(List<Sak> saker, String fnr) {
         WSHentJournalpostListeRequest wsRequest = new WSHentJournalpostListeRequest();
         wsRequest.setSoekeFilter(new WSSoekeFilter().withJournalFiltrering(KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER));
@@ -67,7 +68,6 @@ public class InnsynImpl implements Innsyn {
         }
     }
 
-    @Override
     public TjenesteResultatWrapper hentDokument(String journalpostid, String dokumentreferanse) {
         WSHentDokumentRequest wsRequest = new WSHentDokumentRequest();
         wsRequest.setDokumentId(dokumentreferanse);
@@ -82,10 +82,10 @@ public class InnsynImpl implements Innsyn {
             return new TjenesteResultatWrapper(wsResponse.getDokument());
         } catch (HentDokumentSikkerhetsbegrensning e) {
             logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke hentet grunnet en sikkerhetsbegrensning. {}", journalpostid, dokumentreferanse, e.getMessage());
-            return new TjenesteResultatWrapper(DOKUMENT_IKKE_FUNNET);
+            return new TjenesteResultatWrapper(SIKKERHETSBEGRENSNING);
         } catch (HentDokumentDokumentIkkeFunnet e) {
             logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke funnet. {}", journalpostid, dokumentreferanse, e.getMessage());
-            return new TjenesteResultatWrapper(SIKKERHETSBEGRENSNING);
+            return new TjenesteResultatWrapper(DOKUMENT_IKKE_FUNNET);
         } catch (RuntimeException e) {
             logger.error("Det skjedde en ukjent feil under henting av dokumentet med journalpostid '{}' og dokumentid '{}'.", journalpostid, dokumentreferanse, e);
             return new TjenesteResultatWrapper(UKJENT_FEIL);

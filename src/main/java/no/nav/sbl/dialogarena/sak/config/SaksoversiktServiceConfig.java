@@ -6,8 +6,9 @@ import no.nav.sbl.dialogarena.sak.service.TilgangskontrollServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
+import no.nav.sbl.dialogarena.sak.transformers.Filter;
 import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
+import no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers;
 import no.nav.sbl.dialogarena.saksoversikt.service.config.ServiceConfig;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
 import org.springframework.context.annotation.Bean;
@@ -34,8 +35,8 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public FilterImpl filter() {
-        return new FilterImpl();
+    public Filter filter() {
+        return new Filter();
     }
 
 
@@ -47,6 +48,11 @@ public class SaksoversiktServiceConfig {
     @Bean
     public JournalpostTransformer journalpostTransformer() {
         return new JournalpostTransformer();
+    }
+
+    @Bean
+    public SakOgBehandlingTransformers sakOgBehandlingTransformers() {
+        return new SakOgBehandlingTransformers();
     }
 
 }

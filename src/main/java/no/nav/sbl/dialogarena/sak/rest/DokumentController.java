@@ -2,9 +2,10 @@ package no.nav.sbl.dialogarena.sak.rest;
 
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentFeilmelding;
-import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.DokumentResultat;
-import no.nav.sbl.dialogarena.sak.viewdomain.dokumentvisning.JournalpostResultat;
+import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.DokumentFeilmelding;
+import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.DokumentResultat;
+import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.JournalpostResultat;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
@@ -143,7 +144,14 @@ public class DokumentController {
                         .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
                         .map((Pair<String, TjenesteResultatWrapper> data) -> {
                             int antallSider = hentAntallSiderIDokument(data);
-                            return new DokumentResultat(journalpostMetadata.getHoveddokument().getTittel(), antallSider, fnr, journalpostId, data.getLeft());
+                            String tittel = journalpostMetadata.getVedlegg()
+                                    .stream()
+                                    .filter((d) -> data.getLeft().equals(d.getDokumentreferanse()))
+                                    .findFirst()
+                                    .map(Dokument::getTittel)
+                                    .orElse(journalpostMetadata.getHoveddokument().getTittel());
+
+                            return new DokumentResultat(tittel, antallSider, fnr, journalpostId, data.getLeft());
                         }).collect(toList());
             }).get();
         } catch (InterruptedException | ExecutionException e) {
