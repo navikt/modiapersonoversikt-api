@@ -18,7 +18,9 @@ class ViktigAViteLenke extends React.Component {
             const linktekst = `Viktig å vite om ${valgtTema.temanavn}`;
             return (
                 <div className="viktig-aa-vite-container">
-                    <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>{linktekst}</a>
+                    <div className="viktig-aa-vite-lenke">
+                        <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>{linktekst}</a>
+                    </div>
                 </div>
             );
         }

@@ -2,24 +2,42 @@ import React, { PropTypes as pt } from 'react';
 import { velgFiltreringAvsender } from './../../../../actions';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { ALLE, NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
+import { NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
 
-const _onSelect = (dispatch) => (event) => dispatch(velgFiltreringAvsender(event.target.value));
+const _onChange = (alleredeValgt, dispatch) => (event) => {
+    const nyttFilterValg = {
+        NAV: alleredeValgt[NAV],
+        BRUKER: alleredeValgt[BRUKER],
+        ANDRE: alleredeValgt[ANDRE]
+    };
 
-const FiltrerAvsender = ({ valgtValg, dispatch, intl: { formatMessage } }) => (
+    nyttFilterValg[event.target.value] = !nyttFilterValg[event.target.value];
+    return dispatch(velgFiltreringAvsender(nyttFilterValg));
+};
+
+const FiltrerAvsender = ({ alleredeValgt, dispatch, intl: { formatMessage } }) => {
+    const filtervalg = [NAV, BRUKER, ANDRE];
+    const filtreringsCheckbox = filtervalg.map((valg) => (
+            <div className="filtreringsvalg">
+                <input name={valg} type="checkbox" value={valg} id={valg} checked={alleredeValgt[valg]}
+                       onChange={_onChange(alleredeValgt, dispatch)}/>
+                <label htmlFor={valg} className="filtreringsvalg-label">{ formatMessage({ id: `dokumentliste.filtrering.${valg}` }) }</label>
+            </div>
+        )
+    );
+
+    return (
         <div className="filtrering-container">
-            <FormattedMessage id={'dokumentliste.filtrering.forklaring'}/>
-            <select className="select-container" value={valgtValg} onChange={_onSelect(dispatch)}>
-                <option value={ALLE}>{ formatMessage({ id: 'dokumentliste.filtrering.alle' }) }</option>
-                <option value={NAV}>{ formatMessage({ id: 'dokumentliste.filtrering.nav' }) }</option>
-                <option value={BRUKER}>{ formatMessage({ id: 'dokumentliste.filtrering.bruker' }) }</option>
-                <option value={ANDRE}>{ formatMessage({ id: 'dokumentliste.filtrering.andre' }) }</option>
-            </select>
+            <span className="filtrering-forklaring">
+                <FormattedMessage id={'dokumentliste.filtrering.forklaring'}/>
+            </span>
+            {filtreringsCheckbox}
         </div>
-);
+    );
+};
 
 FiltrerAvsender.propTypes = {
-    valgtValg: pt.string.isRequired
+    alleredeValgt: pt.object.isRequired
 };
 
 export default injectIntl(connect(({ filtreringsvalg }) => ({ filtreringsvalg }))(FiltrerAvsender));
