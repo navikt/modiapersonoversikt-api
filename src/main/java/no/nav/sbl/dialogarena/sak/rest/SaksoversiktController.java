@@ -60,10 +60,11 @@ public class SaksoversiktController {
                 .hentSakstema(sakerWrapper.resultat, fnr, false);
 
         tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat);
+        saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat);
 
         return ok(new ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat,
                 hentValgtEnhet(request)),
-                collectFeilendeSystemer(sakerWrapper, sakstemaWrapper ))).build();
+                collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))).build();
 
     }
 
