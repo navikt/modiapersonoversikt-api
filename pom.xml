@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>7.4</version>
+    <version>8.0-HL2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
