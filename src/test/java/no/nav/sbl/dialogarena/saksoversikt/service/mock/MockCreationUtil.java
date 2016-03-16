@@ -4,11 +4,9 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHovedskjema;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Tema;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -16,27 +14,14 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.LASTET_OPP;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.SEND_SENERE;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLINGKVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_DATO;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_STATUS;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus.OPPRETTET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.BEHANDLING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.JOURNALPOST_ID;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.BEHANDLINGS_ID;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.ETTERSENDING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsStatus.OPPRETTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.UNDER_ARBEID;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.OPPRETTET_DATO;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.SKJEMANUMMER_REF;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Tema.SISTOPPDATERTEBEHANDLING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Tema.TEMAKODE;
 import static org.joda.time.DateTime.now;
 
 public class MockCreationUtil {
@@ -44,63 +29,62 @@ public class MockCreationUtil {
     public static final String TEMA_DAGPENGER_SKJEMA_1 = "NAV 04-01.03";
     public static final String TEMA_AAP_SKJEMA_1 = "NAV 11-13.06";
 
-    public static Record<GenerellBehandling> createHendelse() {
-        return new Record<GenerellBehandling>()
-                .with(BEHANDLING_STATUS, OPPRETTET)
-                .with(SKJEMANUMMER_REF, "generell-behandling-kodeverk-ref-mock")
-                .with(BEHANDLINGKVITTERING, BEHANDLING)
-                .with(ETTERSENDING, false)
-                .with(GenerellBehandling.OPPRETTET_DATO, now())
-                .with(BEHANDLING_DATO, now());
+    public static Behandling createHendelse() {
+        return new Behandling()
+                .withBehandlingStatus(OPPRETTET)
+                .withSkjemanummerRef("generell-behandling-kodeverk-ref-mock")
+                .withBehandlingKvittering(BEHANDLING)
+                .withEttersending(false)
+                .withOpprettetDato(now())
+                .withBehandlingsDato(now());
     }
 
-    public static Record<Kvittering> createKvittering() {
-        return new Record<Kvittering>()
-                .with(BEHANDLINGS_ID, "123-behandlingsid")
-                .with(BEHANDLING_STATUS, OPPRETTET)
-                .with(JOURNALPOST_ID, "journalpostid")
-                .with(ARKIVREFERANSE_ORIGINALKVITTERING, optional("123456"))
-                .with(SKJEMANUMMER_REF, "kvittering-kodeverk-ref-mock")
-                .with(BEHANDLINGKVITTERING, KVITTERING)
-                .with(ETTERSENDING, false)
-                .with(KVITTERINGSTYPE, DOKUMENTINNSENDING)
-                .with(INNSENDTE_DOKUMENTER, asList(
-                        new Record<DokumentFraHenvendelse>()
-                                .with(KODEVERK_REF, "bla")
-                                .with(INNSENDINGSVALG, LASTET_OPP)
-                                .with(ARKIVREFERANSE, "1234")
-                                .with(UUID, "123-abc")
-                                .with(HOVEDSKJEMA, false),
-                        new Record<DokumentFraHenvendelse>()
-                                .with(KODEVERK_REF, "bla2")
-                                .with(INNSENDINGSVALG, LASTET_OPP)
-                                .with(ARKIVREFERANSE, "4321")
-                                .with(UUID, "abc-123")
-                                .with(HOVEDSKJEMA, false)
+    public static Behandling createKvittering() {
+        return new Behandling()
+                .withBehandlingsId("123-behandlingsid")
+                .withBehandlingStatus(OPPRETTET)
+                .withJournalPostId("journalpostid")
+                .withArkivreferanseOriginalkvittering(optional("123456"))
+                .withSkjemanummerRef("kvittering-kodeverk-ref-mock")
+                .withBehandlingKvittering(KVITTERING)
+                .withEttersending(false)
+                .withKvitteringType(DOKUMENTINNSENDING)
+                .withInnsendteDokumenter(asList(
+                        new DokumentFraHenvendelse()
+                                .withKodeverkRef("bla")
+                                .withInnsendingsvalg(LASTET_OPP)
+                                .withArkivreferanse("1234")
+                                .withUuid("123-abc")
+                                .withErHovedskjema(false),
+                        new DokumentFraHenvendelse()
+                                .withKodeverkRef("bla2")
+                                .withInnsendingsvalg(LASTET_OPP)
+                                .withArkivreferanse("4321")
+                                .withUuid("abc-123")
+                                .withErHovedskjema(false)
                 ))
-                .with(Kvittering.MANGLENDE_DOKUMENTER, asList(
-                        new Record<DokumentFraHenvendelse>()
-                                .with(KODEVERK_REF, "bla3")
-                                .with(INNSENDINGSVALG, SEND_SENERE)
-                                .with(HOVEDSKJEMA, false)
+                .withManglendeDokumenter(asList(
+                        new DokumentFraHenvendelse()
+                                .withKodeverkRef("bla3")
+                                .withInnsendingsvalg(SEND_SENERE)
+                                .withErHovedskjema(false)
                 ))
-                .with(BEHANDLING_DATO, now());
+                .withBehandlingsDato(now());
     }
 
-    public static Record<Tema> createTema() {
-        return new Record<Tema>()
-                .with(TEMAKODE, "DAG")
-                .with(SISTOPPDATERTEBEHANDLING, createHendelse());
+    public static Tema createTema() {
+        return new Tema()
+                .withTemakode("DAG")
+                .withSistoppdatertebehandling(createHendelse());
     }
 
-    public static Record<Soknad> createSoknad() {
-        return new Record<Soknad>()
-                .with(KVITTERINGSTYPE, DOKUMENTINNSENDING)
-                .with(Soknad.TYPE, HenvendelseType.DOKUMENTINNSENDING)
-                .with(STATUS, UNDER_ARBEID)
-                .with(SKJEMANUMMER_REF, "soknad-kodeverk-ref-mock")
-                .with(SISTENDRET_DATO, now())
-                .with(OPPRETTET_DATO, now());
+    public static Soknad createSoknad() {
+        return new Soknad()
+                .withHenvendelseType(HenvendelseType.DOKUMENTINNSENDING)
+                .withStatus(UNDER_ARBEID)
+                .withSkjemanummerRef("soknad-kodeverk-ref-mock")
+                .withSistEndretDato(now())
+                .withOpprettetDato(now());
     }
 
     public static WSSak createWSSak() {

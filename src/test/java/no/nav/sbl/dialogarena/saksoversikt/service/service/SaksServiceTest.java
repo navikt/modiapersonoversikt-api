@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
@@ -37,8 +36,6 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGruppe
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.UNDER_ARBEID;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.OPPRETTET_DATO;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.STATUS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
@@ -94,8 +91,8 @@ public class SaksServiceTest {
     @Test
     public void hentPaabegynteSoknader_henterSoknader_medStatusUnderArbeid() {
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(UNDER_ARBEID, "12345678901")).thenReturn(asList(
-                new Record<Soknad>().with(STATUS, UNDER_ARBEID).with(OPPRETTET_DATO, new DateTime()),
-                new Record<Soknad>().with(STATUS, UNDER_ARBEID).with(OPPRETTET_DATO, new DateTime())
+                new Soknad().withStatus(UNDER_ARBEID).withOpprettetDato(new DateTime()),
+                new Soknad().withStatus(UNDER_ARBEID).withOpprettetDato(new DateTime())
         ));
         assertThat(saksService.hentPaabegynteSoknader("12345678901").size(), equalTo(2));
     }

@@ -1,46 +1,42 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator;
 
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
-import org.joda.time.DateTime;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import org.junit.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BEHANDLING_DATO;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.SKJEMANUMMER_REF;
 import static org.hamcrest.core.Is.is;
+import static org.joda.time.DateTime.*;
 import static org.junit.Assert.assertThat;
 
 public class OmvendtKronologiskHendelseComparatorTest {
 
     @Test
     public void sortOrderTest() {
-        DateTime now = DateTime.now();
-        Record<GenerellBehandling> hendelse1 = new Record<GenerellBehandling>()
-                .with(SKJEMANUMMER_REF, "Hendelse1")
-                .with(BEHANDLING_DATO, now.minusDays(1));
-        Record<GenerellBehandling> hendelse2 = new Record<GenerellBehandling>()
-                .with(SKJEMANUMMER_REF, "Hendelse2")
-                .with(BEHANDLING_DATO, now);
-        Record<GenerellBehandling> hendelse3 = new Record<GenerellBehandling>()
-                .with(SKJEMANUMMER_REF, "Hendelse3")
-                .with(BEHANDLING_DATO, now.minusDays(2));
-        Record<GenerellBehandling> hendelse4 = new Record<GenerellBehandling>()
-                .with(SKJEMANUMMER_REF, "Hendelse4")
-                .with(BEHANDLING_DATO, now.plusHours(23));
-        Record<GenerellBehandling> hendelse5 = new Record<GenerellBehandling>()
-                .with(SKJEMANUMMER_REF, "Hendelse5")
-                .with(BEHANDLING_DATO, now.plusHours(10));
+        Behandling hendelse1 = new Behandling()
+                .withSkjemanummerRef("Hendelse1")
+                .withBehandlingsDato(now().minusDays(1));
+        Behandling hendelse2 = new Behandling()
+                .withSkjemanummerRef("Hendelse2")
+                .withBehandlingsDato(now());
+        Behandling hendelse3 = new Behandling()
+                .withSkjemanummerRef("Hendelse3")
+                .withBehandlingsDato(now().minusDays(2));
+        Behandling hendelse4 = new Behandling()
+                .withSkjemanummerRef("Hendelse4")
+                .withBehandlingsDato(now().plusHours(23));
+        Behandling hendelse5 = new Behandling()
+                .withSkjemanummerRef("Hendelse5")
+                .withBehandlingsDato(now().plusHours(10));
 
-        List<Record<GenerellBehandling>> sortedList = on(asList(hendelse1, hendelse2, hendelse3, hendelse4, hendelse5)).collect(new OmvendtKronologiskHendelseComparator());
+        List<Behandling> sortedList = on(asList(hendelse1, hendelse2, hendelse3, hendelse4, hendelse5)).collect(new OmvendtKronologiskHendelseComparator());
 
-        assertThat(sortedList.get(0).get(SKJEMANUMMER_REF), is("Hendelse4"));
-        assertThat(sortedList.get(1).get(SKJEMANUMMER_REF), is("Hendelse5"));
-        assertThat(sortedList.get(2).get(SKJEMANUMMER_REF), is("Hendelse2"));
-        assertThat(sortedList.get(3).get(SKJEMANUMMER_REF), is("Hendelse1"));
-        assertThat(sortedList.get(4).get(SKJEMANUMMER_REF), is("Hendelse3"));
+        assertThat(sortedList.get(0).getSkjemanummerRef(), is("Hendelse4"));
+        assertThat(sortedList.get(1).getSkjemanummerRef(), is("Hendelse5"));
+        assertThat(sortedList.get(2).getSkjemanummerRef(), is("Hendelse2"));
+        assertThat(sortedList.get(3).getSkjemanummerRef(), is("Hendelse1"));
+        assertThat(sortedList.get(4).getSkjemanummerRef(), is("Hendelse3"));
     }
 }

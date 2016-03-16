@@ -1,14 +1,13 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator;
 
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 
 import java.util.Comparator;
 
-public class OmvendtKronologiskHendelseComparator implements Comparator<Record<? extends GenerellBehandling>> {
+public class OmvendtKronologiskHendelseComparator implements Comparator<Behandling> {
 
     @Override
-    public int compare(Record<? extends GenerellBehandling> o1, Record<? extends GenerellBehandling> o2) {
+    public int compare(Behandling o1, Behandling o2) {
         if (o2 == null && o1 == null) {
             return 0;
         } else if (o2 == null) {
@@ -16,6 +15,6 @@ public class OmvendtKronologiskHendelseComparator implements Comparator<Record<?
         } else if (o1 == null) {
             return 1;
         }
-        return o2.get(GenerellBehandling.BEHANDLING_DATO).compareTo(o1.get(GenerellBehandling.BEHANDLING_DATO));
+        return o2.getBehandlingDato().compareTo(o1.getBehandlingDato());
     }
 }

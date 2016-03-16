@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
@@ -17,10 +15,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSSak;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsStatus.AVSLUTTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -35,25 +32,25 @@ public class DataFletterTest {
         DateTime henvendelseTid = new DateTime();
         DateTime sakOgBehandlingTid = new DateTime().minusDays(1);
         String henvendelsesId = "henvendelsesId";
-        List<Record<Kvittering>> kvitteringer = asList(new Record<Kvittering>()
-                        .with(BEHANDLING_DATO, henvendelseTid)
-                        .with(BEHANDLING_STATUS, GenerellBehandling.BehandlingsStatus.AVSLUTTET)
-                        .with(GenerellBehandling.BEHANDLINGS_ID, henvendelsesId)
+        List<Behandling> kvitteringer = asList(new Behandling()
+                .withBehandlingsDato(henvendelseTid)
+                .withBehandlingStatus(Behandling.BehandlingsStatus.AVSLUTTET)
+                .withBehandlingsId(henvendelsesId)
         );
         WSSak sak = new WSSak().withBehandlingskjede(new WSBehandlingskjede()
-                        .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(BEHANDLINGSTATUS_AVSLUTTET))
-                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
-                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.AVSLUTTET))
-                        .withBehandlingsListeRef(henvendelsesId)
-                        .withSisteBehandlingREF(henvendelsesId)
-                        .withStart(sakOgBehandlingTid)
-                        .withSlutt(null)
+                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(BEHANDLINGSTATUS_AVSLUTTET))
+                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.AVSLUTTET))
+                .withBehandlingsListeRef(henvendelsesId)
+                .withSisteBehandlingREF(henvendelsesId)
+                .withStart(sakOgBehandlingTid)
+                .withSlutt(null)
         );
 
-        Record<? extends GenerellBehandling> kvittering = fletter.flettDataFraBaksystemer(sak, kvitteringer).get(0);
+        Behandling kvittering = fletter.flettDataFraBaksystemer(sak, kvitteringer).get(0);
 
-        assertThat(kvittering.get(BEHANDLING_DATO), equalTo(henvendelseTid));
-        assertThat(kvittering.get(GenerellBehandling.BEHANDLING_STATUS), equalTo(AVSLUTTET));
+        assertThat(kvittering.getBehandlingDato(), equalTo(henvendelseTid));
+        assertThat(kvittering.getBehandlingsStatus(), equalTo(AVSLUTTET));
     }
 
     @Test
@@ -61,10 +58,10 @@ public class DataFletterTest {
         DateTime henvendelseTid = new DateTime();
         DateTime sakOgBehandlingTid = new DateTime().minusDays(1);
         String henvendelsesId = "henvendelsesId";
-        List<Record<Kvittering>> kvitteringer = asList(new Record<Kvittering>()
-                        .with(BEHANDLING_DATO, henvendelseTid)
-                        .with(BEHANDLING_STATUS, GenerellBehandling.BehandlingsStatus.AVSLUTTET)
-                        .with(GenerellBehandling.BEHANDLINGS_ID, henvendelsesId)
+        List<Behandling> kvitteringer = asList(new Behandling()
+                        .withBehandlingsDato(henvendelseTid)
+                        .withBehandlingStatus(Behandling.BehandlingsStatus.AVSLUTTET)
+                        .withBehandlingsId(henvendelsesId)
         );
         WSSak sak = new WSSak().withBehandlingskjede(new WSBehandlingskjede()
                         .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(Filter.OPPRETTET))
@@ -76,37 +73,37 @@ public class DataFletterTest {
                         .withSlutt(null)
         );
 
-        Record<? extends GenerellBehandling> kvittering = fletter.flettDataFraBaksystemer(sak, kvitteringer).get(0);
+        Behandling kvittering = fletter.flettDataFraBaksystemer(sak, kvitteringer).get(0);
 
-        assertThat(kvittering.get(BEHANDLING_DATO), equalTo(henvendelseTid));
-        assertThat(kvittering.get(GenerellBehandling.BEHANDLING_STATUS), equalTo(AVSLUTTET));
+        assertThat(kvittering.getBehandlingDato(), equalTo(henvendelseTid));
+        assertThat(kvittering.getBehandlingsStatus(), equalTo(AVSLUTTET));
     }
 
     @Test
     public void fireBehandlingsKjederMedToKvitteringskoblinger_skalFlette_toKvitteringerOgToBehandlinger() {
         WSSak sak = opprettSak();
-        List<Record<Kvittering>> kvitteringer = opprettKvitteringer();
+        List<Behandling> kvitteringer = opprettKvitteringer();
 
-        List<Record<? extends GenerellBehandling>> behandlinger = fletter.flettDataFraBaksystemer(sak, kvitteringer);
+        List<Behandling> behandlinger = fletter.flettDataFraBaksystemer(sak, kvitteringer);
 
         assertThat(finnAntallKvitteringer(behandlinger), equalTo(2));
         assertThat(behandlinger.size(), equalTo(4));
     }
 
-    private List<Record<Kvittering>> opprettKvitteringer() {
+    private List<Behandling> opprettKvitteringer() {
         return asList(
-                new Record<Kvittering>()
-                        .with(GenerellBehandling.BEHANDLINGS_ID, KVITTERINGSID_1)
-                        .with(BEHANDLINGKVITTERING, KVITTERING)
-                        .with(BEHANDLING_STATUS, AVSLUTTET),
-                new Record<Kvittering>()
-                        .with(GenerellBehandling.BEHANDLINGS_ID, KVITTERINGSID_2)
-                        .with(BEHANDLINGKVITTERING, KVITTERING)
-                        .with(BEHANDLING_STATUS, AVSLUTTET),
-                new Record<Kvittering>()
-                        .with(GenerellBehandling.BEHANDLINGS_ID, "ikke-matchende-id-henvendelse")
-                        .with(BEHANDLINGKVITTERING, KVITTERING)
-                        .with(BEHANDLING_STATUS, AVSLUTTET)
+                new Behandling()
+                        .withBehandlingsId(KVITTERINGSID_1)
+                        .withBehandlingKvittering(KVITTERING)
+                        .withBehandlingStatus(AVSLUTTET),
+                new Behandling()
+                        .withBehandlingsId(KVITTERINGSID_2)
+                        .withBehandlingKvittering(KVITTERING)
+                        .withBehandlingStatus(AVSLUTTET),
+                new Behandling()
+                        .withBehandlingsId("ikke-matchende-id-henvendelse")
+                        .withBehandlingKvittering(KVITTERING)
+                        .withBehandlingStatus(AVSLUTTET)
         );
     }
 
@@ -131,10 +128,10 @@ public class DataFletterTest {
                 );
     }
 
-    private int finnAntallKvitteringer(List<Record<? extends GenerellBehandling>> behandlinger) {
+    private int finnAntallKvitteringer(List<Behandling> behandlinger) {
         int i = 0;
-        for (Record<? extends GenerellBehandling> behandling : behandlinger) {
-            if (behandling.get(BEHANDLINGKVITTERING).equals(KVITTERING)) {
+        for (Behandling behandling : behandlinger) {
+            if (behandling.getBehandlingkvittering().equals(KVITTERING)) {
                 i++;
             }
         }
