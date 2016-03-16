@@ -24,7 +24,7 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
             );
         }, []);
 
-    return <ul className="ustilet dokumentliste">{dokumentListeForAarstall}</ul>;
+    return <ul className="ustilet">{dokumentListeForAarstall}</ul>;
 };
 
 
