@@ -42,7 +42,7 @@ class SaksoversiktLerret extends React.Component {
 
     render() {
         if (this.props.status !== Const.LASTET) {
-            return <Snurrepipp />;
+            return <Snurrepipp farge='hvit'/>;
         }
 
         const feilmelding = lagFeilmelding(this.props);
