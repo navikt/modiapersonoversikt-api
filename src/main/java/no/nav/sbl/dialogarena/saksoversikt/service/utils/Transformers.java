@@ -19,8 +19,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.BEHANDLING;
@@ -28,6 +26,7 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandl
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsStatus;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
@@ -116,10 +115,11 @@ public class Transformers {
                 .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                 .withEttersending(wsSoknad.isEttersending())
                 .withHenvendelseType(valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
-                .withDokumenter(on(optional(wsSoknad.getDokumentforventninger())
-                        .getOrElse(new Dokumentforventninger())
-                        .getDokumentforventning())
-                        .map(wsDokumentforventning -> transformTilDokument(wsDokumentforventning, wsSoknad.getHovedskjemaKodeverkId())).collect());
+                .withDokumenter(optional(wsSoknad.getDokumentforventninger())
+                        .orElse(new Dokumentforventninger())
+                        .getDokumentforventning()
+                        .stream()
+                        .map(wsDokumentforventning -> transformTilDokument(wsDokumentforventning, wsSoknad.getHovedskjemaKodeverkId())).collect(toList()));
     }
 
     public static final DokumentFraHenvendelse transformTilDokument(WSDokumentforventning wsDokumentforventning, String hovedskjemaId) {

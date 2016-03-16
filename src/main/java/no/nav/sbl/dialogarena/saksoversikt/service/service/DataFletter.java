@@ -4,15 +4,11 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import org.apache.commons.collections15.Predicate;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilGenerellBehandling;
 
 public class DataFletter {
@@ -28,15 +24,17 @@ public class DataFletter {
     }
 
     private List<Behandling> finnBehandlingerMedKvitteringskobling(List<Behandling> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
-        List<WSBehandlingskjede> behandlingskjederMedKvitteringskobling = on(behandlingskjeder).filter(finnesKvittering(kvitteringerFraHenvendelse)).collect();
+        List<WSBehandlingskjede> behandlingskjederMedKvitteringskobling = behandlingskjeder.stream()
+                .filter(finnesKvittering(kvitteringerFraHenvendelse))
+                .collect(toList());
         return hentBehandlingerFraBehandlingskjeder(behandlingskjederMedKvitteringskobling);
     }
 
     private List<Behandling> finnBehandlingerUtenKvitteringskobling(List<Behandling> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
-        List<WSBehandlingskjede> behandlingskjederUtenKvitteringskobling = on(behandlingskjeder)
-                .filter(not(finnesKvittering(kvitteringerFraHenvendelse)))
-                .filter(not(harKvitteringsBehandlingstype()))
-                .collect();
+        List<WSBehandlingskjede> behandlingskjederUtenKvitteringskobling = behandlingskjeder.stream()
+                .filter((finnesKvittering(kvitteringerFraHenvendelse).negate()))
+                .filter((harKvitteringsBehandlingstype().negate()))
+                .collect(toList());
         return hentBehandlingerFraBehandlingskjeder(behandlingskjederUtenKvitteringskobling);
     }
 
@@ -66,7 +64,7 @@ public class DataFletter {
         throw new ApplicationException("Fant ikke kvittering i Henvendelse");
     }
 
-    private Predicate<WSBehandlingskjede> finnesKvittering(final List<Behandling> kvitteringer) {
+    private Predicate<WSBehandlingskjede> finnesKvittering(List<Behandling> kvitteringer) {
         return wsBehandlingskjede -> kvitteringer.stream()
                 .filter(kvittering -> kvittering.getBehandlingsId().equals(wsBehandlingskjede.getSisteBehandlingREF()))
                 .findAny()

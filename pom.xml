@@ -27,7 +27,6 @@
         <!-- Egenlagde dependencies -->
         <modig-core.version>1.0.1</modig-core.version>
         <modig-content.version>2.0.13</modig-content.version>
-        <modig.lang.version>2.0.4</modig.lang.version>
         <common-test.version>1.2</common-test.version>
         <commons-lang3.version>3.1</commons-lang3.version>
         <common-jetty.version>1.0.27</common-jetty.version>
@@ -81,11 +80,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-kodeverk</artifactId>
             <version>${common-kodeverk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-lang</artifactId>
-            <version>${modig.lang.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>

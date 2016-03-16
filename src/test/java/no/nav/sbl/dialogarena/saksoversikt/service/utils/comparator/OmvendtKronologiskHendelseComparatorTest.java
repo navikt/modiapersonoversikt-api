@@ -2,11 +2,9 @@ package no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import org.junit.Test;
-
 import java.util.List;
-
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.*;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.*;
 import static org.junit.Assert.assertThat;
@@ -31,7 +29,9 @@ public class OmvendtKronologiskHendelseComparatorTest {
                 .withSkjemanummerRef("Hendelse5")
                 .withBehandlingsDato(now().plusHours(10));
 
-        List<Behandling> sortedList = on(asList(hendelse1, hendelse2, hendelse3, hendelse4, hendelse5)).collect(new OmvendtKronologiskHendelseComparator());
+        List<Behandling> sortedList = asList(hendelse1, hendelse2, hendelse3, hendelse4, hendelse5).stream()
+                .sorted(new OmvendtKronologiskHendelseComparator())
+                .collect(toList());
 
         assertThat(sortedList.get(0).getSkjemanummerRef(), is("Hendelse4"));
         assertThat(sortedList.get(1).getSkjemanummerRef(), is("Hendelse5"));
