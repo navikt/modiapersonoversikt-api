@@ -12,7 +12,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>7.7-HL2-SNAPSHOT</version>
+    <version>8.0-HL2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -94,7 +94,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.24-FAMOUS-SHADE</personsok.version>
-        <kjerneinfo.versjon>1.1.34-FAMOUS-SHADE</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.2.6</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -117,6 +117,7 @@
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.2</joark-tjenestespesifikasjon.version>
+        <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
@@ -316,6 +317,17 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>dkif-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
             <!--Kodeverk-->
             <dependency>
@@ -431,6 +443,11 @@
                 <groupId>no.nav.sbl</groupId>
                 <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
                 <version>1.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl</groupId>
+                <artifactId>dkif-tjenestespesifikasjon</artifactId>
+                <version>${dkif-tjenestespesifikasjon.version}</version>
             </dependency>
 
             <!--Dialogarena-->
