@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
 
-const _onSelect = (alleredeValgt, dispatch) => (event) => {
+const _onChange = (alleredeValgt, dispatch) => (event) => {
     const nyttFilterValg = {
         NAV: alleredeValgt[NAV],
         BRUKER: alleredeValgt[BRUKER],
@@ -20,7 +20,7 @@ const FiltrerAvsender = ({ alleredeValgt, dispatch }) => {
     const filtreringsCheckbox = filtervalg.map((valg) => (
             <div className="filtreringsvalg">
                 <input name={valg} type="checkbox" value={valg} id={valg} checked={alleredeValgt[valg]}
-                       onChange={_onSelect(alleredeValgt, dispatch)}/>
+                       onChange={_onChange(alleredeValgt, dispatch)}/>
                 <label htmlFor={valg}>{valg}</label>
             </div>
         )
