@@ -4,7 +4,6 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { basicReducer } from './../utils/redux-utils';
 import { nyesteSakstema } from './../utils/dato-sortering';
-import { ALLE } from './sakstema/dokumentliste/filtrering/filtrering-avsender-valg';
 
 const fjernTommeTema = (tema) => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 const lagAlleTema = (temaliste) => [{
@@ -18,7 +17,7 @@ const lagAlleTema = (temaliste) => [{
 const actionHandlers = {};
 const initalState = {
     valgtside: 'sakstema',
-    filtreringsvalg: ALLE,
+    filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true },
     status: Const.VOID,
     data: {},
     feil: '',
@@ -28,15 +27,14 @@ const initalState = {
 };
 // ------- Your handler here
 
-actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => {
-    return { ...state, status: Const.LASTER };
-};
+actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => ({ ...state, status: Const.LASTER });
+
 actionHandlers[AT.LAST_LERRET_DATA_INIT_OK] = (state, action) => {
     const [tekster, miljovariabler] = action.data;
 
     return {
         ...state,
-        status: state.status === Const.LASTET? state.status : Const.INIT_OK,
+        status: state.status === Const.LASTET ? state.status : Const.INIT_OK,
         data: {
             sakstema: state.data.sakstema,
             feilendeSystemer: state.data.feilendeSystemer,
@@ -48,7 +46,7 @@ actionHandlers[AT.LAST_LERRET_DATA_INIT_OK] = (state, action) => {
 actionHandlers[AT.LAST_LERRET_DATA_ALLE_SAKER_OK] = (state, action) => {
     const { resultat, feilendeSystemer } = action.data;
 
-    let _sakstema = resultat && resultat.length > 0? resultat
+    let _sakstema = resultat && resultat.length > 0 ? resultat
         .filter(fjernTommeTema).sort(nyesteSakstema) : [];
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
@@ -63,7 +61,7 @@ actionHandlers[AT.LAST_LERRET_DATA_ALLE_SAKER_OK] = (state, action) => {
 
     return {
         ...state,
-        status: state.status === Const.INIT_OK? Const.LASTET: Const.LASTER,
+        status: state.status === Const.INIT_OK ? Const.LASTET : Const.LASTER,
         data: {
             tekster: state.data.tekster,
             miljovariabler: state.data.miljovariabler,
@@ -72,18 +70,16 @@ actionHandlers[AT.LAST_LERRET_DATA_ALLE_SAKER_OK] = (state, action) => {
         },
         valgtTema,
         widgetValgtTemakode,
-        filtreringsvalg: ALLE
+        filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
     };
 };
-actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
-    return { ...state, status: Const.FEILET, feil: action.data };
-};
+actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => ({ ...state, status: Const.FEILET, feil: action.data });
 
-actionHandlers[AT.VELG_SAK] = (state, action) => ({...state, valgtTema: action.data, filtreringsvalg: ALLE});
-actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({...state, valgtJournalpost: action.data});
-actionHandlers[AT.VIS_TEMA] = (state, action) => ({...state, widgetValgtTemakode: action.data});
-actionHandlers[AT.VIS_SIDE] = (state, action) => ({...state, valgtside: action.data});
-actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({...state, filtreringsvalg: action.filtreringsvalg});
+actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data, filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true } });
+actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJournalpost: action.data });
+actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
+actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
+actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({ ...state, filtreringsvalg: action.filtreringsvalg });
 
 // -------
 export default basicReducer(initalState, actionHandlers);
