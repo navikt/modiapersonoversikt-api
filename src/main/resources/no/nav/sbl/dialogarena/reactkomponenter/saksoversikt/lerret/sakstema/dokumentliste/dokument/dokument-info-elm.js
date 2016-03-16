@@ -39,14 +39,16 @@ class DokumentInfoElm extends React.Component {
                 </div>
                 <div className="hoveddokument-tittel-wrapper">
                     <a href="javascript:void(0)" className="hoveddokument-tittel"
-                       onClick={this._redirect.bind(this)}>{hoveddokumentTekst}</a>
+                       onClick={this._redirect.bind(this)}>
+                        {hoveddokumentTekst}
+                    </a>
                 </div>
-                {temaHvisAlleTemaer}
                 <div className="typo-info">
                     <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost}
                                          dokumentinfo={dokumentinfo}
                     />
                 </div>
+                {temaHvisAlleTemaer}
             </li>
         );
     }
