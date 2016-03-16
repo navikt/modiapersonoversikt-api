@@ -2,14 +2,9 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
+import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.transformers.Filter;
-import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
-import no.nav.sbl.dialogarena.sak.transformers.FilterImpl;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.Tema;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
@@ -29,9 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static java.lang.System.getProperty;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.temaVMTransformer;
 
 public class SaksoversiktServiceImpl implements SaksoversiktService {
