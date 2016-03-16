@@ -24,7 +24,7 @@ public class TemaTransformer {
         return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak, filter)) : tema;
     }
 
-    private static final Behandling behandlingskjedeTilBehandling(WSBehandlingskjede WsBehandlingskjede) {
+    private static Behandling behandlingskjedeTilBehandling(WSBehandlingskjede WsBehandlingskjede) {
         Behandling generellBehandling = new Behandling()
                 .withBehandlingsDato(behandlingsDato(WsBehandlingskjede))
                 .withOpprettetDato(WsBehandlingskjede.getStart())
