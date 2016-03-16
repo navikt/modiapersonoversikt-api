@@ -22,7 +22,6 @@
         <wicket.version>6.19.0</wicket.version>
         <mockito.core.version>1.10.19</mockito.core.version>
         <joda-time.version>2.7</joda-time.version>
-        <collections-generic.version>4.01</collections-generic.version>
         <slf4j.version>1.7.12</slf4j.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.11</junit.version>
@@ -171,11 +170,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.collections</groupId>
-            <artifactId>collections-generic</artifactId>
-            <version>${collections-generic.version}</version>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-test</artifactId>
             <version>${common-test.version}</version>
@@ -299,25 +293,6 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <failOnWarning>false</failOnWarning>
-                            <ignoreNonCompile>true</ignoreNonCompile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-        </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
