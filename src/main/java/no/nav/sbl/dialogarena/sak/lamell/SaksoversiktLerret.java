@@ -39,6 +39,8 @@ public class SaksoversiktLerret extends Lerret {
         }
     }
 
+    //Unused parameters. De maa vaere der. 
+    @SuppressWarnings("squid:S1172")
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         String tema = feedItemPayload.getItemId();

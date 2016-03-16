@@ -41,6 +41,9 @@ import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDo
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 
+
+//Single Responsibility Principle
+@SuppressWarnings("squid:S1200")
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
 public class DokumentController {
