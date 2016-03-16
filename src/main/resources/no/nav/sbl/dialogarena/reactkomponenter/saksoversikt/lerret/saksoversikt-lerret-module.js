@@ -26,10 +26,13 @@ function getContent(props) {
     return fn(componentProps);
 }
 
-function lagFeilmelding(props) {
+function harFeilmelding(props) {
     return props.feilendeSystemer && props.feilendeSystemer.length > 0
-    && props.valgtside === 'sakstema'?
-        (<div className="lamell-feilmelding">
+        && props.valgtside === 'sakstema';
+}
+
+function lagFeilmelding(props) {
+        return harFeilmelding(props)? (<div className="lamell-feilmelding">
             <FormattedMessage id="sakslamell.feilmelding" />
         </div>): <noscript />;
 }
@@ -50,11 +53,12 @@ class SaksoversiktLerret extends React.Component {
         }
 
         const feilmelding = lagFeilmelding(this.props);
+        const feilmeldingKlasse = harFeilmelding(this.props) ? 'har-feilmelding' : '';
 
         return (
             <MiljovariablerProvider miljovariabler={this.props.miljovariabler}>
                 <IntlProvider defaultLocale="nb" locale="nb" messages={this.props.tekster}>
-                    <div className="saksoversikt-lerret-container">
+                    <div className={`saksoversikt-lerret-container ${feilmeldingKlasse}`}>
                         { feilmelding }
                         { getContent(this.props) }
                     </div>
