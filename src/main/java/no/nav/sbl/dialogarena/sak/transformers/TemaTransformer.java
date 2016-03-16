@@ -24,7 +24,7 @@ public class TemaTransformer {
         return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak, filter)) : tema;
     }
 
-    private static Behandling behandlingskjedeTilBehandling(WSBehandlingskjede WsBehandlingskjede) {
+    private static Behandling behandlingkjedeTilBehandling(WSBehandlingskjede WsBehandlingskjede) {
         Behandling generellBehandling = new Behandling()
                 .withBehandlingsDato(behandlingsDato(WsBehandlingskjede))
                 .withOpprettetDato(WsBehandlingskjede.getStart())
@@ -67,7 +67,7 @@ public class TemaTransformer {
 
     private static DateTime hentSistOppdaterteLovligeBehandling(WSSak wsSak, Filter filter) {
         List<Behandling> behandlinger = wsSak.getBehandlingskjede().stream()
-                .map(wsBehandlingskjede -> behandlingskjedeTilBehandling(wsBehandlingskjede))
+                .map(wsBehandlingskjede -> behandlingkjedeTilBehandling(wsBehandlingskjede))
                 .collect(toList());
         List<Behandling> filtrerteBehandlinger = filter.filtrerBehandlinger(behandlinger);
         List<Behandling> sorterteFiltrerteBehandlinger = filtrerteBehandlinger.stream()
