@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
@@ -34,7 +33,7 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
         List<WSSak> saker = sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr));
         return filter.filtrerSaker(saker).stream()
                 .map(wsSak -> tilTema(wsSak, bulletproofKodeverkService, filter))
-                .sorted(new SistOppdaterteBehandlingComparator())
+                .sorted((o1, o2) -> o2.behandlingsdato.compareTo(o1.behandlingsdato))
                 .collect(toList());
     }
 

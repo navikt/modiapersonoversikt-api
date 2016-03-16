@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
@@ -72,7 +71,7 @@ public class TemaTransformer {
                 .collect(toList());
         List<Behandling> filtrerteBehandlinger = filter.filtrerBehandlinger(behandlinger);
         List<Behandling> sorterteFiltrerteBehandlinger = filtrerteBehandlinger.stream()
-                .sorted(new OmvendtKronologiskBehandlingComparator())
+                .sorted((o1, o2) -> o2.behandlingDato.compareTo(o1.behandlingDato))
                 .collect(toList());
         Behandling forsteBehandling = sorterteFiltrerteBehandlinger.stream().findFirst().orElseGet(null);
         return (forsteBehandling != null) ? forsteBehandling.behandlingDato : null;
