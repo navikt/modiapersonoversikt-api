@@ -4,10 +4,12 @@ import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilResponse;
 import no.nav.brukerprofil.domain.Bruker;
+import no.nav.brukerprofil.domain.TilrettelagtKommunikasjon;
 import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserPersonIdentErUtgaatt;
 import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -30,7 +32,12 @@ public class BrukerprofilServiceBiMock {
 
     private static BrukerprofilResponse createBrukerprofilResponse() {
         BrukerprofilResponse mockReturnValue = new BrukerprofilResponse();
-        mockReturnValue.setBruker(new Bruker());
+        Bruker bruker = new Bruker();
+        bruker.setTilrettelagtKommunikasjon(asList(
+                new TilrettelagtKommunikasjon().withBehov("LESA").withBeskrivelse("Ledsager"),
+                new TilrettelagtKommunikasjon().withBehov("TOHJ").withBeskrivelse("Tolkehjelp")
+        ));
+        mockReturnValue.setBruker(bruker);
         return mockReturnValue;
     }
 
