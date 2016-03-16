@@ -35,7 +35,7 @@ class DokumentinfoVedlegg extends React.Component {
             </li>));
 
         return (
-            <div>
+            <div className="vedleggcontainer">
                 <div className="vedleggheader"><FormattedMessage id="dokumentinfo.vedlegg"/></div>
                 <ul className="vedleggliste">{vedleggListe}</ul>
             </div>
