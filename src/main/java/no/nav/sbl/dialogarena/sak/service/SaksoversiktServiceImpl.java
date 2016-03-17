@@ -1,14 +1,13 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
-import no.nav.sbl.dialogarena.sak.transformers.Filter;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.temaVMTransformer;
+import static no.nav.sbl.dialogarena.sak.transformers.TemaTransformer.tilTema;
 
 public class SaksoversiktServiceImpl implements SaksoversiktService {
 
@@ -43,8 +42,8 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
     public List<Tema> hentTemaer(String fnr) {
         List<WSSak> saker = sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr));
         return filter.filtrerSaker(saker).stream()
-                .map(wsSak -> temaVMTransformer(wsSak, bulletproofKodeverkService, filter))
-                .sorted(new SistOppdaterteBehandlingComparator())
+                .map(wsSak -> tilTema(wsSak, bulletproofKodeverkService, filter))
+                .sorted((o1, o2) -> o2.behandlingsdato.compareTo(o1.behandlingsdato))
                 .collect(toList());
     }
 

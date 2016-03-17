@@ -38,7 +38,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     public final static String TEMAKODE_BIDRAG = "BID";
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-
+    //Jeg mener denne er oversiktlig og kun gjor en ting.
+    @SuppressWarnings("squid:MethodCyclomaticComplexity")
     public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode) {
         String valgtEnhet = hentValgtEnhet(request);
         String temakode = journalpostMetadata.getTemakode();

@@ -49,7 +49,8 @@ public class SaksoversiktWidget extends Widget<Object> {
     public final void apneSaksoversiktLamell() {
         send(this, Broadcast.BUBBLE, new NamedEventPayload(WIDGET_HEADER_CLICKED, new WidgetHeaderPayload(this.getId())));
     }
-
+    //Should be lambda. Denne kan ikke bli det.
+    @SuppressWarnings("squid:S1604")
     private AjaxEventBehavior createHeaderClickBehavior() {
         return new AjaxEventBehavior("click") {
             @Override

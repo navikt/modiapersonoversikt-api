@@ -8,7 +8,9 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattServi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.Before;
@@ -22,11 +24,13 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import javax.servlet.http.Cookie;
 import java.util.List;
 
+import static java.lang.Boolean.*;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,6 +49,7 @@ public class TilgangskontrollServiceTest {
     public static final String BRUKERS_IDENT = "12345678901";
     private static final String GODKJENT_ENHET = "0000";
     private static final String ANNEN_ENHET = "1000";
+    private final static String TEMAKODE = "DAG";
 
     @Before
     public void setup() throws HentAktoerIdForIdentPersonIkkeFunnet {
@@ -93,6 +98,93 @@ public class TilgangskontrollServiceTest {
         boolean harGodkjentEnhet = tilgangskontrollService.harGodkjentEnhet(mockRequest);
 
         assertThat(harGodkjentEnhet, is(false));
+    }
+
+    @Test
+    public void saksbehandlerHarTilgangTilDokumentOk() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+        when(pep.hasAccess(any())).thenReturn(true);
+        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
+        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
+
+
+        assertThat(result.result.isPresent(), is(TRUE));
+        assertThat(result.result.get(), is(TRUE));
+    }
+
+    @Test
+    public void saksbehandlerEnhetIkkeTilgang() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+        when(pep.hasAccess(any())).thenReturn(false);
+        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
+        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
+
+
+        assertThat(result.result.isPresent(), is(FALSE));
+        assertThat(result.feilmelding, is(SAKSBEHANDLER_IKKE_TILGANG));
+    }
+
+    @Test
+    public void saksbehandlerharIkkeGodkjentEnhet() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+        mockRequest.setCookies(lagSaksbehandlerCookie(ANNEN_ENHET));
+        when(pep.hasAccess(any())).thenReturn(true);
+        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
+        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
+
+
+        assertThat(result.result.isPresent(), is(FALSE));
+        assertThat(result.feilmelding, is(SAKSBEHANDLER_IKKE_TILGANG));
+    }
+
+    @Test
+    public void temaBidragGirFeilmelding() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+        when(pep.hasAccess(any())).thenReturn(true);
+        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode("BID");
+        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
+
+
+        assertThat(result.result.isPresent(), is(FALSE));
+        assertThat(result.feilmelding, is(TEMAKODE_ER_BIDRAG));
+    }
+
+    @Test
+    public void journalfortAnnetTema() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+        when(pep.hasAccess(any())).thenReturn(true);
+        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode("FOR");
+        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
+
+
+        assertThat(result.result.isPresent(), is(FALSE));
+        assertThat(result.feilmelding, is(JOURNALFORT_ANNET_TEMA));
+        assertThat(result.ekstraFeilInfo.size(), is(1));
+    }
+
+    @Test
+    public void journalfortAnnenBruker() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+        when(pep.hasAccess(any())).thenReturn(true);
+        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE).withIsJournalfort(false);
+        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
+
+
+        assertThat(result.result.isPresent(), is(FALSE));
+        assertThat(result.feilmelding, is(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER));
+        assertThat(result.ekstraFeilInfo.size(), is(1));
+    }
+
+    @Test
+    public void inneholderFeil() {
+        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
+        when(pep.hasAccess(any())).thenReturn(true);
+        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE).withFeilWrapper(UKJENT_FEIL);
+        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
+
+
+        assertThat(result.result.isPresent(), is(FALSE));
+        assertThat(result.feilmelding, is(UKJENT_FEIL));
     }
 
     private Cookie[] lagSaksbehandlerCookie(String valgtEnhet) {

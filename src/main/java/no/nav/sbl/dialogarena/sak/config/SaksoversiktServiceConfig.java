@@ -6,9 +6,8 @@ import no.nav.sbl.dialogarena.sak.service.TilgangskontrollServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.transformers.Filter;
 import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
-import no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers;
+import no.nav.sbl.dialogarena.sak.transformers.TemaTransformer;
 import no.nav.sbl.dialogarena.saksoversikt.service.config.ServiceConfig;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
 import org.springframework.context.annotation.Bean;
@@ -35,12 +34,6 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public Filter filter() {
-        return new Filter();
-    }
-
-
-    @Bean
     public Innsyn innsyn() {
         return new InnsynImpl();
     }
@@ -51,8 +44,8 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public SakOgBehandlingTransformers sakOgBehandlingTransformers() {
-        return new SakOgBehandlingTransformers();
+    public TemaTransformer sakOgBehandlingTransformers() {
+        return new TemaTransformer();
     }
 
 }

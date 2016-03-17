@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.sak.transformers.Filter;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
@@ -34,9 +33,6 @@ public class SaksoversiktServiceTest {
     private AktoerPortType fodselnummerAktorService;
     @Mock
     private SakOgBehandlingService sakOgBehandlingService;
-    @Mock
-    private Filter filter;
-
     @InjectMocks
     private SaksoversiktServiceImpl saksoversiktService = new SaksoversiktServiceImpl();
 

@@ -41,6 +41,9 @@ import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDo
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 
+
+//Single Responsibility Principle
+@SuppressWarnings("squid:S1200")
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
 public class DokumentController {
@@ -101,7 +104,8 @@ public class DokumentController {
 
         TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata, fnr, temakode);
         if (harIkkeTilgang(tilgangskontrollResult)) {
-            JournalpostResultat feilside = new JournalpostResultat().withDokumentFeilmelding(blurretDokumentReferanseResponse(tilgangskontrollResult.feilmelding, hovedtittel, tilgangskontrollResult.ekstraFeilInfo));
+            JournalpostResultat feilside = new JournalpostResultat()
+                    .withDokumentFeilmelding(blurretDokumentReferanseResponse(tilgangskontrollResult.feilmelding, hovedtittel, tilgangskontrollResult.ekstraFeilInfo));
             return ok(feilside).build();
         }
 
@@ -200,5 +204,7 @@ public class DokumentController {
         return new DokumentFeilmelding(tittel, feilmelding.feilmeldingKey, BLURRED_DOKUMENT, ekstrafeilinfo);
     }
 
-    private static BiFunction<DokumentMetadata, Feilmelding, DokumentFeilmelding> TIL_FEIL = (dokumentMetadata, feilmelding) -> new DokumentFeilmelding(dokumentMetadata.getHoveddokument().getTittel(), feilmelding.feilmeldingKey, BLURRED_DOKUMENT, null);
+    private static final BiFunction<DokumentMetadata, Feilmelding, DokumentFeilmelding> TIL_FEIL =
+            (dokumentMetadata, feilmelding) ->
+                    new DokumentFeilmelding(dokumentMetadata.getHoveddokument().getTittel(), feilmelding.feilmeldingKey, BLURRED_DOKUMENT, null);
 }
