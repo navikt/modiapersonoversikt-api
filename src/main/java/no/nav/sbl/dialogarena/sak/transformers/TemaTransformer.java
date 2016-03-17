@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sak.transformers;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 
 public class TemaTransformer {
@@ -42,14 +44,14 @@ public class TemaTransformer {
         return of(wsSak.getBehandlingskjede()).isPresent() && !wsSak.getBehandlingskjede().isEmpty();
     }
 
-    private static Behandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
+    private static BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
         if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
             if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVSLUTTET)) {
-                return Behandling.BehandlingsStatus.AVSLUTTET;
+                return FERDIG_BEHANDLET;
             } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.OPPRETTET)) {
-                return Behandling.BehandlingsStatus.OPPRETTET;
+                return UNDER_BEHANDLING;
             } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVBRUTT)) {
-                return Behandling.BehandlingsStatus.AVBRUTT;
+                return AVBRUTT;
             } else {
                 throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
             }
