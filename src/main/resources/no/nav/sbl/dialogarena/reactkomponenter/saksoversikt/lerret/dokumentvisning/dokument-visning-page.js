@@ -42,7 +42,7 @@ class DokumentVisningPage extends React.Component {
 
         const values = {
             retning: this.props.valgtJournalpost.retning,
-            navn: this.props.brukerNavn,
+            navn: this.props.valgtJournalpost.navn,
             dato: javaLocalDateTimeToJSDate(this.props.valgtJournalpost.dato)
         };
 
