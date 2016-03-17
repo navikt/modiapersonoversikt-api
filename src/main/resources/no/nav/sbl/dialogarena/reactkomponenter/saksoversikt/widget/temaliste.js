@@ -37,20 +37,30 @@ class Temaliste extends React.Component {
         const { temaer, fnr, tekster, status } = this.props;
 
         if (status === Const.LASTER) {
-            return <noscript></noscript>;
+            return <noscript/>;
         }
 
-        const temaliste = status === Const.FEILET ? <li><p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding" /></p></li>
-            :  take(temaer, ANTALL_TEMAER).map((tema) =>
-            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
+        const feilmelding = (
+            <div className="listeelement-kant">
+                <p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding"/></p>
+            </div>
+        );
+
+        const temaliste = status === Const.FEILET ? feilmelding :
+            take(temaer, ANTALL_TEMAER).map((tema) =>
+                <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
+
+        const flereSaker = <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}
+                                  tabIndex="-1"><FormattedMessage id="sakswidget.sefleresaker"/></a></li>;
 
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={tekster}>
-                <ul>
-                    {temaliste}
-                    <li><a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')}
-                           tabIndex="-1"><FormattedMessage id="sakswidget.sefleresaker"/></a></li>
-                </ul>
+                <div>
+                    <ul>
+                        {temaliste}
+                        {flereSaker}
+                    </ul>
+                </div>
             </IntlProvider>
         );
     }
@@ -70,5 +80,5 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, { hentWidgetData })(Temaliste);
+export default connect(mapStateToProps, {hentWidgetData})(Temaliste);
 
