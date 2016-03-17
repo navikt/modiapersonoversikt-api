@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import { combineReducers } from 'redux';
 import * as AT from './action-types';
-import widgetReducer from './widget/widgetReducer';
+import widgetReducer from './widget/widget-reducer';
 import lerretReducer from './lerret/lerret-reducer';
 import dokumentReducer from './lerret/dokumentvisning/dokument-reducer';
 
