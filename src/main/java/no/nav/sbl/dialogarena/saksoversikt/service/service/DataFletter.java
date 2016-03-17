@@ -1,44 +1,42 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import org.apache.commons.collections15.Predicate;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.function.Predicate;
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
+import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.not;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilBehandling;
 
 public class DataFletter {
 
-    public List<Record<? extends GenerellBehandling>> flettDataFraBaksystemer(WSSak wsSak, List<Record<Kvittering>> kvitteringerFraHenvendelse) {
+    public List<Behandling> flettDataFraBaksystemer(WSSak wsSak, List<Behandling> kvitteringerFraHenvendelse) {
         final List<WSBehandlingskjede> behandlingskjeder = wsSak.getBehandlingskjede();
-        List<Record<GenerellBehandling>> behandlingerUtenKvitteringskobling = finnBehandlingerUtenKvitteringskobling(kvitteringerFraHenvendelse, behandlingskjeder);
-        List<Record<GenerellBehandling>> behandlingerMedKvitteringskobling = finnBehandlingerMedKvitteringskobling(kvitteringerFraHenvendelse, behandlingskjeder);
+        List<Behandling> behandlingerUtenKvitteringskobling = finnBehandlingerUtenKvitteringskobling(kvitteringerFraHenvendelse, behandlingskjeder);
+        List<Behandling> behandlingerMedKvitteringskobling = finnBehandlingerMedKvitteringskobling(kvitteringerFraHenvendelse, behandlingskjeder);
 
-        List<Record<Kvittering>> beriketeKvitteringer = berikKvitteringer(behandlingerMedKvitteringskobling, kvitteringerFraHenvendelse);
+        List<Behandling> beriketeKvitteringer = berikKvitteringer(behandlingerMedKvitteringskobling, kvitteringerFraHenvendelse);
 
-        return slaaSammenbehandlinger(behandlingerUtenKvitteringskobling, beriketeKvitteringer);
+        return slaaSammenBehandlinger(behandlingerUtenKvitteringskobling, beriketeKvitteringer);
     }
 
-    private List<Record<GenerellBehandling>> finnBehandlingerMedKvitteringskobling(List<Record<Kvittering>> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
-        List<WSBehandlingskjede> behandlingskjederMedKvitteringskobling = on(behandlingskjeder).filter(finnesKvittering(kvitteringerFraHenvendelse)).collect();
+    private List<Behandling> finnBehandlingerMedKvitteringskobling(List<Behandling> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
+        List<WSBehandlingskjede> behandlingskjederMedKvitteringskobling = behandlingskjeder.stream()
+                .filter(finnesKvittering(kvitteringerFraHenvendelse))
+                .collect(toList());
         return hentBehandlingerFraBehandlingskjeder(behandlingskjederMedKvitteringskobling);
     }
 
-    private List<Record<GenerellBehandling>> finnBehandlingerUtenKvitteringskobling(List<Record<Kvittering>> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
-        List<WSBehandlingskjede> behandlingskjederUtenKvitteringskobling = on(behandlingskjeder)
-                .filter(not(finnesKvittering(kvitteringerFraHenvendelse)))
-                .filter(not(harKvitteringsBehandlingstype()))
-                .collect();
+    private List<Behandling> finnBehandlingerUtenKvitteringskobling(List<Behandling> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
+        List<WSBehandlingskjede> behandlingskjederUtenKvitteringskobling = behandlingskjeder.stream()
+                .filter(not((finnesKvittering(kvitteringerFraHenvendelse))))
+                .filter(not((harKvitteringsBehandlingstype())))
+                .collect(toList());
         return hentBehandlingerFraBehandlingskjeder(behandlingskjederUtenKvitteringskobling);
     }
 
@@ -46,42 +44,45 @@ public class DataFletter {
         return wsBehandlingskjede -> Filter.erKvitteringstype(wsBehandlingskjede.getSisteBehandlingstype().getValue());
     }
 
-    private List<Record<Kvittering>> berikKvitteringer(List<Record<GenerellBehandling>> behandlingerMedKvitteringskobling, List<Record<Kvittering>> kvitteringerFraHenvendelse) {
-        List<Record<Kvittering>> beriketeKvitteringer = new ArrayList<>();
-        for (Record<GenerellBehandling> behandlingMedKvitteringsKobling : behandlingerMedKvitteringskobling) {
-            Record<Kvittering> kvittering = finnKvitteringMedId(behandlingMedKvitteringsKobling.get(GenerellBehandling.BEHANDLINGS_ID), kvitteringerFraHenvendelse);
-            kvittering = kvittering.with(GenerellBehandling.BEHANDLINGS_TYPE, behandlingMedKvitteringsKobling.get(GenerellBehandling.BEHANDLINGS_TYPE))
-                    .with(GenerellBehandling.BEHANDLINGKVITTERING, KVITTERING)
-                    .with(GenerellBehandling.BEHANDLINGSTEMA, behandlingMedKvitteringsKobling.get(GenerellBehandling.BEHANDLINGSTEMA));
+    private List<Behandling> berikKvitteringer(List<Behandling> behandlingerMedKvitteringskobling, List<Behandling> kvitteringerFraHenvendelse) {
+        List<Behandling> beriketeKvitteringer = new ArrayList<>();
+        for (Behandling behandlingMedKvitteringsKobling : behandlingerMedKvitteringskobling) {
+            Behandling kvittering = finnKvitteringMedId(behandlingMedKvitteringsKobling.getBehandlingsId(), kvitteringerFraHenvendelse);
+            kvittering = kvittering
+                    .withBehandlingsType(behandlingMedKvitteringsKobling.getBehandlingsType())
+                    .withBehandlingKvittering(KVITTERING)
+                    .withBehandlingsTema(behandlingMedKvitteringsKobling.getBehandlingstema());
             beriketeKvitteringer.add(kvittering);
         }
         return beriketeKvitteringer;
     }
 
-    private Record<Kvittering> finnKvitteringMedId(String behandlingsId, List<Record<Kvittering>> kvitteringerFraHenvendelse) {
-        for (Record<Kvittering> kvittering : kvitteringerFraHenvendelse) {
-            if (kvittering.get(GenerellBehandling.BEHANDLINGS_ID).equals(behandlingsId)) {
+    private Behandling finnKvitteringMedId(String behandlingsId, List<Behandling> kvitteringerFraHenvendelse) {
+        for (Behandling kvittering : kvitteringerFraHenvendelse) {
+            if (kvittering.getBehandlingsId().equals(behandlingsId)) {
                 return kvittering;
             }
         }
         throw new ApplicationException("Fant ikke kvittering i Henvendelse");
     }
 
-    private Predicate<WSBehandlingskjede> finnesKvittering(final List<Record<Kvittering>> kvitteringer) {
-        return wsBehandlingskjede -> on(kvitteringer).exists(kvitteringRecord -> {
-            return wsBehandlingskjede.getSisteBehandlingREF().equals(kvitteringRecord.get(GenerellBehandling.BEHANDLINGS_ID));
-        });
+    private Predicate<WSBehandlingskjede> finnesKvittering(List<Behandling> kvitteringer) {
+        return wsBehandlingskjede -> kvitteringer.stream()
+                .filter(kvittering -> kvittering.getBehandlingsId().equals(wsBehandlingskjede.getSisteBehandlingREF()))
+                .findAny()
+                .isPresent();
     }
 
-    public static List<Record<GenerellBehandling>> hentBehandlingerFraBehandlingskjeder(List<WSBehandlingskjede> behandlingskjedeListe) {
-        return on(behandlingskjedeListe).map(Transformers.BEHANDLINGSKJEDE_TIL_BEHANDLING).collect();
+    public static List<Behandling> hentBehandlingerFraBehandlingskjeder(List<WSBehandlingskjede> behandlingskjedeListe) {
+        return behandlingskjedeListe.stream()
+                .map(wsBehandlingskjede ->  transformTilBehandling(wsBehandlingskjede))
+                .collect(toList());
     }
 
-    @SafeVarargs
-    private final List<Record<? extends GenerellBehandling>> slaaSammenbehandlinger(List<? extends Record<? extends GenerellBehandling>>... behandlingslister) {
-        ArrayList<Record<? extends GenerellBehandling>> sammenslaatteBehandlinger = new ArrayList<>();
-        asList(behandlingslister).forEach(sammenslaatteBehandlinger::addAll);
+
+    private List<Behandling> slaaSammenBehandlinger(List<Behandling>... behandlingslister) {
+        List<Behandling> sammenslaatteBehandlinger = new ArrayList<>();
+        asList(behandlingslister).forEach(behandlinger -> sammenslaatteBehandlinger.addAll(behandlinger));
         return sammenslaatteBehandlinger;
     }
-
 }
