@@ -16,6 +16,7 @@ import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
@@ -105,14 +106,16 @@ public class SaksService {
     private ResultatWrapper opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        List<Map.Entry<String, List<Behandlingskjede>>> behandlingsKjedeUtenSakstema = behandlingskjeder.entrySet()
+        List<Sakstema> sakstemaKunPopulertFraSakOgBehandling = behandlingskjeder.entrySet()
                 .stream()
-                .filter(stringListEntry ->
-                        saker.stream()
-                                .filter(sak -> sak.getTemakode().equals(stringListEntry.getKey()))
+                .filter(entry ->
+                        !saker.stream()
+                                .filter(sak -> sak.getTemakode().equals(entry.getKey()))
                                 .findAny()
                                 .isPresent())
+                .map(entry -> opprettSakstemaForBehandlingskjedeUtenTilhoerendeSakstema(entry))
                 .collect(toList());
+
 
         return grupperteSakstema.entrySet()
                 .stream()
@@ -120,6 +123,7 @@ public class SaksService {
                 .map(fjernSakstemaKontroll)
                 .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
+                    accumulator.resultat.addAll(sakstemaKunPopulertFraSakOgBehandling);
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
                     return accumulator;
                 })
@@ -131,9 +135,16 @@ public class SaksService {
                     .filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL))
                     .collect(toList()), entry.feilendeSystemer);
 
+    protected Sakstema opprettSakstemaForBehandlingskjedeUtenTilhoerendeSakstema(Map.Entry<String, List<Behandlingskjede>> behandlingskjede) {
+        String temakode = behandlingskjede.getKey();
+        return new Sakstema()
+                .withTemakode(temakode)
+                .withBehandlingskjeder(behandlingskjede.getValue())
+                .withTemanavn(bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA));
+    }
+
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
         Predicate<String> ikkeGruppertOppfolingssak = temakode -> (RESTERENDE_TEMA.equals(temagruppe.getKey()) || !OPPFOLGING.equals(temakode));
-
         Set<Baksystem> feilendeBaksystemer = new HashSet();
 
         List<Sakstema> sakstema = temagruppe.getValue().stream()
@@ -174,9 +185,9 @@ public class SaksService {
 
     private String temanavn(Map.Entry<String, Set<String>> temagruppe, String temakode) {
         if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
-            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
+            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA);
         } else {
-            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA) + " og oppfølging";
+            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA) + " og oppfølging";
         }
     }
 

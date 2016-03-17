@@ -12,7 +12,11 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappe
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +37,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.of;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.*;
@@ -198,7 +204,7 @@ public class SaksServiceTest {
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
                         .withDato(LocalDateTime.now())
-                        .withBaksystem(Baksystem.JOARK)
+                        .withBaksystem(JOARK)
                         .withHoveddokument(
                                 new Dokument()
                                         .withTittel("TEST"))), emptyMap());
@@ -233,7 +239,7 @@ public class SaksServiceTest {
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
                         .withDato(LocalDateTime.now())
-                        .withBaksystem(Baksystem.HENVENDELSE)
+                        .withBaksystem(HENVENDELSE)
                         .withTemakode("OPP")
                         .withHoveddokument(
                                 new Dokument()
@@ -247,10 +253,62 @@ public class SaksServiceTest {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
         when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
         when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(emptyMap());
-        when(sakOgBehandlingService.hentAlleSaker(anyString())).thenReturn(asList(new WSSak()));
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
 
-        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), "123213123213", false);
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), FNR, false);
 
+        assertThat(listResultatWrapper.resultat.size(), is(1));
+        assertThat(listResultatWrapper.resultat.get(0).temakode, is("DAG"));
+    }
+
+    @Test
+    public void sakFraSakogBehandlingMedTilhoerendeSakstemaOppretterIkkeEgetSakstema() {
+        when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG"))));
+        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(emptyMap());
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), FNR, false);
+
+        assertThat(listResultatWrapper.resultat.size(), is(1));
+        assertThat(listResultatWrapper.resultat.get(0).temakode, is("DAG"));
+    }
+
+
+    @Test
+    public void forskjelligTemakodeSakOgBehandlingOgAnnet() {
+        when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTemanavnForTemakode("FOR", BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Foreldrepenger");
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(HENVENDELSE))));
+
+        Map<String, Set<String>> gruppertTema = new HashMap<>();
+        Set set = new HashSet<>();
+        set.add("FOR");
+        gruppertTema.put("RESTERENDE_TEMA", set);
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(gruppertTema);
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), FNR, false);
+
+        assertThat(listResultatWrapper.resultat.size(), is(2));
+    }
+
+    private WSSak sakFraSakOgBehandling() {
+        return new WSSak().withBehandlingskjede(new WSBehandlingskjede()
+                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(Filter.OPPRETTET))
+                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.OPPRETTET))
+                .withBehandlingsListeRef("henvendelsesId")
+                .withSisteBehandlingREF("henvendelsesId")
+                .withStart(new DateTime().minusDays(1))
+                .withSlutt(null));
     }
 
     @Test
@@ -285,7 +343,7 @@ public class SaksServiceTest {
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
                         .withDato(LocalDateTime.now())
-                        .withBaksystem(Baksystem.JOARK)
+                        .withBaksystem(JOARK)
                         .withHoveddokument(
                                 new Dokument()
                                         .withTittel("TEST"))), emptyMap());
@@ -314,7 +372,7 @@ public class SaksServiceTest {
                                 .withAvsender(Entitet.NAV)
                                 .withRetning(Kommunikasjonsretning.UT)
                                 .withDato(LocalDateTime.now())
-                                .withBaksystem(Baksystem.JOARK)
+                                .withBaksystem(JOARK)
                                 .withHoveddokument(
                                         new Dokument()
                                                 .withTittel("TEST")),
@@ -324,7 +382,7 @@ public class SaksServiceTest {
                                         .withAvsender(Entitet.NAV)
                                         .withRetning(Kommunikasjonsretning.UT)
                                         .withDato(LocalDateTime.now())
-                                        .withBaksystem(Baksystem.JOARK)
+                                        .withBaksystem(JOARK)
                                         .withHoveddokument(
                                                 new Dokument()
                                                         .withTittel("TEST")))
