@@ -1,5 +1,5 @@
 import React from 'react';
-import DokumentVisning from './DokumentVisning';
+import DokumentVisning from './dokument-visning';
 
 function DokumentVisningListe({dokumenter}) {
     const dokumentElementer = dokumenter.map((dokument) => (

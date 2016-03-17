@@ -1,5 +1,5 @@
 import React from 'react';
-import Kulemeny from './Kulemeny';
+import Kulemeny from './kulemeny';
 
 const renderKulemeny = (kulemenypunkt, index) => (
     <Kulemeny

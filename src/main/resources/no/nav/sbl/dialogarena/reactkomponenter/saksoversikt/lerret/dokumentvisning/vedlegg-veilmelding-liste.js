@@ -1,5 +1,5 @@
 import React from 'react';
-import VedleggFeilmelding from './VedleggFeilmelding'
+import VedleggFeilmelding from './vedlegg-feilmelding'
 
 
 const VedleggFeilmeldingListe = ({feilmeldinger}) => {

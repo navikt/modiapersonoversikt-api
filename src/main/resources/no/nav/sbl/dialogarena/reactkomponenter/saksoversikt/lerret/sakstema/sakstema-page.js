@@ -1,5 +1,5 @@
 import React, { PropTypes as PT } from 'react';
-import SakstemaListe from './SakstemaListe';
+import SakstemaListe from './sakstema-liste';
 import { connect } from 'react-redux';
 import VisningDokumentliste from './dokumentliste/visning-dokumentliste';
 import { FormattedMessage } from 'react-intl';

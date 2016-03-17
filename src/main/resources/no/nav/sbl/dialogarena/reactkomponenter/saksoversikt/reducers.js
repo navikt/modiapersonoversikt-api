@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import { combineReducers } from 'redux';
-import * as AT from './actionTypes';
+import * as AT from './action-types';
 import widgetReducer from './widget/widgetReducer';
-import lerretReducer from './lerret/lerretReducer';
-import dokumentReducer from './lerret/dokumentvisning/dokumentReducer';
+import lerretReducer from './lerret/lerret-reducer';
+import dokumentReducer from './lerret/dokumentvisning/dokument-reducer';
 
 function purgeStateReducer(fn) {
     return (state, action) => {
