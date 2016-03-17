@@ -53,7 +53,6 @@ public class SaksService {
     }
 
     public ResultatWrapper<List<Sak>> hentAlleSaker(String fnr) {
-
         Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
         Optional<Stream<Sak>> maybeFraGSak;

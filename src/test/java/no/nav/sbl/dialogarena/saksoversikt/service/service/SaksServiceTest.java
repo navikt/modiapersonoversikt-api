@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappe
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,10 +74,7 @@ public class SaksServiceTest {
     private BulletproofKodeverkService kodeverk;
 
     @Mock
-    DokumentMetadataService dokumentMetadataService;
-
-    @Mock
-    private ExecutorService executorService;
+    private DokumentMetadataService dokumentMetadataService;
 
     @Mock
     private SakstemaGrupperer sakstemaGrupperer;
@@ -84,20 +82,19 @@ public class SaksServiceTest {
     @InjectMocks
     private SaksService saksService = new SaksService();
 
+    private static final String FNR = "12345678901";
     @Before
     public void setup() {
-        Future<Object> futurePesys = getFuturePesys();
-        when(executorService.submit(any(Callable.class))).thenReturn(futurePesys);
         when(request.getSession()).thenReturn(new MockHttpSession());
     }
 
     @Test
     public void hentPaabegynteSoknader_henterSoknader_medStatusUnderArbeid() {
-        when(henvendelseService.hentHenvendelsessoknaderMedStatus(UNDER_ARBEID, "12345678901")).thenReturn(asList(
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(UNDER_ARBEID, FNR)).thenReturn(asList(
                 new Record<Soknad>().with(STATUS, UNDER_ARBEID).with(OPPRETTET_DATO, new DateTime()),
                 new Record<Soknad>().with(STATUS, UNDER_ARBEID).with(OPPRETTET_DATO, new DateTime())
         ));
-        assertThat(saksService.hentPaabegynteSoknader("12345678901").size(), equalTo(2));
+        assertThat(saksService.hentPaabegynteSoknader(FNR).size(), equalTo(2));
     }
 
     private Sak lagSakMedAvsluttetDato(Optional<DateTime> date) {
@@ -123,7 +120,7 @@ public class SaksServiceTest {
             put("RESTERENDE_TEMA", new HashSet<>(asList(DAGPENGER)));
         }});
 
-        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).resultat;
+        List<Sakstema> sakstema = saksService.hentSakstema(saker, FNR, true).resultat;
 
         assertTrue(sakstema.size() == 1);
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
@@ -249,6 +246,17 @@ public class SaksServiceTest {
     }
 
     @Test
+    public void sakFraSakogBehandlingUtenTilhoerendeSakstemaOppretterEgetSakstema() {
+        when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
+        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(emptyMap());
+        when(sakOgBehandlingService.hentAlleSaker(anyString())).thenReturn(asList(new WSSak()));
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), "123213123213", false);
+
+    }
+
+    @Test
     public void FlereSakstemaMedOppfolgingGirFlereSakstemaMedOppfolging() {
         when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Oppfølging");
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
@@ -339,34 +347,5 @@ public class SaksServiceTest {
 
         assertThat(wrapper.resultat.size(), is(1));
         assertThat(wrapper.resultat.get(0).temakode, is(OPPFOLGING));
-    }
-
-    private Future<Object> getFuturePesys() {
-        return new Future<Object>() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
-                return false;
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
-
-            @Override
-            public boolean isDone() {
-                return false;
-            }
-
-            @Override
-            public Stream<Sak> get() throws InterruptedException, ExecutionException {
-                return Stream.empty();
-            }
-
-            @Override
-            public Stream<Sak> get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-                return null;
-            }
-        };
     }
 }
