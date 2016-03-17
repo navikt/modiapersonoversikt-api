@@ -55,12 +55,10 @@ class Temaliste extends React.Component {
 
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={tekster}>
-                <div>
-                    <ul>
-                        {temaliste}
-                        {flereSaker}
-                    </ul>
-                </div>
+                <ul>
+                    {temaliste}
+                    {flereSaker}
+                </ul>
             </IntlProvider>
         );
     }
