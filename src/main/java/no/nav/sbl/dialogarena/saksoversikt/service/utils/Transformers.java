@@ -1,157 +1,140 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
-import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.both;
-import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
+import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.BehandlingsStatus;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.BehandlingsType;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
 
 public class Transformers {
 
-    public static final Transformer<Record<Soknad>, Record<Kvittering>> SOKNAD_TIL_KVITTERING = new Transformer<Record<Soknad>, Record<Kvittering>>() {
-        @Override
-        public Record<Kvittering> transform(Record<Soknad> soknadRecord) {
-            GenerellBehandling.BehandlingsStatus status = soknadRecord.get(Soknad.INNSENDT_DATO) != null ? BehandlingsStatus.AVSLUTTET : BehandlingsStatus.OPPRETTET;
-            return new Record<Kvittering>()
-                    .with(Kvittering.BEHANDLINGS_ID, soknadRecord.get(Soknad.BEHANDLINGS_ID))
-                    .with(Kvittering.BEHANDLINGSKJEDE_ID, soknadRecord.get(Soknad.BEHANDLINGSKJEDE_ID))
-                    .with(Kvittering.JOURNALPOST_ID, soknadRecord.get(Soknad.JOURNALPOST_ID))
-                    .with(Kvittering.KVITTERINGSTYPE, soknadRecord.get(Soknad.TYPE))
-                    .with(GenerellBehandling.BEHANDLING_DATO, soknadRecord.get(Soknad.INNSENDT_DATO))
-                    .with(Soknad.SKJEMANUMMER_REF, soknadRecord.get(Soknad.SKJEMANUMMER_REF))
-                    .with(GenerellBehandling.BEHANDLING_STATUS, status)
-                    .with(GenerellBehandling.BEHANDLINGKVITTERING, BehandlingsType.KVITTERING)
-                    .with(Kvittering.ETTERSENDING, soknadRecord.get(Soknad.ETTERSENDING))
-                    .with(Kvittering.ARKIVREFERANSE_ORIGINALKVITTERING, arkivreferanseOriginalkvittering(soknadRecord))
-                    .with(Kvittering.INNSENDTE_DOKUMENTER, filtrerVedlegg(soknadRecord, DokumentFraHenvendelse.INNSENDT))
-                    .with(Kvittering.MANGLENDE_DOKUMENTER, filtrerVedlegg(soknadRecord, both(not(DokumentFraHenvendelse.INNSENDT)).and(not(DokumentFraHenvendelse.ER_HOVEDSKJEMA))));
-        }
-
-        private Optional<String> arkivreferanseOriginalkvittering(Record<Soknad> soknad) {
-            return on(soknad.get(Soknad.DOKUMENTER))
-                    .filter(DokumentFraHenvendelse.ER_KVITTERING)
-                    .map(arkivreveranse())
-                    .head();
-        }
-
-        private Transformer<Record<DokumentFraHenvendelse>, String> arkivreveranse() {
-            return dokument -> dokument.get(DokumentFraHenvendelse.ARKIVREFERANSE);
-        }
+    public static final Function<Soknad, Behandling> SOKNAD_TIL_KVITTERING = soknad -> {
+        BehandlingsStatus status = soknad.getInnsendtDato() != null ? FERDIG_BEHANDLET : UNDER_BEHANDLING;
+        return new Behandling()
+                .withBehandlingsId(soknad.getBehandlingsId())
+                .withBehandlingskjedeId(soknad.getBehandlingskjedeId())
+                .withJournalPostId(soknad.getJournalpostId())
+                .withKvitteringType(soknad.getType())
+                .withBehandlingsDato(soknad.getInnsendtDato())
+                .withSkjemanummerRef(soknad.getSkjemanummerRef())
+                .withBehandlingStatus(status)
+                .withBehandlingKvittering(KVITTERING)
+                .withEttersending(soknad.getEttersending())
+                .withArkivreferanseOriginalkvittering(arkivreferanseOriginalkvittering(soknad))
+                .withInnsendteDokumenter(filtrerVedlegg(soknad, DokumentFraHenvendelse.INNSENDT))
+                .withManglendeDokumenter(filtrerVedlegg(soknad, manglendeDokumenter()));
 
     };
 
-    public static final Transformer<WSBehandlingskjede, Record<GenerellBehandling>> BEHANDLINGSKJEDE_TIL_BEHANDLING =
-            new Transformer<WSBehandlingskjede, Record<GenerellBehandling>>() {
-
-                @Override
-                public Record<GenerellBehandling> transform(WSBehandlingskjede wsBehandlingskjede) {
-                    GenerellBehandling.BehandlingsType type = erKvitteringstype(wsBehandlingskjede.getSisteBehandlingstype()) ? BehandlingsType.KVITTERING : BehandlingsType.BEHANDLING;
-                    Record<GenerellBehandling> generellBehandling = new Record<GenerellBehandling>()
-                            .with(GenerellBehandling.BEHANDLINGS_TYPE, wsBehandlingskjede.getSisteBehandlingstype().getValue())
-                            .with(GenerellBehandling.BEHANDLING_DATO, behandlingsDato(wsBehandlingskjede))
-                            .with(GenerellBehandling.OPPRETTET_DATO, wsBehandlingskjede.getStart())
-                            .with(GenerellBehandling.PREFIX, wsBehandlingskjede.getSisteBehandlingREF().substring(0, 2))
-                            .with(GenerellBehandling.BEHANDLINGKVITTERING, type)
-                            .with(GenerellBehandling.BEHANDLINGS_ID, wsBehandlingskjede.getSisteBehandlingREF())
-                            .with(GenerellBehandling.BEHANDLING_STATUS, behandlingsStatus(wsBehandlingskjede));
-                    WSBehandlingstemaer behandlingstema = wsBehandlingskjede.getBehandlingstema();
-                    if (behandlingstema != null) {
-                        generellBehandling = generellBehandling.with(GenerellBehandling.BEHANDLINGSTEMA, behandlingstema.getValue());
-                    }
-                    return generellBehandling;
-                }
-
-                private boolean erKvitteringstype(WSBehandlingstyper sisteBehandlingstype) {
-                    return equals(sisteBehandlingstype.getValue()) || equals((sisteBehandlingstype.getValue()));
-                }
-
-                private GenerellBehandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
-                    if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
-                        if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVSLUTTET)) {
-                            return BehandlingsStatus.AVSLUTTET;
-                        } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.OPPRETTET)) {
-                            return BehandlingsStatus.OPPRETTET;
-                        } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVBRUTT)) {
-                            return BehandlingsStatus.AVBRUTT;
-                        } else {
-                            throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
-                        }
-                    }
-                    throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
-                }
-
-                private DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
-                    return erAvsluttet(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
-                }
-            };
-
-
-
-    public static final Transformer<WSSoknad, Record<Soknad>> SOKNAD = wsSoknad -> {
-        String behandlingskjedeId = wsSoknad.getBehandlingsId();
-
-        if (wsSoknad.getBehandlingsKjedeId() != null && !wsSoknad.getBehandlingsKjedeId().isEmpty()) {
-            behandlingskjedeId = wsSoknad.getBehandlingsKjedeId();
-        }
-        return new Record<Soknad>()
-                .with(Soknad.BEHANDLINGS_ID, wsSoknad.getBehandlingsId())
-                .with(Soknad.BEHANDLINGSKJEDE_ID, behandlingskjedeId)
-                .with(Soknad.JOURNALPOST_ID, wsSoknad.getJournalpostId())
-                .with(Soknad.STATUS, HenvendelseStatus.valueOf(wsSoknad.getHenvendelseStatus()))
-                .with(Soknad.OPPRETTET_DATO, wsSoknad.getOpprettetDato())
-                .with(Soknad.INNSENDT_DATO, wsSoknad.getInnsendtDato())
-                .with(Soknad.SISTENDRET_DATO, wsSoknad.getSistEndretDato())
-                .with(Soknad.SKJEMANUMMER_REF, wsSoknad.getHovedskjemaKodeverkId())
-                .with(Soknad.ETTERSENDING, wsSoknad.isEttersending())
-                .with(Soknad.TYPE, valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
-                .with(Soknad.DOKUMENTER, on(optional(wsSoknad.getDokumentforventninger())
-                        .getOrElse(new Dokumentforventninger())
-                        .getDokumentforventning())
-                        .map(tilDokument(wsSoknad.getHovedskjemaKodeverkId())).collect());
-    };
-
-    public static Transformer<WSDokumentforventning, Record<DokumentFraHenvendelse>> tilDokument(final String hovedskjemaId) {
-        return wsDokumentforventning -> new Record<DokumentFraHenvendelse>()
-                .with(DokumentFraHenvendelse.KODEVERK_REF, wsDokumentforventning.getKodeverkId())
-                .with(DokumentFraHenvendelse.TILLEGGSTITTEL, wsDokumentforventning.getTilleggsTittel())
-                .with(DokumentFraHenvendelse.UUID, wsDokumentforventning.getUuid())
-                .with(DokumentFraHenvendelse.ARKIVREFERANSE, wsDokumentforventning.getArkivreferanse())
-                .with(DokumentFraHenvendelse.INNSENDINGSVALG, Innsendingsvalg.valueOf(wsDokumentforventning.getInnsendingsvalg()))
-                .with(DokumentFraHenvendelse.HOVEDSKJEMA, hovedskjemaId.equals(wsDokumentforventning.getKodeverkId()));
+    private static Optional<String> arkivreferanseOriginalkvittering(Soknad soknad) {
+        return soknad.getDokumenter().stream()
+                .filter(ER_KVITTERING)
+                .map(dokumentFraHenvendelse -> dokumentFraHenvendelse.getArkivreferanse())
+                .findFirst();
     }
 
-    public static final Transformer<WSSak, String> TEMAKODE_FOR_SAK = wsSak -> wsSak.getSakstema().getValue();
-    
-    private static List<Record<DokumentFraHenvendelse>> filtrerVedlegg(Record<Soknad> soknad, Predicate<Record<DokumentFraHenvendelse>> betingelse) {
-        return on(soknad.get(Soknad.DOKUMENTER))
-                .filter(both(betingelse).and(not(DokumentFraHenvendelse.ER_KVITTERING)))
-                .collect();
+    private static Predicate<DokumentFraHenvendelse> manglendeDokumenter() {
+        return dokumentFraHenvendelse -> !DokumentFraHenvendelse.INNSENDT.test(dokumentFraHenvendelse) && !dokumentFraHenvendelse.erHovedskjema();
+    }
+
+    public static Behandling transformTilBehandling(WSBehandlingskjede wsBehandlingskjede) {
+        Behandling behandling = new Behandling()
+                .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
+                .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
+                .withOpprettetDato(wsBehandlingskjede.getStart())
+                .withPrefix(wsBehandlingskjede.getSisteBehandlingREF().substring(0, 2))
+                .withBehandlingsId(wsBehandlingskjede.getSisteBehandlingREF())
+                .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
+                .withBehandlingKvittering(kvitteringstype(wsBehandlingskjede.getSisteBehandlingstype()));
+        WSBehandlingstemaer behandlingstema = wsBehandlingskjede.getBehandlingstema();
+        if (behandlingstema != null) {
+            behandling = behandling.withBehandlingsTema(behandlingstema.getValue());
+        }
+        return behandling;
+    }
+
+    private static BehandlingsType kvitteringstype(WSBehandlingstyper sisteBehandlingstype) {
+        return KVITTERING.equals(sisteBehandlingstype.getValue()) ? KVITTERING : BEHANDLING;
+    }
+
+    private static DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
+        return erAvsluttet(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
+    }
+
+    private static BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
+        if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
+            if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVSLUTTET)) {
+                return FERDIG_BEHANDLET;
+            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.OPPRETTET)) {
+                return UNDER_BEHANDLING;
+            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVBRUTT)) {
+                return AVBRUTT;
+            } else {
+                throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
+            }
+        }
+        throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
+    }
+
+    public static Soknad transformTilSoknad(WSSoknad wsSoknad) {
+        return new Soknad()
+                .withBehandlingsId(wsSoknad.getBehandlingsId())
+                .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
+                .withJournalpostId(wsSoknad.getJournalpostId())
+                .withStatus(HenvendelseStatus.valueOf(wsSoknad.getHenvendelseStatus()))
+                .withOpprettetDato(wsSoknad.getOpprettetDato())
+                .withInnsendtDato(wsSoknad.getInnsendtDato())
+                .withSistEndretDato(wsSoknad.getSistEndretDato())
+                .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
+                .withEttersending(wsSoknad.isEttersending())
+                .withHenvendelseType(valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
+                .withDokumenter(optional(wsSoknad.getDokumentforventninger())
+                        .orElse(new Dokumentforventninger())
+                        .getDokumentforventning()
+                        .stream()
+                        .map(wsDokumentforventning -> transformTilDokument(wsDokumentforventning, wsSoknad.getHovedskjemaKodeverkId())).collect(toList()));
+    }
+
+    public static DokumentFraHenvendelse transformTilDokument(WSDokumentforventning wsDokumentforventning, String hovedskjemaId) {
+        return new DokumentFraHenvendelse()
+                .withKodeverkRef(wsDokumentforventning.getKodeverkId())
+                .withTilleggstittel(wsDokumentforventning.getTilleggsTittel())
+                .withUuid(wsDokumentforventning.getUuid())
+                .withArkivreferanse(wsDokumentforventning.getArkivreferanse())
+                .withInnsendingsvalg(Innsendingsvalg.valueOf(wsDokumentforventning.getInnsendingsvalg()))
+                .withErHovedskjema(hovedskjemaId.equals(wsDokumentforventning.getKodeverkId()));
+    }
+
+    private static List<DokumentFraHenvendelse> filtrerVedlegg(Soknad soknad, Predicate<DokumentFraHenvendelse> betingelse) {
+        return soknad.getDokumenter().stream()
+                .filter(betingelse)
+                .filter(ER_KVITTERING.negate())
+                .collect(toList());
     }
 }

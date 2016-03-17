@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
@@ -16,7 +15,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
@@ -48,8 +46,8 @@ public class SaksService {
     @Inject
     private SakstemaGrupperer sakstemaGrupperer;
 
-    public List<Record<Soknad>> hentPaabegynteSoknader(String fnr) {
-        return on(henvendelseService.hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus.UNDER_ARBEID, fnr)).collect();
+    public List<Soknad> hentPaabegynteSoknader(String fnr) {
+        return henvendelseService.hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus.UNDER_ARBEID, fnr);
     }
 
     public ResultatWrapper<List<Sak>> hentAlleSaker(String fnr) {
