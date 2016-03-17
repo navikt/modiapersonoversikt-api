@@ -10,11 +10,11 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
@@ -81,7 +81,7 @@ public class SaksService {
 
     private Map grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {
         Set<String> sakstema = grupperteSakstema.entrySet().stream().map(stringSetEntry -> stringSetEntry.getValue())
-                .flatMap(Set::stream).collect(Collectors.toSet());
+                .flatMap(Set::stream).collect(toSet());
         Map<String, Set<String>> map = new HashMap<>();
         map.put(RESTERENDE_TEMA, sakstema);
         return map;
@@ -98,20 +98,24 @@ public class SaksService {
 
         try {
             Map<String, List<Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);
-            return OpprettSakstemaresultat(saker, wrapper, grupperteSakstema, behandlingskjeder);
+            return opprettSakstemaresultat(saker, wrapper, grupperteSakstema, behandlingskjeder);
         } catch (FeilendeBaksystemException e) {
             wrapper.feilendeSystemer.add(e.getBaksystem());
-            return OpprettSakstemaresultat(saker, wrapper, grupperteSakstema, emptyMap());
+            return opprettSakstemaresultat(saker, wrapper, grupperteSakstema, emptyMap());
         }
     }
 
-    private ResultatWrapper OpprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
+    private ResultatWrapper opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll =
-                entry -> new ResultatWrapper<>(entry.resultat.stream()
-                        .filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL))
-                        .collect(Collectors.toList()), entry.feilendeSystemer);
+        List<Map.Entry<String, List<Behandlingskjede>>> behandlingsKjedeUtenSakstema = behandlingskjeder.entrySet()
+                .stream()
+                .filter(stringListEntry ->
+                        saker.stream()
+                                .filter(sak -> sak.getTemakode().equals(stringListEntry.getKey()))
+                                .findAny()
+                                .isPresent())
+                .collect(toList());
 
         return grupperteSakstema.entrySet()
                 .stream()
@@ -125,13 +129,17 @@ public class SaksService {
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
     }
 
-    protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
+    private Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll =
+            entry -> new ResultatWrapper<>(entry.resultat.stream()
+                    .filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL))
+                    .collect(toList()), entry.feilendeSystemer);
 
+    protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
         Predicate<String> ikkeGruppertOppfolingssak = temakode -> (RESTERENDE_TEMA.equals(temagruppe.getKey()) || !OPPFOLGING.equals(temakode));
 
         Set<Baksystem> feilendeBaksystemer = new HashSet();
 
-        List<Sakstema> collect = temagruppe.getValue().stream()
+        List<Sakstema> sakstema = temagruppe.getValue().stream()
                 .filter(ikkeGruppertOppfolingssak)
                 .map(temakode -> {
                     List<Sak> tilhorendeSaker = alleSaker.stream()
@@ -149,7 +157,7 @@ public class SaksService {
                     try {
                         temanavn = temanavn(temagruppe, temakode);
                     } catch (FeilendeBaksystemException e) {
-                        if (!temagruppe.equals(RESTERENDE_TEMA)){
+                        if (!temagruppe.equals(RESTERENDE_TEMA)) {
                             temanavn += " og oppfølging";
                         }
                         feilendeBaksystemer.add(e.getBaksystem());
@@ -164,8 +172,7 @@ public class SaksService {
                             .withErGruppert(erGruppert);
                 })
                 .collect(toList());
-
-        return new ResultatWrapper<>(collect, feilendeBaksystemer);
+        return new ResultatWrapper<>(sakstema, feilendeBaksystemer);
     }
 
     private String temanavn(Map.Entry<String, Set<String>> temagruppe, String temakode) {
