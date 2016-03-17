@@ -76,11 +76,16 @@
     }
   }
   .tema-dokument {
-    font-weight: bold;
+    font-family: Arial, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: @graa_inactive;
+    margin-bottom: 0;
+    margin-top: 0;
   }
 
   .hoveddokument-tittel-wrapper {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
   }
 
   .hoveddokument-tittel {
@@ -110,6 +115,10 @@
 
   .vedleggheader {
     margin-bottom: 8px;
+  }
+
+  .vedleggcontainer {
+    margin-bottom: 1.25rem;
   }
 
   .vedleggliste {
@@ -334,7 +343,7 @@
 }
 
 .saksoversikt-liste-element {
-  border-bottom: 1px solid #b7b1a9;
+  border-bottom: 1px solid @graa;
   display: block;
 
   label:before {
@@ -398,7 +407,7 @@
   font-weight: normal;
   margin-bottom: 0;
   margin-top: 0;
-  color: #7f756c;
+  color: @graa_inactive;
 }
 
 .decorated {
@@ -429,7 +438,7 @@
 }
 
 .side-innhold a {
-  border-bottom: 1px solid #b7b1a9;
+  border-bottom: 1px solid @graa;
   &:hover {
     text-decoration: none !important;
     border-bottom-color: #0067c5;
