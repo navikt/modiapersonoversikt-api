@@ -49,7 +49,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         } else if (temakodeErBidrag(temakode)) {
             return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
         } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
-            return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning()));
+            return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning(), fnr));
         } else if (!journalpostMetadata.isErJournalfort()) {
             return new TjenesteResultatWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, ikkeJournalfortEkstraFeilInfo(fnr));
         } else if (journalpostMetadata.getFeilWrapper().getInneholderFeil()) {
@@ -104,9 +104,10 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         return temakode != null && !dokumentMetadata.getTemakode().equals(temakode);
     }
 
-    private Map journalfortAnnetTemaEktraFeilInfo(String temanavn) {
+    private Map journalfortAnnetTemaEktraFeilInfo(String temanavn, String fnr) {
         Map map = new HashMap<>();
         map.put("temanavn", temanavn);
+        map.put("fnr", fnr);
         return map;
     }
 

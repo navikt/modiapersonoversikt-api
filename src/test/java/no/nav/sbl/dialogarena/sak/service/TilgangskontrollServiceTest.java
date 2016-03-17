@@ -159,7 +159,7 @@ public class TilgangskontrollServiceTest {
 
         assertThat(result.result.isPresent(), is(FALSE));
         assertThat(result.feilmelding, is(JOURNALFORT_ANNET_TEMA));
-        assertThat(result.ekstraFeilInfo.size(), is(1));
+        assertThat(result.ekstraFeilInfo.size(), is(2));
     }
 
     @Test
