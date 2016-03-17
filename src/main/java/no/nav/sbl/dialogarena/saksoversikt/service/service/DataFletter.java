@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilGenerellBehandling;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilBehandling;
 
 public class DataFletter {
 
@@ -48,7 +49,7 @@ public class DataFletter {
             Behandling kvittering = finnKvitteringMedId(behandlingMedKvitteringsKobling.getBehandlingsId(), kvitteringerFraHenvendelse);
             kvittering = kvittering
                     .withBehandlingsType(behandlingMedKvitteringsKobling.getBehandlingsType())
-                    .withBehandlingKvittering(Behandling.BehandlingsType.KVITTERING)
+                    .withBehandlingKvittering(KVITTERING)
                     .withBehandlingsTema(behandlingMedKvitteringsKobling.getBehandlingstema());
             beriketeKvitteringer.add(kvittering);
         }
@@ -73,7 +74,7 @@ public class DataFletter {
 
     public static List<Behandling> hentBehandlingerFraBehandlingskjeder(List<WSBehandlingskjede> behandlingskjedeListe) {
         return behandlingskjedeListe.stream()
-                .map(wsBehandlingskjede ->  transformTilGenerellBehandling(wsBehandlingskjede))
+                .map(wsBehandlingskjede ->  transformTilBehandling(wsBehandlingskjede))
                 .collect(toList());
     }
 

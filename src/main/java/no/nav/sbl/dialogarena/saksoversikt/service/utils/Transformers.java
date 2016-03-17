@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
@@ -19,12 +21,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.BEHANDLING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsStatus;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
@@ -36,7 +37,7 @@ public class Transformers {
     public static final Transformer<Soknad, Behandling> SOKNAD_TIL_KVITTERING = new Transformer<Soknad, Behandling>() {
         @Override
         public Behandling transform(Soknad soknad) {
-            Behandling.BehandlingsStatus status = soknad.getInnsendtDato() != null ? BehandlingsStatus.AVSLUTTET : BehandlingsStatus.OPPRETTET;
+            BehandlingsStatus status = soknad.getInnsendtDato() != null ? FERDIG_BEHANDLET : UNDER_BEHANDLING;
             return new Behandling()
                     .withBehandlingsId(soknad.getBehandlingsId())
                     .withBehandlingskjedeId(soknad.getBehandlingskjedeId())
@@ -45,7 +46,7 @@ public class Transformers {
                     .withBehandlingsDato(soknad.getInnsendtDato())
                     .withSkjemanummerRef(soknad.getSkjemanummerRef())
                     .withBehandlingStatus(status)
-                    .withBehandlingKvittering(BehandlingsType.KVITTERING)
+                    .withBehandlingKvittering(KVITTERING)
                     .withEttersending(soknad.getEttersending())
                     .withArkivreferanseOriginalkvittering(arkivreferanseOriginalkvittering(soknad))
                     .withInnsendteDokumenter(filtrerVedlegg(soknad, DokumentFraHenvendelse.INNSENDT))
@@ -64,7 +65,7 @@ public class Transformers {
         return dokumentFraHenvendelse -> !DokumentFraHenvendelse.INNSENDT.test(dokumentFraHenvendelse) && !dokumentFraHenvendelse.erHovedskjema();
     }
 
-    public static final Behandling transformTilGenerellBehandling(WSBehandlingskjede wsBehandlingskjede) {
+    public static final Behandling transformTilBehandling(WSBehandlingskjede wsBehandlingskjede) {
         Behandling behandling = new Behandling()
                 .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
                 .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
@@ -88,14 +89,14 @@ public class Transformers {
         return erAvsluttet(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
     }
 
-    private static Behandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
+    private static BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
         if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
             if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVSLUTTET)) {
-                return BehandlingsStatus.AVSLUTTET;
+                return FERDIG_BEHANDLET;
             } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.OPPRETTET)) {
-                return BehandlingsStatus.OPPRETTET;
+                return UNDER_BEHANDLING;
             } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVBRUTT)) {
-                return BehandlingsStatus.AVBRUTT;
+                return AVBRUTT;
             } else {
                 throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
             }

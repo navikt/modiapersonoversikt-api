@@ -8,27 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class Behandling implements Serializable {
-    public enum BehandlingsType {BEHANDLING, KVITTERING}
-
-    public enum BehandlingsStatus {
-        OPPRETTET {
-            public String cmsKey() {
-                return "hendelse.sistoppdatert.dato";
-            }
-        },
-        AVBRUTT {
-            public String cmsKey() {
-                return "hendelse.sistoppdatert.dato";
-            }
-        },
-        AVSLUTTET {
-            public String cmsKey() {
-                return "hendelse.sistoppdatert.dato";
-            }
-        };
-        public abstract String cmsKey();
-    }
-
     public DateTime opprettetDato;
     public DateTime behandlingDato;
     public BehandlingsStatus behandlingsStatus;
@@ -39,9 +18,6 @@ public class Behandling implements Serializable {
     public String skjemanummerRef;
     public String behandlingsId;
     public String prefix;
-
-
-    //Fra kvittering
     private List<DokumentFraHenvendelse> innsendteDokumenter;
     private List<DokumentFraHenvendelse> manglendeDokumenter;
     private String behandlingskjedeId;
@@ -96,6 +72,37 @@ public class Behandling implements Serializable {
 
     public Behandling withSkjemanummerRef(String skjemanummerRef) {
         this.skjemanummerRef = skjemanummerRef;
+        return this;
+    }
+
+    public Behandling withKvitteringType(HenvendelseType kvitteringstype) {
+        this.kvitteringstype = kvitteringstype;
+        return this;
+    }
+
+    public Behandling withArkivreferanseOriginalkvittering(Optional<String> arkivreferanseOriginalkvittering) {
+        this.arkivreferanseOriginalkvittering = arkivreferanseOriginalkvittering;
+        return this;
+    }
+
+    public Behandling withInnsendteDokumenter(List<DokumentFraHenvendelse> innsendteDokumenter) {
+        this.innsendteDokumenter = innsendteDokumenter;
+        return this;
+    }
+
+    public Behandling withManglendeDokumenter(List<DokumentFraHenvendelse> manglendeDokumenter) {
+        this.manglendeDokumenter = manglendeDokumenter;
+        return this;
+    }
+
+
+    public Behandling withBehandlingskjedeId(String id) {
+        behandlingskjedeId = id;
+        return this;
+    }
+
+    public Behandling withJournalPostId(String id) {
+        journalpostId = id;
         return this;
     }
 
@@ -163,35 +170,5 @@ public class Behandling implements Serializable {
         return arkivreferanseOriginalkvittering;
     }
 
-    public Behandling withKvitteringType(HenvendelseType kvitteringstype) {
-        this.kvitteringstype = kvitteringstype;
-        return this;
-    }
-
-    public Behandling withArkivreferanseOriginalkvittering(Optional<String> arkivreferanseOriginalkvittering) {
-        this.arkivreferanseOriginalkvittering = arkivreferanseOriginalkvittering;
-        return this;
-    }
-
-    public Behandling withInnsendteDokumenter(List<DokumentFraHenvendelse> innsendteDokumenter) {
-        this.innsendteDokumenter = innsendteDokumenter;
-        return this;
-    }
-
-    public Behandling withManglendeDokumenter(List<DokumentFraHenvendelse> manglendeDokumenter) {
-        this.manglendeDokumenter = manglendeDokumenter;
-        return this;
-    }
-
-
-    public Behandling withBehandlingskjedeId(String id) {
-        behandlingskjedeId = id;
-        return this;
-    }
-
-    public Behandling withJournalPostId(String id) {
-        journalpostId = id;
-        return this;
-    }
 
 }

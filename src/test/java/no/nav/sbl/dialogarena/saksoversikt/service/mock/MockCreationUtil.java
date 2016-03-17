@@ -16,9 +16,9 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.LASTET_OPP;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.SEND_SENERE;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsStatus.OPPRETTET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.BEHANDLING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.UNDER_BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.UNDER_ARBEID;
@@ -31,7 +31,7 @@ public class MockCreationUtil {
 
     public static Behandling createHendelse() {
         return new Behandling()
-                .withBehandlingStatus(OPPRETTET)
+                .withBehandlingStatus(UNDER_BEHANDLING)
                 .withSkjemanummerRef("generell-behandling-kodeverk-ref-mock")
                 .withBehandlingKvittering(BEHANDLING)
                 .withEttersending(false)
@@ -42,7 +42,7 @@ public class MockCreationUtil {
     public static Behandling createKvittering() {
         return new Behandling()
                 .withBehandlingsId("123-behandlingsid")
-                .withBehandlingStatus(OPPRETTET)
+                .withBehandlingStatus(UNDER_BEHANDLING)
                 .withJournalPostId("journalpostid")
                 .withArkivreferanseOriginalkvittering(optional("123456"))
                 .withSkjemanummerRef("kvittering-kodeverk-ref-mock")

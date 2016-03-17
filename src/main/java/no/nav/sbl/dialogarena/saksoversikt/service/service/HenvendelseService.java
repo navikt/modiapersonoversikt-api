@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.comparator.OmvendtKronologiskSistEndretDatoComparator;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
@@ -52,7 +51,7 @@ public class HenvendelseService {
         try {
             return hentHenvendelsessoknader(fnr).stream()
                     .filter(soknad -> soknad.getStatus().equals(status))
-                    .sorted(new OmvendtKronologiskSistEndretDatoComparator())
+                    .sorted((o1, o2) -> o2.getSistendretDato().compareTo(o1.getSistendretDato()))
                     .collect(toList());
         } catch (RuntimeException e) {
             LOGGER.error("Det skjedde en uventet feil mot Henvendelse", e);

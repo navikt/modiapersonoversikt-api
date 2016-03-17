@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
@@ -15,8 +16,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSSak;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.FERDIG_BEHANDLET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -34,7 +35,7 @@ public class DataFletterTest {
         String henvendelsesId = "henvendelsesId";
         List<Behandling> kvitteringer = asList(new Behandling()
                 .withBehandlingsDato(henvendelseTid)
-                .withBehandlingStatus(Behandling.BehandlingsStatus.AVSLUTTET)
+                .withBehandlingStatus(FERDIG_BEHANDLET)
                 .withBehandlingsId(henvendelsesId)
         );
         WSSak sak = new WSSak().withBehandlingskjede(new WSBehandlingskjede()
@@ -50,7 +51,7 @@ public class DataFletterTest {
         Behandling kvittering = fletter.flettDataFraBaksystemer(sak, kvitteringer).get(0);
 
         assertThat(kvittering.getBehandlingDato(), equalTo(henvendelseTid));
-        assertThat(kvittering.getBehandlingsStatus(), equalTo(AVSLUTTET));
+        assertThat(kvittering.getBehandlingsStatus(), equalTo(FERDIG_BEHANDLET));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class DataFletterTest {
         String henvendelsesId = "henvendelsesId";
         List<Behandling> kvitteringer = asList(new Behandling()
                         .withBehandlingsDato(henvendelseTid)
-                        .withBehandlingStatus(Behandling.BehandlingsStatus.AVSLUTTET)
+                        .withBehandlingStatus(FERDIG_BEHANDLET)
                         .withBehandlingsId(henvendelsesId)
         );
         WSSak sak = new WSSak().withBehandlingskjede(new WSBehandlingskjede()
@@ -76,7 +77,7 @@ public class DataFletterTest {
         Behandling kvittering = fletter.flettDataFraBaksystemer(sak, kvitteringer).get(0);
 
         assertThat(kvittering.getBehandlingDato(), equalTo(henvendelseTid));
-        assertThat(kvittering.getBehandlingsStatus(), equalTo(AVSLUTTET));
+        assertThat(kvittering.getBehandlingsStatus(), equalTo(FERDIG_BEHANDLET));
     }
 
     @Test
@@ -95,15 +96,15 @@ public class DataFletterTest {
                 new Behandling()
                         .withBehandlingsId(KVITTERINGSID_1)
                         .withBehandlingKvittering(KVITTERING)
-                        .withBehandlingStatus(AVSLUTTET),
+                        .withBehandlingStatus(FERDIG_BEHANDLET),
                 new Behandling()
                         .withBehandlingsId(KVITTERINGSID_2)
                         .withBehandlingKvittering(KVITTERING)
-                        .withBehandlingStatus(AVSLUTTET),
+                        .withBehandlingStatus(FERDIG_BEHANDLET),
                 new Behandling()
                         .withBehandlingsId("ikke-matchende-id-henvendelse")
                         .withBehandlingKvittering(KVITTERING)
-                        .withBehandlingStatus(AVSLUTTET)
+                        .withBehandlingStatus(FERDIG_BEHANDLET)
         );
     }
 
