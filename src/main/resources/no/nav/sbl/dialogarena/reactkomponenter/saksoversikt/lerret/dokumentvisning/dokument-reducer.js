@@ -1,4 +1,4 @@
-import * as AT from './../../actionTypes';
+import * as AT from './../../action-types';
 import * as Const from './../../konstanter';
 import { basicReducer } from './../../utils/redux-utils';
 

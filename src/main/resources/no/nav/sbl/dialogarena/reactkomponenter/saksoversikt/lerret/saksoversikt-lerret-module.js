@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { hentLerretDataInit, hentLerretDataSakstema, velgSak, visSide, velgJournalpost, velgFiltreringAvsender } from './../actions';
 import * as Const from './../konstanter';
 
-import SakstemaPage from './sakstema/SakstemaPage';
-import ViktigAVitePage from './viktigavite/ViktigAVitePage';
-import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
+import SakstemaPage from './sakstema/sakstema-page';
+import ViktigAVitePage from './viktigavite/viktig-aa-vite-page';
+import DokumentVisningPage from './dokumentvisning/dokument-visning-page';
 import Snurrepipp from './../../utils/snurrepipp';
 import { IntlProvider, addLocaleData, FormattedMessage } from 'react-intl';
 import MiljovariablerProvider from './../miljovariabler-provider';

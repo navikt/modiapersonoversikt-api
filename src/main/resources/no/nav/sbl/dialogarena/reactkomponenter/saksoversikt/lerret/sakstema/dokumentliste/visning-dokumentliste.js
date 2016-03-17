@@ -5,7 +5,7 @@ import IngenDokumenterBidrag from './info/ingen-dokumenter-bidrag';
 import TidligereDokumenter from './info/tidligere-dokumenter';
 import FiltrerteDokumenter from './filtrering/filtrerte-dokumenter';
 import FiltrerAvsender from './filtrering/filtrer-avsender';
-import ViktigAViteLenke from './../../viktigavite/ViktigAViteLenke';
+import ViktigAViteLenke from './../../viktigavite/viktig-aa-vite-lenke';
 
 const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost, visSide, filtreringsvalg }) => {
     const dokumenter = sakstema.slice(1).reduce((acc, tema) => acc.concat(tema.dokumentMetadata), []);
