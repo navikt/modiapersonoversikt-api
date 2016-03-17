@@ -1,10 +1,12 @@
 import React, { PropTypes as pt } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-const Utgaaende = ({ mottaker, mottakerNavn}) => {
-    const dokumentAvsender = <span className="dokument-avsender-nav">
-        <FormattedMessage id="avsender.nav"/>
-    </span>;
+const Utgaaende = ({ mottaker, mottakerNavn }) => {
+    const dokumentAvsender = (
+        <span className="dokument-avsender-nav">
+            <FormattedMessage id="avsender.nav"/>
+        </span>
+    );
 
     const fra = < FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: dokumentAvsender } }/>;
 

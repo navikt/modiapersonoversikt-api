@@ -14,8 +14,12 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
     dokumentlisteParam.visTema = valgtTema.temakode === 'alle';
 
     const dokumentliste = valgtTema.temakode !== 'alle' ?
-        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam}/> :
-        <FiltrerteDokumenter dokumentMetadata={dokumenter} filtreringsvalg={filtreringsvalg} dokumentlisteParam={dokumentlisteParam}/>;
+        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata} filtreringsvalg={filtreringsvalg}
+          dokumentlisteParam={dokumentlisteParam}
+        /> :
+        <FiltrerteDokumenter dokumentMetadata={dokumenter} filtreringsvalg={filtreringsvalg}
+          dokumentlisteParam={dokumentlisteParam}
+        />;
 
     const ingendokumenter = (
         <h2 className="robust-ikon-feil-strek ingendokumenterheader">

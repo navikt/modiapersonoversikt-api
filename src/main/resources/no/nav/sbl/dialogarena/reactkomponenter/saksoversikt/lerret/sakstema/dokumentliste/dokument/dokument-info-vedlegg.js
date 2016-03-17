@@ -1,6 +1,14 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+const DokumentinfoVedlegg = ({visSide, velgJournalpost, dokumentinfo})=> {
+    function _redirect(e) {
+        e.preventDefault();
+        visSide('dokumentvisning');
+        velgJournalpost(dokumentinfo);
+    }
+}
+
 // TODO stateless function
 class DokumentinfoVedlegg extends React.Component {
 
@@ -20,7 +28,10 @@ class DokumentinfoVedlegg extends React.Component {
         const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg) => (
             <li className="vedlegg-element">
                 <a href="javascript:void(0);" onClick={this._redirect.bind(this)}
-                   className="vedleggtext">{dokumentVedlegg.tittel}</a>
+                   className="vedleggtext"
+                >
+                    {dokumentVedlegg.tittel}
+                </a>
             </li>));
 
         return (
@@ -33,7 +44,9 @@ class DokumentinfoVedlegg extends React.Component {
 }
 
 DokumentinfoVedlegg.propTypes = {
-    dokumentinfo: React.PropTypes.object.isRequired
+    dokumentinfo: React.PropTypes.object.isRequired,
+    visSide: React.PropTypes.func.isRequired,
+    velgJournalpost: React.PropTypes.func.isRequired
 };
 
 export default DokumentinfoVedlegg;
