@@ -106,14 +106,10 @@ public class SaksService {
     private ResultatWrapper opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        List<Sakstema> sakstemaKunPopulertFraSakOgBehandling = behandlingskjeder.entrySet()
+        List<Sakstema> sakstemaSomKunFinnesISakOgBehandling = behandlingskjeder.entrySet()
                 .stream()
-                .filter(entry ->
-                        !wrapper.resultat.stream()
-                                .filter(sak -> sak.getTemakode().equals(entry.getKey()))
-                                .findAny()
-                                .isPresent())
-                .map(entry -> opprettSakstemaForBehandlingskjedeUtenTilhoerendeSakstema(entry))
+                .filter(temaFinnesKunISakOgBehandling(wrapper))
+                .map(entry -> opprettSakstemaForBehandlingskjede(entry))
                 .collect(toList());
 
 
@@ -123,11 +119,19 @@ public class SaksService {
                 .map(fjernSakstemaKontroll)
                 .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
-                    accumulator.resultat.addAll(sakstemaKunPopulertFraSakOgBehandling);
+                    accumulator.resultat.addAll(sakstemaSomKunFinnesISakOgBehandling);
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
                     return accumulator;
                 })
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
+    }
+
+    private Predicate<Map.Entry<String, List<Behandlingskjede>>> temaFinnesKunISakOgBehandling(ResultatWrapper<List<DokumentMetadata>> wrapper) {
+        return entry ->
+                !wrapper.resultat.stream()
+                        .filter(sak -> sak.getTemakode().equals(entry.getKey()))
+                        .findAny()
+                        .isPresent();
     }
 
     private Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll =
@@ -135,7 +139,7 @@ public class SaksService {
                     .filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL))
                     .collect(toList()), entry.feilendeSystemer);
 
-    protected Sakstema opprettSakstemaForBehandlingskjedeUtenTilhoerendeSakstema(Map.Entry<String, List<Behandlingskjede>> behandlingskjede) {
+    protected Sakstema opprettSakstemaForBehandlingskjede(Map.Entry<String, List<Behandlingskjede>> behandlingskjede) {
         String temakode = behandlingskjede.getKey();
         return new Sakstema()
                 .withTemakode(temakode)
