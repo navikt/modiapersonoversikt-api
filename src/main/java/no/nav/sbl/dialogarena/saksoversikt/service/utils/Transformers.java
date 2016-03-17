@@ -80,7 +80,7 @@ public class Transformers {
     }
 
     private static BehandlingsType kvitteringstype(WSBehandlingstyper sisteBehandlingstype) {
-        return sisteBehandlingstype.getValue().equals(KVITTERING) ? KVITTERING : BEHANDLING;
+        return KVITTERING.equals(sisteBehandlingstype.getValue()) ? KVITTERING : BEHANDLING;
     }
 
     private static DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
