@@ -141,7 +141,7 @@ const ModalPortal = React.createClass({
             <div tabIndex="-1" className={cls} aria-hidden={!this.props.isOpen} onKeyDown={this.keyHandler}
                  role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
                 <div className="backdrop" onClick={this.props.modal.close}></div>
-                <iframe src="about:blank" className="cover" />
+                <iframe src="about:blank" className="cover" aria-hidden />
                 {title.hidden}
                 {description.hidden}
                 <div className="centering" style={this.props.width ? {'width': this.props.width + 'px'} : null}>
