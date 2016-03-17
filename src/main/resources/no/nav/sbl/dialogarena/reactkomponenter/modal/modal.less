@@ -16,6 +16,16 @@ body.modal-open {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1011;
   }
+  iframe.cover { // Super-hack for IE + adobe
+    min-height: 100%;
+    min-width: 100%;
+    overflow: hidden;
+    position: absolute;
+    border: none;
+    left: 0;
+    top: 0;
+    z-index: 1;
+  }
   .centering {
     width: @width;
     margin: 0 auto;
