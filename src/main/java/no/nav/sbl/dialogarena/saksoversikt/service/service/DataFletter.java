@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.not;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilBehandling;
 
 public class DataFletter {
@@ -21,7 +22,7 @@ public class DataFletter {
 
         List<Behandling> beriketeKvitteringer = berikKvitteringer(behandlingerMedKvitteringskobling, kvitteringerFraHenvendelse);
 
-        return slaaSammenbehandlinger(behandlingerUtenKvitteringskobling, beriketeKvitteringer);
+        return slaaSammenBehandlinger(behandlingerUtenKvitteringskobling, beriketeKvitteringer);
     }
 
     private List<Behandling> finnBehandlingerMedKvitteringskobling(List<Behandling> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
@@ -33,8 +34,8 @@ public class DataFletter {
 
     private List<Behandling> finnBehandlingerUtenKvitteringskobling(List<Behandling> kvitteringerFraHenvendelse, List<WSBehandlingskjede> behandlingskjeder) {
         List<WSBehandlingskjede> behandlingskjederUtenKvitteringskobling = behandlingskjeder.stream()
-                .filter((finnesKvittering(kvitteringerFraHenvendelse).negate()))
-                .filter((harKvitteringsBehandlingstype().negate()))
+                .filter(not((finnesKvittering(kvitteringerFraHenvendelse))))
+                .filter(not((harKvitteringsBehandlingstype())))
                 .collect(toList());
         return hentBehandlingerFraBehandlingskjeder(behandlingskjederUtenKvitteringskobling);
     }
@@ -79,7 +80,7 @@ public class DataFletter {
     }
 
 
-    private final List<Behandling> slaaSammenbehandlinger(List<Behandling>... behandlingslister) {
+    private List<Behandling> slaaSammenBehandlinger(List<Behandling>... behandlingslister) {
         List<Behandling> sammenslaatteBehandlinger = new ArrayList<>();
         asList(behandlingslister).forEach(behandlinger -> sammenslaatteBehandlinger.addAll(behandlinger));
         return sammenslaatteBehandlinger;

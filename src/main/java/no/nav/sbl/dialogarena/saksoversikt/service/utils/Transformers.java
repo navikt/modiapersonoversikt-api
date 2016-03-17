@@ -13,11 +13,11 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WS
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -34,38 +34,36 @@ import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informa
 
 public class Transformers {
 
-    public static final Transformer<Soknad, Behandling> SOKNAD_TIL_KVITTERING = new Transformer<Soknad, Behandling>() {
-        @Override
-        public Behandling transform(Soknad soknad) {
-            BehandlingsStatus status = soknad.getInnsendtDato() != null ? FERDIG_BEHANDLET : UNDER_BEHANDLING;
-            return new Behandling()
-                    .withBehandlingsId(soknad.getBehandlingsId())
-                    .withBehandlingskjedeId(soknad.getBehandlingskjedeId())
-                    .withJournalPostId(soknad.getJournalpostId())
-                    .withKvitteringType(soknad.getType())
-                    .withBehandlingsDato(soknad.getInnsendtDato())
-                    .withSkjemanummerRef(soknad.getSkjemanummerRef())
-                    .withBehandlingStatus(status)
-                    .withBehandlingKvittering(KVITTERING)
-                    .withEttersending(soknad.getEttersending())
-                    .withArkivreferanseOriginalkvittering(arkivreferanseOriginalkvittering(soknad))
-                    .withInnsendteDokumenter(filtrerVedlegg(soknad, DokumentFraHenvendelse.INNSENDT))
-                    .withManglendeDokumenter(filtrerVedlegg(soknad, manglendeDokumenter()));
-        }
+    public static final Function<Soknad, Behandling> SOKNAD_TIL_KVITTERING = soknad -> {
+        BehandlingsStatus status = soknad.getInnsendtDato() != null ? FERDIG_BEHANDLET : UNDER_BEHANDLING;
+        return new Behandling()
+                .withBehandlingsId(soknad.getBehandlingsId())
+                .withBehandlingskjedeId(soknad.getBehandlingskjedeId())
+                .withJournalPostId(soknad.getJournalpostId())
+                .withKvitteringType(soknad.getType())
+                .withBehandlingsDato(soknad.getInnsendtDato())
+                .withSkjemanummerRef(soknad.getSkjemanummerRef())
+                .withBehandlingStatus(status)
+                .withBehandlingKvittering(KVITTERING)
+                .withEttersending(soknad.getEttersending())
+                .withArkivreferanseOriginalkvittering(arkivreferanseOriginalkvittering(soknad))
+                .withInnsendteDokumenter(filtrerVedlegg(soknad, DokumentFraHenvendelse.INNSENDT))
+                .withManglendeDokumenter(filtrerVedlegg(soknad, manglendeDokumenter()));
 
-        private Optional<String> arkivreferanseOriginalkvittering(Soknad soknad) {
-            return soknad.getDokumenter().stream()
-                    .filter(ER_KVITTERING)
-                    .map(dokumentFraHenvendelse -> dokumentFraHenvendelse.getArkivreferanse())
-                    .findFirst();
-        }
     };
+
+    private static Optional<String> arkivreferanseOriginalkvittering(Soknad soknad) {
+        return soknad.getDokumenter().stream()
+                .filter(ER_KVITTERING)
+                .map(dokumentFraHenvendelse -> dokumentFraHenvendelse.getArkivreferanse())
+                .findFirst();
+    }
 
     private static Predicate<DokumentFraHenvendelse> manglendeDokumenter() {
         return dokumentFraHenvendelse -> !DokumentFraHenvendelse.INNSENDT.test(dokumentFraHenvendelse) && !dokumentFraHenvendelse.erHovedskjema();
     }
 
-    public static final Behandling transformTilBehandling(WSBehandlingskjede wsBehandlingskjede) {
+    public static Behandling transformTilBehandling(WSBehandlingskjede wsBehandlingskjede) {
         Behandling behandling = new Behandling()
                 .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
                 .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
@@ -104,7 +102,7 @@ public class Transformers {
         throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
     }
 
-    public static final Soknad transformTilSoknad(WSSoknad wsSoknad) {
+    public static Soknad transformTilSoknad(WSSoknad wsSoknad) {
         return new Soknad()
                 .withBehandlingsId(wsSoknad.getBehandlingsId())
                 .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
@@ -123,7 +121,7 @@ public class Transformers {
                         .map(wsDokumentforventning -> transformTilDokument(wsDokumentforventning, wsSoknad.getHovedskjemaKodeverkId())).collect(toList()));
     }
 
-    public static final DokumentFraHenvendelse transformTilDokument(WSDokumentforventning wsDokumentforventning, String hovedskjemaId) {
+    public static DokumentFraHenvendelse transformTilDokument(WSDokumentforventning wsDokumentforventning, String hovedskjemaId) {
         return new DokumentFraHenvendelse()
                 .withKodeverkRef(wsDokumentforventning.getKodeverkId())
                 .withTilleggstittel(wsDokumentforventning.getTilleggsTittel())

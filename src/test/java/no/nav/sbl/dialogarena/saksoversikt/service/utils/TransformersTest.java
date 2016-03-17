@@ -19,8 +19,6 @@ import static org.junit.Assert.assertThat;
 
 public class TransformersTest {
 
-    private static final String FERDIG = "FERDIG";
-
     @Test
     public void skalTransformereEnSoknadTilKvittering() {
         DokumentFraHenvendelse innsendtHovedskjema = new DokumentFraHenvendelse().withErHovedskjema(true).withInnsendingsvalg(LASTET_OPP).withKodeverkRef("kodeverk1");
@@ -36,7 +34,7 @@ public class TransformersTest {
                 .withEttersending(false)
                 .withDokumenter(asList(innsendtHovedskjema, innsendtVedlegg, sendSenereVedlegg));
 
-        Behandling kvittering = SOKNAD_TIL_KVITTERING.transform(soknad);
+        Behandling kvittering = SOKNAD_TIL_KVITTERING.apply(soknad);
 
         assertThat(kvittering.getBehandlingsId(), is(soknad.getBehandlingsId()));
         assertThat(kvittering.getBehandlingskjedeId(), is(soknad.getBehandlingskjedeId()));
@@ -57,7 +55,7 @@ public class TransformersTest {
         Soknad soknad = new Soknad()
                 .withDokumenter(asList(innsendtHovedskjema));
 
-        Behandling kvittering = SOKNAD_TIL_KVITTERING.transform(soknad);
+        Behandling kvittering = SOKNAD_TIL_KVITTERING.apply(soknad);
 
         assertThat(kvittering.getInnsendteDokumenter().size(), is(1));
         assertThat(kvittering.getInnsendteDokumenter(), contains(innsendtHovedskjema));
@@ -70,7 +68,7 @@ public class TransformersTest {
         Soknad soknad = new Soknad()
                 .withDokumenter(asList(innsendtHovedskjema));
 
-        Behandling kvittering = SOKNAD_TIL_KVITTERING.transform(soknad);
+        Behandling kvittering = SOKNAD_TIL_KVITTERING.apply(soknad);
 
         assertThat(kvittering.getInnsendteDokumenter().size(), is(0));
         assertThat(kvittering.getManglendeDokumenter().size(), is(0));

@@ -43,7 +43,7 @@ public class HenvendelseService {
 
     public List<Behandling> hentKvitteringer(String fnr) {
         return hentHenvendelsessoknaderMedStatus(FERDIG, fnr).stream()
-                .map(SOKNAD_TIL_KVITTERING::transform)
+                .map(SOKNAD_TIL_KVITTERING)
                 .collect(toList());
     }
 
