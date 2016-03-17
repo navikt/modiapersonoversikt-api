@@ -11,7 +11,7 @@ import DokumentVisningPage from './dokumentvisning/DokumentVisningPage';
 import Snurrepipp from './../../utils/snurrepipp';
 import { IntlProvider, addLocaleData, FormattedMessage } from 'react-intl';
 import MiljovariablerProvider from './../miljovariabler-provider';
-import nbLocale from 'react-intl/dist/locale-data/nb';
+import nbLocale from 'react-intl/locale-data/nb';
 addLocaleData(nbLocale);
 
 const contextRoutes = {

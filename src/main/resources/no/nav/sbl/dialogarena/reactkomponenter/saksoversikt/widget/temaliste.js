@@ -4,7 +4,7 @@ import Sakstema from './tema';
 import { hentWidgetData } from './../actions';
 import { take } from 'lodash';
 import WicketSender from './../../react-wicket-mixin/wicket-sender';
-import nbLocale from 'react-intl/dist/locale-data/nb';
+import nbLocale from 'react-intl/locale-data/nb';
 import { IntlProvider, addLocaleData,FormattedMessage } from 'react-intl';
 import * as Const from './../konstanter';
 addLocaleData(nbLocale);
