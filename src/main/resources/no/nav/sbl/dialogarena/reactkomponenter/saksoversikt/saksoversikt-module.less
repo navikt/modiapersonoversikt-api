@@ -1,8 +1,17 @@
 @imgDir: "/modiabrukerdialog/img/saksoversikt";
-@graa: #b7b1a9;
-@graa_inactive: #7f756c;
+
+.saksoversiktLerret-wicket {
+  height: 100%;
+
+  .snurrepipp img {
+    margin: 8rem auto;
+    display: block;
+  }
+}
 
 .saksoversikt-lerret-container {
+  @graa: #b7b1a9;
+  @graa_inactive: #7f756c;
 
   padding: 0 !important;
   height: 100%;
@@ -256,6 +265,51 @@
       }
     }
   }
+
+  .viktig-aa-vite-lenke {
+    padding: 2rem 2rem;
+    background-image: url("/modiabrukerdialog/img/saksoversikt/infomation-circle_inactive.svg");
+    background-repeat: no-repeat;
+    background-size: 2rem 2rem;
+    background-position: 1.3rem 1.6rem;
+    padding-left: 4rem;
+  }
+
+  .viktig-aa-vite-container {
+    border-bottom: 1px solid @graa;
+  }
+
+  .filtrering-container {
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid @graa_inactive;
+    .clearfix;
+  }
+
+  .filtrering-forklaring {
+    color: @graa_inactive;
+    padding-left: 1.5rem;
+    padding-top: 1.3rem;
+    padding-bottom: .5rem;
+    display: block;
+  }
+
+  .filtreringsvalg {
+    display: inline;
+    padding: 0rem 1.5rem;
+
+    input[type=checkbox] {
+      + label {
+        display: inline;
+        padding-right: 20%;
+        text-transform: none;
+      }
+    }
+    .filtreringsvalg-label {
+      font-size: 1rem;
+      color: #3e3832;
+    }
+  }
+
 }
 
 .sakstema-container {
@@ -280,7 +334,7 @@
 }
 
 .saksoversikt-liste-element {
-  border-bottom: 1px solid @graa;
+  border-bottom: 1px solid #b7b1a9;
   display: block;
 
   label:before {
@@ -335,6 +389,7 @@
   margin-top: 0;
   margin-bottom: 0;
   padding-bottom: 4px;
+  padding-right: 4rem;
 }
 
 .datotekst {
@@ -343,7 +398,7 @@
   font-weight: normal;
   margin-bottom: 0;
   margin-top: 0;
-  color: @graa_inactive;
+  color: #7f756c;
 }
 
 .decorated {
@@ -374,15 +429,11 @@
 }
 
 .side-innhold a {
-  border-bottom: 1px solid @graa;
+  border-bottom: 1px solid #b7b1a9;
   &:hover {
     text-decoration: none !important;
     border-bottom-color: #0067c5;
   }
-}
-
-.saksoversiktLerret-container {
-  height: 100%;
 }
 
 .lerret.saksoversikt-lerret {
@@ -409,50 +460,6 @@
 
 .text-center {
   text-align: center;
-}
-
-.viktig-aa-vite-lenke {
-  padding: 2rem;
-  background-image: url("/modiabrukerdialog/img/saksoversikt/infomation-circle_inactive.svg");
-  background-repeat: no-repeat;
-  background-size: 2rem;
-  background-position: 1.3rem 1.6rem;
-  padding-left: 4rem;
-}
-
-.viktig-aa-vite-container {
-  border-bottom: 1px solid @graa;
-}
-
-.filtrering-container {
-  padding-bottom: 1.4rem;
-  border-bottom: 1px solid @graa_inactive;
-  .clearfix;
-}
-
-.filtrering-forklaring {
-  color: @graa_inactive;
-  padding-left: 1.5rem;
-  padding-top: 1.3rem;
-  padding-bottom: .5rem;
-  display: block;
-}
-
-.filtreringsvalg {
-  display: inline;
-  padding: 0rem 1.5rem;
-
-  input[type=checkbox] {
-    + label {
-      display: inline;
-      padding-right: 20%;
-      text-transform: none;
-    }
-  }
-  .filtreringsvalg-label {
-    font-size: 1rem;
-    color: #3e3832;
-  }
 }
 
 .lamell-feilmelding {
