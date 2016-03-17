@@ -266,8 +266,13 @@ public class SaksServiceTest {
     @Test
     public void sakFraSakogBehandlingMedTilhoerendeSakstemaOppretterIkkeEgetSakstema() {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG"))));
-        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(emptyMap());
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG").withBaksystem(HENVENDELSE))));
+        Map<String, Set<String>> gruppertTema = new HashMap<>();
+        Set set = new HashSet<>();
+        set.add("DAG");
+        gruppertTema.put("RESTERENDE_TEMA", set);
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(gruppertTema);
         Map sakOgBehandlingResults = new HashMap<>();
         sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
         when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);

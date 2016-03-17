@@ -109,7 +109,7 @@ public class SaksService {
         List<Sakstema> sakstemaKunPopulertFraSakOgBehandling = behandlingskjeder.entrySet()
                 .stream()
                 .filter(entry ->
-                        !saker.stream()
+                        !wrapper.resultat.stream()
                                 .filter(sak -> sak.getTemakode().equals(entry.getKey()))
                                 .findAny()
                                 .isPresent())
