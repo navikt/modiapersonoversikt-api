@@ -4,8 +4,8 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHovedskjema;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Tema;
@@ -14,12 +14,11 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.LASTET_OPP;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.SEND_SENERE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.UNDER_BEHANDLING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.BEHANDLING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.LASTET_OPP;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.SEND_SENERE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.UNDER_ARBEID;
 import static org.joda.time.DateTime.now;
@@ -43,8 +42,6 @@ public class MockCreationUtil {
         return new Behandling()
                 .withBehandlingsId("123-behandlingsid")
                 .withBehandlingStatus(UNDER_BEHANDLING)
-                .withJournalPostId("journalpostid")
-                .withArkivreferanseOriginalkvittering(optional("123456"))
                 .withSkjemanummerRef("kvittering-kodeverk-ref-mock")
                 .withBehandlingKvittering(KVITTERING)
                 .withEttersending(false)

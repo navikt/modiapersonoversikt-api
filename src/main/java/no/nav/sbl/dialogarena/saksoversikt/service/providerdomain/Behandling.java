@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
 public class Behandling implements Serializable {
     public DateTime opprettetDato;
@@ -21,9 +20,7 @@ public class Behandling implements Serializable {
     private List<DokumentFraHenvendelse> innsendteDokumenter;
     private List<DokumentFraHenvendelse> manglendeDokumenter;
     private String behandlingskjedeId;
-    private String journalpostId;
     private HenvendelseType kvitteringstype;
-    private Optional<String> arkivreferanseOriginalkvittering;
 
     public Behandling withBehandlingKvittering(BehandlingsType behandlingkvittering) {
         this.behandlingkvittering = behandlingkvittering;
@@ -80,11 +77,6 @@ public class Behandling implements Serializable {
         return this;
     }
 
-    public Behandling withArkivreferanseOriginalkvittering(Optional<String> arkivreferanseOriginalkvittering) {
-        this.arkivreferanseOriginalkvittering = arkivreferanseOriginalkvittering;
-        return this;
-    }
-
     public Behandling withInnsendteDokumenter(List<DokumentFraHenvendelse> innsendteDokumenter) {
         this.innsendteDokumenter = innsendteDokumenter;
         return this;
@@ -95,19 +87,9 @@ public class Behandling implements Serializable {
         return this;
     }
 
-
     public Behandling withBehandlingskjedeId(String id) {
         behandlingskjedeId = id;
         return this;
-    }
-
-    public Behandling withJournalPostId(String id) {
-        journalpostId = id;
-        return this;
-    }
-
-    public DateTime getOpprettetDato() {
-        return opprettetDato;
     }
 
     public DateTime getBehandlingDato() {
@@ -158,17 +140,7 @@ public class Behandling implements Serializable {
         return behandlingskjedeId;
     }
 
-    public String getJournalpostId() {
-        return journalpostId;
-    }
-
     public HenvendelseType getKvitteringstype() {
         return kvitteringstype;
     }
-
-    public Optional<String> getArkivreferanseOriginalkvittering() {
-        return arkivreferanseOriginalkvittering;
-    }
-
-
 }

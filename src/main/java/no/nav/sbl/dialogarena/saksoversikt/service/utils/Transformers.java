@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
@@ -16,18 +16,17 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import org.joda.time.DateTime;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.BEHANDLING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
@@ -39,25 +38,15 @@ public class Transformers {
         return new Behandling()
                 .withBehandlingsId(soknad.getBehandlingsId())
                 .withBehandlingskjedeId(soknad.getBehandlingskjedeId())
-                .withJournalPostId(soknad.getJournalpostId())
                 .withKvitteringType(soknad.getType())
                 .withBehandlingsDato(soknad.getInnsendtDato())
                 .withSkjemanummerRef(soknad.getSkjemanummerRef())
                 .withBehandlingStatus(status)
                 .withBehandlingKvittering(KVITTERING)
                 .withEttersending(soknad.getEttersending())
-                .withArkivreferanseOriginalkvittering(arkivreferanseOriginalkvittering(soknad))
                 .withInnsendteDokumenter(filtrerVedlegg(soknad, DokumentFraHenvendelse.INNSENDT))
                 .withManglendeDokumenter(filtrerVedlegg(soknad, manglendeDokumenter()));
-
     };
-
-    private static Optional<String> arkivreferanseOriginalkvittering(Soknad soknad) {
-        return soknad.getDokumenter().stream()
-                .filter(ER_KVITTERING)
-                .map(dokumentFraHenvendelse -> dokumentFraHenvendelse.getArkivreferanse())
-                .findFirst();
-    }
 
     private static Predicate<DokumentFraHenvendelse> manglendeDokumenter() {
         return dokumentFraHenvendelse -> !DokumentFraHenvendelse.INNSENDT.test(dokumentFraHenvendelse) && !dokumentFraHenvendelse.erHovedskjema();
