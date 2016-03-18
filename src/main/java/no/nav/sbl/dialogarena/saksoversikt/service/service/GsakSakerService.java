@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -42,7 +41,7 @@ public class GsakSakerService {
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
             logger.warn("Det skjedde en ventet exception ved henting av Sakstema fra Gsak");
             return Optional.empty();
-        } catch (SOAPFaultException e) {
+        } catch (RuntimeException e) {
             logger.error("Det skjedde en uventet feil mot Gsak", e);
             throw new FeilendeBaksystemException(GSAK);
         }

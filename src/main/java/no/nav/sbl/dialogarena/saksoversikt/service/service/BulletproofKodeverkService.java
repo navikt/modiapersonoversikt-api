@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 
 
 import javax.inject.Inject;
-import javax.xml.ws.soap.SOAPFaultException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.StringUtils.isEmpty;

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class PDFConverterService {
         } catch (PdfErKorruptFault e) {
             logger.warn("PDF er korrupt!", e);
             return new TjenesteResultatWrapper(KORRUPT_PDF);
-        } catch (SOAPFaultException e) {
+        } catch (RuntimeException e) {
             logger.error("Feil mot konverteringstjenesten", e);
             throw new FeilendeBaksystemException(PDF_KONVERTERING);
         }

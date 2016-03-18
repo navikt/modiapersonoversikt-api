@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -36,7 +35,7 @@ public class HenvendelseService {
                     .filter(IKKE_PAABEGYNT_ETTERSENDING_FRA_SEND_SOKNAD)
                     .map(wsSoknad ->  transformTilSoknad(wsSoknad))
                     .collect(toList());
-        } catch (SOAPFaultException e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Det skjedde en uventet feil mot Henvendelse", e);
             throw new FeilendeBaksystemException(HENVENDELSE);
         }
@@ -54,7 +53,7 @@ public class HenvendelseService {
                     .filter(soknad -> soknad.getStatus().equals(status))
                     .sorted((o1, o2) -> o2.getSistendretDato().compareTo(o1.getSistendretDato()))
                     .collect(toList());
-        } catch (SOAPFaultException e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Det skjedde en uventet feil mot Henvendelse", e);
             throw new FeilendeBaksystemException(HENVENDELSE);
         }
