@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.AKTOER;
 
@@ -23,7 +24,7 @@ public class FodselnummerAktorService {
             HentAktoerIdForIdentRequest request = new HentAktoerIdForIdentRequest();
             request.setIdent(fodselsnummer);
             return aktoerPortType.hentAktoerIdForIdent(request).getAktoerId();
-        } catch (RuntimeException e) {
+        } catch (SOAPFaultException e) {
             logger.error("Det skjedde en uventet feil mot Aktoerservice", e);
             throw new FeilendeBaksystemException(AKTOER);
         }
