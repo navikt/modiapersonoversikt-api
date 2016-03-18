@@ -133,11 +133,6 @@ public class SaksService {
                         .isPresent();
     }
 
-    private Function<ResultatWrapper<List<Sakstema>>, ResultatWrapper<List<Sakstema>>> fjernSakstemaKontroll =
-            entry -> new ResultatWrapper<>(entry.resultat.stream()
-                    .filter(tema -> !tema.temakode.equals(TEMAKODE_KONTROLL))
-                    .collect(toList()), entry.feilendeSystemer);
-
     protected Sakstema opprettSakstemaForBehandlingskjede(Map.Entry<String, List<Behandlingskjede>> behandlingskjede) {
         String temakode = behandlingskjede.getKey();
         return new Sakstema()
