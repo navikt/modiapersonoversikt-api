@@ -42,7 +42,7 @@ class DokumentVisningPage extends React.Component {
 
     render() {
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
-            return <Snurrepipp />;
+            return <Snurrepipp farge='hvit' />;
         }
         const { journalpostmetadata } = this.props;
 
