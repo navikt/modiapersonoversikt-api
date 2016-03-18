@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
@@ -13,32 +13,38 @@ import KulemenyListe from './kulemeny/kulemeny-liste';
 
 function lagKulelistedata(dokumenter, feiledeDokumenter) {
     const feil = feiledeDokumenter.map((dokument, index) => {
-        dokument.dokumentreferanse = dokument.feilmeldingEnonicKey + index;
-        return dokument;
+        const nytDokument = Object.assign({}, dokument);
+        nytDokument.dokumentreferanse = dokument.feilmeldingEnonicKey + index;
+        return nytDokument;
     });
 
     return [].concat(dokumenter).concat(feil)
-        .map((dokument) => ({
-            dokumentreferanse: dokument.dokumentreferanse,
-            tittel: dokument.tittel
-        }));
+             .map((dokument) => ({
+                 dokumentreferanse: dokument.dokumentreferanse,
+                 tittel: dokument.tittel
+             }));
 }
 
 class DokumentVisningPage extends React.Component {
-    _redirect(e) {
-        e.preventDefault();
-        this.props.visSide('sakstema');
+    constructor() {
+        super();
+        this._redirect = this._redirect.bind(this);
     }
 
     componentWillMount() {
         this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
 
+    _redirect(e) {
+        e.preventDefault();
+        this.props.visSide('sakstema');
+    }
+
     render() {
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
             return <Snurrepipp />;
         }
-        const { journalpostmetadata, valgtTema } = this.props;
+        const { journalpostmetadata } = this.props;
 
         const values = {
             retning: this.props.valgtJournalpost.retning,
@@ -51,7 +57,7 @@ class DokumentVisningPage extends React.Component {
         return (
             <div className="dokument-visning-page">
                 <div className="fixed-header blokk-s">
-                    <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
+                    <a href="javascript:void(0);" onClick={this._redirect}>Tilbake til sakstema</a>
                     <KulemenyListe dokumentmetadata={kulelisteVM}/>
                 </div>
 
@@ -68,9 +74,19 @@ class DokumentVisningPage extends React.Component {
                     </panel>
                 </div>
             </div>
-        )
-    };
+        );
+    }
 }
+
+DokumentVisningPage.propTypes = {
+    hentDokumentData: PT.func.isRequired,
+    fnr: PT.string.isRequired,
+    valgtJournalpost: PT.object.isRequired,
+    visSide: PT.func.isRequired,
+    lerretstatus: PT.string.isRequired,
+    dokumentstatus: PT.string.isRequired,
+    journalpostmetadata: PT.object.isRequired
+};
 
 const mapStateToProps = (state) => {
     return {
