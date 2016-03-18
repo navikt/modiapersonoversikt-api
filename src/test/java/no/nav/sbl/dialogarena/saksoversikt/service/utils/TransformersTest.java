@@ -1,152 +1,148 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
-import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.SOKNAD_TIL_KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilSoknad;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.GenerellBehandling.BehandlingsType.KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kvittering.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.ETTERSENDING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.SKJEMANUMMER_REF;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.BEHANDLINGSKJEDE_ID;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.BEHANDLINGS_ID;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.FERDIG_BEHANDLET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.INNSENDT;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.*;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TransformersTest {
 
-    private static final String FERDIG = "FERDIG";
-
-    @Test
-    public void henvendelseTransformer_should_mapProperties() {
-//        String behandlingId = "behandlingId";
-//        String kodeverkId = "hovedskjemaKodeverkId";
-//        DateTime innsendtDato = now();
-//        DateTime opprettetDato = now();
-//        String type = XMLHenvendelseType.SEND_SOKNAD.name();
-//
-//        XMLHenvendelse soknad = new XMLHenvendelse()
-//                .withBehandlingsId(behandlingId)
-//                .withMetadataListe(new XMLMetadataListe().withMetadata(
-//                        new XMLHovedskjema()
-//                                .withSkjemanummer(kodeverkId)
-//                ))
-//                .withAvsluttetDato(innsendtDato)
-//                .withHenvendelseType(type)
-//                .withOpprettetDato(opprettetDato);
-//
-//        Record<Soknad> record = SOKNAD.transform(soknad);
-//
-//        assertEquals(behandlingId, record.get(BEHANDLINGS_ID));
-//        assertFalse(record.get(ETTERSENDING));
-//        assertEquals(FERDIG, record.get(STATUS).toString());
-//        assertEquals(kodeverkId, record.get(SKJEMANUMMER_REF));
-//        assertEquals(innsendtDato, record.get(INNSENDT_DATO));
-//        assertEquals(opprettetDato, record.get(Soknad.OPPRETTET_DATO));
-//        assertEquals(type, record.get(Soknad.TYPE).name());
-    }
-
-    @Test
-    public void dokumentTransformer_should_mapProperties() {
-//        String tilleggstittel = "tilleggstittel";
-//        String kodeverkId = "kodeverkId";
-//        XMLVedlegg dokumentforventning = new XMLVedlegg()
-//                .withSkjemanummer(kodeverkId)
-//                .withInnsendingsvalg(LASTET_OPP.name())
-//                .withTilleggsinfo(tilleggstittel);
-//
-//        Record<Dokument> record = tilDokument("hovedskjemaid").transform(dokumentforventning);
-//
-//        assertEquals(tilleggstittel, record.get(TILLEGGSTITTEL));
-//        assertEquals(LASTET_OPP, record.get(INNSENDINGSVALG));
-//        assertFalse(record.get(HOVEDSKJEMA));
-//        assertEquals(kodeverkId, record.get(KODEVERK_REF));
-    }
-
-    @Test
-    public void skalSetteHovedskjemaTilTrueDersomDokumentetHarSammeKodeverksIdSomBlirSendtInnTilTransformer() {
-//        String tilleggstittel = "tilleggstittel";
-//        String kodeverkId = "kodeverkId";
-//        XMLVedlegg dokumentforventning = new XMLVedlegg()
-//                .withSkjemanummer(kodeverkId)
-//                .withInnsendingsvalg(LASTET_OPP.name())
-//                .withTilleggsinfo(tilleggstittel);
-//
-//        Record<Dokument> record = tilDokument("kodeverkId").transform(dokumentforventning);
-//
-//        assertEquals(tilleggstittel, record.get(TILLEGGSTITTEL));
-//        assertEquals(LASTET_OPP, record.get(INNSENDINGSVALG));
-//        assertTrue(record.get(HOVEDSKJEMA));
-//        assertEquals(kodeverkId, record.get(KODEVERK_REF));
-    }
-
     @Test
     public void skalTransformereEnSoknadTilKvittering() {
-        Record<DokumentFraHenvendelse> innsendtHovedskjema = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, LASTET_OPP).with(KODEVERK_REF, "kodeverk1");
-        Record<DokumentFraHenvendelse> innsendtVedlegg = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, false).with(INNSENDINGSVALG, INNSENDT).with(KODEVERK_REF, "kodeverk2");
-        Record<DokumentFraHenvendelse> sendSenereVedlegg = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, false).with(INNSENDINGSVALG, SEND_SENERE).with(KODEVERK_REF, "kodeverk3");
+        DokumentFraHenvendelse innsendtHovedskjema = new DokumentFraHenvendelse().withErHovedskjema(true).withInnsendingsvalg(LASTET_OPP).withKodeverkRef("kodeverk1");
+        DokumentFraHenvendelse innsendtVedlegg = new DokumentFraHenvendelse().withErHovedskjema(false).withInnsendingsvalg(INNSENDT).withKodeverkRef("kodeverk2");
+        DokumentFraHenvendelse sendSenereVedlegg = new DokumentFraHenvendelse().withErHovedskjema(false).withInnsendingsvalg(SEND_SENERE).withKodeverkRef("kodeverk3");
 
-        Record<Soknad> soknad = new Record<Soknad>()
-                .with(BEHANDLINGS_ID, "123-behandlingsid")
-                .with(BEHANDLINGSKJEDE_ID, "123-behandlingskjedeid")
-                .with(Soknad.TYPE, DOKUMENTINNSENDING)
-                .with(INNSENDT_DATO, DateMidnight.parse("2014-01-01").toDateTime())
-                .with(SKJEMANUMMER_REF, "kvittering-kodeverk-ref-mock")
-                .with(GenerellBehandling.ETTERSENDING, false)
-                .with(DOKUMENTER, asList(innsendtHovedskjema, innsendtVedlegg, sendSenereVedlegg));
+        Soknad soknad = new Soknad()
+                .withBehandlingsId("123-behandlingsid")
+                .withBehandlingskjedeId("123-behandlingskjedeid")
+                .withHenvendelseType(DOKUMENTINNSENDING)
+                .withInnsendtDato(DateMidnight.parse("2014-01-01").toDateTime())
+                .withSkjemanummerRef("kvittering-kodeverk-ref-mock")
+                .withEttersending(false)
+                .withDokumenter(asList(innsendtHovedskjema, innsendtVedlegg, sendSenereVedlegg));
 
-        Record<Kvittering> kvittering = SOKNAD_TIL_KVITTERING.transform(soknad);
+        Behandling kvittering = SOKNAD_TIL_KVITTERING.apply(soknad);
 
-        assertThat(kvittering.get(BEHANDLINGS_ID), is(soknad.get(BEHANDLINGS_ID)));
-        assertThat(kvittering.get(BEHANDLINGSKJEDE_ID), is(soknad.get(BEHANDLINGSKJEDE_ID)));
-        assertThat(kvittering.get(KVITTERINGSTYPE), is(soknad.get(Soknad.TYPE)));
-        assertThat(kvittering.get(BEHANDLING_DATO), is(soknad.get(INNSENDT_DATO)));
-        assertThat(kvittering.get(SKJEMANUMMER_REF), is(soknad.get(SKJEMANUMMER_REF)));
-        assertThat(kvittering.get(BEHANDLING_STATUS), is(AVSLUTTET));
-        assertThat(kvittering.get(BEHANDLINGKVITTERING), is(KVITTERING));
-        assertThat(kvittering.get(ETTERSENDING), is(soknad.get(ETTERSENDING)));
-        assertThat(kvittering.get(INNSENDTE_DOKUMENTER), contains(innsendtHovedskjema, innsendtVedlegg));
-        assertThat(kvittering.get(MANGLENDE_DOKUMENTER), contains(sendSenereVedlegg));
+        assertThat(kvittering.getBehandlingsId(), is(soknad.getBehandlingsId()));
+        assertThat(kvittering.getBehandlingskjedeId(), is(soknad.getBehandlingskjedeId()));
+        assertThat(kvittering.getKvitteringstype(), is(soknad.getType()));
+        assertThat(kvittering.getBehandlingDato(), is(soknad.getInnsendtDato()));
+        assertThat(kvittering.getSkjemanummerRef(), is(soknad.getSkjemanummerRef()));
+        assertThat(kvittering.getBehandlingsStatus(), is(FERDIG_BEHANDLET));
+        assertThat(kvittering.getBehandlingkvittering(), is(KVITTERING));
+        assertThat(kvittering.getEttersending(), is(soknad.getEttersending()));
+        assertThat(kvittering.getInnsendteDokumenter(), contains(innsendtHovedskjema, innsendtVedlegg));
+        assertThat(kvittering.getManglendeDokumenter(), contains(sendSenereVedlegg));
     }
 
     @Test
     public void skalLeggeTilHovedskjemaPaaKvitteringHvisHovedskjemaErInnsendt() {
-        Record<DokumentFraHenvendelse> innsendtHovedskjema = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, LASTET_OPP).with(KODEVERK_REF, "kodeverk1");
+        DokumentFraHenvendelse innsendtHovedskjema = new DokumentFraHenvendelse().withErHovedskjema(true).withInnsendingsvalg(LASTET_OPP).withKodeverkRef("kodeverk1");
 
-        Record<Soknad> soknad = new Record<Soknad>()
-                .with(DOKUMENTER, asList(innsendtHovedskjema));
+        Soknad soknad = new Soknad()
+                .withDokumenter(asList(innsendtHovedskjema));
 
-        Record<Kvittering> kvittering = SOKNAD_TIL_KVITTERING.transform(soknad);
+        Behandling kvittering = SOKNAD_TIL_KVITTERING.apply(soknad);
 
-        assertThat(kvittering.get(INNSENDTE_DOKUMENTER).size(), is(1));
-        assertThat(kvittering.get(INNSENDTE_DOKUMENTER), contains(innsendtHovedskjema));
+        assertThat(kvittering.getInnsendteDokumenter().size(), is(1));
+        assertThat(kvittering.getInnsendteDokumenter(), contains(innsendtHovedskjema));
     }
 
     @Test
     public void skalIkkeLeggeTilHovedskjemaPaaKvitteringHvisHovedskjemaIkkeErInnsendt() {
-        Record<DokumentFraHenvendelse> innsendtHovedskjema = new Record<DokumentFraHenvendelse>().with(HOVEDSKJEMA, true).with(INNSENDINGSVALG, SEND_SENERE).with(KODEVERK_REF, "kodeverk1");
+        DokumentFraHenvendelse innsendtHovedskjema = new DokumentFraHenvendelse().withErHovedskjema(true).withInnsendingsvalg(SEND_SENERE).withKodeverkRef("kodeverk1");
 
-        Record<Soknad> soknad = new Record<Soknad>()
-                .with(DOKUMENTER, asList(innsendtHovedskjema));
+        Soknad soknad = new Soknad()
+                .withDokumenter(asList(innsendtHovedskjema));
 
-        Record<Kvittering> kvittering = SOKNAD_TIL_KVITTERING.transform(soknad);
+        Behandling kvittering = SOKNAD_TIL_KVITTERING.apply(soknad);
 
-        assertThat(kvittering.get(INNSENDTE_DOKUMENTER).size(), is(0));
-        assertThat(kvittering.get(MANGLENDE_DOKUMENTER).size(), is(0));
+        assertThat(kvittering.getInnsendteDokumenter().size(), is(0));
+        assertThat(kvittering.getManglendeDokumenter().size(), is(0));
+    }
+
+    @Test
+    public void transformTilSoknadOk() {
+        DateTime opprettetdato = new DateTime();
+        DateTime innsendtdato = new DateTime();
+        DateTime sistendretdato = new DateTime();
+        WSSoknad wsSoknad = new WSSoknad()
+                .withBehandlingsId("behandlingid")
+                .withBehandlingsKjedeId("behandlingkjedeid")
+                .withJournalpostId("journalpostid")
+                .withHenvendelseStatus(UNDER_ARBEID.name())
+                .withOpprettetDato(opprettetdato)
+                .withInnsendtDato(innsendtdato)
+                .withSistEndretDato(sistendretdato)
+                .withHovedskjemaKodeverkId("hovedskjemakodeverkref")
+                .withEttersending(false)
+                .withHenvendelseType(DOKUMENTINNSENDING.name())
+                .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(asList(
+                        new WSDokumentforventning()
+                                .withKodeverkId("dokKodeverkRef1")
+                                .withTilleggsTittel("tilleggstittel1")
+                                .withUuid("uuid1")
+                                .withArkivreferanse("arkivreferanse1")
+                                .withInnsendingsvalg(INNSENDT.name()),
+                        new WSDokumentforventning()
+                                .withKodeverkId("hovedskjemakodeverkref")
+                                .withTilleggsTittel("tilleggstittel2")
+                                .withUuid("uuid2")
+                                .withArkivreferanse("arkivreferanse2")
+                                .withInnsendingsvalg(INNSENDT.name())
+                )));
+
+        Soknad soknad = transformTilSoknad(wsSoknad);
+
+        assertThat(soknad.getBehandlingsId(), is("behandlingid"));
+        assertThat(soknad.getBehandlingskjedeId(), is("behandlingkjedeid"));
+        assertThat(soknad.getJournalpostId(), is("journalpostid"));
+        assertThat(soknad.getStatus(), is(UNDER_ARBEID));
+        assertThat(soknad.getOpprettetDato(), is(opprettetdato));
+        assertThat(soknad.getInnsendtDato(), is(innsendtdato));
+        assertThat(soknad.getSistendretDato(), is(sistendretdato));
+        assertThat(soknad.getSkjemanummerRef(), is("hovedskjemakodeverkref"));
+        assertThat(soknad.getEttersending(), is(false));
+        assertThat(soknad.getType(), is(DOKUMENTINNSENDING));
+        assertThat(soknad.getDokumenter().size(), is(2));
+        assertThat(soknad.getDokumenter().get(0).getKodeverkRef(), is("dokKodeverkRef1"));
+        assertThat(soknad.getDokumenter().get(0).erHovedskjema(), is(false));
+        assertThat(soknad.getDokumenter().get(1).getKodeverkRef(), is("hovedskjemakodeverkref"));
+        assertThat(soknad.getDokumenter().get(1).erHovedskjema(), is(true));
+    }
+
+    @Test
+    public void brukerBehandlingsIdHvisBehandlingskjedeIdErNull() {
+        WSSoknad wsSoknad = new WSSoknad()
+                .withBehandlingsId("behandlingid")
+                .withBehandlingsKjedeId(null)
+                .withHenvendelseStatus(UNDER_ARBEID.name())
+                .withHenvendelseType(DOKUMENTINNSENDING.name());
+
+        Soknad soknad = transformTilSoknad(wsSoknad);
+
+        assertThat(soknad.getBehandlingsId(), is("behandlingid"));
+        assertThat(soknad.getBehandlingskjedeId(), is("behandlingid"));
     }
 
 }

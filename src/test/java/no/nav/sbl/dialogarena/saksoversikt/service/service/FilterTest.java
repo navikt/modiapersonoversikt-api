@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
@@ -17,6 +18,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSSak;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -25,15 +28,15 @@ import static org.mockito.Mockito.when;
 public class FilterTest {
 
     @Mock
-    private CmsContentRetriever cmsContentRetriever;
+    private CmsContentRetriever cms;
 
     @InjectMocks
     private Filter filter = new Filter();
 
     @Before
     public void setup() {
-        when(cmsContentRetriever.hentTekst("filter.ulovligesakstema")).thenReturn("FEI, SAK,SAP  ");
-        when(cmsContentRetriever.hentTekst("filter.lovligebehandlingstyper")).thenReturn("ae0047,ae0034,ae0014");
+        when(cms.hentTekst("filter.lovligebehandlingstyper")).thenReturn("ae0047,ae0034,ae0014,ae0020,ae0019,ae0011,ae0045");
+        when(cms.hentTekst("filter.ulovligesakstema")).thenReturn("FEI,SAK,SAP,OPP,YRA,GEN,AAR,KLA,HEL");
     }
 
     @Test
@@ -151,6 +154,55 @@ public class FilterTest {
 
         List<WSSak> filtrerteSaker = filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(3));
+    }
+
+    @Test
+    public void filtrerBehandlingerOk() {
+        List<Behandling> behandling = filter.filtrerBehandlinger(lovligBehandling());
+        assertThat(behandling.size(), is(1));
+    }
+
+    @Test
+    public void filtrerBehandlingerUlovligPrefix() {
+        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligPrefix());
+        assertThat(behandling.size(), is(0));
+    }
+
+    @Test
+    public void filtrerBehandlingerUlovligBehandlingsstatus() {
+        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligBehandlingsstatus());
+        assertThat(behandling.size(), is(0));
+    }
+
+    private List<Behandling> lovligBehandling() {
+        return asList(
+                new Behandling()
+                        .withBehandlingKvittering(KVITTERING)
+                        .withBehandlingsType(Filter.SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingStatus(FERDIG_BEHANDLET)
+                        .withPrefix("11")
+
+        );
+    }
+
+    private List<Behandling> ulovligPrefix() {
+        return asList(
+                new Behandling()
+                        .withBehandlingsType(Filter.SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingStatus(FERDIG_BEHANDLET)
+                        .withPrefix("17")
+
+        );
+    }
+
+    private List<Behandling> ulovligBehandlingsstatus() {
+        return asList(
+                new Behandling()
+                        .withBehandlingsType(Filter.SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingStatus(FERDIG_BEHANDLET)
+                        .withPrefix("11")
+
+        );
     }
 
 }

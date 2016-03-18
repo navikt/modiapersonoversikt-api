@@ -1,28 +1,78 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
-import no.nav.sbl.dialogarena.common.records.Key;
-import no.nav.sbl.dialogarena.common.records.Record;
-import org.apache.commons.collections15.Predicate;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 
 public class DokumentFraHenvendelse {
 
-    public static final Key<String> KODEVERK_REF = new Key<>("KODEVERK_REF");
-    public static final Key<String> TILLEGGSTITTEL = new Key<>("TILLEGGSTITTEL");
-    public static final Key<String> ARKIVREFERANSE = new Key<>("ARKIVREFERANSE");
-    public static final Key<String> UUID = new Key<>("UUID");
-    public static final Key<Innsendingsvalg> INNSENDINGSVALG = new Key<>("INNSENDINGSVALG");
-    public static final Key<Boolean> HOVEDSKJEMA = new Key<>("HOVEDSKJEMA");
+    private String kodeverkRef;
+    private String tilleggstittel;
+    private String arkivreferanse;
+    private String uuid;
+    private Innsendingsvalg innsendingsvalg;
+    private Boolean hovedskjema;
 
+    public static final Predicate<DokumentFraHenvendelse> INNSENDT = dokument -> asList(Innsendingsvalg.INNSENDT, Innsendingsvalg.LASTET_OPP).contains(dokument.innsendingsvalg);
 
-    public static final Predicate<Record<DokumentFraHenvendelse>> INNSENDT = dokument -> asList(Innsendingsvalg.INNSENDT, Innsendingsvalg.LASTET_OPP).contains(dokument.get(INNSENDINGSVALG));
-
-    public static final Predicate<Record<DokumentFraHenvendelse>> ER_HOVEDSKJEMA = dokument -> dokument.get(HOVEDSKJEMA);
-
-    public static final Predicate<Record<DokumentFraHenvendelse>> ER_KVITTERING = dokument -> dokument.get(KODEVERK_REF).equals("L7");
+    public static final Predicate<DokumentFraHenvendelse> ER_KVITTERING = dokument -> dokument.kodeverkRef.equals("L7");
 
     public enum Innsendingsvalg {
         IKKE_VALGT, SEND_SENERE, LASTET_OPP, SENDES_IKKE, VEDLEGG_SENDES_IKKE, VEDLEGG_SENDES_AV_ANDRE, INNSENDT, VEDLEGG_ALLEREDE_SENDT
+    }
+
+    public String getTilleggstittel() {
+        return tilleggstittel;
+    }
+
+    public String getArkivreferanse() {
+        return arkivreferanse;
+    }
+
+    public String getKodeverkRef() {
+        return kodeverkRef;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Boolean erHovedskjema() {
+        return hovedskjema;
+    }
+
+    public Innsendingsvalg getInnsendingsvalg() {
+        return innsendingsvalg;
+    }
+
+
+    public DokumentFraHenvendelse withKodeverkRef(String kodeverkRef) {
+        this.kodeverkRef = kodeverkRef;
+        return this;
+    }
+
+    public DokumentFraHenvendelse withTilleggstittel(String tilleggstittel) {
+        this.tilleggstittel = tilleggstittel;
+        return this;
+    }
+
+    public DokumentFraHenvendelse withArkivreferanse(String arkivreferanse) {
+        this.arkivreferanse = arkivreferanse;
+        return this;
+    }
+
+    public DokumentFraHenvendelse withUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
+
+    public DokumentFraHenvendelse withErHovedskjema(Boolean hovedskjema) {
+        this.hovedskjema = hovedskjema;
+        return this;
+    }
+
+    public DokumentFraHenvendelse withInnsendingsvalg(Innsendingsvalg innsendingsvalg) {
+        this.innsendingsvalg = innsendingsvalg;
+        return this;
     }
 }
