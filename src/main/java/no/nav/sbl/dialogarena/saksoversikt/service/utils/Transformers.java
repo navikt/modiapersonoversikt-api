@@ -103,9 +103,14 @@ public class Transformers {
     }
 
     public static Soknad transformTilSoknad(WSSoknad wsSoknad) {
+        String behandlingskjedeId = wsSoknad.getBehandlingsId();
+
+        if (wsSoknad.getBehandlingsKjedeId() != null && !wsSoknad.getBehandlingsKjedeId().isEmpty()) {
+            behandlingskjedeId = wsSoknad.getBehandlingsKjedeId();
+        }
         return new Soknad()
                 .withBehandlingsId(wsSoknad.getBehandlingsId())
-                .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
+                .withBehandlingskjedeId(behandlingskjedeId)
                 .withJournalpostId(wsSoknad.getJournalpostId())
                 .withStatus(HenvendelseStatus.valueOf(wsSoknad.getHenvendelseStatus()))
                 .withOpprettetDato(wsSoknad.getOpprettetDato())
