@@ -12,6 +12,11 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappe
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +37,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.of;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.*;
@@ -70,10 +77,7 @@ public class SaksServiceTest {
     private BulletproofKodeverkService kodeverk;
 
     @Mock
-    DokumentMetadataService dokumentMetadataService;
-
-    @Mock
-    private ExecutorService executorService;
+    private DokumentMetadataService dokumentMetadataService;
 
     @Mock
     private SakstemaGrupperer sakstemaGrupperer;
@@ -81,10 +85,9 @@ public class SaksServiceTest {
     @InjectMocks
     private SaksService saksService = new SaksService();
 
+    private static final String FNR = "12345678901";
     @Before
     public void setup() {
-        Future<Object> futurePesys = getFuturePesys();
-        when(executorService.submit(any(Callable.class))).thenReturn(futurePesys);
         when(request.getSession()).thenReturn(new MockHttpSession());
     }
 
@@ -94,7 +97,7 @@ public class SaksServiceTest {
                 new Soknad().withStatus(UNDER_ARBEID).withOpprettetDato(new DateTime()),
                 new Soknad().withStatus(UNDER_ARBEID).withOpprettetDato(new DateTime())
         ));
-        assertThat(saksService.hentPaabegynteSoknader("12345678901").size(), equalTo(2));
+        assertThat(saksService.hentPaabegynteSoknader(FNR).size(), equalTo(2));
     }
 
     private Sak lagSakMedAvsluttetDato(Optional<DateTime> date) {
@@ -120,7 +123,7 @@ public class SaksServiceTest {
             put("RESTERENDE_TEMA", new HashSet<>(asList(DAGPENGER)));
         }});
 
-        List<Sakstema> sakstema = saksService.hentSakstema(saker, "12345678901", true).resultat;
+        List<Sakstema> sakstema = saksService.hentSakstema(saker, FNR, true).resultat;
 
         assertTrue(sakstema.size() == 1);
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
@@ -201,7 +204,7 @@ public class SaksServiceTest {
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
                         .withDato(LocalDateTime.now())
-                        .withBaksystem(Baksystem.JOARK)
+                        .withBaksystem(JOARK)
                         .withHoveddokument(
                                 new Dokument()
                                         .withTittel("TEST"))), emptyMap());
@@ -236,13 +239,81 @@ public class SaksServiceTest {
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
                         .withDato(LocalDateTime.now())
-                        .withBaksystem(Baksystem.HENVENDELSE)
+                        .withBaksystem(HENVENDELSE)
                         .withTemakode("OPP")
                         .withHoveddokument(
                                 new Dokument()
                                         .withTittel("Tilhorende Oppfolging"))), emptyMap());
 
         assertThat(wrapper.resultat.size(), is(2));
+    }
+
+    @Test
+    public void sakFraSakogBehandlingUtenTilhoerendeSakstemaOppretterEgetSakstema() {
+        when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
+        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(emptyMap());
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), FNR, false);
+
+        assertThat(listResultatWrapper.resultat.size(), is(1));
+        assertThat(listResultatWrapper.resultat.get(0).temakode, is("DAG"));
+    }
+
+    @Test
+    public void sakFraSakogBehandlingMedTilhoerendeSakstemaOppretterIkkeEgetSakstema() {
+        when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG").withBaksystem(HENVENDELSE))));
+        Map<String, Set<String>> gruppertTema = new HashMap<>();
+        Set set = new HashSet<>();
+        set.add("DAG");
+        gruppertTema.put("RESTERENDE_TEMA", set);
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(gruppertTema);
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), FNR, false);
+
+        assertThat(listResultatWrapper.resultat.size(), is(1));
+        assertThat(listResultatWrapper.resultat.get(0).temakode, is("DAG"));
+    }
+
+
+    @Test
+    public void forskjelligTemakodeSakOgBehandlingOgAnnet() {
+        when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTemanavnForTemakode("FOR", BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Foreldrepenger");
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(HENVENDELSE))));
+
+        Map<String, Set<String>> gruppertTema = new HashMap<>();
+        Set set = new HashSet<>();
+        set.add("FOR");
+        gruppertTema.put("RESTERENDE_TEMA", set);
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(gruppertTema);
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(emptyList(), FNR, false);
+
+        assertThat(listResultatWrapper.resultat.size(), is(2));
+    }
+
+    private WSSak sakFraSakOgBehandling() {
+        return new WSSak().withBehandlingskjede(new WSBehandlingskjede()
+                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(Filter.OPPRETTET))
+                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.OPPRETTET))
+                .withBehandlingsListeRef("henvendelsesId")
+                .withSisteBehandlingREF("henvendelsesId")
+                .withStart(new DateTime().minusDays(1))
+                .withSlutt(null));
     }
 
     @Test
@@ -277,7 +348,7 @@ public class SaksServiceTest {
                         .withAvsender(Entitet.NAV)
                         .withRetning(Kommunikasjonsretning.UT)
                         .withDato(LocalDateTime.now())
-                        .withBaksystem(Baksystem.JOARK)
+                        .withBaksystem(JOARK)
                         .withHoveddokument(
                                 new Dokument()
                                         .withTittel("TEST"))), emptyMap());
@@ -306,7 +377,7 @@ public class SaksServiceTest {
                                 .withAvsender(Entitet.NAV)
                                 .withRetning(Kommunikasjonsretning.UT)
                                 .withDato(LocalDateTime.now())
-                                .withBaksystem(Baksystem.JOARK)
+                                .withBaksystem(JOARK)
                                 .withHoveddokument(
                                         new Dokument()
                                                 .withTittel("TEST")),
@@ -316,7 +387,7 @@ public class SaksServiceTest {
                                         .withAvsender(Entitet.NAV)
                                         .withRetning(Kommunikasjonsretning.UT)
                                         .withDato(LocalDateTime.now())
-                                        .withBaksystem(Baksystem.JOARK)
+                                        .withBaksystem(JOARK)
                                         .withHoveddokument(
                                                 new Dokument()
                                                         .withTittel("TEST")))
@@ -336,34 +407,5 @@ public class SaksServiceTest {
 
         assertThat(wrapper.resultat.size(), is(1));
         assertThat(wrapper.resultat.get(0).temakode, is(OPPFOLGING));
-    }
-
-    private Future<Object> getFuturePesys() {
-        return new Future<Object>() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
-                return false;
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
-
-            @Override
-            public boolean isDone() {
-                return false;
-            }
-
-            @Override
-            public Stream<Sak> get() throws InterruptedException, ExecutionException {
-                return Stream.empty();
-            }
-
-            @Override
-            public Stream<Sak> get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-                return null;
-            }
-        };
     }
 }
