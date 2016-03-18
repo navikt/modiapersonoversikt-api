@@ -5,7 +5,7 @@ import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.behandlebrukerprofil.consumer.support.DefaultBehandleBrukerprofilService;
 import no.nav.behandlebrukerprofil.consumer.support.mapping.BehandleBrukerprofilMapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.BehandleBrukerprofilPortType;
+import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.BehandleBrukerprofilV2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -21,10 +21,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class BehandleBrukerprofilWrapper {
 
     @Inject
-    private BehandleBrukerprofilPortType behandleBrukerprofilPortType;
+    private BehandleBrukerprofilV2 behandleBrukerprofilPortType;
 
     @Inject
-    private BehandleBrukerprofilPortType selfTestBehandleBrukerprofilPortType;
+    private BehandleBrukerprofilV2 selfTestBehandleBrukerprofilPortType;
 
     @Inject
     private CacheManager cacheManager;
