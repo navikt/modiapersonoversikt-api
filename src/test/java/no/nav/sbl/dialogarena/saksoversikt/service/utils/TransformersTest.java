@@ -131,4 +131,18 @@ public class TransformersTest {
         assertThat(soknad.getDokumenter().get(1).erHovedskjema(), is(true));
     }
 
+    @Test
+    public void brukerBehandlingsIdHvisBehandlingskjedeIdErNull() {
+        WSSoknad wsSoknad = new WSSoknad()
+                .withBehandlingsId("behandlingid")
+                .withBehandlingsKjedeId(null)
+                .withHenvendelseStatus(UNDER_ARBEID.name())
+                .withHenvendelseType(DOKUMENTINNSENDING.name());
+
+        Soknad soknad = transformTilSoknad(wsSoknad);
+
+        assertThat(soknad.getBehandlingsId(), is("behandlingid"));
+        assertThat(soknad.getBehandlingskjedeId(), is("behandlingid"));
+    }
+
 }
