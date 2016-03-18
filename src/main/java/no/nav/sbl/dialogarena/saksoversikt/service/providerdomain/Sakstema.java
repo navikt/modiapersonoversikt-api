@@ -2,15 +2,17 @@ package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 public class Sakstema {
 
     public String temakode;
     public String temanavn;
     public boolean erGruppert;
-    public List<Behandlingskjede> behandlingskjeder;
-    public List<DokumentMetadata> dokumentMetadata;
-    public List<Sak> tilhorendeSaker;
-    public List<Integer> feilkoder;
+    public List<Behandlingskjede> behandlingskjeder = emptyList();
+    public List<DokumentMetadata> dokumentMetadata = emptyList();
+    public List<Sak> tilhorendeSaker = emptyList();
+    public List<Integer> feilkoder = emptyList();
 
     @Override
     public boolean equals(Object o) {

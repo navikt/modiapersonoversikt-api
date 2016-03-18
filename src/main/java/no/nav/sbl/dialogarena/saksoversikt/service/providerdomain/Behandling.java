@@ -4,7 +4,10 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.*;
 
 public class Behandling implements Serializable {
     public DateTime opprettetDato;
@@ -17,8 +20,8 @@ public class Behandling implements Serializable {
     public String skjemanummerRef;
     public String behandlingsId;
     public String prefix;
-    private List<DokumentFraHenvendelse> innsendteDokumenter;
-    private List<DokumentFraHenvendelse> manglendeDokumenter;
+    private List<DokumentFraHenvendelse> innsendteDokumenter = emptyList();
+    private List<DokumentFraHenvendelse> manglendeDokumenter = emptyList();
     private String behandlingskjedeId;
     private HenvendelseType kvitteringstype;
 
