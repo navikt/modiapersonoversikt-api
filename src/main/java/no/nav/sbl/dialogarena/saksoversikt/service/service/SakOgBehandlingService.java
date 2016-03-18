@@ -10,6 +10,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class SakOgBehandlingService {
     public List<WSSak> hentSakerForAktor(String aktorId) {
         try {
             return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
-        } catch (RuntimeException ex) {
+        } catch (SOAPFaultException ex) {
             logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex);
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
@@ -48,7 +49,7 @@ public class SakOgBehandlingService {
             String aktorId = fnrAktor.hentAktorIdForFnr(fnr);
             List<WSSak> sobSaker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
             return filter.filtrerSaker(sobSaker);
-        } catch (RuntimeException ex) {
+        } catch (SOAPFaultException ex) {
             logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex);
             throw new FeilendeBaksystemException(SAK_OG_BEHANDLING);
         }

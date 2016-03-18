@@ -10,6 +10,9 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.meldinger.WSHentSakSammendragLis
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPFault;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -40,7 +43,7 @@ public class PesysService {
         } catch (HentSakSammendragListeSakManglerEierenhet | HentSakSammendragListePersonIkkeFunnet e) {
             LOGGER.warn("Det skjedde en ventet exception ved henting av Sakstema fra Pesys");
             return Optional.empty();
-        } catch (RuntimeException e) {
+        } catch (SOAPFaultException e) {
             LOGGER.error("Det skjedde en uventet feil mot Pesys", e);
             throw new FeilendeBaksystemException(PESYS);
         }
