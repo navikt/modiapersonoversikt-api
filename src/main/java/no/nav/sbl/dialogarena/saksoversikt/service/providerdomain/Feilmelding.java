@@ -11,7 +11,8 @@ public enum Feilmelding {
     IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER("feilmelding.journalfortfeil"),
     SAKSBEHANDLER_IKKE_TILGANG("feilmelding.saksbehandlerikketilgang"),
     TEMAKODE_ER_BIDRAG("feilmelding.sikkerhetsbegrensning"),
-    KORRUPT_PDF("feilmelding.korruptpdf");
+    KORRUPT_PDF("feilmelding.korruptpdf"),
+    TEKNISK_FEIL("feilmelding.teknisk");
 
     public final String feilmeldingKey;
 
