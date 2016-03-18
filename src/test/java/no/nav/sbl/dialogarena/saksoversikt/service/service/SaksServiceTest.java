@@ -1,13 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
@@ -29,15 +23,12 @@ import org.springframework.mock.web.MockHttpSession;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
+import static java.util.Collections.*;
 import static java.util.Optional.of;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA;
@@ -356,34 +347,5 @@ public class SaksServiceTest {
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Arbeidsavklaringspenger og oppfølging"));
         assertThat(wrapper.resultat.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
         assertThat(wrapper.resultat.size(), is(2));
-    }
-
-    private Future<Object> getFuturePesys() {
-        return new Future<Object>() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
-                return false;
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
-
-            @Override
-            public boolean isDone() {
-                return false;
-            }
-
-            @Override
-            public Stream<Sak> get() throws InterruptedException, ExecutionException {
-                return Stream.empty();
-            }
-
-            @Override
-            public Stream<Sak> get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-                return null;
-            }
-        };
     }
 }
