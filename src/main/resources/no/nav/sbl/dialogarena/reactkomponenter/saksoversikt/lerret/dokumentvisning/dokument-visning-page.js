@@ -7,7 +7,7 @@ import VedleggFeilmeldingListe from './vedlegg-veilmelding-liste';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';
-import DokumentVisningListe from './DokumentVisningListe';
+import DokumentVisningListe from './dokument-visning-liste';
 import { FormattedMessage, FormattedDate } from 'react-intl';
 import KulemenyListe from './kulemeny/kulemeny-liste';
 
