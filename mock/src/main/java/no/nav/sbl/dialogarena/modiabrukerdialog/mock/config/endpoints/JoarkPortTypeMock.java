@@ -1,111 +1,210 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.journal.v1.*;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSArkivtemaer;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalpost;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSJournalstatuser;
-import no.nav.tjeneste.virksomhet.journal.v1.informasjon.WSSak;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentDokumentRequest;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentDokumentResponse;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentJournalpostRequest;
-import no.nav.tjeneste.virksomhet.journal.v1.meldinger.WSHentJournalpostResponse;
-import org.apache.commons.io.IOUtils;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import no.nav.tjeneste.virksomhet.journal.v2.*;
+import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
+import no.nav.tjeneste.virksomhet.journal.v2.meldinger.*;
+import org.joda.time.DateTime;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import java.io.IOException;
-import java.util.Map;
+import static java.util.Arrays.asList;
 
-import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakSakV1PortTypeMock.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-@Configuration
 public class JoarkPortTypeMock {
+    public static JournalV2 createInnsynJournalV1Mock() {
 
-    private static WSJournalpost defaultJournalpost = createJournalpost(JOURNALPOSTID_DEFAULT, "J", SAK_MED_INNSENDER, false, "DAG");
+        return new JournalV2() {
 
-    private static Map<String, WSJournalpost> journalpostMap =
-            asMap(
-                    JOURNALPOSTID_DEFAULT, defaultJournalpost,
-                    JOURNALPOSTID_FEILREGISTRERT_SAK, createJournalpost(JOURNALPOSTID_FEILREGISTRERT_SAK, "J", SAK_MED_INNSENDER, true, "DAG"),
-                    JOURNALPOSTID_IKKE_JOURNALFORT, createJournalpost(JOURNALPOSTID_IKKE_JOURNALFORT, "N", SAK_MED_INNSENDER, false, "DAG"),
-                    JOURNALPOSTID_IKKE_SAKSPART, createJournalpost(JOURNALPOSTID_IKKE_SAKSPART, "J", SAK_UTEN_INNSENDER, false, "DAG"),
-                    JOURNALPOSTID_DOKUMENT_SLETTET, createJournalpost(JOURNALPOSTID_DOKUMENT_SLETTET, "J", SAK_MED_INNSENDER, false, "DAG")
-            );
-
-    @Bean(name = "joarkPortType")
-    public static Journal_v1PortType getJournalPortTypeMock() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet, HentDokumentDokumentErSlettet, HentDokumentURLDokumentIkkeFunnet, HentJournalpostJournalpostIkkeFunnet, HentJournalpostSikkerhetsbegrensning {
-        Journal_v1PortType mock = mock(Journal_v1PortType.class);
-        when(mock.hentDokument(any(WSHentDokumentRequest.class))).thenAnswer(new Answer<WSHentDokumentResponse>() {
             @Override
-            public WSHentDokumentResponse answer(InvocationOnMock invocation) throws HentDokumentDokumentErSlettet {
-                Object requestArgument = invocation.getArguments()[0];
-                if (requestArgument == null) {
-                    return hentDokumentResponse(JOURNALPOSTID_DEFAULT);
-                }
+            public WSHentJournalpostListeResponse hentJournalpostListe(WSHentJournalpostListeRequest request) throws HentJournalpostListeSikkerhetsbegrensning {
+                WSHentJournalpostListeResponse response = new WSHentJournalpostListeResponse();
 
-                String journalpostId = ((WSHentDokumentRequest) requestArgument).getJournalpostId();
-                return hentDokumentResponse(journalpostId);
+                List<WSJournalpost> journalposts = new ArrayList<>();
+                Map<String, List<WSJournalpost>> journalPoster = new HashMap<>();
+
+                List<WSSak> saker = request.getSakListe();
+
+                getRandomGeneratedJournalposter(journalPoster, saker);
+
+                leggTilJournalposterSomHarSaksidIResponse(journalposts, journalPoster, saker);
+
+                response.getJournalpostListe().addAll(journalposts);
+                return response;
             }
-        });
-        when(mock.hentJournalpost(any(WSHentJournalpostRequest.class))).thenAnswer(new Answer<WSHentJournalpostResponse>() {
+
             @Override
-            public WSHentJournalpostResponse answer(InvocationOnMock invocation) {
-                String journalpostId = ((WSHentJournalpostRequest) invocation.getArguments()[0]).getJournalpostId();
-                return new WSHentJournalpostResponse()
-                        .withJournalpost(hentJournalpostResponse(journalpostId));
+            public WSHentDokumentURLResponse hentDokumentURL(WSHentDokumentURLRequest request) throws HentDokumentURLSikkerhetsbegrensning, HentDokumentURLDokumentIkkeFunnet {
+                return null;
             }
-        });
-        return mock;
+
+            @Override
+            public WSHentDokumentResponse hentDokument(WSHentDokumentRequest request) throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet {
+                return new WSHentDokumentResponse();
+            }
+
+            @Override
+            public void ping() {}
+
+        };
     }
 
-    private static WSHentDokumentResponse hentDokumentResponse(String journalpostId) throws HentDokumentDokumentErSlettet {
-        if (journalpostId.equals(JOURNALPOSTID_DOKUMENT_SLETTET)) {
-            throw new HentDokumentDokumentErSlettet();
-        } else {
-            return new WSHentDokumentResponse()
-                    .withDokument(createDokument());
-        }
+
+    private static void leggTilJournalposterSomHarSaksidIResponse(List<WSJournalpost> journalposts, Map<String, List<WSJournalpost>> journalPoster, List<WSSak> saker) {
+        saker.stream()
+                .forEach(sak -> {
+                    if (journalPoster.containsKey(sak.getSakId())) {
+                        journalposts.addAll(journalPoster.get(sak.getSakId()));
+                    }
+                });
     }
 
-    private static WSJournalpost hentJournalpostResponse(String journalpostId) {
-        if (journalpostMap.containsKey(journalpostId)) {
-            return journalpostMap.get(journalpostId);
-        } else {
-            return defaultJournalpost;
-        }
+    private static void getRandomGeneratedJournalposter(Map<String, List<WSJournalpost>> journalPoster, List<WSSak> saker) {
+        Random randomJournalpostIndex = new Random();
+        IntStream indexJournalpostIndexer = randomJournalpostIndex.ints(0, saker.size()).distinct().limit(4);
+        List<Integer> index = indexJournalpostIndexer.boxed().collect(Collectors.toList());
+        int i = 0;
+        String saksId = saker.get(index.get(i)).getSakId();
+        journalPoster.put(saksId, asList(mottattSoknad(saksId, "DAG", new DateTime().minusDays(20))));
+        saksId = saker.get(index.get(++i)).getSakId();
+        journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OMS", new DateTime().minusDays(40))));
+        saksId = saker.get(index.get(++i)).getSakId();
+        journalPoster.put(saksId, asList(soknadUnderBehandling(saksId, "OPP", new DateTime().minusDays(19))));
+        saksId = saker.get(index.get(++i)).getSakId();
+        journalPoster.put(saksId, asList(
+                soknadUnderBehandling(saksId, "DAG", new DateTime().minusDays(100)),
+                mottattSoknad(saksId, "DAG", new DateTime()),
+                mottattBekreftelse(saksId, "DAG", new DateTime().minusDays(200)),
+                forvaltningsnotat(saksId, "DAG", new DateTime())
+        ));
     }
 
-    private static WSJournalpost createJournalpost(String journalpostId, String status, String sakId, boolean feilregistrert, String tema) {
-        return new WSJournalpost()
-                .withJournalpostId(journalpostId)
-                .withJournalstatus(createJournalStatus(status))
-                .withGjelderSak(createSak(sakId, feilregistrert))
-                .withArkivtema(new WSArkivtemaer().withValue(tema));
-    }
 
-    private static WSSak createSak(String sakId, boolean feilregistrert) {
-        return new WSSak()
-                .withSakId(sakId)
-                .withErFeilregistrert(feilregistrert);
-    }
-
-    private static WSJournalstatuser createJournalStatus(String verdi) {
-        return new WSJournalstatuser()
-                .withValue(verdi);
-    }
-
-    private static byte[] createDokument() {
+    private static WSJournalpost mottattSoknad(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
+        journalpost.setJournalpostId(id);
+        journalpost.setEksternPart(new WSPerson().withIdent("12345678901").withNavn("Andreas"));
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
+        arkivtemaer.setValue(tema);
+        journalpost.setArkivtema(arkivtemaer);
+        WSRegistertSak sak = new WSRegistertSak();
+        sak.setSakId(id);
+        journalpost.setGjelderSak(sak);
+        journalpost.getDokumentinfoRelasjonListe()
+                .add(dokumentInfoRelasjonMedTittel("Dagpengesøknad"));
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
+        kommunikasjonsretninger.setValue("I");
+        journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
         try {
-            return IOUtils.toByteArray(JoarkPortTypeMock.class.getResourceAsStream("/mock/pdf-vedlegg-mock.pdf"));
-        } catch (IOException e) {
-            throw new RuntimeException("IOException ved henting av Mock PDFen", e);
+            journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(mottattDato.toGregorianCalendar()));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
         }
+        return journalpost;
+    }
+
+    private static WSJournalpost soknadUnderBehandling(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
+        journalpost.setJournalpostId(id);
+        journalpost.setEksternPart(new WSPerson().withIdent("12345678901").withNavn("Andreas"));
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
+        arkivtemaer.setValue(tema);
+        journalpost.setArkivtema(arkivtemaer);
+        WSRegistertSak sak = new WSRegistertSak();
+        sak.setSakId(id);
+        journalpost.setGjelderSak(sak);
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
+        kommunikasjonsretninger.setValue("I");
+        journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
+        journalpost.getDokumentinfoRelasjonListe().add(dokumentInfoRelasjonMedTittel("Klage om behandling av dagpenger"));
+        try {
+            journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(mottattDato.toGregorianCalendar()));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        return journalpost;
+    }
+
+
+    private static WSJournalpost mottattBekreftelse(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
+        journalpost.setJournalpostId(id);
+        journalpost.setEksternPart(new WSPerson().withIdent("12345678901").withNavn("Andreas"));
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
+        arkivtemaer.setValue(tema);
+        journalpost.setArkivtema(arkivtemaer);
+        WSRegistertSak sak = new WSRegistertSak();
+        sak.setSakId(id);
+        journalpost.setGjelderSak(sak);
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
+        kommunikasjonsretninger.setValue("U");
+        journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
+        journalpost.getDokumentinfoRelasjonListe().add(dokumentInfoRelasjonMedTittel("Testdata dagpenger"));
+        try {
+            journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(mottattDato.toGregorianCalendar()));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        return journalpost;
+    }
+
+
+    private static WSJournalpost forvaltningsnotat(String id, String tema, DateTime mottattDato) {
+        WSJournalpost journalpost = new WSJournalpost();
+        journalpost.setJournalpostId(id);
+        WSArkivtemaer arkivtemaer = new WSArkivtemaer();
+        arkivtemaer.setValue(tema);
+        journalpost.setArkivtema(arkivtemaer);
+        WSRegistertSak sak = new WSRegistertSak();
+        sak.setSakId(id);
+        journalpost.setGjelderSak(sak);
+        WSKommunikasjonsretninger kommunikasjonsretninger = new WSKommunikasjonsretninger();
+        kommunikasjonsretninger.setValue("N");
+        journalpost.setKommunikasjonsretning(kommunikasjonsretninger);
+        journalpost.getDokumentinfoRelasjonListe().add(dokumentInfoRelasjonMedTittel("Tittel på forvaltningsnotat"));
+        journalpost.getDokumentinfoRelasjonListe().add(vedleggInfoRelasjonMedTittel("Tittel på vedlegg for forvaltningsnotat"));
+
+
+        try {
+            journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(mottattDato.toGregorianCalendar()));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        return journalpost;
+    }
+
+    private static WSDokumentinfoRelasjon dokumentInfoRelasjonMedTittel(String tittel) {
+        WSJournalfoertDokumentInfo dokumentInfo = new WSJournalfoertDokumentInfo();
+        dokumentInfo.setTittel(tittel);
+        dokumentInfo.setDokumentId("123");
+        WSDokumentinfoRelasjon dokumentinfoRelasjon = new WSDokumentinfoRelasjon();
+        dokumentinfoRelasjon.setJournalfoertDokument(dokumentInfo);
+        dokumentinfoRelasjon.setDokumentTilknyttetJournalpost(lagTilknyttetJournalpostSom());
+        return dokumentinfoRelasjon;
+    }
+
+    private static WSTilknyttetJournalpostSom lagTilknyttetJournalpostSom() {
+        WSTilknyttetJournalpostSom tilknyttetJournalpostSom = new WSTilknyttetJournalpostSom();
+        tilknyttetJournalpostSom.setValue("HOVEDDOKUMENT");
+
+        return tilknyttetJournalpostSom;
+    }
+
+    private static WSDokumentinfoRelasjon vedleggInfoRelasjonMedTittel(String tittel) {
+        WSJournalfoertDokumentInfo dokumentInfo = new WSJournalfoertDokumentInfo();
+        dokumentInfo.setTittel(tittel);
+        dokumentInfo.setDokumentId("456");
+        WSDokumentinfoRelasjon dokumentinfoRelasjon = new WSDokumentinfoRelasjon();
+        dokumentinfoRelasjon.setJournalfoertDokument(dokumentInfo);
+        dokumentinfoRelasjon.setDokumentTilknyttetJournalpost(lagTilknyttetJournalpostSomVedlegg());
+        return dokumentinfoRelasjon;
+    }
+
+    private static WSTilknyttetJournalpostSom lagTilknyttetJournalpostSomVedlegg() {
+        WSTilknyttetJournalpostSom tilknyttetJournalpostSom = new WSTilknyttetJournalpostSom();
+        tilknyttetJournalpostSom.setValue("VEDLEGG");
+
+        return tilknyttetJournalpostSom;
     }
 }

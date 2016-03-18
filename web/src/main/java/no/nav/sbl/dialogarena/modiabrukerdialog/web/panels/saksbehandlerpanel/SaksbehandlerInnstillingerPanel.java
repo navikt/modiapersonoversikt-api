@@ -47,7 +47,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
         valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
-        RadioGroup<String> gruppe = new RadioGroup<>("enhet", new PropertyModel<String>(this, "valgtEnhet"));
+        RadioGroup<String> gruppe = new RadioGroup<>("enhet", new PropertyModel<>(this, "valgtEnhet"));
         gruppe.setRequired(true);
 
         gruppe.add(new PropertyListView<AnsattEnhet>("enhetsvalg", ansattService.hentEnhetsliste()) {

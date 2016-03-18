@@ -32,11 +32,6 @@ public class SkrivestotteController {
     @GET
     @Path("alletags")
     public Set<String> hentAlleTags() {
-        return on(skrivestotteSok.sok("")).flatmap(new Transformer<SkrivestotteTekst, List<String>>() {
-            @Override
-            public List<String> transform(SkrivestotteTekst skrivestotteTekst) {
-                return skrivestotteTekst.tags;
-            }
-        }).collectIn(new HashSet<String>());
+        return on(skrivestotteSok.sok("")).flatmap(skrivestotteTekst -> skrivestotteTekst.tags).collectIn(new HashSet<>());
     }
 }

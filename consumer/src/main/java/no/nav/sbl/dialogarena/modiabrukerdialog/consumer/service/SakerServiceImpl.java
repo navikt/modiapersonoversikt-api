@@ -28,6 +28,7 @@ import org.apache.commons.collections15.Transformer;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
@@ -116,7 +117,7 @@ public class SakerServiceImpl implements SakerService {
     private List<Sak> hentSakerFraGsak(String fnr) {
         try {
             WSFinnSakResponse response = sakV1.finnSak(new WSFinnSakRequest().withBruker(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson().withIdent(fnr)));
-            return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<Sak>());
+            return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<>());
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
             throw new RuntimeException(e);
         }
@@ -134,11 +135,7 @@ public class SakerServiceImpl implements SakerService {
 
     private void leggTilManglendeGenerelleSaker(List<Sak> saker) {
         List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
-        for (String temakode : GODKJENTE_TEMA_FOR_GENERELLE) {
-            if (!on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode))) && !TEMAKODE_OPPFOLGING.equals(temakode)) {
-                saker.add(lagGenerellSak(temakode));
-            }
-        }
+        saker.addAll(GODKJENTE_TEMA_FOR_GENERELLE.stream().filter(temakode -> !on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode))) && !TEMAKODE_OPPFOLGING.equals(temakode)).map(SakerServiceImpl::lagGenerellSak).collect(Collectors.toList()));
     }
 
     private void behandleOppfolgingsSaker(List<Sak> saker) {
@@ -184,56 +181,40 @@ public class SakerServiceImpl implements SakerService {
         try {
             return on(arbeidOgAktivitet.hentSakListe(request).getSakListe())
                     .head()
-                    .map(new Transformer<no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak, Sak>() {
-                        @Override
-                        public Sak transform(no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak arenaSak) {
-                            Sak sak = new Sak();
-                            sak.saksId = optional(arenaSak.getSaksId());
-                            sak.fagsystemSaksId = optional(arenaSak.getSaksId());
-                            sak.fagsystemKode = FAGSYSTEMKODE_ARENA;
-                            sak.sakstype = SAKSTYPE_MED_FAGSAK;
-                            sak.temaKode = arenaSak.getFagomradeKode().getKode();
-                            sak.opprettetDato = arenaSak.getEndringsInfo().getOpprettetDato().toDateTimeAtStartOfDay();
-                            sak.finnesIGsak = false;
-                            return sak;
-                        }
+                    .map(arenaSak -> {
+                        Sak sak = new Sak();
+                        sak.saksId = optional(arenaSak.getSaksId());
+                        sak.fagsystemSaksId = optional(arenaSak.getSaksId());
+                        sak.fagsystemKode = FAGSYSTEMKODE_ARENA;
+                        sak.sakstype = SAKSTYPE_MED_FAGSAK;
+                        sak.temaKode = arenaSak.getFagomradeKode().getKode();
+                        sak.opprettetDato = arenaSak.getEndringsInfo().getOpprettetDato().toDateTimeAtStartOfDay();
+                        sak.finnesIGsak = false;
+                        return sak;
                     });
         } catch (Exception e) {
             return none();
         }
     }
 
-    static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = new Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak>() {
-        @Override
-        public Sak transform(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak wsSak) {
-            Sak sak = new Sak();
-            sak.opprettetDato = wsSak.getOpprettelsetidspunkt();
-            sak.saksId = optional(wsSak.getSakId());
-            sak.fagsystemSaksId = isBlank(wsSak.getFagsystemSakId()) ? Optional.<String>none() : optional(wsSak.getFagsystemSakId());
-            sak.temaKode = wsSak.getFagomraade().getValue();
-            sak.sakstype = wsSak.getSakstype().getValue();
-            sak.fagsystemKode = wsSak.getFagsystem().getValue();
-            sak.finnesIGsak = true;
-            return sak;
-        }
+    static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = wsSak -> {
+        Sak sak = new Sak();
+        sak.opprettetDato = wsSak.getOpprettelsetidspunkt();
+        sak.saksId = optional(wsSak.getSakId());
+        sak.fagsystemSaksId = isBlank(wsSak.getFagsystemSakId()) ? Optional.<String>none() : optional(wsSak.getFagsystemSakId());
+        sak.temaKode = wsSak.getFagomraade().getValue();
+        sak.sakstype = wsSak.getSakstype().getValue();
+        sak.fagsystemKode = wsSak.getFagsystem().getValue();
+        sak.finnesIGsak = true;
+        return sak;
     };
 
-    private static final Predicate<Sak> GODSKJENT_FAGSAK = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return !sak.isSakstypeForVisningGenerell() &&
-                    GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
-                    !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
-        }
-    };
+    private static final Predicate<Sak> GODSKJENT_FAGSAK = sak -> !sak.isSakstypeForVisningGenerell() &&
+            GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
+            !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
 
-    private static final Predicate<Sak> GODSKJENT_GENERELL = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return sak.isSakstypeForVisningGenerell() &&
-                    GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode) &&
-                    GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
-        }
-    };
+    private static final Predicate<Sak> GODSKJENT_GENERELL = sak -> sak.isSakstypeForVisningGenerell() &&
+            GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode) &&
+            GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
 
 }

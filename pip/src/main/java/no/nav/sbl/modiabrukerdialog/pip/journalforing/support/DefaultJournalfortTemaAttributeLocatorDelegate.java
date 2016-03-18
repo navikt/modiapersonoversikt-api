@@ -13,8 +13,10 @@ import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.*;
 
 public class DefaultJournalfortTemaAttributeLocatorDelegate implements JournalfortTemaAttributeLocatorDelegate {
 
@@ -35,10 +37,7 @@ public class DefaultJournalfortTemaAttributeLocatorDelegate implements Journalfo
 
             List<ASBOGOSYSFagomrade> fagomrader = ansattService.hentNAVAnsattFagomradeListe(ansattFagomraderRequest).getFagomrader();
 
-            Set<String> temaSet = new HashSet<>();
-            for (ASBOGOSYSFagomrade fagomrade : fagomrader) {
-                temaSet.add(fagomrade.getFagomradeKode());
-            }
+            Set<String> temaSet = fagomrader.stream().map(ASBOGOSYSFagomrade::getFagomradeKode).collect(toSet());
 
             return temaSet;
         } catch (HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg e) {

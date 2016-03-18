@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * Delegate that retrieves enhet information from NORG and NAVAnsatt services.
@@ -50,9 +53,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
             }
             enhetIdSet.add(lokalEnhet.getEnhetsId());
 
-            for (String enhetId : enhetIdSet) {
-                values.add(enhetId);
-            }
+            values.addAll(enhetIdSet.stream().collect(toList()));
         }
 
         return values;
@@ -139,9 +140,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
             request.setEnhetsId(enhetId);
             List<ASBOGOSYSNavEnhet> enheter = enhetService.hentNAVEnhetGruppeListe(request).getNAVEnheter();
 
-            for (ASBOGOSYSNavEnhet enhet : enheter) {
-                enhetIdSet.add(enhet.getEnhetsId());
-            }
+            enhetIdSet.addAll(enheter.stream().map(ASBOGOSYSNavEnhet::getEnhetsId).collect(toList()));
             return enhetIdSet;
         } catch (HentNAVEnhetGruppeListeFaultGOSYSGeneriskMsg | HentNAVEnhetGruppeListeFaultGOSYSNAVEnhetIkkeFunnetMsg ex) {
             logger.warn("Exception while calling hentNAVEnhetGruppeListe with ansattId {}.", enhetId, ex);

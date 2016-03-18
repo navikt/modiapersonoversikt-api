@@ -12,12 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Set;
-
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -46,9 +43,7 @@ public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
 
         when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenReturn(fagomradeListe);
 
-        Set<String> temagrupperForAnsattesValgteEnhet = delegate.getTemagrupperForAnsattesValgteEnhet("", "");
-        assertThat(temagrupperForAnsattesValgteEnhet, hasItem("FAML"));
-        assertThat(temagrupperForAnsattesValgteEnhet, hasItem("ARBD"));
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet("", ""), containsInAnyOrder("ARBD", "FAML"));
         verify(ansattService, only()).hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class));
     }
 
