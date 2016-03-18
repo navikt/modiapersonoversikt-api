@@ -106,24 +106,25 @@ public class SaksService {
     private ResultatWrapper opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
             Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        List<Sakstema> sakstemaSomKunFinnesISakOgBehandling = behandlingskjeder.entrySet()
-                .stream()
-                .filter(temaFinnesKunISakOgBehandling(wrapper))
-                .map(entry -> opprettSakstemaForBehandlingskjede(entry))
-                .collect(toList());
-
-
         return grupperteSakstema.entrySet()
                 .stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder))
                 .map(fjernSakstemaKontroll)
                 .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
-                    accumulator.resultat.addAll(sakstemaSomKunFinnesISakOgBehandling);
+                    accumulator.resultat.addAll(getSakstemaSomKunFinnesiSakOgBehandling(wrapper, behandlingskjeder));
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
                     return accumulator;
                 })
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
+    }
+
+    private List<Sakstema> getSakstemaSomKunFinnesiSakOgBehandling(ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String, List<Behandlingskjede>> behandlingskjeder) {
+        return behandlingskjeder.entrySet()
+                .stream()
+                .filter(temaFinnesKunISakOgBehandling(wrapper))
+                .map(entry -> opprettSakstemaForBehandlingskjede(entry))
+                .collect(toList());
     }
 
     private Predicate<Map.Entry<String, List<Behandlingskjede>>> temaFinnesKunISakOgBehandling(ResultatWrapper<List<DokumentMetadata>> wrapper) {
