@@ -1,4 +1,4 @@
-import * as AT from './actionTypes';
+import * as AT from './action-types';
 import Ajax from './../utils/ajax';
 import Q from 'q';
 
