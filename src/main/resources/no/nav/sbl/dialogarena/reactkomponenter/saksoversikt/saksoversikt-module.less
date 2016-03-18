@@ -10,8 +10,6 @@
 }
 
 .saksoversikt-lerret-container {
-  @graa: #b7b1a9;
-  @graa_inactive: #7f756c;
 
   padding: 0 !important;
   height: 100%;
@@ -20,12 +18,12 @@
     height: 25em;
     width: 45em;
     margin: 2em auto;
-    border: 1px solid @graa;
+    border: 1px solid @gray-icon;
     text-align: center;
   }
   .ingen-sakstemaer-tekst {
     margin-top: 1em;
-    color: @graa
+    color: @gray-icon
   }
   .ingensakstemaerimage {
     height: 45px;
@@ -39,7 +37,7 @@
     width: 35%;
     height: 100%;
     float: left;
-    border-right: 1px solid @graa;
+    border-right: 1px solid @gray-icon;
     overflow-x: hidden;
     overflow-y: visible;
   }
@@ -79,7 +77,7 @@
     font-family: Arial, sans-serif;
     font-size: 0.9375rem;
     font-weight: 400;
-    color: @graa_inactive;
+    color: @gray-icon_inactive;
     margin-bottom: 0;
     margin-top: 0;
   }
@@ -129,7 +127,7 @@
     }
 
     .vedleggtext {
-      border-bottom: 2px solid @graa;
+      border-bottom: 2px solid @gray-icon;
       font-size: 14px;
       font-family: Arial, sans-serif;
       margin-bottom: 8px;
@@ -148,7 +146,7 @@
     }
     .lenke-fremhevet, .side-innhold, & {
       a:not(.knapp) {
-        border-bottom: 1px solid @graa;
+        border-bottom: 1px solid @gray-icon;
         &:active, &:hover {
           outline: none
         }
@@ -180,7 +178,7 @@
   }
   .infoingenbidrag {
     width: 100%;
-    border-bottom: solid 2px @graa;
+    border-bottom: solid 2px @gray-icon;
     background-repeat: no-repeat;
     background-image: url("@{imgDir}/information-circle.svg");
     background-size: 1.8rem;
@@ -204,7 +202,7 @@
   .tidligere-dokumenter-tekst {
     font-size: 14px;
     font-family: Arial, sans-serif;
-    color: @graa_inactive;
+    color: @gray-icon_inactive;
   }
 
   .gamle-dokumenter {
@@ -213,7 +211,7 @@
   }
 
   .aarstall {
-    background-color: @graa;
+    background-color: @gray-icon;
     padding: 0.5rem 2rem;
     font-weight: 600;
   }
@@ -245,7 +243,7 @@
     left: 0;
     right: 17px;
     z-index: 99;
-    box-shadow: -1px 1px 5px 0px @graa;
+    box-shadow: -1px 1px 5px 0px @gray-icon;
   }
   .kulemeny {
     list-style: none;
@@ -261,7 +259,7 @@
     input {
       border: none;
       border-radius: 50%;
-      background-color: @graa;
+      background-color: @gray-icon;
       width: 14px;
       height: 14px;
 
@@ -285,17 +283,17 @@
   }
 
   .viktig-aa-vite-container {
-    border-bottom: 1px solid @graa;
+    border-bottom: 1px solid @gray-icon;
   }
 
   .filtrering-container {
     padding-bottom: 1.4rem;
-    border-bottom: 1px solid @graa_inactive;
+    border-bottom: 1px solid @gray-icon_inactive;
     .clearfix;
   }
 
   .filtrering-forklaring {
-    color: @graa_inactive;
+    color: @gray-icon_inactive;
     padding-left: 1.5rem;
     padding-top: 1.3rem;
     padding-bottom: .5rem;
@@ -343,7 +341,7 @@
 }
 
 .saksoversikt-liste-element {
-  border-bottom: 1px solid @graa;
+  border-bottom: 1px solid @gray-icon;
   display: block;
 
   label:before {
@@ -407,7 +405,7 @@
   font-weight: normal;
   margin-bottom: 0;
   margin-top: 0;
-  color: @graa_inactive;
+  color: @gray-icon_inactive;
 }
 
 .decorated {
@@ -438,7 +436,7 @@
 }
 
 .side-innhold a {
-  border-bottom: 1px solid @graa;
+  border-bottom: 1px solid @gray-icon;
   &:hover {
     text-decoration: none !important;
     border-bottom-color: #0067c5;
