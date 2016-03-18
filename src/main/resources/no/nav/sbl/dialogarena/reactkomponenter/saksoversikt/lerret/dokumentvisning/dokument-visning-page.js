@@ -31,6 +31,10 @@ class DokumentVisningPage extends React.Component {
         this._redirect = this._redirect.bind(this);
     }
 
+    componentDidMount() {
+        document.querySelector('.saksoversikt .lamellhode a').focus();
+    }
+
     componentWillMount() {
         this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
