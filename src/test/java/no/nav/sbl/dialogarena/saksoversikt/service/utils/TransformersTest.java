@@ -2,17 +2,24 @@ package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
+import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.SOKNAD_TIL_KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilSoknad;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.FERDIG_BEHANDLET;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.INNSENDT;
+import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.*;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -72,6 +79,56 @@ public class TransformersTest {
 
         assertThat(kvittering.getInnsendteDokumenter().size(), is(0));
         assertThat(kvittering.getManglendeDokumenter().size(), is(0));
+    }
+
+    @Test
+    public void transformTilSoknadOk() {
+        DateTime opprettetdato = new DateTime();
+        DateTime innsendtdato = new DateTime();
+        DateTime sistendretdato = new DateTime();
+        WSSoknad wsSoknad = new WSSoknad()
+                .withBehandlingsId("behandlingid")
+                .withBehandlingsKjedeId("behandlingkjedeid")
+                .withJournalpostId("journalpostid")
+                .withHenvendelseStatus(UNDER_ARBEID.name())
+                .withOpprettetDato(opprettetdato)
+                .withInnsendtDato(innsendtdato)
+                .withSistEndretDato(sistendretdato)
+                .withHovedskjemaKodeverkId("hovedskjemakodeverkref")
+                .withEttersending(false)
+                .withHenvendelseType(DOKUMENTINNSENDING.name())
+                .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(asList(
+                        new WSDokumentforventning()
+                                .withKodeverkId("dokKodeverkRef1")
+                                .withTilleggsTittel("tilleggstittel1")
+                                .withUuid("uuid1")
+                                .withArkivreferanse("arkivreferanse1")
+                                .withInnsendingsvalg(INNSENDT.name()),
+                        new WSDokumentforventning()
+                                .withKodeverkId("hovedskjemakodeverkref")
+                                .withTilleggsTittel("tilleggstittel2")
+                                .withUuid("uuid2")
+                                .withArkivreferanse("arkivreferanse2")
+                                .withInnsendingsvalg(INNSENDT.name())
+                )));
+
+        Soknad soknad = transformTilSoknad(wsSoknad);
+
+        assertThat(soknad.getBehandlingsId(), is("behandlingid"));
+        assertThat(soknad.getBehandlingskjedeId(), is("behandlingkjedeid"));
+        assertThat(soknad.getJournalpostId(), is("journalpostid"));
+        assertThat(soknad.getStatus(), is(UNDER_ARBEID));
+        assertThat(soknad.getOpprettetDato(), is(opprettetdato));
+        assertThat(soknad.getInnsendtDato(), is(innsendtdato));
+        assertThat(soknad.getSistendretDato(), is(sistendretdato));
+        assertThat(soknad.getSkjemanummerRef(), is("hovedskjemakodeverkref"));
+        assertThat(soknad.getEttersending(), is(false));
+        assertThat(soknad.getType(), is(DOKUMENTINNSENDING));
+        assertThat(soknad.getDokumenter().size(), is(2));
+        assertThat(soknad.getDokumenter().get(0).getKodeverkRef(), is("dokKodeverkRef1"));
+        assertThat(soknad.getDokumenter().get(0).erHovedskjema(), is(false));
+        assertThat(soknad.getDokumenter().get(1).getKodeverkRef(), is("hovedskjemakodeverkref"));
+        assertThat(soknad.getDokumenter().get(1).erHovedskjema(), is(true));
     }
 
 }
