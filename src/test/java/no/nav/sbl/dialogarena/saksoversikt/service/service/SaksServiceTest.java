@@ -358,54 +358,32 @@ public class SaksServiceTest {
         assertThat(wrapper.resultat.size(), is(2));
     }
 
-    @Test
-    public void sakstemaKontrollFiltreresBort() {
-        when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Oppfølging");
-        when(kodeverk.getTemanavnForTemakode(KONTROLL, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Kontroll");
-        when(kodeverk.finnesTemaKodeIKodeverk(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(true);
-        when(kodeverk.finnesTemaKodeIKodeverk(KONTROLL, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(true);
+    private Future<Object> getFuturePesys() {
+        return new Future<Object>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                return false;
+            }
 
-        Map<String, Set<String>> grupperteSakstema = new HashMap<>();
-        grupperteSakstema.put(TEMAGRUPPE_RESTERENDE_TEMA, new HashSet<>(asList(SaksService.TEMAKODE_KONTROLL, OPPFOLGING)));
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(grupperteSakstema);
-        when(dokumentMetadataService.hentDokumentMetadata(any(), any())).thenReturn(
-                new ResultatWrapper<>(
-                        asList(new DokumentMetadata()
-                                .withTilhorendeSakid("321")
-                                .withMottaker(Entitet.SLUTTBRUKER)
-                                .withAvsender(Entitet.NAV)
-                                .withRetning(Kommunikasjonsretning.UT)
-                                .withDato(LocalDateTime.now())
-                                .withBaksystem(JOARK)
-                                .withHoveddokument(
-                                        new Dokument()
-                                                .withTittel("TEST")),
-                                new DokumentMetadata()
-                                        .withTilhorendeSakid("3211")
-                                        .withMottaker(Entitet.SLUTTBRUKER)
-                                        .withAvsender(Entitet.NAV)
-                                        .withRetning(Kommunikasjonsretning.UT)
-                                        .withDato(LocalDateTime.now())
-                                        .withBaksystem(JOARK)
-                                        .withHoveddokument(
-                                                new Dokument()
-                                                        .withTittel("TEST")))
-                ));
+            @Override
+            public boolean isDone() {
+                return false;
+            }
 
-        Sak kontrollSak = new Sak()
-                .withSaksId("321")
-                .withTemakode(SaksService.TEMAKODE_KONTROLL)
-                .withAvsluttet(null);
+            @Override
+            public Stream<Sak> get() throws InterruptedException, ExecutionException {
+                return Stream.empty();
+            }
 
-        Sak sak = new Sak()
-                .withSaksId("3211")
-                .withTemakode(OPPFOLGING)
-                .withAvsluttet(null);
-
-        ResultatWrapper<List<Sakstema>> wrapper = saksService.hentSakstema(asList(kontrollSak, sak), "1233123123", false);
-
-        assertThat(wrapper.resultat.size(), is(1));
-        assertThat(wrapper.resultat.get(0).temakode, is(OPPFOLGING));
+            @Override
+            public Stream<Sak> get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                return null;
+            }
+        };
     }
 }
