@@ -138,7 +138,8 @@ public class SaksService {
         return new Sakstema()
                 .withTemakode(temakode)
                 .withBehandlingskjeder(behandlingskjede.getValue())
-                .withTemanavn(bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA));
+                .withTemanavn(bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA))
+                .withDokumentMetadata(emptyList());
     }
 
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
