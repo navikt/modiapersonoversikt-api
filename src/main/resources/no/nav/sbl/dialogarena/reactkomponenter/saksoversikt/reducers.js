@@ -11,8 +11,8 @@ function purgeStateReducer(fn) {
             const node = document.querySelector('[id^="saksoversiktLerret"]');
             if (node) {
                 ReactDOM.unmountComponentAtNode(node);
-                return fn(undefined, action);
             }
+            return fn({widget:state.widget}, action);
         }
         return fn(state, action);
     };
