@@ -14,7 +14,7 @@ class ViktigAVitePage extends React.Component {
         const innhold =  this.props.intl.formatMessage({id:`saksinformasjon.${valgtTema.temakode}`});
 
         return (
-            <div className="grattpanel side-innhold">
+            <div className="grattpanel side-innhold viktigtaavitepanel">
                 <div className="blokk-s">
                     <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
                 </div>
@@ -36,4 +36,3 @@ function createMarkup(markuptekst) {
 };
 
 export default injectIntl(ViktigAVitePage);
-
