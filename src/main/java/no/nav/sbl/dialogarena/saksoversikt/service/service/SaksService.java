@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -87,30 +86,31 @@ public class SaksService {
 
     public ResultatWrapper<List<Sakstema>> hentSakstema(List<Sak> saker, String fnr, boolean skalGruppere) {
         ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(saker, fnr);
-        Map<String, Set<String>> grupperteSakstema = sakstemaGrupperer.grupperSakstema(saker, wrapper.resultat);
-
-        if (!skalGruppere) {
-            grupperteSakstema = grupperAlleSakstemaSomResterende(grupperteSakstema);
-        }
 
         try {
             Map<String, List<Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);
+            Map<String, Set<String>> grupperteSakstema = sakstemaGrupperer.grupperSakstema(saker, wrapper.resultat, behandlingskjeder);
+
+            if (!skalGruppere) {
+                grupperteSakstema = grupperAlleSakstemaSomResterende(grupperteSakstema);
+            }
             return opprettSakstemaresultat(saker, wrapper, grupperteSakstema, behandlingskjeder);
         } catch (FeilendeBaksystemException e) {
+            Map<String, Set<String>> grupperteSakstema = sakstemaGrupperer.grupperSakstema(saker, wrapper.resultat, emptyMap());
             wrapper.feilendeSystemer.add(e.getBaksystem());
             return opprettSakstemaresultat(saker, wrapper, grupperteSakstema, emptyMap());
         }
     }
 
-    private ResultatWrapper opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String,
-            Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
+    private ResultatWrapper opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper,
+                                                    Map<String,Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
         return grupperteSakstema.entrySet()
                 .stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder))
                 .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
-                    accumulator.resultat.addAll(getSakstemaSomKunFinnesiSakOgBehandling(wrapper, behandlingskjeder));
+//                    accumulator.resultat.addAll(getSakstemaSomKunFinnesiSakOgBehandling(wrapper, behandlingskjeder));
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
                     return accumulator;
                 })
