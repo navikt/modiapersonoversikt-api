@@ -2,10 +2,16 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 class ViktigAVitePage extends React.Component {
+
+    componentDidMount() {
+        document.querySelector('.saksoversikt .lamellhode a').focus();
+    }
+
     _redirect(e) {
         e.preventDefault();
         this.props.visSide('sakstema');
     }
+
     render() {
         const { valgtTema, sakstema } = this.props;
 
@@ -16,7 +22,7 @@ class ViktigAVitePage extends React.Component {
         return (
             <div className="grattpanel side-innhold viktigtaavitepanel">
                 <div className="blokk-s">
-                    <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
+                    <a role="button" href="javascript:void(0);" onClick={this._redirect.bind(this)}>Tilbake til sakstema</a>
                 </div>
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">{sidetittel}</h1>
