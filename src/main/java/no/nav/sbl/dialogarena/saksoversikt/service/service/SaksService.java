@@ -110,36 +110,10 @@ public class SaksService {
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder))
                 .reduce(new ResultatWrapper<>(new ArrayList<>()), (accumulator, resultatwrapper) -> {
                     accumulator.resultat.addAll(resultatwrapper.resultat);
-//                    accumulator.resultat.addAll(getSakstemaSomKunFinnesiSakOgBehandling(wrapper, behandlingskjeder));
                     accumulator.feilendeSystemer.addAll(resultatwrapper.feilendeSystemer);
                     return accumulator;
                 })
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
-    }
-
-    private List<Sakstema> getSakstemaSomKunFinnesiSakOgBehandling(ResultatWrapper<List<DokumentMetadata>> wrapper, Map<String, List<Behandlingskjede>> behandlingskjeder) {
-        return behandlingskjeder.entrySet()
-                .stream()
-                .filter(temaFinnesKunISakOgBehandling(wrapper))
-                .map(entry -> opprettSakstemaForBehandlingskjede(entry))
-                .collect(toList());
-    }
-
-    private Predicate<Map.Entry<String, List<Behandlingskjede>>> temaFinnesKunISakOgBehandling(ResultatWrapper<List<DokumentMetadata>> wrapper) {
-        return entry ->
-                !wrapper.resultat.stream()
-                        .filter(sak -> sak.getTemakode().equals(entry.getKey()))
-                        .findAny()
-                        .isPresent();
-    }
-
-    protected Sakstema opprettSakstemaForBehandlingskjede(Map.Entry<String, List<Behandlingskjede>> behandlingskjede) {
-        String temakode = behandlingskjede.getKey();
-        return new Sakstema()
-                .withTemakode(temakode)
-                .withBehandlingskjeder(behandlingskjede.getValue())
-                .withTemanavn(bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA))
-                .withDokumentMetadata(emptyList());
     }
 
     protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
