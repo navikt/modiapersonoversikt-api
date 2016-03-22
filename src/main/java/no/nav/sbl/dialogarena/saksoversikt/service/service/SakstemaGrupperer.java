@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -11,7 +10,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.*;
-import static java.util.stream.Stream.concat;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
 
 public class SakstemaGrupperer {
 
@@ -37,7 +36,7 @@ public class SakstemaGrupperer {
                 .filter(erTemaMedOppfolging)
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        Set<String> ugrupperteTema = Java8Utils.concat(
+        Set<String> ugrupperteTema = concat(
                 saker.stream()
                         .map(s -> s.getTemakode())
                 ,
