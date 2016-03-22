@@ -34,7 +34,11 @@ public class TemaTransformer {
         List<Behandling> sorterteFiltrerteBehandlinger = filtrerteBehandlinger.stream()
                 .sorted((o1, o2) -> o2.behandlingDato.compareTo(o1.behandlingDato))
                 .collect(toList());
-        Behandling forsteBehandling = sorterteFiltrerteBehandlinger.stream().findFirst().orElseGet(null);
-        return (forsteBehandling != null) ? forsteBehandling.behandlingDato : null;
+
+        return sorterteFiltrerteBehandlinger
+                .stream()
+                .findFirst()
+                .map(behandling -> behandling.behandlingDato)
+                .orElse(null);
     }
 }
