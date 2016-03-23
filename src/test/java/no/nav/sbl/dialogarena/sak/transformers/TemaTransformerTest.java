@@ -16,6 +16,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
+import static no.nav.sbl.dialogarena.sak.transformers.TemaTransformer.hentSistOppdaterteLovligeBehandling;
 import static no.nav.sbl.dialogarena.sak.transformers.TemaTransformer.tilTema;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
@@ -35,17 +36,34 @@ public class TemaTransformerTest {
     @Before
     public void setup() {
         when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn("Dagpenger");
-        when(filter.filtrerBehandlinger(anyList())).thenReturn(getBehandlinger());
     }
 
     @Test
     public void mapperTilTema() {
+        when(filter.filtrerBehandlinger(anyList())).thenReturn(getBehandlinger());
+
         WSSak sak = createWSSak()
                 .withSakstema(new WSSakstemaer().withValue("DAG"));
         Tema tema = tilTema(sak, bulletproofKodeverkService, filter);
 
         assertThat(tema.temakode, is("DAG"));
         assertThat(tema.temanavn, is("Dagpenger"));
+    }
+
+    @Test
+    public void skalReturnereDato1970HvisBehandlingsdatoIkkeFinnes() {
+        when(filter.filtrerBehandlinger(anyList())).thenReturn(getBehandlingUtenBehandlingsdato());
+
+        WSSak sak = createWSSak()
+                .withSakstema(new WSSakstemaer().withValue("DAG"));
+        org.joda.time.DateTime dato = hentSistOppdaterteLovligeBehandling(sak, filter);
+
+        assertThat(dato.getYear(), is(1970));
+    }
+
+    private List<Behandling> getBehandlingUtenBehandlingsdato() {
+        return asList(
+                new Behandling().withBehandlingskjedeId("1").withBehandlingsDato(null));
     }
 
     private List<Behandling> getBehandlinger() {

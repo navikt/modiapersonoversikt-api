@@ -26,7 +26,7 @@ public class TemaTransformer {
         return of(wsSak.getBehandlingskjede()).isPresent() && !wsSak.getBehandlingskjede().isEmpty();
     }
 
-    private static DateTime hentSistOppdaterteLovligeBehandling(WSSak wsSak, Filter filter) {
+    protected static DateTime hentSistOppdaterteLovligeBehandling(WSSak wsSak, Filter filter) {
         List<Behandling> behandlinger = wsSak.getBehandlingskjede().stream()
                 .map(wsBehandlingskjede -> transformTilBehandling(wsBehandlingskjede))
                 .collect(toList());
@@ -35,10 +35,11 @@ public class TemaTransformer {
                 .sorted((o1, o2) -> o2.behandlingDato.compareTo(o1.behandlingDato))
                 .collect(toList());
 
+        //Returnerer dato fra 1970 hvis dato ikke finnes
         return sorterteFiltrerteBehandlinger
                 .stream()
                 .findFirst()
                 .map(behandling -> behandling.behandlingDato)
-                .orElse(null);
+                .orElse(new DateTime(0));
     }
 }
