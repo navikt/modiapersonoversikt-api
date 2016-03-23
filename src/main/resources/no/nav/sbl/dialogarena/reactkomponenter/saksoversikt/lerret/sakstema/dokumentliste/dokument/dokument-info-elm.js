@@ -1,57 +1,67 @@
 import React, { PropTypes as pt } from 'react';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
 import DokumentAvsender from './avsender/dokument-avsender';
-import { FormattedDate } from 'react-intl';
+import { FormattedDate, injectIntl } from 'react-intl';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../../../utils/dato-utils';
 import dokumentinfoShape from './dokumentinfo-shape';
-import { ettersendelseTil } from './../../../../utils/ettersending-utils';
 
 const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
 const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
 
-const DokumentInfoElm = ({ dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide }) => {
-    function _redirect(e) {
-        e.preventDefault();
-        velgJournalpost(dokumentinfo);
-        visSide('dokumentvisning');
+class DokumentInfoElm extends React.Component {
+
+    constructor() {
+        super();
+        this._redirect = this._redirect.bind(this);
     }
 
-    const { retning, avsender, mottaker, navn, hoveddokument, vedlegg, temakodeVisning,
-        feilWrapper, ettersending, kategoriNotat } = dokumentinfo;
-    const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript/>;
-    const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
-    const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ?
-        'dokument-kan-vises' : 'dokument-kan-ikke-vises';
-    const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
-        <p className="vekk">Ikke tilgang til dokument</p> : '';
-    const hoveddokumentTekst = ettersending ? ettersendelseTil(hoveddokument.tittel) : hoveddokument.tittel;
+    _redirect(e) {
+        e.preventDefault();
+        this.props.velgJournalpost(this.props.dokumentinfo);
+        this.props.visSide('dokumentvisning');
+    }
 
-    return (
-        <li className={`dokumentliste-element ${kanViseDokument}`}>
-            {skjultIngenTilgangTekst}
-            <div className="datodokumentliste">
-                <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
-                <span> / </span>
-                <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker}
-                  brukerNavn={brukerNavn} navn={navn} kategoriNotat={kategoriNotat}
-                />
-            </div>
-            <div className="hoveddokument-tittel-wrapper">
-                <a href="javascript:void(0)" className="hoveddokument-tittel"
-                  onClick={_redirect}
-                >
-                    {hoveddokumentTekst}
-                </a>
-            </div>
-            <div className="typo-info">
-                <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost}
-                  dokumentinfo={dokumentinfo}
-                />
-            </div>
-            {temaHvisAlleTemaer}
-        </li>
-    );
-};
+    render() {
+        const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide, intl } = this.props;
+        const { retning, avsender, mottaker, navn, hoveddokument, vedlegg,
+            temakodeVisning, feilWrapper, ettersending, kategoriNotat } = dokumentinfo;
+        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript/>;
+        const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
+        const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ?
+            'dokument-kan-vises' : 'dokument-kan-ikke-vises';
+        const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
+            <p className="vekk">Ikke tilgang til dokument</p> : '';
+        const hoveddokumentTekst = ettersending ?
+            intl.formatMessage({ id: `ettersending.til.soknad` }, { soknadTittel: hoveddokument.tittel }) :
+            hoveddokument.tittel;
+
+        return (
+            <li className={`dokumentliste-element ${kanViseDokument}`}>
+                <article aria-label={hoveddokumentTekst}>
+                    {skjultIngenTilgangTekst}
+                    <div className="datodokumentliste">
+                        <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
+                        <span> / </span>
+                        <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker}
+                          brukerNavn={brukerNavn} navn={navn} kategoriNotat={kategoriNotat}
+                        />
+                    </div>
+                    <div className="hoveddokument-tittel-wrapper">
+                        <a href="javascript:void(0)" className="hoveddokument-tittel" onClick={this._redirect}>
+                            {hoveddokumentTekst}
+                        </a>
+                    </div>
+                    <div className="typo-info">
+                        <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost}
+                          dokumentinfo={dokumentinfo}
+                        />
+                    </div>
+                    {temaHvisAlleTemaer}
+                </article>
+            </li>
+        );
+    }
+}
 
 DokumentInfoElm.propTypes = {
     dokumentinfo: dokumentinfoShape.isRequired,
@@ -61,4 +71,4 @@ DokumentInfoElm.propTypes = {
     visSide: pt.func.isRequired
 };
 
-export default DokumentInfoElm;
+export default injectIntl(DokumentInfoElm);

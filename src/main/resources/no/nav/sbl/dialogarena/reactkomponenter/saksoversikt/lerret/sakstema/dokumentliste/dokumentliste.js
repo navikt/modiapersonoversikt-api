@@ -13,7 +13,7 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
         .map(aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) }))
         .reduce((acc, { aarstall, dokumenter }) => {
             if (aarstall !== gjeldendeAar) {
-                acc.push(<li key={`aarstall-'${aarstall}`} className="aarstall">{aarstall}</li>);
+                acc.push(<li key={`aarstall-'${aarstall}`} className="aarstall" aria-hidden="true">{aarstall}</li>);
             }
 
             return acc.concat(

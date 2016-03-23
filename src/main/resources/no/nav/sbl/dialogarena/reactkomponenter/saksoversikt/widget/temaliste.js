@@ -37,40 +37,49 @@ class Temaliste extends React.Component {
         const { temaer, fnr, tekster, status } = this.props;
 
         if (status === Const.LASTER) {
-            return <noscript></noscript>;
+            return <noscript/>;
         }
 
-        const temaliste = status === Const.FEILET ?
-            <li className="feederroritem"><p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding"/></p>
-            </li>
-            : take(temaer, ANTALL_TEMAER).map((tema) =>
-            <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
+        const feilmelding = (
+            <div className="listeelement-kant">
+                <p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding"/></p>
+            </div>
+        );
+
+        const temaliste = status === Const.FEILET ? feilmelding :
+            take(temaer, ANTALL_TEMAER).map((tema) =>
+                <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
 
         const sendToWidget = () => this.sendToWidget('VIS_ALLE_CLICK');
+
+        const flereSaker = (
+            <li>
+                <a href="javascript:void(0)" onClick={sendToWidget} tabIndex="-1">
+                    <FormattedMessage id="sakswidget.sefleresaker"/>
+                </a>
+            </li>
+        );
 
         return (
             <IntlProvider defaultLocale="nb" locale="nb" messages={tekster}>
                 <ul>
                     {temaliste}
-                    <li>
-                        <a href="javascript:void(0)" onClick={sendToWidget} tabIndex="-1">
-                            <FormattedMessage id="sakswidget.sefleresaker"/>
-                        </a>
-                    </li>
+                    {flereSaker}
                 </ul>
             </IntlProvider>
         );
     }
 }
 
+
 Temaliste.propTypes = {
     temaer: React.PropTypes.array,
-    fnr: React.PropTypes.string,
-    hentWidgetData: React.PropTypes.func,
-    wicketurl: React.PropTypes.string,
-    wicketcomponent: React.PropTypes.string,
-    status: React.PropTypes.string,
-    tekster: React.PropTypes.object
+    fnr: React.PropTypes.string.isRequired,
+    wicketurl: React.PropTypes.string.isRequired,
+    wicketcomponent: React.PropTypes.string.isRequired,
+    status: React.PropTypes.string.isRequired,
+    tekster: React.PropTypes.object,
+    hentWidgetData: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {

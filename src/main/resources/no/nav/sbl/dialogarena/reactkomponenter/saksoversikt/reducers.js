@@ -12,7 +12,7 @@ function purgeStateReducer(fn) {
             if (node) {
                 ReactDOM.unmountComponentAtNode(node);
             }
-            return fn(undefined, action);
+            return fn({widget:state.widget}, action);
         }
         return fn(state, action);
     };
