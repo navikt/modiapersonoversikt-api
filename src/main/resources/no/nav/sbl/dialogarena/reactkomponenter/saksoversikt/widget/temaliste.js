@@ -67,11 +67,10 @@ Temaliste.propTypes = {
     temaer: React.PropTypes.array,
     fnr: React.PropTypes.string,
     hentWidgetData: React.PropTypes.func,
-    wicketurl: React.PropTypes.object,
-    wicketcomponent: React.PropTypes.object,
+    wicketurl: React.PropTypes.string,
+    wicketcomponent: React.PropTypes.string,
     status: React.PropTypes.string,
-    tekster: React.PropTypes.array
-
+    tekster: React.PropTypes.object
 };
 
 const mapStateToProps = (state) => {
