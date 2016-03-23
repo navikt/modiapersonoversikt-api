@@ -75,11 +75,18 @@ actionHandlers[AT.LAST_LERRET_DATA_ALLE_SAKER_OK] = (state, action) => {
 };
 actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => ({ ...state, status: Const.FEILET, feil: action.data });
 
-actionHandlers[AT.VELG_SAK] = (state, action) => ({ ...state, valgtTema: action.data, filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true } });
+actionHandlers[AT.VELG_SAK] = (state, action) => ({
+    ...state,
+    valgtTema: action.data,
+    filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
+});
 actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJournalpost: action.data });
 actionHandlers[AT.VIS_TEMA] = (state, action) => ({ ...state, widgetValgtTemakode: action.data });
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
-actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({ ...state, filtreringsvalg: action.filtreringsvalg });
+actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({
+    ...state,
+    filtreringsvalg: action.filtreringsvalg
+});
 
 // -------
 export default basicReducer(initalState, actionHandlers);
