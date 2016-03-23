@@ -27,8 +27,8 @@ class DokumentInfoElm extends React.Component {
         const hoveddokumentTekst = ettersending ? intl.formatMessage({ id: `ettersending.til.soknad`},{ soknadTittel: hoveddokument.tittel }): hoveddokument.tittel;
 
         return (
-            <article aria-label={hoveddokumentTekst}>
-                <li className={`dokumentliste-element ${kanViseDokument}`}>
+            <li className={`dokumentliste-element ${kanViseDokument}`}>
+                <article aria-label={hoveddokumentTekst}>
                     {skjultIngenTilgangTekst}
                     <div className="datodokumentliste">
                         <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
@@ -49,8 +49,8 @@ class DokumentInfoElm extends React.Component {
                         />
                     </div>
                     {temaHvisAlleTemaer}
-                </li>
-            </article>
+                </article>
+            </li>
         );
     }
 }

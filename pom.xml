@@ -12,7 +12,7 @@
     <description>Fellesbibliotek for React-komponenter</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>reactkomponenter</artifactId>
-    <version>2.7.11-HL2-SNAPSHOT</version>
+    <version>2.7.12-HL2</version>
     <packaging>jar</packaging>
 
     <properties>
