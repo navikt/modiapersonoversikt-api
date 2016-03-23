@@ -3,7 +3,7 @@ import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
 import { connect } from 'react-redux';
-import VedleggFeilmeldingListe from './vedlegg-veilmelding-liste';
+import VedleggFeilmeldingListe from './vedlegg-feilmelding-liste';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';

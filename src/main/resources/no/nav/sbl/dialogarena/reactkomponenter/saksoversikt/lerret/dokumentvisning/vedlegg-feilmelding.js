@@ -2,33 +2,33 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Element } from 'react-scroll';
 
+function createMarkup(markuptekst) {
+    return {
+        __html: markuptekst
+    };
+}
 
 class VedleggFeilmelding extends React.Component {
     render() {
         const { feilmelding: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo }, name } = this.props;
 
         const enonicFeilmeldingstekstKey = feilmeldingEnonicKey.concat('.tekst');
-        const innhold =  this.props.intl.formatMessage({id:enonicFeilmeldingstekstKey}, ekstrafeilinfo);
+        const innhold = this.props.intl.formatMessage({ id: enonicFeilmeldingstekstKey }, ekstrafeilinfo);
 
         return (
             <Element className="feilmelding-container" name={name}>
                 <img className="feilmelding-bakgrunn" src={bildeUrl} alt=""/>
                 <div className="feilmelding panel panel-ramme">
-                    <h1 className="vanlig-ikon-feil-strek"><FormattedMessage id={feilmeldingEnonicKey.concat('.tittel')} /></h1>
+                    <h1 className="vanlig-ikon-feil-strek"><FormattedMessage
+                      id={feilmeldingEnonicKey.concat('.tittel')}
+                    />
+                    </h1>
                     <p className="text-center" dangerouslySetInnerHTML={createMarkup(innhold)}/>
                 </div>
             </Element>
-        )
+        );
     }
 }
-
-
-function createMarkup(markuptekst) {
-    return {
-        __html: markuptekst
-    };
-};
-
 
 VedleggFeilmelding.propTypes = {
     feilmelding: React.PropTypes.shape({
@@ -36,7 +36,8 @@ VedleggFeilmelding.propTypes = {
         kanVises: React.PropTypes.bool.isRequired,
         ekstrafeilinfo: React.PropTypes.object,
         bildeUrl: React.PropTypes.string.isRequired
-    }).isRequired
+    }).isRequired,
+    name: React.PropTypes.string
 };
 
 export default injectIntl(VedleggFeilmelding);

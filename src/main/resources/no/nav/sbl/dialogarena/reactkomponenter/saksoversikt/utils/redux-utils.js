@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from './../store';
 import * as Actions from './../actions';
 
-export function wrapWithProvider(Component, store) {
+export function wrapWithProvider(Component) {
     const wrapperKlasse = class ProviderWrapper extends React.Component {
 
         callAction(action, ...args) {
@@ -11,7 +11,7 @@ export function wrapWithProvider(Component, store) {
         }
 
         render() {
-            const {...props} = this.props;
+            const { ...props } = this.props;
             return (
                 <Provider store={store}><Component {...props} /></Provider>
             );
@@ -27,5 +27,5 @@ export function basicReducer(initalState, actionHandlers) {
     return (state = initalState, action) => {
         const matchingHandler = actionHandlers[action.type] || voidHandler;
         return matchingHandler(state, action);
-    }
+    };
 }
