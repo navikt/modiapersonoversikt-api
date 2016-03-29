@@ -5,6 +5,11 @@ export const skalViseViktigAViteSideForTema = (godkjenteTemakoder, valgtTemakode
 
 
 class ViktigAViteLenke extends React.Component {
+    constructor() {
+        super();
+        this._redirect = this._redirect.bind(this);
+    }
+
     _redirect(e) {
         e.preventDefault();
         this.props.visSide('viktigavite');
@@ -19,7 +24,7 @@ class ViktigAViteLenke extends React.Component {
             return (
                 <div className="viktig-aa-vite-container">
                     <div className="viktig-aa-vite-lenke">
-                        <a href="javascript:void(0);" onClick={this._redirect.bind(this)}>{linktekst}</a>
+                        <a href="javascript:void(0);" onClick={this._redirect}>{linktekst}</a>
                     </div>
                 </div>
             );

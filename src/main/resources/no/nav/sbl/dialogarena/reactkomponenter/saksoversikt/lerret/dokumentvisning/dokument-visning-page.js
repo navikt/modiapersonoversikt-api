@@ -3,7 +3,7 @@ import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
 import { connect } from 'react-redux';
-import VedleggFeilmeldingListe from './vedlegg-veilmelding-liste';
+import VedleggFeilmeldingListe from './vedlegg-feilmelding-liste';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';
@@ -31,12 +31,12 @@ class DokumentVisningPage extends React.Component {
         this._redirect = this._redirect.bind(this);
     }
 
-    componentDidMount() {
-        document.querySelector('.saksoversikt .lamellhode a').focus();
-    }
-
     componentWillMount() {
         this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
+    }
+
+    componentDidMount() {
+        document.querySelector('.saksoversikt .lamellhode a').focus();
     }
 
     _redirect(e) {
@@ -46,7 +46,7 @@ class DokumentVisningPage extends React.Component {
 
     render() {
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
-            return <Snurrepipp farge='hvit' />;
+            return <Snurrepipp farge="hvit" />;
         }
         const { journalpostmetadata } = this.props;
 

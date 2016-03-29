@@ -19,7 +19,8 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
             return acc.concat(
                 dokumenter.map((dokument, index) => (
                     <DokumentInfoElm key={`dokument-${aarstall}-${index}`} brukerNavn={brukerNavn} visTema={visTema}
-                                     velgJournalpost={velgJournalpost} visSide={visSide} dokumentinfo={dokument}/>
+                      velgJournalpost={velgJournalpost} visSide={visSide} dokumentinfo={dokument}
+                    />
                 ))
             );
         }, []);

@@ -2,7 +2,8 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretDataInit, hentLerretDataSakstema, velgSak, visSide, velgJournalpost, velgFiltreringAvsender } from './../actions';
+import { hentLerretDataInit, hentLerretDataSakstema, velgSak,
+    visSide, velgJournalpost, velgFiltreringAvsender } from './../actions';
 import * as Const from './../konstanter';
 
 import SakstemaPage from './sakstema/sakstema-page';
@@ -15,14 +16,14 @@ import nbLocale from 'react-intl/locale-data/nb';
 addLocaleData(nbLocale);
 
 const contextRoutes = {
-    'sakstema': (props) => <SakstemaPage {...props} />,
-    'viktigavite': (props) => <ViktigAVitePage {...props} />,
-    'dokumentvisning': (props) => <DokumentVisningPage {...props} />
+    sakstema: (props) => <SakstemaPage {...props} />,
+    viktigavite: (props) => <ViktigAVitePage {...props} />,
+    dokumentvisning: (props) => <DokumentVisningPage {...props} />
 };
 
 function getContent(props) {
     const { valgtside, ...componentProps } = props;
-    const fn = contextRoutes[valgtside] || contextRoutes['sakstema'];
+    const fn = contextRoutes[valgtside] || contextRoutes.sakstema;
     return fn(componentProps);
 }
 
@@ -32,9 +33,9 @@ function harFeilmelding(props) {
 }
 
 function lagFeilmelding(props) {
-        return harFeilmelding(props)? (<div className="lamell-feilmelding">
-            <FormattedMessage id="sakslamell.feilmelding" />
-        </div>): <noscript />;
+    return harFeilmelding(props) ? (<div className="lamell-feilmelding">
+        <FormattedMessage id="sakslamell.feilmelding"/>
+    </div>) : <noscript />;
 }
 
 class SaksoversiktLerret extends React.Component {
@@ -47,7 +48,7 @@ class SaksoversiktLerret extends React.Component {
         if (this.props.status !== Const.LASTET) {
             return (
                 <div className="saksoversikt-snurrepipp">
-                    <Snurrepipp farge='hvit'/>
+                    <Snurrepipp farge="hvit"/>
                 </div>
             );
         }
@@ -75,7 +76,8 @@ SaksoversiktLerret.propTypes = {
     hentLerretDataSakstema: React.PropTypes.func,
     velgSak: React.PropTypes.func,
     status: React.PropTypes.string,
-    tekster: React.PropTypes.object
+    tekster: React.PropTypes.object,
+    miljovariabler: React.PropTypes.object
 };
 
 const mapStateToProps = (state) => {

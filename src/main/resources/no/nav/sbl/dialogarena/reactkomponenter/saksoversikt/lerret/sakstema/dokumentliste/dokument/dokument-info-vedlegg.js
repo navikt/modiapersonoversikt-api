@@ -1,39 +1,39 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-// TODO stateless function
-class DokumentinfoVedlegg extends React.Component {
-
-    _redirect(e) {
+const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
+    function _redirect(e) {
         e.preventDefault();
-        this.props.visSide('dokumentvisning');
-        this.props.velgJournalpost(this.props.dokumentinfo);
+        visSide('dokumentvisning');
+        velgJournalpost(dokumentinfo);
     }
 
-    render() {
-        const { dokumentinfo } = this.props;
-
-        if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {
-            return <noscript />;
-        }
-
-        const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg) => (
-            <li className="vedlegg-element">
-                <a href="javascript:void(0);" onClick={this._redirect.bind(this)}
-                   className="vedleggtext">{dokumentVedlegg.tittel}</a>
-            </li>));
-
-        return (
-            <div className="vedleggcontainer">
-                <div className="vedleggheader"><FormattedMessage id="dokumentinfo.vedlegg"/></div>
-                <ul className="vedleggliste">{vedleggListe}</ul>
-            </div>
-        );
+    if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {
+        return <noscript />;
     }
-}
+
+    const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg) => (
+        <li className="vedlegg-element">
+            <a href="javascript:void(0);" onClick={_redirect}
+              className="vedleggtext"
+            >
+                {dokumentVedlegg.tittel}
+            </a>
+        </li>));
+    return (
+        <div className="vedleggcontainer">
+            <div className="vedleggheader"><FormattedMessage id="dokumentinfo.vedlegg"/></div>
+            <ul className="vedleggliste">{vedleggListe}</ul>
+        </div>
+
+    );
+};
+
 
 DokumentinfoVedlegg.propTypes = {
-    dokumentinfo: React.PropTypes.object.isRequired
+    dokumentinfo: React.PropTypes.object.isRequired,
+    visSide: React.PropTypes.func.isRequired,
+    velgJournalpost: React.PropTypes.func.isRequired
 };
 
 export default DokumentinfoVedlegg;

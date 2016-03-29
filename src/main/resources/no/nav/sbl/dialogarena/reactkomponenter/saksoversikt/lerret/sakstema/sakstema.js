@@ -13,21 +13,23 @@ class Sakstema extends React.Component {
     }
 
     render() {
-        const { tema, valgtTema, velgSak, nokkelinfo } = this.props;
+        const { tema, valgtTema, nokkelinfo } = this.props;
 
         // Sjekk på temakode ettersom 'alletemaet' blir laget på nytt ved rerender.
         const erValgt = tema.temakode === valgtTema.temakode ? 'valgt' : '';
+        const velgSak = () => this.props.velgSak(tema);
         const id = `sakstemaRadioListe--${tema.temakode}`;
         const sisteOppdatering = nokkelinfo.sisteOppdatering || '';
-        const behandlingsstatus = tema.temakode !== 'alle' && nokkelinfo.behandlingsstatus ? nokkelinfo.behandlingsstatus : '';
+        const behandlingsstatus = tema.temakode !== 'alle' && nokkelinfo.behandlingsstatus ?
+            nokkelinfo.behandlingsstatus : '';
         const sisteOppdateringTekst = <FormattedDate value={sisteOppdatering} {...datoformat.NUMERISK_2_DIGIT} />;
         const harTilgang = tema.harTilgang ? '' : 'tema-ikke-tilgang';
-        const skjultIngenTilgangTekst = !tema.harTilgang? <p className="vekk">Ikke tilgang til sakstema</p>:'';
+        const skjultIngenTilgangTekst = !tema.harTilgang ? <p className="vekk">Ikke tilgang til sakstema</p> : '';
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt} ${harTilgang}`}>
                 <input type="radio" id={id} ref="radio" readOnly checked={erValgt} name="sakstemaRadioListe"
-                       onClick={() => velgSak(tema)}
+                  onClick={velgSak}
                 />
                 <label htmlFor={id}>
                     {skjultIngenTilgangTekst}

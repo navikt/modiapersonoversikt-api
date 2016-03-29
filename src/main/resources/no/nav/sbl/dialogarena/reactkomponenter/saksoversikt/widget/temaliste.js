@@ -50,9 +50,11 @@ class Temaliste extends React.Component {
             take(temaer, ANTALL_TEMAER).map((tema) =>
                 <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
 
+        const sendToWidget = () => this.sendToWidget('VIS_ALLE_CLICK');
+
         const flereSaker = (
             <li>
-                <a href="javascript:void(0)" onClick={() => this.sendToWidget('VIS_ALLE_CLICK')} tabIndex="-1">
+                <a href="javascript:void(0)" onClick={sendToWidget} tabIndex="-1">
                     <FormattedMessage id="sakswidget.sefleresaker"/>
                 </a>
             </li>

@@ -1,8 +1,10 @@
 import { javaLocalDateTimeToJSDate } from './dato-utils';
 
 const nyesteElementISakstema = (sakstema) => {
-    const behandlingskjeder = sakstema.behandlingskjeder.map((behandlingskjede) => javaLocalDateTimeToJSDate(behandlingskjede.sistOppdatert).getTime());
-    const metadata = sakstema.dokumentMetadata.map((metadata) => javaLocalDateTimeToJSDate(metadata.dato).getTime());
+    const behandlingskjeder = sakstema.behandlingskjeder.map((behandlingskjede) =>
+        javaLocalDateTimeToJSDate(behandlingskjede.sistOppdatert).getTime());
+    const metadata = sakstema.dokumentMetadata.map((metaData) =>
+        javaLocalDateTimeToJSDate(metaData.dato).getTime());
 
     const combined = [].concat(behandlingskjeder, metadata);
 
@@ -11,6 +13,5 @@ const nyesteElementISakstema = (sakstema) => {
     return combined[0];
 };
 
-export const nyesteSakstema = (saktema1, saktema2) => {
-    return nyesteElementISakstema(saktema2) - nyesteElementISakstema(saktema1);
-};
+export const nyesteSakstema = (saktema1, saktema2) =>
+nyesteElementISakstema(saktema2) - nyesteElementISakstema(saktema1);

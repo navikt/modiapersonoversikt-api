@@ -8,7 +8,7 @@ const stylingFn = (antallSider, width = 750) => ({
     width: '100%',
     maxWidth: '100%',
     marginBottom: '2rem',
-    height: a4Ratio * antallSider * width + 100 //magisk tall
+    height: a4Ratio * antallSider * width + 100 // magisk tall
 });
 
 class DokumentVisning extends Component {
@@ -20,33 +20,6 @@ class DokumentVisning extends Component {
         };
 
         autobind(this);
-    }
-
-    _oppdaterPdfVisning() {
-        const pdf = this.refs.pdf;
-        const width = pdf.offsetWidth;
-
-        const height = stylingFn(this.props.dokument.antallsider, width).height;
-
-        if (this.state.height !== height) {
-            this.setState({ height: height });
-        }
-    }
-
-    _print(e) {
-        e.preventDefault();
-        try {
-            this.refs.pdf.print()
-        } catch (e) {
-            const printWindow = window.open(this.props.dokument.pdfUrl);
-
-            printWindow.onload = () => {
-                printWindow.print();
-            };
-
-            return false;
-        }
-
     }
 
     componentDidMount() {
@@ -65,6 +38,31 @@ class DokumentVisning extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.eventHandler);
+    }
+
+    _oppdaterPdfVisning() {
+        const pdf = this.refs.pdf;
+        const width = pdf.offsetWidth;
+
+        const height = stylingFn(this.props.dokument.antallsider, width).height;
+
+        if (this.state.height !== height) {
+            this.setState({ height });
+        }
+    }
+
+    _print(e) {
+        e.preventDefault();
+        try {
+            this.refs.pdf.print();
+        } catch (ex) {
+            const printWindow = window.open(this.props.dokument.pdfUrl);
+
+            printWindow.onload = () => {
+                printWindow.print();
+            };
+            return false;
+        }
     }
 
     render() {
@@ -86,15 +84,24 @@ class DokumentVisning extends Component {
                     </div>
                 </div>
                 <object ref="pdf" data={pdfData} type="application/pdf" scrolling="no" style={style}
-                        key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
+                  key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}
+                >
                     <param name="view" value="FitV"/>
 
                     <div className="feilmelding-container">
-                        <img className="feilmelding-bakgrunn" src="/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg" alt=""/>
+                        <img className="feilmelding-bakgrunn"
+                          src="/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg" alt=""
+                        />
                         <div className="feilmelding panel panel-ramme">
-                            <h1 className="-ikon-feil-strek teknisk-feil-ikon"><FormattedMessage id="dokumentvisning.pdf.feilmelding.tittel" /></h1>
-                            <p className="text-center"><FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold" /></p>
-                            <p className="text-center"><a href={dokument.pdfUrl} target="_blank">Åpne i egen fane</a></p>
+                            <h1 className="-ikon-feil-strek teknisk-feil-ikon">
+                                <FormattedMessage
+                                  id="dokumentvisning.pdf.feilmelding.tittel"
+                                />
+                            </h1>
+                            <p className="text-center"><FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold"/>
+                            </p>
+                            <p className="text-center"><a href={dokument.pdfUrl} target="_blank">Åpne i egen fane</a>
+                            </p>
                         </div>
                     </div>
                 </object>
@@ -102,5 +109,13 @@ class DokumentVisning extends Component {
         );
     }
 }
+
+DokumentVisning.propTypes = {
+    dokument: React.PropTypes.shape({
+        antallSider: React.PropTypes.int,
+        antallsider: React.PropTypes.int,
+        pdfUrl: React.PropTypes.string
+    }).isRequired
+};
 
 export default DokumentVisning;
