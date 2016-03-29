@@ -97,7 +97,7 @@
 
     <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
 
-    <logger name="org.apache.cxf" level="INFO">
+    <logger name="org.apache.cxf" level="OFF">
         <appender-ref ref="infolog"/>
     </logger>
 
