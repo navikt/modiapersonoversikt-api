@@ -1,21 +1,16 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.*;
-import static java.util.stream.Stream.concat;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
 
 public class SakstemaGrupperer {
 
@@ -31,9 +26,9 @@ public class SakstemaGrupperer {
     private Predicate<Map.Entry<String, Set<String>>> inneholderOppfolgingstema = entrySet -> entrySet.getValue().contains(OPPFOLGING);
     private Predicate<Map.Entry<String, Set<String>>> erTemaMedOppfolging = harMinstEtTema.and(inneholderOppfolgingstema);
 
-    public Map<String, Set<String>> grupperSakstema(List<Sak> saker, List<DokumentMetadata> dokumentMetadata) {
+    public Map<String, Set<String>> grupperSakstema(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
-        Map<String, List<Pair<String, String>>> grupperteSaker = grupperSakstemaITemagrupper(saker, dokumentMetadata);
+        Map<String, List<Pair<String, String>>> grupperteSaker = grupperSakstemaITemagrupper(saker, dokumentMetadata, behandlingskjeder);
 
         Map<String, Set<String>> grupperteSakstema = grupperTemagruppePar(grupperteSaker);
 
@@ -48,6 +43,9 @@ public class SakstemaGrupperer {
                 dokumentMetadata.stream()
                         .filter(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE))
                         .map(s -> s.getTemakode())
+                ,
+                behandlingskjeder.entrySet().stream()
+                        .map(e -> e.getKey())
         )
                 .filter(tema -> temaFinnesIkkeITemagruppe(tema, temaMedOppfolging))
                 .collect(toSet());
@@ -58,7 +56,7 @@ public class SakstemaGrupperer {
         }};
     }
 
-    private Map<String, List<Pair<String, String>>> grupperSakstemaITemagrupper(List<Sak> saker, List<DokumentMetadata> dokumentMetadata) {
+    private Map<String, List<Pair<String, String>>> grupperSakstemaITemagrupper(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
         Map<String, List<String>> temagrupperMedTema = temagrupperHenter.genererTemagrupperMedTema();
 
@@ -76,7 +74,15 @@ public class SakstemaGrupperer {
                 .flatMap(List::stream)
                 .collect(groupingBy(Pair::getKey));
 
-        parFraDokumentMetadata.entrySet().stream().forEach(entry -> {
+        Map<String, List<Pair<String, String>>> parFraBehandlingskjeder = behandlingskjeder.entrySet().stream()
+                .map(entry -> finnTemagruppeForBehandlingskjede(temagrupperMedTema, entry.getKey()))
+                .flatMap(List::stream)
+                .collect(groupingBy(Pair::getKey));
+
+        concat(
+                parFraDokumentMetadata.entrySet().stream(),
+                parFraBehandlingskjeder.entrySet().stream()
+        ).forEach(entry -> {
                     parFraSaker.computeIfPresent(entry.getKey(), (k, v) -> {
                         v.addAll(entry.getValue());
                         return v;
@@ -108,6 +114,14 @@ public class SakstemaGrupperer {
                 .stream()
                 .filter(entry -> entry.getValue().contains(sak.getTemakode()))
                 .map(entry -> new ImmutablePair<>(entry.getKey(), sak.getTemakode()))
+                .collect(toList());
+    }
+
+    private static List<Pair<String, String>> finnTemagruppeForBehandlingskjede(Map<String, List<String>> temagrupperMedTemaer, String temakode) {
+        return temagrupperMedTemaer.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().contains(temakode))
+                .map(entry -> new ImmutablePair<>(entry.getKey(), temakode))
                 .collect(toList());
     }
 

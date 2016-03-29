@@ -77,6 +77,7 @@ public class SaksServiceTest {
     private SaksService saksService = new SaksService();
 
     private static final String FNR = "12345678901";
+
     @Before
     public void setup() {
         when(request.getSession()).thenReturn(new MockHttpSession());
@@ -110,7 +111,10 @@ public class SaksServiceTest {
 
         when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(dokumentmetadata, emptySet()));
 
-        when(sakstemaGrupperer.grupperSakstema(saker, dokumentmetadata)).thenReturn(new HashMap<String, Set<String>>() {{
+        Map<String, List<Behandlingskjede>> emptyMap = new HashMap();
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(FNR)).thenReturn(emptyMap);
+
+        when(sakstemaGrupperer.grupperSakstema(saker, dokumentmetadata, emptyMap)).thenReturn(new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet<>(asList(DAGPENGER)));
         }});
 
@@ -243,7 +247,13 @@ public class SaksServiceTest {
     public void sakFraSakogBehandlingUtenTilhoerendeSakstemaOppretterEgetSakstema() {
         when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
         when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
-        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(emptyMap());
+
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+            put("RESTERENDE_TEMA", new HashSet(asList("DAG")));
+        }};
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+
         Map sakOgBehandlingResults = new HashMap<>();
         sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
         when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
@@ -263,7 +273,7 @@ public class SaksServiceTest {
         set.add("DAG");
         gruppertTema.put("RESTERENDE_TEMA", set);
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
         Map sakOgBehandlingResults = new HashMap<>();
         sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
         when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
@@ -281,12 +291,11 @@ public class SaksServiceTest {
         when(kodeverk.getTemanavnForTemakode("FOR", BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Foreldrepenger");
         when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(HENVENDELSE))));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<>();
-        Set set = new HashSet<>();
-        set.add("FOR");
-        gruppertTema.put("RESTERENDE_TEMA", set);
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+            put("RESTERENDE_TEMA", new HashSet(asList("FOR", "DAG")));
+        }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
         Map sakOgBehandlingResults = new HashMap<>();
         sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
         when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
@@ -348,4 +357,45 @@ public class SaksServiceTest {
         assertThat(wrapper.resultat.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
         assertThat(wrapper.resultat.size(), is(2));
     }
+
+    @Test
+    public void gruppererNyttTemaFraSogBOmViHarEnOppfolgingssak() {
+        when(kodeverk.getTemanavnForTemakode(DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Dagpenger");
+        when(kodeverk.getTemanavnForTemakode(ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Arbeidsavklaringspenger");
+        when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn("Oppfølging");
+
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+                .thenReturn(
+                        new ResultatWrapper<>(
+                                asList(
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("123")
+                                                .withTemakode("AAP")
+                                                .withBaksystem(JOARK),
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("456")
+                                                .withTemakode("OPP")
+                                                .withBaksystem(JOARK))
+                        ));
+
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+            put("Arbeid", new HashSet(asList("AAP", "DAG", "OPP")));
+        }};
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+
+        List<Sak> saker = asList(new Sak().withSaksId("123").withTemakode("AAP"), new Sak().withSaksId("456").withTemakode("OPP"));
+
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = saksService.hentSakstema(saker, FNR, true);
+
+        assertThat(listResultatWrapper.resultat.size(), is(2));
+        assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Arbeidsavklaringspenger og oppfølging"));
+        assertThat(listResultatWrapper.resultat.get(1).temanavn, is("Dagpenger og oppfølging"));
+    }
+
 }
