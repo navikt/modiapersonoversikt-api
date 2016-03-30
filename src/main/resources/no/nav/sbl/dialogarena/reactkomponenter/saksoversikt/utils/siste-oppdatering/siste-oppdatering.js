@@ -1,5 +1,3 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { javaLocalDateTimeToJSDate } from './../dato-utils';
 import { finnBehandlingsstatus } from './behandlingsstatus';
 import { sisteOppdatering } from './siste-oppdateringsdato';

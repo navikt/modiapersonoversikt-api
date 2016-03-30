@@ -1,26 +1,8 @@
+/* eslint-env mocha */
 import './../../test-config';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import { nyesteSakstema } from './dato-sortering';
-import { nyesteElementISakstema } from './dato-sortering'
-
-describe('Datosortering - ', () => {
-
-    it('skal returnere den nyeste av datoene for et sakstema', () => {
-        const datoFasit = new Date(2016,2,27).getTime();
-        const datoFraMetode = nyesteElementISakstema(sakstema1);
-
-        expect(datoFraMetode).to.be.eql(datoFasit);
-    });
-
-    it('skal sortere sakstema på nyeste dato', () => {
-        const sakstemaListe = [].concat(sakstema1).concat(sakstema3).concat(sakstema2);
-
-        sakstemaListe.sort(nyesteSakstema);
-
-        expect(sakstemaListe[0].temakode).to.be.eql('DAG');
-        expect(sakstemaListe[2].temakode).to.be.eql('IND');
-    });
-});
+import { nyesteElementISakstema } from './dato-sortering';
 
 const sakstema1 = {
     temakode: 'AAP',
@@ -83,3 +65,21 @@ const sakstema3 = {
     ],
     dokumentMetadata: []
 };
+
+describe('Datosortering - ', () => {
+    it('skal returnere den nyeste av datoene for et sakstema', () => {
+        const datoFasit = new Date(2016, 2, 27).getTime();
+        const datoFraMetode = nyesteElementISakstema(sakstema1);
+
+        expect(datoFraMetode).to.be.eql(datoFasit);
+    });
+
+    it('skal sortere sakstema på nyeste dato', () => {
+        const sakstemaListe = [].concat(sakstema1).concat(sakstema3).concat(sakstema2);
+
+        sakstemaListe.sort(nyesteSakstema);
+
+        expect(sakstemaListe[0].temakode).to.be.eql('DAG');
+        expect(sakstemaListe[2].temakode).to.be.eql('IND');
+    });
+});
