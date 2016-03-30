@@ -22,6 +22,12 @@ function widgetSnurrepipp(status) {
     }
 }
 
+const feilmelding = (
+    <div className="listeelement-kant">
+        <p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding"/></p>
+    </div>
+);
+
 class Temaliste extends React.Component {
     componentWillMount() {
         this.props.hentWidgetData(this.props.fnr);
@@ -40,21 +46,19 @@ class Temaliste extends React.Component {
             return <noscript/>;
         }
 
-        const feilmelding = (
-            <div className="listeelement-kant">
-                <p className="-ikon-feil"><FormattedMessage id="sakswidget.feilmelding"/></p>
-            </div>
-        );
-
         const temaliste = status === Const.FEILET ? feilmelding :
-            take(temaer, ANTALL_TEMAER).map((tema) =>
-                <li key={tema.temakode}><Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/></li>);
+            take(temaer, ANTALL_TEMAER)
+                .map((tema) => (
+                    <li key={tema.temakode}>
+                        <Sakstema tema={tema} fnr={fnr} sendToWicket={this.sendToWidget}/>
+                    </li>
+                ));
 
         const sendToWidget = () => this.sendToWidget('VIS_ALLE_CLICK');
 
         const flereSaker = (
             <li>
-                <a href="javascript:void(0)" onClick={sendToWidget} tabIndex="-1">
+                <a href="#" onClick={sendToWidget} tabIndex="-1">
                     <FormattedMessage id="sakswidget.sefleresaker"/>
                 </a>
             </li>
@@ -82,12 +86,10 @@ Temaliste.propTypes = {
     hentWidgetData: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
-    return {
-        temaer: state.widget.data.temaer,
-        tekster: state.widget.data.tekster,
-        status: state.widget.status
-    };
-};
+const mapStateToProps = (state) => ({
+    temaer: state.widget.data.temaer,
+    tekster: state.widget.data.tekster,
+    status: state.widget.status
+});
 
 export default connect(mapStateToProps, { hentWidgetData })(Temaliste);
