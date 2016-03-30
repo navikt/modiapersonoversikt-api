@@ -1,9 +1,7 @@
 import './../../../test-config';
 import { expect } from 'chai';
-import sinon from 'sinon';
 import React from 'react';
 import assign from 'object-assign';
-import TestUtils from 'react-addons-test-utils';
 import { finnBehandlingsstatus, finnAntallBehandlingskjeder, underBehandlingEllerNyereEnnGrenseverdi } from './behandlingsstatus';
 
 const datoForGrense = {
