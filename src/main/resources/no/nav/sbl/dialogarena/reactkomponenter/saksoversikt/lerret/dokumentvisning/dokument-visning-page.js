@@ -8,7 +8,7 @@ import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';
 import DokumentVisningListe from './dokument-visning-liste';
-import { FormattedMessage, FormattedDate } from 'react-intl';
+import { FormattedMessage, FormattedDate, injectIntl, intlShape } from 'react-intl';
 import KulemenyListe from './kulemeny/kulemeny-liste';
 
 function lagKulelistedata(dokumenter, feiledeDokumenter) {
@@ -23,6 +23,15 @@ function lagKulelistedata(dokumenter, feiledeDokumenter) {
                  dokumentreferanse: dokument.dokumentreferanse,
                  tittel: dokument.tittel
              }));
+}
+
+function getNotatTekst(valgtJournalpost, intl) {
+    if (valgtJournalpost.retning !== 'INTERN') {
+        return '';
+    }
+    return valgtJournalpost.kategoriNotat === 'FORVALTNINGSNOTAT' ?
+        intl.formatMessage({ id: 'dokumentinfo.forvaltningsnotat' }) :
+        intl.formatMessage({ id: 'dokumentinfo.internnotat' });
 }
 
 class DokumentVisningPage extends React.Component {
@@ -46,13 +55,14 @@ class DokumentVisningPage extends React.Component {
 
     render() {
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
-            return <Snurrepipp farge="hvit" />;
+            return <Snurrepipp farge="hvit"/>;
         }
-        const { journalpostmetadata } = this.props;
+        const { journalpostmetadata, intl } = this.props;
 
         const values = {
             retning: this.props.valgtJournalpost.retning,
             navn: this.props.valgtJournalpost.navn,
+            typeIntern: getNotatTekst(this.props.valgtJournalpost, intl),
             dato: javaLocalDateTimeToJSDate(this.props.valgtJournalpost.dato)
         };
 
@@ -61,7 +71,7 @@ class DokumentVisningPage extends React.Component {
         return (
             <div className="dokument-visning-page">
                 <div className="fixed-header blokk-s">
-                    <a href="javascript:void(0);" onClick={this._redirect}>Tilbake til sakstema</a>
+                    <a href="#" onClick={this._redirect}>Tilbake til sakstema</a>
                     <KulemenyListe dokumentmetadata={kulelisteVM}/>
                 </div>
 
@@ -89,19 +99,18 @@ DokumentVisningPage.propTypes = {
     visSide: PT.func.isRequired,
     lerretstatus: PT.string.isRequired,
     dokumentstatus: PT.string.isRequired,
-    journalpostmetadata: PT.object.isRequired
+    journalpostmetadata: PT.object.isRequired,
+    intl: intlShape
 };
 
-const mapStateToProps = (state) => {
-    return {
-        journalpostmetadata: state.dokument.data,
-        lerretstatus: state.lerret.status,
-        dokumentstatus: state.dokument.status,
-        valgtJournalpost: state.lerret.valgtJournalpost,
-        tekster: state.lerret.data.tekster
-    };
-};
+const mapStateToProps = (state) => ({
+    journalpostmetadata: state.dokument.data,
+    lerretstatus: state.lerret.status,
+    dokumentstatus: state.dokument.status,
+    valgtJournalpost: state.lerret.valgtJournalpost,
+    tekster: state.lerret.data.tekster
+});
 
 export default wrapWithProvider(connect(mapStateToProps, {
     hentDokumentData
-})(DokumentVisningPage), store);
+})(injectIntl(DokumentVisningPage)), store);

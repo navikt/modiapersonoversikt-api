@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { Element } from 'react-scroll';
 
 function createMarkup(markuptekst) {
@@ -37,7 +37,8 @@ VedleggFeilmelding.propTypes = {
         ekstrafeilinfo: React.PropTypes.object,
         bildeUrl: React.PropTypes.string.isRequired
     }).isRequired,
-    name: React.PropTypes.string
+    name: React.PropTypes.string,
+    intl: intlShape
 };
 
 export default injectIntl(VedleggFeilmelding);
