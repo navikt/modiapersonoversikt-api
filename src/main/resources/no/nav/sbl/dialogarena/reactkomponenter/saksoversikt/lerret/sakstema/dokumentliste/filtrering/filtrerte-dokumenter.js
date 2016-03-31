@@ -3,11 +3,11 @@ import { NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
 import DokumentListe from './../dokumentliste';
 
 const filtrertPaaNav = (retning, filtreringsvalg) =>
-filtreringsvalg[NAV] && (retning === 'UT' || retning === 'INTERN');
+    filtreringsvalg[NAV] && (retning === 'UT' || retning === 'INTERN');
 const filtrertPaaBruker = (retning, avsender, filtreringsvalg) =>
-filtreringsvalg[BRUKER] && retning === 'INN' && avsender === 'SLUTTBRUKER';
+    filtreringsvalg[BRUKER] && retning === 'INN' && avsender === 'SLUTTBRUKER';
 const filtrertPaaAndre = (retning, avsender, filtreringsvalg) =>
-filtreringsvalg[ANDRE] && retning === 'INN' && avsender !== 'SLUTTBRUKER';
+    filtreringsvalg[ANDRE] && retning === 'INN' && avsender !== 'SLUTTBRUKER';
 
 export const skalViseDokument = ({ avsender, retning }, filtreringsvalg) => filtrertPaaNav(retning, filtreringsvalg) ||
 filtrertPaaBruker(retning, avsender, filtreringsvalg) || filtrertPaaAndre(retning, avsender, filtreringsvalg);

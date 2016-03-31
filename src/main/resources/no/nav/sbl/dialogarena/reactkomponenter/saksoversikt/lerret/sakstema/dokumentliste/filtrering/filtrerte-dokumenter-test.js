@@ -32,16 +32,16 @@ describe('FiltrerDokumenter', () => {
         };
 
         const skalViseUtgaaendeDokument = skalViseDokument(utgaaendeDokument, filtreringsvalg);
-        expect(skalViseUtgaaendeDokument).to.be.eql(true);
+        expect(skalViseUtgaaendeDokument).to.equal(true);
 
         const skalViseInngaaendeDokumentSluttbruker = skalViseDokument(inngaaaendeDokumentSluttbruker, filtreringsvalg);
-        expect(skalViseInngaaendeDokumentSluttbruker).to.be.eql(true);
+        expect(skalViseInngaaendeDokumentSluttbruker).to.equal(true);
 
         const skalViseInngaaendeDokumentAndre = skalViseDokument(inngaaendeDokumentAndre, filtreringsvalg);
-        expect(skalViseInngaaendeDokumentAndre).to.be.eql(true);
+        expect(skalViseInngaaendeDokumentAndre).to.equal(true);
 
         const skalViseinternDokument = skalViseDokument(internDokument, filtreringsvalg);
-        expect(skalViseinternDokument).to.be.eql(true);
+        expect(skalViseinternDokument).to.equal(true);
     });
 
     it('Skal vise ingen dokumenter naar ingen filtreringsvalg er valgt', () => {
@@ -52,16 +52,16 @@ describe('FiltrerDokumenter', () => {
         };
 
         const skalViseUtgaaendeDokument = skalViseDokument(utgaaendeDokument, filtreringsvalg);
-        expect(skalViseUtgaaendeDokument).to.be.eql(false);
+        expect(skalViseUtgaaendeDokument).to.equal(false);
 
         const skalViseInngaaendeDokumentSluttbruker = skalViseDokument(inngaaaendeDokumentSluttbruker, filtreringsvalg);
-        expect(skalViseInngaaendeDokumentSluttbruker).to.be.eql(false);
+        expect(skalViseInngaaendeDokumentSluttbruker).to.equal(false);
 
         const skalViseInngaaendeDokumentAndre = skalViseDokument(inngaaendeDokumentAndre, filtreringsvalg);
-        expect(skalViseInngaaendeDokumentAndre).to.be.eql(false);
+        expect(skalViseInngaaendeDokumentAndre).to.equal(false);
 
         const skalViseinternDokument = skalViseDokument(internDokument, filtreringsvalg);
-        expect(skalViseinternDokument).to.be.eql(false);
+        expect(skalViseinternDokument).to.equal(false);
     });
 
     it('Skal vise alle dokumenter fra NAV naar filtreringsvalget NAV er valgt', () => {
@@ -72,15 +72,15 @@ describe('FiltrerDokumenter', () => {
         };
 
         const skalViseUtgaaendeDokument = skalViseDokument(utgaaendeDokument, filtreringsvalg);
-        expect(skalViseUtgaaendeDokument).to.be.eql(true);
+        expect(skalViseUtgaaendeDokument).to.equal(true);
 
         const skalViseInngaaendeDokumentSluttbruker = skalViseDokument(inngaaaendeDokumentSluttbruker, filtreringsvalg);
-        expect(skalViseInngaaendeDokumentSluttbruker).to.be.eql(false);
+        expect(skalViseInngaaendeDokumentSluttbruker).to.equal(false);
 
         const skalViseInngaaendeDokumentAndre = skalViseDokument(inngaaendeDokumentAndre, filtreringsvalg);
-        expect(skalViseInngaaendeDokumentAndre).to.be.eql(false);
+        expect(skalViseInngaaendeDokumentAndre).to.equal(false);
 
         const skalViseinternDokument = skalViseDokument(internDokument, filtreringsvalg);
-        expect(skalViseinternDokument).to.be.eql(true);
+        expect(skalViseinternDokument).to.equal(true);
     });
 });
