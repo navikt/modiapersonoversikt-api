@@ -33,6 +33,7 @@ public class SaksoversiktWidget extends Widget<Object> {
         }});
 
         feeditemListe.addCallback("ITEM_CLICK", String.class, (target, data) -> {
+            feeditemListe.callFirst("callAction", "purgeState");
             send(this, Broadcast.BUBBLE, new NamedEventPayload(
                     FEED_ITEM_CLICKED,
                     new FeedItemPayload(this.getId(), data, "tema"))
@@ -40,6 +41,7 @@ public class SaksoversiktWidget extends Widget<Object> {
         });
 
         feeditemListe.addCallback("VIS_ALLE_CLICK", Void.class, (target, data) -> {
+            feeditemListe.callFirst("callAction", "purgeState");
             apneSaksoversiktLamell();
         });
 
