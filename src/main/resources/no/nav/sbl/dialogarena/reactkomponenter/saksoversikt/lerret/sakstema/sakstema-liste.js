@@ -1,6 +1,6 @@
 import React, { PropTypes as PT } from 'react';
 import Sakstema from './sakstema';
-import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering';
+import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering/siste-oppdatering';
 
 const SakstemaListe = ({ sakstema, valgtTema, velgSak }, { miljovariabler }) => {
     const temaListe = sakstema.map((tema) => (
