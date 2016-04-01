@@ -20,6 +20,7 @@ class VedleggFeilmelding extends React.Component {
 
         feilmelding.style.left = `${leftPosition}px`;
     }
+
     render() {
         const { feilmelding: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo }, name } = this.props;
 
