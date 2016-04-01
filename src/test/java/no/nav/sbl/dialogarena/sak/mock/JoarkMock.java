@@ -17,6 +17,7 @@ public class JoarkMock {
     public static final String PERSON_FNR = "12345678901";
 
     public static final String TREDJEPERSON_NAVN = "Doktor Proktor";
+    public static final String FALLBACK_NAVN = "Fallbacknavn";
     public static final String TREDJEPERSON_FNR = "09876543212";
 
     public static final String BEDRIFT_NAVN = "Testbedrift";
@@ -57,13 +58,13 @@ public class JoarkMock {
         journalpost.setJournalpostId("1");
         journalpost.setArkivtema(lagArkivtema("DAG"));
         journalpost.setEksternPart(ingen());
+        journalpost.setEksternPartNavn("");
         journalpost.setGjelderSak(lagJoarkSak("1"));
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
         journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
         journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
         journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
         journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
-
         return journalpost;
     }
 
@@ -152,6 +153,44 @@ public class JoarkMock {
         journalpost.setJournalpostId("3");
         journalpost.setArkivtema(lagArkivtema("DAG"));
         journalpost.setEksternPart(tredjePartsPerson());
+        journalpost.setGjelderSak(lagJoarkSak("2"));
+        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(DokumentMetadataService.JOURNALPOST_UTGAAENDE));
+        try {
+            journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
+            journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        journalpost.getDokumentinfoRelasjonListe()
+                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
+        return journalpost;
+    }
+
+    public static WSJournalpost dokumentUtenEksternPartMedFallbackNavn() {
+        WSJournalpost journalpost = new WSJournalpost();
+        journalpost.setJournalpostId("3");
+        journalpost.setArkivtema(lagArkivtema("DAG"));
+        journalpost.setEksternPart(null);
+        journalpost.setEksternPartNavn(FALLBACK_NAVN);
+        journalpost.setGjelderSak(lagJoarkSak("2"));
+        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(DokumentMetadataService.JOURNALPOST_UTGAAENDE));
+        try {
+            journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
+            journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        journalpost.getDokumentinfoRelasjonListe()
+                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
+        return journalpost;
+    }
+
+    public static WSJournalpost dokumentUkjentAvsender() {
+        WSJournalpost journalpost = new WSJournalpost();
+        journalpost.setJournalpostId("3");
+        journalpost.setArkivtema(lagArkivtema("DAG"));
+        journalpost.setEksternPart(null);
+        journalpost.setEksternPartNavn("");
         journalpost.setGjelderSak(lagJoarkSak("2"));
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(DokumentMetadataService.JOURNALPOST_UTGAAENDE));
         try {

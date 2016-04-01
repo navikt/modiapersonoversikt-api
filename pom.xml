@@ -40,7 +40,7 @@
         <reactkomponenter.version>2.7.12-HL2</reactkomponenter.version>
 
         <!-- Tjenester  -->
-        <joark-tjenestespesifikasjon.version>2.2</joark-tjenestespesifikasjon.version>
+        <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <pensjon-sak-v1-tjenestespesifikasjon.version>1.0.3</pensjon-sak-v1-tjenestespesifikasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>

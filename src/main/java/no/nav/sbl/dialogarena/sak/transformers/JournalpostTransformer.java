@@ -52,7 +52,7 @@ public class JournalpostTransformer {
                 .withDato(dato)
                 .withAvsender(avsenderMottaker.getLeft())
                 .withMottaker(avsenderMottaker.getRight())
-                .withNavn(finnNavn(journalpost.getEksternPart(), fnr))
+                .withNavn(finnNavn(journalpost.getEksternPart(), fnr, journalpost.getEksternPartNavn()))
                 .withTemakode(journalpost.getArkivtema().getValue())
                 .withRetning(Kommunikasjonsretning.fraJournalpostretning(journalpost.getKommunikasjonsretning().getValue()))
                 .withBaksystem(JOARK)
@@ -76,7 +76,7 @@ public class JournalpostTransformer {
         return erSluttbruker;
     }
 
-    private String finnNavn(WSAktoer aktoer, String fnr) {
+    private String finnNavn(WSAktoer aktoer, String fnr, String fallbacknavn) {
         if (aktoer instanceof WSPerson) {
             WSPerson wsPerson = (WSPerson) aktoer;
             if (!fnr.equals(wsPerson.getIdent())) {
@@ -85,6 +85,8 @@ public class JournalpostTransformer {
             return wsPerson.getNavn();
         } else if (aktoer instanceof WSOrganisasjon) {
             return ((WSOrganisasjon) aktoer).getNavn();
+        } else if (!fallbacknavn.isEmpty()) {
+            return fallbacknavn;
         }
         return "ukjent";
     }
