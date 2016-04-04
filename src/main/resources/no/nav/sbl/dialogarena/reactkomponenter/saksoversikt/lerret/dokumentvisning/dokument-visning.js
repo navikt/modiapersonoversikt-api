@@ -72,7 +72,7 @@ class DokumentVisning extends Component {
 
         const aapneSomPDFLink = (
             <a target="_blank" href={dokument.pdfUrl}>
-                <span><FormattedMessage id="dokumentvisning.pdf.aapne.pdf" /></span>
+                <FormattedMessage id="dokumentvisning.pdf.aapne.pdf" />
             </a>
         );
 
@@ -83,7 +83,7 @@ class DokumentVisning extends Component {
                     <div className="lokal-linker">
                         {aapneSomPDFLink}
                         <a href="javscript:void(0)" onClick={this._print}>
-                            <span><FormattedMessage id="dokumentvisning.pdf.skriv.ut" /></span>
+                            <FormattedMessage id="dokumentvisning.pdf.skriv.ut" />
                         </a>
                     </div>
                 </div>
