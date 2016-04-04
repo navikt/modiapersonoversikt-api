@@ -2,21 +2,20 @@ import React, { PropTypes as pt } from 'react';
 import { NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
 import DokumentListe from './../dokumentliste';
 
+const filtrertPaaNav = (retning, filtreringsvalg) =>
+    filtreringsvalg[NAV] && (retning === 'UT' || retning === 'INTERN');
+const filtrertPaaBruker = (retning, avsender, filtreringsvalg) =>
+    filtreringsvalg[BRUKER] && retning === 'INN' && avsender === 'SLUTTBRUKER';
+const filtrertPaaAndre = (retning, avsender, filtreringsvalg) =>
+    filtreringsvalg[ANDRE] && retning === 'INN' && avsender !== 'SLUTTBRUKER';
+
+export const skalViseDokument = ({ avsender, retning }, filtreringsvalg) => filtrertPaaNav(retning, filtreringsvalg) ||
+filtrertPaaBruker(retning, avsender, filtreringsvalg) || filtrertPaaAndre(retning, avsender, filtreringsvalg);
+
 const FiltrerteDokumenter = props => {
     const { dokumentMetadata, filtreringsvalg, dokumentlisteParam } = props;
 
-    const valgtNav = filtreringsvalg[NAV];
-    const valgtBruker = filtreringsvalg[BRUKER];
-    const valgtAndre = filtreringsvalg[ANDRE];
-
-    const filtrertPaaNav = (retning) => valgtNav && (retning === 'UT' || retning === 'INTERN');
-    const filtrertPaaBruker = (retning, avsender) => valgtBruker && retning === 'INN' && avsender === 'SLUTTBRUKER';
-    const filtrertPaaAndre = (retning, avsender) => valgtAndre && retning === 'INN' && avsender !== 'SLUTTBRUKER';
-
-    const skalViseDokument = ({ avsender, retning }) => filtrertPaaNav(retning) ||
-    filtrertPaaBruker(retning, avsender) || filtrertPaaAndre(retning, avsender);
-
-    const filtrerteDokumenter = dokumentMetadata.filter(dokument => skalViseDokument(dokument));
+    const filtrerteDokumenter = dokumentMetadata.filter(dokument => skalViseDokument(dokument, filtreringsvalg));
 
     const dokumentliste = filtrerteDokumenter.length === 0 ?
         <noscript/> :

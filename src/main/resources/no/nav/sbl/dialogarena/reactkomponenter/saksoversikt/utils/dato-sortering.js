@@ -1,6 +1,6 @@
 import { javaLocalDateTimeToJSDate } from './dato-utils';
 
-const nyesteElementISakstema = (sakstema) => {
+export const nyesteElementISakstema = (sakstema) => {
     const behandlingskjeder = sakstema.behandlingskjeder.map((behandlingskjede) =>
         javaLocalDateTimeToJSDate(behandlingskjede.sistOppdatert).getTime());
     const metadata = sakstema.dokumentMetadata.map((metaData) =>
