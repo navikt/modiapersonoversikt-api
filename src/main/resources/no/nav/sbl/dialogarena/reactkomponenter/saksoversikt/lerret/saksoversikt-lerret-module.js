@@ -2,7 +2,7 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretDataInit, hentLerretDataSakstema, velgSak,
+import { hentLerretData, velgSak,
     visSide, velgJournalpost, velgFiltreringAvsender } from './../actions';
 import * as Const from './../konstanter';
 
@@ -40,8 +40,7 @@ function lagFeilmelding(props) {
 
 class SaksoversiktLerret extends React.Component {
     componentWillMount() {
-        this.props.hentLerretDataInit();
-        this.props.hentLerretDataSakstema(this.props.fnr);
+        this.props.hentLerretData(this.props.fnr);
     }
 
     render() {
@@ -72,8 +71,7 @@ class SaksoversiktLerret extends React.Component {
 SaksoversiktLerret.propTypes = {
     fnr: React.PropTypes.string.isRequired,
     brukerNavn: React.PropTypes.string.isRequired,
-    hentLerretDataInit: React.PropTypes.func,
-    hentLerretDataSakstema: React.PropTypes.func,
+    hentLerretData: React.PropTypes.func,
     velgSak: React.PropTypes.func,
     status: React.PropTypes.string,
     tekster: React.PropTypes.object,
@@ -98,6 +96,5 @@ export default wrapWithProvider(connect(mapStateToProps, {
     visSide,
     velgJournalpost,
     velgFiltreringAvsender,
-    hentLerretDataInit,
-    hentLerretDataSakstema
+    hentLerretData
 })(SaksoversiktLerret), store);

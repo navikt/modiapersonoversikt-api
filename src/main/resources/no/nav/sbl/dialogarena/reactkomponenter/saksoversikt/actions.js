@@ -29,31 +29,20 @@ export const hentWidgetData = (fnr) => {
     }
 };
 
-export const hentLerretDataInit = () => {
+export const hentLerretData = (fnr) => {
     return (dispatch) => {
         const promisedDispatch = dataDispatch.bind(null, dispatch);
 
         const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
         const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
+        const sakstema = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/sakstema`);
 
         dispatch({ type: AT.LAST_LERRET_DATA_START });
-
         return Q
-            .all([tekster, miljovariabler])
-            .then(promisedDispatch(AT.LAST_LERRET_DATA_INIT_OK))
+            .allSettled([tekster, miljovariabler, sakstema])
+            .then(promisedDispatch(AT.LAST_LERRET_DATA_OK))
             .catch(rethrow(promisedDispatch(AT.LAST_LERRET_DATA_FEIL)));
-    }
-};
-
-export const hentLerretDataSakstema = (fnr)=> {
-    return (dispatch) => {
-        const promisedDispatch = dataDispatch.bind(null, dispatch);
-
-        const sakstema = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/sakstema`);
-        return sakstema
-            .then(promisedDispatch(AT.LAST_LERRET_DATA_ALLE_SAKER_OK))
-            .catch(rethrow(promisedDispatch(AT.LAST_LERRET_DATA_FEIL)));
-    }
+    };
 };
 
 export const hentDokumentData = (fnr, valgtjournalpost) => {
