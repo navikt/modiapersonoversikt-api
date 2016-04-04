@@ -26,6 +26,7 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandl
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erKvitteringstype;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
 import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus;
@@ -69,7 +70,7 @@ public class Transformers {
     }
 
     private static BehandlingsType kvitteringstype(WSBehandlingstyper sisteBehandlingstype) {
-        return KVITTERING.equals(sisteBehandlingstype.getValue()) ? KVITTERING : BEHANDLING;
+        return erKvitteringstype(sisteBehandlingstype.getValue()) ? KVITTERING : BEHANDLING;
     }
 
     private static DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
