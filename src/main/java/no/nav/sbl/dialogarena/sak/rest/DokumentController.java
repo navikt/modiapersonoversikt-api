@@ -206,5 +206,5 @@ public class DokumentController {
 
     private static final BiFunction<DokumentMetadata, Feilmelding, DokumentFeilmelding> TIL_FEIL =
             (dokumentMetadata, feilmelding) ->
-                    new DokumentFeilmelding(dokumentMetadata.getHoveddokument().getTittel(), feilmelding.feilmeldingKey, BLURRED_DOKUMENT, null);
+                    new DokumentFeilmelding(dokumentMetadata.getHoveddokument().getTittel(), feilmelding.feilmeldingKey, BLURRED_DOKUMENT, new HashMap<>());
 }
