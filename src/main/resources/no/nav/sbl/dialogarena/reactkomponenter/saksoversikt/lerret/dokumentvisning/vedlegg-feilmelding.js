@@ -9,7 +9,6 @@ function createMarkup(markuptekst) {
 }
 
 class VedleggFeilmelding extends React.Component {
-
     render() {
         const { feilmelding: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo }, name } = this.props;
 
