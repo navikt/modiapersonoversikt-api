@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { debounce, autobind } from './../../../utils/utils-module';
 import { Element } from 'react-scroll';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 const a4Ratio = 2 / Math.sqrt(2);
 const stylingFn = (antallSider, width = 750) => ({
@@ -66,13 +66,13 @@ class DokumentVisning extends Component {
     }
 
     render() {
-        const { dokument } = this.props;
+        const { dokument, intl: { formatMessage } } = this.props;
         const pdfData = `${dokument.pdfUrl}#view=FitH&scrollbar=0&toolbar=0&statusbar=0&messages=0&navpanes=0`;
         const style = { ...this.state };
 
         const aapneSomPDFLink = (
             <a target="_blank" href={dokument.pdfUrl}>
-                <FormattedMessage id="dokumentvisning.pdf.aapne.pdf" />
+                { formatMessage({ id: 'dokumentvisning.pdf.aapne.pdf' }) }
             </a>
         );
 
@@ -83,7 +83,7 @@ class DokumentVisning extends Component {
                     <div className="lokal-linker">
                         {aapneSomPDFLink}
                         <a href="javscript:void(0)" onClick={this._print}>
-                            <FormattedMessage id="dokumentvisning.pdf.skriv.ut" />
+                            { formatMessage({ id: 'dokumentvisning.pdf.skriv.ut' }) }
                         </a>
                     </div>
                 </div>
@@ -119,7 +119,8 @@ DokumentVisning.propTypes = {
         antallSider: React.PropTypes.int,
         antallsider: React.PropTypes.int,
         pdfUrl: React.PropTypes.string
-    }).isRequired
+    }).isRequired,
+    intl: intlShape
 };
 
-export default DokumentVisning;
+export default injectIntl(DokumentVisning);
