@@ -68,7 +68,7 @@ public class Filter {
     }
 
     public static boolean erKvitteringstype(String type) {
-        return type.equals(SEND_SOKNAD_KVITTERINGSTYPE) || type.equals(DOKUMENTINNSENDING_KVITTERINGSTYPE);
+        return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
     }
 
     private static final Predicate<Behandling> HAR_LOVLIG_BEHANDLINGSSTATUS = behandling -> !behandling.getBehandlingsStatus().equals(BehandlingsStatus.AVBRUTT);
