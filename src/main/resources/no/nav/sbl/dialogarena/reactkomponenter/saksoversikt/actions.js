@@ -78,3 +78,4 @@ export const velgFiltreringAvsender = (filtreringsvalg) => ({ type: AT.VELG_FILT
 //Benyttes av Wicketklassen SaksoversiktLerret
 export const visTema = (tema) => ({ type: AT.VIS_TEMA, data: tema });
 export const purgeState = () => ({ type: AT.PURGE_STATE });
+export const unmount = () => ({ type: AT.UNMOUNT });

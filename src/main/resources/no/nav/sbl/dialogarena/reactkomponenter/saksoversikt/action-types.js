@@ -22,5 +22,6 @@ export const VELG_JOURNALPOST = 'VELG_JOURNALPOST';
 export const VIS_TEMA = 'VIS_TEMA';
 export const VIS_SIDE = 'VIS_SIDE';
 export const PURGE_STATE= 'PURGE_STATE';
+export const UNMOUNT= 'UNMOUNT';
 
 export const VELG_FILTRERING_AVSENDER = 'VELG_FILTRERING_AVSENDER';
