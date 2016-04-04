@@ -30,10 +30,15 @@ function bundleJS(isDev) {
     function rebundle() {
         var stream;
         stream = bundler.bundle();
-        return stream.on('error', notify.onError({
+
+        if (isDev) {
+            stream = stream.on('error', notify.onError({
                 title: 'Compile error',
                 message: '<%= error.message %>'
-            }))
+            }));
+        }
+
+        return stream
             .pipe(source('reactkomponenter.js'))
             .pipe(gulp.dest(config.targetPath));
     }
