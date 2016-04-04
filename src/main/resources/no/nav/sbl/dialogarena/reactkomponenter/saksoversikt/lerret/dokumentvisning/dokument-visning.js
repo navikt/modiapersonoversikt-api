@@ -70,16 +70,20 @@ class DokumentVisning extends Component {
         const pdfData = `${dokument.pdfUrl}#view=FitH&scrollbar=0&toolbar=0&statusbar=0&messages=0&navpanes=0`;
         const style = { ...this.state };
 
+        const aapneSomPDFLink = (
+            <a target="_blank" href={dokument.pdfUrl}>
+                <span><FormattedMessage id="dokumentvisning.pdf.aapne.pdf" /></span>
+            </a>
+        );
+
         return (
             <Element name={dokument.dokumentreferanse} key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
                 <div className="dokumentheader blokk-xxxs">
                     <h2 className="typo-element">{dokument.tittel}</h2>
                     <div className="lokal-linker">
-                        <a target="_blank" href={dokument.pdfUrl}>
-                            <span>Åpne som PDF</span>
-                        </a>
+                        {aapneSomPDFLink}
                         <a href="javscript:void(0)" onClick={this._print}>
-                            <span>Skriv ut</span>
+                            <span><FormattedMessage id="dokumentvisning.pdf.skriv.ut" /></span>
                         </a>
                     </div>
                 </div>
@@ -98,10 +102,10 @@ class DokumentVisning extends Component {
                                   id="dokumentvisning.pdf.feilmelding.tittel"
                                 />
                             </h1>
-                            <p className="text-center"><FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold"/>
+                            <p className="text-center">
+                                <FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold" />
                             </p>
-                            <p className="text-center"><a href={dokument.pdfUrl} target="_blank">Åpne i egen fane</a>
-                            </p>
+                            <p className="text-center">{aapneSomPDFLink}</p>
                         </div>
                     </div>
                 </object>
