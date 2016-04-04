@@ -22,22 +22,19 @@ class DokumentInfoElm extends React.Component {
     }
 
     render() {
-        const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide, intl } = this.props;
+        const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
         const { retning, avsender, mottaker, navn, hoveddokument, vedlegg,
-            temakodeVisning, feilWrapper, ettersending, kategoriNotat } = dokumentinfo;
+            temakodeVisning, feilWrapper, kategoriNotat } = dokumentinfo;
         const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript/>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ?
             'dokument-kan-vises' : 'dokument-kan-ikke-vises';
         const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
             <p className="vekk">Ikke tilgang til dokument</p> : '';
-        const hoveddokumentTekst = ettersending ?
-            intl.formatMessage({ id: `ettersending.til.soknad` }, { soknadTittel: hoveddokument.tittel }) :
-            hoveddokument.tittel;
 
         return (
             <li className={`dokumentliste-element ${kanViseDokument}`}>
-                <article aria-label={hoveddokumentTekst}>
+                <article aria-label={hoveddokument.tittel}>
                     {skjultIngenTilgangTekst}
                     <div className="datodokumentliste">
                         <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
@@ -48,7 +45,7 @@ class DokumentInfoElm extends React.Component {
                     </div>
                     <div className="hoveddokument-tittel-wrapper">
                         <a href="javascript:void(0)" className="hoveddokument-tittel" onClick={this._redirect}>
-                            {hoveddokumentTekst}
+                            {hoveddokument.tittel}
                         </a>
                     </div>
                     <div className="typo-info">
