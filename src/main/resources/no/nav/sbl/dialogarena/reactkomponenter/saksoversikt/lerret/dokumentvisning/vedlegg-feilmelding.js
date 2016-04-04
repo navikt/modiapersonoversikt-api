@@ -10,17 +10,6 @@ function createMarkup(markuptekst) {
 
 class VedleggFeilmelding extends React.Component {
 
-    componentDidMount() {
-        const feilmeldingContainer = document.getElementsByClassName('feilmelding-container')[0];
-        const feilmelding = document.getElementsByClassName('feilmelding')[0];
-
-        const feilmeldingContainerWidth = feilmeldingContainer.offsetWidth;
-        const feilmeldingWidth = feilmelding.offsetWidth;
-        const leftPosition = (feilmeldingContainerWidth - feilmeldingWidth) / 2;
-
-        feilmelding.style.left = `${leftPosition}px`;
-    }
-
     render() {
         const { feilmelding: { bildeUrl, feilmeldingEnonicKey, ekstrafeilinfo }, name } = this.props;
 
