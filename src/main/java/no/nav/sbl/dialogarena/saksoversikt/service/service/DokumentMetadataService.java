@@ -90,7 +90,7 @@ public class DokumentMetadataService {
         Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse
                 .stream()
                 .filter(finnesIkkeIJoark(joarkMetadataListe))
-                .map(dokumentMetadata -> dokumentMetadata.withIsJournalfort(FALSE));
+                .map(dokumentMetadata -> dokumentMetadata.withIsJournalfort(FALSE).withLeggTilEttersendelseTekstDersomEttersendelse());
 
         return new ResultatWrapper<>(Java8Utils.concat(
                 populerEttersendelserFraHenvendelse(joarkMetadataListe, innsendteSoknaderIHenvendelse),

@@ -128,6 +128,13 @@ public class DokumentMetadata {
         return this;
     }
 
+    public DokumentMetadata withLeggTilEttersendelseTekstDersomEttersendelse() {
+        if (this.ettersending) {
+            this.navn = "Ettersendelse til " + navn;
+        }
+        return this;
+    }
+
     public String getTilhorendeSakid() {
         return tilhorendeSakid;
     }
