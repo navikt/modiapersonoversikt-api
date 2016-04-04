@@ -36,6 +36,8 @@ public class SaksoversiktLerret extends Lerret {
     public void onClosing(AjaxRequestTarget target, boolean isMinimizing) {
         if (!isMinimizing) {
             lerret.callFirst("callAction", "purgeState");
+        } else {
+            lerret.callFirst("callAction", "unmount");
         }
     }
 
