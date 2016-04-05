@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import static no.nav.sbl.dialogarena.sak.mock.JoarkMock.*;
 import static no.nav.sbl.dialogarena.sak.mock.JoarkMock.PERSON_FNR;
 import static no.nav.sbl.dialogarena.sak.mock.JoarkMock.brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg;
 import static org.hamcrest.Matchers.is;
@@ -65,31 +66,43 @@ public class JournalpostTransformerTest {
 
     @Test
     public void navSendtDokumentTilEksternPart() {
+        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(dokumentUtenEksternPartMedFallbackNavn(), FNR);
+        assertThat(dokumentMetadata.getNavn(), is(FALLBACK_NAVN));
+    }
+
+    @Test
+    public void setterUkjentDersomIkkeEksternPartEllerEksternPartNavn() {
+        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(dokumentUkjentAvsender(), FNR);
+        assertThat(dokumentMetadata.getNavn(), is("ukjent"));
+    }
+
+    @Test
+    public void brukerFallbackNavnHvisEksternpartErNull() {
         DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(JoarkMock.navSendtDokumentTilEksternPart(), FNR);
-        assertThat(dokumentMetadata.getNavn(), is(JoarkMock.TREDJEPERSON_NAVN));
+        assertThat(dokumentMetadata.getNavn(), is(TREDJEPERSON_NAVN));
     }
 
     @Test
     public void navSendtDokumentFraBedrift() throws DatatypeConfigurationException {
-        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(JoarkMock.navMottattDokumentFraBedrift(), FNR);
-        assertThat(dokumentMetadata.getNavn(), is(JoarkMock.BEDRIFT_NAVN));
+        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(navMottattDokumentFraBedrift(), FNR);
+        assertThat(dokumentMetadata.getNavn(), is(BEDRIFT_NAVN));
     }
 
     @Test
     public void navSendtDokumentUtenAktoer() throws DatatypeConfigurationException {
-        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(JoarkMock.navMottattDokumentFraUkjent(), FNR);
+        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(navMottattDokumentFraUkjent(), FNR);
         assertThat(dokumentMetadata.getNavn(), is("ukjent"));
     }
 
     @Test
     public void internKategoriNotat() throws DatatypeConfigurationException {
-        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(JoarkMock.internDokumentinfoRelasjonListe(), FNR);
+        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(internDokumentinfoRelasjonListe(), FNR);
         assertThat(dokumentMetadata.getKategoriNotat(), is(KategoriNotat.INTERN_NOTAT));
     }
 
     @Test
     public void inngaaendeKategoriNotat() throws DatatypeConfigurationException {
-        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(JoarkMock.eksternDokumentinfoRelasjonListe(), FNR);
+        DokumentMetadata dokumentMetadata = journalpostTransformer.dokumentMetadataFraJournalPost(eksternDokumentinfoRelasjonListe(), FNR);
         assertNull(dokumentMetadata.getKategoriNotat());
     }
 
