@@ -4,7 +4,7 @@ import { Element } from 'react-scroll';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
 const a4Ratio = 2 / Math.sqrt(2);
-const stylingFn = (antallSider, width = 750) => ({
+const stylingFn = (antallSider = 1, width = 750) => ({
     width: '100%',
     maxWidth: '100%',
     marginBottom: '2rem',
@@ -25,7 +25,6 @@ class DokumentVisning extends Component {
     componentDidMount() {
         this.eventHandler = debounce(this._oppdaterPdfVisning, 150);
         window.addEventListener('resize', this.eventHandler);
-        this._oppdaterPdfVisning();
 
         $(this.refs.pdf).ready(() => {
             setTimeout(() => this._oppdaterPdfVisning(), 100);
@@ -42,6 +41,9 @@ class DokumentVisning extends Component {
 
     _oppdaterPdfVisning() {
         const pdf = this.refs.pdf;
+        if (!pdf) {
+            return;
+        }
         const width = pdf.offsetWidth;
 
         const height = stylingFn(this.props.dokument.antallsider, width).height;
