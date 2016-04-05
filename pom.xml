@@ -116,7 +116,7 @@
         <nav-fellessystemer-environment.version>6.0.3</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
-        <joark-tjenestespesifikasjon.version>2.2</joark-tjenestespesifikasjon.version>
+        <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
     </properties>
 
