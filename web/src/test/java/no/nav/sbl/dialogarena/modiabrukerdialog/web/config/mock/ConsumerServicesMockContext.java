@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
+import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
@@ -65,5 +66,10 @@ public class ConsumerServicesMockContext {
     @Bean
     public SakerService sakerService() {
         return mock(SakerService.class);
+    }
+
+    @Bean
+    public KodeverkmanagerBi kodeverk() {
+        return mock(KodeverkmanagerBi.class);
     }
 }
