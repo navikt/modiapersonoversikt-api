@@ -85,7 +85,7 @@ public class JournalpostTransformer {
             return wsPerson.getNavn();
         } else if (aktoer instanceof WSOrganisasjon) {
             return ((WSOrganisasjon) aktoer).getNavn();
-        } else if (!fallbacknavn.isEmpty()) {
+        } else if (fallbacknavn != null && !fallbacknavn.isEmpty()) {
             return fallbacknavn;
         }
         return "ukjent";
