@@ -18,12 +18,12 @@ const _onChange = (alleredeValgt, dispatch) => (event) => {
 const FiltrerAvsender = ({ alleredeValgt, dispatch, intl: { formatMessage } }) => {
     const filtervalg = [NAV, BRUKER, ANDRE];
     const filtreringsCheckbox = filtervalg.map((valg) => (
-            <div className="filtreringsvalg">
+            <div className="filtreringsvalg" key={`valg-${valg}`}>
                 <input name={valg} type="checkbox" value={valg} id={valg} checked={alleredeValgt[valg]}
                   onChange={_onChange(alleredeValgt, dispatch)}
                 />
                 <label htmlFor={valg} className="filtreringsvalg-label">
-                  { formatMessage({ id: `dokumentliste.filtrering.${valg}` }) }
+                    { formatMessage({ id: `dokumentliste.filtrering.${valg}` }) }
                 </label>
             </div>
         )

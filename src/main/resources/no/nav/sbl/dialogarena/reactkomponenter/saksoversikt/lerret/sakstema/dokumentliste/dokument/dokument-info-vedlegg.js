@@ -11,12 +11,10 @@ const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
     if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {
         return <noscript />;
     }
-
+    let i = 0;
     const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg) => (
-        <li className="vedlegg-element">
-            <a href="javascript:void(0);" onClick={_redirect}
-              className="vedleggtext"
-            >
+        <li className="vedlegg-element" key={`vedlegg${++i}`}>
+            <a href="#" onClick={_redirect} className="vedleggtext">
                 {dokumentVedlegg.tittel}
             </a>
         </li>));
