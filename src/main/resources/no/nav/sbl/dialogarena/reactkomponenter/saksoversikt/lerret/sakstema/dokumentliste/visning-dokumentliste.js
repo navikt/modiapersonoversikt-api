@@ -26,17 +26,25 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
             <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.header"/>
         </h2>);
 
-    if (valgtTema.temakode === 'BID') {
-        return <IngenDokumenterBidrag ingenDokumenterHeader={ingendokumenter}/>;
-    }
     if (valgtTema.dokumentMetadata.length === 0) {
+        if (valgtTema.temakode === 'BID') {
+            return <IngenDokumenterBidrag ingenDokumenterHeader={ingendokumenter}/>;
+        }
         return <IngenDokumenter ingenDokumenterHeader={ingendokumenter}/>;
     }
+
+    const infoMeldingDokumenterBidrag = valgtTema.temakode === 'BID' ?
+        <div className="infoingenbidrag">
+            <FormattedMessage
+              id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"
+            />
+        </div> : <noscript/>;
 
     return (
         <div>
             <FiltrerAvsender alleredeValgt={filtreringsvalg}/>
             <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
+            {infoMeldingDokumenterBidrag}
             { dokumentliste }
             <TidligereDokumenter />
         </div>);

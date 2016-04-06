@@ -14,33 +14,33 @@
     padding: 0 !important;
     height: 100%;
 
-  .ingen-sakstemaer {
-    height: 25em;
-    width: 45em;
-    margin: 2em auto;
-    border: 1px solid @gray-icon;
-    text-align: center;
-  }
-  .ingen-sakstemaer-tekst {
-    margin-top: 1em;
-    color: @gray-icon
-  }
-  .ingensakstemaerimage {
-    height: 45px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .saksoversikt-liste {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 35%;
-    height: 100%;
-    float: left;
-    border-right: 1px solid @gray-icon;
-    overflow-x: hidden;
-    overflow-y: visible;
-  }
+    .ingen-sakstemaer {
+        height: 25em;
+        width: 45em;
+        margin: 2em auto;
+        border: 1px solid @gray-icon;
+        text-align: center;
+    }
+    .ingen-sakstemaer-tekst {
+        margin-top: 1em;
+        color: @gray-icon
+    }
+    .ingensakstemaerimage {
+        height: 45px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .saksoversikt-liste {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 35%;
+        height: 100%;
+        float: left;
+        border-right: 1px solid @gray-icon;
+        overflow-x: hidden;
+        overflow-y: visible;
+    }
 
     .saksoversikt-innhold {
         position: absolute;
@@ -126,45 +126,45 @@
             margin-bottom: 8px;
         }
 
-    .vedleggtext {
-      border-bottom: 2px solid @gray-icon;
-      font-size: 14px;
-      font-family: Arial, sans-serif;
-      margin-bottom: 8px;
-    }
-    .ingen-sakstemaer {
-      width: 80%;
-      padding: 10rem;
-      margin: 6rem;
-      border: 1px solid;
-    }
+        .vedleggtext {
+            border-bottom: 2px solid @gray-icon;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            margin-bottom: 8px;
+        }
+        .ingen-sakstemaer {
+            width: 80%;
+            padding: 10rem;
+            margin: 6rem;
+            border: 1px solid;
+        }
 
-    a {
-      color: #0067c5;
-      text-decoration: none;
-      background-color: transparent;
+        a {
+            color: #0067c5;
+            text-decoration: none;
+            background-color: transparent;
+        }
+        .lenke-fremhevet, .side-innhold, & {
+            a:not(.knapp) {
+                border-bottom: 1px solid @gray-icon;
+                &:active, &:hover {
+                    outline: none
+                }
+                &:active {
+                    color: #634689;
+                    border-bottom-color: #634689;
+                }
+                &:hover {
+                    border-bottom-color: #0067c5;
+                }
+            }
+        }
     }
-    .lenke-fremhevet, .side-innhold, & {
-      a:not(.knapp) {
-        border-bottom: 1px solid @gray-icon;
-        &:active, &:hover {
-          outline: none
-        }
-        &:active {
-          color: #634689;
-          border-bottom-color: #634689;
-        }
-        &:hover {
-          border-bottom-color: #0067c5;
-        }
-      }
+    .ingendokumenterheader {
+        margin-top: 2em;
+        text-transform: none;
+        font-size: 1.5em;
     }
-  }
-  .ingendokumenterheader {
-    margin-top: 2em;
-    text-transform: none;
-    font-size: 1.5em;
-  }
 
     .ingendokumenterforklaring {
         text-transform: none;
@@ -172,23 +172,22 @@
         padding-bottom: 1em;
     }
 
-  .ingendokumenter {
-    padding: 2em 4em;
-    text-align: center;
-  }
-  .infoingenbidrag {
-    width: 100%;
-    border-bottom: solid 2px @gray-icon;
-    background-repeat: no-repeat;
-    background-image: url("@{imgDir}/information-circle.svg");
-    background-size: 1.8rem;
-    padding-left: 6.2rem;
-    padding-bottom: 1rem;
-    background-position: 3rem;
-    padding-top: 1rem;
-    font-size: 14px;
-    font-family: Arial, sans-serif;
-  }
+    .ingendokumenter {
+        padding: 2em 4em;
+        text-align: center;
+    }
+    .infoingenbidrag {
+        width: 100%;
+        border-bottom: solid 2px @gray-icon;
+        padding: 2rem 2rem;
+        background-image: url("@{imgDir}/infomation-circle_inactive.svg");
+        background-repeat: no-repeat;
+        background-size: 2rem 2rem;
+        background-position: 1.3rem 1.6rem;
+        padding-left: 4rem;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+    }
 
     .tidligere-dokumenter-bilde {
         display: block;
@@ -199,69 +198,69 @@
         margin-bottom: 16px;
     }
 
-  .tidligere-dokumenter-tekst {
-    font-size: 14px;
-    font-family: Arial, sans-serif;
-    color: @gray-icon_inactive;
-  }
+    .tidligere-dokumenter-tekst {
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+        color: @gray-icon_inactive;
+    }
 
     .gamle-dokumenter {
         box-shadow: none;
         text-align: center;
     }
 
-  .aarstall {
-    background-color: @gray-icon;
-    padding: 0.5rem 2rem;
-    font-weight: 600;
-  }
+    .aarstall {
+        background-color: @gray-icon;
+        padding: 0.5rem 2rem;
+        font-weight: 600;
+    }
 
     .dokumentheader {
         margin-bottom: 20px;
 
-    .typo-element {
-      display: inline;
-      font-family: Arial, sans-serif;
-      font-weight: 600;
-      font-size: 16px;
+        .typo-element {
+            display: inline;
+            font-family: Arial, sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .lokal-linker {
+            float: right
+        }
+        a:not(:last-child) {
+            margin-right: 1rem;
+        }
     }
-    .lokal-linker {
-      float: right
+    .dokument-visning-page {
+        height: 100%;
     }
-    a:not(:last-child) {
-      margin-right: 1rem;
+    .fixed-header {
+        background-color: #EFEFEF;
+        padding: 1rem 3rem 1rem 3rem;
+        margin: 0;
+        position: relative;
+        left: 0;
+        right: 17px;
+        z-index: 99;
+        box-shadow: -1px 1px 5px 0px @gray-icon;
     }
-  }
-  .dokument-visning-page {
-    height: 100%;
-  }
-  .fixed-header {
-    background-color: #EFEFEF;
-    padding: 1rem 3rem 1rem 3rem;
-    margin: 0;
-    position: relative;
-    left: 0;
-    right: 17px;
-    z-index: 99;
-    box-shadow: -1px 1px 5px 0px @gray-icon;
-  }
-  .kulemeny {
-    list-style: none;
-    padding: 0;
-    display: inline-block;
-    float: right;
-    margin: 0;
+    .kulemeny {
+        list-style: none;
+        padding: 0;
+        display: inline-block;
+        float: right;
+        margin: 0;
 
-    li {
-      display: inline-block;
-      margin-left: 16px;
-    }
-    input {
-      border: none;
-      border-radius: 50%;
-      background-color: @gray-icon;
-      width: 14px;
-      height: 14px;
+        li {
+            display: inline-block;
+            margin-left: 16px;
+        }
+        input {
+            border: none;
+            border-radius: 50%;
+            background-color: @gray-icon;
+            width: 14px;
+            height: 14px;
 
             &.active {
                 background-color: #005b82;
@@ -275,16 +274,16 @@
 
     .viktig-aa-vite-lenke {
         padding: 2rem 2rem;
-        background-image: url("/modiabrukerdialog/img/saksoversikt/infomation-circle_inactive.svg");
+        background-image: url("@{imgDir}/infomation-circle_inactive.svg");
         background-repeat: no-repeat;
         background-size: 2rem 2rem;
         background-position: 1.3rem 1.6rem;
         padding-left: 4rem;
     }
 
-  .viktig-aa-vite-container {
-    border-bottom: 1px solid @gray-icon;
-  }
+    .viktig-aa-vite-container {
+        border-bottom: 1px solid @gray-icon;
+    }
 
     .filtrering-container {
         padding-bottom: 1.4rem;
@@ -292,13 +291,13 @@
         .clearfix;
     }
 
-  .filtrering-forklaring {
-    color: @gray-icon_inactive;
-    padding-left: 1.5rem;
-    padding-top: 1.3rem;
-    padding-bottom: .5rem;
-    display: block;
-  }
+    .filtrering-forklaring {
+        color: @gray-icon_inactive;
+        padding-left: 1.5rem;
+        padding-top: 1.3rem;
+        padding-bottom: .5rem;
+        display: block;
+    }
 
     .filtreringsvalg {
         display: inline;
@@ -341,8 +340,8 @@
 }
 
 .saksoversikt-liste-element {
-  border-bottom: 1px solid @gray-icon;
-  display: block;
+    border-bottom: 1px solid @gray-icon;
+    display: block;
 
     label:before {
         display: none !important;
@@ -439,11 +438,11 @@
 }
 
 .side-innhold a {
-  border-bottom: 1px solid @gray-icon;
-  &:hover {
-    text-decoration: none !important;
-    border-bottom-color: #0067c5;
-  }
+    border-bottom: 1px solid @gray-icon;
+    &:hover {
+        text-decoration: none !important;
+        border-bottom-color: #0067c5;
+    }
 }
 
 .lerret.saksoversikt-lerret {
@@ -473,18 +472,18 @@
 }
 
 .lamell-feilmelding {
-  background-image: url("@{imgDir}/file-warning.svg");
-  background-repeat: no-repeat;
-  background-size: 3rem 3rem;
-  background-position: 2rem;
-  border: 1px solid #ccc;
-  color: #BA3A26;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  padding-left: 6rem;
-  font-weight: 600;
-  font-size: 1.21rem;
-  height: 12%;
+    background-image: url("@{imgDir}/file-warning.svg");
+    background-repeat: no-repeat;
+    background-size: 3rem 3rem;
+    background-position: 2rem;
+    border: 1px solid #ccc;
+    color: #BA3A26;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 6rem;
+    font-weight: 600;
+    font-size: 1.21rem;
+    height: 12%;
 }
 
 .teknisk-feil-ikon {
@@ -492,12 +491,12 @@
     background-size: 2.5rem 1px, 2.5rem 2.5rem;
 }
 
-.har-feilmelding{
-  .sakstema-container {
-    height: 88%;
-  }
+.har-feilmelding {
+    .sakstema-container {
+        height: 88%;
+    }
 }
 
 .listeelement-kant {
-  border-bottom: 1px solid #d1d1d1;
+    border-bottom: 1px solid #d1d1d1;
 }
