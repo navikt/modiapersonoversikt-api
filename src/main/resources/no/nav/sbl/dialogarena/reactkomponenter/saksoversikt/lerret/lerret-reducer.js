@@ -1,16 +1,18 @@
 import * as AT from './../action-types';
 import * as Const from './../konstanter';
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
-import {basicReducer} from './../utils/redux-utils';
-import {nyesteSakstema} from './../utils/dato-sortering';
+import { FormattedMessage } from 'react-intl';
+import { basicReducer } from './../utils/redux-utils';
+import { nyesteSakstema } from './../utils/dato-sortering';
 
 const fjernTommeTema = (tema) => tema.dokumentMetadata.length > 0 || tema.behandlingskjeder.length > 0;
 const lagAlleTema = (temaliste) => [{
     temanavn: <FormattedMessage id="sakslamell.alletemaer"/>,
     temakode: 'alle',
-    behandlingskjeder: temaliste[0].behandlingskjeder,
-    dokumentMetadata: temaliste[0].dokumentMetadata,
+    behandlingskjeder: temaliste.reduce((acc, tema) =>
+        acc.concat(tema.behandlingskjeder), []),
+    dokumentMetadata: temaliste.reduce((acc, tema) =>
+        acc.concat(tema.dokumentMetadata), []),
     harTilgang: true
 }];
 
