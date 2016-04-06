@@ -25,6 +25,7 @@ class DokumentVisning extends Component {
     componentDidMount() {
         this.eventHandler = debounce(this._oppdaterPdfVisning, 150);
         window.addEventListener('resize', this.eventHandler);
+        this._oppdaterPdfVisning();
 
         $(this.refs.pdf).ready(() => {
             setTimeout(() => this._oppdaterPdfVisning(), 100);
