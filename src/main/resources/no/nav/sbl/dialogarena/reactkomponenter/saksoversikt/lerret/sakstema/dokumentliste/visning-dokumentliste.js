@@ -33,7 +33,7 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
         return <IngenDokumenter ingenDokumenterHeader={ingendokumenter}/>;
     }
 
-    const ingenDokumenterBidrag = valgtTema.temakode === 'BID' ?
+    const infoMeldingDokumenterBidrag = valgtTema.temakode === 'BID' ?
         <div className="infoingenbidrag">
             <FormattedMessage
               id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"
@@ -44,7 +44,7 @@ const VisningDokumentliste = ({ sakstema, valgtTema, brukerNavn, velgJournalpost
         <div>
             <FiltrerAvsender alleredeValgt={filtreringsvalg}/>
             <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-            {ingenDokumenterBidrag}
+            {infoMeldingDokumenterBidrag}
             { dokumentliste }
             <TidligereDokumenter />
         </div>);
