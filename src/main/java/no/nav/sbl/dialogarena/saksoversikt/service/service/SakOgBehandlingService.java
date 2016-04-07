@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DataFletter.hentBehandlingerFraBehandlingskjeder;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingService {
@@ -61,7 +62,7 @@ public class SakOgBehandlingService {
     }
 
     private List<Behandling> filtrerteBehandlinger(WSSak sak) {
-        return filter.filtrerBehandlinger(hentBehandlingerFraBehandlingskjeder(sak.getBehandlingskjede()));
+        return filter.filtrerBehandlinger(hentBehandlingerFraBehandlingskjeder(sak.getBehandlingskjede()), UTEN_AVSLUTTETE_KVITTERINGER);
     }
 
     private static final Function<WSSak, String> SAKSTEMA = wsSak -> wsSak.getSakstema().getValue();
