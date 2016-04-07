@@ -28,7 +28,7 @@ class SakstemaPage extends React.Component {
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
                     <h2 className="vekk">{valgtTema.temanavn}</h2>
-                    <VisningDokumentliste visSide={visSide} sakstema={sakstema} valgtTema={valgtTema}
+                    <VisningDokumentliste visSide={visSide} valgtTema={valgtTema}
                       brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}
                       filtreringsvalg={filtreringsvalg}
                     />
