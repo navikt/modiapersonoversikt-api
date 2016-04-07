@@ -13,6 +13,8 @@
 
     padding: 0 !important;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 
     .ingen-sakstemaer {
         height: 25em;
@@ -302,6 +304,8 @@
     .filtreringsvalg {
         display: inline;
         padding: 0rem 1.5rem;
+        float: left;
+        width: 33%;
 
         input[type=checkbox] {
             + label {
@@ -483,18 +487,11 @@
     padding-left: 6rem;
     font-weight: 600;
     font-size: 1.21rem;
-    height: 12%;
 }
 
 .teknisk-feil-ikon {
     background-image: url(../img/under-dark.png), url("@{imgDir}/file-warning.svg");
     background-size: 2.5rem 1px, 2.5rem 2.5rem;
-}
-
-.har-feilmelding {
-    .sakstema-container {
-        height: 88%;
-    }
 }
 
 .listeelement-kant {
