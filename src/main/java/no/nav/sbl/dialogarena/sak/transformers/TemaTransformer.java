@@ -12,6 +12,7 @@ import java.util.List;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilBehandling;
 
 public class TemaTransformer {
@@ -30,7 +31,7 @@ public class TemaTransformer {
         List<Behandling> behandlinger = wsSak.getBehandlingskjede().stream()
                 .map(wsBehandlingskjede -> transformTilBehandling(wsBehandlingskjede))
                 .collect(toList());
-        List<Behandling> filtrerteBehandlinger = filter.filtrerBehandlinger(behandlinger);
+        List<Behandling> filtrerteBehandlinger = filter.filtrerBehandlinger(behandlinger, MED_AVSLUTTETE_KVITTERINGER);
         List<Behandling> sorterteFiltrerteBehandlinger = filtrerteBehandlinger.stream()
                 .sorted((o1, o2) -> o2.behandlingDato.compareTo(o1.behandlingDato))
                 .collect(toList());

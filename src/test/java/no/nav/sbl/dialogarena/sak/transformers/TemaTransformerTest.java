@@ -21,6 +21,7 @@ import static no.nav.sbl.dialogarena.sak.transformers.TemaTransformer.tilTema;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -40,7 +41,7 @@ public class TemaTransformerTest {
 
     @Test
     public void mapperTilTema() {
-        when(filter.filtrerBehandlinger(anyList())).thenReturn(getBehandlinger());
+        when(filter.filtrerBehandlinger(anyList(), anyBoolean())).thenReturn(getBehandlinger());
 
         WSSak sak = createWSSak()
                 .withSakstema(new WSSakstemaer().withValue("DAG"));
@@ -52,7 +53,7 @@ public class TemaTransformerTest {
 
     @Test
     public void skalReturnereDato1970HvisBehandlingsdatoIkkeFinnes() {
-        when(filter.filtrerBehandlinger(anyList())).thenReturn(getBehandlingUtenBehandlingsdato());
+        when(filter.filtrerBehandlinger(anyList(), anyBoolean())).thenReturn(getBehandlingUtenBehandlingsdato());
 
         WSSak sak = createWSSak()
                 .withSakstema(new WSSakstemaer().withValue("DAG"));
