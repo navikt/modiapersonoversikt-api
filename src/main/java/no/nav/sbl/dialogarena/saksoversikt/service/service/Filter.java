@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
+import static java.util.stream.Stream.empty;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -45,9 +46,11 @@ public class Filter {
                 .filter(HAR_MINST_EN_LOVLIG_BEHANDLING).collect(toList());
     }
 
-    public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger) {
+    public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger, Predicate skalHaMedKvitteringer) {
         lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
-        Stream<Behandling> avsluttedeKvitteringer = behandlinger.stream().filter(ER_AVSLUTTET_KVITTERING);
+        Stream<Behandling> avsluttedeKvitteringer = behandlinger.stream()
+                .filter(ER_AVSLUTTET_KVITTERING)
+                .filter(skalHaMedKvitteringer);
         Stream<Behandling> lovligeBehandlinger = behandlinger.stream().filter(HAR_LOVLIG_BEHANDLINGSTYPE);
 
         return concat(avsluttedeKvitteringer, lovligeBehandlinger)
@@ -71,6 +74,9 @@ public class Filter {
         return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
     }
 
+    public static final Predicate MED_AVSLUTTETE_KVITTERINGER = o -> true;
+    public static final Predicate UTEN_AVSLUTTETE_KVITTERINGER = o -> false;
+    
     private static final Predicate<Behandling> HAR_LOVLIG_BEHANDLINGSSTATUS = behandling -> !behandling.getBehandlingsStatus().equals(BehandlingsStatus.AVBRUTT);
 
     private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_PREFIX_PAA_BEHANDLING = kjede -> !kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX);
