@@ -171,7 +171,7 @@ public class DokumentController {
             return PDDocument.load(is).getNumberOfPages();
         } catch (IOException e) {
             logger.error("Kunne ikke finne ut hvor mange sider dokumentet innehold", e);
-            return 0;
+            return 1;
         }
     }
 
