@@ -26,8 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK_SIKKERHETSBEGRENSNING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER;
@@ -49,6 +49,10 @@ public class InnsynImpl implements Innsyn {
         WSHentJournalpostListeRequest wsRequest = new WSHentJournalpostListeRequest();
         wsRequest.setSoekeFilter(new WSSoekeFilter().withJournalFiltrering(KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER));
         wsRequest.getSakListe().addAll(sakerTilJoarkSak(saker));
+
+        if (wsRequest.getSakListe().isEmpty()) {
+            return new ResultatWrapper<>(emptyList());
+        }
 
         try {
             return new ResultatWrapper(
