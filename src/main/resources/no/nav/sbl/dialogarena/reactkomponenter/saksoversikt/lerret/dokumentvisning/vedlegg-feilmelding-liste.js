@@ -4,7 +4,7 @@ import VedleggFeilmelding from './vedlegg-feilmelding';
 const VedleggFeilmeldingListe = ({ feilmeldinger }) => {
     const feilliste = feilmeldinger.map((feilmelding, index) => (
         <VedleggFeilmelding name={feilmelding.feilmeldingEnonicKey + index}
-          key={feilmelding.tittel} feilmelding={feilmelding}
+          key={feilmelding.tittel + index} feilmelding={feilmelding}
         />
     ));
 
