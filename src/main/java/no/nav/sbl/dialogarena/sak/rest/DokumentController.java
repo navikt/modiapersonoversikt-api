@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
-import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
-import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.DokumentFeilmelding;
 import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.JournalpostResultat;
+import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
@@ -110,7 +110,7 @@ public class DokumentController {
         }
 
         JournalpostResultat resultat = new JournalpostResultat().withTittel(hovedtittel);
-        Set<String> dokumentreferanser = new HashSet<>();
+        Set<String> dokumentreferanser = new TreeSet<>();
         dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
 
         journalpostMetadata.getVedlegg()
