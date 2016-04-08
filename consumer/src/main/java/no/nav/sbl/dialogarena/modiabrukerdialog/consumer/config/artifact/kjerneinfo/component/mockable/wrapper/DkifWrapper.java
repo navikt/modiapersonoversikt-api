@@ -19,13 +19,10 @@ public class DkifWrapper {
     @Inject
     private DigitalKontaktinformasjonV1 dkifV1;
 
-    @Inject
-    private DigitalKontaktinformasjonV1 selfTestDigitalKontaktinformasjonV1;
-
     @Bean
     @Named("dkifDefaultService")
     public Wrapper<DefaultDkifService> dkifDefaultService() {
-        return new Wrapper<>(new DefaultDkifService(dkifV1, selfTestDigitalKontaktinformasjonV1));
+        return new Wrapper<>(new DefaultDkifService(dkifV1));
     }
 
     @Bean
