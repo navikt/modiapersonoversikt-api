@@ -13,6 +13,14 @@ $(document).ready(function () {
         event.stopPropagation(); // Stop, slik at vi ikke får alle parents sine events også
 
         var $this = $(this);
+
+        /**
+         * Fordi IE11. Browseren setter fokus på fieldset, det vil vi ikke at den skal gjøre.
+         */
+        if ($(event.target).is("fieldset")) {
+            return;
+        }
+
         var $scroller = $this.scrollParent();
 
         var offsetTop = getOffsetTop($this) - getOffsetTop($scroller); // Reell offset innenfor scrollcontainer
