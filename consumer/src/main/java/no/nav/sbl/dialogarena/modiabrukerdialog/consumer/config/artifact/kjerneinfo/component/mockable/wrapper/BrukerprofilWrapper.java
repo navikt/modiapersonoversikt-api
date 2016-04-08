@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjernei
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.brukerprofil.v3.BrukerprofilV3;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,11 +22,13 @@ public class BrukerprofilWrapper {
     @Inject
     private BrukerprofilV3 brukerprofilPortType;
 
+    @Inject
+    private CacheManager cacheManager;
 
     @Bean
     @Qualifier("brukerprofilService")
     public Wrapper<BrukerprofilServiceBi> brukerprofilService() {
-        return new Wrapper<>(new BrukerprofilConsumerConfigImpl(brukerprofilPortType).brukerprofilServiceBi());
+        return new Wrapper<>(new BrukerprofilConsumerConfigImpl(brukerprofilPortType, cacheManager).brukerprofilServiceBi());
     }
 
     @Bean

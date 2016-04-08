@@ -49,6 +49,15 @@ public class BrukerprofilConsumerConfigResolver {
                 }
             }
 
+            @Override
+            public void fjernFraCache(final String ident) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
+                    mockService.wrappedObject.fjernFraCache(ident);
+                } else {
+                    defaultService.wrappedObject.fjernFraCache(ident);
+                }
+            }
+
         };
 
     }
