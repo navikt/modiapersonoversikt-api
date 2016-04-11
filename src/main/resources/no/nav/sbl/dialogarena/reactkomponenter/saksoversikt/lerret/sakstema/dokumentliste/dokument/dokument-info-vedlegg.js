@@ -2,19 +2,21 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
-    function _redirect(e) {
-        e.preventDefault();
-        visSide('dokumentvisning');
-        velgJournalpost(dokumentinfo);
+    function _redirect(index) {
+        return (e) => {
+            e.preventDefault();
+            visSide('dokumentvisning');
+            const dokumentMetadata = Object.assign({ valgtIndex: index }, dokumentinfo);
+            velgJournalpost(dokumentMetadata);
+        };
     }
 
     if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {
         return <noscript />;
     }
-    let i = 0;
-    const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg) => (
-        <li className="vedlegg-element" key={`vedlegg${++i}`}>
-            <a href="#" onClick={_redirect} className="vedleggtext">
+    const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg, index) => (
+        <li className="vedlegg-element" key={`vedlegg${index}`}>
+            <a href="#" onClick={_redirect(index + 1)} className="vedleggtext">
                 {dokumentVedlegg.tittel}
             </a>
         </li>));
