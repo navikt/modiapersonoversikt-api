@@ -27,8 +27,9 @@ class DokumentVisning extends Component {
         window.addEventListener('resize', this.eventHandler);
         this._oppdaterPdfVisning();
 
+        //Firefox fix
         $(this.refs.pdf).ready(() => {
-            this.cancelIntervalID = setInterval(() => this._oppdaterPdfVisning(), 500);
+            this.cancelIntervalID = setInterval(() => this._oppdaterPdfVisning(), 250);
         });
     }
 
