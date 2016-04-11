@@ -28,7 +28,7 @@ class DokumentVisning extends Component {
         this._oppdaterPdfVisning();
 
         $(this.refs.pdf).ready(() => {
-            setTimeout(() => this._oppdaterPdfVisning(), 100);
+            this.cancelIntervalID = setInterval(() => this._oppdaterPdfVisning(), 500);
         });
     }
 
@@ -38,6 +38,7 @@ class DokumentVisning extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.eventHandler);
+        clearInterval(this.cancelIntervalID);
     }
 
     _oppdaterPdfVisning() {
