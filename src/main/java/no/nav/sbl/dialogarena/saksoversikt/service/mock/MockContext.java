@@ -6,9 +6,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import static org.mockito.Mockito.mock;
 
 @Configuration
@@ -76,11 +73,6 @@ public class MockContext {
     @Bean
     public SakstemaGrupperer sakstemaGrupperer() {
         return mock(SakstemaGrupperer.class);
-    }
-
-    @Bean
-    public ExecutorService executorService() {
-        return Executors.newFixedThreadPool(50);
     }
 
     @Bean
