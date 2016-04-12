@@ -38,14 +38,15 @@ function lagFeilmelding(props) {
             <div className="lamell-feilmelding">
                 <FormattedMessage id="sakslamell.tekniskfeilmelding"/>
             </div>);
-    } else {
-        return skalViseFeilmeldingOmBaksystem(props) ?
-            (<div className="lamell-feilmelding">
-                <FormattedMessage id="sakslamell.feilmelding"/>
-            </div>)
-            :
-            <noscript />;
     }
+
+    return skalViseFeilmeldingOmBaksystem(props) ?
+        (<div className="lamell-feilmelding">
+            <FormattedMessage id="sakslamell.feilmelding"/>
+        </div>)
+        :
+        <noscript />;
+
 }
 
 class SaksoversiktLerret extends React.Component {
