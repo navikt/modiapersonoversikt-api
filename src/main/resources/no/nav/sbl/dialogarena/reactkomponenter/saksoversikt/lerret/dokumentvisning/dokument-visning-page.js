@@ -66,13 +66,15 @@ class DokumentVisningPage extends React.Component {
             dato: javaLocalDateTimeToJSDate(this.props.valgtJournalpost.dato)
         };
 
+        const indexValgtDokument = this.props.valgtJournalpost.valgtIndex;
+
         const kulelisteVM = lagKulelistedata(journalpostmetadata.dokumenter, journalpostmetadata.feilendeDokumenter);
 
         return (
             <div className="dokument-visning-page">
                 <div className="fixed-header blokk-s">
                     <a href="#" onClick={this._redirect}>Tilbake til sakstema</a>
-                    <KulemenyListe dokumentmetadata={kulelisteVM}/>
+                    <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
                 </div>
 
                 <div className="grattpanel side-innhold" id="js-kulemeny-scroll">
