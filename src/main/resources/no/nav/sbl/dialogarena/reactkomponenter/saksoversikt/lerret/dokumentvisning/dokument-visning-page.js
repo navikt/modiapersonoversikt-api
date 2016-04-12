@@ -10,6 +10,7 @@ import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils'
 import DokumentVisningListe from './dokument-visning-liste';
 import { FormattedMessage, FormattedDate, injectIntl, intlShape } from 'react-intl';
 import KulemenyListe from './kulemeny/kulemeny-liste';
+import GenerellFeilMeldingDokumentvisning from './generell-feilmelding-dokumentvisning';
 
 function lagKulelistedata(dokumenter, feiledeDokumenter) {
     const feil = feiledeDokumenter.map((dokument, index) => {
@@ -54,9 +55,20 @@ class DokumentVisningPage extends React.Component {
     }
 
     render() {
+        console.log('dokumentvisningspage', this.props.dokumentstatus);
+        if (this.props.dokumentstatus === Const.FEILET) {
+            return (
+                <div className="dokument-visning-page">
+                    <div className="fixed-header blokk-s">
+                        <a href="#" onClick={this._redirect}>Tilbake til sakstema</a>
+                    </div>
+                    <GenerellFeilMeldingDokumentvisning/>
+                </div>);
+        }
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
             return <Snurrepipp farge="hvit"/>;
         }
+
         const { journalpostmetadata, intl } = this.props;
 
         const values = {
@@ -87,8 +99,7 @@ class DokumentVisningPage extends React.Component {
                         </section>
                     </panel>
                 </div>
-            </div>
-        );
+            </div>);
     }
 }
 

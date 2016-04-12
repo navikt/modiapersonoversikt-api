@@ -5,57 +5,50 @@ import Q from 'q';
 function rethrow(fn) {
     return (data) => {
         console.error(data);
-
         fn(data);
-    }
+    };
 }
 
 const dataDispatch = (dispatch, type) => (data) => dispatch({ type, data });
 
-export const hentWidgetData = (fnr) => {
-    return (dispatch) => {
-        const promisedDispatch = dataDispatch.bind(null, dispatch);
+export const hentWidgetData = (fnr) => (dispatch) => {
+    const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
-        const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
+    const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
+    const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
 
-        dispatch({ type: AT.LAST_WIDGET_DATA_START });
+    dispatch({ type: AT.LAST_WIDGET_DATA_START });
 
-        return tekster
-            .then(promisedDispatch(AT.LAST_WIDGET_DATA_TEKSTER_OK))
-            .then(() => temaer)
-            .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
-            .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)));
-    }
+    return tekster
+        .then(promisedDispatch(AT.LAST_WIDGET_DATA_TEKSTER_OK))
+        .then(() => temaer)
+        .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
+        .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)));
 };
 
-export const hentLerretData = (fnr) => {
-    return (dispatch) => {
-        const promisedDispatch = dataDispatch.bind(null, dispatch);
+export const hentLerretData = (fnr) => (dispatch) => {
+    const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
-        const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
-        const sakstema = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/sakstema`);
+    const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
+    const miljovariabler = Ajax.get('/modiabrukerdialog/rest/informasjon/miljovariabler');
+    const sakstema = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/sakstema`);
 
-        dispatch({ type: AT.LAST_LERRET_DATA_START });
-        return Q
-            .allSettled([tekster, miljovariabler, sakstema])
-            .then(promisedDispatch(AT.LAST_LERRET_DATA_OK))
-            .catch(rethrow(promisedDispatch(AT.LAST_LERRET_DATA_FEIL)));
-    };
+    dispatch({ type: AT.LAST_LERRET_DATA_START });
+    return Q
+        .allSettled([tekster, miljovariabler, sakstema])
+        .then(promisedDispatch(AT.LAST_LERRET_DATA_OK))
+        .catch(rethrow(promisedDispatch(AT.LAST_LERRET_DATA_FEIL)));
 };
 
-export const hentDokumentData = (fnr, valgtjournalpost) => {
-    return (dispatch) => {
-        const promisedDispatch = dataDispatch.bind(null, dispatch);
+export const hentDokumentData = (fnr, valgtjournalpost) => (dispatch) => {
+    const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-        const journalpostmetadata = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/journalpostmetadata/${valgtjournalpost.journalpostId}?temakode=${valgtjournalpost.temakode}`);
+    const journalpostmetadata = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/journalpostmetadata/${valgtjournalpost.journalpostId}?temakode=${valgtjournalpost.temakode}`);
 
-        dispatch({ type: AT.LAST_DOKUMENT_DATA_START });
-        return journalpostmetadata
-            .then(promisedDispatch(AT.LAST_DOKUMENT_DATA_OK))
-            .catch(rethrow(promisedDispatch(AT.LAST_DOKUMENT_DATA_FEIL)));
-    }
+    dispatch({ type: AT.LAST_DOKUMENT_DATA_START });
+    return journalpostmetadata
+        .then(promisedDispatch(AT.LAST_DOKUMENT_DATA_OK))
+        .catch(rethrow(promisedDispatch(AT.LAST_DOKUMENT_DATA_FEIL)));
 };
 
 export const velgSak = (sak) => ({ type: AT.VELG_SAK, data: sak });
@@ -64,7 +57,7 @@ export const visSide = (side) => ({ type: AT.VIS_SIDE, data: side });
 
 export const velgFiltreringAvsender = (filtreringsvalg) => ({ type: AT.VELG_FILTRERING_AVSENDER, filtreringsvalg });
 
-//Benyttes av Wicketklassen SaksoversiktLerret
+// Benyttes av Wicketklassen SaksoversiktLerret
 export const visTema = (tema) => ({ type: AT.VIS_TEMA, data: tema });
 export const purgeState = () => ({ type: AT.PURGE_STATE });
 export const unmount = () => ({ type: AT.UNMOUNT });
