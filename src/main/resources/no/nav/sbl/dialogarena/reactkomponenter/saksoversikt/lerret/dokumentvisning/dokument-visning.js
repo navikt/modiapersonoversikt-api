@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { debounce, autobind } from './../../../utils/utils-module';
 import { Element } from 'react-scroll';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
+import GenerellFeilMeldingDokumentvisning from './generell-feilmelding-dokumentvisning';
 
 const a4Ratio = 2 / Math.sqrt(2);
 const stylingFn = (antallSider = 1, width = 750) => ({
@@ -74,7 +75,6 @@ class DokumentVisning extends Component {
         const { dokument, intl: { formatMessage } } = this.props;
         const pdfData = `${dokument.pdfUrl}#view=FitH&scrollbar=0&toolbar=0&statusbar=0&messages=0&navpanes=0`;
         const style = { ...this.state };
-
         const aapneSomPDFLink = (
             <a target="_blank" href={dokument.pdfUrl}>
                 { formatMessage({ id: 'dokumentvisning.pdf.aapne.pdf' }) }
@@ -96,23 +96,7 @@ class DokumentVisning extends Component {
                   key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}
                 >
                     <param name="view" value="FitV"/>
-
-                    <div className="feilmelding-container">
-                        <img className="feilmelding-bakgrunn"
-                          src="/modiabrukerdialog/img/saksoversikt/Dummy_dokument.jpg" alt=""
-                        />
-                        <div className="feilmelding panel panel-ramme">
-                            <h1 className="-ikon-feil-strek teknisk-feil-ikon">
-                                <FormattedMessage
-                                  id="dokumentvisning.pdf.feilmelding.tittel"
-                                />
-                            </h1>
-                            <p className="text-center">
-                                <FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold" />
-                            </p>
-                            <p className="text-center">{aapneSomPDFLink}</p>
-                        </div>
-                    </div>
+                    <GenerellFeilMeldingDokumentvisning aapneSomPDFLink={aapneSomPDFLink}/>
                 </object>
             </Element>
         );
