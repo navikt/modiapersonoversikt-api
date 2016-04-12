@@ -9,7 +9,7 @@ class SakstemaPage extends React.Component {
     render() {
         const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost, filtreringsvalg } = this.props;
 
-        if (this.props.sakstema.length === 0) {
+        if (!sakstema || sakstema.length === 0) {
             return (
                 <div className="ingen-sakstemaer">
                     <img className="ingensakstemaerimage"

@@ -27,15 +27,26 @@ function getContent(props) {
     return fn(componentProps);
 }
 
-function harFeilmelding(props) {
+function skalViseFeilmeldingOmBaksystem(props) {
     return props.feilendeSystemer && props.feilendeSystemer.length > 0
         && props.valgtside === 'sakstema';
 }
 
 function lagFeilmelding(props) {
-    return harFeilmelding(props) ? (<div className="lamell-feilmelding">
-        <FormattedMessage id="sakslamell.feilmelding"/>
-    </div>) : <noscript />;
+    if (props.status === Const.FEILET) {
+        return (
+            <div className="lamell-feilmelding">
+                <FormattedMessage id="sakslamell.tekniskfeilmelding"/>
+            </div>);
+    }
+
+    return skalViseFeilmeldingOmBaksystem(props) ?
+        (<div className="lamell-feilmelding">
+            <FormattedMessage id="sakslamell.feilmelding"/>
+        </div>)
+        :
+        <noscript />;
+
 }
 
 class SaksoversiktLerret extends React.Component {
@@ -44,7 +55,7 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-        if (this.props.status !== Const.LASTET) {
+        if (this.props.status === Const.VOID || this.props.status === Const.LASTER) {
             return (
                 <div className="saksoversikt-snurrepipp">
                     <Snurrepipp farge="hvit"/>
@@ -53,7 +64,7 @@ class SaksoversiktLerret extends React.Component {
         }
 
         const feilmelding = lagFeilmelding(this.props);
-        const feilmeldingKlasse = harFeilmelding(this.props) ? 'har-feilmelding' : '';
+        const feilmeldingKlasse = skalViseFeilmeldingOmBaksystem(this.props) ? 'har-feilmelding' : '';
 
         return (
             <MiljovariablerProvider miljovariabler={this.props.miljovariabler}>

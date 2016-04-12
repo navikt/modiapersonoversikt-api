@@ -32,8 +32,15 @@ const initalState = {
 actionHandlers[AT.LAST_LERRET_DATA_START] = (state) => ({ ...state, status: Const.LASTER });
 
 actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
+    let status = Const.LASTET;
+
     const [tekster, miljovariabler, sakstema] = action.data;
-    const { resultat, feilendeSystemer } = sakstema.value;
+    const { resultat, feilendeSystemer } = sakstema.value? sakstema.value: {result:[], feilendeSystemer:[]};
+
+    const feilendeKall = action.data.filter(object => object.state === "rejected");
+    if(feilendeKall.length > 0) {
+        status = Const.FEILET;
+    }
 
     let _sakstema = resultat && resultat.length > 0 ? resultat
         .filter(fjernTommeTema).sort(nyesteSakstema) : [];
@@ -50,7 +57,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
 
     return {
         ...state,
-        status: Const.LASTET,
+        status: status,
         valgtTema,
         widgetValgtTemakode,
         filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true },
@@ -62,7 +69,20 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
         }
     };
 };
-actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => ({ ...state, status: Const.FEILET, feil: action.data });
+actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
+    const [tekster, miljovariabler] = action.data;
+
+    return {
+        ...state,
+        status: Const.FEILET,
+        data: {
+            sakstema: [],
+            tekster: tekster.value,
+            miljovariabler: miljovariabler.value
+        },
+        feil: action.data
+    }
+};
 
 actionHandlers[AT.VELG_SAK] = (state, action) => ({
     ...state,
