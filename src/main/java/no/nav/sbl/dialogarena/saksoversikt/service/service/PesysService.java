@@ -38,7 +38,7 @@ public class PesysService {
                                 .withFagsystem(PESYS_FAGSYSTEM_ID)))
                     ;
         } catch (HentSakSammendragListeSakManglerEierenhet | HentSakSammendragListePersonIkkeFunnet e) {
-            LOGGER.warn("Det skjedde en ventet exception ved henting av Sakstema fra Pesys");
+            LOGGER.error("Det skjedde en ventet exception ved henting av Sakstema fra Pesys", e);
             return Optional.empty();
         } catch (RuntimeException e) {
             LOGGER.error("Det skjedde en uventet feil mot Pesys", e);
