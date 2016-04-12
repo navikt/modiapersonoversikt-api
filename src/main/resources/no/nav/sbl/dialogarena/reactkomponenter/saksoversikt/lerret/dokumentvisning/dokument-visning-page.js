@@ -55,7 +55,6 @@ class DokumentVisningPage extends React.Component {
     }
 
     render() {
-        console.log('dokumentvisningspage', this.props.dokumentstatus);
         if (this.props.dokumentstatus === Const.FEILET) {
             return (
                 <div className="dokument-visning-page">
