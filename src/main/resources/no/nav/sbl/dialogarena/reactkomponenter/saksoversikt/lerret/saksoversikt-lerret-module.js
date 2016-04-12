@@ -33,9 +33,15 @@ function harFeilmelding(props) {
 }
 
 function lagFeilmelding(props) {
-    return harFeilmelding(props) ? (<div className="lamell-feilmelding">
-        <FormattedMessage id="sakslamell.feilmelding"/>
-    </div>) : <noscript />;
+    if (props.status === Const.FEILET) {
+        return (<div className="lamell-feilmelding">
+            <FormattedMessage id="sakslamell.tekniskfeilmelding"/>
+        </div>);
+    } else {
+        return harFeilmelding(props) ? (<div className="lamell-feilmelding">
+            <FormattedMessage id="sakslamell.feilmelding"/>
+        </div>) : <noscript />;
+    }
 }
 
 class SaksoversiktLerret extends React.Component {
@@ -44,7 +50,7 @@ class SaksoversiktLerret extends React.Component {
     }
 
     render() {
-        if (this.props.status !== Const.LASTET) {
+        if (this.props.status === Const.VOID || this.props.status === Const.LASTER) {
             return (
                 <div className="saksoversikt-snurrepipp">
                     <Snurrepipp farge="hvit"/>
