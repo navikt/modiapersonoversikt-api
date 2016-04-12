@@ -98,7 +98,8 @@ class DokumentVisningPage extends React.Component {
                         </section>
                     </panel>
                 </div>
-            </div>);
+            </div>
+        );
     }
 }
 
