@@ -27,20 +27,24 @@ function getContent(props) {
     return fn(componentProps);
 }
 
-function harFeilmelding(props) {
+function skalViseFeilmeldingOmBaksystem(props) {
     return props.feilendeSystemer && props.feilendeSystemer.length > 0
         && props.valgtside === 'sakstema';
 }
 
 function lagFeilmelding(props) {
     if (props.status === Const.FEILET) {
-        return (<div className="lamell-feilmelding">
-            <FormattedMessage id="sakslamell.tekniskfeilmelding"/>
-        </div>);
+        return (
+            <div className="lamell-feilmelding">
+                <FormattedMessage id="sakslamell.tekniskfeilmelding"/>
+            </div>);
     } else {
-        return harFeilmelding(props) ? (<div className="lamell-feilmelding">
-            <FormattedMessage id="sakslamell.feilmelding"/>
-        </div>) : <noscript />;
+        return skalViseFeilmeldingOmBaksystem(props) ?
+            (<div className="lamell-feilmelding">
+                <FormattedMessage id="sakslamell.feilmelding"/>
+            </div>)
+            :
+            <noscript />;
     }
 }
 
@@ -59,7 +63,7 @@ class SaksoversiktLerret extends React.Component {
         }
 
         const feilmelding = lagFeilmelding(this.props);
-        const feilmeldingKlasse = harFeilmelding(this.props) ? 'har-feilmelding' : '';
+        const feilmeldingKlasse = skalViseFeilmeldingOmBaksystem(this.props) ? 'har-feilmelding' : '';
 
         return (
             <MiljovariablerProvider miljovariabler={this.props.miljovariabler}>
