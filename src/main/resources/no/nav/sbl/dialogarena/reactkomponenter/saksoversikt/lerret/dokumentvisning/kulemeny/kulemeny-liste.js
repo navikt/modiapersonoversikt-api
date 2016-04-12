@@ -11,10 +11,10 @@ const renderKulemeny = (kulemenypunkt, index) => (
 
 class KulemenyListe extends React.Component {
     componentDidMount() {
-        const indexValgtDokument = this.props.indexValgtDokument;
-        const list = document.getElementById('kulemenyliste');
-        if (indexValgtDokument && indexValgtDokument >= 0 && list !== null) {
-            setTimeout(() => list.querySelectorAll('li')[indexValgtDokument].querySelector('input').click(), 0);
+        const { indexValgtDokument } = this.props;
+        const list = this.refs.kulemenyliste;
+        if (indexValgtDokument >= 0 && list) {
+            setTimeout(() => list.querySelector(`li:nth-child(${indexValgtDokument}) input`).click(), 0);
         }
     }
 
@@ -25,7 +25,7 @@ class KulemenyListe extends React.Component {
         }
 
         const kulemenypunkter = dokumentmetadata.map(renderKulemeny);
-        return <ul className="kulemeny" id="kulemenyliste">{kulemenypunkter}</ul>;
+        return <ul className="kulemeny" ref="kulemenyliste">{kulemenypunkter}</ul>;
     }
 }
 
