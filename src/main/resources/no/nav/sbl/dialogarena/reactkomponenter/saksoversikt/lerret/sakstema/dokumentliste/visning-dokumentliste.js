@@ -26,7 +26,12 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
         if (valgtTema.temakode === 'BID') {
             return <IngenDokumenterBidrag ingenDokumenterHeader={ingendokumenter}/>;
         }
-        return <IngenDokumenter ingenDokumenterHeader={ingendokumenter}/>;
+        return (
+            <div>
+                <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
+                <IngenDokumenter ingenDokumenterHeader={ingendokumenter}/>
+            </div>
+        );
     }
 
     const infoMeldingDokumenterBidrag = valgtTema.temakode === 'BID' ?
