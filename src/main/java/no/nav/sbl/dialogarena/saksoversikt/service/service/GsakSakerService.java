@@ -39,7 +39,7 @@ public class GsakSakerService {
                                         .withFagsystem(GSAK_FAGSYSTEM_ID))
                     );
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
-            logger.warn("Det skjedde en ventet exception ved henting av Sakstema fra Gsak");
+            logger.error("Det skjedde en ventet exception ved henting av Sakstema fra Gsak", e);
             return Optional.empty();
         } catch (RuntimeException e) {
             logger.error("Det skjedde en uventet feil mot Gsak", e);

@@ -20,6 +20,7 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGruppe
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 
+@SuppressWarnings("squid:S1166") // Either log or rethrow
 public class SaksService {
 
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
@@ -75,8 +76,8 @@ public class SaksService {
         return new ResultatWrapper<>(concat(fraGSak, fraPesys).collect(toList()), feilendeBaksystemer);
     }
 
-    private Map grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {
-        Set<String> sakstema = grupperteSakstema.entrySet().stream().map(stringSetEntry -> stringSetEntry.getValue())
+    private Map<String, Set<String>> grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {
+        Set<String> sakstema = grupperteSakstema.entrySet().stream().map(Map.Entry::getValue)
                 .flatMap(Set::stream).collect(toSet());
         Map<String, Set<String>> map = new HashMap<>();
         map.put(RESTERENDE_TEMA, sakstema);
@@ -102,9 +103,8 @@ public class SaksService {
         }
     }
 
-    private ResultatWrapper opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper,
+    private ResultatWrapper<List<Sakstema>> opprettSakstemaresultat(List<Sak> saker, ResultatWrapper<List<DokumentMetadata>> wrapper,
                                                     Map<String,Set<String>> grupperteSakstema, Map<String, List<Behandlingskjede>> behandlingskjeder) {
-
         return grupperteSakstema.entrySet()
                 .stream()
                 .map(entry -> opprettSakstemaForEnTemagruppe(entry, saker, wrapper.resultat, behandlingskjeder))
@@ -116,7 +116,9 @@ public class SaksService {
                 .withEkstraFeilendeBaksystemer(wrapper.feilendeSystemer);
     }
 
-    protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
+    protected ResultatWrapper<List<Sakstema>> opprettSakstemaForEnTemagruppe(Map.Entry<String, Set<String>> temagruppe,
+                                                                             List<Sak> alleSaker, List<DokumentMetadata> alleDokumentMetadata,
+                                                                             Map<String, List<Behandlingskjede>> behandlingskjeder) {
         Predicate<String> ikkeGruppertOppfolingssak = temakode -> (RESTERENDE_TEMA.equals(temagruppe.getKey()) || !OPPFOLGING.equals(temakode));
         Set<Baksystem> feilendeBaksystemer = new HashSet();
 
@@ -132,13 +134,13 @@ public class SaksService {
                             .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
                             .collect(toList());
 
-                    boolean erGruppert = RESTERENDE_TEMA.equals(temagruppe.getKey()) ? false : true;
+                    boolean erGruppert = !RESTERENDE_TEMA.equals(temagruppe.getKey());
 
                     String temanavn = temakode;
                     try {
                         temanavn = temanavn(temagruppe, temakode);
                     } catch (FeilendeBaksystemException e) {
-                        if (!temagruppe.equals(RESTERENDE_TEMA)) {
+                        if (!RESTERENDE_TEMA.equals(temagruppe)) {
                             temanavn += " og oppfølging";
                         }
                         feilendeBaksystemer.add(e.getBaksystem());
@@ -164,17 +166,17 @@ public class SaksService {
         }
     }
 
-    private Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
+    private static final Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
         return dm -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dm.getTilhorendeSakid());
     }
 
-    private Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+    private static final Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
         return dm -> dm.getBaksystem().equals(HENVENDELSE)
                 && (dm.getTemakode().equals(temakode)
                 || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));
     }
 
-    private boolean tilhorerSakTemagruppe(Sak sak, String temakode, Map.Entry<String, Set<String>> temagruppe) {
+    private static boolean tilhorerSakTemagruppe(Sak sak, String temakode, Map.Entry<String, Set<String>> temagruppe) {
         if (!RESTERENDE_TEMA.equals(temagruppe.getKey())) {
             return temakode.equals(sak.getTemakode()) || sak.temakode().equals(OPPFOLGING);
         } else {

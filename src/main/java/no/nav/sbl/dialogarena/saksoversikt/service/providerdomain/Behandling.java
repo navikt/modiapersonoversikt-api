@@ -4,10 +4,9 @@ import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 
 public class Behandling implements Serializable {
     public DateTime opprettetDato;

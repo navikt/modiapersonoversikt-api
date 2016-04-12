@@ -58,7 +58,7 @@ public class SakOgBehandlingService {
     public Map<String, List<Behandlingskjede>> hentBehandlingskjederGruppertPaaTema(String fnr) {
         return hentAlleSaker(fnr)
                 .stream()
-                .collect(toMap(SAKSTEMA, TIL_BEHANDLINGSKJEDER));
+                .collect(toMap(SAKSTEMA, this::tilBehandligskjeder));
     }
 
     private List<Behandling> filtrerteBehandlinger(WSSak sak) {
@@ -71,9 +71,7 @@ public class SakOgBehandlingService {
             .withStatus(behandling.getBehandlingsStatus())
             .withSistOppdatert(LocalDateTime.from(behandling.getBehandlingDato().toGregorianCalendar().toZonedDateTime()));
 
-    private final Function<WSSak, List<Behandlingskjede>> TIL_BEHANDLINGSKJEDER = sak -> behandlingskjederForSak(sak);
-
-    private List<Behandlingskjede> behandlingskjederForSak(WSSak wsSak) {
+    private List<Behandlingskjede> tilBehandligskjeder(WSSak wsSak) {
         return filtrerteBehandlinger(wsSak)
                 .stream()
                 .map(TIL_BEHANDLINGSKJEDE)
