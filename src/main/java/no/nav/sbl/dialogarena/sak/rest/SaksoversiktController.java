@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
+import no.nav.sbl.dialogarena.sak.domain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.sak.domain.widget.ModiaSakstema;
-import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
@@ -21,9 +20,9 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.concat;
-import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
@@ -40,12 +39,6 @@ public class SaksoversiktController {
 
     @Inject
     private TilgangskontrollService tilgangskontrollService;
-
-    @GET
-    @Path("/temaer")
-    public List<Tema> hentTemaer(@PathParam("fnr") String fnr) {
-        return saksoversiktService.hentTemaer(fnr);
-    }
 
     @GET
     @Path("/sakstema")
