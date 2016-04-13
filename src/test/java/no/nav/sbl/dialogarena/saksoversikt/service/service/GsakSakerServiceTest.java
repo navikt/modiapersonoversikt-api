@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
@@ -44,7 +45,7 @@ public class GsakSakerServiceTest {
 
     @Before
     public void setup() {
-        when(kodeverkWrapper.getTemanavnForTemakode(anyString(), eq("Tema"))).thenReturn("test");
+        when(kodeverkWrapper.getTemanavnForTemakode(anyString(), eq("Tema"))).thenReturn(new ResultatWrapper("test"));
     }
 
     @Test

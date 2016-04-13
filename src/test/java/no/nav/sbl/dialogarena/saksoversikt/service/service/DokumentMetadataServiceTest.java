@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static junit.framework.TestCase.assertFalse;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
@@ -62,7 +60,7 @@ public class DokumentMetadataServiceTest {
         mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
         when(kodeverk.getKode(anyString(), any())).thenReturn("FOR");
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
@@ -78,7 +76,7 @@ public class DokumentMetadataServiceTest {
 
         mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
@@ -101,7 +99,7 @@ public class DokumentMetadataServiceTest {
     public void hvisViFaarJournalpostFraHenvendelseSomIkkeFinnesIJoarkSkalDenneBrukesVidere() throws DatatypeConfigurationException {
         mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("En annen journalpost")));
@@ -115,7 +113,7 @@ public class DokumentMetadataServiceTest {
     public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoarkMenTaMedInformasjonOmEttersendelseFraHenvendelse() throws DatatypeConfigurationException {
         mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
 
         String SAMME_JOURNALPOST = "2";
@@ -131,7 +129,7 @@ public class DokumentMetadataServiceTest {
     public void hvisViBareFaarJournalpostFraJoarkSkalIkkeDokumentetSettesTilFiktivtDokument() throws DatatypeConfigurationException {
         mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn("Dagpenger");
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
 
         when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(emptyList());
