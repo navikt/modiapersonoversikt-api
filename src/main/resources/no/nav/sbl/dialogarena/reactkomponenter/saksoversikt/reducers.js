@@ -6,13 +6,7 @@ import dokumentReducer from './lerret/dokumentvisning/dokument-reducer';
 
 function purgeStateReducer(fn) {
     return (state, action) => {
-        if (action.type === AT.PURGE_STATE) {
-            const node = document.querySelector('[class="saksoversiktLerret-wicket unmount-react"]');
-            if (node) {
-                ReactDOM.unmountComponentAtNode(node);
-            }
-            return fn({}, action);
-        } else if(action.type === AT.UNMOUNT) {
+        if (action.type === AT.PURGE_STATE || action.type === AT.UNMOUNT) {
             const node = document.querySelector('[class="saksoversiktLerret-wicket unmount-react"]');
             if (node) {
                 ReactDOM.unmountComponentAtNode(node);
