@@ -93,7 +93,7 @@ public class InnsynImplTest {
                 )
         ));
 
-        when(journalpostTransformer.dokumentMetadataFraJournalPost(any(), anyString())).thenReturn(new DokumentMetadata());
+        when(journalpostTransformer.dokumentMetadataFraJournalPost(any(), anyString())).thenReturn(new ResultatWrapper<>(new DokumentMetadata()));
         ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
 
         List<DokumentMetadata> dokumentmetadata = wrapper.resultat;

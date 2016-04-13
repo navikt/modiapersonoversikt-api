@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -34,7 +35,7 @@ public class TemaTransformerTest {
 
     @Before
     public void setup() {
-        when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn("Dagpenger");
+        when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper("Dagpenger"));
     }
 
     @Test

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.sak.domain.widget.Tema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -12,14 +13,15 @@ import java.util.List;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.MED_AVSLUTTETE_KVITTERINGER;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilBehandling;
 
 public class TemaTransformer {
 
     public static Tema tilTema(WSSak wsSak, BulletproofKodeverkService bulletproofKodeverkService, Filter filter) {
         String temakode = wsSak.getSakstema().getValue();
-        Tema tema = new Tema(temakode).withTemanavn(bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA));
+        ResultatWrapper temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA);
+        Tema tema = new Tema(temakode).withTemanavn((String) temanavnForTemakode.resultat);
         return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak, filter)) : tema;
     }
 
