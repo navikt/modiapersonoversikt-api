@@ -11,21 +11,6 @@ function rethrow(fn) {
 
 const dataDispatch = (dispatch, type) => (data) => dispatch({ type, data });
 
-export const hentWidgetData = (fnr) => (dispatch) => {
-    const promisedDispatch = dataDispatch.bind(null, dispatch);
-
-    const tekster = Ajax.get('/modiabrukerdialog/rest/informasjon/tekster');
-    const temaer = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/temaer`);
-
-    dispatch({ type: AT.LAST_WIDGET_DATA_START });
-
-    return tekster
-        .then(promisedDispatch(AT.LAST_WIDGET_DATA_TEKSTER_OK))
-        .then(() => temaer)
-        .then(promisedDispatch(AT.LAST_WIDGET_DATA_OK))
-        .catch(rethrow(promisedDispatch(AT.LAST_WIDGET_DATA_FEIL)));
-};
-
 export const hentLerretData = (fnr) => (dispatch) => {
     const promisedDispatch = dataDispatch.bind(null, dispatch);
 
@@ -56,8 +41,3 @@ export const velgJournalpost = (journalpost) => ({ type: AT.VELG_JOURNALPOST, da
 export const visSide = (side) => ({ type: AT.VIS_SIDE, data: side });
 
 export const velgFiltreringAvsender = (filtreringsvalg) => ({ type: AT.VELG_FILTRERING_AVSENDER, filtreringsvalg });
-
-// Benyttes av Wicketklassen SaksoversiktLerret
-export const visTema = (tema) => ({ type: AT.VIS_TEMA, data: tema });
-export const purgeState = () => ({ type: AT.PURGE_STATE });
-export const unmount = () => ({ type: AT.UNMOUNT });
