@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
@@ -136,21 +136,14 @@ public class SaksService {
 
                     boolean erGruppert = !RESTERENDE_TEMA.equals(temagruppe.getKey());
 
-                    String temanavn = temakode;
-                    try {
-                        temanavn = temanavn(temagruppe, temakode);
-                    } catch (FeilendeBaksystemException e) {
-                        if (!RESTERENDE_TEMA.equals(temagruppe)) {
-                            temanavn += " og oppfølging";
-                        }
-                        feilendeBaksystemer.add(e.getBaksystem());
-                    }
+                    ResultatWrapper temanavn = temanavnFraKodeverk(temagruppe, temakode);
+                    feilendeBaksystemer.addAll(temanavn.feilendeSystemer);
 
                     return new Sakstema()
                             .withTemakode(temakode)
                             .withBehandlingskjeder(optional(behandlingskjeder.get(temakode)).orElse(emptyList()))
                             .withTilhorendeSaker(tilhorendeSaker)
-                            .withTemanavn(temanavn)
+                            .withTemanavn((String) temanavn.resultat)
                             .withDokumentMetadata(tilhorendeDokumentMetadata)
                             .withErGruppert(erGruppert);
                 })
@@ -158,11 +151,12 @@ public class SaksService {
         return new ResultatWrapper<>(sakstema, feilendeBaksystemer);
     }
 
-    private String temanavn(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+    private ResultatWrapper temanavnFraKodeverk(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+        ResultatWrapper temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA);
         if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
-            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA);
+            return temanavnForTemakode;
         } else {
-            return bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA) + " og oppfølging";
+            return new ResultatWrapper(temanavnForTemakode.resultat + " og oppfølging", temanavnForTemakode.feilendeSystemer);
         }
     }
 

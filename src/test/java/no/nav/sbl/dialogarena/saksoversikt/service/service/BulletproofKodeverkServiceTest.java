@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.BEHANDLINGSTEMA;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -67,13 +69,14 @@ public class BulletproofKodeverkServiceTest {
 
     @Test
     public void getTemaForTemakode_shouldReturn_tema() {
-        String tema = kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_DAGPENGER, BEHANDLINGSTEMA);
-        assertThat(tema, is(TEMANAVN_DAGPENGER));
+        ResultatWrapper tema = kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_DAGPENGER, BEHANDLINGSTEMA);
+        assertThat(tema.resultat, is(TEMANAVN_DAGPENGER));
     }
 
-    @Test(expected = FeilendeBaksystemException.class )
+    @Test
     public void getTemanavnForTemaKode_shouldThrowFeilendeBaksystemExceptionWhenRuntimeErrorOccours() {
-        kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_UFORE, BEHANDLINGSTEMA);
+        ResultatWrapper temanavnForTemakode = kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_UFORE, BEHANDLINGSTEMA);
+        assertTrue(temanavnForTemakode.feilendeSystemer.contains(Baksystem.KODEVERK));
     }
 
 
