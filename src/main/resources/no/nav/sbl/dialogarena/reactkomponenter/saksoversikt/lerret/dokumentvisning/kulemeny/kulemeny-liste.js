@@ -14,7 +14,7 @@ class KulemenyListe extends React.Component {
         const { indexValgtDokument } = this.props;
         const list = this.refs.kulemenyliste;
         if (indexValgtDokument >= 0 && list) {
-            setTimeout(() => list.querySelector(`li:nth-child(${indexValgtDokument}) input`).click(), 0);
+            setTimeout(() => list.querySelector(`li:nth-child(${indexValgtDokument + 1}) input`).click(), 0);
         }
     }
 

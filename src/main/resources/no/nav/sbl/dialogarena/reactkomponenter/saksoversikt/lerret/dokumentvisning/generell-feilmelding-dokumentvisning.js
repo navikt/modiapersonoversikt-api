@@ -23,7 +23,7 @@ const GenerellFeilMeldingDokumentvisning = ({ aapneSomPDFLink }) => {
     );
 };
 GenerellFeilMeldingDokumentvisning.propTypes = {
-    aapneSomPDFLink: React.PropTypes.func
+    aapneSomPDFLink: React.PropTypes.object
 };
 
 export default GenerellFeilMeldingDokumentvisning;
