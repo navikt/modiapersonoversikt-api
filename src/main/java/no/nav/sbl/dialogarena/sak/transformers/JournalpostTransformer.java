@@ -1,19 +1,16 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -30,8 +27,9 @@ public class JournalpostTransformer {
     @Inject
     private BulletproofKodeverkService bulletproofKodeverkService;
 
-    public DokumentMetadata dokumentMetadataFraJournalPost(WSJournalpost journalpost, String fnr) throws RuntimeException {
+    public ResultatWrapper<DokumentMetadata> dokumentMetadataFraJournalPost(WSJournalpost journalpost, String fnr) throws RuntimeException {
         Map<String, List<WSDokumentinfoRelasjon>> relasjoner = byggRelasjonsMap(journalpost);
+        Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
         Dokument hoveddokument = finnHoveddokument(opprettDokument, relasjoner);
         Stream<Dokument> vedlegg = finnVedlegg(opprettDokument, relasjoner);
@@ -43,7 +41,10 @@ public class JournalpostTransformer {
         List<WSDokumentinfoRelasjon> dokumentinfoRelasjonListe = journalpost.getDokumentinfoRelasjonListe();
         String kategori = hentKategoriNotatNavn(dokumentinfoRelasjonListe, journalpost.getKommunikasjonsretning());
 
-        return new DokumentMetadata()
+        ResultatWrapper temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA);
+        feilendeBaksystemer.addAll(temanavnForTemakode.feilendeSystemer);
+
+        return new ResultatWrapper<>(new DokumentMetadata()
                 .withJournalpostId(journalpost.getJournalpostId())
                 .withHoveddokument(hoveddokument)
                 .withVedlegg(
@@ -58,7 +59,7 @@ public class JournalpostTransformer {
                 .withBaksystem(JOARK)
                 .withKategoriNotat(kategori)
                 .withTilhorendeSakid(journalpost.getGjelderSak().getSakId())
-                .withTemakodeVisning(bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA));
+                .withTemakodeVisning((String) temanavnForTemakode.resultat), feilendeBaksystemer);
     }
 
     private String hentKategoriNotatNavn(List<WSDokumentinfoRelasjon> dokumentinfoRelasjonListe, WSKommunikasjonsretninger kommunikasjonsretninger) {

@@ -22,12 +22,14 @@ import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentJournalpostListeReq
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK_SIKKERHETSBEGRENSNING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER;
@@ -55,12 +57,18 @@ public class InnsynImpl implements Innsyn {
         }
 
         try {
-            return new ResultatWrapper(
-                    joarkV2.hentJournalpostListe(wsRequest)
-                            .getJournalpostListe()
-                            .stream()
-                            .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp, fnr)).collect(toList()));
+            List<ResultatWrapper<DokumentMetadata>> dokumentMetadataWrappers = joarkV2.hentJournalpostListe(wsRequest)
+                    .getJournalpostListe()
+                    .stream()
+                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp, fnr))
+                    .collect(toList());
 
+            List<DokumentMetadata> dokumentMetadata = dokumentMetadataWrappers.stream()
+                    .map(jpw -> jpw.resultat)
+                    .collect(toList());
+            Set<Baksystem> feilendeBaksystemer = dokumentMetadataWrappers.stream().map(entry -> entry.feilendeSystemer).flatMap(Collection::stream).collect(toSet());
+
+            return new ResultatWrapper<>(dokumentMetadata, feilendeBaksystemer);
         } catch (HentJournalpostListeSikkerhetsbegrensning e) {
             logger.warn("Sikkerhetsbegrensning ved henting av dokument! {}", e.getMessage());
             Set<Baksystem> feil = new HashSet<>();
