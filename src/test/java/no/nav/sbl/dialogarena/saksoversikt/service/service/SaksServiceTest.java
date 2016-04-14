@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils;
 import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
@@ -29,7 +30,7 @@ import static java.util.Collections.*;
 import static java.util.Optional.of;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.SEND_SOKNAD_KVITTERINGSTYPE;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.*;
@@ -298,9 +299,9 @@ public class SaksServiceTest {
 
     private WSSak sakFraSakOgBehandling() {
         return new WSSak().withBehandlingskjede(new WSBehandlingskjede()
-                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(Filter.OPPRETTET))
+                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(FilterUtils.OPPRETTET))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
-                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.OPPRETTET))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.OPPRETTET))
                 .withBehandlingsListeRef("henvendelsesId")
                 .withSisteBehandlingREF("henvendelsesId")
                 .withStart(new DateTime().minusDays(1))

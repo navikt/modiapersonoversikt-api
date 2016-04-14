@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
@@ -18,7 +18,6 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSSak;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.FERDIG_BEHANDLET;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -39,9 +38,9 @@ public class DataFletterTest {
                 .withBehandlingsId(henvendelsesId)
         );
         WSSak sak = new WSSak().withBehandlingskjede(new WSBehandlingskjede()
-                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(BEHANDLINGSTATUS_AVSLUTTET))
-                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
-                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.AVSLUTTET))
+                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(FilterUtils.BEHANDLINGSTATUS_AVSLUTTET))
+                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                 .withBehandlingsListeRef(henvendelsesId)
                 .withSisteBehandlingREF(henvendelsesId)
                 .withStart(sakOgBehandlingTid)
@@ -65,9 +64,9 @@ public class DataFletterTest {
                         .withBehandlingsId(henvendelsesId)
         );
         WSSak sak = new WSSak().withBehandlingskjede(new WSBehandlingskjede()
-                        .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(Filter.OPPRETTET))
-                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
-                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.OPPRETTET))
+                        .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(FilterUtils.OPPRETTET))
+                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE))
+                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.OPPRETTET))
                         .withBehandlingsListeRef(henvendelsesId)
                         .withSisteBehandlingREF(henvendelsesId)
                         .withStart(sakOgBehandlingTid)
@@ -113,18 +112,18 @@ public class DataFletterTest {
                 .withSakstema(new WSSakstemaer().withValue("DAG"))
                 .withBehandlingskjede(
                         createWSBehandlingskjede()
-                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.AVSLUTTET))
-                                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(DOKUMENTINNSENDING_KVITTERINGSTYPE))
+                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
+                                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(FilterUtils.DOKUMENTINNSENDING_KVITTERINGSTYPE))
                                 .withSisteBehandlingREF(KVITTERINGSID_1),
                         createWSBehandlingskjede()
-                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.AVSLUTTET))
-                                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
+                                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE))
                                 .withSisteBehandlingREF(KVITTERINGSID_2),
                         createWSBehandlingskjede()
-                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.AVSLUTTET))
+                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ingenkvittering")),
                         createWSBehandlingskjede()
-                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(Filter.AVSLUTTET))
+                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ingenkvittering"))
                 );
     }

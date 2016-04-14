@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class DataFletter {
     }
 
     private static Predicate<WSBehandlingskjede> harKvitteringsBehandlingstype() {
-        return wsBehandlingskjede -> Filter.erKvitteringstype(wsBehandlingskjede.getSisteBehandlingstype().getValue());
+        return wsBehandlingskjede -> FilterUtils.erKvitteringstype(wsBehandlingskjede.getSisteBehandlingstype().getValue());
     }
 
     private List<Behandling> berikKvitteringer(List<Behandling> behandlingerMedKvitteringskobling, List<Behandling> kvitteringerFraHenvendelse) {

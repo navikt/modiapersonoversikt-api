@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
@@ -44,22 +45,22 @@ public class FilterTest {
     public void sjekkerLovligeTema_vedFiltrering_avSaker() throws Exception {
         List<WSSak> saker = asList(
                 createWSSak().withSakstema(new WSSakstemaer().withValue("FEI")).withBehandlingskjede( // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 ),
                 createWSSak().withSakstema(new WSSakstemaer().withValue("AAP")).withBehandlingskjede(
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 ),
                 createWSSak().withSakstema(new WSSakstemaer().withValue("SAK")).withBehandlingskjede( // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 ),
                 createWSSak().withSakstema(new WSSakstemaer().withValue("SAP")).withBehandlingskjede( // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 )
@@ -116,37 +117,37 @@ public class FilterTest {
     public void sjekkerBehandlingstyper_vedFiltrering_avSaker() throws Exception {
         List<WSSak> saker = asList(
                 createWSSak().withSakstema(new WSSakstemaer().withValue("DAG")).withBehandlingskjede(
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0001")), // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                                 .withSisteBehandlingREF("lovlig")
                 ),
                 createWSSak().withSakstema(new WSSakstemaer().withValue("HJL")).withBehandlingskjede(
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0034"))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue("ok"))
                                 .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet")),
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0047"))
                                 .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue("ok"))
                                 .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 ),
                 createWSSak().withSakstema(new WSSakstemaer().withValue("FEI")).withBehandlingskjede(                      // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0034")).withSisteBehandlingREF("lovlig"),
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0047")).withSisteBehandlingREF("lovlig")
                 ),
                 createWSSak().withSakstema(new WSSakstemaer().withValue("AAP")).withBehandlingskjede(
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET)).withSlutt(new DateTime()).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0001"))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET)).withSlutt(new DateTime()).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0001"))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue("ok"))
                                 .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet")), // Ulovlig, men avsluttet kvittering
-                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(AVSLUTTET)).withSlutt(new DateTime()).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0002"))
+                        createWSBehandlingskjede().withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET)).withSlutt(new DateTime()).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0002"))
                                 .withSisteBehandlingREF("lovlig")
                                 .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue("ok"))
                                 .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))// Ulovlig, men avsluttet kvittering
@@ -179,7 +180,7 @@ public class FilterTest {
         return asList(
                 new Behandling()
                         .withBehandlingKvittering(KVITTERING)
-                        .withBehandlingsType(SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingsType(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
                         .withBehandlingStatus(FERDIG_BEHANDLET)
                         .withPrefix("11")
 
@@ -189,7 +190,7 @@ public class FilterTest {
     private List<Behandling> ulovligPrefix() {
         return asList(
                 new Behandling()
-                        .withBehandlingsType(SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingsType(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
                         .withBehandlingStatus(FERDIG_BEHANDLET)
                         .withPrefix("17")
 
@@ -199,7 +200,7 @@ public class FilterTest {
     private List<Behandling> ulovligBehandlingsstatus() {
         return asList(
                 new Behandling()
-                        .withBehandlingsType(SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withBehandlingsType(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
                         .withBehandlingStatus(FERDIG_BEHANDLET)
                         .withPrefix("11")
 
