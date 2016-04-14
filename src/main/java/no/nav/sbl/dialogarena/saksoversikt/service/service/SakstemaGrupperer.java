@@ -20,8 +20,6 @@ public class SakstemaGrupperer {
     @Inject
     private TemagrupperHenter temagrupperHenter;
 
-    private Predicate<Sak> erOppfolgingsSak = sak -> OPPFOLGING.equals(sak.getTemakode());
-    private Predicate<Sak> ikkeOppfolgingsSak = erOppfolgingsSak.negate();
     private Predicate<Map.Entry<String, Set<String>>> harMinstEtTema = entrySet -> entrySet.getValue().size() > 1;
     private Predicate<Map.Entry<String, Set<String>>> inneholderOppfolgingstema = entrySet -> entrySet.getValue().contains(OPPFOLGING);
     private Predicate<Map.Entry<String, Set<String>>> erTemaMedOppfolging = harMinstEtTema.and(inneholderOppfolgingstema);
