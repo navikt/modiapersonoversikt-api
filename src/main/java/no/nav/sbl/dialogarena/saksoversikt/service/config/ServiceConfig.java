@@ -56,11 +56,6 @@ public class ServiceConfig {
     }
 
     @Bean
-    public DataFletter dataFletter() {
-        return new DataFletter();
-    }
-
-    @Bean
     public DokumentMetadataService dokumentMetadataService() {
         return new DokumentMetadataService();
     }

@@ -51,7 +51,7 @@ public class Transformers {
         return dokumentFraHenvendelse -> !DokumentFraHenvendelse.INNSENDT.test(dokumentFraHenvendelse) && !dokumentFraHenvendelse.erHovedskjema();
     }
 
-    public static Behandling transformTilBehandling(WSBehandlingskjede wsBehandlingskjede) {
+    public static Function<WSBehandlingskjede, Behandling> TIL_BEHANDLING = (WSBehandlingskjede wsBehandlingskjede) -> {
         Behandling behandling = new Behandling()
                 .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
                 .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
@@ -65,7 +65,7 @@ public class Transformers {
             behandling = behandling.withBehandlingsTema(behandlingstema.getValue());
         }
         return behandling;
-    }
+    };
 
     private static BehandlingsType kvitteringstype(WSBehandlingstyper sisteBehandlingstype) {
         return erKvitteringstype(sisteBehandlingstype.getValue()) ? KVITTERING : BEHANDLING;

@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.slf4j.Logger;
@@ -17,9 +18,9 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.DataFletter.hentBehandlingerFraBehandlingskjeder;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.SAK_OG_BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.UTEN_AVSLUTTETE_KVITTERINGER;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.TIL_BEHANDLING;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingService {
@@ -34,6 +35,12 @@ public class SakOgBehandlingService {
 
     @Inject
     private FodselnummerAktorService fnrAktor;
+
+    private static List<Behandling> hentBehandlingerFraBehandlingskjeder(List<WSBehandlingskjede> behandlingskjedeListe) {
+        return behandlingskjedeListe.stream()
+                .map(TIL_BEHANDLING)
+                .collect(toList());
+    }
 
     public List<WSSak> hentSakerForAktor(String aktorId) {
         try {
