@@ -18,9 +18,10 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil.createWSSak;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.FERDIG_BEHANDLET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.AVSLUTTET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -158,20 +159,14 @@ public class FilterTest {
     }
 
     @Test
-    public void filtrerBehandlingerOk() {
-        List<Behandling> behandling = filter.filtrerBehandlinger(lovligBehandling(), MED_AVSLUTTETE_KVITTERINGER);
-        assertThat(behandling.size(), is(1));
-    }
-
-    @Test
     public void filtrerBehandlingerUlovligPrefix() {
-        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligPrefix(), UTEN_AVSLUTTETE_KVITTERINGER);
+        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligPrefix());
         assertThat(behandling.size(), is(0));
     }
 
     @Test
     public void filtrerBehandlingerUlovligBehandlingsstatus() {
-        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligBehandlingsstatus(), UTEN_AVSLUTTETE_KVITTERINGER);
+        List<Behandling> behandling = filter.filtrerBehandlinger(ulovligBehandlingsstatus());
         assertThat(behandling.size(), is(0));
     }
 

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.slf4j.Logger;
@@ -14,10 +14,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
-import static java.util.stream.Stream.empty;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Filter {
@@ -46,14 +42,11 @@ public class Filter {
                 .filter(HAR_MINST_EN_LOVLIG_BEHANDLING).collect(toList());
     }
 
-    public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger, Predicate skalHaMedKvitteringer) {
+    public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger) {
         lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
-        Stream<Behandling> avsluttedeKvitteringer = behandlinger.stream()
-                .filter(ER_AVSLUTTET_KVITTERING)
-                .filter(skalHaMedKvitteringer);
         Stream<Behandling> lovligeBehandlinger = behandlinger.stream().filter(HAR_LOVLIG_BEHANDLINGSTYPE);
 
-        return concat(avsluttedeKvitteringer, lovligeBehandlinger)
+        return lovligeBehandlinger
                 .filter(HAR_LOVLIG_BEHANDLINGSSTATUS)
                 .filter(HAR_LOVLIG_PREFIX)
                 .sorted((o1, o2) -> o2.getBehandlingDato().compareTo(o1.getBehandlingDato()))
@@ -74,9 +67,6 @@ public class Filter {
         return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
     }
 
-    public static final Predicate MED_AVSLUTTETE_KVITTERINGER = o -> true;
-    public static final Predicate UTEN_AVSLUTTETE_KVITTERINGER = o -> false;
-    
     private static final Predicate<Behandling> HAR_LOVLIG_BEHANDLINGSSTATUS = behandling -> !behandling.getBehandlingsStatus().equals(BehandlingsStatus.AVBRUTT);
 
     private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_PREFIX_PAA_BEHANDLING = kjede -> !kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX);
@@ -100,10 +90,6 @@ public class Filter {
     private static final Predicate<WSSak> HAR_LOVLIG_SAKSTEMA = wsSak -> !ulovligeSakstema.contains(wsSak.getSakstema().getValue());
 
     private static final Predicate<WSSak> HAR_BEHANDLINGER = wsSak -> !wsSak.getBehandlingskjede().isEmpty();
-
-    private static final Predicate<Behandling> ER_AVSLUTTET_KVITTERING
-            = behandling -> KVITTERING.equals(behandling.getBehandlingkvittering())
-            && behandling.getBehandlingsStatus().equals(FERDIG_BEHANDLET);
 
     private static final Predicate<Behandling> HAR_LOVLIG_PREFIX = behandling -> !ULOVLIG_PREFIX.equals(behandling.getPrefix());
 

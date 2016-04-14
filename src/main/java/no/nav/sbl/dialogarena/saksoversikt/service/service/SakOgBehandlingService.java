@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -17,9 +16,8 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.SAK_OG_BEHANDLING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.DataFletter.hentBehandlingerFraBehandlingskjeder;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingService {
@@ -34,15 +32,6 @@ public class SakOgBehandlingService {
 
     @Inject
     private FodselnummerAktorService fnrAktor;
-
-    public List<WSSak> hentSakerForAktor(String aktorId) {
-        try {
-            return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
-        } catch (RuntimeException ex) {
-            logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex);
-            throw new SystemException("Feil ved kall til sakogbehandling", ex);
-        }
-    }
 
     public List<WSSak> hentAlleSaker(String fnr) {
         try {
@@ -62,7 +51,7 @@ public class SakOgBehandlingService {
     }
 
     private List<Behandling> filtrerteBehandlinger(WSSak sak) {
-        return filter.filtrerBehandlinger(hentBehandlingerFraBehandlingskjeder(sak.getBehandlingskjede()), UTEN_AVSLUTTETE_KVITTERINGER);
+        return filter.filtrerBehandlinger(hentBehandlingerFraBehandlingskjeder(sak.getBehandlingskjede()));
     }
 
     private static final Function<WSSak, String> SAKSTEMA = wsSak -> wsSak.getSakstema().getValue();
