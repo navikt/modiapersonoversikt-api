@@ -15,7 +15,7 @@ describe('DokumentinfoVedlegg', () => {
         ]
     };
 
-    const noop = () => {};
+    function noop() {}
 
     const props = {
         dokumentinfo,
@@ -26,7 +26,7 @@ describe('DokumentinfoVedlegg', () => {
     it('Gir noscript om vedlegglisten er tom', () => {
         const shallowRenderer = createRenderer();
         const emptyProps = {
-            dokumentinfo: {vedlegg: []},
+            dokumentinfo: { vedlegg: [] },
             visSide: noop,
             velgJournalpost: noop
         };

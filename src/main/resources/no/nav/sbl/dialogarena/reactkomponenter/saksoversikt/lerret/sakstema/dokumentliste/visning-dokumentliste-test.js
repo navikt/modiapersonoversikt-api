@@ -76,7 +76,7 @@ describe('VisningDokumentliste', () => {
         const props = {
             brukerNavn: 'Test testesen',
             valgtTema: {
-                dokumentMetadata: [dokumentinfo,dokumentinfo],
+                dokumentMetadata: [dokumentinfo, dokumentinfo],
                 brukerNavn: 'test',
                 visTema: false,
                 temakode: 'BID'
