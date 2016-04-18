@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.FERDIG;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus.FERDIG;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.UNDER_ARBEID;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.valueOf;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.SOKNADSINNSENDING;

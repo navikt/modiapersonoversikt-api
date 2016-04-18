@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -34,7 +33,6 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.SEND
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus.UNDER_ARBEID;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;

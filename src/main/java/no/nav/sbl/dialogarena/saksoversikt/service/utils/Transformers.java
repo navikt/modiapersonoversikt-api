@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
@@ -26,8 +26,8 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokumen
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.erKvitteringstype;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.behandlingsDato;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.valueOf;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
 
 public class Transformers {

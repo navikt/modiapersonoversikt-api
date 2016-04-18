@@ -1,7 +1,5 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt;
+package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import org.joda.time.DateTime;
 
 import java.util.List;

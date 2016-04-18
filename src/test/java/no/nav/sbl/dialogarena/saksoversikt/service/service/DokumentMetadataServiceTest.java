@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHen
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import static java.util.Collections.*;
 import static junit.framework.TestCase.assertFalse;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.SOKNADSINNSENDING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.SOKNADSINNSENDING;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
