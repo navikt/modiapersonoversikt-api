@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.utils;
+package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsSta
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
@@ -23,8 +24,8 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandl
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.erKvitteringstype;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.behandlingsDato;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils.erKvitteringstype;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils.behandlingsDato;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.valueOf;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus;
