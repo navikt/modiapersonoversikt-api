@@ -17,7 +17,6 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKod
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 
-@SuppressWarnings("squid:S1166") // Either log or rethrow
 public class SakstemaService {
 
     public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
