@@ -1,16 +1,27 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.utils;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.Transformers;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Transformers.SOKNAD_TIL_KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Transformers.TIL_BEHANDLING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.Transformers.transformTilSoknad;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.*;
@@ -19,6 +30,7 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandl
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.INNSENDT;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus.*;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -142,5 +154,75 @@ public class TransformersTest {
         assertThat(soknad.getBehandlingsId(), is("behandlingid"));
         assertThat(soknad.getBehandlingskjedeId(), is("behandlingid"));
     }
+
+    @Test
+    public void mapperBehandlingskjedeTilBehandling() {
+        List<Behandling> collect = asList(
+                new WSBehandlingskjede()
+                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
+                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
+                        .withSlutt(new DateTime())
+                        .withStart(new DateTime().minusDays(1))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                .stream()
+                .map(TIL_BEHANDLING)
+                .collect(Collectors.toList());
+
+        assertThat(collect.size(), equalTo(1));
+        assertThat(collect.get(0).behandlingsId, equalTo("hovedskjemakodeverkref"));
+        assertThat(collect.get(0).behandlingsStatus, equalTo(BehandlingsStatus.FERDIG_BEHANDLET));
+    }
+
+    @Test
+    public void mapperAvbruttBehandlingskjedeTilBehandling() {
+        List<Behandling> collect = asList(
+                new WSBehandlingskjede()
+                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
+                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVBRUTT))
+                        .withSlutt(new DateTime())
+                        .withStart(new DateTime().minusDays(1))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                .stream()
+                .map(TIL_BEHANDLING)
+                .collect(Collectors.toList());
+
+        assertThat(collect.size(), equalTo(1));
+        assertThat(collect.get(0).behandlingsStatus, equalTo(BehandlingsStatus.AVBRUTT));
+    }
+
+    @Test
+    public void mapperOpprettetBehandlingskjedeTilBehandling() {
+        List<Behandling> collect = asList(
+                new WSBehandlingskjede()
+                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
+                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.OPPRETTET))
+                        .withSlutt(new DateTime())
+                        .withStart(new DateTime().minusDays(1))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                .stream()
+                .map(TIL_BEHANDLING)
+                .collect(Collectors.toList());
+
+        assertThat(collect.size(), equalTo(1));
+        assertThat(collect.get(0).behandlingsStatus, equalTo(BehandlingsStatus.UNDER_BEHANDLING));
+        assertThat(collect.get(0).behandlingsId, equalTo("hovedskjemakodeverkref"));
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void ugyldigBehandlingsstatusKasterException() {
+            asList(
+                new WSBehandlingskjede()
+                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
+                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("IKKE_EN_STATUS"))
+                        .withSlutt(new DateTime())
+                        .withStart(new DateTime().minusDays(1))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                .stream()
+                .map(TIL_BEHANDLING)
+                .collect(Collectors.toList());
+
+    }
+
+
 
 }
