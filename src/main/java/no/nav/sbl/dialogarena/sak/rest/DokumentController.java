@@ -32,6 +32,7 @@ import java.util.function.BiFunction;
 
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
@@ -40,6 +41,7 @@ import static javax.ws.rs.core.Response.status;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.MANGLER_DOKUMENTMETADATA;
 
 
 //Single Responsibility Principle
@@ -74,6 +76,10 @@ public class DokumentController {
             return mockDokumentResponse();
         }
 
+        if ("null".equals(journalpostId)) {
+            return status(NOT_FOUND).build();
+        }
+
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
         TjenesteResultatWrapper tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request, journalpostMetadata, fnr, journalpostMetadata.getTemakode());
 
@@ -97,6 +103,10 @@ public class DokumentController {
                                             @QueryParam("temakode") String temakode, @Context HttpServletRequest request) {
         if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
             return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
+        }
+
+        if ("null".equals(journalpostId)) {
+            return ok(new JournalpostResultat().withDokumentFeilmelding(blurretDokumentReferanseResponse(MANGLER_DOKUMENTMETADATA, ""))).build();
         }
 
         DokumentMetadata journalpostMetadata = hentDokumentMetadata(journalpostId, fnr);
@@ -160,7 +170,7 @@ public class DokumentController {
             }).get();
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Kunne ikke håndtere alle pdfer", e);
-            return Collections.emptyList();
+            return emptyList();
         }
     }
 
