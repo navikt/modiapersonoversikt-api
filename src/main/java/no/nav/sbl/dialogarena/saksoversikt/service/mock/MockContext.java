@@ -41,8 +41,8 @@ public class MockContext {
     }
 
     @Bean
-    public SaksService saksService() {
-        return mock(SaksService.class);
+    public SakstemaService saksService() {
+        return mock(SakstemaService.class);
     }
 
     @Bean

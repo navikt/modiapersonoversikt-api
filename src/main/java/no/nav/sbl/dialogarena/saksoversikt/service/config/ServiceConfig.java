@@ -41,9 +41,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SaksService saksService() {
-        return new SaksService();
+    public SakstemaService sakstemaService() {
+        return new SakstemaService();
     }
+
+    @Bean
+    public SaksService saksService() { return new SaksService(); }
 
     @Bean
     public GsakSakerService gsakSakerService() {
