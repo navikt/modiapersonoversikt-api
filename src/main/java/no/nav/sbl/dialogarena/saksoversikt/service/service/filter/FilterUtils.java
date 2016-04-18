@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.utils;
+package no.nav.sbl.dialogarena.saksoversikt.service.service.filter;
 
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import org.joda.time.DateTime;

@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;

@@ -10,8 +10,8 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.SOKNAD_TIL_KVITTERING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Transformers.transformTilSoknad;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Transformers.SOKNAD_TIL_KVITTERING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.Transformers.transformTilSoknad;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.FERDIG_BEHANDLET;

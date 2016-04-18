@@ -2,7 +2,8 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.filter.Filter;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;

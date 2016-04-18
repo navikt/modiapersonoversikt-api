@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksystemException;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import org.slf4j.Logger;

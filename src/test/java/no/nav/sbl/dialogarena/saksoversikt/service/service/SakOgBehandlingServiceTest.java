@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.mock.MockCreationUtil;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.filter.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
