@@ -8,7 +8,10 @@ export const nyesteElementISakstema = (sakstema) => {
 
     const combined = [].concat(behandlingskjeder, metadata);
 
-    if (combined.length === 0) return -1;
+    if (combined.length === 0) {
+        return -1;
+    }
+
     combined.sort().reverse();
     return combined[0];
 };
