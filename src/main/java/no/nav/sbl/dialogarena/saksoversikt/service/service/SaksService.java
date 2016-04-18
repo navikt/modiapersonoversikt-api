@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 
+@SuppressWarnings("squid:S1166") // Either log or rethrow
 public class SaksService {
 
     @Inject
