@@ -11,7 +11,7 @@
 
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>saksoversikt-service</artifactId>
-    <version>1.37-SNAPSHOT</version>
+    <version>1.38-SNAPSHOT</version>
 
     <properties>
         <hamcrest.version>1.3</hamcrest.version>

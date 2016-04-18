@@ -14,9 +14,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus.FERDIG_BEHANDLET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 
 public class Filter {
     public final static String ULOVLIG_PREFIX = "17";
@@ -36,23 +33,17 @@ public class Filter {
                 .filter(HAR_MINST_EN_LOVLIG_BEHANDLING).collect(toList());
     }
 
-    public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger, Predicate<Behandling> skalHaMedKvitteringer) {
+    public synchronized List<Behandling> filtrerBehandlinger(List<Behandling> behandlinger) {
         lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
-        Stream<Behandling> avsluttedeKvitteringer = behandlinger.stream()
-                .filter(ER_AVSLUTTET_KVITTERING)
-                .filter(skalHaMedKvitteringer);
         Stream<Behandling> lovligeBehandlinger = behandlinger.stream().filter(HAR_LOVLIG_BEHANDLINGSTYPE);
 
-        return concat(avsluttedeKvitteringer, lovligeBehandlinger)
+        return lovligeBehandlinger
                 .filter(HAR_LOVLIG_BEHANDLINGSSTATUS)
                 .filter(HAR_LOVLIG_PREFIX)
                 .sorted((o1, o2) -> o2.getBehandlingDato().compareTo(o1.getBehandlingDato()))
                 .collect(toList());
     }
 
-    public static final Predicate<Behandling> MED_AVSLUTTETE_KVITTERINGER = o -> true;
-    public static final Predicate<Behandling> UTEN_AVSLUTTETE_KVITTERINGER = o -> false;
-    
     private static final Predicate<Behandling> HAR_LOVLIG_BEHANDLINGSSTATUS = behandling -> !behandling.getBehandlingsStatus().equals(BehandlingsStatus.AVBRUTT);
 
     private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_PREFIX_PAA_BEHANDLING = kjede -> !kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX);
@@ -76,10 +67,6 @@ public class Filter {
     private static final Predicate<WSSak> HAR_LOVLIG_SAKSTEMA = wsSak -> !ulovligeSakstema.contains(wsSak.getSakstema().getValue());
 
     private static final Predicate<WSSak> HAR_BEHANDLINGER = wsSak -> !wsSak.getBehandlingskjede().isEmpty();
-
-    private static final Predicate<Behandling> ER_AVSLUTTET_KVITTERING
-            = behandling -> KVITTERING.equals(behandling.getBehandlingkvittering())
-            && behandling.getBehandlingsStatus().equals(FERDIG_BEHANDLET);
 
     private static final Predicate<Behandling> HAR_LOVLIG_PREFIX = behandling -> !ULOVLIG_PREFIX.equals(behandling.getPrefix());
 
