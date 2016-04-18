@@ -64,7 +64,7 @@ public class SakOgBehandlingService {
     public Map<String, List<Behandlingskjede>> hentBehandlingskjederGruppertPaaTema(String fnr) {
         return hentAlleSaker(fnr)
                 .stream()
-                .collect(toMap(SAKSTEMA, this::tilBehandligskjeder));
+                .collect(toMap(SAKSTEMA, (wsSak) -> tilBehandligskjeder(wsSak)));
     }
 
     private List<Behandling> filtrerteBehandlinger(WSSak sak) {
