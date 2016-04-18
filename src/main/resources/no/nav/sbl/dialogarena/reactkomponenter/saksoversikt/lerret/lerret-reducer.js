@@ -34,10 +34,10 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     let status = Const.LASTET;
 
     const [tekster, miljovariabler, sakstema] = action.data;
-    const { resultat, feilendeSystemer } = sakstema.value? sakstema.value: {result:[], feilendeSystemer:[]};
+    const { resultat, feilendeSystemer } = sakstema.value ? sakstema.value: { result: [], feilendeSystemer: [] };
 
-    const feilendeKall = action.data.filter(object => object.state === "rejected");
-    if(feilendeKall.length > 0) {
+    const feilendeKall = action.data.filter(object => object.state === 'rejected');
+    if (feilendeKall.length > 0) {
         status = Const.FEILET;
     }
 
@@ -71,7 +71,7 @@ actionHandlers[AT.LAST_LERRET_DATA_FEIL] = (state, action) => {
             miljovariabler: miljovariabler.value
         },
         feil: action.data
-    }
+    };
 };
 
 actionHandlers[AT.VELG_SAK] = (state, action) => ({
