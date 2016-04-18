@@ -11,8 +11,9 @@ function purgeStateReducer(fn) {
             if (node) {
                 ReactDOM.unmountComponentAtNode(node);
             }
+            // NB viktig at det sendes inn {} eller undefined for å få resatt state
             return fn({}, action);
-        } else if(action.type === AT.UNMOUNT) {
+        } else if (action.type === AT.UNMOUNT) {
             const node = document.querySelector('[class="saksoversiktLerret-wicket unmount-react"]');
             if (node) {
                 ReactDOM.unmountComponentAtNode(node);

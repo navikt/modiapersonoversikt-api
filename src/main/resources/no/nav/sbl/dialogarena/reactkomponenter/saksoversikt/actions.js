@@ -41,3 +41,7 @@ export const velgJournalpost = (journalpost) => ({ type: AT.VELG_JOURNALPOST, da
 export const visSide = (side) => ({ type: AT.VIS_SIDE, data: side });
 
 export const velgFiltreringAvsender = (filtreringsvalg) => ({ type: AT.VELG_FILTRERING_AVSENDER, filtreringsvalg });
+
+// Benyttes av Wicketklassen SaksoversiktLerret
+export const purgeState = () => ({ type: AT.PURGE_STATE });
+export const unmount = () => ({ type: AT.UNMOUNT });
