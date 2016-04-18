@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,9 @@ public class SaksoversiktController {
     private SaksoversiktService saksoversiktService;
 
     @Inject
+    private SakstemaService sakstemaService;
+
+    @Inject
     private SaksService saksService;
 
     @Inject
@@ -49,7 +53,7 @@ public class SaksoversiktController {
         }
 
         ResultatWrapper<List<Sak>> sakerWrapper = saksService.hentAlleSaker(fnr);
-        ResultatWrapper<List<Sakstema>> sakstemaWrapper = saksService
+        ResultatWrapper<List<Sakstema>> sakstemaWrapper = sakstemaService
                 .hentSakstema(sakerWrapper.resultat, fnr, false);
 
         tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat);
