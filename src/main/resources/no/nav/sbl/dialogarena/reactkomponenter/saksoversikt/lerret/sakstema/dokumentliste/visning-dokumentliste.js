@@ -36,9 +36,7 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
 
     const infoMeldingDokumenterBidrag = valgtTema.temakode === 'BID' ?
         <div className="infoingenbidrag">
-            <FormattedMessage
-              id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"
-            />
+            <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.bidrag" />
         </div> : <noscript/>;
 
     return (
@@ -52,6 +50,7 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
 };
 
 VisningDokumentliste.propTypes = {
+    brukerNavn: PT.string,
     valgtTema: PT.object,
     visSide: PT.func.isRequired,
     velgJournalpost: PT.func,

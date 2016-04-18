@@ -2,7 +2,7 @@ var istanbul = require('browserify-istanbul');
 
 module.exports = function (config) {
     config.set({
-        frameworks: ['mocha', 'browserify'],
+        frameworks: ['mocha', 'browserify', 'intl-shim'],
 
         files: [
             './src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/*-test.js'
@@ -35,7 +35,8 @@ module.exports = function (config) {
             'karma-browserify',
             'karma-phantomjs-launcher',
             'karma-mocha-reporter',
-            'karma-mocha'
+            'karma-mocha',
+            'karma-intl-shim'
         ],
 
         browserify: {
