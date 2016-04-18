@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.utils;
+package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
 
