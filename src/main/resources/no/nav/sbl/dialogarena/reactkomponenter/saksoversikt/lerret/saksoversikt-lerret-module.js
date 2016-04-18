@@ -37,13 +37,15 @@ function harInternfeil(props) {
 }
 
 function lagFeilmelding(props) {
+    let enonicFeilmeldingKey = '';
 
-    const enonicFeilmeldingKey = harInternfeil(props)?
-        "sakslamell.tekniskfeilmelding" : skalViseFeilmeldingOmBaksystem(props) ?
-        "sakslamell.feilmelding" : "";
+    if(harInternfeil(props)) {
+        enonicFeilmeldingKey = 'sakslamell.tekniskfeilmelding';
+    } else if(skalViseFeilmeldingOmBaksystem(props)) {
+        enonicFeilmeldingKey = 'sakslamell.feilmelding';
+    }
 
-
-    if(enonicFeilmeldingKey !== "") {
+    if(enonicFeilmeldingKey !== '') {
         return (
             <div className="lamell-feilmelding">
                 <FormattedMessage id={`${enonicFeilmeldingKey}`}/>
