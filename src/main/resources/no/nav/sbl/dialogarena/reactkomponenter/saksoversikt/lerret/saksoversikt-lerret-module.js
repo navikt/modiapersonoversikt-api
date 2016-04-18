@@ -32,21 +32,27 @@ function skalViseFeilmeldingOmBaksystem(props) {
         && props.valgtside === 'sakstema';
 }
 
+function harInternfeil(props) {
+    return props.status === Const.FEILET;
+}
+
 function lagFeilmelding(props) {
-    if (props.status === Const.FEILET) {
+    let enonicFeilmeldingKey = '';
+
+    if(harInternfeil(props)) {
+        enonicFeilmeldingKey = 'sakslamell.tekniskfeilmelding';
+    } else if(skalViseFeilmeldingOmBaksystem(props)) {
+        enonicFeilmeldingKey = 'sakslamell.feilmelding';
+    }
+
+    if(enonicFeilmeldingKey !== '') {
         return (
             <div className="lamell-feilmelding">
-                <FormattedMessage id="sakslamell.tekniskfeilmelding"/>
+                <FormattedMessage id={`${enonicFeilmeldingKey}`}/>
             </div>);
     }
 
-    return skalViseFeilmeldingOmBaksystem(props) ?
-        (<div className="lamell-feilmelding">
-            <FormattedMessage id="sakslamell.feilmelding"/>
-        </div>)
-        :
-        <noscript />;
-
+    return <noscript />;
 }
 
 class SaksoversiktLerret extends React.Component {
