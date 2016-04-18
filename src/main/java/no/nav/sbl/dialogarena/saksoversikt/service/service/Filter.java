@@ -3,9 +3,9 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
+import no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -14,24 +14,15 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class Filter {
-    public static final String OPPRETTET = "opprettet";
-    public static final String AVBRUTT = "avbrutt";
-    public static final String AVSLUTTET = "avsluttet";
-    public final static String DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001";
-    public final static String SEND_SOKNAD_KVITTERINGSTYPE = "ae0002";
     public final static String ULOVLIG_PREFIX = "17";
-    public static final String BEHANDLINGSTATUS_AVSLUTTET = "avsluttet";
 
     @Inject
     private CmsContentRetriever cms;
 
     private static List<String> ulovligeSakstema;
     private static List<String> lovligeBehandlingstyper;
-
-    private final static Logger log = getLogger(Filter.class);
 
     public synchronized List<WSSak> filtrerSaker(List<WSSak> saker) {
         lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
@@ -53,32 +44,18 @@ public class Filter {
                 .collect(toList());
     }
 
-    public static boolean erAvsluttet(WSBehandlingskjede kjede) {
-        boolean erAvsluttet = kjede.getSisteBehandlingsstatus() != null && BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue());
-        if (erAvsluttet && kjede.getSlutt() == null) {
-            log.warn("Inkonsistent data fra sak og behandling: Behandling rapporteres som avsluttet uten at kjede har slutt-tid satt. " +
-                    "Behandlingsid: " + kjede.getSisteBehandlingREF() +
-                    "Behandlingskjedeid: " + kjede.getBehandlingskjedeId());
-        }
-        return erAvsluttet;
-    }
-
-    public static boolean erKvitteringstype(String type) {
-        return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
-    }
-
     private static final Predicate<Behandling> HAR_LOVLIG_BEHANDLINGSSTATUS = behandling -> !behandling.getBehandlingsStatus().equals(BehandlingsStatus.AVBRUTT);
 
     private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_PREFIX_PAA_BEHANDLING = kjede -> !kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX);
 
     private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_STATUS_PAA_BEHANDLING = kjede ->
             kjede.getSisteBehandlingsstatus().getValue() != null &&
-            ((kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) && !erKvitteringstype(kjede.getSisteBehandlingstype().getValue()))
-                    || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET));
+            ((kjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.OPPRETTET) && !FilterUtils.erKvitteringstype(kjede.getSisteBehandlingstype().getValue()))
+                    || kjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVSLUTTET));
 
     private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING = kjede -> {
         String type = kjede.getSisteBehandlingstype().getValue();
-        return (erKvitteringstype(type) && erAvsluttet(kjede)) || lovligeBehandlingstyper.contains(type);
+        return (FilterUtils.erKvitteringstype(type) && FilterUtils.erAvsluttet(kjede)) || lovligeBehandlingstyper.contains(type);
     };
 
     private static final Predicate<WSBehandlingskjede> LOVLIG_BEHANDLING = wsBehandlingskjede -> HAR_LOVLIG_STATUS_PAA_BEHANDLING

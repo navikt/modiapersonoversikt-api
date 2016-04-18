@@ -55,17 +55,17 @@ public class BulletproofKodeverkService {
         }
     }
 
-    public ResultatWrapper getTemanavnForTemakode(String temakode, String kodeverknavn) {
+    public ResultatWrapper<String> getTemanavnForTemakode(String temakode, String kodeverknavn) {
         try {
-            return new ResultatWrapper(kodeverkClient.hentFoersteTermnavnForKode(temakode, kodeverknavn));
+            return new ResultatWrapper<>(kodeverkClient.hentFoersteTermnavnForKode(temakode, kodeverknavn));
         } catch (ApplicationException e) {
             LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
-            return new ResultatWrapper(temakode);
+            return new ResultatWrapper<>(temakode);
         } catch (RuntimeException e) {
             LOG.error("Ukjent feil mot kall mot kodeverk", e);
             Set<Baksystem> feilendeBaksystemer = new HashSet<>();
             feilendeBaksystemer.add(Baksystem.KODEVERK);
-            return new ResultatWrapper(temakode, feilendeBaksystemer);
+            return new ResultatWrapper<>(temakode, feilendeBaksystemer);
         }
     }
 

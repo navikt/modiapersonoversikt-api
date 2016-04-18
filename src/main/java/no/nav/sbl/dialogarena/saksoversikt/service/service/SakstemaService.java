@@ -81,30 +81,24 @@ public class SakstemaService {
             Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
         Predicate<String> ikkeGruppertOppfolingssak = temakode -> (RESTERENDE_TEMA.equals(temagruppe.getKey()) || !OPPFOLGING.equals(temakode));
-        Set<Baksystem> feilendeBaksystemer = new HashSet();
+        Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
         List<Sakstema> sakstema = temagruppe.getValue().stream()
                 .filter(ikkeGruppertOppfolingssak)
                 .map(temakode -> {
-                    List<Sak> tilhorendeSaker = alleSaker.stream()
-                            .filter(sak -> tilhorerSakTemagruppe(sak, temakode, temagruppe))
-                            .collect(toList());
-
-                    List<DokumentMetadata> tilhorendeDokumentMetadata = alleDokumentMetadata
-                            .stream()
-                            .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
-                            .collect(toList());
+                    List<Sak> tilhorendeSaker = sakerITemagruppe(temagruppe, alleSaker, temakode);
+                    List<DokumentMetadata> tilhorendeDokumentMetadata = tilhorendeDokumentMetadata(temagruppe, alleDokumentMetadata, temakode, tilhorendeSaker);
 
                     boolean erGruppert = !RESTERENDE_TEMA.equals(temagruppe.getKey());
 
-                    ResultatWrapper temanavn = temanavnFraKodeverk(temagruppe, temakode);
+                    ResultatWrapper<String> temanavn = temanavnFraKodeverk(temagruppe, temakode);
                     feilendeBaksystemer.addAll(temanavn.feilendeSystemer);
 
                     return new Sakstema()
                             .withTemakode(temakode)
                             .withBehandlingskjeder(optional(behandlingskjeder.get(temakode)).orElse(emptyList()))
                             .withTilhorendeSaker(tilhorendeSaker)
-                            .withTemanavn((String)temanavn.resultat)
+                            .withTemanavn(temanavn.resultat)
                             .withDokumentMetadata(tilhorendeDokumentMetadata)
                             .withErGruppert(erGruppert);
                 })
@@ -112,12 +106,25 @@ public class SakstemaService {
         return new ResultatWrapper<>(sakstema, feilendeBaksystemer);
     }
 
-    private ResultatWrapper temanavnFraKodeverk(Map.Entry<String, Set<String>> temagruppe, String temakode) {
-        ResultatWrapper temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA);
+    private List<DokumentMetadata> tilhorendeDokumentMetadata(Map.Entry<String, Set<String>> temagruppe, List<DokumentMetadata> alleDokumentMetadata, String temakode, List<Sak> tilhorendeSaker) {
+        return alleDokumentMetadata
+                .stream()
+                .filter(tilhorendeFraJoark(tilhorendeSaker).or(tilhorendeFraHenvendelse(temagruppe, temakode)))
+                .collect(toList());
+    }
+
+    private List<Sak> sakerITemagruppe(Map.Entry<String, Set<String>> temagruppe, List<Sak> alleSaker, String temakode) {
+        return alleSaker.stream()
+                .filter(sak -> tilhorerSakTemagruppe(sak, temakode, temagruppe))
+                .collect(toList());
+    }
+
+    private ResultatWrapper<String> temanavnFraKodeverk(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+        ResultatWrapper<String> temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(temakode, ARKIVTEMA);
         if (temagruppe.getKey().equals(RESTERENDE_TEMA)) {
             return temanavnForTemakode;
         } else {
-            return new ResultatWrapper(temanavnForTemakode.resultat + " og oppfølging", temanavnForTemakode.feilendeSystemer);
+            return new ResultatWrapper<>(temanavnForTemakode.resultat + " og oppfølging", temanavnForTemakode.feilendeSystemer);
         }
     }
 

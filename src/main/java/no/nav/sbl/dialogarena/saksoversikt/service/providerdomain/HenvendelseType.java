@@ -1,8 +1,6 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.viewdomain;
+package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.StatiskeLenker;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
 
 public enum HenvendelseType {
 

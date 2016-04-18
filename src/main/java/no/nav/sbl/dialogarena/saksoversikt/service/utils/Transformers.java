@@ -5,15 +5,13 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.Filter;
-import no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
-import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.function.Function;
@@ -25,11 +23,11 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandl
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erAvsluttet;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Filter.erKvitteringstype;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.erKvitteringstype;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.FilterUtils.behandlingsDato;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.HenvendelseType.valueOf;
-import static no.nav.sbl.dialogarena.saksoversikt.service.viewdomain.oversikt.Soknad.HenvendelseStatus;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.valueOf;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
 
 public class Transformers {
@@ -53,7 +51,7 @@ public class Transformers {
         return dokumentFraHenvendelse -> !DokumentFraHenvendelse.INNSENDT.test(dokumentFraHenvendelse) && !dokumentFraHenvendelse.erHovedskjema();
     }
 
-    public static Behandling transformTilBehandling(WSBehandlingskjede wsBehandlingskjede) {
+    public static final Function<WSBehandlingskjede, Behandling> TIL_BEHANDLING = (WSBehandlingskjede wsBehandlingskjede) -> {
         Behandling behandling = new Behandling()
                 .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
                 .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
@@ -67,23 +65,19 @@ public class Transformers {
             behandling = behandling.withBehandlingsTema(behandlingstema.getValue());
         }
         return behandling;
-    }
+    };
 
     private static BehandlingsType kvitteringstype(WSBehandlingstyper sisteBehandlingstype) {
         return erKvitteringstype(sisteBehandlingstype.getValue()) ? KVITTERING : BEHANDLING;
     }
 
-    private static DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
-        return erAvsluttet(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
-    }
-
     private static BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
         if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
-            if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVSLUTTET)) {
+            if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVSLUTTET)) {
                 return FERDIG_BEHANDLET;
-            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.OPPRETTET)) {
+            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.OPPRETTET)) {
                 return UNDER_BEHANDLING;
-            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVBRUTT)) {
+            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVBRUTT)) {
                 return AVBRUTT;
             } else {
                 throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
