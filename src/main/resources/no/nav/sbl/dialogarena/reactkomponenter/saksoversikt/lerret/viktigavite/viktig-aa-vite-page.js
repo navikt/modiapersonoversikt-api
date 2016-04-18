@@ -46,6 +46,7 @@ class ViktigAVitePage extends React.Component {
 }
 
 ViktigAVitePage.propTypes = {
+    intl: PT.object.isRequired,
     valgtTema: PT.object.isRequired,
     visSide: PT.func.isRequired,
     sakstema: PT.array.isRequired
