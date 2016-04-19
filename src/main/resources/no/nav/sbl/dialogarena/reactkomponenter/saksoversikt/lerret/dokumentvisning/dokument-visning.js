@@ -28,7 +28,7 @@ class DokumentVisning extends Component {
         window.addEventListener('resize', this.eventHandler);
         this._oppdaterPdfVisning();
 
-        //Firefox fix
+        // Firefox fix
         $(this.refs.pdf).ready(() => {
             this.cancelIntervalID = setInterval(() => this._oppdaterPdfVisning(), 250);
         });
@@ -107,6 +107,8 @@ DokumentVisning.propTypes = {
     dokument: React.PropTypes.shape({
         antallSider: React.PropTypes.int,
         antallsider: React.PropTypes.int,
+        dokumentreferanse: React.PropTypes.string,
+        journalpostId: React.PropTypes.string,
         pdfUrl: React.PropTypes.string
     }).isRequired,
     intl: intlShape
