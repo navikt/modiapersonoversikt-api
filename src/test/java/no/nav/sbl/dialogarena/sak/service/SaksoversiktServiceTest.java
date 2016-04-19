@@ -23,7 +23,7 @@ public class SaksoversiktServiceTest {
 
     private SaksoversiktServiceImpl saksoversiktService = new SaksoversiktServiceImpl();
 
-    private static final String PROD_SETTNINGS_DATO = "2015-04-13";
+    private static final String PROD_SETTNINGS_DATO = "2015-01-01";
 
     @Before
     public void setup() {
@@ -32,30 +32,38 @@ public class SaksoversiktServiceTest {
 
     @Test
     public void fjernerGamleJournalpostSomKunFinnesIJoark() {
-        List<Sakstema> saksteman = getMockSaksteman();
+        List<Sakstema> sakstema = getMockSaksteman();
 
-        saksoversiktService.fjernGamleDokumenter(saksteman);
+        saksoversiktService.fjernGamleDokumenter(sakstema);
 
-        assertThat(saksteman.get(0).dokumentMetadata.size(), is(2));
-        assertThat(saksteman.get(1).dokumentMetadata.size(), is(2));
-        assertThat(saksteman.get(0).dokumentMetadata.get(0).getJournalpostId(), is("123"));
-        assertThat(saksteman.get(0).dokumentMetadata.get(1).getJournalpostId(), is("456"));
-        assertThat(saksteman.get(1).dokumentMetadata.get(0).getJournalpostId(), is("123"));
-        assertThat(saksteman.get(1).dokumentMetadata.get(1).getJournalpostId(), is("012"));
+        assertThat(sakstema.get(0).dokumentMetadata.size(), is(2));
+        assertThat(sakstema.get(1).dokumentMetadata.size(), is(3));
+        assertThat(sakstema.get(2).dokumentMetadata.size(), is(0));
+
+        assertThat(sakstema.get(0).dokumentMetadata.get(0).getJournalpostId(), is("2"));
+        assertThat(sakstema.get(0).dokumentMetadata.get(1).getJournalpostId(), is("3"));
+
+        assertThat(sakstema.get(1).dokumentMetadata.get(0).getJournalpostId(), is("4"));
+        assertThat(sakstema.get(1).dokumentMetadata.get(1).getJournalpostId(), is("5"));
+        assertThat(sakstema.get(1).dokumentMetadata.get(2).getJournalpostId(), is("6"));
     }
 
     private List<Sakstema> getMockSaksteman() {
-        List<Sakstema> saksteman = new ArrayList<>();
-        DokumentMetadata dokumentmetadata1 = new DokumentMetadata().withJournalpostId("123").withBaksystem(JOARK).withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30));
-        DokumentMetadata dokumentmetadata2 = new DokumentMetadata().withJournalpostId("123").withBaksystem(HENVENDELSE).withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30));
-        DokumentMetadata dokumentmetadata3 = new DokumentMetadata().withJournalpostId("456").withBaksystem(HENVENDELSE).withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30));
-        DokumentMetadata dokumentmetadata4 = new DokumentMetadata().withJournalpostId("789").withBaksystem(JOARK).withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30));
-        DokumentMetadata dokumentmetadata5 = new DokumentMetadata().withJournalpostId("012").withBaksystem(JOARK).withDato(LocalDateTime.of(2016, Month.APRIL, 8, 12, 30));
+        List<Sakstema> sakstema = new ArrayList<>();
+        DokumentMetadata dokumentmetadata1 = new DokumentMetadata().withJournalpostId("1").withBaksystem(JOARK).withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
+        DokumentMetadata dokumentmetadata2 = new DokumentMetadata().withJournalpostId("2").withBaksystem(JOARK).withBaksystem(HENVENDELSE).withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
+        DokumentMetadata dokumentmetadata3 = new DokumentMetadata().withJournalpostId("3").withBaksystem(HENVENDELSE).withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
+        DokumentMetadata dokumentmetadata4 = new DokumentMetadata().withJournalpostId("4").withBaksystem(JOARK).withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30));
+        DokumentMetadata dokumentmetadata5 = new DokumentMetadata().withJournalpostId("5").withBaksystem(HENVENDELSE).withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30));
+        DokumentMetadata dokumentmetadata6 = new DokumentMetadata().withJournalpostId("6").withBaksystem(HENVENDELSE).withBaksystem(JOARK).withDato(LocalDateTime.of(2015, Month.APRIL, 8, 12, 30));
+        DokumentMetadata dokumentmetadata7 = new DokumentMetadata().withJournalpostId("7").withBaksystem(JOARK).withDato(LocalDateTime.of(2010, Month.APRIL, 8, 12, 30));
+        DokumentMetadata dokumentmetadata8 = new DokumentMetadata().withJournalpostId("8").withBaksystem(JOARK).withDato(LocalDateTime.of(2011, Month.APRIL, 8, 12, 30));
 
-        Sakstema sakstema1 = new Sakstema().withDokumentMetadata(asList(dokumentmetadata1, dokumentmetadata3, dokumentmetadata4));
-        Sakstema sakstema2 = new Sakstema().withDokumentMetadata(asList(dokumentmetadata2, dokumentmetadata5));
+        Sakstema sakstema1 = new Sakstema().withDokumentMetadata(asList(dokumentmetadata1, dokumentmetadata2, dokumentmetadata3));
+        Sakstema sakstema2 = new Sakstema().withDokumentMetadata(asList(dokumentmetadata4, dokumentmetadata5, dokumentmetadata6));
+        Sakstema sakstema3 = new Sakstema().withDokumentMetadata(asList(dokumentmetadata7, dokumentmetadata8));
 
-        saksteman.addAll(asList(sakstema1, sakstema2));
-        return saksteman;
+        sakstema.addAll(asList(sakstema1, sakstema2, sakstema3));
+        return sakstema;
     }
 }
