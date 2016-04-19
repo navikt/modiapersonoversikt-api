@@ -22,7 +22,7 @@ public class DokumentMetadata {
     private Entitet avsender;
     private Entitet mottaker;
     private String tilhorendeSakid;
-    private Set<Baksystem> baksystem;
+    private Set<Baksystem> baksystem = new HashSet<>();
     private String temakode;
     private String temakodeVisning;
     private boolean ettersending;
@@ -147,10 +147,6 @@ public class DokumentMetadata {
     }
 
     public DokumentMetadata withBaksystem(Baksystem baksystem) {
-        if (this.baksystem == null) {
-            this.baksystem = new HashSet<>();
-        }
-
         this.baksystem.add(baksystem);
         return this;
     }

@@ -1,16 +1,22 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandlingskjede;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.TemagrupperHenter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 
 public class SakstemaGrupperer {
 
@@ -27,7 +33,6 @@ public class SakstemaGrupperer {
     public Map<String, Set<String>> grupperSakstema(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
 
         Map<String, List<Pair<String, String>>> grupperteSaker = grupperSakstemaITemagrupper(saker, dokumentMetadata, behandlingskjeder);
-
         Map<String, Set<String>> grupperteSakstema = grupperTemagruppePar(grupperteSaker);
 
         Map<String, Set<String>> temaMedOppfolging = grupperteSakstema.entrySet().stream()
@@ -35,9 +40,7 @@ public class SakstemaGrupperer {
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         Set<String> ugrupperteTema = concat(
-                saker.stream()
-                        .map(s -> s.getTemakode())
-                ,
+                saker.stream().map(s -> s.getTemakode()),
                 dokumentMetadata.stream()
                         .filter(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE))
                         .map(s -> s.getTemakode())
@@ -60,15 +63,13 @@ public class SakstemaGrupperer {
 
         Map<String, List<Pair<String, String>>> parFraSaker = saker.stream()
                 .filter(harDokumentMetadata(dokumentMetadata))
-                .map(sak ->
-                        finnTemagruppeForSak(temagrupperMedTema, sak))
+                .map(sak -> finnTemagruppeForSak(temagrupperMedTema, sak))
                 .flatMap(List::stream)
                 .collect(groupingBy(Pair::getKey));
 
         Map<String, List<Pair<String, String>>> parFraDokumentMetadata = dokumentMetadata.stream()
                 .filter(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE))
-                .map(dm ->
-                        finnTemagruppeForDokumentMetadata(temagrupperMedTema, dm))
+                .map(dm -> finnTemagruppeForDokumentMetadata(temagrupperMedTema, dm))
                 .flatMap(List::stream)
                 .collect(groupingBy(Pair::getKey));
 
