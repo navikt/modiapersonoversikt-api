@@ -1,11 +1,8 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +18,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static junit.framework.TestCase.assertFalse;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.SOKNADSINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.SOKNADSINNSENDING;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -92,6 +89,7 @@ public class DokumentMetadataServiceTest {
                 .withTemakode("DAG")
                 .withAvsender(Entitet.NAV)
                 .withMottaker(Entitet.SLUTTBRUKER)
+                .withBaksystem(Baksystem.JOARK)
                 .withDato(LocalDateTime.now());
     }
 
@@ -137,6 +135,54 @@ public class DokumentMetadataServiceTest {
         ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertFalse(wrapper.resultat.get(0).isEttersending());
+    }
+
+    @Test
+    public void hvisJournalpostKommerFraBadeJoarkOgHenvendelseSkalBeggeSettesSomBaksystem() {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
+
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+
+        assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(2));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.JOARK));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.HENVENDELSE));
+    }
+
+    @Test
+    public void hvisJournalpostKunKommerFraJoarkSkalKunJoarkSettesSomBaksystem() {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(emptyList());
+
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+
+        assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(1));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.JOARK));
+
+    }
+
+    @Test
+    public void hvisJournalpostKunKommerFraHenvendelseSkalKunHenvendelseSettesSomBaksystem() {
+        mockJoark();
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        when(henvendelseService.hentHenvendelsessoknaderMedStatus(any(), anyString())).thenReturn(singletonList(lagHenvendelse("2")));
+
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+
+        assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(1));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.HENVENDELSE));
+
     }
 
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){

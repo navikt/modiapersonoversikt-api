@@ -3,11 +3,10 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +14,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.lang.Boolean.FALSE;
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus.FERDIG;
@@ -60,32 +58,41 @@ public class DokumentMetadataService {
     public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
         Set<Baksystem> feilendeBaksystem = new HashSet<>();
 
-        List<DokumentMetadata> joarkMetadataListe;
-        List<DokumentMetadata> innsendteSoknaderIHenvendelse;
+        List<DokumentMetadata> joarkMetadataListe = new ArrayList<>();
+        List<DokumentMetadata> innsendteSoknaderIHenvendelse = new ArrayList<>();
 
         try {
             ResultatWrapper<List<DokumentMetadata>> dokumentMetadataResultatWrapper = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr);
-            joarkMetadataListe = dokumentMetadataResultatWrapper.resultat;
+            joarkMetadataListe.addAll(dokumentMetadataResultatWrapper.resultat);
             feilendeBaksystem.addAll(dokumentMetadataResultatWrapper.feilendeSystemer);
         } catch (FeilendeBaksystemException e) {
             feilendeBaksystem.add(e.getBaksystem());
-            joarkMetadataListe = emptyList();
         }
         try {
-            innsendteSoknaderIHenvendelse = henvendelseService.hentHenvendelsessoknaderMedStatus(FERDIG, fnr)
+            innsendteSoknaderIHenvendelse.addAll(henvendelseService.hentHenvendelsessoknaderMedStatus(FERDIG, fnr)
                     .stream()
                     .map(soknad -> dokumentMetadataFraHenvendelse(soknad))
-                    .collect(toList());
+                    .collect(toList()));
         } catch (FeilendeBaksystemException e) {
             feilendeBaksystem.add(e.getBaksystem());
-            innsendteSoknaderIHenvendelse = emptyList();
         }
 
-        final List<DokumentMetadata> finalListe = joarkMetadataListe;
+        List<String> duplikateJournalposter = innsendteSoknaderIHenvendelse
+                .stream()
+                .filter(finnesIJoark(joarkMetadataListe))
+                .map(dokumentMetadata1 -> dokumentMetadata1.getJournalpostId())
+                .collect(toList());
+
+        joarkMetadataListe
+                .forEach(dokumentMetadata -> {
+                    if(duplikateJournalposter.contains(dokumentMetadata.getJournalpostId())) {
+                        dokumentMetadata.withBaksystem(Baksystem.HENVENDELSE);
+                    }
+                });
 
         Stream<DokumentMetadata> soknaderSomHarEndretTema = innsendteSoknaderIHenvendelse
                 .stream()
-                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, finalListe))
+                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, joarkMetadataListe))
                 .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(JOURNALFORT_ANNET_TEMA));
 
         Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = innsendteSoknaderIHenvendelse

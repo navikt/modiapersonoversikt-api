@@ -39,7 +39,7 @@ public class SakstemaGrupperer {
                         .map(s -> s.getTemakode())
                 ,
                 dokumentMetadata.stream()
-                        .filter(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE))
+                        .filter(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE))
                         .map(s -> s.getTemakode())
                 ,
                 behandlingskjeder.entrySet().stream()
@@ -66,7 +66,7 @@ public class SakstemaGrupperer {
                 .collect(groupingBy(Pair::getKey));
 
         Map<String, List<Pair<String, String>>> parFraDokumentMetadata = dokumentMetadata.stream()
-                .filter(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE))
+                .filter(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE))
                 .map(dm ->
                         finnTemagruppeForDokumentMetadata(temagrupperMedTema, dm))
                 .flatMap(List::stream)
@@ -140,6 +140,6 @@ public class SakstemaGrupperer {
     }
 
     private Predicate<Sak> harInnholdIHenvendelse(List<DokumentMetadata> dokumentMetadata) {
-        return sak -> dokumentMetadata.stream().anyMatch(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE) && dm.getTemakode().equals(sak.getTemakode()));
+        return sak -> dokumentMetadata.stream().anyMatch(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE) && dm.getTemakode().equals(sak.getTemakode()));
     }
 }
