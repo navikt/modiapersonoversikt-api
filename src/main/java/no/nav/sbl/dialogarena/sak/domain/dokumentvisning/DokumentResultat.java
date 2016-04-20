@@ -5,15 +5,15 @@ import static java.lang.String.format;
 public class DokumentResultat {
     public final String pdfUrl;
     public final String tittel;
-    public final Integer antallsider;
+    public final Integer antallSider;
     public final String fnr;
     public final String journalpostId;
     public final String dokumentreferanse;
 
 
-    public DokumentResultat(String tittel, Integer antallsider, String fnr, String journalpostId, String dokumentreferanse) {
+    public DokumentResultat(String tittel, Integer antallSider, String fnr, String journalpostId, String dokumentreferanse) {
         this.tittel = tittel;
-        this.antallsider = antallsider;
+        this.antallSider = antallSider;
         this.fnr = fnr;
         this.journalpostId = journalpostId;
         this.dokumentreferanse = dokumentreferanse;
@@ -36,8 +36,8 @@ public class DokumentResultat {
         return tittel;
     }
 
-    public Integer getAntallsider() {
-        return antallsider;
+    public Integer getAntallSider() {
+        return antallSider;
     }
 
     public String getJournalpostId() {
