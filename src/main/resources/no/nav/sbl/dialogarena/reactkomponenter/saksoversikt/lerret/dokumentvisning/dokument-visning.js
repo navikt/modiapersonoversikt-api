@@ -50,7 +50,7 @@ class DokumentVisning extends Component {
         }
         const width = pdf.offsetWidth;
 
-        const height = stylingFn(this.props.dokument.antallsider, width).height;
+        const height = stylingFn(this.props.dokument.antallSider, width).height;
 
         if (this.state.height !== height) {
             this.setState({ height });
@@ -105,8 +105,7 @@ class DokumentVisning extends Component {
 
 DokumentVisning.propTypes = {
     dokument: React.PropTypes.shape({
-        antallSider: React.PropTypes.int,
-        antallsider: React.PropTypes.int,
+        antallSider: React.PropTypes.number,
         dokumentreferanse: React.PropTypes.string,
         journalpostId: React.PropTypes.string,
         pdfUrl: React.PropTypes.string
