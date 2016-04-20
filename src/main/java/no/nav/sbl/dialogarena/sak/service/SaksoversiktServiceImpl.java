@@ -35,13 +35,9 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
         return muligeJournalpostIdAaFjerne
                 .keySet()
                 .stream()
-                .filter(key -> muligeJournalpostIdAaFjerne
-                        .get(key).getBaksystem()
-                        .equals(Baksystem.JOARK))
-                .filter(joarkKey -> muligeJournalpostIdAaFjerne
-                        .get(joarkKey)
-                        .getDato()
-                        .isBefore(PROD_SETTNING_DATO))
+                .filter(key -> muligeJournalpostIdAaFjerne.get(key).getBaksystem().size() == 1
+                        && muligeJournalpostIdAaFjerne.get(key).getBaksystem().contains(Baksystem.JOARK)
+                        && muligeJournalpostIdAaFjerne.get(key).getDato().isBefore(PROD_SETTNING_DATO))
                 .collect(Collectors.toList());
     }
 
