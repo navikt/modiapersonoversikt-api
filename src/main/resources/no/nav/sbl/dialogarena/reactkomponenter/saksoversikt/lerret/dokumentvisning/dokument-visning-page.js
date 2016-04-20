@@ -35,7 +35,7 @@ function getNotatTekst(valgtJournalpost, intl) {
         intl.formatMessage({ id: 'dokumentinfo.internnotat' });
 }
 
-class DokumentVisningPage extends React.Component {
+export class DokumentVisningPage extends React.Component {
     constructor() {
         super();
         this._redirect = this._redirect.bind(this);
@@ -46,7 +46,10 @@ class DokumentVisningPage extends React.Component {
     }
 
     componentDidMount() {
-        document.querySelector('.saksoversikt .lamellhode a').focus();
+        const saksoversiktLamellhode = document.querySelector('.saksoversikt .lamellhode a');
+        if (saksoversiktLamellhode) {
+            saksoversiktLamellhode.focus();
+        }
     }
 
     _redirect(e) {
@@ -112,7 +115,10 @@ DokumentVisningPage.propTypes = {
     visSide: PT.func.isRequired,
     lerretstatus: PT.string.isRequired,
     dokumentstatus: PT.string.isRequired,
-    journalpostmetadata: PT.object.isRequired,
+    journalpostmetadata: PT.shape({
+        dokumenter: PT.array,
+        feilendeDokumenter: PT.array
+    }).isRequired,
     intl: intlShape
 };
 
