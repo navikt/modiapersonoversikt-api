@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-import './../../../test-config';
+import './../../../../test-config';
 import React from 'react';
 import { expect } from 'chai';
 import { IntlProvider } from 'react-intl';

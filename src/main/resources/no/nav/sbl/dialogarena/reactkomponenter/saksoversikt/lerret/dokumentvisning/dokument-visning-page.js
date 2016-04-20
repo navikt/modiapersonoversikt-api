@@ -3,14 +3,14 @@ import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
 import { connect } from 'react-redux';
-import VedleggFeilmeldingListe from './vedlegg-feilmelding-liste';
+import VedleggFeilmeldingListe from './feilmelding/vedlegg-feilmelding-liste';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';
 import DokumentVisningListe from './dokument-visning-liste';
 import { FormattedMessage, FormattedDate, injectIntl, intlShape } from 'react-intl';
 import KulemenyListe from './kulemeny/kulemeny-liste';
-import GenerellFeilMeldingDokumentvisning from './generell-feilmelding-dokumentvisning';
+import GenerellFeilMeldingDokumentvisning from './feilmelding/generell-feilmelding-dokumentvisning';
 
 function lagKulelistedata(dokumenter, feiledeDokumenter) {
     const feil = feiledeDokumenter.map((dokument, index) => {

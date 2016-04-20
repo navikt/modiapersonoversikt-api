@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { debounce, autobind } from './../../../utils/utils-module';
 import { Element } from 'react-scroll';
 import { injectIntl, intlShape } from 'react-intl';
-import GenerellFeilMeldingDokumentvisning from './generell-feilmelding-dokumentvisning';
+import GenerellFeilMeldingDokumentvisning from './feilmelding/generell-feilmelding-dokumentvisning';
 
 const a4Ratio = 2 / Math.sqrt(2);
 const stylingFn = (antallSider = 1, width = 750) => ({
