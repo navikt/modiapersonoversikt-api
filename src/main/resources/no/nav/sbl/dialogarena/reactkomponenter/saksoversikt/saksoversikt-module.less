@@ -238,7 +238,7 @@
     }
     .fixed-header {
         background-color: #EFEFEF;
-        padding: 1rem 3rem 1rem 3rem;
+        padding: 15px 3rem 2rem 3rem;
         margin: 0;
         position: relative;
         left: 0;
@@ -246,12 +246,32 @@
         z-index: 99;
         box-shadow: -1px 1px 5px 0px @gray-icon;
     }
+
+    .close-document{
+        display: block;
+        position: absolute;
+        right: 30px;
+        top: 10px;
+        width: 26px;
+        height: 26px;
+        color: transparent;
+        background: url(../img/kryss.svg) no-repeat center center;
+        background-size: contain;
+        z-index: 150;
+    }
+
+    .closeDocument:focus, .closeDocument:hover {
+        background: url(../img/kryss_hover.svg) no-repeat center center;
+        background-size: contain;
+    }
+
     .kulemeny {
         list-style: none;
         padding: 0;
         display: inline-block;
-        float: right;
         margin: 0;
+        position: absolute;
+        right: 6rem;
 
         li {
             display: inline-block;

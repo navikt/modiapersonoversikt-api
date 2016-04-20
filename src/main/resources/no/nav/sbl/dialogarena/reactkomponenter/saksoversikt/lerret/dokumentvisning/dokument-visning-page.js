@@ -59,7 +59,7 @@ class DokumentVisningPage extends React.Component {
             return (
                 <div className="dokument-visning-page">
                     <div className="fixed-header blokk-s">
-                        <a href="#" onClick={this._redirect}>Tilbake til sakstema</a>
+                        <a href="#" onClick={this._redirect} className="close-document"></a>
                     </div>
                     <GenerellFeilMeldingDokumentvisning/>
                 </div>);
@@ -83,8 +83,8 @@ class DokumentVisningPage extends React.Component {
 
         return (
             <div className="dokument-visning-page">
-                <div className="fixed-header blokk-s">
-                    <a href="#" onClick={this._redirect}>Tilbake til sakstema</a>
+                <div className="fixed-header">
+                    <a href="#" onClick={this._redirect} className="close-document"></a>
                     <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
                 </div>
 
