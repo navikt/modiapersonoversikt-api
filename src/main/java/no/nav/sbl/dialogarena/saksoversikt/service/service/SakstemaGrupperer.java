@@ -31,6 +31,7 @@ public class SakstemaGrupperer {
     private Predicate<Map.Entry<String, Set<String>>> erTemaMedOppfolging = harMinstEtTema.and(inneholderOppfolgingstema);
 
     public Map<String, Set<String>> grupperSakstema(List<Sak> saker, List<DokumentMetadata> dokumentMetadata, Map<String, List<Behandlingskjede>> behandlingskjeder) {
+
         Map<String, List<Pair<String, String>>> grupperteSaker = grupperSakstemaITemagrupper(saker, dokumentMetadata, behandlingskjeder);
         Map<String, Set<String>> grupperteSakstema = grupperTemagruppePar(grupperteSaker);
 
@@ -41,8 +42,9 @@ public class SakstemaGrupperer {
         Set<String> ugrupperteTema = concat(
                 saker.stream().map(s -> s.getTemakode()),
                 dokumentMetadata.stream()
-                        .filter(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE))
-                        .map(s -> s.getTemakode()),
+                        .filter(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE))
+                        .map(s -> s.getTemakode())
+                ,
                 behandlingskjeder.entrySet().stream()
                         .map(e -> e.getKey())
         )
@@ -66,7 +68,7 @@ public class SakstemaGrupperer {
                 .collect(groupingBy(Pair::getKey));
 
         Map<String, List<Pair<String, String>>> parFraDokumentMetadata = dokumentMetadata.stream()
-                .filter(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE))
+                .filter(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE))
                 .map(dm -> finnTemagruppeForDokumentMetadata(temagrupperMedTema, dm))
                 .flatMap(List::stream)
                 .collect(groupingBy(Pair::getKey));
@@ -139,6 +141,6 @@ public class SakstemaGrupperer {
     }
 
     private Predicate<Sak> harInnholdIHenvendelse(List<DokumentMetadata> dokumentMetadata) {
-        return sak -> dokumentMetadata.stream().anyMatch(dm -> dm.getBaksystem().equals(Baksystem.HENVENDELSE) && dm.getTemakode().equals(sak.getTemakode()));
+        return sak -> dokumentMetadata.stream().anyMatch(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE) && dm.getTemakode().equals(sak.getTemakode()));
     }
 }

@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Boolean.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.FORVALTNINGSNOTAT;
@@ -20,7 +22,7 @@ public class DokumentMetadata {
     private Entitet avsender;
     private Entitet mottaker;
     private String tilhorendeSakid;
-    private Baksystem baksystem;
+    private Set<Baksystem> baksystem = new HashSet<>();
     private String temakode;
     private String temakodeVisning;
     private boolean ettersending;
@@ -38,7 +40,7 @@ public class DokumentMetadata {
         return this;
     }
 
-    public Baksystem getBaksystem() {
+    public Set<Baksystem> getBaksystem() {
         return baksystem;
     }
 
@@ -144,8 +146,8 @@ public class DokumentMetadata {
         return this;
     }
 
-    public DokumentMetadata withBaksystem(final Baksystem baksystem) {
-        this.baksystem = baksystem;
+    public DokumentMetadata withBaksystem(Baksystem baksystem) {
+        this.baksystem.add(baksystem);
         return this;
     }
 

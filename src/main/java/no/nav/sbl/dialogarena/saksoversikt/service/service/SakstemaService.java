@@ -133,7 +133,7 @@ public class SakstemaService {
     }
 
     private static final Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
-        return dm -> dm.getBaksystem().equals(HENVENDELSE)
+        return dm -> dm.getBaksystem().contains(HENVENDELSE)
                 && (dm.getTemakode().equals(temakode)
                 || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));
     }
