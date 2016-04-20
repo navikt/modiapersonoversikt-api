@@ -21,6 +21,7 @@ const SakstemaListe = ({ sakstema, valgtTema, velgSak }, { miljovariabler }) => 
 
 SakstemaListe.propTypes = {
     sakstema: PT.array.isRequired,
+    valgtTema: PT.object,
     velgSak: PT.func.isRequired
 };
 

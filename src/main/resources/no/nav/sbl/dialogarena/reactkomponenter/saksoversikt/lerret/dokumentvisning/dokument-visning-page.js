@@ -3,14 +3,14 @@ import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
 import { connect } from 'react-redux';
-import VedleggFeilmeldingListe from './vedlegg-feilmelding-liste';
+import VedleggFeilmeldingListe from './feilmelding/vedlegg-feilmelding-liste';
 import * as Const from './../../konstanter';
 import Snurrepipp from './../../../utils/snurrepipp';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../utils/dato-utils';
 import DokumentVisningListe from './dokument-visning-liste';
 import { FormattedMessage, FormattedDate, injectIntl, intlShape } from 'react-intl';
 import KulemenyListe from './kulemeny/kulemeny-liste';
-import GenerellFeilMeldingDokumentvisning from './generell-feilmelding-dokumentvisning';
+import GenerellFeilMeldingDokumentvisning from './feilmelding/generell-feilmelding-dokumentvisning';
 
 function lagKulelistedata(dokumenter, feiledeDokumenter) {
     const feil = feiledeDokumenter.map((dokument, index) => {
@@ -35,7 +35,7 @@ function getNotatTekst(valgtJournalpost, intl) {
         intl.formatMessage({ id: 'dokumentinfo.internnotat' });
 }
 
-class DokumentVisningPage extends React.Component {
+export class DokumentVisningPage extends React.Component {
     constructor() {
         super();
         this._redirect = this._redirect.bind(this);
@@ -46,7 +46,10 @@ class DokumentVisningPage extends React.Component {
     }
 
     componentDidMount() {
-        document.querySelector('.saksoversikt .lamellhode a').focus();
+        const saksoversiktLamellhode = document.querySelector('.saksoversikt .lamellhode a');
+        if (saksoversiktLamellhode) {
+            saksoversiktLamellhode.focus();
+        }
     }
 
     _redirect(e) {
@@ -112,7 +115,10 @@ DokumentVisningPage.propTypes = {
     visSide: PT.func.isRequired,
     lerretstatus: PT.string.isRequired,
     dokumentstatus: PT.string.isRequired,
-    journalpostmetadata: PT.object.isRequired,
+    journalpostmetadata: PT.shape({
+        dokumenter: PT.array,
+        feilendeDokumenter: PT.array
+    }).isRequired,
     intl: intlShape
 };
 

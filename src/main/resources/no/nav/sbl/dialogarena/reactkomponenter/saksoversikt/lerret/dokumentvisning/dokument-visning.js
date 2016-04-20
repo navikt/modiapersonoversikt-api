@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { debounce, autobind } from './../../../utils/utils-module';
 import { Element } from 'react-scroll';
 import { injectIntl, intlShape } from 'react-intl';
-import GenerellFeilMeldingDokumentvisning from './generell-feilmelding-dokumentvisning';
+import GenerellFeilMeldingDokumentvisning from './feilmelding/generell-feilmelding-dokumentvisning';
 
 const a4Ratio = 2 / Math.sqrt(2);
 const stylingFn = (antallSider = 1, width = 750) => ({
@@ -28,7 +28,7 @@ class DokumentVisning extends Component {
         window.addEventListener('resize', this.eventHandler);
         this._oppdaterPdfVisning();
 
-        //Firefox fix
+        // Firefox fix
         $(this.refs.pdf).ready(() => {
             this.cancelIntervalID = setInterval(() => this._oppdaterPdfVisning(), 250);
         });
@@ -50,7 +50,7 @@ class DokumentVisning extends Component {
         }
         const width = pdf.offsetWidth;
 
-        const height = stylingFn(this.props.dokument.antallsider, width).height;
+        const height = stylingFn(this.props.dokument.antallSider, width).height;
 
         if (this.state.height !== height) {
             this.setState({ height });
@@ -105,8 +105,9 @@ class DokumentVisning extends Component {
 
 DokumentVisning.propTypes = {
     dokument: React.PropTypes.shape({
-        antallSider: React.PropTypes.int,
-        antallsider: React.PropTypes.int,
+        antallSider: React.PropTypes.number,
+        dokumentreferanse: React.PropTypes.string,
+        journalpostId: React.PropTypes.string,
         pdfUrl: React.PropTypes.string
     }).isRequired,
     intl: intlShape
