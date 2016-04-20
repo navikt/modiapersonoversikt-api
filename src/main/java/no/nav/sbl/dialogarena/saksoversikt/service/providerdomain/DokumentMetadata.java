@@ -5,11 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Boolean.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.FORVALTNINGSNOTAT;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.INTERN_NOTAT;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.REFERAT;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.*;
+import static java.lang.Boolean.TRUE;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.INTERN;
 
 public class DokumentMetadata {
 
@@ -132,7 +130,7 @@ public class DokumentMetadata {
 
     public DokumentMetadata withLeggTilEttersendelseTekstDersomEttersendelse() {
         if (this.ettersending) {
-            this.navn = "Ettersendelse til " + navn;
+            this.hoveddokument.withTittel("Ettersendelse til " + this.hoveddokument.getTittel());
         }
         return this;
     }
