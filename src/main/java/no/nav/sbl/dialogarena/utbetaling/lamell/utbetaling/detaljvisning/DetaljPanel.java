@@ -53,7 +53,8 @@ public class DetaljPanel extends Panel {
 
     protected void appendTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if (utbetalingVM.getTrekkListe() != null) {
-            ytelseVMer.addAll(on(utbetalingVM.getTrekkListe())
+            ytelseVMer.addAll(
+                    on(utbetalingVM.getTrekkListe())
                     .map(TREKK_TIL_YTELSE_VM)
                     .collect(DESC_BELOP));
         }

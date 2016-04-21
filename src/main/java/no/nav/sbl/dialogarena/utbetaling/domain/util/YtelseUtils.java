@@ -24,7 +24,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
 import static org.joda.time.LocalDate.now;
 
@@ -87,7 +86,7 @@ public class YtelseUtils {
      * @param utbetalinger
      * @return
      */
-    public static List<List<Record<Hovedytelse>>> groupByHovedytelseAndPeriod(List<Record<Hovedytelse>> utbetalinger) {
+    public static List<List<Hovedytelse>> groupByHovedytelseAndPeriod(List<Hovedytelse> utbetalinger) {
         Collection<List<Record<?>>> gruppertEtterHovedytelse = groupByHovedytelse(utbetalinger).values();
 
         List<List<Record<Hovedytelse>>> resultat = new ArrayList<>();

@@ -1,40 +1,258 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.common.records.Key;
-import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.modig.lang.option.Optional;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import java.util.List;
 
+import static no.nav.modig.lang.reflect.MethodReferenceUtils.on;
+
 @SuppressWarnings("all")
-public interface Hovedytelse {
-    Key<String> id = new Key<>("ID");
+public class Hovedytelse {
 
-    Key<DateTime> forfallsdato = new Key<>("FORFALLS_DATO");
-    Key<DateTime> utbetalingsDato = new Key<>("UTBETALINGS_DATO");
-    Key<DateTime> posteringsDato = new Key<>("POSTERINGS_DATO");
-    Key<Record<Aktoer>> utbetaltTil = new Key<>("UTBETALT_TIL");
-    Key<Mottakertype> mottakertype = new Key<>("MOTTAKER_TYPE");
-    Key<String> utbetalingsmelding = new Key<>("UTBETALING_MELDING");
-    Key<String> utbetaltTilKonto = new Key<>("UTBETALT_TIL_KONTO");
-    Key<String> utbetalingsmetode = new Key<>("UTBETALING_METODE");
-    Key<String> utbetalingsstatus = new Key<>("UTBETALING_STATUS");
+    String id;
 
-    Key<String> ytelse = new Key<>("YTELSE");
-    Key<Interval> ytelsesperiode = new Key<>("YTELSE_PERIODE");
-    Key<List<Record<Underytelse>>> underytelseListe = new Key<>("UNDERYTELSE_LISTE");
-    Key<List<Record<Trekk>>> trekkListe = new Key<>("TREKK_LISTE");
-    Key<Double> sumTrekk = new Key<>("SUM_TREKK");
-    Key<List<Double>> skattListe = new Key<>("SKATT_LISTE");
-    Key<Double> sumSkatt = new Key<>("SUM_SKATT");
-    Key<Double> nettoUtbetalt = new Key<>("YTELSE_NETTO_BELOEP");
-    Key<String> bilagsnummer = new Key<>("BILAGSNUMMER");
-    Key<Record<Aktoer>> rettighetshaver = new Key<>("RETTIGHETSHAVER");
-    Key<Record<Aktoer>> refundertForOrg = new Key<>("REFUNDERT_FOR_ORG");
+    DateTime forfallsdato;
+    DateTime utbetalingsDato;
+    DateTime posteringsDato;
+    Aktoer utbetaltTil;
+    Mottakertype mottakertype;
+    String utbetalingsmelding;
+    String utbetaltTilKonto;
+    String utbetalingsmetode;
+    String utbetalingsstatus;
 
-    Key<DateTime> hovedytelsedato = new Key<>("HOVEDYTELSES_DATO");
-    Key<Double> bruttoUtbetalt = new Key<>("AGGREGERT_BRUTTO_BELOEP");
-    Key<Double> sammenlagtTrekkBeloep = new Key<>("AGGREGERT_TREKK_BELOEP");
+    String ytelse;
+    Interval ytelsesperiode;
+    List<Underytelse> underytelseListe;
+    List<Trekk> trekkListe;
+    Double sumTrekk;
+    List<Double> skattListe;
+    Double sumSkatt;
+    Double nettoUtbetalt;
+    String bilagsnummer;
+    Aktoer rettighetshaver;
+    Aktoer refundertForOrg;
 
+    DateTime hovedytelsedato;
+    Double bruttoUtbetalt;
+    Double sammenlagtTrekkBeloep;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public DateTime getForfallsdato() {
+        return forfallsdato;
+    }
+
+    public DateTime getUtbetalingsDato() {
+        return utbetalingsDato;
+    }
+
+    public DateTime getPosteringsDato() {
+        return posteringsDato;
+    }
+
+    public Aktoer getUtbetaltTil() {
+        return utbetaltTil;
+    }
+
+    public Mottakertype getMottakertype() {
+        return mottakertype;
+    }
+
+    public String getUtbetalingsmelding() {
+        return utbetalingsmelding;
+    }
+
+    public String getUtbetaltTilKonto() {
+        return utbetaltTilKonto;
+    }
+
+    public String getUtbetalingsmetode() {
+        return utbetalingsmetode;
+    }
+
+    public String getUtbetalingsstatus() {
+        return utbetalingsstatus;
+    }
+
+    public String getYtelse() {
+        return ytelse;
+    }
+
+    public Interval getYtelsesperiode() {
+        return ytelsesperiode;
+    }
+
+    public List<Underytelse> getUnderytelseListe() {
+        return underytelseListe;
+    }
+
+    public List<Trekk> getTrekkListe() {
+        return trekkListe;
+    }
+
+    public Double getSumTrekk() {
+        return sumTrekk;
+    }
+
+    public List<Double> getSkattListe() {
+        return skattListe;
+    }
+
+    public Double getSumSkatt() {
+        return sumSkatt;
+    }
+
+    public Double getNettoUtbetalt() {
+        return nettoUtbetalt;
+    }
+
+    public String getBilagsnummer() {
+        return bilagsnummer;
+    }
+
+    public Aktoer getRettighetshaver() {
+        return rettighetshaver;
+    }
+
+    public Aktoer getRefundertForOrg() {
+        return refundertForOrg;
+    }
+
+    public DateTime getHovedytelsedato() {
+        return hovedytelsedato;
+    }
+
+    public Double getBruttoUtbetalt() {
+        return bruttoUtbetalt;
+    }
+
+    public Double getSammenlagtTrekkBeloep() {
+        return sammenlagtTrekkBeloep;
+    }
+
+    public Hovedytelse withMottakertype(Mottakertype mottakertype) {
+        this.mottakertype = mottakertype;
+        return this;
+    }
+
+    public Hovedytelse withHovedytelsedato(DateTime hovedhytelsesdato) {
+//        this./dateTime = hovedhytelsesdato;
+        return this;
+    }
+
+    public Hovedytelse withForfallsdato(DateTime forfallsdato) {
+        this.forfallsdato = forfallsdato;
+        return this;
+    }
+
+    public Hovedytelse withUtbetalingsDato(Optional<DateTime> utbetalingsdato) {
+        this.utbetalingsDato = on(utbetalingsdato).get();
+        return this;
+    }
+
+    public Hovedytelse withPosteringsDato(DateTime posteringsdato) {
+        this.posteringsDato = posteringsdato;
+        return this;
+    }
+
+    public Hovedytelse withUtbetaltTil(Aktoer aktoer) {
+        this.utbetaltTil = aktoer;
+        return this;
+    }
+
+    public Hovedytelse withUtbetalingsmelding(String utbetalingsmelding) {
+        this.utbetalingsmelding = utbetalingsmelding;
+        return this;
+    }
+
+    public Hovedytelse withUtbetaltTilKonto(String kontoUtbetaltTil) {
+        this.utbetaltTilKonto = kontoUtbetaltTil;
+        return this;
+    }
+
+    public Hovedytelse withUtbetalingsmetode(String utbetalingsmetode) {
+        this.utbetalingsmetode = utbetalingsmetode;
+        return this;
+    }
+
+    public Hovedytelse withUtbetalingsstatus(String utbetalingsstatus) {
+        this.utbetalingsstatus = utbetalingsstatus;
+        return this;
+    }
+
+    public Hovedytelse withId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public Hovedytelse withYtelse(String ytelse) {
+        this.ytelse = ytelse;
+        return this;
+    }
+
+    public Hovedytelse withYtelsesperiode(Interval ytelsesperiode) {
+        this.ytelsesperiode = ytelsesperiode;
+        return this;
+    }
+
+    public Hovedytelse withUnderytelseListe(Optional<List<Underytelse>> underytelser) {
+        this.underytelseListe = on(underytelser).get();
+        return this;
+    }
+
+    public Hovedytelse withTrekkListe(List<Trekk> trekkliste) {
+        this.trekkListe = trekkliste;
+        return this;
+    }
+
+    public Hovedytelse withSumTrekk(double trekksum) {
+        this.sumTrekk = trekksum;
+        return this;
+    }
+
+    public Hovedytelse withSkattListe(List<Double> skatteListe) {
+        this.skattListe = skatteListe;
+        return this;
+    }
+
+    public Hovedytelse withSumSkatt(double skattsum) {
+        this.sumSkatt = skattsum;
+        return this;
+    }
+
+    public Hovedytelse withNettoUtbetalt(double ytelseNettobeloep) {
+        this.nettoUtbetalt = ytelseNettobeloep;
+        return this;
+    }
+
+    public Hovedytelse withBilagsnummer(String bilagsnummer) {
+        this.bilagsnummer = bilagsnummer;
+        return this;
+    }
+
+    public Hovedytelse withRettighetshaver(Aktoer aktoer) {
+        this.rettighetshaver = aktoer;
+        return this;
+    }
+
+    public Hovedytelse withRefundertForOrg(Aktoer aktoer) {
+        this.refundertForOrg = aktoer;
+        return this;
+    }
+
+    public Hovedytelse withBruttoUtbetalt(double ytelseskomponentersum) {
+        this.bruttoUtbetalt = ytelseskomponentersum;
+        return this;
+    }
+
+    public Hovedytelse withSammenlagtTrekkBeloep(Double sammenlagtTrekkBeloep) {
+        this.sammenlagtTrekkBeloep = sammenlagtTrekkBeloep;
+        return this;
+    }
 }

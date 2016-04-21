@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import org.joda.time.DateTime;
 
@@ -8,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
@@ -22,7 +22,7 @@ public class HovedYtelseVM implements Serializable {
     private final DateTime startPeriode;
     private final DateTime sluttPeriode;
 
-    public HovedYtelseVM(String beskrivelse, List<Record<Underytelse>> underytelser, Double brutto, Double trekk, Double utbetalt, DateTime startPeriode, DateTime sluttPeriode) {
+    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt, DateTime startPeriode, DateTime sluttPeriode) {
         hovedYtelsesBeskrivelse = beskrivelse;
         this.brutto = brutto;
         this.trekk = trekk;
@@ -30,9 +30,11 @@ public class HovedYtelseVM implements Serializable {
         this.startPeriode = startPeriode;
         this.sluttPeriode = sluttPeriode;
         underYtelsesBeskrivelser = new ArrayList<>();
-        for (Record<Underytelse> underytelse : underytelser) {
-            underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.get(Underytelse.ytelsesType), underytelse.get(Underytelse.ytelseBeloep)));
-        }
+        underYtelsesBeskrivelser.addAll(
+                underytelser
+                        .stream()
+                        .map(underytelse -> new UnderYtelseVM(underytelse.getYtelsesType(), underytelse.getYtelseBeloep()))
+                        .collect(Collectors.toList()));
     }
 
     public String getHovedYtelsesBeskrivelse() {
@@ -68,11 +70,6 @@ public class HovedYtelseVM implements Serializable {
     }
 
     public static class HovedYtelseComparator {
-        public static final Comparator<HovedYtelseVM> HOVEDYTELSE_NAVN = new Comparator<HovedYtelseVM>() {
-            @Override
-            public int compare(HovedYtelseVM o1, HovedYtelseVM o2) {
-                return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
-            }
-        };
+        public static final Comparator<HovedYtelseVM> HOVEDYTELSE_NAVN = (o1, o2) -> o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
     }
 }

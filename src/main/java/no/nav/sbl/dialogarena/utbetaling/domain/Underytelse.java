@@ -1,12 +1,30 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.common.records.Key;
-
 @SuppressWarnings("all")
-public interface Underytelse {
-    Key<String> ytelsesType = new Key<>("YTELSE_TYPE");
-    Key<Double> satsBeloep = new Key<>("SATS_BELOEP");
-    Key<String> satsType = new Key<>("SATS_TYPE");
-    Key<Double> satsAntall = new Key<>("SATS_ANTALL");
-    Key<Double> ytelseBeloep = new Key<>("YTELSE_BELOEP");
+public class Underytelse {
+    String ytelsesType;
+    Double satsBeloep;
+    String satsType;
+    Double satsAntall;
+    Double ytelseBeloep;
+
+    public String getYtelsesType() {
+        return ytelsesType;
+    }
+
+    public Double getSatsBeloep() {
+        return satsBeloep;
+    }
+
+    public String getSatsType() {
+        return satsType;
+    }
+
+    public Double getSatsAntall() {
+        return satsAntall;
+    }
+
+    public Double getYtelseBeloep() {
+        return ytelseBeloep;
+    }
 }
