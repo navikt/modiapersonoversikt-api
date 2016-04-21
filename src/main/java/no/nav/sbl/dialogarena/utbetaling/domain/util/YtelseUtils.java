@@ -39,18 +39,15 @@ public class YtelseUtils {
     }
 
     public static final class UtbetalingComparator {
-        public static final Comparator<Record<Hovedytelse>> HOVEDYTELSE_DATO_COMPARATOR = new Comparator<Record<Hovedytelse>>() {
-            @Override
-            public int compare(Record<Hovedytelse> ytelse1, Record<Hovedytelse> ytelse2) {
-                DateTime ytelse1Hovedytelsedato = ytelse1.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
-                DateTime ytelse2Hovedytelsedato = ytelse2.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
+        public static final Comparator<Record<Hovedytelse>> HOVEDYTELSE_DATO_COMPARATOR = (ytelse1, ytelse2) -> {
+            DateTime ytelse1Hovedytelsedato = ytelse1.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
+            DateTime ytelse2Hovedytelsedato = ytelse2.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
 
-                int compareDato = -ytelse1Hovedytelsedato.compareTo(ytelse2Hovedytelsedato);
-                if (compareDato == 0) {
-                    return ytelse1.get(ytelse).compareToIgnoreCase(ytelse2.get(ytelse));
-                }
-                return compareDato;
+            int compareDato = -ytelse1Hovedytelsedato.compareTo(ytelse2Hovedytelsedato);
+            if (compareDato == 0) {
+                return ytelse1.get(ytelse).compareToIgnoreCase(ytelse2.get(ytelse));
             }
+            return compareDato;
         };
     }
 
@@ -112,13 +109,10 @@ public class YtelseUtils {
      * @return
      */
     public static Predicate<Record<Hovedytelse>> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
-        return new Predicate<Record<Hovedytelse>>() {
-            @Override
-            public boolean evaluate(Record<Hovedytelse> hovedytelse) {
-                DateTime hovedytelseDato = hovedytelse.get(hovedytelsedato);
-                DateTime threshold = minusDaysAndFixedAtMidnightAtDayBefore(DateTime.now(), numberOfDaysToShow);
-                return hovedytelseDato.isAfter(threshold);
-            }
+        return hovedytelse -> {
+            DateTime hovedytelseDato = hovedytelse.get(hovedytelsedato);
+            DateTime threshold = minusDaysAndFixedAtMidnightAtDayBefore(DateTime.now(), numberOfDaysToShow);
+            return hovedytelseDato.isAfter(threshold);
         };
     }
 
@@ -158,14 +152,11 @@ public class YtelseUtils {
     /**
      * Transformer en Hovedytelse til en Entry hvor key = YearMonth basert på <em>hovedytelsedato</em>, og verdi er Hovedytelsen.
      */
-    protected static final Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> TO_YEAR_MONTH_ENTRY = new Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>>() {
-        @Override
-        public Entry<YearMonth, Record<Hovedytelse>> transform(Record<Hovedytelse> ytelse) {
-            int year = ytelse.get(hovedytelsedato).getYear();
-            int monthOfYear = ytelse.get(hovedytelsedato).getMonthOfYear();
-            YearMonth yearMonth = new YearMonth(year, monthOfYear);
-            return new SimpleEntry<>(yearMonth, ytelse);
-        }
+    protected static final Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> TO_YEAR_MONTH_ENTRY = ytelse1 -> {
+        int year = ytelse1.get(hovedytelsedato).getYear();
+        int monthOfYear = ytelse1.get(hovedytelsedato).getMonthOfYear();
+        YearMonth yearMonth = new YearMonth(year, monthOfYear);
+        return new SimpleEntry<>(yearMonth, ytelse1);
     };
 
     /**
@@ -199,28 +190,15 @@ public class YtelseUtils {
      * @return
      */
     protected static Predicate<Collection<Record<Hovedytelse>>> isWithinSamePeriod(final Record<Hovedytelse> hovedytelse) {
-        return new Predicate<Collection<Record<Hovedytelse>>>() {
-            @Override
-            public boolean evaluate(Collection<Record<Hovedytelse>> utbetalinger) {
-                LocalDate start = hovedytelse.get(ytelsesperiode).getStart().toLocalDate().minusDays(1);
-                return !on(utbetalinger)
-                        .filter(where(first(ytelsesperiode).then(END).then(TO_LOCAL_DATE),
-                                either(equalTo(start)).or(isAfter(start)))).isEmpty();
-            }
+        return utbetalinger -> {
+            LocalDate start = hovedytelse.get(ytelsesperiode).getStart().toLocalDate().minusDays(1);
+            return !on(utbetalinger)
+                    .filter(where(first(ytelsesperiode).then(END).then(TO_LOCAL_DATE),
+                            either(equalTo(start)).or(isAfter(start)))).isEmpty();
         };
     }
 
-    public static final Comparator<Record<Hovedytelse>> SORT_BY_HOVEDYTELSEDATO_DESC = new Comparator<Record<Hovedytelse>>() {
-        @Override
-        public int compare(Record<Hovedytelse> o1, Record<Hovedytelse> o2) {
-           return o2.get(Hovedytelse.hovedytelsedato).compareTo(o1.get(Hovedytelse.hovedytelsedato));
-        }
-    };
+    public static final Comparator<Record<Hovedytelse>> SORT_BY_HOVEDYTELSEDATO_DESC = (o1, o2) -> o2.get(Hovedytelse.hovedytelsedato).compareTo(o1.get(Hovedytelse.hovedytelsedato));
 
-    public static final Comparator<YearMonth> SORT_BY_YEARMONTH_DESC = new Comparator<YearMonth>() {
-        @Override
-        public int compare(YearMonth o1, YearMonth o2) {
-            return o2.compareTo(o1);
-        }
-    };
+    public static final Comparator<YearMonth> SORT_BY_YEARMONTH_DESC = (o1, o2) -> o2.compareTo(o1);
 }

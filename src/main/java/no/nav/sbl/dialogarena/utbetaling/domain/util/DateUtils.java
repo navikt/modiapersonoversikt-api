@@ -13,34 +13,14 @@ public final class DateUtils {
     private DateUtils() {
     }
 
-    public static final Transformer<Interval, DateTime> START = new Transformer<Interval, DateTime>() {
-        @Override
-        public DateTime transform(Interval interval) {
-            return interval.getStart();
-        }
-    };
+    public static final Transformer<Interval, DateTime> START = interval -> interval.getStart();
 
-    public static final Transformer<Interval, DateTime> END = new Transformer<Interval, DateTime>() {
-        @Override
-        public DateTime transform(Interval interval) {
-            return interval.getEnd();
-        }
-    };
+    public static final Transformer<Interval, DateTime> END = interval -> interval.getEnd();
 
-    public static final Transformer<DateTime, LocalDate> TO_LOCAL_DATE = new Transformer<DateTime, LocalDate>() {
-        @Override
-        public LocalDate transform(DateTime dateTime) {
-            return dateTime.toLocalDate();
-        }
-    };
+    public static final Transformer<DateTime, LocalDate> TO_LOCAL_DATE = dateTime -> dateTime.toLocalDate();
 
     public static Predicate<LocalDate> isAfter(final LocalDate compare) {
-        return new Predicate<LocalDate>() {
-            @Override
-            public boolean evaluate(LocalDate localDate) {
-                return localDate.isAfter(compare);
-            }
-        };
+        return localDate -> localDate.isAfter(compare);
     }
 
     public static DateTime minusDaysAndFixedAtMidnightAtDayBefore(DateTime prevDate, int minusDays) {
@@ -59,12 +39,7 @@ public final class DateUtils {
     }
 
     protected static Predicate<DateTime> isWithinRange(final Interval intervall) {
-        return new Predicate<DateTime>() {
-            @Override
-            public boolean evaluate(DateTime dateTime) {
-                return intervall.contains(dateTime);
-            }
-        };
+        return dateTime -> intervall.contains(dateTime);
     }
 
     public static boolean isUnixEpoch(DateTime dateTime) {

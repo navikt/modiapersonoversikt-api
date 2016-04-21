@@ -32,36 +32,25 @@ public class VMUtils {
     }
 
     public static Transformer<Double, YtelseVM> skattTilYtelseVM(final Component component) {
-        return new Transformer<Double, YtelseVM>() {
-            @Override
-            public YtelseVM transform(Double skatt) {
-                if (skatt > 0) {
-                    return new YtelseVM(TILBAKEBETALING + new StringResourceModel("ytelse.skatt.beskrivelse.tekst", component, null).getString().toLowerCase(), skatt);
-                }
-                return new YtelseVM(new StringResourceModel("ytelse.skatt.beskrivelse.tekst", component, null).getString(), skatt);
+        return skatt -> {
+            if (skatt > 0) {
+                return new YtelseVM(TILBAKEBETALING + new StringResourceModel("ytelse.skatt.beskrivelse.tekst", component, null).getString().toLowerCase(), skatt);
             }
+            return new YtelseVM(new StringResourceModel("ytelse.skatt.beskrivelse.tekst", component, null).getString(), skatt);
         };
     }
 
-    public static final Transformer<Record<Trekk>, YtelseVM> TREKK_TIL_YTELSE_VM = new Transformer<Record<Trekk>, YtelseVM>() {
-        @Override
-        public YtelseVM transform(Record<Trekk> trekk) {
-            if (trekk.get(Trekk.trekkBeloep) > 0) {
-                return new YtelseVM(TILBAKEBETALING + trekk.get(Trekk.trekksType).toLowerCase(), trekk.get(Trekk.trekkBeloep));
-            }
-            return new YtelseVM(trekk.get(Trekk.trekksType), trekk.get(Trekk.trekkBeloep));
+    public static final Transformer<Record<Trekk>, YtelseVM> TREKK_TIL_YTELSE_VM = trekk -> {
+        if (trekk.get(Trekk.trekkBeloep) > 0) {
+            return new YtelseVM(TILBAKEBETALING + trekk.get(Trekk.trekksType).toLowerCase(), trekk.get(Trekk.trekkBeloep));
         }
+        return new YtelseVM(trekk.get(Trekk.trekksType), trekk.get(Trekk.trekkBeloep));
     };
 
-    public static final Transformer<Record<Underytelse>, YtelseVM> UNDERYTELSE_TIL_YTELSE_VM = new Transformer<Record<Underytelse>, YtelseVM>() {
-            @Override
-            public YtelseVM transform(Record<Underytelse> underytelse) {
-                return new YtelseVM(
-                        underytelse.get(Underytelse.ytelsesType),
-                        underytelse.get(Underytelse.ytelseBeloep),
-                        underytelse.get(Underytelse.satsAntall),
-                        underytelse.get(Underytelse.satsBeloep),
-                        underytelse.get(Underytelse.satsType));
-            }
-    };
+    public static final Transformer<Record<Underytelse>, YtelseVM> UNDERYTELSE_TIL_YTELSE_VM = underytelse -> new YtelseVM(
+            underytelse.get(Underytelse.ytelsesType),
+            underytelse.get(Underytelse.ytelseBeloep),
+            underytelse.get(Underytelse.satsAntall),
+            underytelse.get(Underytelse.satsBeloep),
+            underytelse.get(Underytelse.satsType));
 }

@@ -9,13 +9,10 @@ import org.joda.time.LocalDate;
 public class UtbetalingUtils {
     public static Predicate<WSUtbetaling> finnUtbetalingerMedUtbetalingsdatoISokeperioden(final LocalDate startDato, final LocalDate sluttDato) {
 
-        return new Predicate<WSUtbetaling>() {
-            @Override
-            public boolean evaluate(WSUtbetaling utbetaling) {
+        return utbetaling -> {
 
-                DateTime utbetalingsDato = utbetaling.getUtbetalingsdato();
-                return utbetalingsDato != null && erUtbetalingsdatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
-            }
+            DateTime utbetalingsDato = utbetaling.getUtbetalingsdato();
+            return utbetalingsDato != null && erUtbetalingsdatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
         };
     }
 
