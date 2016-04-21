@@ -31,8 +31,8 @@ class ViktigAVitePage extends React.Component {
 
         return (
             <div className="grattpanel side-innhold viktigtaavitepanel">
-                <div className="blokk-s">
-                    <a role="button" href="javascript:void(0);" onClick={this._redirect}>Tilbake til sakstema</a>
+                <div className="fixed-header blokk-s">
+                    <a href="#" onClick={this._redirect} className="close-document"></a>
                 </div>
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">{sidetittel}</h1>
