@@ -2,7 +2,7 @@ import { javaLocalDateTimeToJSDate } from './../dato-utils';
 import { finnBehandlingsstatus } from './behandlingsstatus';
 import { sisteOppdatering } from './siste-oppdateringsdato';
 
-const nyesteDokumentForst = (dok1, dok2) =>
+export const nyesteDokumentForst = (dok1, dok2) =>
     javaLocalDateTimeToJSDate(dok1.dato) < javaLocalDateTimeToJSDate(dok2.dato) ? 1 : -1;
 const nyesteBehandlingskjedeForst = (b1, b2) =>
     javaLocalDateTimeToJSDate(b1.sistOppdatert) < javaLocalDateTimeToJSDate(b2.sistOppdatert) ? 1 : -1;

@@ -1,10 +1,10 @@
 import React, { PropTypes as pt } from 'react';
 import { groupBy } from 'lodash';
 import DokumentInfoElm from './dokument/dokument-info-elm';
+import { nyesteDokumentForst } from './../../../utils/siste-oppdatering/siste-oppdatering';
 
-const nyesteForst = (a, b) => b.dato.dayOfYear - a.dato.dayOfYear;
 const grupperDokumenterPaaAar = (dokumenterGruppertPaaAar) =>
-    aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteForst) });
+    aarstall => ({ aarstall, dokumenter: dokumenterGruppertPaaAar[aarstall].sort(nyesteDokumentForst) });
 const akkumulerDokumenterPaaAar = (brukerNavn, visTema, velgJournalpost, visSide, gjeldendeAar) =>
     (acc, { aarstall, dokumenter }) => {
         if (aarstall !== gjeldendeAar) {
