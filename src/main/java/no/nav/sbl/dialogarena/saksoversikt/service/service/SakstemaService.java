@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksys
 import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -15,6 +17,7 @@ import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaGrupperer.OPPFOLGING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 
 @SuppressWarnings("squid:S1166") // Either log or rethrow
@@ -103,7 +106,62 @@ public class SakstemaService {
                             .withErGruppert(erGruppert);
                 })
                 .collect(toList());
-        return new ResultatWrapper<>(sakstema, feilendeBaksystemer);
+
+        List<Sakstema> sakstemas = grupperSykepengerOgSykemelding(sakstema);
+
+        return new ResultatWrapper<>(sakstemas, feilendeBaksystemer);
+    }
+
+    private List<Sakstema> grupperSykepengerOgSykemelding(List<Sakstema> sakstema) {
+
+        List<Sakstema> listeKopi = sakstema.stream().collect(Collectors.toList());
+
+        Optional<Sakstema> maybeSykepenger = listeKopi.stream().filter(st -> st.temakode.equals("SYK")).findFirst();
+        Optional<Sakstema> maybeSykemelding = listeKopi.stream().filter(st -> st.temakode.equals("SYM")).findFirst();
+        if (maybeSykepenger.isPresent() && maybeSykemelding.isPresent()){
+            Sakstema sykepenger = maybeSykepenger.get();
+            Sakstema sykemelding = maybeSykemelding.get();
+            if(sykepenger.erGruppert && sykemelding.erGruppert){
+                return flettSykepengerOgSykemelding(listeKopi, sykepenger, sykemelding, true);
+            } else if (sykepenger.erIkkeTomtTema() && sykemelding.erIkkeTomtTema()){
+                return flettSykepengerOgSykemelding(listeKopi, sykepenger, sykemelding, false);
+            }
+        }
+        return sakstema;
+    }
+
+    private List<Sakstema> flettSykepengerOgSykemelding(List<Sakstema> sakstema, Sakstema sykepenger, Sakstema sykemelding, boolean harOppfolging) {
+        sakstema.remove(sykepenger);
+        sakstema.remove(sykemelding);
+
+        List<Behandlingskjede> behandlingskjeder = concat(sykemelding.behandlingskjeder.stream(), sykepenger.behandlingskjeder.stream()).collect(Collectors.toList());
+        List<DokumentMetadata> dokumentMetadata = concat(sykemelding.dokumentMetadata.stream(), sykepenger.dokumentMetadata.stream()).collect(Collectors.toList());
+        List<Sak> tilhorendeSaker = concat(sykemelding.tilhorendeSaker.stream(), sykepenger.tilhorendeSaker.stream()).collect(Collectors.toList());
+        List<Integer> feilkoder = concat(sykemelding.feilkoder.stream(), sykepenger.feilkoder.stream()).collect(Collectors.toList());
+
+        String temanavn = harOppfolging ? "Sykemelding/Sykepenger og oppfølging" : "Sykemelding og Sykepenger";
+
+        sakstema.add(
+                new Sakstema()
+                        .withBehandlingskjeder(behandlingskjeder)
+                        .withDokumentMetadata(dokumentMetadata)
+                        .withErGruppert(true)
+                        .withTemakode("SYK_SYM")
+                        .withTemanavn(temanavn)
+                        .withTilhorendeSaker(tilhorendeSaker)
+                        .withFeilkoder(feilkoder)
+        );
+
+        return sakstema;
+    }
+
+    private boolean harBaadesykepengerOgsykemelding(List<Sakstema> sakstema) {
+        List<String> temakoder = sakstema.stream().map(st -> st.temakode).collect(Collectors.toList());
+
+        if (temakoder.contains("SYM") && temakoder.contains("SYM")){
+            return true;
+        }
+        return false;
     }
 
     private List<DokumentMetadata> tilhorendeDokumentMetadata(Map.Entry<String, Set<String>> temagruppe, List<DokumentMetadata> alleDokumentMetadata, String temakode, List<Sak> tilhorendeSaker) {
