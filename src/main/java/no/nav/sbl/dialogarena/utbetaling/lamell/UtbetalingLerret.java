@@ -40,13 +40,8 @@ import java.util.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.hovedytelserFromPeriod;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.ytelserGroupedByYearMonth;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.YTELSE_FILTER_KLIKKET;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
 
 public final class UtbetalingLerret extends Lerret {
 
