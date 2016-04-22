@@ -2,7 +2,7 @@ import React from 'react';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
-import { hentLerretData, velgSak,
+import { hentLerretData, velgSak, purgeScrollId,
     visSide, velgJournalpost, velgFiltreringAvsender } from './../actions';
 import * as Const from './../konstanter';
 
@@ -104,13 +104,15 @@ const mapStateToProps = (state) => {
         valgtTema: state.lerret.valgtTema,
         tekster: state.lerret.data.tekster,
         miljovariabler: state.lerret.data.miljovariabler,
-        filtreringsvalg: state.lerret.filtreringsvalg
+        filtreringsvalg: state.lerret.filtreringsvalg,
+        scrollToDokumentId: state.lerret.scrollToDokumentId
     };
 };
 
 export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,
     visSide,
+    purgeScrollId,
     velgJournalpost,
     velgFiltreringAvsender,
     hentLerretData

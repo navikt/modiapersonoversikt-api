@@ -4,20 +4,21 @@ import * as AT from './action-types';
 import lerretReducer from './lerret/lerret-reducer';
 import dokumentReducer from './lerret/dokumentvisning/dokument-reducer';
 
+function unmountReactComponent() {
+    const node = document.querySelector('[class="saksoversiktLerret-wicket unmount-react"]');
+    if (node) {
+        ReactDOM.unmountComponentAtNode(node);
+    }
+}
+
 function purgeStateReducer(fn) {
     return (state, action) => {
         if (action.type === AT.PURGE_STATE) {
-            const node = document.querySelector('[class="saksoversiktLerret-wicket unmount-react"]');
-            if (node) {
-                ReactDOM.unmountComponentAtNode(node);
-            }
+            unmountReactComponent();
             // NB viktig at det sendes inn {} eller undefined for å få resatt state
             return fn({}, action);
         } else if (action.type === AT.UNMOUNT) {
-            const node = document.querySelector('[class="saksoversiktLerret-wicket unmount-react"]');
-            if (node) {
-                ReactDOM.unmountComponentAtNode(node);
-            }
+            unmountReactComponent();
             return fn(state, action);
         }
         return fn(state, action);

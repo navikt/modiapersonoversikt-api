@@ -33,7 +33,7 @@ class DokumentInfoElm extends React.Component {
             <p className="vekk">Ikke tilgang til dokument</p> : '';
 
         return (
-            <li className={`dokumentliste-element ${kanViseDokument}`}>
+            <li className={`dokumentliste-element ${kanViseDokument}`} id={`${"x" + dokumentinfo.journalpostId}`}>
                 <article aria-label={hoveddokument.tittel}>
                     {skjultIngenTilgangTekst}
                     <div className="datodokumentliste">

@@ -39,6 +39,7 @@ export const hentDokumentData = (fnr, valgtjournalpost) => (dispatch) => {
 export const velgSak = (sak) => ({ type: AT.VELG_SAK, data: sak });
 export const velgJournalpost = (journalpost) => ({ type: AT.VELG_JOURNALPOST, data: journalpost });
 export const visSide = (side) => ({ type: AT.VIS_SIDE, data: side });
+export const purgeScrollId = () => ({type: AT.PURGE_SCROLL_ID});
 
 export const velgFiltreringAvsender = (filtreringsvalg) => ({ type: AT.VELG_FILTRERING_AVSENDER, filtreringsvalg });
 
