@@ -376,4 +376,152 @@ public class SakstemaServiceTest {
         assertThat(listResultatWrapper.resultat.get(1).temanavn, is("Dagpenger og oppfølging"));
     }
 
+    @Test
+    public void slaarSammenSykepengerOgSykemeldingMedOppfolging (){
+        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
+
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+                .thenReturn(
+                        new ResultatWrapper<>(
+                                asList(
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("123")
+                                                .withTemakode("SYM")
+                                                .withBaksystem(JOARK),
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("456")
+                                                .withTemakode("SYK")
+                                                .withBaksystem(JOARK),
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("789")
+                                                .withTemakode("OPP")
+                                                .withBaksystem(JOARK))
+                        ));
+
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+            put("Arbeid", new HashSet(asList("SYK", "SYM", "OPP")));
+        }};
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+
+        List<Sak> saker = asList(
+                new Sak()
+                        .withSaksId("123")
+                        .withTemakode("SYM"),
+                new Sak()
+                        .withSaksId("456")
+                        .withTemakode("SYK"),
+                new Sak()
+                        .withSaksId("789")
+                        .withTemakode("OPP")
+        );
+
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(saker, FNR, true);
+
+        assertThat(listResultatWrapper.resultat.size(), is(1));
+        assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Sykemelding/Sykepenger og oppfølging"));
+    }
+
+    @Test
+    public void slaarSammenSykepengerOgSykemeldingUtenOppfolging (){
+        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
+
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+                .thenReturn(
+                        new ResultatWrapper<>(
+                                asList(
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("123")
+                                                .withTemakode("SYM")
+                                                .withBaksystem(JOARK),
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("456")
+                                                .withTemakode("SYK")
+                                                .withBaksystem(JOARK))
+                        ));
+
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+            put(TEMAGRUPPE_RESTERENDE_TEMA, new HashSet(asList("SYK", "SYM")));
+        }};
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+
+        List<Sak> saker = asList(
+                new Sak()
+                        .withSaksId("123")
+                        .withTemakode("SYM"),
+                new Sak()
+                        .withSaksId("456")
+                        .withTemakode("SYK"),
+                new Sak()
+                        .withSaksId("789")
+                        .withTemakode("OPP")
+        );
+
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(saker, FNR, true);
+
+        assertThat(listResultatWrapper.resultat.size(), is(1));
+        assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Sykemelding og Sykepenger"));
+
+    }
+
+    @Test
+    public void slaarIkkeSammenSykepengerOgSykemeldingHvisEnErTomtTema (){
+        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
+
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+                .thenReturn(
+                        new ResultatWrapper<>(
+                                asList(
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("123")
+                                                .withTemakode("SYM")
+                                                .withBaksystem(JOARK))
+                        ));
+
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+            put(TEMAGRUPPE_RESTERENDE_TEMA, new HashSet(asList("SYM")));
+        }};
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+
+        List<Sak> saker = asList(
+                new Sak()
+                        .withSaksId("123")
+                        .withTemakode("SYM"),
+                new Sak()
+                        .withSaksId("456")
+                        .withTemakode("SYK"),
+                new Sak()
+                        .withSaksId("789")
+                        .withTemakode("OPP")
+        );
+
+        Map sakOgBehandlingResults = new HashMap<>();
+        sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
+
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(saker, FNR, true);
+
+        assertThat(listResultatWrapper.resultat.size(), is(1));
+        assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Sykemeldinger"));
+    }
+
 }

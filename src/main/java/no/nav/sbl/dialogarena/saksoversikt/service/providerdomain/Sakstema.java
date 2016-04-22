@@ -69,6 +69,10 @@ public class Sakstema {
         this.erGruppert = erGruppert;
         return this;
     }
+
+    public boolean erIkkeTomtTema(){
+        return behandlingskjeder.size() > 0 || dokumentMetadata.size() > 0;
+    }
 }
 
 
