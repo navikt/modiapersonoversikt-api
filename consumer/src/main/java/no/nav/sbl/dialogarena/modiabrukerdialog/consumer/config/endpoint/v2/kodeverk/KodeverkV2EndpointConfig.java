@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
@@ -12,8 +11,7 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
-
+import static java.util.Optional.empty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
@@ -52,7 +50,7 @@ public class KodeverkV2EndpointConfig {
     }
 
     private KodeverkClient lagKodeverkClient() {
-        return new CachingKodeverkClient(new DefaultKodeverkClient(kodeverkPortType()), new Optional.None<File>());
+        return new CachingKodeverkClient(new DefaultKodeverkClient(kodeverkPortType()), empty());
     }
 
 }
