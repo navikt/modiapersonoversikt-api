@@ -6,8 +6,8 @@ import { FormattedMessage } from 'react-intl';
 
 function scrollTilDokument(props) {
     const scrollToDokumentId = props.scrollToDokumentId;
-    const element = document.querySelector(`#x${scrollToDokumentId}`);
-    const parent  = document.querySelector(".saksoversikt-innhold");
+    const element = document.querySelector(`#a${scrollToDokumentId}`);
+    const parent  = document.querySelector('.saksoversikt-innhold');
 
     if(element && parent) {
         setTimeout(() => {
