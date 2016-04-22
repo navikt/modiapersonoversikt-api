@@ -35,6 +35,7 @@ describe('SakstemaPage', () => {
             velgSak: noop,
             brukerNavn: 'brukernavn',
             visSide: noop,
+            purgeScrollId: noop,
             velgJournalpost: noop,
             filtreringsvalg: {}
         };
@@ -91,6 +92,7 @@ describe('SakstemaPage', () => {
             velgSak: noop,
             brukerNavn: 'brukernavn',
             visSide: noop,
+            purgeScrollId: noop,
             velgJournalpost: noop,
             filtreringsvalg: {}
         };
