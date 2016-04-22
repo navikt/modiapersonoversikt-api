@@ -4,7 +4,24 @@ import { connect } from 'react-redux';
 import VisningDokumentliste from './dokumentliste/visning-dokumentliste';
 import { FormattedMessage } from 'react-intl';
 
+function scrollTilDokument(props) {
+    const scrollToDokumentId = props.scrollToDokumentId;
+    const element = document.querySelector(`#a${scrollToDokumentId}`);
+    const parent  = document.querySelector('.saksoversikt-innhold');
+
+    if(element && parent) {
+        setTimeout(() => {
+            parent.scrollTop = element.offsetTop - 200;
+        }, 0);
+    }
+    props.purgeScrollId();
+}
+
 class SakstemaPage extends React.Component {
+
+    componentDidMount() {
+        scrollTilDokument(this.props);
+    }
 
     render() {
         const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost, filtreringsvalg } = this.props;

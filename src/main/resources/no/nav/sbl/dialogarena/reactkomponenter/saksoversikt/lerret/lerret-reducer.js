@@ -79,12 +79,22 @@ actionHandlers[AT.VELG_SAK] = (state, action) => ({
     valgtTema: action.data,
     filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
 });
-actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => ({ ...state, valgtJournalpost: action.data });
+actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => {
+    return {
+        ...state,
+        valgtJournalpost: action.data,
+        scrollToDokumentId: action.data.journalpostId
+    };
+};
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
 actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({
     ...state,
     filtreringsvalg: action.filtreringsvalg
 });
 
+actionHandlers[AT.PURGE_SCROLL_ID] = (state, action) => ({
+    ...state,
+    scrollToDokumentId: ''
+});
 // -------
 export default basicReducer(initalState, actionHandlers);
