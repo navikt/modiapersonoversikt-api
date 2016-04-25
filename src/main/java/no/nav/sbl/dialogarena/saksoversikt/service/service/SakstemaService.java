@@ -143,7 +143,7 @@ public class SakstemaService {
                 new Sakstema()
                         .withBehandlingskjeder(behandlingskjeder)
                         .withDokumentMetadata(dokumentMetadata)
-                        .withErGruppert(true)
+                        .withErGruppert(harOppfolging)
                         .withTemakode("SYK_SYM")
                         .withTemanavn(temanavn)
                         .withTilhorendeSaker(tilhorendeSaker)
