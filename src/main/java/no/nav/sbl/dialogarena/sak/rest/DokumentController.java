@@ -125,6 +125,7 @@ public class DokumentController {
 
         journalpostMetadata.getVedlegg()
                 .stream()
+                .filter(dokument -> !dokument.isLogiskDokument())
                 .forEach(dokument -> dokumentreferanser.add(dokument.getDokumentreferanse()));
 
         List<Pair<String, TjenesteResultatWrapper>> dokumenter = dokumentreferanser
