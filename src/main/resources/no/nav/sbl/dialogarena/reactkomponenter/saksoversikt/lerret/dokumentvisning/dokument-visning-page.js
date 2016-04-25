@@ -35,16 +35,13 @@ function getNotatTekst(valgtJournalpost, intl) {
         intl.formatMessage({ id: 'dokumentinfo.internnotat' });
 }
 
-function filtrerUtLogiskeVedlegg(props) {
+export function filtrerUtLogiskeVedlegg(props) {
     const { journalpostmetadata, valgtJournalpost } = props;
-
     const logiskeVedlegg = valgtJournalpost.vedlegg.filter(vedlegg => vedlegg.logiskDokument === true);
 
-    journalpostmetadata.feilendeDokumenter.filter(feilendeDokument => {
-        return logiskeVedlegg.some(logiskVedlegg => logiskVedlegg.dokumentreferanse === feilendeDokument.dokumentreferanse);
+     return journalpostmetadata.feilendeDokumenter.filter(feilendeDokument => {
+        return !logiskeVedlegg.some(logiskVedlegg => logiskVedlegg.dokumentreferanse === feilendeDokument.dokumentreferanse);
     });
-
-    return journalpostmetadata;
 }
 
 export class DokumentVisningPage extends React.Component {
@@ -83,9 +80,8 @@ export class DokumentVisningPage extends React.Component {
             return <Snurrepipp farge="hvit"/>;
         }
 
-        const { intl } = this.props;
-
-        const journalpostmetadata = filtrerUtLogiskeVedlegg(this.props);
+        const { intl, journalpostmetadata } = this.props;
+        journalpostmetadata.feilendeDokumenter = filtrerUtLogiskeVedlegg(this.props);
 
         const values = {
             retning: this.props.valgtJournalpost.retning,

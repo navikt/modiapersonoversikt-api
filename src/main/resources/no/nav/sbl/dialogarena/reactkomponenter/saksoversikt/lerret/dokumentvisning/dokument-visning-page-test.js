@@ -4,7 +4,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
-import { DokumentVisningPage } from './dokument-visning-page';
+import { DokumentVisningPage, filtrerUtLogiskeVedlegg } from './dokument-visning-page';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass,
     scryRenderedDOMComponentsWithTag } from 'react-addons-test-utils';
 import * as Const from './../../konstanter';
@@ -36,7 +36,9 @@ describe('DokumentVisningPage', () => {
 
         const props = {
             fnr,
-            valgtJournalpost,
+            valgtJournalpost: {
+                vedlegg: []
+            },
             hentDokumentData,
             visSide: noop,
             lerretstatus: Const.INIT_OK,
@@ -65,7 +67,9 @@ describe('DokumentVisningPage', () => {
 
         const props = {
             fnr,
-            valgtJournalpost,
+            valgtJournalpost: {
+                vedlegg: []
+            },
             hentDokumentData,
             visSide: noop,
             lerretstatus: Const.INIT_OK,
@@ -92,7 +96,9 @@ describe('DokumentVisningPage', () => {
 
         const props = {
             fnr,
-            valgtJournalpost,
+            valgtJournalpost: {
+                vedlegg: []
+            },
             hentDokumentData,
             visSide: noop,
             lerretstatus: Const.LASTET,
@@ -119,7 +125,10 @@ describe('DokumentVisningPage', () => {
 
         const props = {
             fnr,
-            valgtJournalpost,
+            valgtJournalpost: {
+                vedlegg: [],
+                dato: fromDateToJSON(new Date())
+            },
             hentDokumentData,
             visSide: noop,
             lerretstatus: Const.LASTET,
@@ -151,44 +160,10 @@ describe('DokumentVisningPage', () => {
 
         const props = {
             fnr,
-            valgtJournalpost,
-            hentDokumentData,
-            visSide: noop,
-            lerretstatus: Const.LASTET,
-            dokumentstatus: Const.LASTET,
-            journalpostmetadata: {
-                dokumenter: [
-                    {
-                        dokumentreferanse: '123',
-                        tittel: 'tittel'
-                    }
-                ],
-                feilendeDokumenter: []
+            valgtJournalpost: {
+                vedlegg: [],
+                dato: fromDateToJSON(new Date())
             },
-            intl
-        };
-
-        const element = renderIntoDocument(
-            <IntlProvider locale="en" messages={messages}>
-                <DokumentVisningPage {...props} />
-            </IntlProvider>
-        );
-
-        const renderedSnurrepipp = scryRenderedDOMComponentsWithClass(element, 'snurrepipp');
-        expect(renderedSnurrepipp.length).to.equal(0);
-        const renderedDokumentVisningPage = scryRenderedDOMComponentsWithClass(element, 'dokument-visning-page');
-        expect(renderedDokumentVisningPage.length).to.equal(1);
-        const renderedDokumentElement = scryRenderedDOMComponentsWithClass(element, 'dokumentheader');
-        expect(renderedDokumentElement.length).to.equal(1);
-    });
-
-    it('Gir visningspage med dokument hvis alt er ferdig lastet og ett dokumenter', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
-        const props = {
-            fnr,
-            valgtJournalpost,
             hentDokumentData,
             visSide: noop,
             lerretstatus: Const.LASTET,
@@ -230,7 +205,8 @@ describe('DokumentVisningPage', () => {
                 temakode: 'DAG',
                 dato: fromDateToJSON(new Date()),
                 retning: 'INTERN',
-                kategoriNotat: 'FORVALTNINGSNOTAT'
+                kategoriNotat: 'FORVALTNINGSNOTAT',
+                vedlegg: []
             },
             hentDokumentData,
             visSide: noop,
@@ -269,7 +245,8 @@ describe('DokumentVisningPage', () => {
                 temakode: 'DAG',
                 dato: fromDateToJSON(new Date()),
                 retning: 'INTERN',
-                kategoriNotat: 'INTERNNOTAT'
+                kategoriNotat: 'INTERNNOTAT',
+                vedlegg: []
             },
             hentDokumentData,
             visSide: noop,
@@ -307,7 +284,8 @@ describe('DokumentVisningPage', () => {
                 journalpostId: '123',
                 temakode: 'DAG',
                 dato: fromDateToJSON(new Date()),
-                retning: 'INN'
+                retning: 'INN',
+                vedlegg: []
             },
             hentDokumentData,
             visSide: noop,
@@ -334,5 +312,56 @@ describe('DokumentVisningPage', () => {
         expect(renderedForvaltningsnotat.length).to.equal(1);
         expect(renderedForvaltningsnotat[0].textContent).to.not.contain('forvaltningsnotat');
         expect(renderedForvaltningsnotat[0].textContent).to.not.contain('internnotat');
+    });
+
+    it('Skal filtrere ut logiske vedlegg', () => {
+        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
+        const { intl } = intlProvider.getChildContext();
+
+        const props = {
+            fnr,
+            valgtJournalpost: {
+                journalpostId: '123',
+                temakode: 'DAG',
+                dato: fromDateToJSON(new Date()),
+                retning: 'INN',
+                vedlegg: [
+                    {
+                        dokumentreferanse: '3',
+                        logiskDokument: false
+                    },
+                    {
+                        dokumentreferanse: '1',
+                        logiskDokument: true
+                    },
+                    {
+                        dokumentreferanse: '2',
+                        logiskDokument: false
+                    }
+                ]
+            },
+            hentDokumentData,
+            visSide: noop,
+            lerretstatus: Const.LASTET,
+            dokumentstatus: Const.LASTET,
+            journalpostmetadata: {
+                dokumenter: [],
+                feilendeDokumenter: [
+                    {
+                        dokumentreferanse: '2'
+                    },
+                    {
+                        dokumentreferanse: '1'
+                    }
+                ]
+            },
+            intl
+        };
+
+        const {journalpostmetadata} = props;
+        journalpostmetadata.feilendeDokumenter = filtrerUtLogiskeVedlegg(props);
+
+        expect(journalpostmetadata.feilendeDokumenter.length).to.equal(1);
+        expect(journalpostmetadata.feilendeDokumenter[0].dokumentreferanse).to.equal('2');
     });
 });
