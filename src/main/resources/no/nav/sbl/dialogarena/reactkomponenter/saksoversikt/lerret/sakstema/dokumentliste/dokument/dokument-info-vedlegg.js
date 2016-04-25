@@ -11,14 +11,26 @@ const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
         };
     }
 
+    function getVedleggTekst(dokumentVedlegg, index) {
+        if(dokumentVedlegg.logiskDokument) {
+            return (
+                <span className="vedleggtext ikke-lenke"> {dokumentVedlegg.tittel} </span>
+            );
+        } else {
+            return (
+                <a href="#" onClick={_redirect(index + 1)} className="vedleggtext">
+                    {dokumentVedlegg.tittel}
+                </a>
+            );
+        }
+    }
+
     if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {
         return <noscript />;
     }
     const vedleggListe = dokumentinfo.vedlegg.map((dokumentVedlegg, index) => (
         <li className="vedlegg-element" key={`vedlegg${index}`}>
-            <a href="#" onClick={_redirect(index + 1)} className="vedleggtext">
-                {dokumentVedlegg.tittel}
-            </a>
+            { getVedleggTekst(dokumentVedlegg, index) }
         </li>));
     return (
         <div className="vedleggcontainer">
@@ -28,7 +40,6 @@ const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
 
     );
 };
-
 
 DokumentinfoVedlegg.propTypes = {
     dokumentinfo: React.PropTypes.object.isRequired,
