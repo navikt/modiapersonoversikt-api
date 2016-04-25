@@ -12,17 +12,17 @@ const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
     }
 
     function getVedleggTekst(dokumentVedlegg, index) {
-        if(dokumentVedlegg.logiskDokument) {
+        if (dokumentVedlegg.logiskDokument) {
             return (
                 <span className="vedleggtext ikke-lenke"> {dokumentVedlegg.tittel} </span>
             );
-        } else {
-            return (
-                <a href="#" onClick={_redirect(index + 1)} className="vedleggtext">
-                    {dokumentVedlegg.tittel}
-                </a>
-            );
         }
+
+        return (
+            <a href="#" onClick={_redirect(index + 1)} className="vedleggtext">
+                {dokumentVedlegg.tittel}
+            </a>
+        );
     }
 
     if (!dokumentinfo.vedlegg || dokumentinfo.vedlegg.length === 0) {

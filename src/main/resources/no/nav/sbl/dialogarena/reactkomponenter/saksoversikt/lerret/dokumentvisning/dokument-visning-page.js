@@ -35,8 +35,7 @@ function getNotatTekst(valgtJournalpost, intl) {
         intl.formatMessage({ id: 'dokumentinfo.internnotat' });
 }
 
-export function filtrerUtLogiskeVedlegg(props) {
-    const { journalpostmetadata, valgtJournalpost } = props;
+export function filtrerUtLogiskeVedlegg(journalpostmetadata, valgtJournalpost) {
     const logiskeVedlegg = valgtJournalpost.vedlegg.filter(vedlegg => vedlegg.logiskDokument === true);
 
      return journalpostmetadata.feilendeDokumenter.filter(feilendeDokument => {
@@ -80,8 +79,9 @@ export class DokumentVisningPage extends React.Component {
             return <Snurrepipp farge="hvit"/>;
         }
 
-        const { intl, journalpostmetadata } = this.props;
-        journalpostmetadata.feilendeDokumenter = filtrerUtLogiskeVedlegg(this.props);
+        const { intl, journalpostmetadata, valgtJournalpost } = this.props;
+
+        journalpostmetadata.feilendeDokumenter = filtrerUtLogiskeVedlegg(journalpostmetadata, valgtJournalpost);
 
         const values = {
             retning: this.props.valgtJournalpost.retning,
