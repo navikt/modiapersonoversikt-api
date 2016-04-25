@@ -130,7 +130,7 @@ public class SakstemaServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>("Arbeid", new HashSet<>(Arrays.asList(DAGPENGER, OPPFOLGING)));
-        ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), emptyMap());
+        ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), emptyMap(),true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
     }
@@ -154,7 +154,7 @@ public class SakstemaServiceTest {
                         .withDato(LocalDateTime.now())
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), emptyMap());
+                                        .withTittel("TEST"))), emptyMap(),true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Oppfølging"));
         assertThat(wrapper.resultat.size(), is(1));
@@ -186,7 +186,7 @@ public class SakstemaServiceTest {
                         .withBaksystem(JOARK)
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), emptyMap());
+                                        .withTittel("TEST"))), emptyMap(),true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
         assertThat(wrapper.resultat.size(), is(1));
@@ -219,7 +219,7 @@ public class SakstemaServiceTest {
                         .withTemakode("OPP")
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("Tilhorende Oppfolging"))), emptyMap());
+                                        .withTittel("Tilhorende Oppfolging"))), emptyMap(),true);
 
         assertThat(wrapper.resultat.size(), is(2));
     }
@@ -329,7 +329,7 @@ public class SakstemaServiceTest {
                         .withBaksystem(JOARK)
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), emptyMap());
+                                        .withTittel("TEST"))), emptyMap(),true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Arbeidsavklaringspenger og oppfølging"));
         assertThat(wrapper.resultat.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
@@ -522,6 +522,58 @@ public class SakstemaServiceTest {
 
         assertThat(listResultatWrapper.resultat.size(), is(1));
         assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Sykemeldinger"));
+    }
+
+    @Test
+    public void slaarIkkeSammenSykepengerOgSykemeldingForModia (){
+        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode(OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
+
+        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+                .thenReturn(
+                        new ResultatWrapper<>(
+                                asList(
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("123")
+                                                .withTemakode("SYK")
+                                                .withBaksystem(JOARK),
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("456")
+                                                .withTemakode("SYM")
+                                                .withBaksystem(JOARK),
+                                        new DokumentMetadata()
+                                                .withTilhorendeSakid("789")
+                                                .withTemakode("OPP")
+                                                .withBaksystem(JOARK))
+                        ));
+
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+            put(TEMAGRUPPE_ARBEID, new HashSet(asList("SYK", "SYM", "OPP")));
+        }};
+
+        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+
+        List<Sak> saker = asList(
+                new Sak()
+                        .withSaksId("123")
+                        .withTemakode("SYM"),
+                new Sak()
+                        .withSaksId("456")
+                        .withTemakode("SYK"),
+                new Sak()
+                        .withSaksId("789")
+                        .withTemakode("OPP")
+        );
+
+        Map sakOgBehandlingResults = new HashMap<>();
+
+        when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
+
+        ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(saker, FNR, false);
+
+        assertThat(listResultatWrapper.resultat.size(), is(3));
+        assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Sykepenger"));
     }
 
 }
