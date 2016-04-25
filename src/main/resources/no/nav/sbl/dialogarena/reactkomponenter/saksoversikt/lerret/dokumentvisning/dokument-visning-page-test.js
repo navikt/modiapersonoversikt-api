@@ -359,7 +359,7 @@ describe('DokumentVisningPage', () => {
         };
 
         const {journalpostmetadata} = props;
-        journalpostmetadata.feilendeDokumenter = filtrerUtLogiskeVedlegg(props);
+        journalpostmetadata.feilendeDokumenter = filtrerUtLogiskeVedlegg(props.journalpostmetadata, props.valgtJournalpost);
 
         expect(journalpostmetadata.feilendeDokumenter.length).to.equal(1);
         expect(journalpostmetadata.feilendeDokumenter[0].dokumentreferanse).to.equal('2');
