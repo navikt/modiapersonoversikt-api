@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
@@ -37,14 +36,14 @@ public class UtbetalingWidgetPanelTest extends AbstractWicketTest{
 
     private HovedytelseVM lagHovedYtelse(){
         return new HovedytelseVM(
-                new Record<Hovedytelse>()
-                    .with(Hovedytelse.id, "123")
-                    .with(Hovedytelse.hovedytelsedato, new DateTime().withDate(2015, 2, 18))
-                    .with(Hovedytelse.ytelsesperiode, new Interval(
+                new Hovedytelse()
+                    .withId("123")
+                    .withHovedytelsedato(new DateTime().withDate(2015, 2, 18))
+                    .withYtelsesperiode(new Interval(
                             new DateTime().withDate(2015,2,1),
                             new DateTime().withDate(2015,3,1)))
-                    .with(Hovedytelse.utbetaltTilKonto, "123")
-                    .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.aktoerId, "***REMOVED***"))
+                    .withUtbetaltTilKonto("123")
+                    .withUtbetaltTil(new Aktoer().withAktoerId("***REMOVED***"))
         );
     }
 

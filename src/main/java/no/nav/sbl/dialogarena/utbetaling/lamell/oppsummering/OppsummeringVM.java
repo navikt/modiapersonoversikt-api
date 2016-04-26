@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
-import no.nav.modig.lang.collections.iter.ReduceFunction;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
@@ -12,13 +10,13 @@ import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.summingDouble;
-import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.isUnixEpoch;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.groupByHovedytelseAndPeriod;
@@ -64,7 +62,7 @@ public class OppsummeringVM implements Serializable {
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
 
         for (List<Hovedytelse> grupperteHovedytelser : groupByHovedytelseAndPeriod(ytelser)) {
-            Map<String, List<?>> indekserteUnderytelser = groupUnderytelseByType(grupperteHovedytelser);
+            Map<String, List<Underytelse>> indekserteUnderytelser = groupUnderytelseByType(grupperteHovedytelser);
 
             List<Underytelse> sammenlagteUnderytelser = combineUnderytelser(indekserteUnderytelser);
 
@@ -100,28 +98,13 @@ public class OppsummeringVM implements Serializable {
     public String getOppsummertPeriode() {
         if (isPeriodeWithinSameMonthAndYear()) {
             return startDato.toString("MMMM yyyy", Locale.getDefault());
-        } else if(isUnixEpoch(startDato) && isUnixEpoch(sluttDato)) {
+        } else if (isUnixEpoch(startDato) && isUnixEpoch(sluttDato)) {
             return new StringResourceModel("utbetaling.lamell.total.oppsummering.udefinertperiode", null).getString();
         }
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
                 Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
     }
 
-    public static final ReduceFunction<List<Record<?>>, List<Record<Underytelse>>> TO_TOTAL_OF_UNDERYTELSER = new ReduceFunction<List<Record<?>>, List<Record<Underytelse>>>() {
-        @Override
-        public List<Record<Underytelse>> reduce(List<Record<Underytelse>> accumulator, List<Record<?>> ytelser) {
-            if (!ytelser.isEmpty()) {
-                Double sum = on(ytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
-                accumulator.add((Record<Underytelse>) ytelser.get(0).with(Underytelse.ytelseBeloep, sum));
-            }
-            return accumulator;
-        }
-
-        @Override
-        public List<Record<Underytelse>> identity() {
-            return new ArrayList<>();
-        }
-    };
 
     protected boolean isPeriodeWithinSameMonthAndYear() {
         return startDato.getMonthOfYear() == sluttDato.getMonthOfYear()
@@ -148,23 +131,42 @@ public class OppsummeringVM implements Serializable {
                 .get();
     }
 
-    protected static List<Underytelse> combineUnderytelser(Map<String, List<?>> indekserteUnderytelser) {
-        List<Underytelse> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(TO_TOTAL_OF_UNDERYTELSER);
-        sammenlagteUnderytelser = sammenlagteUnderytelser
-                .stream()
-                .sorted(((o1, o2) -> o1.ytelseBe))
+    protected static List<Underytelse> combineUnderytelser(Map<String, List<Underytelse>> indekserteUnderytelser) {
 
-                on(sammenlagteUnderytelser).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
-        return sammenlagteUnderytelser;
+        BiFunction<ArrayList<Underytelse>, List<Underytelse>, ArrayList<Underytelse>> accumulator = (acc, ytelser) -> {
+
+            if (!ytelser.isEmpty()) {
+                Double sum = ytelser.stream().map(underytelse -> underytelse.getYtelseBeloep()).collect(sumDouble);
+                acc.add(ytelser.get(0).withYtelseBeloep(sum));
+            }
+            return acc;
+        };
+
+        BinaryOperator<ArrayList<Underytelse>> combiner = (underytelsesliste1, underytelsesliste2) -> {
+            ArrayList<Underytelse> res = new ArrayList<>();
+            res.addAll(underytelsesliste1);
+            res.addAll(underytelsesliste2);
+            return res;
+        };
+
+        List<Underytelse> sammenlagteUnderytelser = indekserteUnderytelser.values()
+                .stream()
+                .reduce(new ArrayList<>(), accumulator, combiner);
+
+        return sammenlagteUnderytelser
+                .stream()
+                .sorted(((o1, o2) -> o2.getYtelseBeloep().compareTo(o1.getYtelseBeloep())))
+                .collect(Collectors.toList());
     }
 
-    protected static Map<String, List<?>> groupUnderytelseByType(List<Hovedytelse> sammen) {
+    protected static Map<String, List<Underytelse>> groupUnderytelseByType(List<Hovedytelse> sammen) {
+        List<Underytelse> alleUnderytelser = sammen
+                .stream()
+                .flatMap(hovedytelse -> hovedytelse.getUnderytelseListe().stream())
+                .collect(Collectors.toList());
 
-        //1 YtelseType - [1...2...3]
-
-        sammen.stream().map(hovedytelse -> )
-
-//        return sammen.stream().flatMap(hovedytelse -> hovedytelse.getUnderytelseListe()).collec
-        return on(sammen).flatmap(Hovedytelse.underytelseListe).reduce(indexBy(Underytelse.ytelsesType));
+        return alleUnderytelser
+                .stream()
+                .collect(Collectors.groupingBy(underytelse -> underytelse.getYtelsesType()));
     }
 }

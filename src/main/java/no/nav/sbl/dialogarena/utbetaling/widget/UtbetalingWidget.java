@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.widget.async.AsyncWidget;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.model.IModel;
@@ -27,7 +26,7 @@ public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
         this.fnr = fnr;
     }
 
-    protected static List<HovedytelseVM> transformUtbetalingToVM(List<Record<Hovedytelse>> utbetalinger) {
+    protected static List<HovedytelseVM> transformUtbetalingToVM(List<Hovedytelse> utbetalinger) {
         return on(utbetalinger)
                 .filter(betweenNowAndDaysBefore(NUMBER_OF_DAYS_TO_SHOW))
                 .map(TIL_HOVEDYTELSEVM)
@@ -36,7 +35,7 @@ public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
 
     @Override
     public List<HovedytelseVM> getFeedItems() {
-        List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
+        List<Hovedytelse> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
         return transformUtbetalingToVM(hovedytelser);
     }
 

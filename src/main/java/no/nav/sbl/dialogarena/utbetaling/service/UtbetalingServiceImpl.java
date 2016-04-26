@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator;
@@ -30,11 +29,20 @@ public class UtbetalingServiceImpl implements UtbetalingService {
     @Inject
     private UtbetalingV1 utbetalingV1;
 
+
+    /*
+    TODO Skriv om til java 8
+     */
     @Override
-    public List<Record<Hovedytelse>> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    public List<Hovedytelse> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden = on(getWSUtbetalinger(fnr, startDato, sluttDato))
                 .filter(UtbetalingUtils.finnUtbetalingerMedUtbetalingsdatoISokeperioden(startDato, sluttDato))
                 .collect();
+
+//        utbetalingerMedPosteringInnenPerioden
+//                .stream()
+//                .filter()
+
         return on(utbetalingerMedPosteringInnenPerioden).flatmap(TO_HOVEDYTELSE)
                 .collect(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR);
     }

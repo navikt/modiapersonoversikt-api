@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
-import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.AktoerType;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
@@ -15,8 +13,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.*;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 
@@ -27,7 +24,7 @@ public class TransformersTest {
         WSSkatt wsSkatt = new WSSkatt()
                 .withSkattebeloep(-20.0);
 
-        Double skattTransformed = SKATT_TRANSFORMER.transform(wsSkatt);
+        Double skattTransformed = SKATT_TRANSFORMER(wsSkatt);
         assertThat(skattTransformed, is(-20.0));
     }
 
@@ -59,12 +56,12 @@ public class TransformersTest {
                 .withSatsbeloep(20.0)
                 .withSatstype("SatsType");
 
-        Record<Underytelse> underytelse = UNDERYTELSE_TRANSFORMER.transform(wsYtelseskomponent);
-        assertThat(underytelse.get(Underytelse.ytelsesType), is("KompType"));
-        assertThat(underytelse.get(Underytelse.ytelseBeloep), is(-10.0));
-        assertThat(underytelse.get(Underytelse.satsAntall), is(2.0));
-        assertThat(underytelse.get(Underytelse.satsBeloep), is(20.0));
-        assertThat(underytelse.get(Underytelse.satsType), is("SatsType"));
+        Underytelse underytelse = LAG_UNDERYTELSE(wsYtelseskomponent);
+        assertThat(underytelse.getYtelsesType(), is("KompType"));
+        assertThat(underytelse.getYtelseBeloep(), is(-10.0));
+        assertThat(underytelse.getSatsAntall(), is(2.0));
+        assertThat(underytelse.getSatsBeloep(), is(20.0));
+        assertThat(underytelse.getSatsType(), is("SatsType"));
     }
 
     @Test
@@ -75,24 +72,24 @@ public class TransformersTest {
                 .withSatsantall(2.0)
                 .withSatsbeloep(20.0);
 
-        Record<Underytelse> underytelse = UNDERYTELSE_TRANSFORMER.transform(wsYtelseskomponent);
-        assertThat(underytelse.get(Underytelse.ytelsesType), is("KompType"));
-        assertThat(underytelse.get(Underytelse.ytelseBeloep), is(-10.0));
-        assertThat(underytelse.get(Underytelse.satsAntall), is(2.0));
-        assertThat(underytelse.get(Underytelse.satsBeloep), is(20.0));
+        Underytelse underytelse = LAG_UNDERYTELSE(wsYtelseskomponent);
+        assertThat(underytelse.getYtelsesType(), is("KompType"));
+        assertThat(underytelse.getYtelseBeloep(), is(-10.0));
+        assertThat(underytelse.getSatsAntall(), is(2.0));
+        assertThat(underytelse.getSatsBeloep(), is(20.0));
     }
 
     @Test
     public void createAktoerFraWSObjekt() {
         WSPerson wsAktoer = new WSPerson().withAktoerId("***REMOVED***").withNavn("Ola Normann");
-        Record<? extends Aktoer> aktoer = createAktoer(wsAktoer);
-        assertThat(aktoer.get(Aktoer.aktoerId), is("***REMOVED***"));
-        assertThat(aktoer.get(Aktoer.navn), is("Ola Normann"));
+        Aktoer aktoer = createAktoer(wsAktoer);
+        assertThat(aktoer.getAktoerId(), is("***REMOVED***"));
+        assertThat(aktoer.getNavn(), is("Ola Normann"));
     }
 
     @Test
     public void createAktoerNaarAktoerErNull() {
-        Record<? extends Aktoer> aktoer = createAktoer(null);
+        Aktoer aktoer = createAktoer(null);
         assertNull(aktoer);
     }
 
@@ -148,18 +145,18 @@ public class TransformersTest {
                         .withYtelseskomponenttype("ThirdEntry")
                 );
 
-        Optional<List<Record<Underytelse>>> underytelser = createUnderytelser(wsListe);
+        List<Underytelse> underytelser = createUnderytelser(wsListe);
 
-        assertThat(underytelser.get().size(), is(3));
-        assertThat(underytelser.get().get(0).get(Underytelse.ytelsesType), is("SecondEntry"));
-        assertThat(underytelser.get().get(1).get(Underytelse.ytelsesType), is("ThirdEntry"));
-        assertThat(underytelser.get().get(2).get(Underytelse.ytelsesType), is("FirstEntry"));
+        assertThat(underytelser.size(), is(3));
+        assertThat(underytelser.get(0).getYtelsesType(), is("SecondEntry"));
+        assertThat(underytelser.get(1).getYtelsesType(), is("ThirdEntry"));
+        assertThat(underytelser.get(2).getYtelsesType(), is("FirstEntry"));
     }
 
     @Test
     public void createUnderytelserNaarYtelseskomponenterErNull() {
-        Optional<List<Record<Underytelse>>> underytelser = createUnderytelser(null);
-        assertFalse(underytelser.isSome());
+        List<Underytelse> underytelser = createUnderytelser(null);
+        assertFalse(underytelser == null);
     }
 
     @Test
@@ -170,13 +167,13 @@ public class TransformersTest {
             new WSTrekk().withKreditor("Third").withTrekkbeloep(0)
         );
 
-        List<Record<Trekk>> trekkliste = createTrekkliste(wsTrekkListe);
+        List<Trekk> trekkliste = createTrekkliste(wsTrekkListe);
         assertThat(trekkliste.size(), is(3));
     }
 
     @Test
     public void createTrekkListeNaarTrekkErNull() {
-        List<Record<Trekk>> trekkliste = createTrekkliste(null);
+        List<Trekk> trekkliste = createTrekkliste(null);
         assertNotNull(trekkliste);
         assertTrue(trekkliste.isEmpty());
     }
@@ -207,10 +204,10 @@ public class TransformersTest {
 
     @Test
     public void aggregereBruttoBeloepNaarAlleFelterFinnes() {
-        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.nettoUtbetalt, 1000.0)
-                .with(Hovedytelse.sumTrekk, -100.0)
-                .with(Hovedytelse.sumSkatt, -100.0);
+        Hovedytelse hovedytelse = new Hovedytelse()
+                .withNettoUtbetalt(1000.0)
+                .withSumTrekk(-100.0)
+                .withSumSkatt(-100.0);
 
         Double bruttoBeloep = aggregateBruttoBeloep(hovedytelse);
         assertThat(bruttoBeloep, is(800.0));
@@ -218,8 +215,8 @@ public class TransformersTest {
 
     @Test
     public void aggregateBruttoBeloepNaarSkattOgTrekkMangler() {
-        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.nettoUtbetalt, 1000.0);
+        Hovedytelse hovedytelse = new Hovedytelse()
+                .withNettoUtbetalt(1000.0);
 
         Double bruttoBeloep = aggregateBruttoBeloep(hovedytelse);
         assertThat(bruttoBeloep, is(1000.0));
@@ -227,7 +224,7 @@ public class TransformersTest {
 
     @Test
     public void aggregateBruttoBeloepNaarAlleVerdierMangler() {
-        Record<Hovedytelse> hovedytelse = new Record<>();
+        Hovedytelse hovedytelse = new Hovedytelse();
 
         Double bruttoBeloep = aggregateBruttoBeloep(hovedytelse);
         assertThat(bruttoBeloep, is(0.0));
@@ -235,9 +232,9 @@ public class TransformersTest {
 
     @Test
     public void aggregateTrekkBeloepNaarAlleFelterFinnes() {
-        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.sumTrekk, -20.0)
-                .with(Hovedytelse.sumSkatt, -10.0);
+        Hovedytelse hovedytelse = new Hovedytelse()
+                .withSumTrekk(-20.0)
+                .withSumSkatt(-10.0);
 
         Double trekkBeloep = aggregateTrekkBeloep(hovedytelse);
         assertThat(trekkBeloep, is(-30.0));
@@ -245,8 +242,8 @@ public class TransformersTest {
 
     @Test
     public void aggregateTrekkBeloepNaarSkattMangler() {
-        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.sumTrekk, -20.0);
+        Hovedytelse hovedytelse = new Hovedytelse()
+                .withSumTrekk(-20.0);
 
         Double trekkBeloep = aggregateTrekkBeloep(hovedytelse);
         assertThat(trekkBeloep, is(-20.0));
@@ -254,8 +251,8 @@ public class TransformersTest {
 
     @Test
     public void aggregateTrekkBeloepNaarTrekkMangler() {
-        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.sumSkatt, -10.0);
+        Hovedytelse hovedytelse = new Hovedytelse()
+                .withSumSkatt(-10.0);
 
         Double trekkBeloep = aggregateTrekkBeloep(hovedytelse);
         assertThat(trekkBeloep, is(-10.0));
@@ -331,54 +328,70 @@ public class TransformersTest {
                                 .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***6").withNavn("Kari Normann").withDiskresjonskode("3"))
                                 .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("KariNormann AS")));
 
-        List<Record<Hovedytelse>> hovedytelser = TO_HOVEDYTELSE.transform(wsUtbetaling);
+        List<Hovedytelse> hovedytelser = TO_HOVEDYTELSE.transform(wsUtbetaling);
         assertThat(hovedytelser.size(), is(1));
 
-        Record<Hovedytelse> ytelse = hovedytelser.get(0);
-        assertThat(ytelse.get(Hovedytelse.mottakertype), is(Mottakertype.BRUKER));
-        assertThat(ytelse.get(Hovedytelse.hovedytelsedato), is(new DateTime(2015, 1, 2, 3, 4)));
-        assertThat(ytelse.get(Hovedytelse.utbetaltTil), is(new Record<Aktoer>().with(Aktoer.aktoerId, "123123123").with(Aktoer.navn, "Ola Normann").with(Aktoer.diskresjonskode, "5").with(Aktoer.aktoerType, AktoerType.PERSON)));
-        assertThat(ytelse.get(Hovedytelse.utbetalingsmelding), is("Dette er en melding"));
-        assertThat(ytelse.get(Hovedytelse.utbetaltTilKonto), is("***REMOVED***3"));
-        assertThat(ytelse.get(Hovedytelse.utbetalingsmetode), is("Overføring via bank"));
-        assertThat(ytelse.get(Hovedytelse.utbetalingsstatus), is("Utbetalt"));
-        assertThat(ytelse.get(Hovedytelse.forfallsdato), is(new DateTime(2000, 1, 1, 1, 1)));
-        assertThat(ytelse.get(Hovedytelse.id), is(notNullValue()));
-        assertThat(ytelse.get(Hovedytelse.ytelse), is("dagpenger"));
-        assertThat(ytelse.get(Hovedytelse.ytelsesperiode), is(new Interval(new DateTime(2000, 1, 1, 1, 2), new DateTime(2001, 1, 1, 1, 1))));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).size(), is(2));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.ytelsesType), is("Særtillegg"));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.satsAntall), is(12.0));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.ytelseBeloep), is(20000.0));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.satsType), is("SatsSats"));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(0).get(Underytelse.satsBeloep), is(20.0));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.ytelsesType), is("Grunnbeløp"));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.satsAntall), is(2.0));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.ytelseBeloep), is(200.0));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.satsType), is("SatsType"));
-        assertThat(ytelse.get(Hovedytelse.underytelseListe).get(1).get(Underytelse.satsBeloep), is(10.0));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).size(), is(3));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(0).get(Trekk.kreditor), is("kreditor as"));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(0).get(Trekk.trekkBeloep), is(-2000.0));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(0).get(Trekk.trekksType), is("kreditortrekk"));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(1).get(Trekk.kreditor), is("kreditor ans"));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(1).get(Trekk.trekkBeloep), is(-3000.0));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(1).get(Trekk.trekksType), is("kreditortrekk"));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(2).get(Trekk.kreditor), is("kreditor enk"));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(2).get(Trekk.trekkBeloep), is(-4000.0));
-        assertThat(ytelse.get(Hovedytelse.trekkListe).get(2).get(Trekk.trekksType), is("kreditortrekk"));
-        assertThat(ytelse.get(Hovedytelse.sumTrekk), is(-9000.0));
-        assertThat(ytelse.get(Hovedytelse.skattListe).size(), is(3));
-        assertThat(ytelse.get(Hovedytelse.skattListe).get(0), is(-1.0));
-        assertThat(ytelse.get(Hovedytelse.skattListe).get(1), is(-2.0));
-        assertThat(ytelse.get(Hovedytelse.skattListe).get(2), is(-3.0));
-        assertThat(ytelse.get(Hovedytelse.sumSkatt), is(-6.0));
-        assertThat(ytelse.get(Hovedytelse.nettoUtbetalt), is(12994.0));
-        assertThat(ytelse.get(Hovedytelse.bilagsnummer), is("123456789"));
-        assertThat(ytelse.get(Hovedytelse.rettighetshaver), is(new Record<Aktoer>().with(Aktoer.navn, "Kari Normann").with(Aktoer.aktoerId, "***REMOVED***6").with(Aktoer.diskresjonskode, "3").with(Aktoer.aktoerType, AktoerType.PERSON)));
-        assertThat(ytelse.get(Hovedytelse.refundertForOrg), is(new Record<Aktoer>().with(Aktoer.navn, "KariNormann AS").with(Aktoer.aktoerId, "***REMOVED***").with(Aktoer.aktoerType, AktoerType.ORGANISASJON)));
+        Hovedytelse ytelse = hovedytelser.get(0);
+        assertThat(ytelse.getMottakertype(), is(Mottakertype.BRUKER));
+        assertThat(ytelse.getHovedytelsedato(), is(new DateTime(2015, 1, 2, 3, 4)));
 
-        assertThat(ytelse.get(Hovedytelse.sammenlagtTrekkBeloep), is(-9006.0));
-        assertThat(ytelse.get(Hovedytelse.bruttoUtbetalt), is(22000.0));
+//        Aktoer utbetaltTilSomAktoer = new Aktoer().withAktoerId("123123123").withNavn("Ola Normann").withDiskresjonskode("5").withAktoerType(AktoerType.PERSON))
+        assertThat(ytelse.getUtbetaltTil(), instanceOf(Aktoer.class));
+        assertThat(ytelse.getUtbetaltTil().getAktoerId(), is("123123123"));
+        assertThat(ytelse.getUtbetaltTil().getNavn(), is("Ola Normann"));
+        assertThat(ytelse.getUtbetaltTil().getDiskresjonskode(), is("5"));
+        assertThat(ytelse.getUtbetaltTil().getAktoerType(), is(AktoerType.PERSON));
+
+        assertThat(ytelse.getUtbetalingsmelding(), is("Dette er en melding"));
+        assertThat(ytelse.getUtbetaltTilKonto(), is("***REMOVED***3"));
+        assertThat(ytelse.getUtbetalingsmetode(), is("Overføring via bank"));
+        assertThat(ytelse.getUtbetalingsstatus(), is("Utbetalt"));
+        assertThat(ytelse.getForfallsdato(), is(new DateTime(2000, 1, 1, 1, 1)));
+        assertThat(ytelse.getId(), is(notNullValue()));
+        assertThat(ytelse.getYtelse(), is("dagpenger"));
+        assertThat(ytelse.getYtelsesperiode(), is(new Interval(new DateTime(2000, 1, 1, 1, 2), new DateTime(2001, 1, 1, 1, 1))));
+        assertThat(ytelse.getUnderytelseListe().size(), is(2));
+        assertThat(ytelse.getUnderytelseListe().get(0).getYtelsesType(), is("Særtillegg"));
+        assertThat(ytelse.getUnderytelseListe().get(0).getSatsAntall(), is(12.0));
+        assertThat(ytelse.getUnderytelseListe().get(0).getYtelseBeloep(), is(20000.0));
+        assertThat(ytelse.getUnderytelseListe().get(0).getSatsType(), is("SatsSats"));
+        assertThat(ytelse.getUnderytelseListe().get(0).getSatsBeloep(), is(20.0));
+        assertThat(ytelse.getUnderytelseListe().get(1).getYtelsesType(), is("Grunnbeløp"));
+        assertThat(ytelse.getUnderytelseListe().get(1).getSatsAntall(), is(2.0));
+        assertThat(ytelse.getUnderytelseListe().get(1).getYtelseBeloep(), is(200.0));
+        assertThat(ytelse.getUnderytelseListe().get(1).getSatsType(), is("SatsType"));
+        assertThat(ytelse.getUnderytelseListe().get(1).getSatsBeloep(), is(10.0));
+        assertThat(ytelse.getTrekkListe().size(), is(3));
+        assertThat(ytelse.getTrekkListe().get(0).getKreditor(), is("kreditor as"));
+        assertThat(ytelse.getTrekkListe().get(0).getTrekkBeloep(), is(-2000.0));
+        assertThat(ytelse.getTrekkListe().get(0).getTrekksType(), is("kreditortrekk"));
+        assertThat(ytelse.getTrekkListe().get(1).getKreditor(), is("kreditor ans"));
+        assertThat(ytelse.getTrekkListe().get(1).getTrekkBeloep(), is(-3000.0));
+        assertThat(ytelse.getTrekkListe().get(1).getTrekksType(), is("kreditortrekk"));
+        assertThat(ytelse.getTrekkListe().get(2).getKreditor(), is("kreditor enk"));
+        assertThat(ytelse.getTrekkListe().get(2).getTrekkBeloep(), is(-4000.0));
+        assertThat(ytelse.getTrekkListe().get(2).getTrekksType(), is("kreditortrekk"));
+        assertThat(ytelse.getSumTrekk(), is(-9000.0));
+        assertThat(ytelse.getSkattListe().size(), is(3));
+        assertThat(ytelse.getSkattListe().get(0), is(-1.0));
+        assertThat(ytelse.getSkattListe().get(1), is(-2.0));
+        assertThat(ytelse.getSkattListe().get(2), is(-3.0));
+        assertThat(ytelse.getSumSkatt(), is(-6.0));
+        assertThat(ytelse.getNettoUtbetalt(), is(12994.0));
+        assertThat(ytelse.getBilagsnummer(), is("123456789"));
+
+        assertThat(ytelse.getRettighetshaver(), instanceOf(Aktoer.class));
+        assertThat(ytelse.getRettighetshaver().getNavn(), is("Kari Normann"));
+        assertThat(ytelse.getRettighetshaver().getAktoerId(), is("***REMOVED***6"));
+        assertThat(ytelse.getRettighetshaver().getDiskresjonskode(), is("3"));
+        assertThat(ytelse.getRettighetshaver().getAktoerType(), is(AktoerType.PERSON));
+
+        assertThat(ytelse.getRefundertForOrg(), instanceOf(Aktoer.class));
+        assertThat(ytelse.getRefundertForOrg().getNavn(), is("KariNormann AS"));
+        assertThat(ytelse.getRefundertForOrg().getAktoerId(), is("***REMOVED***"));
+        assertThat(ytelse.getRefundertForOrg().getAktoerType(), is(AktoerType.ORGANISASJON));
+
+        assertThat(ytelse.getSammenlagtTrekkBeloep(), is(-9006.0));
+        assertThat(ytelse.getBruttoUtbetalt(), is(22000.0));
     }
 }

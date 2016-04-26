@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PeriodeVelger;
@@ -35,11 +34,11 @@ public class FilterParametereTest {
 
     @Test
     public void filtrererBortUtbetalingForAnnenMottakertype() {
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.mottakertype, Mottakertype.ANNEN_MOTTAKER)
-                .with(Hovedytelse.ytelse, DAGPENGER);
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withHovedytelsedato(now())
+                .withMottakertype(Mottakertype.ANNEN_MOTTAKER)
+                .withYtelse(DAGPENGER);
 
         filterparams.toggleMottaker(Mottakertype.ANNEN_MOTTAKER);
 
@@ -48,11 +47,11 @@ public class FilterParametereTest {
 
     @Test
     public void skalBeholdeYtelsenHvisUtbetalingenInneholderEnYtelseManVilHa() {
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.ytelse, BARNETRYGD)
-                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withHovedytelsedato(now())
+                .withYtelse(BARNETRYGD)
+                .withMottakertype(Mottakertype.BRUKER);
 
         filterparams.leggTilOnsketYtelse(BARNETRYGD);
 
@@ -61,11 +60,11 @@ public class FilterParametereTest {
 
     @Test
     public void skalIkkeBeholdeYtelsenHvisAlleUtbetalingerErUonskede() {
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
-                .with(Hovedytelse.ytelse, DAGPENGER);
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withHovedytelsedato(now())
+                .withMottakertype(Mottakertype.BRUKER)
+                .withYtelse(DAGPENGER);
 
         filterparams.velgEnYtelse(BARNETRYGD);
 
@@ -76,12 +75,12 @@ public class FilterParametereTest {
     public void skalViseAlleUtbetalingerHvisAlleYtelserErValgtOgNyeYtelserBlirSatt() {
         filterparams = new FilterParametere(new HashSet<String>());
 
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
-                .with(Hovedytelse.ytelse, DAGPENGER);
-        filterparams.setYtelser(new HashSet<>(asList(ytelse.get(Hovedytelse.ytelse))));
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withHovedytelsedato(now())
+                .withMottakertype(Mottakertype.BRUKER)
+                .withYtelse(DAGPENGER);
+        filterparams.setYtelser(new HashSet<>(asList(ytelse.getYtelse())));
 
         assertThat(filterparams.evaluate(ytelse), is(true));
     }
@@ -118,27 +117,27 @@ public class FilterParametereTest {
 
     @Test
     public void skalToggleAlleYtelserSomOnsket() {
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withHovedytelsedato(now())
+                .withMottakertype(Mottakertype.BRUKER);
 
         filterparams.toggleAlleYtelser(true);
 
-        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, DAGPENGER)), is(true));
-        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse ,BARNETRYGD)), is(true));
+        assertThat(filterparams.evaluate(ytelse.withYtelse(DAGPENGER)), is(true));
+        assertThat(filterparams.evaluate(ytelse.withYtelse(BARNETRYGD)), is(true));
     }
 
     @Test
     public void skalToggleAlleYtelserSomUonsket() {
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withHovedytelsedato(now())
+                .withMottakertype(Mottakertype.BRUKER);
 
         filterparams.toggleAlleYtelser(false);
-        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, DAGPENGER)), is(false));
-        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, BARNETRYGD)), is(false));
+        assertThat(filterparams.evaluate(ytelse.withYtelse(DAGPENGER)), is(false));
+        assertThat(filterparams.evaluate(ytelse.withYtelse(BARNETRYGD)), is(false));
     }
 
     @Test

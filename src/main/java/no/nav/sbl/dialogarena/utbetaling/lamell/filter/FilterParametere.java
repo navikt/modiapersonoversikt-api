@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.apache.commons.collections15.Predicate;
@@ -19,7 +18,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultS
 import static org.apache.commons.collections15.CollectionUtils.isEqualCollection;
 import static org.joda.time.DateTime.now;
 
-public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
+public class FilterParametere implements Serializable, Predicate<Hovedytelse> {
 
     public enum PeriodeVelger {
         SISTE_30_DAGER,
@@ -129,15 +128,15 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     }
 
     @Override
-    public boolean evaluate(Record<Hovedytelse> hovedytelse) {
-        boolean mottakerSkalVises = viseMottaker(hovedytelse.get(Hovedytelse.mottakertype));
+    public boolean evaluate(Hovedytelse hovedytelse) {
+        boolean mottakerSkalVises = viseMottaker(hovedytelse.getMottakertype());
         boolean harYtelse = filtrerPaaYtelser(hovedytelse);
         return mottakerSkalVises
                 && harYtelse;
     }
 
-    private boolean filtrerPaaYtelser(Record<Hovedytelse> utbetaling) {
-        return onskedeYtelser.contains(utbetaling.get(Hovedytelse.ytelse));
+    private boolean filtrerPaaYtelser(Hovedytelse utbetaling) {
+        return onskedeYtelser.contains(utbetaling.getYtelse());
     }
 
     protected Interval intervalBasertPaaPeriodevalg(PeriodeVelger valg) {

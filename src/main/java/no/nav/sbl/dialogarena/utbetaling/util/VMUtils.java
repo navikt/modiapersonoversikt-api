@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.util;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Trekk;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM;
@@ -40,17 +39,17 @@ public class VMUtils {
         };
     }
 
-    public static final Transformer<Record<Trekk>, YtelseVM> TREKK_TIL_YTELSE_VM = trekk -> {
-        if (trekk.get(Trekk.trekkBeloep) > 0) {
-            return new YtelseVM(TILBAKEBETALING + trekk.get(Trekk.trekksType).toLowerCase(), trekk.get(Trekk.trekkBeloep));
+    public static final Transformer<Trekk, YtelseVM> TREKK_TIL_YTELSE_VM = trekk -> {
+        if (trekk.getTrekkBeloep() > 0) {
+            return new YtelseVM(TILBAKEBETALING + trekk.getTrekksType().toLowerCase(), trekk.getTrekkBeloep());
         }
-        return new YtelseVM(trekk.get(Trekk.trekksType), trekk.get(Trekk.trekkBeloep));
+        return new YtelseVM(trekk.getTrekksType(), trekk.getTrekkBeloep());
     };
 
-    public static final Transformer<Record<Underytelse>, YtelseVM> UNDERYTELSE_TIL_YTELSE_VM = underytelse -> new YtelseVM(
-            underytelse.get(Underytelse.ytelsesType),
-            underytelse.get(Underytelse.ytelseBeloep),
-            underytelse.get(Underytelse.satsAntall),
-            underytelse.get(Underytelse.satsBeloep),
-            underytelse.get(Underytelse.satsType));
+    public static final Transformer<Underytelse, YtelseVM> UNDERYTELSE_TIL_YTELSE_VM = underytelse -> new YtelseVM(
+            underytelse.getYtelsesType(),
+            underytelse.getYtelseBeloep(),
+            underytelse.getSatsAntall(),
+            underytelse.getSatsBeloep(),
+            underytelse.getSatsType());
 }

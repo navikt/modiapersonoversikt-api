@@ -1,12 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.modig.lang.option.Optional;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import java.util.List;
-
-import static no.nav.modig.lang.reflect.MethodReferenceUtils.on;
 
 @SuppressWarnings("all")
 public class Hovedytelse {
@@ -142,7 +139,7 @@ public class Hovedytelse {
     }
 
     public Hovedytelse withHovedytelsedato(DateTime hovedhytelsesdato) {
-//        this./dateTime = hovedhytelsesdato;
+        this.hovedytelsedato = hovedhytelsesdato;
         return this;
     }
 
@@ -151,8 +148,8 @@ public class Hovedytelse {
         return this;
     }
 
-    public Hovedytelse withUtbetalingsDato(Optional<DateTime> utbetalingsdato) {
-        this.utbetalingsDato = on(utbetalingsdato).get();
+    public Hovedytelse withUtbetalingsDato(DateTime utbetalingsdato) {
+        this.utbetalingsDato = utbetalingsdato;
         return this;
     }
 
@@ -201,8 +198,8 @@ public class Hovedytelse {
         return this;
     }
 
-    public Hovedytelse withUnderytelseListe(Optional<List<Underytelse>> underytelser) {
-        this.underytelseListe = on(underytelser).get();
+    public Hovedytelse withUnderytelseListe(List<Underytelse> underytelser) {
+        this.underytelseListe = underytelser;
         return this;
     }
 
@@ -254,5 +251,13 @@ public class Hovedytelse {
     public Hovedytelse withSammenlagtTrekkBeloep(Double sammenlagtTrekkBeloep) {
         this.sammenlagtTrekkBeloep = sammenlagtTrekkBeloep;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        return id.equals(((Hovedytelse) other).getId());
     }
 }

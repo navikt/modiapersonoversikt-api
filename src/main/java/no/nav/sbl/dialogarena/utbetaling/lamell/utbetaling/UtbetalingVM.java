@@ -1,7 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.sbl.dialogarena.utbetaling.domain.*;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
+import no.nav.sbl.dialogarena.utbetaling.domain.Trekk;
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -35,7 +38,7 @@ public class UtbetalingVM {
     }
 
     public String getMottakerNavn() {
-        return ytelse.getUtbetaltTil().get(Aktoer.navn);
+        return ytelse.getUtbetaltTil().getNavn();
     }
 
     public Mottakertype getMottakertype() {

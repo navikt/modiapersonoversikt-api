@@ -1,30 +1,27 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import no.nav.modig.lang.collections.iter.ReduceFunction;
-import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPerson;
 import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonth;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
-import static java.util.Collections.sort;
-import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.*;
-import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
-import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.intervalFromStartEndDate;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.minusDaysAndFixedAtMidnightAtDayBefore;
 import static org.joda.time.LocalDate.now;
 
 public class YtelseUtils {
@@ -38,13 +35,13 @@ public class YtelseUtils {
     }
 
     public static final class UtbetalingComparator {
-        public static final Comparator<Record<Hovedytelse>> HOVEDYTELSE_DATO_COMPARATOR = (ytelse1, ytelse2) -> {
-            DateTime ytelse1Hovedytelsedato = ytelse1.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
-            DateTime ytelse2Hovedytelsedato = ytelse2.get(hovedytelsedato).toLocalDate().toDateTimeAtStartOfDay();
+        public static final Comparator<Hovedytelse> HOVEDYTELSE_DATO_COMPARATOR = (ytelse1, ytelse2) -> {
+            DateTime ytelse1Hovedytelsedato = ytelse1.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
+            DateTime ytelse2Hovedytelsedato = ytelse2.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
 
             int compareDato = -ytelse1Hovedytelsedato.compareTo(ytelse2Hovedytelsedato);
             if (compareDato == 0) {
-                return ytelse1.get(ytelse).compareToIgnoreCase(ytelse2.get(ytelse));
+                return ytelse1.getYtelse().compareToIgnoreCase(ytelse2.getYtelse());
             }
             return compareDato;
         };
@@ -64,10 +61,13 @@ public class YtelseUtils {
      * @param sluttDato (Exclusive)
      * @return
      */
-    public static List<Record<Hovedytelse>> hovedytelserFromPeriod(List<Record<Hovedytelse>> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
+    public static List<Hovedytelse> hovedytelserFromPeriod(List<Hovedytelse> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         final Interval intervall = intervalFromStartEndDate(startDato, sluttDato);
-        return on(hovedytelser)
-                .filter(either(where(posteringsDato, isWithinRange(intervall))).or(where(utbetalingsDato, isWithinRange(intervall)))).collect();
+
+        return hovedytelser
+                .stream()
+                .filter(hovedytelse -> intervall.contains(hovedytelse.getPosteringsDato()) || intervall.contains(hovedytelse.getUtbetalingsDato()))
+                .collect(toList());
     }
 
     /**
@@ -75,8 +75,25 @@ public class YtelseUtils {
      * @param hovedytelser
      * @return
      */
-    public static Map<YearMonth, List<Record<Hovedytelse>>> ytelserGroupedByYearMonth(List<Record<Hovedytelse>> hovedytelser) {
-        return on(hovedytelser).map(TO_YEAR_MONTH_ENTRY).reduce(BY_YEAR_MONTH);
+    public static TreeMap<YearMonth, List<Hovedytelse>> ytelserGroupedByYearMonth(List<Hovedytelse> hovedytelser) {
+        Comparator<YearMonth> eldsteForst = (o1, o2) -> o2.compareTo(o1);
+
+        Map<YearMonth, List<Hovedytelse>> hovedytelserSortertPaaYearMonth = hovedytelser
+                .stream()
+                .collect(groupingBy(hovedytelse -> new YearMonth(hovedytelse.getHovedytelsedato().getYear(), hovedytelse.getHovedytelsedato().getMonthOfYear())));
+
+        TreeMap<YearMonth, List<Hovedytelse>> yearMonthListTreeMap = new TreeMap<>(eldsteForst);
+        yearMonthListTreeMap.putAll(hovedytelserSortertPaaYearMonth);
+        return yearMonthListTreeMap;
+    }
+
+    protected static java.util.function.Predicate<List<Hovedytelse>> isWithinSamePeriod(Hovedytelse hovedytelse) {
+        return utbetalinger -> {
+            DateTime start = hovedytelse.getYtelsesperiode().getStart().minusDays(1);
+            return utbetalinger
+                    .stream()
+                    .anyMatch((periode) -> !periode.getYtelsesperiode().getEnd().isBefore(start));
+        };
     }
 
     /**
@@ -87,15 +104,38 @@ public class YtelseUtils {
      * @return
      */
     public static List<List<Hovedytelse>> groupByHovedytelseAndPeriod(List<Hovedytelse> utbetalinger) {
-        Collection<List<Record<?>>> gruppertEtterHovedytelse = groupByHovedytelse(utbetalinger).values();
+        Comparator<Hovedytelse> forsteHovedytelseForst = (h1, h2) -> h1.getYtelsesperiode().getStart().compareTo(h2.getYtelsesperiode().getStart());
+        Stream<List<Hovedytelse>> sortertOgGruppertEtterHovedytelse = groupByHovedytelse(utbetalinger)
+                .stream()
+                .map(sorter(forsteHovedytelseForst));
 
-        List<List<Record<Hovedytelse>>> resultat = new ArrayList<>();
-        for (List<Record<?>> sammeHovedytelse : gruppertEtterHovedytelse) {
-            sort(sammeHovedytelse, compareWith(first(ytelsesperiode).then(START)));
-            resultat.addAll(on(sammeHovedytelse).reduce(splitByPeriod));
-        }
+        BinaryOperator<List<List<Hovedytelse>>> combiner = (hovedytelsesliste1, hovedytelsesliste2) -> {
+            ArrayList<List<Hovedytelse>> res = new ArrayList<>();
+            res.addAll(hovedytelsesliste1);
+            res.addAll(hovedytelsesliste2);
+            return res;
+        };
 
-        return resultat;
+        BiFunction<List<List<Hovedytelse>>, Hovedytelse, List<List<Hovedytelse>>> accumulator = (accu, hovedytelse) -> {
+            Optional<List<Hovedytelse>> sammePeriode = accu.stream().filter(isWithinSamePeriod(hovedytelse)).findFirst();
+            List<Hovedytelse> liste;
+            if (sammePeriode.isPresent()) {
+                liste = sammePeriode.get();
+            } else {
+                liste = new ArrayList<>();
+                accu.add(liste);
+            }
+            liste.add(hovedytelse);
+            return accu;
+        };
+
+        return sortertOgGruppertEtterHovedytelse
+                .flatMap(sammeHovedytelse -> sammeHovedytelse.stream().reduce(new ArrayList<>(), accumulator, combiner).stream())
+                .collect(toList());
+    }
+
+    private static Function<List<Hovedytelse>, List<Hovedytelse>> sorter(Comparator<Hovedytelse> forsteHovedytelseForst) {
+        return hovedytelseListe -> hovedytelseListe.stream().sorted(forsteHovedytelseForst).collect(toList());
     }
 
     /**
@@ -107,9 +147,9 @@ public class YtelseUtils {
      * @param numberOfDaysToShow
      * @return
      */
-    public static Predicate<Record<Hovedytelse>> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
+    public static Predicate<Hovedytelse> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
         return hovedytelse -> {
-            DateTime hovedytelseDato = hovedytelse.get(hovedytelsedato);
+            DateTime hovedytelseDato = hovedytelse.getHovedytelsedato();
             DateTime threshold = minusDaysAndFixedAtMidnightAtDayBefore(DateTime.now(), numberOfDaysToShow);
             return hovedytelseDato.isAfter(threshold);
         };
@@ -122,8 +162,13 @@ public class YtelseUtils {
      * @param ytelser
      * @return
      */
-    protected static Map<String, List<Record<?>>> groupByHovedytelse(List<Record<Hovedytelse>> ytelser) {
-        return on(ytelser).reduce(indexBy(Hovedytelse.ytelse));
+    protected static List<List<Hovedytelse>> groupByHovedytelse(List<Hovedytelse> ytelser) {
+        Map<String, List<Hovedytelse>> hovedytelserGruppertPaaYtelse = ytelser
+                .stream()
+                .collect(groupingBy(hovedytelse -> hovedytelse.getYtelse()));
+        ArrayList<List<Hovedytelse>> lists = new ArrayList<>();
+        lists.addAll(hovedytelserGruppertPaaYtelse.values());
+        return lists;
     }
 
 
@@ -131,73 +176,23 @@ public class YtelseUtils {
      * Slå sammen Hovedytelser som er i samme år og måned. Returner et map hvor key = YearMonth og verdien er en liste
      * over hovedytelsen innen for den gitte perioden
      */
-    protected static final ReduceFunction<Entry<YearMonth, Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>> BY_YEAR_MONTH = new ReduceFunction<Entry<YearMonth,Record<Hovedytelse>>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
+    protected static final ReduceFunction<Entry<YearMonth, Hovedytelse>, Map<YearMonth, List<Hovedytelse>>> BY_YEAR_MONTH = new ReduceFunction<Entry<YearMonth,Hovedytelse>, Map<YearMonth, List<Hovedytelse>>>() {
         @Override
-        public Map<YearMonth, List<Record<Hovedytelse>>> reduce(Map<YearMonth, List<Record<Hovedytelse>>> accumulator, Entry<YearMonth, Record<Hovedytelse>> entry) {
+        public Map<YearMonth, List<Hovedytelse>> reduce(Map<YearMonth, List<Hovedytelse>> accumulator, Entry<YearMonth, Hovedytelse> entry) {
             if(!accumulator.containsKey(entry.getKey())) {
-                accumulator.put(entry.getKey(), new ArrayList<Record<Hovedytelse>>());
+                accumulator.put(entry.getKey(), new ArrayList<Hovedytelse>());
             }
             accumulator.get(entry.getKey()).add(entry.getValue());
             return accumulator;
         }
 
         @Override
-        public Map<YearMonth, List<Record<Hovedytelse>>> identity() {
+        public Map<YearMonth, List<Hovedytelse>> identity() {
             return new TreeMap<>(SORT_BY_YEARMONTH_DESC);
         }
     };
 
-
-    /**
-     * Transformer en Hovedytelse til en Entry hvor key = YearMonth basert på <em>hovedytelsedato</em>, og verdi er Hovedytelsen.
-     */
-    protected static final Transformer<Record<Hovedytelse>, Entry<YearMonth, Record<Hovedytelse>>> TO_YEAR_MONTH_ENTRY = ytelse1 -> {
-        int year = ytelse1.get(hovedytelsedato).getYear();
-        int monthOfYear = ytelse1.get(hovedytelsedato).getMonthOfYear();
-        YearMonth yearMonth = new YearMonth(year, monthOfYear);
-        return new SimpleEntry<>(yearMonth, ytelse1);
-    };
-
-    /**
-     * Splitt
-     */
-    private static ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>> splitByPeriod = new ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>>() {
-        @Override
-        public List<List<Record<Hovedytelse>>> reduce(List<List<Record<Hovedytelse>>> accumulator, Record<?> newValue) {
-            Optional<List<Record<Hovedytelse>>> optionalMedSammePeriode = on(accumulator).filter(isWithinSamePeriod((Record<Hovedytelse>) newValue)).head();
-
-            List<Record<Hovedytelse>> liste;
-            if (optionalMedSammePeriode.isSome()) {
-                liste = optionalMedSammePeriode.get();
-            } else {
-                liste = new ArrayList<>();
-                accumulator.add(liste);
-            }
-            liste.add((Record<Hovedytelse>) newValue);
-            return accumulator;
-        }
-
-        @Override
-        public List<List<Record<Hovedytelse>>> identity() {
-            return new ArrayList<>();
-        }
-    };
-
-    /**
-     *
-     * @param hovedytelse
-     * @return
-     */
-    protected static Predicate<Collection<Record<Hovedytelse>>> isWithinSamePeriod(final Record<Hovedytelse> hovedytelse) {
-        return utbetalinger -> {
-            LocalDate start = hovedytelse.get(ytelsesperiode).getStart().toLocalDate().minusDays(1);
-            return !on(utbetalinger)
-                    .filter(where(first(ytelsesperiode).then(END).then(TO_LOCAL_DATE),
-                            either(equalTo(start)).or(isAfter(start)))).isEmpty();
-        };
-    }
-
-    public static final Comparator<Record<Hovedytelse>> SORT_BY_HOVEDYTELSEDATO_DESC = (o1, o2) -> o2.get(Hovedytelse.hovedytelsedato).compareTo(o1.get(Hovedytelse.hovedytelsedato));
+    public static final Comparator<Hovedytelse> SORT_BY_HOVEDYTELSEDATO_DESC = (o1, o2) -> o2.getHovedytelsedato().compareTo(o1.getHovedytelsedato());
 
     public static final Comparator<YearMonth> SORT_BY_YEARMONTH_DESC = (o1, o2) -> o2.compareTo(o1);
 }

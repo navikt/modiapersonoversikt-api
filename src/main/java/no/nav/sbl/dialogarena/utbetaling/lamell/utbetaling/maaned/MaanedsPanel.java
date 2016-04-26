@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
@@ -18,29 +17,29 @@ import static org.joda.time.LocalDate.now;
 
 public class MaanedsPanel extends Panel {
 
-    public MaanedsPanel(String id, List<Record<Hovedytelse>> utbetalingsliste) {
+    public MaanedsPanel(String id, List<Hovedytelse> utbetalingsliste) {
         super(id);
         add(createOppsummeringsPanel(utbetalingsliste),
             createUtbetalingListView(utbetalingsliste));
     }
 
-    private MaanedOppsummeringPanel createOppsummeringsPanel(List<Record<Hovedytelse>> utbetalingsliste) {
+    private MaanedOppsummeringPanel createOppsummeringsPanel(List<Hovedytelse> utbetalingsliste) {
         return new MaanedOppsummeringPanel("oppsummeringsPanel",
                 createOppsummeringVM(utbetalingsliste));
     }
 
-    private ListView<Record<Hovedytelse>> createUtbetalingListView(List<Record<Hovedytelse>> utbetalingsliste) {
-        return new ListView<Record<Hovedytelse>>("utbetalinger", utbetalingsliste) {
+    private ListView<Hovedytelse> createUtbetalingListView(List<Hovedytelse> utbetalingsliste) {
+        return new ListView<Hovedytelse>("utbetalinger", utbetalingsliste) {
             @Override
-            protected void populateItem(ListItem<Record<Hovedytelse>> item) {
+            protected void populateItem(ListItem<Hovedytelse> item) {
                 item.add(new UtbetalingPanel("utbetaling", new UtbetalingVM(item.getModelObject())));
             }
         };
     }
 
-    private OppsummeringVM createOppsummeringVM(List<Record<Hovedytelse>> liste) {
+    private OppsummeringVM createOppsummeringVM(List<Hovedytelse> liste) {
         if (liste.isEmpty()) {
-            return new OppsummeringVM(new ArrayList<Record<Hovedytelse>>(), now(), now());
+            return new OppsummeringVM(new ArrayList<>(), now(), now());
         }
 
         LocalDate startDato = getStartDato(liste);
@@ -49,12 +48,12 @@ public class MaanedsPanel extends Panel {
         return new OppsummeringVM(liste, startDato, sluttDato);
     }
 
-    protected LocalDate getSluttDato(List<Record<Hovedytelse>> liste) {
-        return liste.get(0).get(Hovedytelse.hovedytelsedato).dayOfMonth().withMaximumValue().toLocalDate();
+    protected LocalDate getSluttDato(List<Hovedytelse> liste) {
+        return liste.get(0).getHovedytelsedato().dayOfMonth().withMaximumValue().toLocalDate();
     }
 
-    protected LocalDate getStartDato(List<Record<Hovedytelse>> liste) {
-        return liste.get(liste.size() - 1).get(Hovedytelse.hovedytelsedato).dayOfMonth().withMinimumValue().toLocalDate();
+    protected LocalDate getStartDato(List<Hovedytelse> liste) {
+        return liste.get(liste.size() - 1).getHovedytelsedato().dayOfMonth().withMinimumValue().toLocalDate();
     }
 
 }

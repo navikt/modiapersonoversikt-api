@@ -28,4 +28,28 @@ public class Aktoer {
         return diskresjonskode;
     }
 
+
+    public Aktoer withAktoerId(String aktoerId) {
+        this.aktoerId = aktoerId;
+        return this;
+    }
+
+
+    public Aktoer withNavn(String navn) {
+        this.navn = navn;
+        return this;
+    }
+
+    public Aktoer withAktoerType(AktoerType aktoerType) {
+        this.aktoerType = aktoerType;
+        return this;
+    }
+
+
+    public Aktoer withDiskresjonskode(String diskresjonskode) {
+        this.diskresjonskode = diskresjonskode;
+        return this;
+    }
+
+
 }

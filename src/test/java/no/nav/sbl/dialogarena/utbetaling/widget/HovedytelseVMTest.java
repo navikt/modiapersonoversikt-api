@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import org.joda.time.DateTime;
@@ -32,10 +31,10 @@ public class HovedytelseVMTest {
     @Test
     public void belopFormateres_medGruppering_medKomma_medToDesimaler() throws Exception {
         double belop = 67856565.6;
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                .with(Hovedytelse.nettoUtbetalt, belop);
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withUtbetaltTil(dummyAktoer())
+                .withNettoUtbetalt(belop);
         HovedytelseVM vm = new HovedytelseVM(ytelse);
 
         String belop1 = vm.getBelop();
@@ -47,13 +46,13 @@ public class HovedytelseVMTest {
 
     @Test
     public void transformerWorksCorrectly(){
-        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(7), now()));
+        Hovedytelse ytelse = new Hovedytelse()
+                .withId(ID)
+                .withUtbetaltTil(dummyAktoer())
+                .withYtelsesperiode(new Interval(now().minusDays(7), now()));
 
         HovedytelseVM hovedytelseVM = HovedytelseVM.TIL_HOVEDYTELSEVM.transform(ytelse);
-        assertThat(ytelse.get(Hovedytelse.ytelsesperiode).getStart(), is(equalTo(hovedytelseVM.getStartDato())));
+        assertThat(ytelse.getYtelsesperiode().getStart(), is(equalTo(hovedytelseVM.getStartDato())));
     }
 
 
@@ -93,18 +92,17 @@ public class HovedytelseVMTest {
 
     private HovedytelseVM lagUtbetalingVM(DateTime utbetalingsDato) {
         return new HovedytelseVM(
-                new Record<Hovedytelse>()
-                    .with(Hovedytelse.id, ID)
-                    .with(Hovedytelse.hovedytelsedato, utbetalingsDato)
-                    .with(Hovedytelse.utbetaltTil, dummyAktoer())
-                    .with(Hovedytelse.utbetaltTilKonto, "123")
-                    .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.aktoerId, "***REMOVED***"))
+                new Hovedytelse()
+                    .withId(ID)
+                    .withHovedytelsedato(utbetalingsDato)
+                    .withUtbetaltTil(dummyAktoer())
+                    .withUtbetaltTilKonto("123")
+                    .withUtbetaltTil(new Aktoer().withAktoerId("***REMOVED***"))
         );
     }
 
-    private Record<Aktoer> dummyAktoer() {
-        return new Record<Aktoer>()
-                .with(Aktoer.navn, "Ola Nordmann");
+    private Aktoer dummyAktoer() {
+        return new Aktoer().withNavn("Ola Nordmann");
     }
 
 }
