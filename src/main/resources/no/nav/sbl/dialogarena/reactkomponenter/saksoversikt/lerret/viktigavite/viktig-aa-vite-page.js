@@ -30,17 +30,17 @@ class ViktigAVitePage extends React.Component {
         const innhold = this.props.intl.formatMessage({ id: `saksinformasjon.${valgtTema.temakode}` });
 
         return (
-            <div className="grattpanel side-innhold viktigtaavitepanel">
+            <section className="grattpanel side-innhold viktigtaavitepanel">
                 <div className="fixed-header blokk-s">
                     <a href="#" onClick={this._redirect} className="close-document"></a>
                 </div>
                 <panel className="panel">
                     <h1 className="decorated typo-innholdstittel">{sidetittel}</h1>
-                    <section>
+                    <article>
                         <div dangerouslySetInnerHTML={createMarkup(innhold)}/>
-                    </section>
+                    </article>
                 </panel>
-            </div>
+            </section>
         );
     }
 }
