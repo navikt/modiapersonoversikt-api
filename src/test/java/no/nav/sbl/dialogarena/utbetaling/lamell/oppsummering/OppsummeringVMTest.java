@@ -169,6 +169,12 @@ public class OppsummeringVMTest {
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(600.0));
     }
 
+
+    // TODO legg inn test for:
+    // * bruttoUtbetaltForAlle
+    // * nettoUtbetaltForAlle
+    // * trekkbeloepforAlle
+
     private Hovedytelse getYtelse(DateTime dato) {
         return new Hovedytelse()
                 .withId(ID)

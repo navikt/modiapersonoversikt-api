@@ -13,11 +13,9 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.*;
-import static java.util.stream.Collectors.summingDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.isUnixEpoch;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.groupByHovedytelseAndPeriod;
@@ -37,23 +35,31 @@ public class OppsummeringVM implements Serializable {
     public OppsummeringVM(List<Hovedytelse> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         this.sluttDato = sluttDato;
         this.startDato = startDato;
-        this.utbetalt = getBelopString(hovedytelser
-                .stream()
-                .map(hovedytelse -> hovedytelse.getNettoUtbetalt())
-                .collect(sumDouble)
-        );
+        this.utbetalt = getBelopString(nettoUtbetaltForAlle(hovedytelser));
+        this.trekk = getBelopString(trekkBeloepForAlle(hovedytelser));
+        this.brutto = getBelopString(bruttoUtbetaltForAlle(hovedytelser));
+        this.hovedytelser = lagHovetytelseVMer(hovedytelser);
+    }
 
-        this.trekk = getBelopString(hovedytelser
-                .stream()
-                .map(hovedytelse -> hovedytelse.getSammenlagtTrekkBeloep())
-                .collect(sumDouble)
-        );
-        this.brutto = getBelopString(hovedytelser
+    private static Double bruttoUtbetaltForAlle(List<Hovedytelse> hovedytelser) {
+        return hovedytelser
                 .stream()
                 .map(hovedytelse -> hovedytelse.getBruttoUtbetalt())
-                .collect(sumDouble)
-        );
-        this.hovedytelser = lagHovetytelseVMer(hovedytelser);
+                .collect(sumDouble);
+    }
+
+    public static Double nettoUtbetaltForAlle(List<Hovedytelse> hovedytelser) {
+        return hovedytelser
+                .stream()
+                .map(hovedytelse -> hovedytelse.getNettoUtbetalt())
+                .collect(sumDouble);
+    }
+
+    public static Double trekkBeloepForAlle(List<Hovedytelse> hovedytelser) {
+        return hovedytelser
+                .stream()
+                .map(hovedytelse -> hovedytelse.getSammenlagtTrekkBeloep())
+                .collect(sumDouble);
     }
 
     /**
@@ -67,18 +73,9 @@ public class OppsummeringVM implements Serializable {
 
             List<Underytelse> sammenlagteUnderytelser = combineUnderytelser(indekserteUnderytelser);
 
-            Double brutto = grupperteHovedytelser
-                    .stream()
-                    .map(hovedytelse -> hovedytelse.getBruttoUtbetalt())
-                    .collect(sumDouble);
-            Double trekk = grupperteHovedytelser
-                    .stream()
-                    .map(hovedytelse -> hovedytelse.getSammenlagtTrekkBeloep())
-                    .collect(sumDouble);
-            Double nettoUtbetalt = grupperteHovedytelser
-                    .stream()
-                    .map(hovedytelse -> hovedytelse.getNettoUtbetalt())
-                    .collect(sumDouble);
+            Double brutto = bruttoUtbetaltForAlle(grupperteHovedytelser);
+            Double trekk = trekkBeloepForAlle(grupperteHovedytelser);
+            Double nettoUtbetalt = nettoUtbetaltForAlle(grupperteHovedytelser);
 
             DateTime startPeriode = getStartPeriode(grupperteHovedytelser);
             DateTime sluttPeriode = getSluttPeriode(grupperteHovedytelser);
