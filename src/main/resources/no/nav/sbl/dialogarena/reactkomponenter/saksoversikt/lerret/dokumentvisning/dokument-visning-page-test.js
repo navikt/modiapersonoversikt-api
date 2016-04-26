@@ -4,7 +4,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
-import { DokumentVisningPage, filtrerUtLogiskeVedlegg } from './dokument-visning-page';
+import { DokumentVisningPage } from './dokument-visning-page';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass,
     scryRenderedDOMComponentsWithTag } from 'react-addons-test-utils';
 import * as Const from './../../konstanter';
@@ -312,56 +312,5 @@ describe('DokumentVisningPage', () => {
         expect(renderedForvaltningsnotat.length).to.equal(1);
         expect(renderedForvaltningsnotat[0].textContent).to.not.contain('forvaltningsnotat');
         expect(renderedForvaltningsnotat[0].textContent).to.not.contain('internnotat');
-    });
-
-    it('Skal filtrere ut logiske vedlegg', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
-        const props = {
-            fnr,
-            valgtJournalpost: {
-                journalpostId: '123',
-                temakode: 'DAG',
-                dato: fromDateToJSON(new Date()),
-                retning: 'INN',
-                vedlegg: [
-                    {
-                        dokumentreferanse: '3',
-                        logiskDokument: false
-                    },
-                    {
-                        dokumentreferanse: '1',
-                        logiskDokument: true
-                    },
-                    {
-                        dokumentreferanse: '2',
-                        logiskDokument: false
-                    }
-                ]
-            },
-            hentDokumentData,
-            visSide: noop,
-            lerretstatus: Const.LASTET,
-            dokumentstatus: Const.LASTET,
-            journalpostmetadata: {
-                dokumenter: [],
-                feilendeDokumenter: [
-                    {
-                        dokumentreferanse: '2'
-                    },
-                    {
-                        dokumentreferanse: '1'
-                    }
-                ]
-            },
-            intl
-        };
-
-        const {journalpostmetadata} = props;
-        journalpostmetadata.feilendeDokumenter = filtrerUtLogiskeVedlegg(props.journalpostmetadata, props.valgtJournalpost);
-
-        expect(journalpostmetadata.feilendeDokumenter.length).to.equal(1);
-        expect(journalpostmetadata.feilendeDokumenter[0].dokumentreferanse).to.equal('2');
     });
 });
