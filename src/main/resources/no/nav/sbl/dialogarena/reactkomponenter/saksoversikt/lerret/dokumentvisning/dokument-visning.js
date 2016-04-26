@@ -83,21 +83,23 @@ class DokumentVisning extends Component {
 
         return (
             <Element name={dokument.dokumentreferanse} key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
-                <div className="dokumentheader blokk-xxxs">
-                    <h2 className="typo-element">{dokument.tittel}</h2>
-                    <div className="lokal-linker">
-                        {aapneSomPDFLink}
-                        <a href="javscript:void(0)" onClick={this._print}>
-                            { formatMessage({ id: 'dokumentvisning.pdf.skriv.ut' }) }
-                        </a>
+                <article>
+                    <div className="dokumentheader blokk-xxxs">
+                        <h2 className="typo-element">{dokument.tittel}</h2>
+                        <div className="lokal-linker">
+                            {aapneSomPDFLink}
+                            <a href="javscript:void(0)" onClick={this._print}>
+                                { formatMessage({ id: 'dokumentvisning.pdf.skriv.ut' }) }
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <object ref="pdf" data={pdfData} type="application/pdf" scrolling="no" style={style}
-                  key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}
-                >
-                    <param name="view" value="FitV"/>
-                    <GenerellFeilMeldingDokumentvisning aapneSomPDFLink={aapneSomPDFLink}/>
-                </object>
+                    <object ref="pdf" data={pdfData} type="application/pdf" scrolling="no" style={style}
+                      key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}
+                    >
+                        <param name="view" value="FitV"/>
+                        <GenerellFeilMeldingDokumentvisning aapneSomPDFLink={aapneSomPDFLink}/>
+                    </object>
+                </article>
             </Element>
         );
     }
