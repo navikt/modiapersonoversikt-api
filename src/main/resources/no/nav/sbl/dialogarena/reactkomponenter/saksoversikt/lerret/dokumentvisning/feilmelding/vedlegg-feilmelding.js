@@ -17,14 +17,15 @@ class VedleggFeilmelding extends React.Component {
 
         return (
             <Element className="feilmelding-container" name={name}>
-                <img className="feilmelding-bakgrunn" src={bildeUrl} alt=""/>
-                <div className="feilmelding panel panel-ramme">
-                    <h1 className="vanlig-ikon-feil-strek"><FormattedMessage
-                      id={feilmeldingEnonicKey.concat('.tittel')}
-                    />
-                    </h1>
-                    <p className="text-center" dangerouslySetInnerHTML={createMarkup(innhold)}/>
-                </div>
+                <article>
+                    <img className="feilmelding-bakgrunn" src={bildeUrl} alt=""/>
+                    <div className="feilmelding panel panel-ramme">
+                        <h1 className="vanlig-ikon-feil-strek">
+                            <FormattedMessage id={feilmeldingEnonicKey.concat('.tittel')}/>
+                        </h1>
+                        <p className="text-center" dangerouslySetInnerHTML={createMarkup(innhold)}/>
+                    </div>
+                </article>
             </Element>
         );
     }
