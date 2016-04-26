@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -67,7 +67,7 @@ public class YtelseUtilsTest {
     public void hentYtelser_inneholderNoyaktigAlleHovedYtelser() {
         Set<String> ytelser = hovedytelseListe.stream()
                 .map(hovedytelse -> hovedytelse.getYtelse())
-                .collect(Collectors.toSet());
+                .collect(toSet());
 
         assertThat(ytelser.size(), is(3));
         assertThat(ytelser, containsInAnyOrder(DAGPENGER, SYKEPENGER, BARNETRYGD));
@@ -198,7 +198,7 @@ public class YtelseUtilsTest {
 
         List<Hovedytelse> unsortedList = asList(hovedytelseA, hovedytelseB, hovedytelseC);
 
-        List<Hovedytelse> sortedList = on(unsortedList).collect(YtelseUtils.SORT_BY_HOVEDYTELSEDATO_DESC);
+        List<Hovedytelse> sortedList = unsortedList.stream().sorted(YtelseUtils.SORT_BY_HOVEDYTELSEDATO_DESC).collect(toList());
         assertThat(sortedList.get(0).getHovedytelsedato(), is(new DateTime(2015, 01, 03, 1, 1)));
         assertThat(sortedList.get(1).getHovedytelsedato(), is(new DateTime(2015, 01, 02, 1, 1)));
         assertThat(sortedList.get(2).getHovedytelsedato(), is(new DateTime(2015, 01, 01, 1, 1)));
@@ -241,7 +241,7 @@ public class YtelseUtilsTest {
                 new Hovedytelse()
                         .withHovedytelsedato(new DateTime(2015, 1, 1, 1, 1))
                         .withYtelse("Bytelse"));
-        List<Hovedytelse> sortedYtelser = on(ytelser).collect(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR);
+        List<Hovedytelse> sortedYtelser = ytelser.stream().sorted(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR).collect(toList());
 
         assertThat(sortedYtelser.get(0).getYtelse(), is("Aytelse"));
         assertThat(sortedYtelser.get(1).getYtelse(), is("Bytelse"));

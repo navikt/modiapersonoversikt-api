@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
-import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
@@ -25,6 +24,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.modia.feedbackform.FeedbackLabel.addFormLabelsToTarget;
+import static no.nav.modig.modia.feedbackform.FeedbackLabel.create;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.PeriodeVelger.EGENDEFINERT;
@@ -50,8 +51,8 @@ public class PeriodeForm extends Panel {
         Form form = new Form(id);
         form.add(createPeriodeVelger("periodeVelger"),
                 datovelgerContainer,
-                FeedbackLabel.create(datovelgerContainer.get("datoFilter:startDate")),
-                FeedbackLabel.create(datovelgerContainer.get("datoFilter:endDate")),
+                create(datovelgerContainer.get("datoFilter:startDate")),
+                create(datovelgerContainer.get("datoFilter:endDate")),
                 createSokKnapp());
         return form;
     }
@@ -86,7 +87,7 @@ public class PeriodeForm extends Panel {
                     datovelgerContainer.setVisibilityAllowed(true);
                     target.add(datovelgerContainer);
                 } else {
-                    FeedbackLabel.addFormLabelsToTarget(target, thisPeriodeform);
+                    addFormLabelsToTarget(target, thisPeriodeform);
                     datovelgerContainer.setVisibilityAllowed(false);
                     target.add(datovelgerContainer);
                 }
@@ -110,8 +111,8 @@ public class PeriodeForm extends Panel {
                 .build();
 
         DateRangeModel dateRangeModel = new DateRangeModel(
-                new PropertyModel<LocalDate>(filterParametere, "startDato"),
-                new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
+                new PropertyModel<>(filterParametere, "startDato"),
+                new PropertyModel<>(filterParametere, "sluttDato"));
 
         return new StrictDateRangePicker(id, dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
@@ -125,13 +126,13 @@ public class PeriodeForm extends Panel {
                 sendFilterEndretEvent();
                 target.add(datovelgerContainer);
                 target.appendJavaScript("Utbetalinger.skjulSnurrepipp();");
-                FeedbackLabel.addFormLabelsToTarget(target, form);
+                addFormLabelsToTarget(target, form);
             }
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 sendFilterFeilEvent();
-                FeedbackLabel.addFormLabelsToTarget(target, form);
+                addFormLabelsToTarget(target, form);
             }
         };
 

@@ -26,10 +26,6 @@ public class TotalOppsummeringPanel extends Panel {
 
         add(createTopplinje(), createYtelsesOppsummering());
         add(hasCssClassIf("ekspandert", ekspandert));
-
-//        toggleWrapper.add(new WebMarkupContainer("togglepil")
-//                .add(hasCssClassIf("ned", not(ekspandertModel)))
-//                .add(hasCssClassIf("opp", ekspandertModel)));
     }
 
     private MarkupContainer createTopplinje() {

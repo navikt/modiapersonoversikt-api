@@ -1,21 +1,19 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
-import no.nav.modig.lang.collections.iter.ReduceFunction;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPerson;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonth;
 
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -56,10 +54,6 @@ public class YtelseUtils {
 
     /**
      * Returnerer en liste av Hovedytelser innenfor gitt periode
-     * @param hovedytelser
-     * @param startDato (Inclusive)
-     * @param sluttDato (Exclusive)
-     * @return
      */
     public static List<Hovedytelse> hovedytelserFromPeriod(List<Hovedytelse> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         final Interval intervall = intervalFromStartEndDate(startDato, sluttDato);
@@ -72,8 +66,6 @@ public class YtelseUtils {
 
     /**
      * Grupperer hovedytelser basert på år og måned, sortert synkende
-     * @param hovedytelser
-     * @return
      */
     public static TreeMap<YearMonth, List<Hovedytelse>> ytelserGroupedByYearMonth(List<Hovedytelse> hovedytelser) {
         Comparator<YearMonth> eldsteForst = (o1, o2) -> o2.compareTo(o1);
@@ -98,10 +90,7 @@ public class YtelseUtils {
 
     /**
      * Grupper på hovdytelser
-     * Innenfor hver hovdytelse, grupper på perioder
-     *
-     * @param utbetalinger
-     * @return
+     * Innenfor hver hovedytelse, grupper på perioder
      */
     public static List<List<Hovedytelse>> groupByHovedytelseAndPeriod(List<Hovedytelse> utbetalinger) {
         Comparator<Hovedytelse> forsteHovedytelseForst = (h1, h2) -> h1.getYtelsesperiode().getStart().compareTo(h2.getYtelsesperiode().getStart());
@@ -144,8 +133,6 @@ public class YtelseUtils {
      *         now: 2015-03-04 <br>
      *         numberOfDaysToShow: 30 <br>
      *         gyldig periode: 2014-12-05 - 2015-01-04 <br>
-     * @param numberOfDaysToShow
-     * @return
      */
     public static Predicate<Hovedytelse> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
         return hovedytelse -> {
@@ -159,8 +146,6 @@ public class YtelseUtils {
      * Grupper hovedytelsene basert på ytelsen. <br>
      *     F.eks <br>
      *         Alle Dagpenger bli gruppert sammen, alle Sykepenger bli gruppert sammen osv.
-     * @param ytelser
-     * @return
      */
     protected static List<List<Hovedytelse>> groupByHovedytelse(List<Hovedytelse> ytelser) {
         Map<String, List<Hovedytelse>> hovedytelserGruppertPaaYtelse = ytelser
@@ -171,28 +156,5 @@ public class YtelseUtils {
         return lists;
     }
 
-
-    /**
-     * Slå sammen Hovedytelser som er i samme år og måned. Returner et map hvor key = YearMonth og verdien er en liste
-     * over hovedytelsen innen for den gitte perioden
-     */
-    protected static final ReduceFunction<Entry<YearMonth, Hovedytelse>, Map<YearMonth, List<Hovedytelse>>> BY_YEAR_MONTH = new ReduceFunction<Entry<YearMonth,Hovedytelse>, Map<YearMonth, List<Hovedytelse>>>() {
-        @Override
-        public Map<YearMonth, List<Hovedytelse>> reduce(Map<YearMonth, List<Hovedytelse>> accumulator, Entry<YearMonth, Hovedytelse> entry) {
-            if(!accumulator.containsKey(entry.getKey())) {
-                accumulator.put(entry.getKey(), new ArrayList<Hovedytelse>());
-            }
-            accumulator.get(entry.getKey()).add(entry.getValue());
-            return accumulator;
-        }
-
-        @Override
-        public Map<YearMonth, List<Hovedytelse>> identity() {
-            return new TreeMap<>(SORT_BY_YEARMONTH_DESC);
-        }
-    };
-
     public static final Comparator<Hovedytelse> SORT_BY_HOVEDYTELSEDATO_DESC = (o1, o2) -> o2.getHovedytelsedato().compareTo(o1.getHovedytelsedato());
-
-    public static final Comparator<YearMonth> SORT_BY_YEARMONTH_DESC = (o1, o2) -> o2.compareTo(o1);
 }

@@ -16,6 +16,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.sort;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.summingDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.isUnixEpoch;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
@@ -156,17 +157,17 @@ public class OppsummeringVM implements Serializable {
         return sammenlagteUnderytelser
                 .stream()
                 .sorted(((o1, o2) -> o2.getYtelseBeloep().compareTo(o1.getYtelseBeloep())))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     protected static Map<String, List<Underytelse>> groupUnderytelseByType(List<Hovedytelse> sammen) {
         List<Underytelse> alleUnderytelser = sammen
                 .stream()
                 .flatMap(hovedytelse -> hovedytelse.getUnderytelseListe().stream())
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return alleUnderytelser
                 .stream()
-                .collect(Collectors.groupingBy(underytelse -> underytelse.getYtelsesType()));
+                .collect(groupingBy(underytelse -> underytelse.getYtelsesType()));
     }
 }

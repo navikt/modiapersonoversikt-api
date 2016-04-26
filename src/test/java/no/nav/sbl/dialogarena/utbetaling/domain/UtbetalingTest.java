@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -33,7 +33,7 @@ public class UtbetalingTest {
 
         List<Hovedytelse> hovedytelser = asList(hovedytelse, hovedytelse2);
 
-        hovedytelser = on(hovedytelser).collect(HOVEDYTELSE_DATO_COMPARATOR);
+        hovedytelser = hovedytelser.stream().sorted(HOVEDYTELSE_DATO_COMPARATOR).collect(toList());
 
         assertThat(hovedytelser.get(0).getYtelse(), is("Foreldrepenger"));
         assertThat(hovedytelser.get(1).getYtelse(), is("Uføre"));
@@ -54,7 +54,7 @@ public class UtbetalingTest {
                 .withHovedytelsedato(igaar);
 
         List<Hovedytelse> hovedytelser = asList(hovedytelse, hovedytelse2);
-        hovedytelser = on(hovedytelser).collect(HOVEDYTELSE_DATO_COMPARATOR);
+        hovedytelser = hovedytelser.stream().sorted(HOVEDYTELSE_DATO_COMPARATOR).collect(toList());
 
         assertThat(hovedytelser.get(0).getYtelse(), is("Uføre"));
         assertThat(hovedytelser.get(1).getYtelse(), is("Foreldrepenger"));

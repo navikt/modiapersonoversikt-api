@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
+import java.util.function.Predicate;
 
 
 public class UtbetalingUtils {

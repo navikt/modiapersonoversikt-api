@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
@@ -11,18 +10,12 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Locale;
-
+import java.util.function.Function;
 
 
 public class HovedytelseVM implements FeedItemVM, Serializable {
 
-    public static final Transformer<Hovedytelse, HovedytelseVM> TIL_HOVEDYTELSEVM = new Transformer<Hovedytelse, HovedytelseVM>() {
-        @Override
-        public HovedytelseVM transform(Hovedytelse hovedytelse) {
-            return new HovedytelseVM(hovedytelse);
-        }
-    };
-
+    public static final Function<Hovedytelse, HovedytelseVM> TIL_HOVEDYTELSEVM = hovedytelse -> new HovedytelseVM(hovedytelse);
 
     private String beskrivelse;
     private DateTime hovedytelseDato;

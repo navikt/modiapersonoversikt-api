@@ -12,39 +12,29 @@ import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.List;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.TO_HOVEDYTELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.leggTilEkstraDagerPaaStartdato;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class UtbetalingServiceImpl implements UtbetalingService {
-
-    private static final Logger logger = getLogger(UtbetalingServiceImpl.class);
 
     @Inject
     private UtbetalingV1 utbetalingV1;
 
-
-    /*
-    TODO Skriv om til java 8
-     */
     @Override
     public List<Hovedytelse> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden = on(getWSUtbetalinger(fnr, startDato, sluttDato))
+        List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden = getWSUtbetalinger(fnr, startDato, sluttDato).stream()
                 .filter(UtbetalingUtils.finnUtbetalingerMedUtbetalingsdatoISokeperioden(startDato, sluttDato))
-                .collect();
+                .collect(toList());
 
-//        utbetalingerMedPosteringInnenPerioden
-//                .stream()
-//                .filter()
-
-        return on(utbetalingerMedPosteringInnenPerioden).flatmap(TO_HOVEDYTELSE)
-                .collect(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR);
+        return utbetalingerMedPosteringInnenPerioden.stream()
+                .flatMap(wsUtbetaling -> TO_HOVEDYTELSE.apply(wsUtbetaling).stream())
+                .sorted(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR)
+                .collect(toList());
     }
 
     @Override
@@ -53,7 +43,6 @@ public class UtbetalingServiceImpl implements UtbetalingService {
     }
 
     protected List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        logger.info("---- Spør etter utebetalinger. Fnr: {}. ----", fnr);
         try {
             return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, leggTilEkstraDagerPaaStartdato(startDato), sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingsinformasjonPeriodeIkkeGyldig ex) {

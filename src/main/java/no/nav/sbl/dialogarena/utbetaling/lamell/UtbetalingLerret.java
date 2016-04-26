@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
@@ -105,7 +105,7 @@ public final class UtbetalingLerret extends Lerret {
         List<Hovedytelse> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
         filterParametere = new FilterParametere(ytelserAsText(ytelser));
 
-        List<Hovedytelse> synligeUtbetalinger = on(ytelser).filter(filterParametere).collect();
+        List<Hovedytelse> synligeUtbetalinger = ytelser.stream().filter(filterParametere).collect(toList());
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
 
         utbetalingslisteContainer = createUtbetalinglisteContainer();
@@ -137,7 +137,7 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private ListView<List<Hovedytelse>> createMaanedsPanelListe(List<Hovedytelse> hovedytelseListe) {
-        Map<YearMonth, List<Hovedytelse>> yearMonthListMap = ytelserGroupedByYearMonth(on(hovedytelseListe).filter(filterParametere).collect());
+        Map<YearMonth, List<Hovedytelse>> yearMonthListMap = ytelserGroupedByYearMonth(hovedytelseListe.stream().filter(filterParametere).collect(toList()));
 
         return new ListView<List<Hovedytelse>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
@@ -203,7 +203,7 @@ public final class UtbetalingLerret extends Lerret {
         List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
         oppdaterYtelser(hovedytelser);
 
-        List<Hovedytelse> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
+        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream().filter(filterParametere).collect(toList());
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
@@ -220,7 +220,7 @@ public final class UtbetalingLerret extends Lerret {
 
         List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
 
-        List<Hovedytelse> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
+        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream().filter(filterParametere).collect(toList());
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -12,13 +11,38 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static org.apache.commons.collections15.CollectionUtils.isEqualCollection;
 import static org.joda.time.DateTime.now;
 
-public class FilterParametere implements Serializable, Predicate<Hovedytelse> {
+public class FilterParametere implements Serializable, Predicate {
+
+    @Override
+    public boolean test(Object o) {
+        Hovedytelse hovedytelse = (Hovedytelse) o;
+        boolean mottakerSkalVises = viseMottaker(hovedytelse.getMottakertype());
+        boolean harYtelse = filtrerPaaYtelser(hovedytelse);
+        return mottakerSkalVises
+                && harYtelse;
+    }
+
+    @Override
+    public Predicate and(Predicate other) {
+        return null;
+    }
+
+    @Override
+    public Predicate negate() {
+        return null;
+    }
+
+    @Override
+    public Predicate or(Predicate other) {
+        return null;
+    }
 
     public enum PeriodeVelger {
         SISTE_30_DAGER,
@@ -127,13 +151,6 @@ public class FilterParametere implements Serializable, Predicate<Hovedytelse> {
         this.onskedeYtelser.remove(ytelse);
     }
 
-    @Override
-    public boolean evaluate(Hovedytelse hovedytelse) {
-        boolean mottakerSkalVises = viseMottaker(hovedytelse.getMottakertype());
-        boolean harYtelse = filtrerPaaYtelser(hovedytelse);
-        return mottakerSkalVises
-                && harYtelse;
-    }
 
     private boolean filtrerPaaYtelser(Hovedytelse utbetaling) {
         return onskedeYtelser.contains(utbetaling.getYtelse());

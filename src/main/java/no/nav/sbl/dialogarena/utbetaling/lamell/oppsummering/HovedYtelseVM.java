@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
 import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
@@ -34,7 +35,7 @@ public class HovedYtelseVM implements Serializable {
                 underytelser
                         .stream()
                         .map(underytelse -> new UnderYtelseVM(underytelse.getYtelsesType(), underytelse.getYtelseBeloep()))
-                        .collect(Collectors.toList()));
+                        .collect(toList()));
     }
 
     public String getHovedYtelsesBeskrivelse() {

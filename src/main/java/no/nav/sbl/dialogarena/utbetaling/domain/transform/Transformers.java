@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Trekk;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
-import org.apache.commons.collections15.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -15,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -29,12 +29,12 @@ public class Transformers {
     public static  Double SKATT_TRANSFORMER(WSSkatt wsSkatt)  {
         return wsSkatt.getSkattebeloep();
     }
-    public static final Transformer<WSTrekk, Trekk> TREKK_TRANSFORMER = wsTrekk -> new Trekk()
+    public static final Function<WSTrekk, Trekk> TREKK_TRANSFORMER = wsTrekk -> new Trekk()
             .withTrekksType(wsTrekk.getTrekktype() != null ? wsTrekk.getTrekktype() : "")
             .withTrekkBeloep(wsTrekk.getTrekkbeloep())
             .withKreditor(wsTrekk.getKreditor());
 
-    public static final Transformer<WSYtelseskomponent, Underytelse> UNDERYTELSE_TRANSFORMER = wsYtelseskomponent -> new Underytelse()
+    public static final Function<WSYtelseskomponent, Underytelse> UNDERYTELSE_TRANSFORMER = wsYtelseskomponent -> new Underytelse()
             .withYtelsesType(wsYtelseskomponent.getYtelseskomponenttype())
             .withSatsBeloep(wsYtelseskomponent.getSatsbeloep())
             .withSatsType(wsYtelseskomponent.getSatstype())
@@ -51,7 +51,7 @@ public class Transformers {
     }
 
 
-    public static final Transformer<WSUtbetaling, List<Hovedytelse>> TO_HOVEDYTELSE = wsUtbetaling -> {
+    public static final Function<WSUtbetaling, List<Hovedytelse>> TO_HOVEDYTELSE = wsUtbetaling -> {
         List<Hovedytelse> hovedytelser = new ArrayList<>();
 
         for (WSYtelse wsYtelse : wsUtbetaling.getYtelseListe()) {
@@ -93,9 +93,6 @@ public class Transformers {
      * HovedytelseDato baserer seg på følgende prioritert rekkefølge:
      * 1. Hvis utbetalingsdato finnes så brukes denne
      * 2. Hvis ikke brukes posteringsdatoen (som vises sammen med forfallsdato for å indikere når utbetalingen vil skje)
-     *
-     * @param wsUtbetaling
-     * @return
      */
     protected static DateTime determineHovedytelseDato(WSUtbetaling wsUtbetaling) {
         if (wsUtbetaling.getUtbetalingsdato() != null) {

@@ -8,10 +8,9 @@ import org.joda.time.Interval;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.*;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
@@ -191,7 +190,7 @@ public class TransformersTest {
         List<Double> skatteListe = createSkatteListe(wsSkatteListe);
         assertThat(skatteListe.size(), is(5));
 
-        Double totalSkatt = on(skatteListe).reduce(sumDouble);
+        Double totalSkatt = skatteListe.stream().reduce((aDouble, aDouble2) -> aDouble+aDouble2).get();
         assertThat(totalSkatt, is(-1500.0));
     }
 

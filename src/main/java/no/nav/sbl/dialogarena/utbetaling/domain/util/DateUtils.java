@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
-import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public final class DateUtils {
 
@@ -13,11 +14,11 @@ public final class DateUtils {
     private DateUtils() {
     }
 
-    public static final Transformer<Interval, DateTime> START = interval -> interval.getStart();
+    public static final Function<Interval, DateTime> START = interval -> interval.getStart();
 
-    public static final Transformer<Interval, DateTime> END = interval -> interval.getEnd();
+    public static final Function<Interval, DateTime> END = interval -> interval.getEnd();
 
-    public static final Transformer<DateTime, LocalDate> TO_LOCAL_DATE = dateTime -> dateTime.toLocalDate();
+    public static final Function<DateTime, LocalDate> TO_LOCAL_DATE = dateTime -> dateTime.toLocalDate();
 
     public static Predicate<LocalDate> isAfter(final LocalDate compare) {
         return localDate -> localDate.isAfter(compare);
@@ -27,19 +28,8 @@ public final class DateUtils {
         return prevDate.minusDays(minusDays+1).toDateMidnight().toDateTime();
     }
 
-
-    /**
-     * Opprett Intervall basert på startDato og sluttDato
-     * @param startDato
-     * @param sluttDato
-     * @return
-     */
     public static Interval intervalFromStartEndDate(LocalDate startDato, LocalDate sluttDato) {
         return new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
-    }
-
-    protected static Predicate<DateTime> isWithinRange(final Interval intervall) {
-        return dateTime -> intervall.contains(dateTime);
     }
 
     public static boolean isUnixEpoch(DateTime dateTime) {
