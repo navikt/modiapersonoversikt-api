@@ -70,8 +70,8 @@ public class Sakstema {
         return this;
     }
 
-    public boolean erIkkeTomtTema(){
-        return behandlingskjeder.size() > 0 || dokumentMetadata.size() > 0;
+    public boolean erIkkeTomtTema() {
+        return !behandlingskjeder.isEmpty() || !dokumentMetadata.isEmpty();
     }
 }
 
