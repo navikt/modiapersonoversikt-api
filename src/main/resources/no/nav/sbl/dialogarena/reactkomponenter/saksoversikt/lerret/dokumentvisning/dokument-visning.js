@@ -85,7 +85,7 @@ class DokumentVisning extends Component {
             <Element name={dokument.dokumentreferanse} key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
                 <article>
                     <div className="dokumentheader blokk-xxxs">
-                        <h2 className="typo-element">{dokument.tittel}</h2>
+                        <h1 className="typo-element">{dokument.tittel}</h1>
                         <div className="lokal-linker">
                             {aapneSomPDFLink}
                             <a href="javscript:void(0)" onClick={this._print}>
