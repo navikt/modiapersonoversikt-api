@@ -51,7 +51,7 @@ public class HovedytelseVMTest {
                 .withUtbetaltTil(dummyAktoer())
                 .withYtelsesperiode(new Interval(now().minusDays(7), now()));
 
-        HovedytelseVM hovedytelseVM = HovedytelseVM.TIL_HOVEDYTELSEVM.transform(ytelse);
+        HovedytelseVM hovedytelseVM = HovedytelseVM.TIL_HOVEDYTELSEVM.apply(ytelse);
         assertThat(ytelse.getYtelsesperiode().getStart(), is(equalTo(hovedytelseVM.getStartDato())));
     }
 

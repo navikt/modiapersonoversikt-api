@@ -59,7 +59,6 @@ public class DetaljPanelTest extends AbstractWicketTest {
         detaljPanel.appendUnderytelser(utbetalingVM, ytelseVMListe);
         assertThat(ytelseVMListe.size(), is(3));
 
-//        hovedytelse.remove(hovedytelse.getUnderytelseListe());
         detaljPanel.appendUnderytelser(utbetalingVM, ytelseVMListe);
         assertThat(ytelseVMListe.size(), is(3));
     }
@@ -76,7 +75,6 @@ public class DetaljPanelTest extends AbstractWicketTest {
         detaljPanel.appendTrekk(utbetalingVM, ytelseVMListe);
         assertThat(ytelseVMListe.size(), is(2));
 
-//        hovedytelse.remove(hovedytelse.getTrekkListe());
         detaljPanel.appendTrekk(utbetalingVM, ytelseVMListe);
         assertThat(ytelseVMListe.size(), is(2));
     }
@@ -93,7 +91,6 @@ public class DetaljPanelTest extends AbstractWicketTest {
         detaljPanel.appendSkatteTrekk(utbetalingVM, ytelseVMListe);
         assertThat(ytelseVMListe.size(), is(4));
 
-//        hovedytelse.remove(hovedytelse.getSkattListe());
         detaljPanel.appendSkatteTrekk(utbetalingVM, ytelseVMListe);
         assertThat(ytelseVMListe.size(), is(4));
     }

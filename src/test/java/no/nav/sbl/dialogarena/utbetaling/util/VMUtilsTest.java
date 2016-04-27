@@ -26,7 +26,7 @@ public class VMUtilsTest {
                 .withYtelseBeloep(11.0)
                 .withSatsAntall(2.0);
 
-        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.transform(underytelse);
+        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.apply(underytelse);
         assertThat(ytelseVM.getYtelse(), is("ytelsetype"));
         assertThat(ytelseVM.getAntall(), is("2,0"));
         assertThat(ytelseVM.getSats(), is("10,00"));
@@ -42,7 +42,7 @@ public class VMUtilsTest {
                 .withYtelseBeloep(11.0)
                 .withSatsAntall(2.0);
 
-        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.transform(underytelse);
+        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.apply(underytelse);
         assertThat(ytelseVM.getYtelse(), is("ytelsetype"));
         assertThat(ytelseVM.getAntall(), is("2,0"));
         assertThat(ytelseVM.getSats(), is("10,00%"));
@@ -57,7 +57,7 @@ public class VMUtilsTest {
                 .withYtelseBeloep(11.0)
                 .withSatsAntall(2.0);
 
-        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.transform(underytelse);
+        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.apply(underytelse);
         assertThat(ytelseVM.getYtelse(), is("ytelsetype"));
         assertThat(ytelseVM.getAntall(), is("2,0"));
         assertThat(ytelseVM.getSats(), is("10,00"));
