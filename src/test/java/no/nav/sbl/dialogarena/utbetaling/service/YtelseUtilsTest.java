@@ -198,7 +198,7 @@ public class YtelseUtilsTest {
 
         List<Hovedytelse> unsortedList = asList(hovedytelseA, hovedytelseB, hovedytelseC);
 
-        List<Hovedytelse> sortedList = unsortedList.stream().sorted(YtelseUtils.SORT_BY_HOVEDYTELSEDATO_DESC).collect(toList());
+        List<Hovedytelse> sortedList = unsortedList.stream().sorted(YtelseUtils.SISTE_HOVEDYTELSESDATO_FORST).collect(toList());
         assertThat(sortedList.get(0).getHovedytelsedato(), is(new DateTime(2015, 01, 03, 1, 1)));
         assertThat(sortedList.get(1).getHovedytelsedato(), is(new DateTime(2015, 01, 02, 1, 1)));
         assertThat(sortedList.get(2).getHovedytelsedato(), is(new DateTime(2015, 01, 01, 1, 1)));
@@ -241,7 +241,7 @@ public class YtelseUtilsTest {
                 new Hovedytelse()
                         .withHovedytelsedato(new DateTime(2015, 1, 1, 1, 1))
                         .withYtelse("Bytelse"));
-        List<Hovedytelse> sortedYtelser = ytelser.stream().sorted(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR).collect(toList());
+        List<Hovedytelse> sortedYtelser = ytelser.stream().sorted(SISTE_HOVEDYTELSESDATO_FORST).collect(toList());
 
         assertThat(sortedYtelser.get(0).getYtelse(), is("Aytelse"));
         assertThat(sortedYtelser.get(1).getYtelse(), is("Bytelse"));

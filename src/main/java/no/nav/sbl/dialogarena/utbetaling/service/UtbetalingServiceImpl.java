@@ -4,7 +4,6 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils;
-import no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPersonIkkeFunnet;
@@ -19,6 +18,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.TO_HOVEDYTELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.leggTilEkstraDagerPaaStartdato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.SISTE_HOVEDYTELSESDATO_FORST;
 
 public class UtbetalingServiceImpl implements UtbetalingService {
 
@@ -33,7 +33,7 @@ public class UtbetalingServiceImpl implements UtbetalingService {
 
         return utbetalingerMedPosteringInnenPerioden.stream()
                 .flatMap(wsUtbetaling -> TO_HOVEDYTELSE.apply(wsUtbetaling).stream())
-                .sorted(UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR)
+                .sorted(SISTE_HOVEDYTELSESDATO_FORST)
                 .collect(toList());
     }
 

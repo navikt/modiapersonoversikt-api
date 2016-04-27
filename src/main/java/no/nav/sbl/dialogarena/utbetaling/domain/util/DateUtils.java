@@ -11,9 +11,6 @@ public final class DateUtils {
 
     public static final int EKSTRA_SOKEPERIODE = 20;
 
-    private DateUtils() {
-    }
-
     public static final Function<Interval, DateTime> START = interval -> interval.getStart();
 
     public static final Function<Interval, DateTime> END = interval -> interval.getEnd();

@@ -32,21 +32,19 @@ public class YtelseUtils {
         return now();
     }
 
-    public static final class UtbetalingComparator {
-        public static final Comparator<Hovedytelse> HOVEDYTELSE_DATO_COMPARATOR = (ytelse1, ytelse2) -> {
-            DateTime ytelse1Hovedytelsedato = ytelse1.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
-            DateTime ytelse2Hovedytelsedato = ytelse2.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
+    public static final Comparator<Hovedytelse> SISTE_HOVEDYTELSESDATO_FORST = (ytelse1, ytelse2) -> {
+        DateTime ytelse1Hovedytelsedato = ytelse1.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
+        DateTime ytelse2Hovedytelsedato = ytelse2.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
 
-            int compareDato = -ytelse1Hovedytelsedato.compareTo(ytelse2Hovedytelsedato);
-            if (compareDato == 0) {
-                return ytelse1.getYtelse().compareToIgnoreCase(ytelse2.getYtelse());
-            }
-            return compareDato;
-        };
-    }
+        int compareDato = -ytelse1Hovedytelsedato.compareTo(ytelse2Hovedytelsedato);
+        if (compareDato == 0) {
+            return ytelse1.getYtelse().compareToIgnoreCase(ytelse2.getYtelse());
+        }
+        return compareDato;
+    };
 
     public static Mottakertype mottakertypeForAktoer(WSAktoer wsAktoer) {
-        if(wsAktoer instanceof WSPerson) {
+        if (wsAktoer instanceof WSPerson) {
             return Mottakertype.BRUKER;
         }
         return Mottakertype.ANNEN_MOTTAKER;
@@ -73,7 +71,7 @@ public class YtelseUtils {
         return yearMonthListTreeMap;
     }
 
-    protected static java.util.function.Predicate<List<Hovedytelse>> isWithinSamePeriod(Hovedytelse hovedytelse) {
+    protected static Predicate<List<Hovedytelse>> erISammePeriodeSom(Hovedytelse hovedytelse) {
         return utbetalinger -> {
             DateTime start = hovedytelse.getYtelsesperiode().getStart().minusDays(1);
             return utbetalinger
@@ -88,7 +86,7 @@ public class YtelseUtils {
      */
     public static List<List<Hovedytelse>> groupByHovedytelseAndPeriod(List<Hovedytelse> utbetalinger) {
         Comparator<Hovedytelse> forsteHovedytelseForst = (h1, h2) -> h1.getYtelsesperiode().getStart().compareTo(h2.getYtelsesperiode().getStart());
-        Stream<List<Hovedytelse>> sortertOgGruppertEtterHovedytelse = groupByHovedytelse(utbetalinger)
+        Stream<List<Hovedytelse>> sortertOgGruppertEtterHovedytelse = grupperHovedytelseBasertPaaYtelse(utbetalinger)
                 .stream()
                 .map(sorter(forsteHovedytelseForst));
 
@@ -100,7 +98,7 @@ public class YtelseUtils {
         };
 
         BiFunction<List<List<Hovedytelse>>, Hovedytelse, List<List<Hovedytelse>>> accumulator = (accu, hovedytelse) -> {
-            Optional<List<Hovedytelse>> sammePeriode = accu.stream().filter(isWithinSamePeriod(hovedytelse)).findFirst();
+            Optional<List<Hovedytelse>> sammePeriode = accu.stream().filter(erISammePeriodeSom(hovedytelse)).findFirst();
             List<Hovedytelse> liste;
             if (sammePeriode.isPresent()) {
                 liste = sammePeriode.get();
@@ -123,10 +121,10 @@ public class YtelseUtils {
 
     /**
      * true hvis hovedytelsen er mellom now() og antall dager tilbake i tid, gitt ved <em>numberOfDaysToShow</em><br>
-     *     F.eks<br>
-     *         now: 2015-03-04 <br>
-     *         numberOfDaysToShow: 30 <br>
-     *         gyldig periode: 2014-12-05 - 2015-01-04 <br>
+     * F.eks<br>
+     * now: 2015-03-04 <br>
+     * numberOfDaysToShow: 30 <br>
+     * gyldig periode: 2014-12-05 - 2015-01-04 <br>
      */
     public static Predicate<Hovedytelse> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
         return hovedytelse -> {
@@ -136,12 +134,7 @@ public class YtelseUtils {
         };
     }
 
-    /**
-     * Grupper hovedytelsene basert på ytelsen. <br>
-     *     F.eks <br>
-     *         Alle Dagpenger bli gruppert sammen, alle Sykepenger bli gruppert sammen osv.
-     */
-    protected static List<List<Hovedytelse>> groupByHovedytelse(List<Hovedytelse> ytelser) {
+    protected static List<List<Hovedytelse>> grupperHovedytelseBasertPaaYtelse(List<Hovedytelse> ytelser) {
         Map<String, List<Hovedytelse>> hovedytelserGruppertPaaYtelse = ytelser
                 .stream()
                 .collect(groupingBy(hovedytelse -> hovedytelse.getYtelse()));
@@ -149,6 +142,4 @@ public class YtelseUtils {
         lists.addAll(hovedytelserGruppertPaaYtelse.values());
         return lists;
     }
-
-    public static final Comparator<Hovedytelse> SORT_BY_HOVEDYTELSEDATO_DESC = (o1, o2) -> o2.getHovedytelsedato().compareTo(o1.getHovedytelsedato());
 }

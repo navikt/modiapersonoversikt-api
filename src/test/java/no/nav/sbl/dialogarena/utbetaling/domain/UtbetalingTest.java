@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -9,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.*;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.HOVEDYTELSE_DATO_COMPARATOR;
+import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.SISTE_HOVEDYTELSESDATO_FORST;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -33,7 +32,7 @@ public class UtbetalingTest {
 
         List<Hovedytelse> hovedytelser = asList(hovedytelse, hovedytelse2);
 
-        hovedytelser = hovedytelser.stream().sorted(HOVEDYTELSE_DATO_COMPARATOR).collect(toList());
+        hovedytelser = hovedytelser.stream().sorted(SISTE_HOVEDYTELSESDATO_FORST).collect(toList());
 
         assertThat(hovedytelser.get(0).getYtelse(), is("Foreldrepenger"));
         assertThat(hovedytelser.get(1).getYtelse(), is("Uføre"));
@@ -54,7 +53,7 @@ public class UtbetalingTest {
                 .withHovedytelsedato(igaar);
 
         List<Hovedytelse> hovedytelser = asList(hovedytelse, hovedytelse2);
-        hovedytelser = hovedytelser.stream().sorted(HOVEDYTELSE_DATO_COMPARATOR).collect(toList());
+        hovedytelser = hovedytelser.stream().sorted(SISTE_HOVEDYTELSESDATO_FORST).collect(toList());
 
         assertThat(hovedytelser.get(0).getYtelse(), is("Uføre"));
         assertThat(hovedytelser.get(1).getYtelse(), is("Foreldrepenger"));
