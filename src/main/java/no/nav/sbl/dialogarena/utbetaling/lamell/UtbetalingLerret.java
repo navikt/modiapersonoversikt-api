@@ -52,7 +52,6 @@ public final class UtbetalingLerret extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
     public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
-    public static final ConditionalCssResource UTBETALING_IE_CSS = new ConditionalCssResource(new CssResourceReference(UtbetalingLerret.class, "utbetaling_ie9.css"), "screen", "lt IE 10");
 
     private static final String FEILMELDING_DEFAULT_KEY = "feil.utbetalinger.default";
 
