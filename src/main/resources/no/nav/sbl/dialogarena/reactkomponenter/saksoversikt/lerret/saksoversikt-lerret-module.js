@@ -47,7 +47,7 @@ function lagFeilmelding(props) {
 
     if (enonicFeilmeldingKey !== '') {
         return (
-            <div className="lamell-feilmelding">
+            <div className="lamell-feilmelding" role="alert" aria-atomic="true">
                 <FormattedMessage id={`${enonicFeilmeldingKey}`}/>
             </div>);
     }
