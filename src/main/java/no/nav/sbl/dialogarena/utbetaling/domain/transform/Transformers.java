@@ -26,9 +26,8 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.mottaker
 public class Transformers {
     private static final Logger LOGGER = LoggerFactory.getLogger(Transformers.class);
 
-    public static  Double SKATT_TRANSFORMER(WSSkatt wsSkatt)  {
-        return wsSkatt.getSkattebeloep();
-    }
+    public static  final Function<WSSkatt, Double> SKATT_TRANSFORMER = wsSkatt -> wsSkatt.getSkattebeloep();
+
     public static final Function<WSTrekk, Trekk> TREKK_TRANSFORMER = wsTrekk -> new Trekk()
             .withTrekksType(wsTrekk.getTrekktype() != null ? wsTrekk.getTrekktype() : "")
             .withTrekkBeloep(wsTrekk.getTrekkbeloep())
@@ -40,15 +39,6 @@ public class Transformers {
             .withSatsType(wsYtelseskomponent.getSatstype())
             .withSatsAntall(wsYtelseskomponent.getSatsantall())
             .withYtelseBeloep(wsYtelseskomponent.getYtelseskomponentbeloep());
-
-    public static Underytelse LAG_UNDERYTELSE(WSYtelseskomponent wsYtelseskomponent) {
-        return  new Underytelse()
-                .withYtelsesType(wsYtelseskomponent.getYtelseskomponenttype())
-                .withSatsBeloep(wsYtelseskomponent.getSatsbeloep())
-                .withSatsType(wsYtelseskomponent.getSatstype())
-                .withSatsAntall(wsYtelseskomponent.getSatsantall())
-                .withYtelseBeloep(wsYtelseskomponent.getYtelseskomponentbeloep());
-    }
 
 
     public static final Function<WSUtbetaling, List<Hovedytelse>> TO_HOVEDYTELSE = wsUtbetaling -> {

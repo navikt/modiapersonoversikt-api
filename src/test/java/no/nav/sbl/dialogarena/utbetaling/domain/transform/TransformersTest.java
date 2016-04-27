@@ -8,7 +8,6 @@ import org.joda.time.Interval;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.*;
@@ -23,7 +22,7 @@ public class TransformersTest {
         WSSkatt wsSkatt = new WSSkatt()
                 .withSkattebeloep(-20.0);
 
-        Double skattTransformed = SKATT_TRANSFORMER(wsSkatt);
+        Double skattTransformed = SKATT_TRANSFORMER.apply(wsSkatt);
         assertThat(skattTransformed, is(-20.0));
     }
 
@@ -55,7 +54,7 @@ public class TransformersTest {
                 .withSatsbeloep(20.0)
                 .withSatstype("SatsType");
 
-        Underytelse underytelse = LAG_UNDERYTELSE(wsYtelseskomponent);
+        Underytelse underytelse = UNDERYTELSE_TRANSFORMER.apply(wsYtelseskomponent);
         assertThat(underytelse.getYtelsesType(), is("KompType"));
         assertThat(underytelse.getYtelseBeloep(), is(-10.0));
         assertThat(underytelse.getSatsAntall(), is(2.0));
@@ -71,7 +70,7 @@ public class TransformersTest {
                 .withSatsantall(2.0)
                 .withSatsbeloep(20.0);
 
-        Underytelse underytelse = LAG_UNDERYTELSE(wsYtelseskomponent);
+        Underytelse underytelse = UNDERYTELSE_TRANSFORMER.apply(wsYtelseskomponent);
         assertThat(underytelse.getYtelsesType(), is("KompType"));
         assertThat(underytelse.getYtelseBeloep(), is(-10.0));
         assertThat(underytelse.getSatsAntall(), is(2.0));
