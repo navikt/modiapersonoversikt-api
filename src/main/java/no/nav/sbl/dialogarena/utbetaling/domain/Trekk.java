@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import java.io.Serializable;
+
 @SuppressWarnings("all")
-public class Trekk {
+public class Trekk implements Serializable {
 
     String trekksType;
     Double trekkBeloep;

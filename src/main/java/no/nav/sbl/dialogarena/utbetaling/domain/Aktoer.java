@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import java.io.Serializable;
+
 @SuppressWarnings("all")
-public class Aktoer {
+public class Aktoer implements Serializable {
     public enum AktoerType {
         PERSON, SAMHANDLER, ORGANISASJON
     }

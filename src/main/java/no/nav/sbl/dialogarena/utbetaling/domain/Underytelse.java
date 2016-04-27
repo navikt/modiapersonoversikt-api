@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import java.io.Serializable;
+
 @SuppressWarnings("all")
-public class Underytelse {
+public class Underytelse implements Serializable {
     String ytelsesType;
     Double satsBeloep;
     String satsType;
