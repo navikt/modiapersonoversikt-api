@@ -327,7 +327,7 @@ public class TransformersTest {
                                 .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***6").withNavn("Kari Normann").withDiskresjonskode("3"))
                                 .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("KariNormann AS")));
 
-        List<Hovedytelse> hovedytelser = TO_HOVEDYTELSE.transform(wsUtbetaling);
+        List<Hovedytelse> hovedytelser = TO_HOVEDYTELSE.apply(wsUtbetaling);
         assertThat(hovedytelser.size(), is(1));
 
         Hovedytelse ytelse = hovedytelser.get(0);

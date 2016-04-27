@@ -60,7 +60,7 @@ public class UtbetalingTest {
         assertThat(hovedytelser.get(1).getYtelse(), is("Foreldrepenger"));
     }
 
-    @Ignore
+
     @Test
     public void testHashCodeOgEqualsTrue() {
         Hovedytelse hovedytelse1 = new Hovedytelse().withId(ID);

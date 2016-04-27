@@ -105,7 +105,9 @@ public final class UtbetalingLerret extends Lerret {
         List<Hovedytelse> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
         filterParametere = new FilterParametere(ytelserAsText(ytelser));
 
-        List<Hovedytelse> synligeUtbetalinger = ytelser.stream().filter(filterParametere).collect(toList());
+        List<Hovedytelse> synligeUtbetalinger = ytelser.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList());
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
 
         utbetalingslisteContainer = createUtbetalinglisteContainer();
@@ -137,7 +139,9 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private ListView<List<Hovedytelse>> createMaanedsPanelListe(List<Hovedytelse> hovedytelseListe) {
-        Map<YearMonth, List<Hovedytelse>> yearMonthListMap = ytelserGroupedByYearMonth(hovedytelseListe.stream().filter(filterParametere).collect(toList()));
+        Map<YearMonth, List<Hovedytelse>> yearMonthListMap = ytelserGroupedByYearMonth(hovedytelseListe.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList()));
 
         return new ListView<List<Hovedytelse>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
@@ -203,7 +207,9 @@ public final class UtbetalingLerret extends Lerret {
         List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
         oppdaterYtelser(hovedytelser);
 
-        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream().filter(filterParametere).collect(toList());
+        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList());
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
@@ -220,7 +226,9 @@ public final class UtbetalingLerret extends Lerret {
 
         List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
 
-        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream().filter(filterParametere).collect(toList());
+        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList());
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 

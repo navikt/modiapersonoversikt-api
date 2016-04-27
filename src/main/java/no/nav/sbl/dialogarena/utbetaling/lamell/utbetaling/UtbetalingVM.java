@@ -92,8 +92,8 @@ public class UtbetalingVM {
     }
 
     public String getPeriodeMedKortDato() {
-        return of(ytelse.getYtelsesperiode().getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
-                + of(ytelse.getYtelsesperiode().getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
+        return of(ytelse.getYtelsesperiode().getStart()).map(KORT_UTEN_LITERAL).orElse("") + " - "
+                + of(ytelse.getYtelsesperiode().getEnd()).map(KORT_UTEN_LITERAL).orElse("");
     }
 
     public String getBruttoBelop() {

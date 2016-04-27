@@ -42,7 +42,7 @@ public class FilterParametereTest {
 
         filterparams.toggleMottaker(Mottakertype.ANNEN_MOTTAKER);
 
-        assertFalse(filterparams.evaluate(ytelse));
+        assertFalse(filterparams.test(ytelse));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class FilterParametereTest {
 
         filterparams.leggTilOnsketYtelse(BARNETRYGD);
 
-        assertTrue(filterparams.evaluate(ytelse));
+        assertTrue(filterparams.test(ytelse));
     }
 
     @Test
@@ -68,12 +68,12 @@ public class FilterParametereTest {
 
         filterparams.velgEnYtelse(BARNETRYGD);
 
-        assertFalse(filterparams.evaluate(ytelse));
+        assertFalse(filterparams.test(ytelse));
     }
 
     @Test
     public void skalViseAlleUtbetalingerHvisAlleYtelserErValgtOgNyeYtelserBlirSatt() {
-        filterparams = new FilterParametere(new HashSet<String>());
+        filterparams = new FilterParametere(new HashSet<>());
 
         Hovedytelse ytelse = new Hovedytelse()
                 .withId(ID)
@@ -82,7 +82,7 @@ public class FilterParametereTest {
                 .withYtelse(DAGPENGER);
         filterparams.setYtelser(new HashSet<>(asList(ytelse.getYtelse())));
 
-        assertThat(filterparams.evaluate(ytelse), is(true));
+        assertThat(filterparams.test(ytelse), is(true));
     }
 
     @Test
@@ -124,8 +124,8 @@ public class FilterParametereTest {
 
         filterparams.toggleAlleYtelser(true);
 
-        assertThat(filterparams.evaluate(ytelse.withYtelse(DAGPENGER)), is(true));
-        assertThat(filterparams.evaluate(ytelse.withYtelse(BARNETRYGD)), is(true));
+        assertThat(filterparams.test(ytelse.withYtelse(DAGPENGER)), is(true));
+        assertThat(filterparams.test(ytelse.withYtelse(BARNETRYGD)), is(true));
     }
 
     @Test
@@ -136,8 +136,8 @@ public class FilterParametereTest {
                 .withMottakertype(Mottakertype.BRUKER);
 
         filterparams.toggleAlleYtelser(false);
-        assertThat(filterparams.evaluate(ytelse.withYtelse(DAGPENGER)), is(false));
-        assertThat(filterparams.evaluate(ytelse.withYtelse(BARNETRYGD)), is(false));
+        assertThat(filterparams.test(ytelse.withYtelse(DAGPENGER)), is(false));
+        assertThat(filterparams.test(ytelse.withYtelse(BARNETRYGD)), is(false));
     }
 
     @Test

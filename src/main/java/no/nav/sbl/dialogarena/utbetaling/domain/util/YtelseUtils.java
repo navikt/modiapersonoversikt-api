@@ -45,16 +45,13 @@ public class YtelseUtils {
         };
     }
 
-    public static final Mottakertype mottakertypeForAktoer(WSAktoer wsAktoer) {
+    public static Mottakertype mottakertypeForAktoer(WSAktoer wsAktoer) {
         if(wsAktoer instanceof WSPerson) {
             return Mottakertype.BRUKER;
         }
         return Mottakertype.ANNEN_MOTTAKER;
     }
 
-    /**
-     * Returnerer en liste av Hovedytelser innenfor gitt periode
-     */
     public static List<Hovedytelse> hovedytelserFromPeriod(List<Hovedytelse> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         final Interval intervall = intervalFromStartEndDate(startDato, sluttDato);
 
@@ -64,9 +61,6 @@ public class YtelseUtils {
                 .collect(toList());
     }
 
-    /**
-     * Grupperer hovedytelser basert på år og måned, sortert synkende
-     */
     public static TreeMap<YearMonth, List<Hovedytelse>> ytelserGroupedByYearMonth(List<Hovedytelse> hovedytelser) {
         Comparator<YearMonth> eldsteForst = (o1, o2) -> o2.compareTo(o1);
 
