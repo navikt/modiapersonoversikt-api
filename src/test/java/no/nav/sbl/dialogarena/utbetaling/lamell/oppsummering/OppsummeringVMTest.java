@@ -9,6 +9,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -64,8 +65,6 @@ public class OppsummeringVMTest {
                 .withSatsAntall(0d)
                 .withYtelseBeloep(500.0)
                 .withSatsBeloep(0d);
-
-        //Skatt - 200
 
         List<Double> skattTrekkListe = asList(-200.0);
 
@@ -169,11 +168,66 @@ public class OppsummeringVMTest {
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(600.0));
     }
 
+    @Test
+    public void summererTotalBruttoForAlleHovedytelser() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(300.0));
 
-    // TODO legg inn test for:
-    // * bruttoUtbetaltForAlle
-    // * nettoUtbetaltForAlle
-    // * trekkbeloepforAlle
+        assertThat(OppsummeringVM.bruttoUtbetaltForAlle(hovedytelser), is(1500.0));
+    }
+
+    @Test
+    public void summererTotalBruttoForHovedytelserMedNegativBrutto() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(-200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(-300.0));
+
+        assertThat(OppsummeringVM.bruttoUtbetaltForAlle(hovedytelser), is(500.0));
+    }
+
+    @Test
+    public void summererTotalNettoForAlleHovedytelser() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(300.0));
+
+        assertThat(OppsummeringVM.nettoUtbetaltForAlle(hovedytelser), is(1500.0));
+    }
+
+    @Test
+    public void summererTotalNettoForHovedytelserMedNegativBrutto() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(-200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(-300.0));
+
+        assertThat(OppsummeringVM.nettoUtbetaltForAlle(hovedytelser), is(500.0));
+    }
+
+
+    @Test
+    public void summererTotalTrekkBeloepForAlleHovedytelser() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(300.0));
+
+        assertThat(OppsummeringVM.trekkBeloepForAlle(hovedytelser), is(1500.0));
+    }
+
+    @Test
+    public void summererTotalTrekkBeloepForHovedytelserMedNegativBrutto() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(-200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(-300.0));
+
+        assertThat(OppsummeringVM.trekkBeloepForAlle(hovedytelser), is(500.0));
+    }
 
     private Hovedytelse getYtelse(DateTime dato) {
         return new Hovedytelse()

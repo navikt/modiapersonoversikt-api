@@ -41,7 +41,7 @@ public class OppsummeringVM implements Serializable {
         this.hovedytelser = lagHovetytelseVMer(hovedytelser);
     }
 
-    private static Double bruttoUtbetaltForAlle(List<Hovedytelse> hovedytelser) {
+    public static Double bruttoUtbetaltForAlle(List<Hovedytelse> hovedytelser) {
         return hovedytelser
                 .stream()
                 .map(hovedytelse -> hovedytelse.getBruttoUtbetalt())
