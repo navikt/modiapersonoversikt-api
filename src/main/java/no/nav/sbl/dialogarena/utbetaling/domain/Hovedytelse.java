@@ -260,4 +260,9 @@ public class Hovedytelse {
         }
         return id.equals(((Hovedytelse) other).getId());
     }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
