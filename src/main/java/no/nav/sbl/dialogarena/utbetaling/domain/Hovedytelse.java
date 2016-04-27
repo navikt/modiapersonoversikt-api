@@ -138,8 +138,8 @@ public class Hovedytelse {
         return this;
     }
 
-    public Hovedytelse withHovedytelsedato(DateTime hovedhytelsesdato) {
-        this.hovedytelsedato = hovedhytelsesdato;
+    public Hovedytelse withHovedytelsedato(DateTime hovedytelsesdato) {
+        this.hovedytelsedato = hovedytelsesdato;
         return this;
     }
 

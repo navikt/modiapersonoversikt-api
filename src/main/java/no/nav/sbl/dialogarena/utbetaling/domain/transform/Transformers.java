@@ -154,10 +154,7 @@ public class Transformers {
         }
         return trekkListe
                 .stream()
-                .map(wsTrekk -> new Trekk()
-                        .withTrekksType(wsTrekk.getTrekktype() != null ? wsTrekk.getTrekktype() : "")
-                        .withTrekkBeloep(wsTrekk.getTrekkbeloep())
-                        .withKreditor(wsTrekk.getKreditor()))
+                .map(TREKK_TRANSFORMER)
                 .collect(Collectors.toList());
     }
 
@@ -167,7 +164,7 @@ public class Transformers {
         }
         return ytelseskomponentListe
                 .stream()
-                .map(wsYtelseskomponent -> LAG_UNDERYTELSE(wsYtelseskomponent))
+                .map(UNDERYTELSE_TRANSFORMER)
                 .sorted((o1, o2) -> o2.getYtelseBeloep().compareTo(o1.getYtelseBeloep()))
                 .collect(Collectors.toList());
     }

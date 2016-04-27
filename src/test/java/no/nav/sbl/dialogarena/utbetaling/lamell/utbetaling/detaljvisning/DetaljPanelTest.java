@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
 import org.apache.wicket.markup.html.list.ListView;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
