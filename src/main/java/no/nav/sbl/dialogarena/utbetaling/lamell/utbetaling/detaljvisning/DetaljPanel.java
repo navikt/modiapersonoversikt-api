@@ -69,7 +69,6 @@ public class DetaljPanel extends Panel {
                     .sorted(DESC_BELOP)
                     .collect(toList()));
         }
-
     }
 
     protected ListView createYtelserader(List<YtelseVM> underytelser) {
