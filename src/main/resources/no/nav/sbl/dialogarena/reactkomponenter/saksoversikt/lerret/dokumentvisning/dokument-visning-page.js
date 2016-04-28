@@ -91,7 +91,7 @@ export class DokumentVisningPage extends React.Component {
                     <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
                 </div>
 
-                <div className="grattpanel side-innhold" id="js-kulemeny-scroll">
+                <div className="scrollpanel gratt side-innhold" id="js-kulemeny-scroll">
                     <panel className="panel">
                         <h1 className="decorated typo-innholdstittel">
                             <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
