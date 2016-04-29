@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 const TidligereDokumenter = () => (
     <section className="panel gamle-dokumenter">
-        <img className="tidligere-dokumenter-bilde" src="/modiabrukerdialog/img/saksoversikt/dokument_stop.png"
+        <img className="tidligere-dokumenter-bilde" src="/modiabrukerdialog/img/saksoversikt/file-block.svg"
           alt="Dokumentet kan ikke vises" aria-hidden="true"
         />
         <p className="tidligere-dokumenter-tekst">
