@@ -91,17 +91,13 @@ export class DokumentVisningPage extends React.Component {
                     <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
                 </div>
 
-                <section aria-labelledby="journalposttittel" className="scrollpanel gratt side-innhold" id="js-kulemeny-scroll">
-                    <panel className="panel">
-                        <h1 className="decorated typo-innholdstittel" id="journalposttittel">
-                            <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
-                            <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
-                        </h1>
-                        <section aria-label="Dokumentliste">
-                            <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter}/>
-                            <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
-                        </section>
-                    </panel>
+                <section aria-labelledby="journalposttittel" className="scrollpanel gratt side-innhold panel" id="js-kulemeny-scroll">
+                    <h1 className="decorated typo-innholdstittel" id="journalposttittel">
+                        <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
+                        <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
+                    </h1>
+                    <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter}/>
+                    <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
                 </section>
             </div>
         );
