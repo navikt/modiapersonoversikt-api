@@ -1,6 +1,6 @@
 import Utils from './../../utils/utils-module';
 
-export const sakstemaScroll = (event, props) => {
+export const pilnavigeringScroll = (event, props) => {
     const elements = document.querySelectorAll(".saksoversikt-liste-element");
     const parent = document.querySelector(".saksoversikt-liste");
     const valgtTema = props.valgtTema;

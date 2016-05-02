@@ -3,7 +3,7 @@ import SakstemaListe from './sakstema-liste';
 import { connect } from 'react-redux';
 import VisningDokumentliste from './dokumentliste/visning-dokumentliste';
 import { FormattedMessage } from 'react-intl';
-import { sakstemaScroll, scrollTilDokument } from './../../utils/sakstema-scroll';
+import { pilnavigeringScroll, scrollTilDokument } from './../../utils/sakstema-scroll';
 
 class SakstemaPage extends React.Component {
 
@@ -12,7 +12,7 @@ class SakstemaPage extends React.Component {
     }
 
     keyDownHandler(event) {
-        sakstemaScroll(event, this.props);
+        pilnavigeringScroll(event, this.props);
     }
 
     render() {
