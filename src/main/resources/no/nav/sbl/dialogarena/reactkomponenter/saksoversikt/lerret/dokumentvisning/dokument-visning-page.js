@@ -46,10 +46,9 @@ export class DokumentVisningPage extends React.Component {
     }
 
     componentDidMount() {
-        const saksoversiktLamellhode = document.querySelector('.saksoversikt .lamellhode a');
-        if (saksoversiktLamellhode) {
-            saksoversiktLamellhode.focus();
-        }
+        setTimeout(() => {
+            this.refs.dokumentvisningOverskrift.focus();
+        }, 250);
     }
 
     _redirect(e) {
@@ -91,8 +90,8 @@ export class DokumentVisningPage extends React.Component {
                     <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
                 </div>
 
-                <section aria-labelledby="journalposttittel" className="scrollpanel gratt side-innhold panel" id="js-kulemeny-scroll">
-                    <h1 className="decorated typo-innholdstittel" id="journalposttittel">
+                <section aria-labelledby="journalposttittel" className="scrollpanel side-innhold panel" id="js-kulemeny-scroll">
+                    <h1 ref="dokumentvisningOverskrift" className="decorated typo-innholdstittel" tabIndex="-1" id="journalposttittel">
                         <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
                         <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
                     </h1>
