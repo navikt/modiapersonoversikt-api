@@ -1,4 +1,5 @@
 import React, { PropTypes as PT } from 'react';
+import ReactDOM from 'react-dom';
 import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
@@ -45,10 +46,8 @@ export class DokumentVisningPage extends React.Component {
         this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
 
-    componentDidMount() {
-        setTimeout(() => {
-            this.refs.dokumentvisningOverskrift.focus();
-        }, 250);
+    componentDidUpdate() {
+        setTimeout(() => this.refs.dokumentvisningOverskrift && this.refs.dokumentvisningOverskrift.focus(), 0);
     }
 
     _redirect(e) {

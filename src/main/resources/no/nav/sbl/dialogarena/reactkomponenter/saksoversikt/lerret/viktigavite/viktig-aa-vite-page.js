@@ -15,9 +15,7 @@ class ViktigAVitePage extends React.Component {
 
 
     componentDidMount() {
-        setTimeout(() => {
-            this.refs.viktigaviteOverskrift.focus();
-        }, 0);
+        setTimeout(() => this.refs.viktigaviteOverskrift && this.refs.viktigaviteOverskrift.focus(), 0);
     }
 
     _redirect(e) {
