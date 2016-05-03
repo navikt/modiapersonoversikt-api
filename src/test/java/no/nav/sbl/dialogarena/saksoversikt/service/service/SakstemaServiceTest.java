@@ -426,7 +426,7 @@ public class SakstemaServiceTest {
         ResultatWrapper<List<Sakstema>> listResultatWrapper = sakstemaService.hentSakstema(saker, FNR, true);
 
         assertThat(listResultatWrapper.resultat.size(), is(1));
-        assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Sykemelding/Sykepenger og oppfølging"));
+        assertThat(listResultatWrapper.resultat.get(0).temanavn, is("Sykemelding, Sykepenger og oppfølging"));
     }
 
     @Test

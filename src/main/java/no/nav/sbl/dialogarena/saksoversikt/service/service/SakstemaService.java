@@ -137,7 +137,7 @@ public class SakstemaService {
         List<Sak> tilhorendeSaker = concat(sykemelding.tilhorendeSaker.stream(), sykepenger.tilhorendeSaker.stream()).collect(toList());
         List<Integer> feilkoder = concat(sykemelding.feilkoder.stream(), sykepenger.feilkoder.stream()).collect(toList());
 
-        String temanavn = harOppfolging ? "Sykemelding/Sykepenger og oppfølging" : "Sykemelding og Sykepenger";
+        String temanavn = harOppfolging ? "Sykemelding, Sykepenger og oppfølging" : "Sykemelding og Sykepenger";
 
         sakstema.add(
                 new Sakstema()
