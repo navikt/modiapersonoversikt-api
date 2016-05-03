@@ -1,5 +1,9 @@
 import Utils from './../../utils/utils-module';
 
+function settFokusPaRadioButton(element) {
+    element.querySelector("input[type=radio]").focus();
+}
+
 export const pilnavigeringScroll = (event, props) => {
     const elements = document.querySelectorAll(".saksoversikt-liste-element");
     const parent = document.querySelector(".saksoversikt-liste");
@@ -14,8 +18,8 @@ export const pilnavigeringScroll = (event, props) => {
             index = props.sakstema.indexOf(valgtTema) - 1 < 0 ? props.sakstema.length - 1 : props.sakstema.indexOf(valgtTema) -1;
             props.velgSak(props.sakstema[index]);
 
+            settFokusPaRadioButton(elements[index]);
             Utils.adjustScroll(parent, elements[index]);
-
             break;
         //Pil ned
         case 40:
@@ -24,6 +28,7 @@ export const pilnavigeringScroll = (event, props) => {
             index = props.sakstema.indexOf(valgtTema) + 1 >= props.sakstema.length? 0 : props.sakstema.indexOf(valgtTema) + 1;
             props.velgSak(props.sakstema[index]);
 
+            settFokusPaRadioButton(elements[index]);
             Utils.adjustScroll(parent, elements[index]);
             break;
         default:
