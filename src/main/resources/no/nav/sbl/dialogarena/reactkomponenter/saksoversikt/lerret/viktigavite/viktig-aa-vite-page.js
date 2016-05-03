@@ -24,7 +24,7 @@ class ViktigAVitePage extends React.Component {
     }
 
     render() {
-        const { valgtTema, sakstema } = this.props;
+        const { intl, valgtTema, sakstema } = this.props;
         const temanavn = sakstema.find(tema => tema.temakode === valgtTema.temakode).temanavn;
         const sidetittel = <FormattedMessage id="saksinformasjon.vikigavite.tittel" values={{ tema: temanavn }}/>;
         const innhold = this.props.intl.formatMessage({ id: `saksinformasjon.${valgtTema.temakode}` });
@@ -32,7 +32,7 @@ class ViktigAVitePage extends React.Component {
         return (
             <section className="viktig-a-vite-page">
                 <div className="fixed-header blokk-s">
-                    <a href="#" onClick={this._redirect} className="close-document"></a>
+                    <a href="#" onClick={this._redirect} className="close-document" aria-label={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}></a>
                 </div>
                 <panel className="panel scrollpanel side-innhold">
                     <h1 ref="viktigaviteOverskrift" className="decorated typo-innholdstittel ikke-fokusmarkering" tabIndex="-1">{sidetittel}</h1>
