@@ -90,7 +90,7 @@ export class DokumentVisningPage extends React.Component {
                 </div>
 
                 <section aria-labelledby="journalposttittel" className="scrollpanel side-innhold panel" id="js-kulemeny-scroll">
-                    <h1 ref="dokumentvisningOverskrift" className="decorated typo-innholdstittel" tabIndex="-1" id="journalposttittel">
+                    <h1 ref="dokumentvisningOverskrift" className="decorated typo-innholdstittel ikke-fokusmarkering" tabIndex="-1" id="journalposttittel">
                         <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
                         <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
                     </h1>
