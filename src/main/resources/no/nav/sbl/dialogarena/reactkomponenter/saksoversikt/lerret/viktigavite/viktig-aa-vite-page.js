@@ -15,7 +15,7 @@ class ViktigAVitePage extends React.Component {
 
 
     componentDidMount() {
-        document.querySelector('.saksoversikt .lamellhode a').focus();
+        setTimeout(() => this.refs.viktigaviteOverskrift && this.refs.viktigaviteOverskrift.focus(), 0);
     }
 
     _redirect(e) {
@@ -35,7 +35,7 @@ class ViktigAVitePage extends React.Component {
                     <a href="#" onClick={this._redirect} className="close-document"></a>
                 </div>
                 <panel className="panel scrollpanel side-innhold">
-                    <h1 className="decorated typo-innholdstittel">{sidetittel}</h1>
+                    <h1 ref="viktigaviteOverskrift" className="decorated typo-innholdstittel ikke-fokusmarkering" tabIndex="-1">{sidetittel}</h1>
                     <article>
                         <div dangerouslySetInnerHTML={createMarkup(innhold)}/>
                     </article>

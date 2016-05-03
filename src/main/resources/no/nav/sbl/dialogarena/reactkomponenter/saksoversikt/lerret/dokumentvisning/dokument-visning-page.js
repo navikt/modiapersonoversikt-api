@@ -1,4 +1,5 @@
 import React, { PropTypes as PT } from 'react';
+import ReactDOM from 'react-dom';
 import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';
@@ -45,11 +46,8 @@ export class DokumentVisningPage extends React.Component {
         this.props.hentDokumentData(this.props.fnr, this.props.valgtJournalpost);
     }
 
-    componentDidMount() {
-        const saksoversiktLamellhode = document.querySelector('.saksoversikt .lamellhode a');
-        if (saksoversiktLamellhode) {
-            saksoversiktLamellhode.focus();
-        }
+    componentDidUpdate() {
+        setTimeout(() => this.refs.dokumentvisningOverskrift && this.refs.dokumentvisningOverskrift.focus(), 0);
     }
 
     _redirect(e) {
@@ -91,8 +89,8 @@ export class DokumentVisningPage extends React.Component {
                     <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
                 </div>
 
-                <section aria-labelledby="journalposttittel" className="scrollpanel gratt side-innhold panel" id="js-kulemeny-scroll">
-                    <h1 className="decorated typo-innholdstittel" id="journalposttittel">
+                <section aria-labelledby="journalposttittel" className="scrollpanel side-innhold panel" id="js-kulemeny-scroll">
+                    <h1 ref="dokumentvisningOverskrift" className="decorated typo-innholdstittel ikke-fokusmarkering" tabIndex="-1" id="journalposttittel">
                         <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
                         <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
                     </h1>
