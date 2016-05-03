@@ -7,6 +7,7 @@ export const pilnavigeringScroll = (event, props) => {
 
     let index = 0;
     switch (event.keyCode) {
+        //Pil opp
         case 38:
             event.preventDefault();
 
@@ -16,6 +17,7 @@ export const pilnavigeringScroll = (event, props) => {
             Utils.adjustScroll(parent, elements[index]);
 
             break;
+        //Pil ned
         case 40:
             event.preventDefault();
 
