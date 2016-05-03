@@ -3,24 +3,16 @@ import SakstemaListe from './sakstema-liste';
 import { connect } from 'react-redux';
 import VisningDokumentliste from './dokumentliste/visning-dokumentliste';
 import { FormattedMessage } from 'react-intl';
-
-function scrollTilDokument(props) {
-    const scrollToDokumentId = props.scrollToDokumentId;
-    const element = document.querySelector(`#a${scrollToDokumentId}`);
-    const parent  = document.querySelector('.saksoversikt-innhold');
-
-    if(element && parent) {
-        setTimeout(() => {
-            parent.scrollTop = element.offsetTop - 200;
-        }, 0);
-    }
-    props.purgeScrollId();
-}
+import { pilnavigeringScroll, scrollTilDokument } from './../../utils/sakstema-scroll';
 
 class SakstemaPage extends React.Component {
 
     componentDidMount() {
         scrollTilDokument(this.props);
+    }
+
+    keyDownHandler(event) {
+        pilnavigeringScroll(event, this.props);
     }
 
     render() {
@@ -40,7 +32,7 @@ class SakstemaPage extends React.Component {
 
         return (
             <div className="sakstema-container">
-                <section className="saksoversikt-liste">
+                <section onKeyDown={this.keyDownHandler.bind(this)} className="saksoversikt-liste">
                     <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
                 <section className="saksoversikt-innhold side-innhold">
