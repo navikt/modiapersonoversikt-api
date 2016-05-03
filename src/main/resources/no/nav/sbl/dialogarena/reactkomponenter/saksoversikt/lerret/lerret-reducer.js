@@ -45,7 +45,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
         .filter(fjernTommeTema).sort(nyesteSakstema) : [];
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
-    const valgtTema = _sakstema[0];
+    const valgtTema = state.valgtTema? state.valgtTema : _sakstema[0];
     return {
         ...state,
         status: status,
