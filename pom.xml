@@ -13,7 +13,7 @@
     <name>modia-saksoversikt</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>5.20-HL2</version>
+    <version>5.21-HL2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -319,6 +319,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modia-saksoversikt.git</developerConnection>
         <url>http://stash.devillo.no/scm/dial/modia-saksoversikt.git</url>
-        <tag>5.20-HL2</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
