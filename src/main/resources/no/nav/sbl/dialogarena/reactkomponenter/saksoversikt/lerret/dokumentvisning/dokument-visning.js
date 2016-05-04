@@ -9,7 +9,7 @@ const stylingFn = (antallSider = 1, width = 750) => ({
     width: '100%',
     maxWidth: '100%',
     marginBottom: '2rem',
-    height: a4Ratio * antallSider * width + 100 // magisk tall
+    height: a4Ratio * antallSider * width // magisk tall
 });
 
 class DokumentVisning extends Component {
