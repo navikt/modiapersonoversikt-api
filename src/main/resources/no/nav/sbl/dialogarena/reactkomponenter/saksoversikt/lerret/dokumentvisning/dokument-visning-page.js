@@ -85,7 +85,13 @@ export class DokumentVisningPage extends React.Component {
         return (
             <div className="dokument-visning-page">
                 <div className="fixed-header">
-                    <a href="#" onClick={this._redirect} className="close-document" aria-label={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}></a>
+                    <button onClick={this._redirect}
+                            className="close-document"
+                            type="button"
+                            aria-label={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                            title={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                    >
+                    </button>
                     <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
                 </div>
 
