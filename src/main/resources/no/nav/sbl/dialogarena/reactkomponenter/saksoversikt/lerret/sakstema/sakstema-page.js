@@ -32,10 +32,10 @@ class SakstemaPage extends React.Component {
 
         return (
             <div className="sakstema-container">
-                <section onKeyDown={this.keyDownHandler.bind(this)} className="saksoversikt-liste">
+                <section onKeyDown={this.keyDownHandler.bind(this)} className="saksoversikt-liste scrollpanel">
                     <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
                 </section>
-                <section className="saksoversikt-innhold side-innhold">
+                <section className="saksoversikt-innhold side-innhold scrollpanel">
                     <h2 className="vekk">{valgtTema.temanavn}</h2>
                     <VisningDokumentliste visSide={visSide} valgtTema={valgtTema}
                       brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}
