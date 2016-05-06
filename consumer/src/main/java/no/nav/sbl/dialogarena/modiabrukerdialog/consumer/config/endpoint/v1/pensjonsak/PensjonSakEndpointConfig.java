@@ -10,7 +10,7 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.PensjonSakEndpointMock.createPensjonSakV1Mock;
 
 @Configuration
@@ -22,7 +22,7 @@ public class PensjonSakEndpointConfig {
     public PensjonSakV1 pensjonSakV1() {
         PensjonSakV1 prod = createPensjonSakV1(new UserSAMLOutInterceptor());
         PensjonSakV1 mock = createPensjonSakV1Mock();
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, PENSJONSAK_KEY, PensjonSakV1.class);
+        return createMetricsProxyWithInstanceSwitcher("PensjonSakV1", prod, mock, PENSJONSAK_KEY, PensjonSakV1.class);
     }
 
     @Bean

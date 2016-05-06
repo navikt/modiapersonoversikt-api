@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 
 @Configuration
@@ -36,7 +36,7 @@ public class AktorEndpointConfig {
         final AktoerPortType mock = new AktoerPortTypeMock().getAktoerPortTypeMock();
         final AktoerPortType prod = aktoerPort();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, AKTOER_KEY, AktoerPortType.class);
+        return createMetricsProxyWithInstanceSwitcher("Aktoer", prod, mock, AKTOER_KEY, AktoerPortType.class);
     }
 
 

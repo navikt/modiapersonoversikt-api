@@ -11,8 +11,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock.createBehandleHenvendelsePortTypeMock;
 
 @Configuration
@@ -23,7 +23,7 @@ public class BehandleHenvendelseEndpointConfig {
         final BehandleHenvendelsePortType prod = createBehandleHenvendelsePortType(new UserSAMLOutInterceptor());
         final BehandleHenvendelsePortType mock = createBehandleHenvendelsePortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, HENVENDELSE_KEY, BehandleHenvendelsePortType.class);
+        return createMetricsProxyWithInstanceSwitcher("BehandleHenvendelse", prod, mock, HENVENDELSE_KEY, BehandleHenvendelsePortType.class);
     }
 
     @Bean
@@ -37,7 +37,7 @@ public class BehandleHenvendelseEndpointConfig {
                 .wsdl("classpath:BehandleHenvendelse.wsdl")
                 .address(System.getProperty("behandle.henvendelse.url"))
                 .withOutInterceptor(interceptor)
-                .setProperty("jaxb.additionalContextClasses", new Class[]{XMLJournalfortInformasjon.class})
+                .withProperty("jaxb.additionalContextClasses", new Class[]{XMLJournalfortInformasjon.class})
                 .build();
     }
 
