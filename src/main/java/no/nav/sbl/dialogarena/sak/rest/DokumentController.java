@@ -159,6 +159,7 @@ public class DokumentController {
                         .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
                         .map((Pair<String, TjenesteResultatWrapper> data) -> {
                             int antallSider = hentAntallSiderIDokument(data);
+                            boolean erHoveddokument = data.getLeft().equals(journalpostMetadata.getHoveddokument().getDokumentreferanse());
                             String tittel = journalpostMetadata.getVedlegg()
                                     .stream()
                                     .filter((d) -> data.getLeft().equals(d.getDokumentreferanse()))
@@ -166,7 +167,7 @@ public class DokumentController {
                                     .map(Dokument::getTittel)
                                     .orElse(journalpostMetadata.getHoveddokument().getTittel());
 
-                            return new DokumentResultat(tittel, antallSider, fnr, journalpostId, data.getLeft());
+                            return new DokumentResultat(tittel, antallSider, fnr, journalpostId, data.getLeft(), erHoveddokument);
                         }).collect(toList());
             }).get();
         } catch (InterruptedException | ExecutionException e) {
