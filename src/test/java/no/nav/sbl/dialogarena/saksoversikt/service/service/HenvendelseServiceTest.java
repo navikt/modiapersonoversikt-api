@@ -39,4 +39,59 @@ public class HenvendelseServiceTest {
         ));
         assertThat(henvendelseService.hentPaabegynteSoknader("12345678901").size(), equalTo(2));
     }
+
+    @Test
+    public void gamlePaabegynteSoknaderFjernes() {
+        System.setProperty("fjern.soknader.for.dato", "2015-01-05");
+        when(henvendelseSoknaderPortType.hentSoknadListe("12345678901")).thenReturn(asList(
+                new WSSoknad()
+                        .withHenvendelseStatus("UNDER_ARBEID")
+                        .withOpprettetDato(new DateTime())
+                        .withHenvendelseType("SOKNADSINNSENDING")
+                        .withSistEndretDato(new DateTime("2015-01-01")),
+                new WSSoknad()
+                        .withHenvendelseStatus("UNDER_ARBEID")
+                        .withOpprettetDato(new DateTime())
+                        .withHenvendelseType("SOKNADSINNSENDING")
+                        .withSistEndretDato(new DateTime("2015-01-06"))
+        ));
+        assertThat(henvendelseService.hentPaabegynteSoknader("12345678901").size(), equalTo(1));
+    }
+
+    @Test
+    public void sokanderPaaGrenseverdiFjernes() {
+        final String grense = "2015-01-01";
+        System.setProperty("fjern.soknader.for.dato", grense);
+        when(henvendelseSoknaderPortType.hentSoknadListe("123")).thenReturn(asList(
+                new WSSoknad()
+                        .withHenvendelseStatus("UNDER_ARBEID")
+                        .withOpprettetDato(new DateTime())
+                        .withHenvendelseType("SOKNADSINNSENDING")
+                        .withSistEndretDato(new DateTime(grense)),
+                new WSSoknad()
+                        .withHenvendelseStatus("UNDER_ARBEID")
+                        .withOpprettetDato(new DateTime())
+                        .withHenvendelseType("SOKNADSINNSENDING")
+                        .withSistEndretDato(new DateTime("2015-01-06"))
+        ));
+        assertThat(henvendelseService.hentPaabegynteSoknader("123").size(), equalTo(1));
+    }
+
+    @Test
+    public void gamleInnsendteSoknaderFjernes() {
+        System.setProperty("fjern.soknader.for.dato", "2015-01-05");
+        when(henvendelseSoknaderPortType.hentSoknadListe("12345678901")).thenReturn(asList(
+                new WSSoknad()
+                        .withHenvendelseStatus("FERDIG")
+                        .withOpprettetDato(new DateTime())
+                        .withHenvendelseType("SOKNADSINNSENDING")
+                        .withSistEndretDato(new DateTime("2015-01-01")),
+                new WSSoknad()
+                        .withHenvendelseStatus("FERDIG")
+                        .withOpprettetDato(new DateTime())
+                        .withHenvendelseType("SOKNADSINNSENDING")
+                        .withSistEndretDato(new DateTime("2015-01-06"))
+        ));
+        assertThat(henvendelseService.hentInnsendteSoknader("12345678901").size(), equalTo(1));
+    }
 }
