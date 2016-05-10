@@ -34,18 +34,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
-import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -62,9 +57,6 @@ public class HenvendelseBehandlingServiceImplTest {
     private static final List<String> IDER_I_VALGT_TRAAD = asList(ID_1, ID_2, ID_3);
     private static final String NAVBRUKERS_ENHET = "Navbrukers enhet";
     public static final String ARKIVTEMANAVN = "arkivtemanavn";
-    public static final String NAV_SELBU = "1664";
-    public static final String NAV_LEKSVIK = "1718";
-    public static final String NAV_VAERNES = "1783";
 
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
@@ -263,60 +255,5 @@ public class HenvendelseBehandlingServiceImplTest {
         assertThat(meldinger.get(0).fritekst).isNotEqualTo(fritekst);
 
     }
-
-    @Test
-    public void skalSendeFlereEnheterTilPepForKontorsperre() throws Exception {
-        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet(NAV_SELBU));
-
-        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(NAV_VAERNES)).collect();
-
-        verify(pep).hasAccess(pepArgument.capture());
-        assertThat(pepArgument.getValue().getAttributes()).contains(
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_VAERNES)),
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_SELBU))
-        );
-    }
-
-    @Test
-    public void skalSendeEnEnheterTilPepForKontorsperre() throws Exception {
-        List<Melding> meldinger = Arrays.asList(new Melding().withKontorsperretEnhet(NAV_SELBU));
-
-        on(meldinger).filter(henvendelseBehandlingService.kontorsperreTilgang(NAV_LEKSVIK)).collect();
-
-        verify(pep).hasAccess(pepArgument.capture());
-        assertThat(pepArgument.getValue().getAttributes()).contains(
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_LEKSVIK))
-        );
-    }
-
-    @Test
-    public void skalSendeFlereEnheterTilPepForOkonomiskSosialeMeldinger() throws Exception {
-        List<Melding> meldinger = Arrays.asList(new Melding().withGjeldendeTemagruppe(OKSOS));
-
-        on(meldinger).map(henvendelseBehandlingService.okonomiskSosialhjelpTilgang(NAV_VAERNES)).collect();
-
-        verify(pep).hasAccess(pepArgument.capture());
-        assertThat(pepArgument.getValue().getAttributes()).contains(
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_VAERNES)),
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_SELBU))
-        );
-    }
-
-    @Test
-    public void skalSendeEnEnheterTilPepForOkonomiskSosialeMeldinger() throws Exception {
-        List<Melding> meldinger = Arrays.asList(new Melding().withGjeldendeTemagruppe(OKSOS));
-
-        on(meldinger).map(henvendelseBehandlingService.okonomiskSosialhjelpTilgang(NAV_LEKSVIK)).collect();
-
-        verify(pep).hasAccess(pepArgument.capture());
-        assertThat(pepArgument.getValue().getAttributes()).contains(
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(NAV_LEKSVIK))
-        );
-    }
-
-
-
-
-
 
 }
