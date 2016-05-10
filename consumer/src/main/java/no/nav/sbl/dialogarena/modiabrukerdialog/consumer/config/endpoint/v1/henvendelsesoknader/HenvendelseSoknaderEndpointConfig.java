@@ -11,7 +11,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSok
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class HenvendelseSoknaderEndpointConfig {
@@ -23,7 +23,7 @@ public class HenvendelseSoknaderEndpointConfig {
         final HenvendelseSoknaderPortType prod = createHenvendelsePortType(new UserSAMLOutInterceptor());
         final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
+        return createMetricsProxyWithInstanceSwitcher("Henvendelsesoknader_v1", prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
     }
 
     @Bean

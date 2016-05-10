@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher;
+import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 

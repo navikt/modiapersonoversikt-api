@@ -7,10 +7,11 @@ import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy;
 import no.nav.sbl.dialogarena.varsel.config.VarslerMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class VarslingEndpointConfig {
@@ -22,7 +23,7 @@ public class VarslingEndpointConfig {
         final VarslerPorttype prod = createVarslingPortType(new UserSAMLOutInterceptor());
         final VarslerPorttype mock = new VarslerMock();
 
-        return TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher(prod, mock, VARSLING_KEY, VarslerPorttype.class);
+        return createMetricsProxyWithInstanceSwitcher("Varsler", prod, mock, VARSLING_KEY, VarslerPorttype.class);
     }
 
     @Bean

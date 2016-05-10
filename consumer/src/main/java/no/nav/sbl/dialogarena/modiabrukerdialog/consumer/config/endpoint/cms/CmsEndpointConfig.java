@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Configuration
@@ -102,7 +102,7 @@ public class CmsEndpointConfig {
     private ValueRetriever siteContentRetriever() throws URISyntaxException {
         final ValueRetriever prod = getValueRetriever();
         final ValueRetriever mock = new CMSValueRetrieverMock().getValueRetrieverMock();
-        return createSwitcher(prod, mock, CMS_KEY, ValueRetriever.class);
+        return createMetricsProxyWithInstanceSwitcher("Enonic", prod, mock, CMS_KEY, ValueRetriever.class);
     }
 
     private ValuesFromContentWithResourceBundleFallback getValueRetriever() throws URISyntaxException {

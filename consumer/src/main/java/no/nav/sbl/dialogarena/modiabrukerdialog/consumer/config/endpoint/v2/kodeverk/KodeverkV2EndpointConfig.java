@@ -12,8 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static java.util.Optional.empty;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
 
 @Configuration
@@ -26,14 +25,14 @@ public class KodeverkV2EndpointConfig {
         KodeverkPortType prod = lagKodeverkPortType();
         KodeverkPortType mock = KodeverkV2PortTypeMock.kodeverkPortType();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, KODEVERK_KEY, KodeverkPortType.class);
+        return createMetricsProxyWithInstanceSwitcher("KodeverkPortTypeV2", prod, mock, KODEVERK_KEY, KodeverkPortType.class);
     }
 
     @Bean
     public KodeverkClient kodeverkClient() {
         KodeverkClient prod = lagKodeverkClient();
         KodeverkClient mock = KodeverkV2PortTypeMock.kodeverkClient();
-        return createSwitcher(prod, mock, KODEVERK_KEY, KodeverkClient.class);
+        return createMetricsProxyWithInstanceSwitcher("KodeverkClient", prod, mock, KODEVERK_KEY, KodeverkClient.class);
     }
 
     @Bean
@@ -45,7 +44,7 @@ public class KodeverkV2EndpointConfig {
         return new CXFClient<>(KodeverkPortType.class)
                 .wsdl("classpath:kodeverk/no/nav/tjeneste/virksomhet/kodeverk/v2/Kodeverk.wsdl")
                 .address(System.getProperty("kodeverkendpoint.v2.url"))
-                .setProperty(MUST_UNDERSTAND, false)
+                .withProperty(MUST_UNDERSTAND, false)
                 .build();
     }
 

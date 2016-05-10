@@ -10,7 +10,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.createOppgavePortTypeMock;
 
 @Configuration
@@ -23,7 +23,7 @@ public class GsakOppgaveV3EndpointConfig {
         OppgaveV3 prod = createOppgavePortType(new UserSAMLOutInterceptor());
         OppgaveV3 mock = createOppgavePortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, GSAK_V3_KEY, OppgaveV3.class);
+        return createMetricsProxyWithInstanceSwitcher("OppgaveV3", prod, mock, GSAK_V3_KEY, OppgaveV3.class);
     }
 
     @Bean

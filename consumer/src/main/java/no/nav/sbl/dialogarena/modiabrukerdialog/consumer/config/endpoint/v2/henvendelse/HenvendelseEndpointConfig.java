@@ -14,7 +14,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.createHenvendelsePortTypeMock;
 
 @Configuration
@@ -27,7 +27,7 @@ public class HenvendelseEndpointConfig {
         HenvendelsePortType prod = createHenvendelsePortType(new UserSAMLOutInterceptor());
         HenvendelsePortType mock = createHenvendelsePortTypeMock();
         
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, HENVENDELSE_KEY, HenvendelsePortType.class);
+        return createMetricsProxyWithInstanceSwitcher("henvendelseV2", prod, mock, HENVENDELSE_KEY, HenvendelsePortType.class);
     }
 
     @Bean
@@ -41,7 +41,7 @@ public class HenvendelseEndpointConfig {
                 .wsdl("classpath:Henvendelse.wsdl")
                 .address(System.getProperty("henvendelse.v2.url"))
                 .withOutInterceptor(interceptor)
-                .setProperty("jaxb.additionalContextClasses", new Class[]{
+                .withProperty("jaxb.additionalContextClasses", new Class[]{
                         XMLHenvendelse.class,
                         XMLMetadataListe.class,
                         XMLMeldingFraBruker.class,

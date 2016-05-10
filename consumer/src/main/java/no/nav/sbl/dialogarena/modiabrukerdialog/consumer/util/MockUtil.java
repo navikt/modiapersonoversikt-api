@@ -6,7 +6,7 @@ import static java.lang.System.getProperty;
 
 public class MockUtil {
 
-    public static final String TILLATMOCKSETUP_PROPERTY = "tillatmocksetup";
+    public static final String TILLATMOCKSETUP_PROPERTY = "tillatmock";
     public static final String DEFAULT_MOCK_TILLATT = "false";
     public static final String ALLOW_MOCK = "true";
 
