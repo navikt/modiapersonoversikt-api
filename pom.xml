@@ -104,8 +104,8 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>4.4</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>5.6-EARSPLITTING-BUCKET</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>5.0.0-2016-HL3-SNAPSHOT</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>6.0.0-2016-HL3-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>5.18-HL2</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
