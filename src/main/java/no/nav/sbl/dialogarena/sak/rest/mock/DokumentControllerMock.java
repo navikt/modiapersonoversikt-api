@@ -19,6 +19,6 @@ public class DokumentControllerMock {
     public static JournalpostResultat mockJournalpost() {
         return new JournalpostResultat()
                 .withTittel("Hoveddokumenttittel")
-                .withDokument(new DokumentResultat("Fancy dokument", 7, "101080003987", "123456", "123456"));
+                .withDokument(new DokumentResultat("Fancy dokument", 7, "101080003987", "123456", "123456", false));
     }
 }
