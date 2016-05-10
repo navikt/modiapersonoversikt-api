@@ -45,13 +45,17 @@ public class HenvendelseService {
         return hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus.UNDER_ARBEID, fnr);
     }
 
+    public List<Soknad> hentInnsendteSoknader(String fnr) {
+        return hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus.FERDIG, fnr);
+    }
+
     public List<Behandling> hentKvitteringer(String fnr) {
         return hentHenvendelsessoknaderMedStatus(FERDIG, fnr).stream()
                 .map(SOKNAD_TIL_KVITTERING)
                 .collect(toList());
     }
 
-    public List<Soknad> hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus status, String fnr) {
+    private List<Soknad> hentHenvendelsessoknaderMedStatus(Soknad.HenvendelseStatus status, String fnr) {
         try {
             return hentHenvendelsessoknader(fnr).stream()
                     .filter(soknad -> soknad.getStatus().equals(status))
