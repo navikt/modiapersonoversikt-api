@@ -1,11 +1,13 @@
 /* eslint-env mocha */
 import './../../../test-config';
+import 'babel-polyfill';
 import React from 'react';
 import { expect } from 'chai';
 import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
 import DokumentVisningListe from './dokument-visning-liste';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
+import { hoveddokumentForst } from './dokument-visning-liste';
 
 describe('DokumentVisningListe', () => {
     const messages = {
@@ -58,5 +60,37 @@ describe('DokumentVisningListe', () => {
         expect(renderedDokumentVisningListe.length).to.equal(1);
         const renderedDokumentliste = scryRenderedDOMComponentsWithClass(element, 'dokumentheader');
         expect(renderedDokumentliste.length).to.equal(2);
+    });
+
+    it('Skal sortere slik at hoveddokumentet havner først i listen', () => {
+            const dokumenter =  [
+                {
+                    antallSider: 5,
+                    dokumentreferanse: '3',
+                    journalpostId: '321',
+                    pdfUrl: '2134',
+                    erHoveddokument: false
+
+                },
+                {
+                    antallSider: 2,
+                    dokumentreferanse: '2',
+                    journalpostId: '654',
+                    pdfUrl: '2134',
+                    erHoveddokument: true
+                },
+                {
+                    antallSider: 1,
+                    dokumentreferanse: '1',
+                    journalpostId: '654',
+                    pdfUrl: '2134',
+                    erHoveddokument: false
+
+                }
+            ];
+
+        const sortertDokumentliste = hoveddokumentForst(dokumenter);
+        expect(sortertDokumentliste.length).to.equal(3);
+        expect(sortertDokumentliste[0].dokumentreferanse).to.equal('2');
     });
 });
