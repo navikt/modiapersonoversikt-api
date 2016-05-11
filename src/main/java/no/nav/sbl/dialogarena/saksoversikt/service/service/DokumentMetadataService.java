@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 import static java.lang.Boolean.FALSE;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.JOURNALFORT_ANNET_TEMA;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus.FERDIG;
 
 @SuppressWarnings("squid:S1166")
 public class DokumentMetadataService {
@@ -69,7 +68,7 @@ public class DokumentMetadataService {
             feilendeBaksystem.add(e.getBaksystem());
         }
         try {
-            innsendteSoknaderIHenvendelse.addAll(henvendelseService.hentHenvendelsessoknaderMedStatus(FERDIG, fnr)
+            innsendteSoknaderIHenvendelse.addAll(henvendelseService.hentInnsendteSoknader(fnr)
                     .stream()
                     .map(soknad -> dokumentMetadataFraHenvendelse(soknad))
                     .collect(toList()));
