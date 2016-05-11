@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
-import com.codahale.metrics.Timer;
+import no.nav.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
@@ -149,7 +149,8 @@ public class LeggTilbakePanel extends Panel {
         return new IndicatingAjaxButtonWithImageUrl("leggtilbake", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                Timer.Context timer = MetricsFactory.createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak + ".time").time();
+                Timer timer = createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak);
+                timer.start();
                 try {
                     oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                             oppgaveId,
@@ -172,6 +173,7 @@ public class LeggTilbakePanel extends Panel {
                     henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
                 } finally {
                     timer.stop();
+                    timer.report();
                 }
             }
 
