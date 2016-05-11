@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
-import com.codahale.metrics.Timer;
-import no.nav.modig.modia.metrics.MetricsFactory;
+import no.nav.metrics.Timer;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -26,6 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
+import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
@@ -135,7 +135,8 @@ public class MerkePanel extends AnimertPanel {
 
         @Override
         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-            Timer.Context timer = MetricsFactory.createTimer("hendelse.merk." + merkVM.getObject().getMerkType() + ".time").time();
+            Timer timer = createTimer("hendelse.merk." + merkVM.getObject().getMerkType() + ".time");
+            timer.start();
             try {
                 switch (merkVM.getObject().getMerkType()) {
                     case FEILSENDT:
@@ -150,6 +151,7 @@ public class MerkePanel extends AnimertPanel {
                 }
             } finally {
                 timer.stop();
+                timer.report();
             }
         }
 
