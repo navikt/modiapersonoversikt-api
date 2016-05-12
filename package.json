@@ -53,6 +53,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "chokidar": "git+https://github.com/paulmillr/chokidar.git#1.5.0",
     "babel-polyfill": "^6.6.1",
     "intl": "^1.1.0",
     "lodash": "^4.5.0",
