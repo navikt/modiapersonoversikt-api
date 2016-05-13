@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class ScheduledAnsattListePrefetchTest {
 
     @Mock
-    EnhetService enhetService;
+    OrganisasjonEnhetService organisasjonEnhetService;
     @Mock
     GOSYSNAVansatt ansattWS;
     @Mock
@@ -43,7 +43,7 @@ public class ScheduledAnsattListePrefetchTest {
     @Before
     public void setUp() throws Exception {
         enheter = Arrays.asList(new AnsattEnhet("0100", "Nav Østfold"), new AnsattEnhet("2960", "Nav Drift"));
-        when(enhetService.hentAlleEnheter()).thenReturn(enheter);
+        when(organisasjonEnhetService.hentAlleEnheter()).thenReturn(enheter);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 

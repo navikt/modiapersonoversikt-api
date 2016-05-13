@@ -24,7 +24,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -119,7 +119,7 @@ public class PersonPage extends BasePage {
     @Inject
     private LDAPService ldapService;
     @Inject
-    private EnhetService enhetService;
+    private OrganisasjonEnhetService organisasjonEnhetService;
 
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
@@ -198,7 +198,7 @@ public class PersonPage extends BasePage {
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
         return new GrunnInfo.Saksbehandler(
-                optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
+                optional(organisasjonEnhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
                 saksbehandler.fornavn,
                 saksbehandler.etternavn
         );
@@ -206,7 +206,7 @@ public class PersonPage extends BasePage {
 
     private String hentEnhet(Personfakta personfakta) {
         try {
-            AnsattEnhet enhet = enhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
+            AnsattEnhet enhet = organisasjonEnhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
             return enhet.enhetNavn;
         } catch (Exception e) {
             return "";

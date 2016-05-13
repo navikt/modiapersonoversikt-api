@@ -42,7 +42,7 @@ public class OrganisasjonEnhetEndpointCacheTest extends CacheTest {
         final WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest request_1 = new WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest();
         request_1.withGeografiskNedslagsfeltListe("1234");
         final WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest request_2 = new WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest();
-        request_1.withGeografiskNedslagsfeltListe("4321");
+        request_2.withGeografiskNedslagsfeltListe("4321");
         enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(request_1);
         enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(request_2);
         enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(request_1);
