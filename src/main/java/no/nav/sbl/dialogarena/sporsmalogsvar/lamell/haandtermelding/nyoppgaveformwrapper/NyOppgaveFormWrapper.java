@@ -9,7 +9,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -44,7 +44,7 @@ public class NyOppgaveFormWrapper extends Panel {
     @Inject
     private GsakKodeverk gsakKodeverk;
     @Inject
-    private EnhetService enhetService;
+    private OrganisasjonEnhetService organisasjonEnhetService;
     @Inject
     private AnsattService ansattService;
 
@@ -61,7 +61,7 @@ public class NyOppgaveFormWrapper extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         this.innboksVM = innboksVM;
-        this.enheter = on(enhetService.hentAlleEnheter()).filter(GYLDIG_ENHET).collect();
+        this.enheter = on(organisasjonEnhetService.hentAlleEnheter()).filter(GYLDIG_ENHET).collect();
         this.foreslatteEnheter = new ArrayList<>();
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
