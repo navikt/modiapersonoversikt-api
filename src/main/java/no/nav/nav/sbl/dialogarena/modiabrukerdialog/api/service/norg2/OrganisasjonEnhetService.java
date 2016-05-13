@@ -1,0 +1,11 @@
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2;
+
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+
+import java.util.List;
+
+public interface OrganisasjonEnhetService {
+    List<AnsattEnhet> hentAlleEnheter();
+
+    AnsattEnhet hentEnhet(String enhetId);
+}
