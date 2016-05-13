@@ -14,14 +14,14 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetri
 @Configuration
 public class OrganisasjonEnhetEndpointConfig {
 
-    private static final String NORG_KEY = "start.norg2.organisasjonenhet.withmock";
+    public static final String NORG2_ORGANISASJON_ENHET_KEY = "start.norg2.organisasjonenhet.withmock";
 
     @Bean
     public OrganisasjonEnhetV1 organisasjonEnhetV1() {
         final OrganisasjonEnhetV1 organisasjonEnhetV1 = lagEndpoint();
         final OrganisasjonEnhetV1 organisasjonEnhetV1Mock = lagMockEnpoint();
 
-        return createMetricsProxyWithInstanceSwitcher(organisasjonEnhetV1, organisasjonEnhetV1Mock, NORG_KEY, OrganisasjonEnhetV1.class);
+        return createMetricsProxyWithInstanceSwitcher(organisasjonEnhetV1, organisasjonEnhetV1Mock, NORG2_ORGANISASJON_ENHET_KEY, OrganisasjonEnhetV1.class);
     }
 
     @Bean
