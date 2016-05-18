@@ -48,7 +48,7 @@ public class OrganisasjonEnhetV1Mock {
                 final WSHentFullstendigEnhetListeResponse response = new WSHentFullstendigEnhetListeResponse();
 
                 final List<WSDetaljertEnhet> enheter = new ArrayList<>();
-                IntStream.rangeClosed(1, 100).mapToObj(i -> enheter.add(lagWSDetaljertEnhet(i)));
+                IntStream.rangeClosed(101, 200).forEach(i -> enheter.add(lagWSDetaljertEnhet(i)));
 
                 response.withEnhetListe(enheter);
                 return response;
