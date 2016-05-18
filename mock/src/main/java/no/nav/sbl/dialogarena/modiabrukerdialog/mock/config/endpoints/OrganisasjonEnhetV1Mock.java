@@ -4,10 +4,14 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSEnheterForGeografiskNedslagsfelt;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.IntStream;
 
 @Configuration
 public class OrganisasjonEnhetV1Mock {
@@ -30,7 +34,7 @@ public class OrganisasjonEnhetV1Mock {
                 final String geografiskNedslagsfelt = wsFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.getGeografiskNedslagsfeltListe().get(0);
                 return new WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse().withEnheterForGeografiskNedslagsfeltListe(
                         new WSEnheterForGeografiskNedslagsfelt().withGeografiskNedslagsfelt(geografiskNedslagsfelt).withEnhetListe(
-                                Collections.singletonList(new WSDetaljertEnhet().withEnhetId(geografiskNedslagsfelt).withNavn("NAV Mockbrukers Enhet").withAntallRessurser(100).withStatus("AKTIV"))
+                                Collections.singletonList(lagWSDetaljertEnhet(1234))
                         ));
             }
 
@@ -41,12 +45,23 @@ public class OrganisasjonEnhetV1Mock {
 
             @Override
             public WSHentFullstendigEnhetListeResponse hentFullstendigEnhetListe(final WSHentFullstendigEnhetListeRequest wsHentFullstendigEnhetListeRequest) {
-                return null;
+                final WSHentFullstendigEnhetListeResponse response = new WSHentFullstendigEnhetListeResponse();
+
+                final List<WSDetaljertEnhet> enheter = new ArrayList<>();
+                IntStream.rangeClosed(1, 100).mapToObj(i -> enheter.add(lagWSDetaljertEnhet(i)));
+
+                response.withEnhetListe(enheter);
+                return response;
             }
 
             @Override
             public WSHentEnhetBolkResponse hentEnhetBolk(final WSHentEnhetBolkRequest wsHentEnhetBolkRequest) throws HentEnhetBolkUgyldigInput {
                 return null;
+            }
+
+            private WSDetaljertEnhet lagWSDetaljertEnhet(final int enhetId) {
+                return new WSDetaljertEnhet().withEnhetId(StringUtils.leftPad(String.valueOf(enhetId), 4, '0'))
+                        .withNavn("NAV Mockbrukers Enhet").withAntallRessurser(100).withStatus("AKTIV");
             }
         };
     }
