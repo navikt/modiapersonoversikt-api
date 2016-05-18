@@ -34,7 +34,7 @@ public class OrganisasjonEnhetV1Mock {
                 final String geografiskNedslagsfelt = wsFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.getGeografiskNedslagsfeltListe().get(0);
                 return new WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse().withEnheterForGeografiskNedslagsfeltListe(
                         new WSEnheterForGeografiskNedslagsfelt().withGeografiskNedslagsfelt(geografiskNedslagsfelt).withEnhetListe(
-                                Collections.singletonList(lagWSDetaljertEnhet(1234))
+                                Collections.singletonList(lagWSDetaljertEnhet(Integer.valueOf(geografiskNedslagsfelt)))
                         ));
             }
 
