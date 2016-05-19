@@ -206,8 +206,13 @@ public class PersonPage extends BasePage {
     }
 
     private String hentEnhet(Personfakta personfakta) {
-        Optional<AnsattEnhet> enhet = organisasjonEnhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
-        return enhet.isSome() ? enhet.get().enhetNavn : "";
+        if (personfakta != null && personfakta.getHarAnsvarligEnhet() != null
+                && personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet() != null
+                && StringUtils.isNotEmpty(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn())) {
+            return personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn();
+        } else {
+            return "";
+        }
     }
 
     @Override
