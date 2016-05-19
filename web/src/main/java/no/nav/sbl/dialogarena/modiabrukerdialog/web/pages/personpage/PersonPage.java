@@ -12,6 +12,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
@@ -65,7 +66,6 @@ import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
@@ -197,20 +197,17 @@ public class PersonPage extends BasePage {
         Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetService.hentEnhet(valgtEnhet);
         return new GrunnInfo.Saksbehandler(
-                optional(organisasjonEnhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
+                ansattEnhet.isSome() ? ansattEnhet.get().enhetNavn : "",
                 saksbehandler.fornavn,
                 saksbehandler.etternavn
         );
     }
 
     private String hentEnhet(Personfakta personfakta) {
-        try {
-            AnsattEnhet enhet = organisasjonEnhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
-            return enhet.enhetNavn;
-        } catch (Exception e) {
-            return "";
-        }
+        Optional<AnsattEnhet> enhet = organisasjonEnhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
+        return enhet.isSome() ? enhet.get().enhetNavn : "";
     }
 
     @Override

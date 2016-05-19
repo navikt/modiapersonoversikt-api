@@ -1,14 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.norg2;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSHentFullstendigEnhetListeRequest;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSHentFullstendigEnhetListeResponse;
 import org.apache.commons.collections15.Transformer;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -18,8 +21,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
+
+    private static final Logger logger = getLogger(OrganisasjonEnhetServiceImpl.class);
 
     @Inject
     private OrganisasjonEnhetV1 enhetWS;
@@ -38,13 +46,22 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
     }
 
     @Override
-    public AnsattEnhet hentEnhet(String geografiskNedslagsfelt) {
+    public Optional<AnsattEnhet> hentEnhet(String geografiskNedslagsfelt) {
         try {
             final WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest request = new WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest();
             request.getGeografiskNedslagsfeltListe().addAll(Collections.singletonList(geografiskNedslagsfelt));
-            return TIL_ANSATTENHET.transform(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(request).getEnheterForGeografiskNedslagsfeltListe().get(0).getEnhetListe().get(0));
+            final WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse response = enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(request);
+            if (response.getEnheterForGeografiskNedslagsfeltListe() != null && !response.getEnheterForGeografiskNedslagsfeltListe().isEmpty()
+                    && response.getEnheterForGeografiskNedslagsfeltListe().get(0) != null
+                    && response.getEnheterForGeografiskNedslagsfeltListe().get(0).getEnhetListe() != null
+                    && !response.getEnheterForGeografiskNedslagsfeltListe().get(0).getEnhetListe().isEmpty()) { // OMG!
+                return optional(TIL_ANSATTENHET.transform(response.getEnheterForGeografiskNedslagsfeltListe().get(0).getEnhetListe().get(0)));
+            } else {
+                return none();
+            }
         } catch (FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput e) {
-            throw new RuntimeException(e);
+            logger.warn("Kall til OrganisasjonEnhetV1.finnNAVKontorForGeografiskNedslagsfeltBolk() kastet exception.", e);
+            return none();
         }
     }
 

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.norg2;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
@@ -20,6 +21,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -65,9 +68,17 @@ public class OrganisasjonEnhetServiceImplTest {
         response.getEnheterForGeografiskNedslagsfeltListe().add(wsEnheterForGeografiskNedslagsfelt);
         when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenReturn(response);
 
-        final AnsattEnhet enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhet("0219");
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhet("0219");
 
-        assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.enhetId)));
-        assertThat(navEnhet.getNavn(), is(equalTo(enhetFraTjenesten.enhetNavn)));
+        assertTrue(enhetFraTjenesten.isSome());
+        assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.get().enhetId)));
+        assertThat(navEnhet.getNavn(), is(equalTo(enhetFraTjenesten.get().enhetNavn)));
+    }
+
+    @Test
+    public void hentEnhetSkalReturnereTomOptionalDersomTjenestenReturnererTomRespons() throws Exception {
+        when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenReturn(new WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse());
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhet("0219");
+        assertFalse(enhetFraTjenesten.isSome());
     }
 }
