@@ -8,7 +8,7 @@ import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakSakV1EndpointConfig.GSAK_SAK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOpprettSakEndpointMock.createGsakOpprettSakPortTypeMock;
 
@@ -19,7 +19,7 @@ public class GsakOpprettSakEndpointConfig {
         BehandleSakV1 prod = createGsakOpprettSakPortType();
         BehandleSakV1 mock = createGsakOpprettSakPortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher("behandleSakV1", prod, mock, GSAK_SAK_KEY, BehandleSakV1.class);
+        return createSwitcher(prod, mock, GSAK_SAK_KEY, BehandleSakV1.class);
     }
 
     @Bean

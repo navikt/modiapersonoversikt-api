@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.varsel.config.VarslerMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class VarslingEndpointConfig {
@@ -23,7 +23,7 @@ public class VarslingEndpointConfig {
         final VarslerPorttype prod = createVarslingPortType(new UserSAMLOutInterceptor());
         final VarslerPorttype mock = new VarslerMock();
 
-        return createMetricsProxyWithInstanceSwitcher("Varsler", prod, mock, VARSLING_KEY, VarslerPorttype.class);
+        return createSwitcher(prod, mock, VARSLING_KEY, VarslerPorttype.class);
     }
 
     @Bean

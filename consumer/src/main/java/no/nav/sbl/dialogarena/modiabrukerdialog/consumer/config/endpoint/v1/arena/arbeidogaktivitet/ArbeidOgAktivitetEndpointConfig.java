@@ -13,7 +13,7 @@ import org.joda.time.LocalDate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.ArbeidOgAktivitetEndpointMock.createArbeidOgAktivitetMock;
 
 @Configuration
@@ -26,7 +26,7 @@ public class ArbeidOgAktivitetEndpointConfig {
         ArbeidOgAktivitet prod = createArbeidOgAktivitet();
         ArbeidOgAktivitet mock = createArbeidOgAktivitetMock();
 
-        return createMetricsProxyWithInstanceSwitcher("ArbeidOgAktivitet", prod, mock, ARENA_ARBEIDOGATKIVITET_KEY, ArbeidOgAktivitet.class);
+        return createSwitcher(prod, mock, ARENA_ARBEIDOGATKIVITET_KEY, ArbeidOgAktivitet.class);
     }
 
     private static ArbeidOgAktivitet createArbeidOgAktivitet() {

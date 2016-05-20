@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
 
 
 @Configuration
@@ -19,7 +19,7 @@ public class CmsSkrivestotteConfig {
 
     @Bean
     public CmsSkrivestotte cmsSkrivestotte() {
-        return createMetricsProxyWithInstanceSwitcher("CmsSkrivestotte", new CmsSkrivestotteEnonic(), new CmsSkrivestotteMock(), CMS_SKRIVESTOTTE_KEY, CmsSkrivestotte.class);
+        return createSwitcher(new CmsSkrivestotteEnonic(), new CmsSkrivestotteMock(), CMS_SKRIVESTOTTE_KEY, CmsSkrivestotte.class);
     }
 
     @Bean
