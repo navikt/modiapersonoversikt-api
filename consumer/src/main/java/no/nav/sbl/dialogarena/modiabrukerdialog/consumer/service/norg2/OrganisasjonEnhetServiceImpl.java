@@ -60,7 +60,8 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
                 return none();
             }
         } catch (FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput e) {
-            logger.warn("Kall til OrganisasjonEnhetV1.finnNAVKontorForGeografiskNedslagsfeltBolk() kastet exception.", e);
+            logger.warn("Kall til OrganisasjonEnhetV1.finnNAVKontorForGeografiskNedslagsfeltBolk() kastet exception " +
+                    "for geografisknedslagsfelt=\"" + geografiskNedslagsfelt + "\".", e);
             return none();
         }
     }
