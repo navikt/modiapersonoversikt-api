@@ -26,7 +26,7 @@ public class OrganisasjonEnhetEndpointConfig {
 
     @Bean
     public Pingable gsakOrganisasjonEnhetPing() {
-        return new PingableWebService("Gsak - sak", lagEndpoint());
+        return new PingableWebService("NORG2 - OrganisasjonEnhet", lagEndpoint());
     }
 
     private OrganisasjonEnhetV1 lagMockEnpoint() {
