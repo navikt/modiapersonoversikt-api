@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
-import no.nav.sbl.dialogarena.sak.service.Filter;
+import no.nav.sbl.dialogarena.sak.service.interfaces.Filter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;

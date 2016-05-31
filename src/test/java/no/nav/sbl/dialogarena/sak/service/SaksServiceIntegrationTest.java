@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.sbl.dialogarena.sak.config.IntegrationTestOverridesConfig;
 import no.nav.sbl.dialogarena.sak.config.KodeverkConfig;
 import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
+import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
@@ -20,6 +21,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.joda.time.DateTime;
+
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

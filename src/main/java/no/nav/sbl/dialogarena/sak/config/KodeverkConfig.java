@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.sbl.dialogarena.common.kodeverk.JsonKodeverk;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
-import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

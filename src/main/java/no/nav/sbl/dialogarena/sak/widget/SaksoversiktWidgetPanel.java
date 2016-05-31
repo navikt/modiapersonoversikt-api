@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
-import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
-import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.BulletProofKodeverkService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import static java.lang.String.format;
 import static no.nav.modig.modia.widget.utils.WidgetDateFormatter.date;
-import static no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService.ARKIVTEMA;
+import static no.nav.sbl.dialogarena.sak.service.interfaces.BulletProofKodeverkService.ARKIVTEMA;
 
 public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
 

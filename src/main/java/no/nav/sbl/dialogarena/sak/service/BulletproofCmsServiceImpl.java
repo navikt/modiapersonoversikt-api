@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.sbl.dialogarena.sak.service.interfaces.BulletproofCmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

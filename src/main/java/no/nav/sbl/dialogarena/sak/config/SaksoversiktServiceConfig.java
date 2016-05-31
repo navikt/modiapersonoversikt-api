@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.sbl.dialogarena.sak.service.*;
+import no.nav.sbl.dialogarena.sak.service.interfaces.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({KodeverkConfig.class})
+@Import({KodeverkConfig.class, EnonicConfig.class})
 public class SaksoversiktServiceConfig {
 
     @Bean
@@ -45,14 +46,14 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public JoarkService joarkService() {
-        return new JoarkServiceImpl();
+    public InnsynJournalService joarkService() {
+        return new InnsynJournalServiceImpl();
     }
-
 
     @Bean
     public DataFletter dataFletter() {
         return new DataFletterImpl();
     }
+
 
 }

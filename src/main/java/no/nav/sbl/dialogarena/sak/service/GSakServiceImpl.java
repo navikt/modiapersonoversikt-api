@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.service;
 
 
 import no.nav.modig.core.exception.SystemException;
+import no.nav.sbl.dialogarena.sak.service.interfaces.GSakService;
 import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;

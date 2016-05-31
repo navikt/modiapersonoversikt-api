@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
+import no.nav.sbl.dialogarena.sak.service.interfaces.DataFletter;
+import no.nav.sbl.dialogarena.sak.service.interfaces.Filter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
