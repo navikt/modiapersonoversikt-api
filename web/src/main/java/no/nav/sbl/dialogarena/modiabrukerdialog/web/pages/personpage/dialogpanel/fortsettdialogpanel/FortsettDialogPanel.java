@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
-import com.codahale.metrics.Timer;
+import no.nav.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
-import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -40,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
+import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
@@ -49,8 +49,8 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.siste;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.siste;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
@@ -199,11 +199,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
         private final FeedbackPanel feedbackPanel;
         private final AjaxButton sendKnapp;
-        private transient Timer.Context timer;
+        private transient Timer timer;
 
         public FortsettDialogForm(String id, final GrunnInfo grunnInfo, final IModel<HenvendelseVM> model) {
             super(id, model);
-            timer = MetricsFactory.createTimer("hendelse.besvar.time").time();
+            timer = createTimer("hendelse.besvar");
+            timer.start();
             final IModel<HenvendelseVM> henvendelseVM = getModel();
 
             add(new FortsettDialogFormElementer("fortsettdialogformelementer", grunnInfo, henvendelseVM));
@@ -262,6 +263,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 target.add(feedbackPanel);
             } finally {
                 timer.stop();
+                timer.report();
             }
         }
 
@@ -308,6 +310,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             super.onRemove();
             if (timer != null) {
                 timer.stop();
+                timer.report();
             }
         }
     }

@@ -4,10 +4,7 @@ import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.handler.WSHandlerConstants;
 
-import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,14 +19,11 @@ public class NorgEndpointFelles {
         props.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
         props.put(WSHandlerConstants.USER, user);
         props.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_TEXT);
-        props.put(WSHandlerConstants.PW_CALLBACK_REF, new CallbackHandler() {
-            @Override
-            public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-                String password = System.getProperty("ctjenestebuss.password");
+        props.put(WSHandlerConstants.PW_CALLBACK_REF, (CallbackHandler) callbacks -> {
+            String password = System.getProperty("ctjenestebuss.password");
 
-                WSPasswordCallback passwordCallback = (WSPasswordCallback) callbacks[0];
-                passwordCallback.setPassword(password);
-            }
+            WSPasswordCallback passwordCallback = (WSPasswordCallback) callbacks[0];
+            passwordCallback.setPassword(password);
         });
         return props;
     }

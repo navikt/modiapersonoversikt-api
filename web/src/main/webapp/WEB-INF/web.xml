@@ -73,9 +73,6 @@
         <role-name>0000-GA-BD06_EndreKontonummer</role-name>
     </security-role>
 
-    <listener>
-        <listener-class>no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MetricsConfigurator</listener-class>
-    </listener>
     <servlet>
         <servlet-name>metrics</servlet-name>
         <servlet-class>com.codahale.metrics.servlets.MetricsServlet</servlet-class>
