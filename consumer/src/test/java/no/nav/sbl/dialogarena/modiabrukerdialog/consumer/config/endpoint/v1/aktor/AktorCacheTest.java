@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig.AKTOER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
@@ -35,8 +36,8 @@ public class AktorCacheTest extends CacheTest {
 
     @BeforeClass
     public static void setup() {
-        System.setProperty(AKTOER_KEY, "true");
-        System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
+        setProperty(AKTOER_KEY, "true");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
     }
 

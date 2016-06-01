@@ -14,8 +14,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.Send
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendUtHenvendelsePortTypeMock.createSendUtHenvendelsePortTypeMock;
 
 @Configuration
@@ -26,7 +26,7 @@ public class SendUtHenvendelseEndpointConfig {
         SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType(new UserSAMLOutInterceptor());
         SendUtHenvendelsePortType mock = createSendUtHenvendelsePortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
+        return createSwitcher(prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
     }
 
     @Bean
@@ -39,7 +39,7 @@ public class SendUtHenvendelseEndpointConfig {
                 .wsdl("classpath:SendUtHenvendelse.wsdl")
                 .address(System.getProperty("send.ut.henvendelse.url"))
                 .withOutInterceptor(interceptor)
-                .setProperty("jaxb.additionalContextClasses", new Class[]{
+                .withProperty("jaxb.additionalContextClasses", new Class[]{
                         XMLHenvendelse.class,
                         XMLMetadataListe.class,
                         XMLMeldingFraBruker.class,
