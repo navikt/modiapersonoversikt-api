@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.nor
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetV1Mock;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
@@ -36,7 +35,7 @@ public class OrganisasjonEnhetEndpointConfig {
     private OrganisasjonEnhetV1 lagEndpoint() {
         return new CXFClient<>(OrganisasjonEnhetV1.class)
                 .address(System.getProperty("norg2.organisasjonenhet.v1.url"))
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
+                .configureStsForSystemUser()
                 .build();
     }
 

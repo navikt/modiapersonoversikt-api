@@ -35,6 +35,9 @@ public class OrganisasjonEnhetEndpointCacheTest extends CacheTest {
         System.setProperty("start.norg2.organisasjonenhet.withmock", "true");
         System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
+        System.setProperty("no.nav.modig.security.sts.url", "");
+        System.setProperty("no.nav.modig.security.systemuser.username", "");
+        System.setProperty("no.nav.modig.security.systemuser.password", "");
     }
 
     @Test
