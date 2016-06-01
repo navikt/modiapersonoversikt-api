@@ -14,7 +14,7 @@
     <name>modia-saksoversikt</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>4.15-SNAPSHOT</version>
+    <version>6.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
