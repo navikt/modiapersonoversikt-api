@@ -12,7 +12,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlin
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -119,10 +119,10 @@ public class ServiceTestContext {
     }
 
     @Bean
-    public EnhetService enhetService() {
-        EnhetService service = mock(EnhetService.class);
-        when(service.hentAlleEnheter()).thenReturn(asList(new AnsattEnhet("1231", "Sinsen")));
-        return service;
+    public OrganisasjonEnhetService organisasjonEnhetService() {
+        OrganisasjonEnhetService organisasjonEnhetService = mock(OrganisasjonEnhetService.class);
+        when(organisasjonEnhetService.hentAlleEnheter()).thenReturn(asList(new AnsattEnhet("1231", "Sinsen")));
+        return organisasjonEnhetService;
     }
 
     @Bean
