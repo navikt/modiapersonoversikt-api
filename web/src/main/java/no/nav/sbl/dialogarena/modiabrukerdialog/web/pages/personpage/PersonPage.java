@@ -197,7 +197,7 @@ public class PersonPage extends BasePage {
         Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
-        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetService.hentEnhet(valgtEnhet);
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetService.hentEnhetGittEnhetId(valgtEnhet);
         return new GrunnInfo.Saksbehandler(
                 ansattEnhet.isSome() ? ansattEnhet.get().enhetNavn : "",
                 saksbehandler.fornavn,

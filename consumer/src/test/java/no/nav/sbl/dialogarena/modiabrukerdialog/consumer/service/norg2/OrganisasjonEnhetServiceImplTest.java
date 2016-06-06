@@ -5,10 +5,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSEnheterForGeografiskNedslagsfelt;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSHentFullstendigEnhetListeRequest;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSHentFullstendigEnhetListeResponse;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -58,7 +55,7 @@ public class OrganisasjonEnhetServiceImplTest {
     }
 
     @Test
-    public void skalKunneHenteEnkeltEnhet() throws Exception {
+    public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereEnkeltEnhetGittGeografiskNedslagsfelt() throws Exception {
         final WSDetaljertEnhet navEnhet = new WSDetaljertEnhet();
         navEnhet.setEnhetId("0219");
         navEnhet.setNavn("Nav Bærum");
@@ -68,7 +65,7 @@ public class OrganisasjonEnhetServiceImplTest {
         response.getEnheterForGeografiskNedslagsfeltListe().add(wsEnheterForGeografiskNedslagsfelt);
         when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenReturn(response);
 
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhet("0219");
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("0219");
 
         assertTrue(enhetFraTjenesten.isSome());
         assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.get().enhetId)));
@@ -76,9 +73,32 @@ public class OrganisasjonEnhetServiceImplTest {
     }
 
     @Test
-    public void hentEnhetSkalReturnereTomOptionalDersomTjenestenReturnererTomRespons() throws Exception {
+    public void hentEnhetGittEnhetIdSkalReturnereHenteEnkeltEnhetGittEnhetId() throws Exception {
+        final WSDetaljertEnhet navEnhet = new WSDetaljertEnhet();
+        navEnhet.setEnhetId("0100");
+        navEnhet.setNavn("Nav Østfold");
+        final WSHentEnhetBolkResponse response = new WSHentEnhetBolkResponse();
+        response.getEnhetListe().add(navEnhet);
+        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(response);
+
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
+
+        assertTrue(enhetFraTjenesten.isSome());
+        assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.get().enhetId)));
+        assertThat(navEnhet.getNavn(), is(equalTo(enhetFraTjenesten.get().enhetNavn)));
+    }
+
+    @Test
+    public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereTomOptionalDersomGeografiskNedslagsfeltReturnererTomRespons() throws Exception {
         when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenReturn(new WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse());
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhet("0219");
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("0219");
+        assertFalse(enhetFraTjenesten.isSome());
+    }
+
+    @Test
+    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
+        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
         assertFalse(enhetFraTjenesten.isSome());
     }
 }

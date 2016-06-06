@@ -37,7 +37,8 @@ public class PersonPageMockContext {
     @Bean
     public OrganisasjonEnhetService organisasjonEnhetService() {
         OrganisasjonEnhetService organisasjonEnhetService = mock(OrganisasjonEnhetService.class);
-        when(organisasjonEnhetService.hentEnhet(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
+        when(organisasjonEnhetService.hentEnhetGittGeografiskNedslagsfelt(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
+        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
         return organisasjonEnhetService;
     }
 
