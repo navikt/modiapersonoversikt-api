@@ -8,5 +8,7 @@ import java.util.List;
 public interface OrganisasjonEnhetService {
     List<AnsattEnhet> hentAlleEnheter();
 
-    Optional<AnsattEnhet> hentEnhet(String enhetId);
+    Optional<AnsattEnhet> hentEnhetGittGeografiskNedslagsfelt(final String geografiskNedslagsfelt);
+
+    Optional<AnsattEnhet> hentEnhetGittEnhetId(final String enhetId);
 }
