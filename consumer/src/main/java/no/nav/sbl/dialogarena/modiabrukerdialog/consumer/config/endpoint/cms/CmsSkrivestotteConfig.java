@@ -7,7 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+
 
 @Configuration
 public class CmsSkrivestotteConfig {

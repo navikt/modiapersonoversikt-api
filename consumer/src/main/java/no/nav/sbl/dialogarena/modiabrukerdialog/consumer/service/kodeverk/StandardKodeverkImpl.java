@@ -181,20 +181,10 @@ public class StandardKodeverkImpl implements StandardKodeverk {
         return kodeverket;
     }
 
-    private static final Transformer<XMLKode, List<XMLPeriode>> GYLDIGHETSPERIODER = new Transformer<XMLKode, List<XMLPeriode>>() {
-        @Override
-        public List<XMLPeriode> transform(XMLKode kode) {
-            return optional(kode.getGyldighetsperiode()).getOrElse(Collections.<XMLPeriode>emptyList());
-        }
-    };
+    private static final Transformer<XMLKode, List<XMLPeriode>> GYLDIGHETSPERIODER = kode -> optional(kode.getGyldighetsperiode()).getOrElse(Collections.<XMLPeriode>emptyList());
 
     private static Predicate<XMLPeriode> periodeMed(final DateTime atTime) {
-        return new Predicate<XMLPeriode>() {
-            @Override
-            public boolean evaluate(XMLPeriode periode) {
-                return atTime.isAfter(periode.getFom()) && atTime.isBefore(periode.getTom());
-            }
-        };
+        return periode -> atTime.isAfter(periode.getFom()) && atTime.isBefore(periode.getTom());
     }
 
     private static final JAXBContext JAXB;

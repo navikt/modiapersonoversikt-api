@@ -31,13 +31,10 @@ public abstract class GsakKodeverkFagsystem implements Serializable {
                 Document fagsystemerDocument = parseDocument(fagsystemer);
                 List<Node> fagsystemNodes = compileAndEvaluate(fagsystemerDocument, "//fagsystemListe/fagsystem/gosys[not(@erGyldig = 'false')]");
                 final Map<String, String> fagsystemMap = new HashMap<>();
-                on(fagsystemNodes).forEach(new Closure<Node>() {
-                    @Override
-                    public void execute(Node node) {
-                        String fagsystemkode = getParentNodeValue(node, KODE);
-                        String fagsystemnavn = getNodeValue(node, DECODE);
-                        fagsystemMap.put(fagsystemkode, fagsystemnavn);
-                    }
+                on(fagsystemNodes).forEach((Closure<Node>) node -> {
+                    String fagsystemkode = getParentNodeValue(node, KODE);
+                    String fagsystemnavn = getNodeValue(node, DECODE);
+                    fagsystemMap.put(fagsystemkode, fagsystemnavn);
                 });
                 return fagsystemMap;
 

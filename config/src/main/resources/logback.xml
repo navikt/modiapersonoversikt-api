@@ -87,17 +87,13 @@
         <appender-ref ref="sporinglog"/>
     </logger>
 
-    <logger name="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MetricsConfigurator" level="INFO">
-        <appender-ref ref="metricslog"/>
-    </logger>
-
     <logger name="personaccess" level="warn" additivity="false">
         <appender-ref ref="personaccessappender"/>
     </logger>
 
     <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
 
-    <logger name="org.apache.cxf" level="OFF">
+    <logger name="org.apache.cxf" level="${modiabrukerdialog.cxf.log.level:-OFF}">
         <appender-ref ref="infolog"/>
     </logger>
 

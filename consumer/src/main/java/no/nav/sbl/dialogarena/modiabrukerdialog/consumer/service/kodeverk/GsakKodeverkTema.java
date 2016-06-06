@@ -63,12 +63,7 @@ public class GsakKodeverkTema implements Serializable {
         private static final class NodeTemaTransformer implements Transformer<Node, GsakKodeTema.Tema> {
 
             private static Predicate<? super GsakKodeTema.OppgaveType> godkjenteKoder(final String fagomrade) {
-                return new Predicate<GsakKodeTema.OppgaveType>() {
-                    @Override
-                    public boolean evaluate(GsakKodeTema.OppgaveType oppgaveType) {
-                        return GODKJENTE_OPPGAVETYPER.contains(oppgaveType.kode.replaceAll("_" + fagomrade + "$", ""));
-                    }
-                };
+                return oppgaveType -> GODKJENTE_OPPGAVETYPER.contains(oppgaveType.kode.replaceAll("_" + fagomrade + "$", ""));
             }
 
             private final Document oppgaveDokument;

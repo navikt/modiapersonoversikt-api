@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.xml.namespace.QName;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class UtbetalingEndpointConfig {
@@ -26,7 +26,7 @@ public class UtbetalingEndpointConfig {
         final UtbetalingV1 prod = createUtbetalingPortType(new UserSAMLOutInterceptor());
         final UtbetalingV1 mock = new UtbetalingPortTypeMock().utbetalingPortType();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, UTBETALING_KEY, UtbetalingV1.class);
+        return createSwitcher(prod, mock, UTBETALING_KEY, UtbetalingV1.class);
     }
 
     @Bean

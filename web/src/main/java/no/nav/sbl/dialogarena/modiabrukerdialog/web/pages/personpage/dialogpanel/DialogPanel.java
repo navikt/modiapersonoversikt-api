@@ -1,24 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Bruker;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.velgdialogpanel.VelgDialogPanel;
@@ -34,7 +28,6 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
@@ -76,11 +69,9 @@ public class DialogPanel extends Panel {
     private Optional<String> henvendelsesIdFraParametere = none();
     private Boolean besvaresFraParametere = false;
 
-    public DialogPanel(String id, String fnr) {
+    public DialogPanel(String id, String fnr, GrunnInfo grunnInfo) {
         super(id);
-        grunnInfo = new GrunnInfo(
-                hentBrukerInfo(fnr),
-                hentSaksbehandlerInfo());
+        this.grunnInfo = grunnInfo;
         settOppVerdierFraParameterePaaSession();
         aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
@@ -96,40 +87,6 @@ public class DialogPanel extends Panel {
 
         String besvares = (String) getSession().getAttribute(BESVARES);
         besvaresFraParametere = !isBlank(besvares) && Boolean.valueOf(besvares);
-    }
-
-    private Bruker hentBrukerInfo(String fnr) {
-        try {
-            HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
-            request.setBegrunnet(true);
-            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(request).getPerson().getPersonfakta();
-
-            return new Bruker(fnr)
-                    .withPersonnavn(personfakta.getPersonnavn())
-                    .withEnhet(hentEnhet(personfakta));
-        } catch (Exception e) {
-            return new Bruker(fnr, "", "", "");
-        }
-    }
-
-    private String hentEnhet(Personfakta personfakta) {
-        try {
-            AnsattEnhet enhet = enhetService.hentEnhet(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
-            return enhet.enhetNavn;
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    private Saksbehandler hentSaksbehandlerInfo() {
-        Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
-        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-
-        return new Saksbehandler(
-                optional(enhetService.hentEnhet(valgtEnhet).enhetNavn).getOrElse(""),
-                saksbehandler.fornavn,
-                saksbehandler.etternavn
-        );
     }
 
     private void settOppRiktigMeldingPanel() {

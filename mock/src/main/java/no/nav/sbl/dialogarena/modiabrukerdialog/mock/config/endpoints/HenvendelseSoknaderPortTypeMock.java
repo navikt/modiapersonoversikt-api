@@ -53,11 +53,9 @@ public class HenvendelseSoknaderPortTypeMock {
         return asList(
                 kvitteringAAP(),
                 kvitteringDAG(),
-                kvitteringForeldrepenger(),
+
                 kvitteringEttersendingAAP(),
-                kvitteringEttersendingDAG(),
-                new WSSoknad().withHenvendelseStatus(UNDER_ARBEID.value()).withBehandlingsId(IKKE_KVITTERING),
-                new WSSoknad().withHenvendelseStatus(UNDER_ARBEID.value()).withBehandlingsId(IKKE_KVITTERING)
+                kvitteringEttersendingDAG()
         );
     }
 
@@ -70,6 +68,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseType(SOKNADSINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(new DateTime())
+                .withSistEndretDato(new DateTime())
                 .withInnsendtDato(new DateTime())
                 .withHovedskjemaKodeverkId("NAV 04-01.03")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
@@ -88,6 +87,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withEttersending(true)
                 .withHenvendelseType(DOKUMENTINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
+                .withSistEndretDato(new DateTime())
                 .withOpprettetDato(new DateTime())
                 .withInnsendtDato(new DateTime())
                 .withHovedskjemaKodeverkId("NAV 11-13.05")
@@ -108,6 +108,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseType(SOKNADSINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(MERGET_OPPRETTET)
+                .withSistEndretDato(new DateTime())
                 .withInnsendtDato(new DateTime().minusDays(3))
                 .withHovedskjemaKodeverkId("NAV 04-01.03")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
@@ -127,6 +128,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseType(DOKUMENTINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(MERGET_OPPRETTET)
+                .withSistEndretDato(new DateTime())
                 .withInnsendtDato(new DateTime().minusDays(3))
                 .withHovedskjemaKodeverkId("NAV 11-13.05")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
@@ -148,6 +150,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseType(SOKNADSINNSENDING.value())
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(MERGET_OPPRETTET)
+                .withSistEndretDato(new DateTime())
                 .withInnsendtDato(new DateTime().minusDays(2))
                 .withHovedskjemaKodeverkId("NAV 14-05.09")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(

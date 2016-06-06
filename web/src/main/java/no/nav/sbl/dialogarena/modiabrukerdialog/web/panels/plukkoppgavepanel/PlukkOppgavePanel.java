@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
-import com.codahale.metrics.Timer;
+import no.nav.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
-import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -31,6 +30,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 import java.io.Serializable;
 
+import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
@@ -106,7 +106,8 @@ public class PlukkOppgavePanel extends Panel {
 
         @Override
         protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-            final Timer.Context timer = MetricsFactory.createTimer("hendelse.plukk.time").time();
+            final Timer timer = createTimer("hendelse.plukk");
+            timer.start();
             try {
                 if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
                     redirectForAaBesvareOppgave(
@@ -130,6 +131,7 @@ public class PlukkOppgavePanel extends Panel {
                 }
             } finally {
                 timer.stop();
+                timer.report();
             }
         }
 

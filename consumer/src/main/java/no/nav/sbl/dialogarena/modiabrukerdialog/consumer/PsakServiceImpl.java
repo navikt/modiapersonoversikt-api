@@ -34,28 +34,22 @@ public class PsakServiceImpl implements PsakService {
         }
     }
 
-    private static final Transformer<WSSakSammendrag, Sak> TIL_SAK = new Transformer<WSSakSammendrag, Sak>() {
-        @Override
-        public Sak transform(WSSakSammendrag wsSakSammendrag) {
-            Sak sak = new Sak();
-            sak.fagsystemSaksId = optional(wsSakSammendrag.getSakId());
-            sak.temaKode = wsSakSammendrag.getArkivtema().getValue();
-            sak.temaNavn = wsSakSammendrag.getArkivtema().getValue();
-            sak.fagsystemKode = FAGSYSTEMKODE_PSAK;
-            sak.saksId = optional(wsSakSammendrag.getSakId());
-            sak.finnesIPsak = true;
-            sak.opprettetDato = opprettetDato(wsSakSammendrag.getSaksperiode());
-            return sak;
-        }
+    private static final Transformer<WSSakSammendrag, Sak> TIL_SAK = wsSakSammendrag -> {
+        Sak sak = new Sak();
+        sak.fagsystemSaksId = optional(wsSakSammendrag.getSakId());
+        sak.temaKode = wsSakSammendrag.getArkivtema().getValue();
+        sak.temaNavn = wsSakSammendrag.getArkivtema().getValue();
+        sak.fagsystemKode = FAGSYSTEMKODE_PSAK;
+        sak.saksId = optional(wsSakSammendrag.getSakId());
+        sak.finnesIPsak = true;
+        sak.opprettetDato = opprettetDato(wsSakSammendrag.getSaksperiode());
+        return sak;
     };
 
     private static DateTime opprettetDato(WSPeriode wsPeriode) {
-        return optional(wsPeriode).map(new Transformer<WSPeriode, DateTime>() {
-            @Override
-            public DateTime transform(WSPeriode wsPeriode) {
-                LocalDate fom = wsPeriode.getFom();
-                return fom == null ? null : fom.toDateTimeAtStartOfDay();
-            }
+        return optional(wsPeriode).map(wsPeriode1 -> {
+            LocalDate fom = wsPeriode1.getFom();
+            return fom == null ? null : fom.toDateTimeAtStartOfDay();
         }).getOrElse(null);
     }
 }

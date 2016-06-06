@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.xml.namespace.QName;
 
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.NORG_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.getSecurityProps;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TimingMetricsProxy.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavOrgEnhetPortTypeMock.createGosysNavOrgEnhetPortTypeMock;
 
 @Configuration
@@ -30,7 +30,7 @@ public class NAVOrgEnhetEndpointConfig {
         GOSYSNAVOrgEnhet prod = createNavOrgEnhetPortType();
         GOSYSNAVOrgEnhet mock = createGosysNavOrgEnhetPortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher(prod, mock, NORG_KEY, GOSYSNAVOrgEnhet.class);
+        return createSwitcher(prod, mock, NORG_KEY, GOSYSNAVOrgEnhet.class);
     }
 
     private static GOSYSNAVOrgEnhet createNavOrgEnhetPortType() {

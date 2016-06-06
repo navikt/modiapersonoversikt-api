@@ -11,7 +11,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
@@ -40,10 +39,11 @@ public class OversiktLerret extends Lerret {
         List<Widget<?>> widgets = new ArrayList<>(asList(
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
                 new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
-                new MeldingerWidget("meldinger", "M", fnr),
-                new SaksoversiktWidget("saksoversikt", "S", fnr)));
+                new MeldingerWidget("meldinger", "M", fnr)
+        )
+        );
 
-
+        add(new SaksoversiktWidget("saksoversikt"));
         add(new VarslerOversiktLink("varsling-lenke", fnr));
 
         if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
@@ -54,16 +54,12 @@ public class OversiktLerret extends Lerret {
 
         asyncWidgets = on(widgets).filter(isA(AsyncWidget.class)).map(castTo(AsyncWidget.class)).collect();
 
-        for (Component widget : widgets) {
-            add(widget);
-        }
+        widgets.forEach(this::add);
     }
 
     @Override
     protected void onRender() {
         super.onRender();
-        for (AsyncWidget widget : asyncWidgets) {
-            widget.startLoading();
-        }
+        asyncWidgets.forEach(AsyncWidget::startLoading);
     }
 }
