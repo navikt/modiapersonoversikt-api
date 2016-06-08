@@ -75,8 +75,8 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
             } else {
                 return none();
             }
-        } catch (HentEnhetBolkUgyldigInput hentEnhetBolkUgyldigInput) {
-            hentEnhetBolkUgyldigInput.printStackTrace();
+        } catch (HentEnhetBolkUgyldigInput e) {
+            logger.warn("Kall til OrganisasjonEnhetV1.hentEnhetGittEnhetId() kastet exception for enhetId=\"" + enhetId + "\".", e);
             return none();
         }
     }
