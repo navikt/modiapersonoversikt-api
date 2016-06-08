@@ -13,7 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -101,5 +102,18 @@ public class MeldingVMTest extends WicketPageTest {
         meldingVM = new MeldingVM(melding, 1);
 
         assertThat(meldingVM.getAvsenderBildeAltKey(), is(NAV_AVSENDER_BILDE_ALT_KEY));
+    }
+
+    @Test
+    public void setterIkkeErDokumentMeldingOmVanligMelding() {
+        assertThat(meldingVM.erDokumentMelding, is(false));
+    }
+
+    @Test
+    public void setterErDokumentMeldingOmMeldingErDokumentVarsel() {
+        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        melding.erDokumentMelding = true;
+        meldingVM = new MeldingVM(melding, 1);
+        assertThat(meldingVM.erDokumentMelding, is(true));
     }
 }
