@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.System.*;
+import static java.lang.System.getProperty;
 
 @Configuration
 public class EnonicConfig {
@@ -25,7 +25,7 @@ public class EnonicConfig {
     private ContentRetriever contentRetriever;
 
     @Bean(name = "saksoversikt-cms-integrasjon")
-    public CmsContentRetriever varslingCmsContentRetriver() throws URISyntaxException {
+    public CmsContentRetriever contentRetriever() throws URISyntaxException {
         CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
         cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
         cmsContentRetriever.setTeksterRetriever(siteContentRetriever());

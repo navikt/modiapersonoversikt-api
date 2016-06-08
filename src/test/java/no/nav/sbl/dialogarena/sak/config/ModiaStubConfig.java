@@ -1,16 +1,17 @@
 package no.nav.sbl.dialogarena.sak.config;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.sak.service.interfaces.DataFletter;
-import no.nav.sbl.dialogarena.sak.service.interfaces.GSakService;
-import no.nav.sbl.dialogarena.sak.service.interfaces.HenvendelseService;
-import no.nav.sbl.dialogarena.sak.service.interfaces.SakOgBehandlingService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.innsynjournal.v1.InnsynJournalV1;
+import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
+import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.when;
 public class ModiaStubConfig {
 
     @Bean
-    public AktoerPortType fodselnummerAktorService() {
+    public AktoerPortType aktoerPortType() {
         return mock(AktoerPortType.class);
     }
 
@@ -42,13 +43,18 @@ public class ModiaStubConfig {
     }
 
     @Bean
+    public ContentRetriever contentRetriever() {
+        return mock(ContentRetriever.class);
+    }
+
+    @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
         return mock(HenvendelseSoknaderPortType.class);
     }
 
     @Bean
-    public InnsynJournalV1 innsynJournalV1() {
-        return mock(InnsynJournalV1.class);
+    public JournalV2 joarkV2() {
+        return mock(JournalV2.class);
     }
 
     @Bean
@@ -62,23 +68,23 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public DataFletter dataFletter() {
-        return mock(DataFletter.class);
-    }
-
-    @Bean
     public KodeverkClient kodeverkClient() {
         return mock(KodeverkClient.class);
     }
 
     @Bean
-    public GSakService gSakService() {
-        return mock(GSakService.class);
+    public GsakSakerService gSakService() {
+        return mock(GsakSakerService.class);
     }
 
     @Bean
     public SakV1 sakEndpoint() {
         return mock(SakV1.class);
+    }
+
+    @Bean
+    public PensjonSakV1 pensjonSakV1() {
+        return mock(PensjonSakV1.class);
     }
 
     @Bean(name = "pep")
@@ -87,36 +93,13 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return mock(SaksbehandlerInnstillingerService.class);
+    public AnsattService ansattService() {
+        return mock(AnsattService.class);
     }
 
     @Bean
-    public CmsContentRetriever cmsContentRetriever() {
-        CmsContentRetriever cmsMock = new CmsContentRetriever() {
-            @Override
-            public String hentTekst(String key) {
-                switch (key) {
-                    case "mange.saker":
-                        return "Vis alle {0} saker";
-                    case "ingen.saker":
-                        return "finnes ikke noen saker";
-                    case "saker.feilet":
-                        return "kan ikke vise saker'";
-                    default:
-                        return "default tekst fra CMS-mock";
-                }
-            }
-
-            @Override
-            public String hentArtikkel(String key) {
-                switch (key) {
-                    default:
-                        return "default tekst fra CMS-mock";
-                }
-            }
-        };
-        return cmsMock;
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
+        return mock(SaksbehandlerInnstillingerService.class);
     }
 
 }

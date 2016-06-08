@@ -1,14 +1,20 @@
 package no.nav.sbl.dialogarena.sak.config;
 
-import no.nav.sbl.dialogarena.sak.service.*;
+import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
+import no.nav.sbl.dialogarena.sak.service.SaksoversiktServiceImpl;
+import no.nav.sbl.dialogarena.sak.service.TilgangskontrollServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
-import no.nav.sbl.dialogarena.sak.service.interfaces.*;
+import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
+import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
+import no.nav.sbl.dialogarena.saksoversikt.service.config.ServiceConfig;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({KodeverkConfig.class, EnonicConfig.class})
+@Import({EnonicConfig.class, ServiceConfig.class})
 public class SaksoversiktServiceConfig {
 
     @Bean
@@ -22,44 +28,18 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public BulletproofCmsService bulletproofCmsService() {
-        return new BulletproofCmsServiceImpl();
-    }
-
-    @Bean
-    public Filter sakOgBehandlingFilter() {
-        return new FilterImpl();
-    }
-
-    @Bean
-    public SakOgBehandlingService sakOgBehandlingService() {
-        return new SakOgBehandlingServiceImpl();
-    }
-
-    @Bean
-    public HenvendelseService henvendelseService() {
-        return new HenvendelseServiceImpl();
-    }
-
-    @Bean
-    public GSakService gSakService() {
-        return new GSakServiceImpl();
-    }
-
-    @Bean
-    public InnsynJournalService joarkService() {
-        return new InnsynJournalServiceImpl();
-    }
-
-    @Bean
-    public DataFletter dataFletter() {
-        return new DataFletterImpl();
-    }
-
-    @Bean
     public MiljovariablerService miljovariablerService() {
         return new MiljovariablerService();
     }
 
+    @Bean
+    public Innsyn innsyn() {
+        return new InnsynImpl();
+    }
+
+    @Bean
+    public JournalpostTransformer journalpostTransformer() {
+        return new JournalpostTransformer();
+    }
 
 }
