@@ -26,7 +26,10 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -79,7 +82,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 REFERAT_OPPMOTE.name(),
                 REFERAT_TELEFON.name(),
                 SPORSMAL_MODIA_UTGAAENDE.name(),
-                SVAR_SBL_INNGAAENDE.name());
+                SVAR_SBL_INNGAAENDE.name(),
+                DOKUMENT_VARSEL.name());
+
 
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
 

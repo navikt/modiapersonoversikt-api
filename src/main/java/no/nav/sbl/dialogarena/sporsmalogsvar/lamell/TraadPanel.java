@@ -38,7 +38,10 @@ public class TraadPanel extends Panel {
 
                 meldingstatusContainer.add(new Label("meldingstatus", new PropertyModel<String>(item.getModel(), "melding.statusTekst")));
                 meldingstatusContainer.add(new Label("lestStatus", lestStatusModel).add(visibleIf(not(isEqualTo(lestStatusModel, "")))));
-                meldingstatusContainer.add(new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")));
+                meldingstatusContainer.add(
+                        new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn"))
+                                .setVisibilityAllowed(!item.getModelObject().erDokumentMelding)
+                );
 
                 item.add(meldingstatusContainer);
                 item.add(new Label("avsenderDato"));

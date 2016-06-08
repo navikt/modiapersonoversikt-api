@@ -82,10 +82,19 @@ public class AlleMeldingerPanel extends Panel {
                         new PropertyModel<String>(item.getModel(), "melding.statusTekst"),
                         new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")
                 ));
-                meldingstatus.setOutputMarkupId(true);
 
+                Label dokumentStatus = new Label("meldingstatus", new StringFormatModel("%s",
+                        new PropertyModel<String>(item.getModel(), "melding.statusTekst")
+                ));
 
-                item.add(meldingstatus);
+                if (meldingVM.erDokumentMelding) {
+                    dokumentStatus.setOutputMarkupId(true);
+                    item.add(dokumentStatus);
+                } else {
+                    meldingstatus.setOutputMarkupId(true);
+                    item.add(meldingstatus);
+                }
+
                 item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));

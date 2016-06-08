@@ -14,14 +14,21 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
         super(id, new CompoundPropertyModel<>(model));
         setOutputMarkupId(true);
 
+        Label meldingStatus = new Label("meldingsstatus", new StringFormatModel("%s - %s",
+                new PropertyModel<String>(getModel(), "melding.statusTekst"),
+                new PropertyModel<String>(getModel(), "melding.temagruppeNavn")
+        ));
+
+        Label dokumentStatus = new Label("dokumentstatus", new StringFormatModel("%s",
+                new PropertyModel<String>(getModel(), "melding.statusTekst")
+        ));
+
         add(
                 new StatusIkon("statusIkon", getModelObject()),
                 new Label("traadlengde").setVisibilityAllowed(getModelObject().traadlengde > 2),
                 new Label("opprettetDato"),
-                new Label("meldingsstatus", new StringFormatModel("%s - %s",
-                        new PropertyModel<String>(getModel(), "melding.statusTekst"),
-                        new PropertyModel<String>(getModel(), "melding.temagruppeNavn")
-                )),
+                meldingStatus.setVisibilityAllowed(!getModelObject().erDokumentMelding),
+                dokumentStatus.setVisibilityAllowed(getModelObject().erDokumentMelding),
                 new Label("fritekst")
         );
     }

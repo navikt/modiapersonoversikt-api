@@ -26,10 +26,14 @@ public class MeldingVM implements Serializable {
     public final Melding melding;
 
     public final int traadlengde;
+    public boolean erDokumentMelding;
 
     public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
         this.traadlengde = traadLengde;
+        if (melding.erDokumentMelding) {
+            this.erDokumentMelding = true;
+        }
     }
 
     public String getAvsenderDato() {
