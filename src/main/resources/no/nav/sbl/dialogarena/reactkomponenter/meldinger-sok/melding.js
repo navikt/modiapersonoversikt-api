@@ -1,30 +1,26 @@
-import React from 'react';
-import Utils from './../utils/utils-module';
-import sanitize from 'sanitize-html';
-import format from 'string-format';
+import React, {PropTypes as pt} from "react";
+import Utils from "./../utils/utils-module";
+import sanitize from "sanitize-html";
+import format from "string-format";
 
-const Melding = React.createClass({
-    propTypes: {
-        melding: React.PropTypes.object.isRequired
-    },
+const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
-    toNameCase: function toNameCase(navn) {
-        return navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-    },
+class Melding extends React.Component {
 
-    render: function render() {
-        const melding = this.props.melding;
+    render() {
+        const { melding } = this.props;
+
         const clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
-        const cls = 'melding clearfix ' + clsExt;
-        const src = '/modiabrukerdialog/img/' + (melding.erInngaaende ? 'personikon.svg' : 'nav-logo.svg');
+        const cls = `melding clearfix ${clsExt}`;
+        const src = `/modiabrukerdialog/img/${(melding.erInngaaende ? 'personikon.svg' : 'nav-logo.svg')}`;
         const altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
-        let meldingsStatusTekst = melding.statusTekst + ', ';
+        let meldingsStatusTekst = `${melding.statusTekst}, `;
         if (!melding.erInngaaende) {
-            meldingsStatusTekst += melding.lestStatus + ' ';
+            meldingsStatusTekst += `${melding.lestStatus} `;
         }
         meldingsStatusTekst += melding.temagruppeNavn;
 
-        const erJournalfort = melding.journalfortTemanavn ? true : false;
+        const erJournalfort = melding.journalfortTemanavn;
         const journalfortMelding = format('Journalført av: {} ({}) | {} | {} | Saksid {}',
             melding.journalfortAv.navn,
             melding.journalfortAvNavIdent,
@@ -35,7 +31,7 @@ const Melding = React.createClass({
             <div className="journalpost-link">
                 <div className="journalpost-element ikon">
                     <span className="ikon"></span>
-                    <span dangerouslySetInnerHTML={{__html: journalfortMelding}}></span>
+                    <span >{journalfortMelding}</span>
                 </div>
             </div>;
 
@@ -43,28 +39,17 @@ const Melding = React.createClass({
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        //paragrafer = React.addons.createFragment({
-        //    paragrafer: paragrafer
-        //});
-
-        const dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
-        const skrevetMelding = format('Skrevet av: {} ({})',
-            this.toNameCase(melding.skrevetAv.navn),
-            melding.fraBruker);
+        const dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
+        const skrevetMelding = melding.erDokumentMelding ? '' : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;
 
         return (
             <div className={cls}>
-                <img className={'avsenderBilde ' + clsExt} src={src} alt={altTekst}/>
-
+                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst}/>
                 <div className="meldingData">
                     <article className="melding-header">
-                        <p className="meldingstatus" dangerouslySetInnerHTML={{__html: meldingsStatusTekst}}></p>
-
-                        <p dangerouslySetInnerHTML={{__html: dato}}></p>
-
-                        <p>
-                            <span dangerouslySetInnerHTML={{__html: skrevetMelding}}></span>
-                        </p>
+                        <p className="meldingstatus">{meldingsStatusTekst}</p>
+                        <p>{dato}</p>
+                        <p>{skrevetMelding}</p>
                     </article>
                     <article className="fritekst">{paragrafer}</article>
                 </div>
@@ -72,6 +57,27 @@ const Melding = React.createClass({
             </div>
         );
     }
-});
+}
 
-module.exports = Melding;
+Melding.propTypes = {
+    melding: React.PropTypes.shape({
+        erInngaaende: pt.bool,
+        statusTekst: pt.string,
+        lestStatus: pt.string,
+        temagruppeNavn: pt.string,
+        journalfortTemanavn: pt.string,
+        journalfortDatoTekst: pt.string,
+        journalfortSaksId: pt.string,
+        journalfortAvNavIdent: pt.string,
+        opprettetDatoTekst: pt.string,
+        erDokumentMelding: pt.bool,
+        skrevetAv: pt.shape({
+            navn: pt.string
+        }),
+        journalfortAv: pt.shape({
+            navn: pt.string
+        })
+    }).isRequired
+};
+
+export default Melding;
