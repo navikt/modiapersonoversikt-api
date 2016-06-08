@@ -63,8 +63,6 @@ public class MeldingUtils {
                 melding.lestDato = xmlHenvendelse.getLestDato();
                 melding.fnrBruker = xmlHenvendelse.getFnr();
                 melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
-                melding.status = STATUS.transform(xmlHenvendelse);
-                melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
                 melding.lestStatus = lagLestStatus(melding);
                 melding.statusKlasse = VisningUtils.lagStatusIkonKlasse(melding);
                 melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
@@ -78,6 +76,7 @@ public class MeldingUtils {
 
                 XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
                 if (journalfortInformasjon != null) {
+                    melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
                     melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
                     melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
                     melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
@@ -87,6 +86,7 @@ public class MeldingUtils {
 
                 if (innholdErKassert(xmlHenvendelse)) {
                     settTemagruppe(melding, null, propertyResolver);
+                    melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
                     melding.fritekst = propertyResolver.getProperty("innhold.kassert");
                     melding.kanal = null;
                     melding.navIdent = null;
@@ -95,6 +95,15 @@ public class MeldingUtils {
                 }
 
                 XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
+                if(DOKUMENT_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
+                    XMLDokumentVarsel dokumentVarsel = (XMLDokumentVarsel) xmlMetadata;
+                    melding.statusTekst = dokumentVarsel.getDokumenttittel();
+                    melding.fritekst = dokumentVarsel.getTemanavn();
+                    melding.erDokumentMelding = true;
+                    return melding;
+                }
+
+                melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
                 if (xmlMetadata instanceof XMLMeldingFraBruker) {
                     XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
                     settTemagruppe(melding, meldingFraBruker.getTemagruppe(), propertyResolver);
@@ -168,6 +177,7 @@ public class MeldingUtils {
             put(XMLHenvendelseType.REFERAT_TELEFON, SAMTALEREFERAT_TELEFON);
             put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, SPORSMAL_MODIA_UTGAAENDE);
             put(XMLHenvendelseType.SVAR_SBL_INNGAAENDE, SVAR_SBL_INNGAAENDE);
+            put(XMLHenvendelseType.DOKUMENT_VARSEL, DOKUMENT_VARSEL);
         }
     };
 }
