@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.norg2;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.HentEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSEnheterForGeografiskNedslagsfelt;
@@ -96,8 +98,22 @@ public class OrganisasjonEnhetServiceImplTest {
     }
 
     @Test
+    public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereTomOptionalDersomGeografiskNedslagsfeltInneholderUgyldigInput() throws Exception {
+        when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenThrow(new FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput());
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("Ikke Gyldig Input");
+        assertFalse(enhetFraTjenesten.isSome());
+    }
+
+    @Test
     public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
         when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
+        assertFalse(enhetFraTjenesten.isSome());
+    }
+
+    @Test
+    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdInneholderUgyldigInput() throws Exception {
+        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenThrow(new HentEnhetBolkUgyldigInput());
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
         assertFalse(enhetFraTjenesten.isSome());
     }
