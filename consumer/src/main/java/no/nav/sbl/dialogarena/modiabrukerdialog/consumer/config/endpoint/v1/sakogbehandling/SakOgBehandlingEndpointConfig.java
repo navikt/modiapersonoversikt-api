@@ -11,7 +11,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
@@ -23,7 +23,7 @@ public class SakOgBehandlingEndpointConfig {
         final SakOgBehandling_v1PortType prod = createSakogbehandlingPortType(new UserSAMLOutInterceptor());
         final SakOgBehandling_v1PortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
 
-        return createSwitcher(prod, mock, SAKOGBEHANDLING_KEY, SakOgBehandling_v1PortType.class);
+        return createMetricsProxyWithInstanceSwitcher("SakOgBehandling", prod, mock, SAKOGBEHANDLING_KEY, SakOgBehandling_v1PortType.class);
     }
 
     @Bean
