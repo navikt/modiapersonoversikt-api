@@ -67,6 +67,8 @@ public class HenvendelsePortTypeMock {
     }
 
     public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
+            lagDokumentVarsel("Dagpenger", "Vedtaksbrev"),
+
             createXMLHenvendelse(BEHANDLINGS_ID1, BEHANDLINGS_ID1, now().minusWeeks(1), null,
                     createXMLMeldingFraBruker("OVRG", LANG_TEKST), valueOf(oppgaveId), createXMLJourfortInformasjon(null, null, null, null))
                     .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
@@ -159,6 +161,19 @@ public class HenvendelsePortTypeMock {
 
         return xmlHenvendelse.withMetadataListe(
                 metadata == null ? null : new XMLMetadataListe().withMetadata(metadata));
+    }
+
+    private static XMLHenvendelse lagDokumentVarsel(String tema, String dokumentTittel) {
+        String dokumentVarselId = randomId();
+        return new XMLHenvendelse()
+                .withBehandlingsId(dokumentVarselId)
+                .withBehandlingskjedeId(dokumentVarselId)
+                .withOpprettetDato(DateTime.now())
+                .withTema(tema)
+                .withLestDato(null)
+                .withKorrelasjonsId("a1-b2")
+                .withHenvendelseType(DOKUMENT_VARSEL.value())
+                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLDokumentVarsel().withDokumenttittel(dokumentTittel).withJournalpostId("1").withDokumentIdListe("2").withTemanavn("Dagpenger")));
     }
 
     private static XMLMeldingFraBruker createXMLMeldingFraBruker(String temagruppe, String tekst) {
