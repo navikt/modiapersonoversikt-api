@@ -2,6 +2,8 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,4 +27,18 @@ public class TemagruppeTemaMappingTest {
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TSO"), is(ARBD.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TSR"), is(ARBD.name()));
     }
+
+    @Test
+    public void temaGruppeTilTemaTestUFRTSkalMappeTilUFO() {
+        List<String> temaer = TemagruppeTemaMapping.hentTemaForTemagruppe("UFRT");
+
+        boolean ufoFound = false;
+        for (String tema : temaer) {
+            if(tema.equals("UFO")){
+                ufoFound = true;
+            }
+        }
+        assertThat(ufoFound, is(true));
+    }
+
 }
