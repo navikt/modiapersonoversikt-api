@@ -1,8 +1,8 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.modig.lang.option.Optional;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -21,7 +21,7 @@ public class Melding implements Serializable {
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
-    public boolean kassert, ingenTilgangJournalfort;
+    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding;
     public Boolean erTilknyttetAnsatt;
     public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
 
