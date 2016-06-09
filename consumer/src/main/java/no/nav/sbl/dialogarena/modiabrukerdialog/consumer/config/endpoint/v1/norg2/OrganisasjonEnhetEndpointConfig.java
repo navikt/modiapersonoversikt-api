@@ -8,7 +8,7 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class OrganisasjonEnhetEndpointConfig {
@@ -20,7 +20,7 @@ public class OrganisasjonEnhetEndpointConfig {
         final OrganisasjonEnhetV1 organisasjonEnhetV1 = lagEndpoint();
         final OrganisasjonEnhetV1 organisasjonEnhetV1Mock = lagMockEnpoint();
 
-        return createSwitcher(organisasjonEnhetV1, organisasjonEnhetV1Mock, NORG2_ORGANISASJON_ENHET_KEY, OrganisasjonEnhetV1.class);
+        return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetV1", organisasjonEnhetV1, organisasjonEnhetV1Mock, NORG2_ORGANISASJON_ENHET_KEY, OrganisasjonEnhetV1.class);
     }
 
     @Bean
