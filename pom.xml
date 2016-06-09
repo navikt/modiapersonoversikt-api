@@ -369,10 +369,9 @@
 
         <!--Diverse-->
         <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>3.1.2</version>
-            <scope>provided</scope>
+            <groupId>no.nav</groupId>
+            <artifactId>metrics</artifactId>
+            <version>${nav-metrics.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.jknack</groupId>

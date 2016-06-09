@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
-import com.codahale.metrics.Timer;
+import no.nav.metrics.Timer;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
-import no.nav.modig.modia.metrics.MetricsFactory;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -103,7 +103,8 @@ public class NyOppgaveFormWrapper extends Panel {
         form.add(new IndicatingAjaxButtonWithImageUrl("opprettoppgave", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                Timer.Context timer = MetricsFactory.createTimer("hendelse.opprettoppgave.time").time();
+                Timer timer = createTimer("hendelse.opprettoppgave.time");
+                timer.start();
                 try {
                     NyOppgave nyOppgave = form.getModelObject();
                     nyOppgave.henvendelseId = innboksVM.getValgtTraad().getEldsteMelding().melding.id;
@@ -116,6 +117,7 @@ public class NyOppgaveFormWrapper extends Panel {
                     target.add(form, feedbackPanelSuccess);
                 } finally {
                     timer.stop();
+                    timer.report();
                 }
             }
 
