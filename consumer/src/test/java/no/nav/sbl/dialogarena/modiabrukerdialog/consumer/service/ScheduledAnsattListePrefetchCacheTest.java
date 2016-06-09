@@ -5,7 +5,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGe
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import net.sf.ehcache.Element;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
 
     @Inject
-    EnhetService enhetService;
+    OrganisasjonEnhetService organisasjonEnhetService;
 
     @Inject
     ScheduledAnsattListePrefetch prefetch;
@@ -45,7 +45,7 @@ public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
     @Before
     public void beforeTest() {
         List<AnsattEnhet> enheter = Arrays.asList(new AnsattEnhet("0100", "Nav Østfold"), new AnsattEnhet("2960", "Nav Drift"));
-        when(enhetService.hentAlleEnheter()).thenReturn(enheter);
+        when(organisasjonEnhetService.hentAlleEnheter()).thenReturn(enheter);
     }
 
 
@@ -72,8 +72,8 @@ public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
     static class ContextConfiguration {
 
         @Bean
-        public EnhetService enhetService() {
-            return mock(EnhetService.class);
+        public OrganisasjonEnhetService organisasjonEnhetService() {
+            return mock(OrganisasjonEnhetService.class);
         }
 
         @Bean

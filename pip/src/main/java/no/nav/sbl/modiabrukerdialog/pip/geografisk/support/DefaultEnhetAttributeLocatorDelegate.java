@@ -7,23 +7,23 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.AnsattEnhetUtil;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Delegate that retrieves enhet information from NORG and NAVAnsatt services.
  */
 public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocatorDelegate {
 
-    public static final String NAV_VAERNES = "1783";
     private static Logger logger = LoggerFactory.getLogger(EnhetAttributeLocator.class);
     @Inject
     private GOSYSNAVansatt ansattService;
@@ -49,7 +49,6 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
                 enhetIdSet = hentUnderenheter(lokalEnhet.getEnhetsId());
             } else {
                 enhetIdSet = hentFylkesEnheter(lokalEnhet);
-                enhetIdSet.addAll(AnsattEnhetUtil.hentEkstraEnheterForFylke(lokalEnhet.getEnhetsId()));
             }
             enhetIdSet.add(lokalEnhet.getEnhetsId());
 
@@ -67,8 +66,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
         Set<String> values = new HashSet<>();
         List<ASBOGOSYSNavEnhet> enheter = hentLokalEnheter(ansattId);
         for (ASBOGOSYSNavEnhet enhet : enheter) {
-            String enhetsId = enhet.getEnhetsId();
-            values.addAll(AnsattEnhetUtil.hentEnheterForValgtEnhet(enhetsId));
+            values.add(enhet.getEnhetsId());
         }
         return values;
     }
