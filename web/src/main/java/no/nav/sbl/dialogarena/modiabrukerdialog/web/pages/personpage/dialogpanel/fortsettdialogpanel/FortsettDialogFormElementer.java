@@ -145,9 +145,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
     }
 
     private void oppdaterAlleElementerSomAvhengerAvKanalOgDelMedBrukerValg(AjaxRequestTarget target, List<Component> avhengerAvKanlOgDelMedBrukerValg) {
-        for (Component component : avhengerAvKanlOgDelMedBrukerValg) {
-            target.add(component);
-        }
+        avhengerAvKanlOgDelMedBrukerValg.forEach(target::add);
     }
 
     private void settDelMedBrukerTilFalseDersomDenneSkalDisables(IModel<HenvendelseVM> model, CheckBox brukerKanSvare) {
