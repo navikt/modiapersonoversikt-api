@@ -126,7 +126,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog-api.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog-api/browse</url>
-        <tag>modiabrukerdialog-api-4.3-FAMOUS-SHADE</tag>
+        <tag>modiabrukerdialog-api-4.5</tag>
     </scm>
 
 </project>
