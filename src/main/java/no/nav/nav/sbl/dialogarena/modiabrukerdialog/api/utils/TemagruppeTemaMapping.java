@@ -19,10 +19,11 @@ public class TemagruppeTemaMapping {
             put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
             put(Temagruppe.FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
             put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
-            put(Temagruppe.PENS.name(), asList("PEN", "SUP", "UFO"));
+            put(Temagruppe.PENS.name(), asList("PEN", "SUP"));
             put(Temagruppe.HJLPM.name(), asList("HJE", "BIL", "HEL"));
             put(Temagruppe.BIL.name(), asList("HJE", "BIL", "HEL"));
             put(Temagruppe.ORT_HJE.name(), asList("HJE", "BIL", "HEL"));
+            put(Temagruppe.UFRT.name(), asList("UFO"));
         }
     };
 
