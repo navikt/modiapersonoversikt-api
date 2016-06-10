@@ -31,9 +31,7 @@ public class MeldingVM implements Serializable {
     public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
         this.traadlengde = traadLengde;
-        if (melding.erDokumentMelding) {
-            this.erDokumentMelding = true;
-        }
+        this.erDokumentMelding = melding.erDokumentMelding;
     }
 
     public String getAvsenderDato() {
