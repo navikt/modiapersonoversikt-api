@@ -23,8 +23,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendels
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.TRAAD_ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_BRUKER;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class MeldingUtils {
 
@@ -76,7 +75,7 @@ public class MeldingUtils {
 
                 XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
                 if (journalfortInformasjon != null) {
-                    melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
+                    melding.statusTekst = propertyResolver.getProperty(lagMeldingStatusTekstKey(melding));
                     melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
                     melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
                     melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
@@ -86,7 +85,7 @@ public class MeldingUtils {
 
                 if (innholdErKassert(xmlHenvendelse)) {
                     settTemagruppe(melding, null, propertyResolver);
-                    melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
+                    melding.statusTekst = propertyResolver.getProperty(lagMeldingStatusTekstKey(melding));
                     melding.fritekst = propertyResolver.getProperty("innhold.kassert");
                     melding.kanal = null;
                     melding.navIdent = null;
@@ -103,7 +102,7 @@ public class MeldingUtils {
                     return melding;
                 }
 
-                melding.statusTekst = propertyResolver.getProperty(VisningUtils.lagMeldingStatusTekstKey(melding));
+                melding.statusTekst = propertyResolver.getProperty(lagMeldingStatusTekstKey(melding));
                 if (xmlMetadata instanceof XMLMeldingFraBruker) {
                     XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
                     settTemagruppe(melding, meldingFraBruker.getTemagruppe(), propertyResolver);
