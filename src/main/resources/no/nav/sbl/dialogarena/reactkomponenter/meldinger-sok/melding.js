@@ -1,7 +1,7 @@
-import React, {PropTypes as pt} from "react";
-import Utils from "./../utils/utils-module";
-import sanitize from "sanitize-html";
-import format from "string-format";
+import React, { PropTypes as pt } from 'react';
+import Utils from './../utils/utils-module';
+import sanitize from 'sanitize-html';
+import format from 'string-format';
 
 const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
@@ -39,7 +39,7 @@ class Melding extends React.Component {
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        const dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
+        const dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', {allowedTags: ['em']});
         const skrevetMelding = melding.erDokumentMelding ? '' : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;
 
         return (
