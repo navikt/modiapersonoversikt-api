@@ -1,6 +1,7 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
 public enum Meldingstype {
+    DOKUMENT_VARSEL,
     SPORSMAL_SKRIFTLIG,
     SVAR_SKRIFTLIG,
     SVAR_OPPMOTE,
@@ -8,5 +9,5 @@ public enum Meldingstype {
     SAMTALEREFERAT_OPPMOTE,
     SAMTALEREFERAT_TELEFON,
     SPORSMAL_MODIA_UTGAAENDE,
-    SVAR_SBL_INNGAAENDE;
+    SVAR_SBL_INNGAAENDE
 }

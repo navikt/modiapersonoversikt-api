@@ -4,7 +4,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import org.hamcrest.MatcherAssert;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.DOKUMENT_VARSEL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
@@ -119,6 +119,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
+        assertThat(melding.erDokumentMelding, is(false));
     }
 
     @Test
@@ -134,6 +135,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.fritekst, is(nullValue()));
         assertThat(melding.temagruppe, is(nullValue()));
+        assertThat(melding.erDokumentMelding, is(false));
     }
 
     @Test
@@ -155,6 +157,7 @@ public class MeldingUtilsTest {
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
         assertThat(melding.navIdent, is(NAVIDENT));
+        assertThat(melding.erDokumentMelding, is(false));
     }
 
     @Test
@@ -175,6 +178,7 @@ public class MeldingUtilsTest {
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
         assertThat(melding.navIdent, is(nullValue()));
+        assertThat(melding.erDokumentMelding, is(false));
     }
 
     @Test
@@ -196,6 +200,7 @@ public class MeldingUtilsTest {
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
         assertThat(melding.navIdent, is(NAVIDENT));
+        assertThat(melding.erDokumentMelding, is(false));
     }
 
     @Test
@@ -215,6 +220,7 @@ public class MeldingUtilsTest {
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
         assertThat(melding.navIdent, is(nullValue()));
+        assertThat(melding.erDokumentMelding, is(false));
     }
 
     @Test
@@ -224,11 +230,12 @@ public class MeldingUtilsTest {
 
         Melding sporsmal = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
 
-        MatcherAssert.assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
-        MatcherAssert.assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
-        MatcherAssert.assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
-        MatcherAssert.assertThat(sporsmal.temagruppe, is(xmlMeldingFraBruker.getTemagruppe()));
-        MatcherAssert.assertThat(sporsmal.fritekst, is(xmlMeldingFraBruker.getFritekst()));
+        assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
+        assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
+        assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
+        assertThat(sporsmal.temagruppe, is(xmlMeldingFraBruker.getTemagruppe()));
+        assertThat(sporsmal.fritekst, is(xmlMeldingFraBruker.getFritekst()));
+        assertThat(sporsmal.erDokumentMelding, is(false));
     }
 
     @Test
@@ -240,14 +247,15 @@ public class MeldingUtilsTest {
 
         verify(ldapService, atLeastOnce()).hentSaksbehandler(xmlMeldingTilBruker.getNavident());
 
-        MatcherAssert.assertThat(referat.fnrBruker, is(xmlHenvendelse.getFnr()));
-        MatcherAssert.assertThat(referat.meldingstype, is(SAMTALEREFERAT_OPPMOTE));
-        MatcherAssert.assertThat(referat.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
-        MatcherAssert.assertThat(referat.traadId, is(xmlHenvendelse.getBehandlingskjedeId()));
-        MatcherAssert.assertThat(referat.temagruppe, is(xmlMeldingTilBruker.getTemagruppe()));
-        MatcherAssert.assertThat(referat.kanal, is(xmlMeldingTilBruker.getKanal()));
-        MatcherAssert.assertThat(referat.fritekst, is(xmlMeldingTilBruker.getFritekst()));
-        MatcherAssert.assertThat(referat.navIdent, is(xmlMeldingTilBruker.getNavident()));
+        assertThat(referat.fnrBruker, is(xmlHenvendelse.getFnr()));
+        assertThat(referat.meldingstype, is(SAMTALEREFERAT_OPPMOTE));
+        assertThat(referat.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
+        assertThat(referat.traadId, is(xmlHenvendelse.getBehandlingskjedeId()));
+        assertThat(referat.temagruppe, is(xmlMeldingTilBruker.getTemagruppe()));
+        assertThat(referat.kanal, is(xmlMeldingTilBruker.getKanal()));
+        assertThat(referat.fritekst, is(xmlMeldingTilBruker.getFritekst()));
+        assertThat(referat.navIdent, is(xmlMeldingTilBruker.getNavident()));
+        assertThat(referat.erDokumentMelding, is(false));
     }
 
     @Test
@@ -257,17 +265,34 @@ public class MeldingUtilsTest {
 
         Melding sporsmal = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
 
-        MatcherAssert.assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
-        MatcherAssert.assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
-        MatcherAssert.assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
-        MatcherAssert.assertThat(sporsmal.temagruppe, is(nullValue()));
-        MatcherAssert.assertThat(sporsmal.fritekst, is(nullValue()));
+        assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
+        assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
+        assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
+        assertThat(sporsmal.temagruppe, is(nullValue()));
+        assertThat(sporsmal.fritekst, is(nullValue()));
+        assertThat(sporsmal.erDokumentMelding, is(false));
     }
 
     @Test(expected = RuntimeException.class)
     public void kasterExceptionVedUkjentType() {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedUkjentType();
         tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+    }
+
+    @Test
+    public void returnererMeldingSomErDokumentMeldingOmDokumentVarsel() {
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedDokumentVarsel();
+        XMLDokumentVarsel innsendtVarsel = (XMLDokumentVarsel) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
+
+        Melding dokumentVarsel = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+
+        assertThat(dokumentVarsel.id, is(xmlHenvendelse.getBehandlingsId()));
+        assertThat(dokumentVarsel.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
+        assertThat(dokumentVarsel.statusTekst, is(innsendtVarsel.getDokumenttittel()));
+        assertThat(dokumentVarsel.fritekst, is(innsendtVarsel.getTemanavn()));
+        assertThat(dokumentVarsel.erDokumentMelding, is(true));
+        assertThat(dokumentVarsel.temagruppe, is(nullValue()));
+
     }
 
     private XMLHenvendelse createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType type) {
@@ -298,6 +323,23 @@ public class MeldingUtilsTest {
                                 .withTemagruppe("temagruppe")
                                 .withFritekst("fritekst")
                 ));
+    }
+
+    private XMLHenvendelse createXMLHenvendelseMedDokumentVarsel() {
+        return new XMLHenvendelse()
+                .withBehandlingsId("123")
+                .withBehandlingskjedeId("123")
+                .withOpprettetDato(DateTime.now())
+                .withTema("dagpenger")
+                .withLestDato(null)
+                .withKorrelasjonsId("a1-b2")
+                .withHenvendelseType(DOKUMENT_VARSEL.value())
+                .withMetadataListe(new XMLMetadataListe().withMetadata(
+                        new XMLDokumentVarsel()
+                                .withDokumenttittel("tittel")
+                                .withJournalpostId("1")
+                                .withDokumentIdListe("2")
+                                .withTemanavn("Dagpenger")));
     }
 
     private XMLHenvendelse createXMLHenvendelseMedUkjentType() {
