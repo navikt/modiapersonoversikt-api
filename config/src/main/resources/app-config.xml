@@ -4,7 +4,10 @@
 
     <name>modiabrukerdialog</name>
 
-    <selftestPagePath>/modiabrukerdialog/internal/selftest</selftestPagePath>
+    <selftest>
+        <path>modiabrukerdialog/internal/selftest</path>
+        <humanReadablePath>modiabrukerdialog/internal/selftest</humanReadablePath>
+    </selftest>
 
     <artifacts>
         <ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee"/>
@@ -16,11 +19,7 @@
         </logins>
     </security>
 
-    <loadBalancer>
-        <contextRoot>modiabrukerdialog</contextRoot>
-        <lbHealthMonitor type="HTTPS" isAliveUrl="internal/isAlive" interval="5" timeout="16"/>
-        <lbPool slowRampTime="30" loadBalancingMethod="LEAST_CONNECTIONS" connectionLimit="500"/>
-    </loadBalancer>
+    <loadBalancer isAlive="/modiabrukerdialog/internal/isAlive" />
 
     <resources>
         <!-- Felles -->
@@ -30,7 +29,7 @@
         <baseUrl alias="tjenestebuss" mapToProperty="tjenestebuss"/>
         <baseUrl alias="tjenester" mapToProperty="tjenester"/>
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss"/>
-        <localFiles name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
+        <directory name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.pesys" mapToProperty="server.pesys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
