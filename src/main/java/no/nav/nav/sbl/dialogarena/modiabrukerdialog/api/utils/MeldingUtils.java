@@ -44,12 +44,7 @@ public class MeldingUtils {
         return map;
     }
 
-    private static final Predicate<Map.Entry<String, List<Melding>>> DET_FINNES_EN_ROTMELDING = new Predicate<Map.Entry<String, List<Melding>>>() {
-        @Override
-        public boolean evaluate(Map.Entry<String, List<Melding>> traad) {
-            return on(traad.getValue()).exists(where(ID, equalTo(traad.getKey())));
-        }
-    };
+    private static final Predicate<Map.Entry<String, List<Melding>>> DET_FINNES_EN_ROTMELDING = traad -> on(traad.getValue()).exists(where(ID, equalTo(traad.getKey())));
 
     public static Transformer<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver, final LDAPService ldapService) {
         return new Transformer<XMLHenvendelse, Melding>() {

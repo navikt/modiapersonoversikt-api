@@ -43,58 +43,23 @@ public class Sak implements Serializable, Comparable<Sak> {
         return SAKSTYPE_GENERELL.equals(sakstype);
     }
 
-    public static final Transformer<Sak, String> TEMAKODE = new Transformer<Sak, String>() {
-        @Override
-        public String transform(Sak sak) {
-            return sak.temaKode;
-        }
-    };
+    public static final Transformer<Sak, String> TEMAKODE = sak -> sak.temaKode;
 
-    public static final Transformer<Sak, Boolean> IS_GENERELL_SAK = new Transformer<Sak, Boolean>() {
-        @Override
-        public Boolean transform(Sak sak) {
-            return sak.isSakstypeForVisningGenerell();
-        }
-    };
+    public static final Transformer<Sak, Boolean> IS_GENERELL_SAK = sak -> sak.isSakstypeForVisningGenerell();
 
-    public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode);
-        }
-    };
+    public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = sak -> GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode);
 
-    public static final Predicate<Sak> IS_GODKJENT_TEMA_FOR_GENERELLE = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
-        }
-    };
+    public static final Predicate<Sak> IS_GODKJENT_TEMA_FOR_GENERELLE = sak -> GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
 
-    public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode);
-        }
-    };
+    public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK = sak -> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode);
 
     public static Predicate<Sak> harTemaKode(final String temaKode) {
-        return new Predicate<Sak>() {
-            @Override
-            public boolean evaluate(Sak sak) {
-                return temaKode.equals(sak.temaKode);
-            }
-        };
+        return sak -> temaKode.equals(sak.temaKode);
     }
 
-    public static final Predicate<Sak> IS_ARENA_OPPFOLGING = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return TEMAKODE_OPPFOLGING.equals(sak.temaKode)
-                    && FAGSYSTEMKODE_ARENA.equals(sak.fagsystemKode)
-                    && SAKSTYPE_MED_FAGSAK.equals(sak.sakstype);
-        }
-    };
+    public static final Predicate<Sak> IS_ARENA_OPPFOLGING = sak -> TEMAKODE_OPPFOLGING.equals(sak.temaKode)
+            && FAGSYSTEMKODE_ARENA.equals(sak.fagsystemKode)
+            && SAKSTYPE_MED_FAGSAK.equals(sak.sakstype);
 
     public String getOpprettetDatoFormatert() {
         return opprettetDato == null ? "" : DateTimeFormat.forPattern("d. MMM. yyyy").withLocale(locale.create()).print(opprettetDato);

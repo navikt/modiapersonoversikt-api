@@ -1,6 +1,5 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -30,12 +29,7 @@ public class Traad {
         this.statusTekst = sisteMelding.statusTekst;
     }
 
-    public static final Transformer<Traad, DateTime> DATO = new Transformer<Traad, DateTime>() {
-        @Override
-        public DateTime transform(Traad traad) {
-            return traad.dato;
-        }
-    };
+    public static final Transformer<Traad, DateTime> DATO = traad -> traad.dato;
 
     public static final Comparator<Traad> NYESTE_FORST = reverseOrder(compareWith(DATO));
 
