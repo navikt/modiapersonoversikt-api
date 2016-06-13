@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService.OppgaveErFerdigstilt;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -36,12 +35,7 @@ public class AvsluttOppgavePanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final Optional<WSOppgave> oppgave = oppgaveId.map(new Transformer<String, WSOppgave>() {
-            @Override
-            public WSOppgave transform(String id) {
-                return gsakService.hentOppgave(id);
-            }
-        });
+        final Optional<WSOppgave> oppgave = oppgaveId.map(id1 -> gsakService.hentOppgave(id1));
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackAvsluttOppgave");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
@@ -50,7 +44,7 @@ public class AvsluttOppgavePanel extends Panel {
         final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedbackError", new ContainerFeedbackMessageFilter(this));
         feedbackPanelError.setOutputMarkupId(true);
 
-        beskrivelseFelt = new TextArea<>("beskrivelse", new Model<String>());
+        beskrivelseFelt = new TextArea<>("beskrivelse", new Model<>());
         beskrivelseFelt.setRequired(true);
         add(new Form("form")
                 .add(beskrivelseFelt)

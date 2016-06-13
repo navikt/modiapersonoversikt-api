@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,18 +27,10 @@ public class ReactJournalforingsPanel extends AnimertPanel {
                 put("temagruppeTemaMapping", TEMAGRUPPE_TEMA_MAPPING);
             }
         });
-        reactComponentPanel.addCallback("lukkPanel", Void.class, new ReactComponentCallback<Void>() {
-            @Override
-            public void onCallback(AjaxRequestTarget target, Void data) {
-                lukkPanel(target);
-            }
-        });
-        reactComponentPanel.addCallback("traadJournalfort", Void.class, new ReactComponentCallback<Void>() {
-            @Override
-            public void onCallback(AjaxRequestTarget target, Void data) {
-                lukkPanel(target);
-                send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
-            }
+        reactComponentPanel.addCallback("lukkPanel", Void.class, (target, data) -> lukkPanel(target));
+        reactComponentPanel.addCallback("traadJournalfort", Void.class, (target, data) -> {
+            lukkPanel(target);
+            send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
         });
         add(reactComponentPanel);
     }

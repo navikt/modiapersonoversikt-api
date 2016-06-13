@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.MeldingActionPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.MeldingActionPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -61,7 +61,7 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
             super(id);
             setOutputMarkupPlaceholderTag(true);
 
-            add(visibleIf(new PropertyModel<Boolean>(getModel(), "valgtTraad.traadKanBesvares()")));
+            add(visibleIf(new PropertyModel<>(getModel(), "valgtTraad.traadKanBesvares()")));
             add(hasCssClassIf("besvares", traadBesvares()));
 
             add(new AjaxLink<InnboksVM>("besvar", TraaddetaljerPanel.this.getModel()) {

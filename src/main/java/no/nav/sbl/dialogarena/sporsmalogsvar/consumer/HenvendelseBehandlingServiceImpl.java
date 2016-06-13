@@ -136,67 +136,58 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     protected Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
         final Set<String> enheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
 
-        return new Predicate<Melding>() {
-            @Override
-            public boolean evaluate(Melding melding) {
-                List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(actionId("kontorsperre"),
-                        resourceId(""),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet))));
+        return melding -> {
+            List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(actionId("kontorsperre"),
+                    resourceId(""),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet))));
 
-                for (String enhet : enheter) {
-                    attributes.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(enhet)));
-                }
-
-                PolicyRequest kontorsperrePolicyRequest = forRequest(attributes);
-
-                return isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest);
+            for (String enhet : enheter) {
+                attributes.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(enhet)));
             }
+
+            PolicyRequest kontorsperrePolicyRequest = forRequest(attributes);
+
+            return isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest);
         };
     }
 
     protected Transformer<Melding, Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
         final Set<String> enheter = AnsattEnhetUtil.hentEnheterForValgtEnhet(valgtEnhet);
-        return new Transformer<Melding, Melding>() {
-            @Override
-            public Melding transform(Melding melding) {
-                List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(
-                        actionId("oksos"),
-                        resourceId(""),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.brukersEnhet))
-                ));
+        return melding -> {
+            List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(
+                    actionId("oksos"),
+                    resourceId(""),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(melding.brukersEnhet))
+            ));
 
-                for (String enhet : enheter) {
-                    attributes.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(enhet)));
-                }
-
-                PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
-
-                if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
-                    melding.fritekst = propertyResolver.getProperty("tilgang.OKSOS");
-                }
-
-                return melding;
+            for (String enhet : enheter) {
+                attributes.add(subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(enhet)));
             }
+
+            PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
+
+            if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
+                melding.fritekst = propertyResolver.getProperty("tilgang.OKSOS");
+            }
+
+            return melding;
         };
     }
 
     private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
-        return new Transformer<Melding, Melding>() {
-            @Override
-            public Melding transform(Melding melding) {
-                PolicyRequest temagruppePolicyRequest = forRequest(
-                        actionId("temagruppe"),
-                        resourceId(""),
-                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
+        return melding -> {
+            PolicyRequest temagruppePolicyRequest = forRequest(
+                    actionId("temagruppe"),
+                    resourceId(""),
+                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
-                if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                    melding.fritekst = propertyResolver.getProperty("tilgang.journalfort");
-                    melding.ingenTilgangJournalfort = true;
-                }
-
-                return melding;
+            if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                melding.fritekst = propertyResolver.getProperty("tilgang.journalfort");
+                melding.ingenTilgangJournalfort = true;
             }
+
+            return melding;
         };
     }
 

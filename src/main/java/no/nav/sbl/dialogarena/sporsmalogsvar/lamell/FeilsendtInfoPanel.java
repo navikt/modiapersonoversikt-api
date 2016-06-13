@@ -14,6 +14,6 @@ public class FeilsendtInfoPanel extends Panel {
         setOutputMarkupId(true);
 
         add(new Label("markertAv", new PropertyModel<>(getDefaultModel(), "markertSomFeilsendtAv.get()")));
-        add(visibleIf(new PropertyModel<Boolean>(getDefaultModel(), "erFeilsendt")));
+        add(visibleIf(new PropertyModel<>(getDefaultModel(), "erFeilsendt")));
     }
 }

@@ -72,12 +72,7 @@ public class InnboksVM implements Serializable {
             for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
                 traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue()), pep, saksbehandlerInnstillingerService));
             }
-            nyesteMeldingerITraad = on(traader.values()).map(new Transformer<TraadVM, MeldingVM>() {
-                @Override
-                public MeldingVM transform(TraadVM traadVM) {
-                    return traadVM.getNyesteMelding();
-                }
-            }).collect(MeldingVM.NYESTE_FORST);
+            nyesteMeldingerITraad = on(traader.values()).map(traadVM -> traadVM.getNyesteMelding()).collect(MeldingVM.NYESTE_FORST);
 
         } catch (Exception e) {
             log.warn("Feilet ved henting av henvendelser for fnr {}", fnr, e);
@@ -115,7 +110,7 @@ public class InnboksVM implements Serializable {
     }
 
     public TraadVM getValgtTraad() {
-        return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new TraadVM(new ArrayList<MeldingVM>(), pep, saksbehandlerInnstillingerService);
+        return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new TraadVM(new ArrayList<>(), pep, saksbehandlerInnstillingerService);
     }
 
     public MeldingVM getNyesteMeldingINyesteTraad() {
@@ -143,16 +138,13 @@ public class InnboksVM implements Serializable {
         };
     }
 
-    private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<Melding>, List<MeldingVM>>() {
-        @Override
-        public List<MeldingVM> transform(List<Melding> meldinger) {
-            List<Melding> meldingerITraad = on(meldinger).collect(Melding.NYESTE_FORST);
-            List<MeldingVM> meldingVMTraad = new ArrayList<>();
-            for (Melding melding : meldingerITraad) {
-                meldingVMTraad.add(new MeldingVM(melding, meldingerITraad.size()));
-            }
-            return meldingVMTraad;
+    private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = meldinger -> {
+        List<Melding> meldingerITraad = on(meldinger).collect(Melding.NYESTE_FORST);
+        List<MeldingVM> meldingVMTraad = new ArrayList<>();
+        for (Melding melding : meldingerITraad) {
+            meldingVMTraad.add(new MeldingVM(melding, meldingerITraad.size()));
         }
+        return meldingVMTraad;
     };
 
     public Optional<String> getSessionOppgaveId() {

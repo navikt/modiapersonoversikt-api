@@ -15,12 +15,12 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
         setOutputMarkupId(true);
 
         Label meldingStatus = new Label("meldingsstatus", new StringFormatModel("%s - %s",
-                new PropertyModel<String>(getModel(), "melding.statusTekst"),
-                new PropertyModel<String>(getModel(), "melding.temagruppeNavn")
+                new PropertyModel<>(getModel(), "melding.statusTekst"),
+                new PropertyModel<>(getModel(), "melding.temagruppeNavn")
         ));
 
         Label dokumentStatus = new Label("dokumentstatus", new StringFormatModel("%s",
-                new PropertyModel<String>(getModel(), "melding.statusTekst")
+                new PropertyModel<>(getModel(), "melding.statusTekst")
         ));
 
         add(

@@ -90,33 +90,13 @@ public class MeldingVM implements Serializable {
         return FRA_NAV.contains(melding.meldingstype);
     }
 
-    public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
-        @Override
-        public int compare(MeldingVM o1, MeldingVM o2) {
-            return o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
-        }
-    };
+    public static final Comparator<MeldingVM> NYESTE_FORST = (o1, o2) -> o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
 
-    public static final Transformer<MeldingVM, String> ID = new Transformer<MeldingVM, String>() {
-        @Override
-        public String transform(MeldingVM meldingVM) {
-            return meldingVM.melding.id;
-        }
-    };
+    public static final Transformer<MeldingVM, String> ID = meldingVM -> meldingVM.melding.id;
 
-    public static final Transformer<MeldingVM, String> TRAAD_ID = new Transformer<MeldingVM, String>() {
-        @Override
-        public String transform(MeldingVM meldingVM) {
-            return meldingVM.melding.traadId;
-        }
-    };
+    public static final Transformer<MeldingVM, String> TRAAD_ID = meldingVM -> meldingVM.melding.traadId;
 
-    public static final Transformer<MeldingVM, Boolean> FEILSENDT = new Transformer<MeldingVM, Boolean>() {
-        @Override
-        public Boolean transform(MeldingVM meldingVM) {
-            return meldingVM.erFeilsendt();
-        }
-    };
+    public static final Transformer<MeldingVM, Boolean> FEILSENDT = meldingVM -> meldingVM.erFeilsendt();
 
     @Override
     public boolean equals(Object obj) {

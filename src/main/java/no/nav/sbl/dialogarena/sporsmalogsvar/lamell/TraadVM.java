@@ -62,7 +62,7 @@ public class TraadVM implements Serializable {
     }
 
     public List<MeldingVM> getTidligereMeldinger() {
-        return meldinger.isEmpty() ? new ArrayList<MeldingVM>() : meldinger.subList(1, meldinger.size());
+        return meldinger.isEmpty() ? new ArrayList<>() : meldinger.subList(1, meldinger.size());
     }
 
     public String getNyesteMeldingsTemagruppe() {

@@ -53,7 +53,7 @@ public class TraadPanel extends Panel {
                 String navIdent = item.getModelObject().melding.navIdent;
                 String skrevetAvNavn = item.getModelObject().melding.skrevetAv.navn;
                 WebMarkupContainer skrevetAvContainer = new WebMarkupContainer("skrevetAvContainer");
-                skrevetAvContainer.add(visibleIf(new PropertyModel<Boolean>(item.getModel(), "erFraSaksbehandler()")));
+                skrevetAvContainer.add(visibleIf(new PropertyModel<>(item.getModel(), "erFraSaksbehandler()")));
                 skrevetAvContainer.add(new Label("skrevetAvLabel", new ResourceModel("melding.skrevet-av")));
                 skrevetAvContainer.add(new Label("skrevetAv", String.format("%s (%s)", skrevetAvNavn, navIdent)));
                 item.add(skrevetAvContainer);

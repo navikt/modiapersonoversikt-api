@@ -19,12 +19,7 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
         super(on(traad).collect(Melding.NYESTE_FORST).get(0), traad.size());
     }
 
-    public static final Comparator<WidgetMeldingVM> NYESTE_OVERST = new Comparator<WidgetMeldingVM>() {
-        @Override
-        public int compare(WidgetMeldingVM o1, WidgetMeldingVM o2) {
-            return o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
-        }
-    };
+    public static final Comparator<WidgetMeldingVM> NYESTE_OVERST = (o1, o2) -> o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
 
     public String getMeldingStatusTekstKey() {
         return lagMeldingStatusTekstKey(melding);

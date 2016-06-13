@@ -4,7 +4,6 @@ import no.nav.metrics.Timer;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -242,7 +241,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
     private MarkupContainer lagEnhetVelger() {
         final IModel<List<AnsattEnhet>> enhetModel = new PropertyModel<>(this, "enheter");
-        final EnhetDropdown enhetDropdown = new EnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
+        final EnhetDropdown enhetDropdown = new EnhetDropdown("enhet", new PropertyModel<>(form.getModel(), "enhet"), enheter, foreslatteEnheter);
 
         enhetDropdown.setRequired(true);
         enhetDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
@@ -275,7 +274,7 @@ public class NyOppgaveFormWrapper extends Panel {
     private MarkupContainer lagAnsattVelger() {
         WebMarkupContainer container = new WebMarkupContainer("ansattContainer");
         container.setOutputMarkupPlaceholderTag(true);
-        container.add(new AnsattDropdown("ansatte", new PropertyModel<Ansatt>(form.getModel(), "valgtAnsatt"), new PropertyModel<List<Ansatt>>(form.getModel(), "ansatteTilknyttetEnhet")));
+        container.add(new AnsattDropdown("ansatte", new PropertyModel<>(form.getModel(), "valgtAnsatt"), new PropertyModel<>(form.getModel(), "ansatteTilknyttetEnhet")));
         container.add(visibleIf(not(nullValue(new PropertyModel<List<AnsattEnhet>>(form.getModel(), "enhet")))));
         return container;
     }
@@ -384,10 +383,5 @@ public class NyOppgaveFormWrapper extends Panel {
         }
     }
 
-    private static final Predicate<AnsattEnhet> GYLDIG_ENHET = new Predicate<AnsattEnhet>() {
-        @Override
-        public boolean evaluate(AnsattEnhet ansattEnhet) {
-            return Integer.valueOf(ansattEnhet.enhetId) >= 100 && !ansattEnhet.enhetNavn.toLowerCase().contains("avviklet");
-        }
-    };
+    private static final Predicate<AnsattEnhet> GYLDIG_ENHET = ansattEnhet -> Integer.valueOf(ansattEnhet.enhetId) >= 100 && !ansattEnhet.enhetNavn.toLowerCase().contains("avviklet");
 }

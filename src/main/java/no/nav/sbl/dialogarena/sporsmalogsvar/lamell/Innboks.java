@@ -5,9 +5,7 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -84,12 +82,9 @@ public class Innboks extends Lerret {
                 target.add(meldingerSokToggleContainer);
             }
         };
-        meldingerSok.addCallback("oppdater", Void.class, new ReactComponentCallback<Void>() {
-            @Override
-            public void onCallback(AjaxRequestTarget target, Void data) {
-                innboksVM.oppdaterMeldinger();
-                target.add(alleMeldingerPanel, traaddetaljerPanel);
-            }
+        meldingerSok.addCallback("oppdater", Void.class, (target, data) -> {
+            innboksVM.oppdaterMeldinger();
+            target.add(alleMeldingerPanel, traaddetaljerPanel);
         });
         meldingerSokToggleContainer.add(meldingerSokToggleButton);
 
@@ -99,7 +94,7 @@ public class Innboks extends Lerret {
 
         if (innboksVM.harFeilmelding().getObject().equals(true)) {
             String beskrivelse = "Legger tilbake en oppgave som du ikke har rett at se";
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId(), beskrivelse, Optional.<Temagruppe>none());
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId(), beskrivelse, Optional.none());
             innboksVM.setSessionHenvendelseId(null);
             innboksVM.setSessionOppgaveId(null);
         }

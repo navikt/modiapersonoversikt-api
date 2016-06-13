@@ -21,12 +21,12 @@ public class JournalpostInformasjon extends AnimertPanel {
         add(new Label("tekst", new StringFormatModel(
                 format,
                 new StringResourceModel("journalpost.journalfort.av", this, null),
-                new PropertyModel<String>(model, "melding.journalfortAv.navn"),
-                new PropertyModel<String>(model, "melding.journalfortAvNavIdent"),
-                new PropertyModel<String>(model, "journalfortDatoFormatert"),
-                new PropertyModel<String>(model, "melding.journalfortTemanavn"),
+                new PropertyModel<>(model, "melding.journalfortAv.navn"),
+                new PropertyModel<>(model, "melding.journalfortAvNavIdent"),
+                new PropertyModel<>(model, "journalfortDatoFormatert"),
+                new PropertyModel<>(model, "melding.journalfortTemanavn"),
                 new StringResourceModel("journalpost.jornalfort.saksid", this, null),
-                new PropertyModel<String>(model, "melding.journalfortSaksId")
+                new PropertyModel<>(model, "melding.journalfortSaksId")
         )));
     }
 
