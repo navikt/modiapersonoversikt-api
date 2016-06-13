@@ -81,7 +81,7 @@ public class TemagruppeTemaMapping {
     };
 
     public static List<String> hentTemaForTemagruppe(String temagruppe) {
-        return optional(TEMAGRUPPE_TEMA_MAPPING.get(temagruppe)).getOrElse(Collections.<String>emptyList());
+        return optional(TEMAGRUPPE_TEMA_MAPPING.get(temagruppe)).getOrElse(Collections.emptyList());
     }
 
     public static String hentTemagruppeForTema(String tema) {
