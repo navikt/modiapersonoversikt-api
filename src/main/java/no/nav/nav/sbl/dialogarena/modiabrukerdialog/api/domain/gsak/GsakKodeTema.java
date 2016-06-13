@@ -22,12 +22,7 @@ public abstract class GsakKodeTema implements Serializable {
         this.tekst = tekst;
     }
 
-    public static final Transformer<? super Tema, String> TEKST = new Transformer<GsakKodeTema.Tema, String>() {
-        @Override
-        public String transform(GsakKodeTema.Tema tema) {
-            return tema.tekst;
-        }
-    };
+    public static final Transformer<? super Tema, String> TEKST = (Transformer<Tema, String>) tema -> tema.tekst;
 
     public static class Tema extends GsakKodeTema implements Serializable {
         public final List<OppgaveType> oppgaveTyper;

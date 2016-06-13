@@ -13,10 +13,5 @@ public class AnsattEnhet implements Serializable {
         this.enhetNavn = enhetNavn;
     }
 
-    public static final Transformer<AnsattEnhet, String> ENHET_ID = new Transformer<AnsattEnhet, String>() {
-        @Override
-        public String transform(AnsattEnhet ansattEnhet) {
-            return ansattEnhet.enhetId;
-        }
-    };
+    public static final Transformer<AnsattEnhet, String> ENHET_ID = ansattEnhet -> ansattEnhet.enhetId;
 }
