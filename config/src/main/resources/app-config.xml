@@ -5,7 +5,7 @@
     <name>modiabrukerdialog</name>
 
     <selftest>
-        <path>modiabrukerdialog/internal/selftest</path>
+        <path>modiabrukerdialog/internal/selftest.json</path>
         <humanReadablePath>modiabrukerdialog/internal/selftest</humanReadablePath>
     </selftest>
 
