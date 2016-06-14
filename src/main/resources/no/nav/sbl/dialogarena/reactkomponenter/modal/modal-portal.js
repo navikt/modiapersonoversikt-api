@@ -1,4 +1,5 @@
-const React = require('react');
+import React, { PropTypes as pt } from 'react';
+import ReactDOM from 'react-dom';
 
 function createId(prefix) {
     return prefix + new Date().getTime() + '-' + Math.random();
@@ -13,7 +14,7 @@ function createAriaOptional(name, data) {
     if (tagComponent.length > 1) {
         className = tagComponent[1];
     }
-    const element = React.createElement(tagType, {id: id, className: className}, data.text);
+    const element = React.createElement(tagType, { id: id, className: className }, data.text);
     return {
         id: id,
         hidden: data.show ? null : element,
@@ -23,15 +24,15 @@ function createAriaOptional(name, data) {
 
 const ModalPortal = React.createClass({
     propTypes: {
-        'description': React.PropTypes.object,
-        'closeButton': React.PropTypes.object,
-        'title': React.PropTypes.object,
-        'isOpen': React.PropTypes.bool,
-        'modal': React.PropTypes.object.isRequired,
-        'skipFocus': React.PropTypes.array,
-        'children': React.PropTypes.object.isRequired,
-        'width': React.PropTypes.number,
-        'height': React.PropTypes.number
+        description: pt.object,
+        closeButton: pt.object,
+        title: pt.object,
+        isOpen: pt.bool,
+        modal: pt.object.isRequired,
+        skipFocus: pt.array,
+        children: pt.object.isRequired,
+        width: pt.number,
+        height: pt.number
     },
     getDefaultProps: function getDefaultProps() {
         return {
@@ -53,7 +54,7 @@ const ModalPortal = React.createClass({
     },
     componentDidUpdate: function componentDidUpdate() {
         if (this.props.isOpen) {
-            if (!$.contains(React.findDOMNode(this.refs.content), document.activeElement)) {
+            if (!$.contains(ReactDOM.findDOMNode(this.refs.content), document.activeElement)) {
                 this.focusFirst();
             }
         } else {
@@ -81,7 +82,7 @@ const ModalPortal = React.createClass({
         event.stopPropagation();
     },
     handleTab: function handleTab(isShiftkey) {
-        const $content = $(React.findDOMNode(this.refs.content));
+        const $content = $(ReactDOM.findDOMNode(this.refs.content));
         const focusable = $content.find(':tabbable');
         const lastValidIndex = isShiftkey ? 0 : focusable.length - 1;
 
@@ -97,7 +98,7 @@ const ModalPortal = React.createClass({
     },
     focusFirst: function focusFirst() {
         this.focusAfterClose = document.activeElement;
-        let tabbables = $(React.findDOMNode(this.refs.content)).find(':tabbable');
+        let tabbables = $(ReactDOM.findDOMNode(this.refs.content)).find(':tabbable');
         this.props.skipFocus.forEach(function removeFromTabbables(skipFocusTag) {
             tabbables = tabbables.not(skipFocusTag);
         });
@@ -119,7 +120,7 @@ const ModalPortal = React.createClass({
         }
 
         children.map(function addModalProp(child) {
-            return React.cloneElement(child, {modal: this.props.modal});
+            return React.cloneElement(child, { modal: this.props.modal });
         }.bind(this));
 
         const title = this.state.title;
@@ -141,7 +142,7 @@ const ModalPortal = React.createClass({
             <div tabIndex="-1" className={cls} aria-hidden={!this.props.isOpen} onKeyDown={this.keyHandler}
                  role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
                 <div className="backdrop" onClick={this.props.modal.close}></div>
-                <iframe src="about:blank" className="cover" aria-hidden />
+                <iframe src="about:blank" className="cover" aria-hidden/>
                 {title.hidden}
                 {description.hidden}
                 <div className="centering" style={this.props.width ? {'width': this.props.width + 'px'} : null}>

@@ -11,7 +11,7 @@ const SPAN_CONTENT = 'span-content';
 function createModal(props, children) {
     return TestUtils.renderIntoDocument(React.createElement(
             Modal, props || {},
-            children || React.createElement('span', {className: 'forReference'}, SPAN_CONTENT))
+            children || React.createElement('span', { className: 'forReference' }, SPAN_CONTENT))
     );
 }
 
@@ -61,7 +61,7 @@ describe('Modal', () => {
     });
 
     it('repects the isOpen prop', () => {
-        const modal = createModal({isOpen: true});
+        const modal = createModal({ isOpen: true });
 
         const portal = React.findDOMNode(modal.modal);
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
