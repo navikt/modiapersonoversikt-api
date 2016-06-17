@@ -8,9 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -45,18 +43,18 @@ public class OrganisasjonEnhetV1Mock {
 
             @Override
             public WSHentFullstendigEnhetListeResponse hentFullstendigEnhetListe(final WSHentFullstendigEnhetListeRequest wsHentFullstendigEnhetListeRequest) {
-                final WSHentFullstendigEnhetListeResponse response = new WSHentFullstendigEnhetListeResponse();
-
-                final List<WSDetaljertEnhet> enheter = new ArrayList<>();
-                IntStream.rangeClosed(101, 200).forEach(i -> enheter.add(lagWSDetaljertEnhet(i)));
-
-                response.withEnhetListe(enheter);
-                return response;
+                return new WSHentFullstendigEnhetListeResponse().withEnhetListe(lagWSDetaljertEnhet());
             }
 
             @Override
             public WSHentEnhetBolkResponse hentEnhetBolk(final WSHentEnhetBolkRequest wsHentEnhetBolkRequest) throws HentEnhetBolkUgyldigInput {
-                return null;
+                return new WSHentEnhetBolkResponse().withEnhetListe(lagWSDetaljertEnhet());
+            }
+
+            private List<WSDetaljertEnhet> lagWSDetaljertEnhet() {
+                final List<WSDetaljertEnhet> enheter = new ArrayList<>();
+                IntStream.rangeClosed(101, 200).forEach(i -> enheter.add(lagWSDetaljertEnhet(i)));
+                return enheter;
             }
 
             private WSDetaljertEnhet lagWSDetaljertEnhet(final int enhetId) {
