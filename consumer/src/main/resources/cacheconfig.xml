@@ -54,7 +54,7 @@
             <cache:cacheable method="hentNAVAnsattEnhetListe"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="organisasjonEnhetV1Advice" key-generator="userkeygenerator">
+    <cache:advice id="organisasjonEnhetV1Advice" key-generator="defaultkeygenerator">
         <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
         <cache:caching cache="organisasjonEnhet">
             <cache:cacheable method="hent*"/>
