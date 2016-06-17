@@ -9,8 +9,7 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import static java.util.Optional.of;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT_UTEN_LITERAL;
+import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class UtbetalingVM {
@@ -92,8 +91,8 @@ public class UtbetalingVM {
     }
 
     public String getPeriodeMedKortDato() {
-        return of(ytelse.getYtelsesperiode().getStart()).map(KORT_UTEN_LITERAL).orElse("") + " - "
-                + of(ytelse.getYtelsesperiode().getEnd()).map(KORT_UTEN_LITERAL).orElse("");
+
+        return kortUtenLiteral(ytelse.getYtelsesperiode().getStart()) + " - " + kortUtenLiteral(ytelse.getYtelsesperiode().getEnd());
     }
 
     public String getBruttoBelop() {
