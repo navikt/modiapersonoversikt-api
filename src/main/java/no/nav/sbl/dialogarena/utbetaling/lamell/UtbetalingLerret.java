@@ -102,7 +102,6 @@ public final class UtbetalingLerret extends Lerret {
         List<Hovedytelse> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
         filterParametere = new FilterParametere(ytelserAsText(ytelser));
 
-        //
         List<Hovedytelse> synligeUtbetalinger = ytelser.stream()
                 .filter(hovedytelse -> filterParametere.test(hovedytelse))
                 .collect(toList());

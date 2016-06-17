@@ -82,13 +82,16 @@ public class Transformers {
     /**
      * HovedytelseDato baserer seg på følgende prioritert rekkefølge:
      * 1. Hvis utbetalingsdato finnes så brukes denne
-     * 2. Hvis ikke brukes posteringsdatoen (som vises sammen med forfallsdato for å indikere når utbetalingen vil skje)
+     * 2. Hvis forfallsdato finnes så brukes denne
+     * 2. Hvis ikke brukes posteringsdatoen
      */
     protected static DateTime determineHovedytelseDato(WSUtbetaling wsUtbetaling) {
         if (wsUtbetaling.getUtbetalingsdato() != null) {
             return wsUtbetaling.getUtbetalingsdato();
         }
-
+        if (wsUtbetaling.getForfallsdato() != null) {
+            return wsUtbetaling.getForfallsdato();
+        }
         return wsUtbetaling.getPosteringsdato();
     }
 

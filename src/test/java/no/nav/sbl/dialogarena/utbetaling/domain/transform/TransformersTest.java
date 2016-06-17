@@ -30,6 +30,7 @@ public class TransformersTest {
     public void hovedytelsesDatoErUtbetalingsdatoNaarUtbetalingsdatoEksisterer() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()
                 .withUtbetalingsdato(new DateTime(2010, 1, 1, 1, 1))
+                .withForfallsdato(new DateTime(2011, 1, 1, 1, 1))
                 .withPosteringsdato(new DateTime(2013, 2, 2, 2, 2));
 
         DateTime hovedytelseDato = determineHovedytelseDato(wsUtbetaling);
@@ -37,9 +38,18 @@ public class TransformersTest {
     }
     
     @Test
-    public void hovedytelsesDatoErPosteringsdatoNaarUtbetalingsdatoIkkeEksisterer() {
+    public void hovedytelsesDatoErPosteringsdatoNaarUtbetalingsdatoOgForfallsdatoIkkeEksisterer() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()
                 .withPosteringsdato(new DateTime(2013, 2, 2, 2, 2));
+
+        DateTime hovedytelseDato = determineHovedytelseDato(wsUtbetaling);
+        assertThat(hovedytelseDato, is(new DateTime(2013, 2, 2, 2, 2)));
+    }
+
+    @Test
+    public void hovedytelsesDatoErForfallsdatoNaarUtbetalingsdatoIkkeEksisterer() {
+        WSUtbetaling wsUtbetaling = new WSUtbetaling()
+                .withForfallsdato(new DateTime(2013, 2, 2, 2, 2));
 
         DateTime hovedytelseDato = determineHovedytelseDato(wsUtbetaling);
         assertThat(hovedytelseDato, is(new DateTime(2013, 2, 2, 2, 2)));
