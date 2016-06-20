@@ -10,10 +10,13 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
@@ -26,6 +29,8 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendels
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class MeldingUtils {
+
+    final static Logger logger = LoggerFactory.getLogger(MeldingUtils.class);
 
     public static Map<String, List<Melding>> skillUtTraader(List<Melding> meldinger) {
 
@@ -64,11 +69,11 @@ public class MeldingUtils {
             melding.tilknyttetEnhet = xmlHenvendelse.getTilknyttetEnhet();
             melding.brukersEnhet = xmlHenvendelse.getBrukersEnhet();
             melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
-            melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
+            melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null && !"".equals(xmlHenvendelse.getGjeldendeTemagruppe()) ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
 
             XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
             if (journalfortInformasjon != null) {
-                melding.statusTekst = propertyResolver.getProperty(lagMeldingStatusTekstKey(melding));
+                melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
                 melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
                 melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
                 melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
@@ -78,7 +83,7 @@ public class MeldingUtils {
 
             if (innholdErKassert(xmlHenvendelse)) {
                 settTemagruppe(melding, null, propertyResolver);
-                melding.statusTekst = propertyResolver.getProperty(lagMeldingStatusTekstKey(melding));
+                melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
                 melding.fritekst = propertyResolver.getProperty("innhold.kassert");
                 melding.kanal = null;
                 melding.navIdent = null;
@@ -92,10 +97,11 @@ public class MeldingUtils {
                 melding.statusTekst = dokumentVarsel.getDokumenttittel();
                 melding.fritekst = dokumentVarsel.getTemanavn();
                 melding.erDokumentMelding = true;
+                melding.withTraadId(xmlHenvendelse.getBehandlingsId());
                 return melding;
             }
 
-            melding.statusTekst = propertyResolver.getProperty(lagMeldingStatusTekstKey(melding));
+            melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
             if (xmlMetadata instanceof XMLMeldingFraBruker) {
                 XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
                 settTemagruppe(melding, meldingFraBruker.getTemagruppe(), propertyResolver);
@@ -113,6 +119,16 @@ public class MeldingUtils {
 
             return melding;
         };
+    }
+
+    private static String hentEnonicTekstForDynamiskNokkel(PropertyResolver propertyResolver, String key) {
+        try {
+            String result = propertyResolver.getProperty(key);
+            return result;
+        } catch(NoSuchElementException exception) {
+            logger.error("Finner ikke cms-oppslag for " + key, exception.getMessage());
+            return key;
+        }
     }
 
     private static String lagLestStatus(Melding melding) {
