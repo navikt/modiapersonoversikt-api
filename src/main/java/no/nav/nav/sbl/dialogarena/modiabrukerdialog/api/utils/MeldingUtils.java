@@ -57,9 +57,11 @@ public class MeldingUtils {
             melding.id = xmlHenvendelse.getBehandlingsId();
             melding.meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(xmlHenvendelse.getHenvendelseType()));
             melding.opprettetDato = xmlHenvendelse.getOpprettetDato();
+            melding.visningsDato = xmlHenvendelse.getOpprettetDato();
             melding.lestDato = xmlHenvendelse.getLestDato();
             melding.fnrBruker = xmlHenvendelse.getFnr();
             melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
+            melding.status = STATUS.transform(xmlHenvendelse);
             melding.lestStatus = lagLestStatus(melding);
             melding.statusKlasse = VisningUtils.lagStatusIkonKlasse(melding);
             melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
@@ -100,6 +102,7 @@ public class MeldingUtils {
                 melding.withTraadId(xmlHenvendelse.getBehandlingsId());
                 melding.lestStatus = lagLestStatusDokumentVarsel(melding);
                 melding.ferdigstiltDato = dokumentVarsel.getFerdigstiltDato();
+                melding.visningsDato = dokumentVarsel.getFerdigstiltDato();
                 return melding;
             }
 
