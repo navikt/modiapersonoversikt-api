@@ -19,7 +19,8 @@ class Listevisning extends React.Component {
         const { traad, valgtTraad } = this.props;
         const erValgt = erValgtTekst(traad, valgtTraad);
         const cls = erValgt ? 'meldingsforhandsvisning valgt' : 'meldingsforhandsvisning';
-        const dato = sanitize(traad.opprettetDato, { allowedTags: ['em'] });
+        const visningsDato = traad.visningsDato;
+        const dato = sanitize(visningsDato, { allowedTags: ['em'] });
 
         const temagruppe = !traad.temagruppe ? '' : `, ${traad.temagruppe}`;
         let meldingsStatus = `${traad.statusTekst}${temagruppe}`;

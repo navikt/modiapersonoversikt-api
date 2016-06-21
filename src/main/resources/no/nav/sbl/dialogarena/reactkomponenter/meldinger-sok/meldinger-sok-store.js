@@ -121,7 +121,8 @@ function onFulfilled(traader) {
         traad.key = traad.traadId;
         traad.datoInMillis = traad.dato.millis;
         traad.innhold = traad.meldinger[0].fritekst;
-        traad.opprettetDato = traad.meldinger[0].opprettetDatoTekst;
+        traad.visningsDato = traad.meldinger[0].visningsDatoTekst;
+        traad.erDokumentMelding = traad.meldinger[0].erDokumentMelding;
 
         traad.meldinger.forEach((melding) => {
             melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
