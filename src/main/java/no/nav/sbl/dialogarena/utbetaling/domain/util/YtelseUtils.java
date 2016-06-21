@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.intervalFromStartEndDate;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.minusDaysAndFixedAtMidnightAtDayBefore;
 import static org.joda.time.LocalDate.now;
 
@@ -36,7 +35,7 @@ public class YtelseUtils {
         DateTime ytelse1Hovedytelsedato = ytelse1.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
         DateTime ytelse2Hovedytelsedato = ytelse2.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
 
-        int compareDato = -ytelse1Hovedytelsedato.compareTo(ytelse2Hovedytelsedato);
+        int compareDato = ytelse2Hovedytelsedato.compareTo(ytelse1Hovedytelsedato);
         if (compareDato == 0) {
             return ytelse1.getYtelse().compareToIgnoreCase(ytelse2.getYtelse());
         }
@@ -50,9 +49,7 @@ public class YtelseUtils {
         return Mottakertype.ANNEN_MOTTAKER;
     }
 
-    public static List<Hovedytelse> hovedytelserFromPeriod(List<Hovedytelse> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
-        final Interval intervall = intervalFromStartEndDate(startDato, sluttDato);
-
+    public static List<Hovedytelse> hovedytelserInnenforIntervall(List<Hovedytelse> hovedytelser, Interval intervall) {
         return hovedytelser
                 .stream()
                 .filter(hovedytelse -> intervall.contains(hovedytelse.getPosteringsDato()) || intervall.contains(hovedytelse.getUtbetalingsDato()))

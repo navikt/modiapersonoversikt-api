@@ -15,6 +15,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.intervalFromStartEndDate;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -128,7 +129,9 @@ public class YtelseUtilsTest {
 
     @Test
     public void hentUtbetalingerFraPeriode_inneholderRiktigAntallUtbetalinger() {
-        List<Hovedytelse> utbetalingsperiode = hovedytelserFromPeriod(hovedytelseListe, JAN_2012_DATE.toLocalDate(), MAR_2012_DATE.toLocalDate());
+
+        Interval intervall = intervalFromStartEndDate(JAN_2012_DATE.toLocalDate(), MAR_2012_DATE.toLocalDate());
+        List<Hovedytelse> utbetalingsperiode = hovedytelserInnenforIntervall(hovedytelseListe, intervall);
 
         assertThat(utbetalingsperiode.size(), is(3));
     }
@@ -137,7 +140,10 @@ public class YtelseUtilsTest {
     public void hentUtbetalingerFraPeriode_inneholderKunUtbetalingerInnenforPeriode() {
         DateTime startDato = new DateTime(2012, 1, 2, 0, 0, 0);
         DateTime sluttDato = new DateTime(2012, 3, 1, 0, 0, 0);
-        List<Hovedytelse> utbetalingsperiode = hovedytelserFromPeriod(hovedytelseListe, startDato.toLocalDate(), sluttDato.toLocalDate());
+
+        Interval intervall = intervalFromStartEndDate(startDato.toLocalDate(), sluttDato.toLocalDate());
+
+        List<Hovedytelse> utbetalingsperiode = hovedytelserInnenforIntervall(hovedytelseListe, intervall);
 
         assertThat(utbetalingsperiode.size(), is(2));
     }

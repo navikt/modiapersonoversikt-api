@@ -31,12 +31,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void toLocalDateTransformerTest() {
-        DateTime dateTime = DateTime.now();
-        assertThat(dateTime.toLocalDate(), equalTo(TO_LOCAL_DATE.apply(dateTime)));
-    }
-
-    @Test
     public void minusDaysToMidnight() {
         DateTime dateTime = new DateTime(2015, 10, 10, 11, 11, 11);
         DateTime newDateTime = minusDaysAndFixedAtMidnightAtDayBefore(dateTime, 30);

@@ -15,8 +15,6 @@ public final class DateUtils {
 
     public static final Function<Interval, DateTime> END = interval -> interval.getEnd();
 
-    public static final Function<DateTime, LocalDate> TO_LOCAL_DATE = dateTime -> dateTime.toLocalDate();
-
     public static Predicate<LocalDate> isAfter(final LocalDate compare) {
         return localDate -> localDate.isAfter(compare);
     }

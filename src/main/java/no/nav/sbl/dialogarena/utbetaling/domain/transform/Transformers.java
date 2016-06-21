@@ -67,9 +67,9 @@ public class Transformers {
                     .withNettoUtbetalt(wsYtelse.getYtelseNettobeloep())
                     .withBilagsnummer(wsYtelse.getBilagsnummer())
                     .withRettighetshaver(createAktoer(wsYtelse.getRettighetshaver()))
-                    .withRefundertForOrg(createAktoer(wsYtelse.getRefundertForOrg()));
+                    .withRefundertForOrg(createAktoer(wsYtelse.getRefundertForOrg()))
+                    .withBruttoUtbetalt(wsYtelse.getYtelseskomponentersum());
 
-            hovedytelse = hovedytelse.withBruttoUtbetalt(wsYtelse.getYtelseskomponentersum());
             hovedytelse = hovedytelse.withSammenlagtTrekkBeloep(aggregateTrekkBeloep(hovedytelse));
 
             hovedytelser.add(hovedytelse);

@@ -26,6 +26,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonth;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.intervalFromStartEndDate;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
 
@@ -156,7 +158,8 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     protected void oppdaterYtelser(List<Hovedytelse> hovedytelser) {
-        filterParametere.setYtelser(ytelserAsText(hovedytelserFromPeriod(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
+        Interval intervall = intervalFromStartEndDate(filterParametere.getStartDato(), filterParametere.getSluttDato());
+        filterParametere.setYtelser(ytelserAsText(hovedytelserInnenforIntervall(hovedytelser, intervall)));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
