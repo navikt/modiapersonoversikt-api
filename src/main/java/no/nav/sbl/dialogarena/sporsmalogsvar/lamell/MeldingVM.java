@@ -34,7 +34,10 @@ public class MeldingVM implements Serializable {
         this.erDokumentMelding = melding.erDokumentMelding;
     }
 
-    public String getAvsenderDato() {
+    public String getVisningsDato() {
+        if (erDokumentMelding){
+            return DateUtils.dateTime(melding.ferdigstiltDato);
+        }
         return DateUtils.dateTime(melding.opprettetDato);
     }
 
@@ -90,7 +93,7 @@ public class MeldingVM implements Serializable {
         return FRA_NAV.contains(melding.meldingstype);
     }
 
-    public static final Comparator<MeldingVM> NYESTE_FORST = (o1, o2) -> o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
+    public static final Comparator<MeldingVM> NYESTE_FORST = (o1, o2) -> o2.melding.getVisningsDato().compareTo(o1.melding.getVisningsDato());
 
     public static final Transformer<MeldingVM, String> ID = meldingVM -> meldingVM.melding.id;
 

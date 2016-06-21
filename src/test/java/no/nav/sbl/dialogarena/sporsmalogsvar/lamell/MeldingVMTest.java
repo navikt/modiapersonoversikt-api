@@ -24,20 +24,30 @@ import static org.hamcrest.core.Is.is;
 public class MeldingVMTest extends WicketPageTest {
 
     public static final DateTime OPPRETTET_DATO = DateTime.now();
+    public static final DateTime FERDIGSTILT_DATO = DateTime.now().minusDays(2);
     public static final String NAV_IDENT = "navIdent";
     private MeldingVM meldingVM;
 
     @Before
     public void setUp() {
         Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        melding.ferdigstiltDato = FERDIGSTILT_DATO;
         meldingVM = new MeldingVM(melding, 1);
     }
 
     @Test
     public void henterAvsenderDatoBasertPaaDato() {
-        String avsenderTekst = meldingVM.getAvsenderDato();
+        String avsenderTekst = meldingVM.getVisningsDato();
 
         assertThat(avsenderTekst, is(DateUtils.dateTime(OPPRETTET_DATO)));
+    }
+
+    @Test
+    public void henterFerdigstiltDatoOmDokumentVarsel() {
+        meldingVM.erDokumentMelding = true;
+        String avsenderTekst = meldingVM.getVisningsDato();
+
+        assertThat(avsenderTekst, is(DateUtils.dateTime(FERDIGSTILT_DATO)));
     }
 
     @Test
@@ -77,7 +87,7 @@ public class MeldingVMTest extends WicketPageTest {
 
     @Test
     public void henterMarkertSomFeilsendtAv() {
-        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(Optional.<String>none()));
+        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(Optional.none()));
 
         meldingVM.melding.markertSomFeilsendtAv = NAV_IDENT;
 

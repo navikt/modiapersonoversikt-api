@@ -44,7 +44,7 @@ public class TraadPanel extends Panel {
                 );
 
                 item.add(meldingstatusContainer);
-                item.add(new Label("avsenderDato"));
+                item.add(new Label("visningsDato"));
                 item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
                 item.add(new Journalpost("journalpost", item.getModel()));
                 item.add(append("aria-labelledby", meldingstatusContainer.getMarkupId()));
