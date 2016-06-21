@@ -98,6 +98,7 @@ public class MeldingUtils {
                 melding.fritekst = dokumentVarsel.getTemanavn();
                 melding.erDokumentMelding = true;
                 melding.withTraadId(xmlHenvendelse.getBehandlingsId());
+                melding.lestStatus = lagLestStatusDokumentVarsel(melding);
                 return melding;
             }
 
@@ -139,6 +140,13 @@ public class MeldingUtils {
         } else {
             return "Ulest,";
         }
+    }
+
+    private static String lagLestStatusDokumentVarsel(Melding melding) {
+        if (melding.status == Status.LEST_AV_BRUKER) {
+            return "Lest";
+        }
+        return "Ulest";
     }
 
     private static void settTemagruppe(Melding melding, String temagruppe, PropertyResolver propertyResolver) {
