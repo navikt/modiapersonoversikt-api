@@ -76,7 +76,7 @@ public class MerkePanel extends AnimertPanel {
                 .add(visibleIf(not(valgtTraadErKontorsperret))));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
-        kontorsperrePanel.add(visibleIf(new PropertyModel<Boolean>(merkVM, "erKontorsperret()")));
+        kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));
 
         merkKnapp = new MerkKnapp("merk");
 
@@ -127,9 +127,9 @@ public class MerkePanel extends AnimertPanel {
         public MerkKnapp(String id) {
             super(id, "../img/ajaxloader/svart/loader_svart_48.gif");
             add(visibleIf(
-                    either(new PropertyModel<Boolean>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
-                            .or(new PropertyModel<Boolean>(merkVM, "erFeilsendt()"))
-                            .or(new PropertyModel<Boolean>(merkVM, "erMerketBidrag()"))));
+                    either(new PropertyModel<>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
+                            .or(new PropertyModel<>(merkVM, "erFeilsendt()"))
+                            .or(new PropertyModel<>(merkVM, "erMerketBidrag()"))));
             setOutputMarkupPlaceholderTag(true);
         }
 

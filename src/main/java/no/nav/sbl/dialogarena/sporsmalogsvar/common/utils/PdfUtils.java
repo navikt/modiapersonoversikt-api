@@ -62,12 +62,9 @@ public class PdfUtils {
     private static Map<String, Helper<?>> generateHelpers() {
         HashMap<String, Helper<?>> result = new HashMap<>();
 
-        Helper hentMeldingHelper = new Helper<Melding>() {
-            @Override
-            public CharSequence apply(Melding o, Options options) throws IOException {
-                Melding melding = finnMelding(options.context);
-                return melding.navIdent;
-            }
+        Helper hentMeldingHelper = (Helper<Melding>) (o, options) -> {
+            Melding melding = finnMelding(options.context);
+            return melding.navIdent;
         };
 
         Helper formaterDatoHelper = new Helper<DateTime>() {

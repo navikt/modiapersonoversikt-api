@@ -79,12 +79,12 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(radio);
 
                 Label meldingstatus = new Label("meldingstatus", new StringFormatModel("%s - %s",
-                        new PropertyModel<String>(item.getModel(), "melding.statusTekst"),
-                        new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn")
+                        new PropertyModel<>(item.getModel(), "melding.statusTekst"),
+                        new PropertyModel<>(item.getModel(), "melding.temagruppeNavn")
                 ));
 
                 Label dokumentStatus = new Label("meldingstatus", new StringFormatModel("%s",
-                        new PropertyModel<String>(item.getModel(), "melding.statusTekst")
+                        new PropertyModel<>(item.getModel(), "melding.statusTekst")
                 ));
 
                 if (meldingVM.erDokumentMelding) {

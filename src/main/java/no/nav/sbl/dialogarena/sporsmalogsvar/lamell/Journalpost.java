@@ -4,11 +4,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.attributeIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
+import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class Journalpost extends Panel {
@@ -19,10 +20,11 @@ public class Journalpost extends Panel {
         super(id);
 
         PropertyModel<Boolean> meldingErJournalfort = new PropertyModel<>(meldingVM, "journalfort");
+        PropertyModel<Boolean> meldingErDokumentMelding = new PropertyModel<>(meldingVM, "erDokumentMelding");
 
         WebMarkupContainer ingenJournalpostInformasjon = new WebMarkupContainer("ingenJournalpostInformasjon");
         ingenJournalpostInformasjon.setOutputMarkupPlaceholderTag(true);
-        ingenJournalpostInformasjon.add(visibleIf(not(meldingErJournalfort)));
+        ingenJournalpostInformasjon.add(visibleIf(both(not(meldingErJournalfort)).and(not(meldingErDokumentMelding))));
         add(ingenJournalpostInformasjon);
 
         final JournalpostInformasjon journalpostInformasjon = new JournalpostInformasjon("journalpostInformasjon", meldingVM);

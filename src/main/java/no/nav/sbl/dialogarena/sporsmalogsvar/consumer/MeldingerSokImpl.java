@@ -177,12 +177,9 @@ public class MeldingerSokImpl implements MeldingerSok {
                 .map(highlighting(resultat))
                 .reduce(indexBy(TRAAD_ID));
 
-        return on(traader.entrySet()).map(new Transformer<Map.Entry<String, List<Melding>>, Traad>() {
-            @Override
-            public Traad transform(Map.Entry<String, List<Melding>> entry) {
-                int antallMeldingerIOpprinneligTraad = opprinneligeTraader.get(entry.getKey()).size();
-                return new Traad(entry.getKey(), antallMeldingerIOpprinneligTraad, entry.getValue());
-            }
+        return on(traader.entrySet()).map(entry -> {
+            int antallMeldingerIOpprinneligTraad = opprinneligeTraader.get(entry.getKey()).size();
+            return new Traad(entry.getKey(), antallMeldingerIOpprinneligTraad, entry.getValue());
         }).collect(NYESTE_FORST);
     }
 
@@ -248,12 +245,7 @@ public class MeldingerSokImpl implements MeldingerSok {
 
     private static String query(String soketekst) {
         String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING).trim();
-        return isBlank(vasketSoketekst) ? "*:*" : on(asList(vasketSoketekst.split(" "))).map(new Transformer<String, String>() {
-            @Override
-            public String transform(String s) {
-                return isBlank(s) ? "" : "*" + s + "*";
-            }
-        }).reduce(join(" "));
+        return isBlank(vasketSoketekst) ? "*:*" : on(asList(vasketSoketekst.split(" "))).map(s -> isBlank(s) ? "" : "*" + s + "*").reduce(join(" "));
     }
 
     private static Map<String, MeldingerSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, final String soketekst, ScoreDoc... hits) {
@@ -320,25 +312,22 @@ public class MeldingerSokImpl implements MeldingerSok {
     }
 
     private static Transformer<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
-        return new Transformer<Melding, Melding>() {
-            @Override
-            public Melding transform(Melding melding) {
-                MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
-                melding.fritekst = meldingerSokResultat.fritekst;
-                melding.temagruppeNavn = meldingerSokResultat.temagruppe;
-                melding.journalfortTemanavn = meldingerSokResultat.arkivtema;
-                melding.opprettetDatoTekst = meldingerSokResultat.dato;
-                melding.navIdent = meldingerSokResultat.navIdent;
-                melding.kanal = meldingerSokResultat.kanal;
-                melding.statusTekst = meldingerSokResultat.statustekst;
-                melding.lestStatus = meldingerSokResultat.lestStatus;
-                melding.skrevetAv = new Person(meldingerSokResultat.skrevetAvNavn, "");
-                melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "");
-                melding.journalfortAvNavIdent = meldingerSokResultat.journalfortAvIdent;
-                melding.journalfortDatoTekst = meldingerSokResultat.journalfortDato;
-                melding.journalfortSaksId = meldingerSokResultat.journalfortSaksId;
-                return melding;
-            }
+        return melding -> {
+            MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
+            melding.fritekst = meldingerSokResultat.fritekst;
+            melding.temagruppeNavn = meldingerSokResultat.temagruppe;
+            melding.journalfortTemanavn = meldingerSokResultat.arkivtema;
+            melding.opprettetDatoTekst = meldingerSokResultat.dato;
+            melding.navIdent = meldingerSokResultat.navIdent;
+            melding.kanal = meldingerSokResultat.kanal;
+            melding.statusTekst = meldingerSokResultat.statustekst;
+            melding.lestStatus = meldingerSokResultat.lestStatus;
+            melding.skrevetAv = new Person(meldingerSokResultat.skrevetAvNavn, "");
+            melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "");
+            melding.journalfortAvNavIdent = meldingerSokResultat.journalfortAvIdent;
+            melding.journalfortDatoTekst = meldingerSokResultat.journalfortDato;
+            melding.journalfortSaksId = meldingerSokResultat.journalfortSaksId;
+            return melding;
         };
     }
 

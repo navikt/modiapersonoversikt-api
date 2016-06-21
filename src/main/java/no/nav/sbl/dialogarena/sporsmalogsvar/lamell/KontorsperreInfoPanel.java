@@ -13,6 +13,6 @@ public class KontorsperreInfoPanel extends Panel {
         setOutputMarkupId(true);
 
         add(new Label("enhet", new PropertyModel<>(getDefaultModel(), "kontorsperretEnhet.get()")));
-        add(visibleIf(new PropertyModel<Boolean>(getDefaultModel(), "erKontorsperret")));
+        add(visibleIf(new PropertyModel<>(getDefaultModel(), "erKontorsperret")));
     }
 }
