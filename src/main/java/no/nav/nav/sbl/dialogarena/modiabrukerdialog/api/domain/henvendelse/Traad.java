@@ -24,7 +24,7 @@ public class Traad {
         Melding sisteMelding = this.meldinger.get(0);
         this.temagruppe = forsteMelding.temagruppeNavn;
         this.journalfortTema = forsteMelding.journalfortTemanavn;
-        this.dato = sisteMelding.opprettetDato;
+        this.dato = sisteMelding.getVisningsDato();
         this.statusKlasse = sisteMelding.statusKlasse;
         this.statusTekst = sisteMelding.statusTekst;
     }
