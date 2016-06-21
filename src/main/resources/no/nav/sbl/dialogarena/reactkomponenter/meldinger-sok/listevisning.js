@@ -21,8 +21,8 @@ class Listevisning extends React.Component {
         const cls = erValgt ? 'meldingsforhandsvisning valgt' : 'meldingsforhandsvisning';
         const dato = sanitize(traad.opprettetDato, { allowedTags: ['em'] });
 
-        const temagruppe = !traad.temagruppe ? '' : traad.temagruppe;
-        let meldingsStatus = `${traad.statusTekst}, ${temagruppe}`;
+        const temagruppe = !traad.temagruppe ? '' : `, ${traad.temagruppe}`;
+        let meldingsStatus = `${traad.statusTekst}${temagruppe}`;
         meldingsStatus = sanitize(meldingsStatus, { allowedTags: ['em'] });
         const innhold = sanitize(traad.innhold, { allowedTags: ['em'] });
 

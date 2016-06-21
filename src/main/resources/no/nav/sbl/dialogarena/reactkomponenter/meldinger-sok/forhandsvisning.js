@@ -1,5 +1,6 @@
 import React from 'react';
 import Melding from './melding';
+import DokumentMelding from './dokument-melding';
 import ScrollPortal from './../utils/scroll-portal';
 
 class Forhandsvisning extends React.Component {
@@ -10,7 +11,12 @@ class Forhandsvisning extends React.Component {
 
         const { traad, traad: { meldinger } } = this.props;
 
-        const meldingElementer = meldinger.map((melding) => <Melding key={melding.id} melding={melding} />);
+        const meldingElementer = meldinger.map((melding) => {
+            if (melding.erDokumentMelding) {
+                return <DokumentMelding key={melding.id} melding={melding} />;
+            }
+            return <Melding key={melding.id} melding={melding} />;
+        });
 
         const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
         const antallInformasjon = `Viser <b>${meldinger.length}</b> av <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
