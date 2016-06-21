@@ -1,33 +1,25 @@
 import React from 'react';
 import Melding from './melding';
 import ScrollPortal from './../utils/scroll-portal';
-import format from 'string-format';
 
-const ForhandsvisningKomponent = React.createClass({
-    propTypes: {
-        traad: React.PropTypes.object.isRequired
-    },
-    render: function render() {
+class Forhandsvisning extends React.Component {
+    render() {
         if (!this.props.traad.hasOwnProperty('meldinger')) {
-            return null;
+            return <noscript/>;
         }
 
-        const traad = this.props.traad;
-        const meldinger = traad.meldinger;
+        const { traad, traad: { meldinger } } = this.props;
 
         const meldingElementer = meldinger.map((melding) => <Melding key={melding.id} melding={melding} />);
 
-        const antallInformasjon = format('Viser <b>{}</b> av <b>{}</b> {} i dialogen',
-            meldinger.length,
-            traad.antallMeldingerIOpprinneligTraad,
-            traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
-        );
+        const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
+        const antallInformasjon = `Viser <b>${meldinger.length}</b> av <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
 
         return (
             <div>
                 <ScrollPortal className="traadPanel" innerClassName="traad-panel-wrapper">
                     <div className="traadinfo">
-                        <span dangerouslySetInnerHTML={{__html: antallInformasjon}}></span>
+                        <span dangerouslySetInnerHTML={{ __html: antallInformasjon }}></span>
                     </div>
                     <div>{meldingElementer}</div>
                 </ScrollPortal>
@@ -37,6 +29,13 @@ const ForhandsvisningKomponent = React.createClass({
             </div>
         );
     }
-});
+}
 
-module.exports = ForhandsvisningKomponent;
+Forhandsvisning.propTypes = {
+    traad: React.PropTypes.shape({
+        meldinger: React.PropTypes.array,
+        antallMeldingerIOpprinneligTraad: React.PropTypes.number
+    }).isRequired
+};
+
+export default Forhandsvisning;

@@ -100,11 +100,11 @@ export const AriaPropType = React.PropTypes.shape({
 });
 
 Modal.propTypes = {
-    'isOpen': React.PropTypes.bool,
-    'onClosing': React.PropTypes.func,
-    'title': AriaPropType,
-    'description': AriaPropType,
-    'closeButton': AriaPropType
+    isOpen: React.PropTypes.bool,
+    onClosing: React.PropTypes.func,
+    title: AriaPropType,
+    description: AriaPropType,
+    closeButton: AriaPropType
 };
 
 export default Modal;
