@@ -100,7 +100,6 @@ public class MeldingUtils {
                 melding.withTraadId(xmlHenvendelse.getBehandlingsId());
                 melding.lestStatus = lagLestStatusDokumentVarsel(melding);
                 melding.ferdigstiltDato = dokumentVarsel.getFerdigstiltDato();
-                melding.visningsDato = dokumentVarsel.getFerdigstiltDato();
                 return melding;
             }
 
