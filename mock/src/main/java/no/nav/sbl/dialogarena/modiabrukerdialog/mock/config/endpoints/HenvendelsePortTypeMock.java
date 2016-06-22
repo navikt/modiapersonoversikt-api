@@ -168,12 +168,18 @@ public class HenvendelsePortTypeMock {
         return new XMLHenvendelse()
                 .withBehandlingsId(dokumentVarselId)
                 .withBehandlingskjedeId(dokumentVarselId)
-                .withOpprettetDato(DateTime.now())
+                .withOpprettetDato(DateTime.now().minusDays(3))
                 .withTema(tema)
                 .withLestDato(null)
                 .withKorrelasjonsId("a1-b2")
                 .withHenvendelseType(DOKUMENT_VARSEL.value())
-                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLDokumentVarsel().withDokumenttittel(dokumentTittel).withJournalpostId("1").withDokumentIdListe("2").withTemanavn("Dagpenger")));
+                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLDokumentVarsel()
+                        .withDokumenttittel(dokumentTittel)
+                        .withJournalpostId("1")
+                        .withDokumentIdListe("2")
+                        .withTemanavn("Dagpenger")
+                        .withFerdigstiltDato(DateTime.now()))
+                );
     }
 
     private static XMLMeldingFraBruker createXMLMeldingFraBruker(String temagruppe, String tekst) {
