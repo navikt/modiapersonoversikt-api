@@ -23,8 +23,10 @@ class Melding extends React.Component {
         const paragrafer = melding.fritekst.split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
+        
+        const datoTekst = melding.visningsDatoTekst; 
 
-        const dato = sanitize(melding.opprettetDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
+        const dato = sanitize(datoTekst || 'Fant ingen data', { allowedTags: ['em'] });
         const skrevetMelding = melding.erDokumentMelding ? '' : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;
 
         return (
@@ -54,7 +56,7 @@ Melding.propTypes = {
         journalfortDatoTekst: pt.string,
         journalfortSaksId: pt.string,
         journalfortAvNavIdent: pt.string,
-        opprettetDatoTekst: pt.string,
+        visningsDatoTekst: pt.string,
         erDokumentMelding: pt.bool,
         skrevetAv: pt.shape({
             navn: pt.string

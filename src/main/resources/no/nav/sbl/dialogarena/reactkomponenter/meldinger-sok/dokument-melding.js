@@ -4,7 +4,7 @@ import sanitize from 'sanitize-html';
 class DokumentMelding extends React.Component {
 
     render() {
-        const { melding: { statusTekst, erInngaaende, lestStatus, opprettetDatoTekst, fritekst } } = this.props;
+        const { melding: { statusTekst, erInngaaende, lestStatus, visningsDatoTekst, fritekst } } = this.props;
         
         const clsExt = erInngaaende ? 'inngaaende' : 'utgaaende';
         const cls = `melding clearfix ${clsExt}`;
@@ -14,7 +14,7 @@ class DokumentMelding extends React.Component {
         if (!erInngaaende) {
             meldingOgLestStatus += `${lestStatus} `;
         }
-        const dato = sanitize(opprettetDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
+        const dato = sanitize(visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
 
         return (
             <div className={cls}>
@@ -36,7 +36,7 @@ DokumentMelding.propTypes = {
         statusTekst: pt.string, 
         erInngaaende: pt.bool,
         lestStatus: pt.string,
-        opprettetDatoTekst: pt.string,
+        visningsDatoTekst: pt.string,
         fritekst: pt.string
     }).isRequired
 };
