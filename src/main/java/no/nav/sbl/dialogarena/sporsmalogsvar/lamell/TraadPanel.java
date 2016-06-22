@@ -44,11 +44,10 @@ public class TraadPanel extends Panel {
                 );
 
                 item.add(meldingstatusContainer);
-                item.add(new Label("avsenderDato"));
+                item.add(new Label("visningsDato"));
                 item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
                 item.add(new Journalpost("journalpost", item.getModel()));
                 item.add(append("aria-labelledby", meldingstatusContainer.getMarkupId()));
-
 
                 String navIdent = item.getModelObject().melding.navIdent;
                 String skrevetAvNavn = item.getModelObject().melding.skrevetAv.navn;
@@ -56,6 +55,7 @@ public class TraadPanel extends Panel {
                 skrevetAvContainer.add(visibleIf(new PropertyModel<>(item.getModel(), "erFraSaksbehandler()")));
                 skrevetAvContainer.add(new Label("skrevetAvLabel", new ResourceModel("melding.skrevet-av")));
                 skrevetAvContainer.add(new Label("skrevetAv", String.format("%s (%s)", skrevetAvNavn, navIdent)));
+                skrevetAvContainer.setVisible(!item.getModelObject().erDokumentMelding);
                 item.add(skrevetAvContainer);
             }
         });

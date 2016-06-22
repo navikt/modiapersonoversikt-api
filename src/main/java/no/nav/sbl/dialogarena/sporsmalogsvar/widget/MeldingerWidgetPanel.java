@@ -26,7 +26,7 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
         add(
                 new StatusIkon("statusIkon", getModelObject()),
                 new Label("traadlengde").setVisibilityAllowed(getModelObject().traadlengde > 2),
-                new Label("opprettetDato"),
+                new Label("visningsDato"),
                 meldingStatus.setVisibilityAllowed(!getModelObject().erDokumentMelding),
                 dokumentStatus.setVisibilityAllowed(getModelObject().erDokumentMelding),
                 new Label("fritekst")

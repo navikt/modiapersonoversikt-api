@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.junit.Test;
@@ -25,6 +25,6 @@ public class MeldingerWidgetPanelTest extends WicketPageTest {
     public void skalInneholdeRiktigeKomponenter() {
         wicket.goToPageWith(new MeldingerWidgetPanel("melding", new Model<>(new WidgetMeldingVM(asList(createMelding("id", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "1"))))))
                 .should().containComponent(withId("meldingsstatus").and(ofType(Label.class)))
-                .should().containComponent(withId("opprettetDato").and(ofType(Label.class)));
+                .should().containComponent(withId("visningsDato").and(ofType(Label.class)));
     }
 }

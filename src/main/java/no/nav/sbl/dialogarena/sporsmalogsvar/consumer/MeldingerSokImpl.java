@@ -114,7 +114,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         List<Melding> transformerteMeldinger = on(meldinger).map(new Transformer<Melding, Melding>() {
             @Override
             public Melding transform(Melding melding) {
-                melding.opprettetDatoTekst = optional(melding.opprettetDato).map(DATO_TIL_STRING).getOrElse("");
+                melding.visningsDatoTekst = optional(melding.getVisningsDato()).map(DATO_TIL_STRING).getOrElse("");
                 melding.journalfortDatoTekst = optional(melding.journalfortDato).map(DATO_TIL_STRING).getOrElse("");
                 return melding;
             }
@@ -229,7 +229,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         document.add(new TextField(FRITEKST, optional(melding.fritekst).getOrElse(""), YES));
         document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppeNavn).getOrElse(""), YES));
         document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), YES));
-        document.add(new TextField(DATO, optional(melding.opprettetDatoTekst).getOrElse(""), YES));
+        document.add(new TextField(DATO, optional(melding.visningsDatoTekst).getOrElse(""), YES));
         document.add(new TextField(NAVIDENT, optional(melding.navIdent).getOrElse(""), YES));
         document.add(new TextField(STATUSTEKST, optional(melding.statusTekst).getOrElse(""), YES));
         document.add(new TextField(LEST_STATUS, optional(melding.lestStatus).getOrElse(""), YES));
@@ -317,7 +317,7 @@ public class MeldingerSokImpl implements MeldingerSok {
             melding.fritekst = meldingerSokResultat.fritekst;
             melding.temagruppeNavn = meldingerSokResultat.temagruppe;
             melding.journalfortTemanavn = meldingerSokResultat.arkivtema;
-            melding.opprettetDatoTekst = meldingerSokResultat.dato;
+            melding.visningsDatoTekst = meldingerSokResultat.dato;
             melding.navIdent = meldingerSokResultat.navIdent;
             melding.kanal = meldingerSokResultat.kanal;
             melding.statusTekst = meldingerSokResultat.statustekst;

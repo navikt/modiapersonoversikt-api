@@ -19,7 +19,7 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
         super(on(traad).collect(Melding.NYESTE_FORST).get(0), traad.size());
     }
 
-    public static final Comparator<WidgetMeldingVM> NYESTE_OVERST = (o1, o2) -> o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
+    public static final Comparator<WidgetMeldingVM> NYESTE_OVERST = (o1, o2) -> o2.melding.getVisningsDato().compareTo(o1.melding.getVisningsDato());
 
     public String getMeldingStatusTekstKey() {
         return lagMeldingStatusTekstKey(melding);
@@ -29,8 +29,8 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
         return lagStatusIkonKlasse(melding);
     }
 
-    public String getOpprettetDato() {
-        return WidgetDateFormatter.dateTime(melding.opprettetDato);
+    public String getVisningsDato() {
+        return WidgetDateFormatter.dateTime(melding.getVisningsDato());
     }
 
     public String getFritekst() {
