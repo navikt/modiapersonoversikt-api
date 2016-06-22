@@ -78,7 +78,7 @@ public class OppsummeringVMTest {
                 .withNettoUtbetalt(0d)
                 .withSumTrekk(0d)
                 .withBruttoUtbetalt(0d)
-                .withSammenlagtTrekkBeloep(0d)
+                .withSammenlagtTrekkBeloep()
                 .withSkattListe(skattTrekkListe);
 
         Hovedytelse dagpenger1 = new Hovedytelse()
@@ -91,7 +91,7 @@ public class OppsummeringVMTest {
                 .withNettoUtbetalt(0d)
                 .withSumTrekk(0d)
                 .withBruttoUtbetalt(0d)
-                .withSammenlagtTrekkBeloep(0d)
+                .withSammenlagtTrekkBeloep()
                 .withSumSkatt(skattTrekkListe.get(0));
 
         Hovedytelse dagpenger2 = new Hovedytelse()
@@ -101,7 +101,7 @@ public class OppsummeringVMTest {
                 .withNettoUtbetalt(0d)
                 .withSumTrekk(0d)
                 .withBruttoUtbetalt(0d)
-                .withSammenlagtTrekkBeloep(0d)
+                .withSammenlagtTrekkBeloep()
                 .withYtelsesperiode(new Interval(now(), now()))
                 .withUnderytelseListe(asList(ytelse2));
 
@@ -154,7 +154,7 @@ public class OppsummeringVMTest {
                 .withNettoUtbetalt(0d)
                 .withSumTrekk(0d)
                 .withBruttoUtbetalt(0d)
-                .withSammenlagtTrekkBeloep(0d)
+                .withSammenlagtTrekkBeloep()
                 .withYtelsesperiode(new Interval(now().minusDays(14), now()));
 
         List<Hovedytelse> utbetalinger = asList(hovedytelse);
@@ -212,9 +212,9 @@ public class OppsummeringVMTest {
     @Test
     public void summererTotalTrekkBeloepForAlleHovedytelser() {
         List<Hovedytelse> hovedytelser = new ArrayList<>();
-        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(1000.0));
-        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(200.0));
-        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(300.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(1000.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(200.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(300.0).withSammenlagtTrekkBeloep());
 
         assertThat(OppsummeringVM.trekkBeloepForAlle(hovedytelser), is(1500.0));
     }
@@ -222,9 +222,9 @@ public class OppsummeringVMTest {
     @Test
     public void summererTotalTrekkBeloepForHovedytelserMedNegativBrutto() {
         List<Hovedytelse> hovedytelser = new ArrayList<>();
-        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(1000.0));
-        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(-200.0));
-        hovedytelser.add(getYtelse(DateTime.now()).withSammenlagtTrekkBeloep(-300.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(1000.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(-200.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(-300.0).withSammenlagtTrekkBeloep());
 
         assertThat(OppsummeringVM.trekkBeloepForAlle(hovedytelser), is(500.0));
     }
@@ -237,7 +237,7 @@ public class OppsummeringVMTest {
                 .withHovedytelsedato(dato)
                 .withNettoUtbetalt(0d)
                 .withSumTrekk(0d)
-                .withSammenlagtTrekkBeloep(0d)
+                .withSammenlagtTrekkBeloep()
                 .withBruttoUtbetalt(0d)
                 .withYtelsesperiode(new Interval(dato.minusDays(14), dato));
     }

@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.mottakertypeForAktoer;
 
 /**
@@ -26,7 +26,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.mottaker
 public class Transformers {
     private static final Logger LOGGER = LoggerFactory.getLogger(Transformers.class);
 
-    public static  final Function<WSSkatt, Double> SKATT_TRANSFORMER = wsSkatt -> wsSkatt.getSkattebeloep();
+    public static final Function<WSSkatt, Double> SKATT_TRANSFORMER = wsSkatt -> wsSkatt.getSkattebeloep();
 
     public static final Function<WSTrekk, Trekk> TREKK_TRANSFORMER = wsTrekk -> new Trekk()
             .withTrekksType(wsTrekk.getTrekktype() != null ? wsTrekk.getTrekktype() : "")
@@ -41,11 +41,9 @@ public class Transformers {
             .withYtelseBeloep(wsYtelseskomponent.getYtelseskomponentbeloep());
 
 
-    public static final Function<WSUtbetaling, List<Hovedytelse>> TO_HOVEDYTELSE = wsUtbetaling -> {
-        List<Hovedytelse> hovedytelser = new ArrayList<>();
-
-        for (WSYtelse wsYtelse : wsUtbetaling.getYtelseListe()) {
-            Hovedytelse hovedytelse = new Hovedytelse()
+    public static final Function<WSUtbetaling, List<Hovedytelse>> TO_HOVEDYTELSE = wsUtbetaling -> wsUtbetaling.getYtelseListe()
+            .stream()
+            .map((wsYtelse -> new Hovedytelse()
                     .withMottakertype(mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
                     .withHovedytelsedato(determineHovedytelseDato(wsUtbetaling))
                     .withForfallsdato(wsUtbetaling.getForfallsdato())
@@ -68,16 +66,9 @@ public class Transformers {
                     .withBilagsnummer(wsYtelse.getBilagsnummer())
                     .withRettighetshaver(createAktoer(wsYtelse.getRettighetshaver()))
                     .withRefundertForOrg(createAktoer(wsYtelse.getRefundertForOrg()))
-                    .withBruttoUtbetalt(wsYtelse.getYtelseskomponentersum());
-
-            hovedytelse = hovedytelse.withSammenlagtTrekkBeloep(aggregateTrekkBeloep(hovedytelse));
-
-            hovedytelser.add(hovedytelse);
-        }
-
-
-        return hovedytelser;
-    };
+                    .withBruttoUtbetalt(wsYtelse.getYtelseskomponentersum())
+                    .withSammenlagtTrekkBeloep()
+            )).collect(toList());
 
     /**
      * HovedytelseDato baserer seg på følgende prioritert rekkefølge:
@@ -93,21 +84,6 @@ public class Transformers {
             return wsUtbetaling.getForfallsdato();
         }
         return wsUtbetaling.getPosteringsdato();
-    }
-
-    protected static Double aggregateTrekkBeloep(Hovedytelse hovedytelse) {
-        Double trekk = hovedytelse.getSumTrekk();
-        Double skatt = hovedytelse.getSumSkatt();
-
-        if (trekk == null) {
-            trekk = 0.0;
-        }
-
-        if (skatt == null) {
-            skatt = 0.0;
-        }
-
-        return trekk + skatt;
     }
 
     protected static Double aggregateBruttoBeloep(Hovedytelse hovedytelse) {
@@ -138,7 +114,7 @@ public class Transformers {
         return skattListe
                 .stream()
                 .map(wsSkatt -> wsSkatt.getSkattebeloep())
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     protected static List<Trekk> createTrekkliste(List<WSTrekk> trekkListe) {
@@ -148,7 +124,7 @@ public class Transformers {
         return trekkListe
                 .stream()
                 .map(TREKK_TRANSFORMER)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     protected static List<Underytelse> createUnderytelser(List<WSYtelseskomponent> ytelseskomponentListe) {
@@ -159,7 +135,7 @@ public class Transformers {
                 .stream()
                 .map(UNDERYTELSE_TRANSFORMER)
                 .sorted((o1, o2) -> o2.getYtelseBeloep().compareTo(o1.getYtelseBeloep()))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     protected static Interval createPeriode(WSPeriode ytelsesperiode) {
@@ -189,7 +165,7 @@ public class Transformers {
                 .withNavn(utbetaltTil.getNavn())
                 .withAktoerType(getAktoerType(utbetaltTil));
 
-        if(aktoer.getAktoerType().equals(AktoerType.PERSON)) {
+        if (aktoer.getAktoerType().equals(AktoerType.PERSON)) {
             WSPerson wsPerson = (WSPerson) utbetaltTil;
             aktoer = aktoer.withDiskresjonskode(wsPerson.getDiskresjonskode());
         }
@@ -198,11 +174,11 @@ public class Transformers {
     }
 
     protected static AktoerType getAktoerType(WSAktoer utbetaltTil) {
-        if(utbetaltTil instanceof WSPerson) {
+        if (utbetaltTil instanceof WSPerson) {
             return AktoerType.PERSON;
-        } else if(utbetaltTil instanceof WSSamhandler) {
+        } else if (utbetaltTil instanceof WSSamhandler) {
             return AktoerType.SAMHANDLER;
-        } else if(utbetaltTil instanceof WSOrganisasjon) {
+        } else if (utbetaltTil instanceof WSOrganisasjon) {
             return AktoerType.ORGANISASJON;
         } else {
             return AktoerType.PERSON;

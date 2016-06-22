@@ -242,27 +242,30 @@ public class TransformersTest {
     public void aggregateTrekkBeloepNaarAlleFelterFinnes() {
         Hovedytelse hovedytelse = new Hovedytelse()
                 .withSumTrekk(-20.0)
-                .withSumSkatt(-10.0);
+                .withSumSkatt(-10.0)
+                .withSammenlagtTrekkBeloep();
 
-        Double trekkBeloep = aggregateTrekkBeloep(hovedytelse);
+        Double trekkBeloep = hovedytelse.getSammenlagtTrekkBeloep();
         assertThat(trekkBeloep, is(-30.0));
     }
 
     @Test
     public void aggregateTrekkBeloepNaarSkattMangler() {
         Hovedytelse hovedytelse = new Hovedytelse()
-                .withSumTrekk(-20.0);
+                .withSumTrekk(-20.0)
+                .withSammenlagtTrekkBeloep();
 
-        Double trekkBeloep = aggregateTrekkBeloep(hovedytelse);
+        Double trekkBeloep = hovedytelse.getSammenlagtTrekkBeloep();
         assertThat(trekkBeloep, is(-20.0));
     }
 
     @Test
     public void aggregateTrekkBeloepNaarTrekkMangler() {
         Hovedytelse hovedytelse = new Hovedytelse()
-                .withSumSkatt(-10.0);
+                .withSumSkatt(-10.0)
+                .withSammenlagtTrekkBeloep();
 
-        Double trekkBeloep = aggregateTrekkBeloep(hovedytelse);
+        Double trekkBeloep = hovedytelse.getSammenlagtTrekkBeloep();
         assertThat(trekkBeloep, is(-10.0));
     }
 

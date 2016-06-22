@@ -37,6 +37,21 @@ public class Hovedytelse implements Serializable {
     Double bruttoUtbetalt;
     Double sammenlagtTrekkBeloep;
 
+    public Double aggregateTrekkBeloep() {
+        Double trekk = this.getSumTrekk();
+        Double skatt = this.getSumSkatt();
+
+        if (trekk == null) {
+            trekk = 0.0;
+        }
+
+        if (skatt == null) {
+            skatt = 0.0;
+        }
+
+        return trekk + skatt;
+    }
+
 
     public String getId() {
         return id;
@@ -249,8 +264,8 @@ public class Hovedytelse implements Serializable {
         return this;
     }
 
-    public Hovedytelse withSammenlagtTrekkBeloep(Double sammenlagtTrekkBeloep) {
-        this.sammenlagtTrekkBeloep = sammenlagtTrekkBeloep;
+    public Hovedytelse withSammenlagtTrekkBeloep() {
+        this.sammenlagtTrekkBeloep = aggregateTrekkBeloep();
         return this;
     }
 

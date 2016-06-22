@@ -143,7 +143,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
                 .withSumSkatt(12D)
                 .withTrekkListe(createTrekkListe())
                 .withBruttoUtbetalt(2000D)
-                .withSammenlagtTrekkBeloep(-200D)
+                .withSammenlagtTrekkBeloep()
                 .withSumTrekk(14D);
     }
 
@@ -190,7 +190,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
                 .withUtbetalingsmelding("Dette er en testmelding")
                 .withTrekkListe(createTrekkListeMedTilbakeBetaling())
                 .withBruttoUtbetalt(2000D)
-                .withSammenlagtTrekkBeloep(-200D)
+                .withSammenlagtTrekkBeloep()
                 .withSumTrekk(14D)
                 .withSkattListe(createTilbakebetalingSkattListe())
                 .withSumSkatt(-9D);
