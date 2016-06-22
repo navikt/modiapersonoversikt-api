@@ -11,7 +11,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendels
 
 public class VisningUtils {
     public static final List<Meldingstype> FRA_BRUKER = asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE);
-    public static final List<Meldingstype> FRA_NAV = asList(SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, SAMTALEREFERAT_OPPMOTE, SAMTALEREFERAT_TELEFON, SPORSMAL_MODIA_UTGAAENDE);
+    public static final List<Meldingstype> FRA_NAV = asList(SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, SAMTALEREFERAT_OPPMOTE, SAMTALEREFERAT_TELEFON, SPORSMAL_MODIA_UTGAAENDE, DOKUMENT_VARSEL);
     public static final List<Meldingstype> SPORSMAL = asList(SPORSMAL_SKRIFTLIG, SPORSMAL_MODIA_UTGAAENDE);
 
     public static String lagStatusIkonKlasse(Melding melding) {
