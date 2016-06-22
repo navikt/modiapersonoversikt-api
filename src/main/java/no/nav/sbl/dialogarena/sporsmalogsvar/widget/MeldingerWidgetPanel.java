@@ -29,7 +29,7 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
                 new Label("visningsDato"),
                 meldingStatus.setVisibilityAllowed(!getModelObject().erDokumentMelding),
                 dokumentStatus.setVisibilityAllowed(getModelObject().erDokumentMelding),
-                new Label("fritekst")
+                new Label("fritekst").setVisibilityAllowed(getModelObject().erDokumentMelding)
         );
     }
 }
