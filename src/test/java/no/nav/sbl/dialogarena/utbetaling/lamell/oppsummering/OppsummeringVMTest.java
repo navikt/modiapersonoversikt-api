@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
@@ -10,6 +9,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -29,7 +29,7 @@ public class OppsummeringVMTest {
     public void testOppsummertPeriode_AlleUtbetalingsdatoerISammeMaaned_DatoFormateringErMaaned() throws Exception {
         DateTime dato = new DateTime(2014, 1, 1, 1, 1);
         String formatertDato = dato.toString(LANG_DATO_FORMAT);
-        List<Record<Hovedytelse>> utbetalinger = asList(getYtelse(dato));
+        List<Hovedytelse> utbetalinger = asList(getYtelse(dato));
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, dato.toLocalDate(), dato.toLocalDate());
         String oppsummertPeriode = vm.getOppsummertPeriode();
@@ -44,7 +44,7 @@ public class OppsummeringVMTest {
         LocalDate sluttDato = defaultSluttDato();
         String formatertDato = Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
                 Datoformat.kortUtenLiteral(sluttDato.toDateTime(new LocalTime(23, 59)));
-        List<Record<Hovedytelse>> utbetalinger = asList(getYtelse(dato));
+        List<Hovedytelse> utbetalinger = asList(getYtelse(dato));
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, startDato, sluttDato);
         String oppsummertPeriode = vm.getOppsummertPeriode();
@@ -54,60 +54,58 @@ public class OppsummeringVMTest {
 
     @Test
     public void testTransformer_LikeYtelser_BlirSlaattSammen() throws Exception {
-        Record<Underytelse> ytelse1 = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "Grunnbeløp")
-                .with(Underytelse.satsAntall, 0d)
-                .with(Underytelse.ytelseBeloep, 1000.0)
-                .with(Underytelse.satsBeloep, 0d);
+        Underytelse ytelse1 = new Underytelse()
+                .withYtelsesType("Grunnbeløp")
+                .withSatsAntall(0d)
+                .withYtelseBeloep(1000.0)
+                .withSatsBeloep(0d);
 
-        Record<Underytelse> ytelse2 = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "Tillegg")
-                .with(Underytelse.satsAntall, 0d)
-                .with(Underytelse.ytelseBeloep, 500.0)
-                .with(Underytelse.satsBeloep, 0d);
-
-        //Skatt - 200
+        Underytelse ytelse2 = new Underytelse()
+                .withYtelsesType("Tillegg")
+                .withSatsAntall(0d)
+                .withYtelseBeloep(500.0)
+                .withSatsBeloep(0d);
 
         List<Double> skattTrekkListe = asList(-200.0);
 
-        Record<Hovedytelse> dagpenger = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.ytelse, "Dagpenger")
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.ytelsesperiode, new Interval(now(), now()))
-                .with(Hovedytelse.underytelseListe, asList(ytelse1))
-                .with(Hovedytelse.sumSkatt, skattTrekkListe.get(0))
-                .with(Hovedytelse.nettoUtbetalt, 0d)
-                .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.bruttoUtbetalt, 0d)
-                .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
-                .with(Hovedytelse.skattListe, skattTrekkListe);
+        Hovedytelse dagpenger = new Hovedytelse()
+                .withId(ID)
+                .withYtelse("Dagpenger")
+                .withHovedytelsedato(now())
+                .withYtelsesperiode(new Interval(now(), now()))
+                .withUnderytelseListe(asList(ytelse1))
+                .withSumSkatt(skattTrekkListe.get(0))
+                .withNettoUtbetalt(0d)
+                .withSumTrekk(0d)
+                .withBruttoUtbetalt(0d)
+                .withSammenlagtTrekkBeloep()
+                .withSkattListe(skattTrekkListe);
 
-        Record<Hovedytelse> dagpenger1 = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.ytelse, "Dagpenger")
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.ytelsesperiode, new Interval(now(), now()))
-                .with(Hovedytelse.underytelseListe, asList(ytelse2))
-                .with(Hovedytelse.skattListe, skattTrekkListe)
-                .with(Hovedytelse.nettoUtbetalt, 0d)
-                .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.bruttoUtbetalt, 0d)
-                .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
-                .with(Hovedytelse.sumSkatt, skattTrekkListe.get(0));
+        Hovedytelse dagpenger1 = new Hovedytelse()
+                .withId(ID)
+                .withYtelse("Dagpenger")
+                .withHovedytelsedato(now())
+                .withYtelsesperiode(new Interval(now(), now()))
+                .withUnderytelseListe(asList(ytelse2))
+                .withSkattListe(skattTrekkListe)
+                .withNettoUtbetalt(0d)
+                .withSumTrekk(0d)
+                .withBruttoUtbetalt(0d)
+                .withSammenlagtTrekkBeloep()
+                .withSumSkatt(skattTrekkListe.get(0));
 
-        Record<Hovedytelse> dagpenger2 = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.ytelse, "Helseprodukter")
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.nettoUtbetalt, 0d)
-                .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.bruttoUtbetalt, 0d)
-                .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
-                .with(Hovedytelse.ytelsesperiode, new Interval(now(), now()))
-                .with(Hovedytelse.underytelseListe, asList(ytelse2));
+        Hovedytelse dagpenger2 = new Hovedytelse()
+                .withId(ID)
+                .withYtelse("Helseprodukter")
+                .withHovedytelsedato(now())
+                .withNettoUtbetalt(0d)
+                .withSumTrekk(0d)
+                .withBruttoUtbetalt(0d)
+                .withSammenlagtTrekkBeloep()
+                .withYtelsesperiode(new Interval(now(), now()))
+                .withUnderytelseListe(asList(ytelse2));
 
-        List<Record<Hovedytelse>> hovedytelser = asList(dagpenger, dagpenger1, dagpenger2);
+        List<Hovedytelse> hovedytelser = asList(dagpenger, dagpenger1, dagpenger2);
 
         OppsummeringVM vm = new OppsummeringVM(hovedytelser, defaultStartDato(), defaultSluttDato());
 
@@ -129,37 +127,37 @@ public class OppsummeringVMTest {
     @Test
     public void testTransformer_LikeTitlerOgForskjelligeAntall_BlirSlaattSammen() throws Exception {
 
-        Record<Underytelse> ytelse = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "Grønn")
-                .with(Underytelse.satsAntall, 1d)
-                .with(Underytelse.ytelseBeloep, 100.0)
-                .with(Underytelse.satsBeloep, 0d);
+        Underytelse ytelse = new Underytelse()
+                .withYtelsesType("Grønn")
+                .withSatsAntall(1d)
+                .withYtelseBeloep(100.0)
+                .withSatsBeloep(0d);
 
-        Record<Underytelse> ytelse2 = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "Grønn")
-                .with(Underytelse.satsAntall, 2d)
-                .with(Underytelse.ytelseBeloep, 200.0)
-                .with(Underytelse.satsBeloep, 0d);
+        Underytelse ytelse2 = new Underytelse()
+                .withYtelsesType("Grønn")
+                .withSatsAntall(2d)
+                .withYtelseBeloep(200.0)
+                .withSatsBeloep(0d);
 
-        Record<Underytelse> ytelse3 = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "Grønn")
-                .with(Underytelse.satsAntall, 3d)
-                .with(Underytelse.ytelseBeloep, 300.0)
-                .with(Underytelse.satsBeloep, 0d);
+        Underytelse ytelse3 = new Underytelse()
+                .withYtelsesType("Grønn")
+                .withSatsAntall(3d)
+                .withYtelseBeloep(300.0)
+                .withSatsBeloep(0d);
 
-        List<Record<Underytelse>> underytelser = asList(ytelse, ytelse2, ytelse3);
-        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.ytelse, "Våren")
-                .with(Hovedytelse.underytelseListe, underytelser)
-                .with(Hovedytelse.hovedytelsedato, now())
-                .with(Hovedytelse.nettoUtbetalt, 0d)
-                .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.bruttoUtbetalt, 0d)
-                .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
-                .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(14), now()));
+        List<Underytelse> underytelser = asList(ytelse, ytelse2, ytelse3);
+        Hovedytelse hovedytelse = new Hovedytelse()
+                .withId(ID)
+                .withYtelse("Våren")
+                .withUnderytelseListe(underytelser)
+                .withHovedytelsedato(now())
+                .withNettoUtbetalt(0d)
+                .withSumTrekk(0d)
+                .withBruttoUtbetalt(0d)
+                .withSammenlagtTrekkBeloep()
+                .withYtelsesperiode(new Interval(now().minusDays(14), now()));
 
-        List<Record<Hovedytelse>> utbetalinger = asList(hovedytelse);
+        List<Hovedytelse> utbetalinger = asList(hovedytelse);
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, defaultStartDato(), defaultSluttDato());
 
@@ -170,23 +168,84 @@ public class OppsummeringVMTest {
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(600.0));
     }
 
-    private Record<Hovedytelse> getYtelse(DateTime dato) {
-        return new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID)
-                .with(Hovedytelse.ytelse, "Kjeks")
-                .with(Hovedytelse.underytelseListe, asList(getUnderytelse()))
-                .with(Hovedytelse.hovedytelsedato, dato)
-                .with(Hovedytelse.nettoUtbetalt, 0d)
-                .with(Hovedytelse.sumTrekk, 0d)
-                .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
-                .with(Hovedytelse.bruttoUtbetalt, 0d)
-                .with(Hovedytelse.ytelsesperiode, new Interval(dato.minusDays(14), dato));
+    @Test
+    public void summererTotalBruttoForAlleHovedytelser() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(300.0));
+
+        assertThat(OppsummeringVM.bruttoUtbetaltForAlle(hovedytelser), is(1500.0));
     }
 
-    private Record<Underytelse> getUnderytelse() {
-        return new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "UnderytelseType")
-                .with(Underytelse.ytelseBeloep, 10d);
+    @Test
+    public void summererTotalBruttoForHovedytelserMedNegativBrutto() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(-200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withBruttoUtbetalt(-300.0));
+
+        assertThat(OppsummeringVM.bruttoUtbetaltForAlle(hovedytelser), is(500.0));
+    }
+
+    @Test
+    public void summererTotalNettoForAlleHovedytelser() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(300.0));
+
+        assertThat(OppsummeringVM.nettoUtbetaltForAlle(hovedytelser), is(1500.0));
+    }
+
+    @Test
+    public void summererTotalNettoForHovedytelserMedNegativBrutto() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(-200.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(-300.0));
+
+        assertThat(OppsummeringVM.nettoUtbetaltForAlle(hovedytelser), is(500.0));
+    }
+
+
+    @Test
+    public void summererTotalTrekkBeloepForAlleHovedytelser() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(1000.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(200.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(300.0).withSammenlagtTrekkBeloep());
+
+        assertThat(OppsummeringVM.trekkBeloepForAlle(hovedytelser), is(1500.0));
+    }
+
+    @Test
+    public void summererTotalTrekkBeloepForHovedytelserMedNegativBrutto() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(1000.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(-200.0).withSammenlagtTrekkBeloep());
+        hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(-300.0).withSammenlagtTrekkBeloep());
+
+        assertThat(OppsummeringVM.trekkBeloepForAlle(hovedytelser), is(500.0));
+    }
+
+    private Hovedytelse getYtelse(DateTime dato) {
+        return new Hovedytelse()
+                .withId(ID)
+                .withYtelse("Kjeks")
+                .withUnderytelseListe(asList(getUnderytelse()))
+                .withHovedytelsedato(dato)
+                .withNettoUtbetalt(0d)
+                .withSumTrekk(0d)
+                .withSammenlagtTrekkBeloep()
+                .withBruttoUtbetalt(0d)
+                .withYtelsesperiode(new Interval(dato.minusDays(14), dato));
+    }
+
+    private Underytelse getUnderytelse() {
+        return new Underytelse()
+                .withYtelsesType("UnderytelseType")
+                .withYtelseBeloep(10d);
     }
 
 }

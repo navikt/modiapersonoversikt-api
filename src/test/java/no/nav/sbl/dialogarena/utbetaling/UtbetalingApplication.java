@@ -38,12 +38,7 @@ public class UtbetalingApplication extends WebApplication {
         Locale.setDefault(new Locale("nb", "no"));
         getMarkupSettings().setStripWicketTags(true);
 
-        Datoformat.brukLocaleFra(new Factory<Locale>() {
-            @Override
-            public Locale create() {
-                return Session.get().getLocale();
-            }
-        });
+        Datoformat.brukLocaleFra(() -> Session.get().getLocale());
 
         new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
         new FrontendConfigurator()

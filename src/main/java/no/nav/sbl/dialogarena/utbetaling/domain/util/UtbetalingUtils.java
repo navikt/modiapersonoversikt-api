@@ -1,21 +1,19 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
+import java.util.function.Predicate;
 
 
 public class UtbetalingUtils {
     public static Predicate<WSUtbetaling> finnUtbetalingerMedUtbetalingsdatoISokeperioden(final LocalDate startDato, final LocalDate sluttDato) {
 
-        return new Predicate<WSUtbetaling>() {
-            @Override
-            public boolean evaluate(WSUtbetaling utbetaling) {
+        return utbetaling -> {
 
-                DateTime utbetalingsDato = utbetaling.getUtbetalingsdato();
-                return utbetalingsDato != null && erUtbetalingsdatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
-            }
+            DateTime utbetalingsDato = utbetaling.getUtbetalingsdato();
+            return utbetalingsDato != null && erUtbetalingsdatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
         };
     }
 

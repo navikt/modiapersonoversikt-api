@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.util;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.YtelseVM;
 import org.junit.BeforeClass;
@@ -20,14 +19,14 @@ public class VMUtilsTest {
 
     @Test
     public void mapUnderytelseTilYtelseVMMedAlleVerdier() {
-        Record<Underytelse> underytelse = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "ytelsetype")
-                .with(Underytelse.satsType, "satstype")
-                .with(Underytelse.satsBeloep, 10.0)
-                .with(Underytelse.ytelseBeloep, 11.0)
-                .with(Underytelse.satsAntall, 2.0);
+        Underytelse underytelse = new Underytelse()
+                .withYtelsesType("ytelsetype")
+                .withSatsType("satstype")
+                .withSatsBeloep(10.0)
+                .withYtelseBeloep(11.0)
+                .withSatsAntall(2.0);
 
-        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.transform(underytelse);
+        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.apply(underytelse);
         assertThat(ytelseVM.getYtelse(), is("ytelsetype"));
         assertThat(ytelseVM.getAntall(), is("2,0"));
         assertThat(ytelseVM.getSats(), is("10,00"));
@@ -36,14 +35,14 @@ public class VMUtilsTest {
 
     @Test
     public void mapUnderytelseTilYtelseVMMedProsentSats() {
-        Record<Underytelse> underytelse = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "ytelsetype")
-                .with(Underytelse.satsType, "prosent")
-                .with(Underytelse.satsBeloep, 10.0)
-                .with(Underytelse.ytelseBeloep, 11.0)
-                .with(Underytelse.satsAntall, 2.0);
+        Underytelse underytelse = new Underytelse()
+                .withYtelsesType("ytelsetype")
+                .withSatsType("prosent")
+                .withSatsBeloep(10.0)
+                .withYtelseBeloep(11.0)
+                .withSatsAntall(2.0);
 
-        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.transform(underytelse);
+        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.apply(underytelse);
         assertThat(ytelseVM.getYtelse(), is("ytelsetype"));
         assertThat(ytelseVM.getAntall(), is("2,0"));
         assertThat(ytelseVM.getSats(), is("10,00%"));
@@ -52,13 +51,13 @@ public class VMUtilsTest {
 
     @Test
     public void mapUnderytelseTilYtelseVMUtenSatstype() {
-        Record<Underytelse> underytelse = new Record<Underytelse>()
-                .with(Underytelse.ytelsesType, "ytelsetype")
-                .with(Underytelse.satsBeloep, 10.0)
-                .with(Underytelse.ytelseBeloep, 11.0)
-                .with(Underytelse.satsAntall, 2.0);
+        Underytelse underytelse = new Underytelse()
+                .withYtelsesType("ytelsetype")
+                .withSatsBeloep(10.0)
+                .withYtelseBeloep(11.0)
+                .withSatsAntall(2.0);
 
-        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.transform(underytelse);
+        YtelseVM ytelseVM = VMUtils.UNDERYTELSE_TIL_YTELSE_VM.apply(underytelse);
         assertThat(ytelseVM.getYtelse(), is("ytelsetype"));
         assertThat(ytelseVM.getAntall(), is("2,0"));
         assertThat(ytelseVM.getSats(), is("10,00"));

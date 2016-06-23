@@ -1,11 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
@@ -13,18 +10,12 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Locale;
-
+import java.util.function.Function;
 
 
 public class HovedytelseVM implements FeedItemVM, Serializable {
 
-    public static final Transformer<Record<Hovedytelse>, HovedytelseVM> TIL_HOVEDYTELSEVM = new Transformer<Record<Hovedytelse>, HovedytelseVM>() {
-        @Override
-        public HovedytelseVM transform(Record<Hovedytelse> hovedytelse) {
-            return new HovedytelseVM(hovedytelse);
-        }
-    };
-
+    public static final Function<Hovedytelse, HovedytelseVM> TIL_HOVEDYTELSEVM = hovedytelse -> new HovedytelseVM(hovedytelse);
 
     private String beskrivelse;
     private DateTime hovedytelseDato;
@@ -37,16 +28,16 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
     private boolean isUtbetalt;
 
 
-    public HovedytelseVM(Record<Hovedytelse> hovedytelse) {
-        this.beskrivelse = hovedytelse.get(Hovedytelse.ytelse);
-        this.hovedytelseDato = hovedytelse.get(Hovedytelse.hovedytelsedato);
-        this.belop = formaterBelop(hovedytelse.get(Hovedytelse.nettoUtbetalt));
-        this.status = hovedytelse.get(Hovedytelse.utbetalingsstatus);
-        this.periode = hovedytelse.get(Hovedytelse.ytelsesperiode);
-        this.utbetalingId = hovedytelse.get(Hovedytelse.id).toString();
-        this.mottakertype = hovedytelse.get(Hovedytelse.mottakertype);
-        this.mottaker = hovedytelse.get(Hovedytelse.utbetaltTil).get(Aktoer.navn);
-        this.isUtbetalt = hovedytelse.get(Hovedytelse.utbetalingsDato) != null;
+    public HovedytelseVM(Hovedytelse hovedytelse) {
+        this.beskrivelse = hovedytelse.getYtelse();
+        this.hovedytelseDato = hovedytelse.getHovedytelsedato();
+        this.belop = formaterBelop(hovedytelse.getNettoUtbetalt());
+        this.status = hovedytelse.getUtbetalingsstatus();
+        this.periode = hovedytelse.getYtelsesperiode();
+        this.utbetalingId = hovedytelse.getId().toString();
+        this.mottakertype = hovedytelse.getMottakertype();
+        this.mottaker = hovedytelse.getUtbetaltTil().getNavn();
+        this.isUtbetalt = hovedytelse.getUtbetalingsDato() != null;
     }
 
     public boolean isUtbetalt() {

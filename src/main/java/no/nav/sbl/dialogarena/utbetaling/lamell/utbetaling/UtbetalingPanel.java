@@ -53,19 +53,8 @@ public class UtbetalingPanel extends Panel {
                 .add(new AttributeAppender("class", "kursiv").setSeparator(" "));
     }
 
-    /**
-     * Viser forfallsdato hvis:
-     * a. Ikke utbetalt
-     * b. Har forfallsdato
-     *
-     * @param utbetalingVM
-     * @return
-     */
     protected boolean skalViseForfallsdato(UtbetalingVM utbetalingVM) {
-        if(!isUtbetalt(utbetalingVM) && hasForfallsdato(utbetalingVM)) {
-            return true;
-        }
-        return false;
+        return !isUtbetalt(utbetalingVM) && hasForfallsdato(utbetalingVM);
     }
 
     protected boolean isUtbetalt(UtbetalingVM utbetalingVM) {
