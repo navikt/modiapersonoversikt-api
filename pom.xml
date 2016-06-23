@@ -72,7 +72,7 @@
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>2.7.33-HL4-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.7.33-HL4</reactkomponenter.version>
         <nav-metrics.version>1.3.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
@@ -96,7 +96,7 @@
         <personsok.version>1.1.24-FAMOUS-SHADE</personsok.version>
         <kjerneinfo.versjon>1.3.7</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>3.0.10-SNAPSHOT</utbetaling.version>
+        <utbetaling.version>3.0.10</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
@@ -105,8 +105,8 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.52</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>4.5-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>5.8-HL4-SNAPSHOT</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>6.0.1</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>5.8-HL4</sporsmalogsvar.version>
         <saksoversikt.version>5.24-HL2</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
