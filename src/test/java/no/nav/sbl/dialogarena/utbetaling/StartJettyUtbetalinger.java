@@ -12,13 +12,13 @@ import static no.nav.sbl.dialogarena.test.path.FilesAndDirs.TEST_RESOURCES;
 
 public final class StartJettyUtbetalinger {
 
-    private static final String REAL_DATA = "false";
-    private static final String MOCK_DATA = "true";
-
-    public static void main(String ... args) {
+    public static void main(String[] args) {
         setupProperties();
         setupKeyAndTrustStore();
+        runJetty();
+    }
 
+    private static void runJetty() {
         usingWar(new File(TEST_RESOURCES, "webapp"))
                 .at("utbetaling")
                 .port(8383)
@@ -28,7 +28,7 @@ public final class StartJettyUtbetalinger {
 
     private static void setupProperties() {
         setProperty("wicket.configuration", "development");
-        setProperty("utbetal.endpoint.mock", REAL_DATA);
+        setProperty("utbetal.endpoint.mock", "true");
         setProperty("server.arena.url", "arenaserver");
         setProperty("utbetalingendpoint.url", getEndpointUrl("T4"));
     }

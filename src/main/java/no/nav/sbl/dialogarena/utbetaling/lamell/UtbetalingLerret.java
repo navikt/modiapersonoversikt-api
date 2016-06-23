@@ -2,11 +2,9 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
-import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.components.ExternalLinkWithLabel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterPanel;
@@ -25,21 +23,26 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.YearMonth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.intervalFromStartEndDate;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.*;
 
@@ -49,7 +52,6 @@ public final class UtbetalingLerret extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
     public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
-    public static final ConditionalCssResource UTBETALING_IE_CSS = new ConditionalCssResource(new CssResourceReference(UtbetalingLerret.class, "utbetaling_ie9.css"), "screen", "lt IE 10");
 
     private static final String FEILMELDING_DEFAULT_KEY = "feil.utbetalinger.default";
 
@@ -99,10 +101,12 @@ public final class UtbetalingLerret extends Lerret {
         feilmelding = createFeilmeldingPanel();
         feilmelding.setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
-        List<Record<Hovedytelse>> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
+        List<Hovedytelse> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
         filterParametere = new FilterParametere(ytelserAsText(ytelser));
 
-        List<Record<Hovedytelse>> synligeUtbetalinger = on(ytelser).filter(filterParametere).collect();
+        List<Hovedytelse> synligeUtbetalinger = ytelser.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList());
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
 
         utbetalingslisteContainer = createUtbetalinglisteContainer();
@@ -112,7 +116,7 @@ public final class UtbetalingLerret extends Lerret {
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
-    private List<Record<Hovedytelse>> getHovedytelseListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    private List<Hovedytelse> getHovedytelseListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             return service.hentUtbetalinger(fnr, startDato, sluttDato);
         } catch (ApplicationException | SystemException e) {
@@ -129,16 +133,18 @@ public final class UtbetalingLerret extends Lerret {
         }
     }
 
-    private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Record<Hovedytelse>> liste) {
+    private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Hovedytelse> liste) {
         return new TotalOppsummeringPanel("totalOppsummeringPanel", new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()));
     }
 
-    private ListView<List<Record<Hovedytelse>>> createMaanedsPanelListe(List<Record<Hovedytelse>> hovedytelseListe) {
-        Map<YearMonth, List<Record<Hovedytelse>>> yearMonthListMap = ytelserGroupedByYearMonth(on(hovedytelseListe).filter(filterParametere).collect());
+    private ListView<List<Hovedytelse>> createMaanedsPanelListe(List<Hovedytelse> hovedytelseListe) {
+        Map<YearMonth, List<Hovedytelse>> yearMonthListMap = ytelserGroupedByYearMonth(hovedytelseListe.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList()));
 
-        return new ListView<List<Record<Hovedytelse>>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
+        return new ListView<List<Hovedytelse>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
-            protected void populateItem(ListItem<List<Record<Hovedytelse>>> item) {
+            protected void populateItem(ListItem<List<Hovedytelse>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
                 item.add(visibleIf(new Model<>(!item.getModelObject().isEmpty())));
             }
@@ -151,12 +157,13 @@ public final class UtbetalingLerret extends Lerret {
         target.appendJavaScript("Utbetalinger.addKeyNavigation();");
     }
 
-    protected void oppdaterYtelser(List<Record<Hovedytelse>> hovedytelser) {
-        filterParametere.setYtelser(ytelserAsText(hovedytelserFromPeriod(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
+    protected void oppdaterYtelser(List<Hovedytelse> hovedytelser) {
+        Interval intervall = intervalFromStartEndDate(filterParametere.getStartDato(), filterParametere.getSluttDato());
+        filterParametere.setYtelser(ytelserAsText(hovedytelserInnenforIntervall(hovedytelser, intervall)));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
-    protected void oppdaterUtbetalingsvisning(List<Record<Hovedytelse>> synligeUtbetalinger) {
+    protected void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger) {
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(synligeUtbetalinger));
     }
@@ -185,7 +192,7 @@ public final class UtbetalingLerret extends Lerret {
         return new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne");
     }
 
-    private List<Record<Hovedytelse>> hentHovedytelseListe() {
+    private List<Hovedytelse> hentHovedytelseListe() {
         return getHovedytelseListe(fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
     }
 
@@ -197,10 +204,12 @@ public final class UtbetalingLerret extends Lerret {
         DateTime filterSlutt = filterParametere.getSluttDato().plusDays(1).toDateTimeAtStartOfDay();
 
 
-        List<Record<Hovedytelse>> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
         oppdaterYtelser(hovedytelser);
 
-        List<Record<Hovedytelse>> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
+        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList());
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
@@ -215,9 +224,11 @@ public final class UtbetalingLerret extends Lerret {
         DateTime filterSlutt = filterParametere.getSluttDato().plusDays(1).toDateTimeAtStartOfDay();
 
 
-        List<Record<Hovedytelse>> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
 
-        List<Record<Hovedytelse>> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
+        List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream()
+                .filter(hovedytelse -> filterParametere.test(hovedytelse))
+                .collect(toList());
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
@@ -235,7 +246,10 @@ public final class UtbetalingLerret extends Lerret {
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('" + detaljPanelID + "');");
     }
 
-    private static Set<String> ytelserAsText(List<Record<Hovedytelse>> ytelser) {
-        return on(ytelser).map(Hovedytelse.ytelse).collectIn(new HashSet<String>());
+    private static Set<String> ytelserAsText(List<Hovedytelse> ytelser) {
+        return ytelser
+                .stream()
+                .map(hovedytelse -> hovedytelse.getYtelse())
+                .collect(Collectors.toSet());
     }
 }

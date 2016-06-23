@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
@@ -62,7 +61,7 @@ public class UtbetalingServiceImplTest {
         LocalDate tom = now();
 
         doReturn(createKariNordmannUtbetaling()).when(spyService).getWSUtbetalinger(fnr, fom, tom);
-        List<Record<Hovedytelse>> hovedytelser = spyService.hentUtbetalinger(fnr, fom, tom);
+        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, fom, tom);
         assertThat(hovedytelser.size(), is(4));
     }
 
@@ -91,7 +90,7 @@ public class UtbetalingServiceImplTest {
         mockUtbetalingsliste.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(posteringsdato, utbetalingsdato));
 
         doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, startdato, sluttdato);
-        List<Record<Hovedytelse>> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
+        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
 
         assertThat(hovedytelser.size(), is(1));
     }
@@ -108,7 +107,7 @@ public class UtbetalingServiceImplTest {
         mockUtbetalingsliste.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(posteringsdato, utbetalingsdato));
 
         doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, startdato, sluttdato);
-        List<Record<Hovedytelse>> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
+        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
 
         assertThat(hovedytelser.size(), is(0));
     }
@@ -129,7 +128,7 @@ public class UtbetalingServiceImplTest {
         LocalDate sluttdato = new LocalDate(now().minusDays(3));
         
         doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, startdato, sluttdato);
-        List<Record<Hovedytelse>> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
+        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
         
         assertThat(hovedytelser.size(), is(3));
     }

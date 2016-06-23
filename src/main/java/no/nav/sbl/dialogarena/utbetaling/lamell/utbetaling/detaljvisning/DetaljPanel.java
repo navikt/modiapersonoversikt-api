@@ -11,7 +11,7 @@ import org.apache.wicket.model.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.*;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -45,27 +45,30 @@ public class DetaljPanel extends Panel {
 
     protected void appendSkatteTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if (utbetalingVM.getSkatteTrekk() != null) {
-            ytelseVMer.addAll(on(utbetalingVM.getSkatteTrekk())
+            ytelseVMer.addAll(utbetalingVM.getSkatteTrekk().stream()
                     .map(skattTilYtelseVM(DetaljPanel.this))
-                    .collect(DESC_BELOP));
+                    .sorted(DESC_BELOP)
+                    .collect(toList()));
         }
     }
 
     protected void appendTrekk(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if (utbetalingVM.getTrekkListe() != null) {
-            ytelseVMer.addAll(on(utbetalingVM.getTrekkListe())
-                    .map(TREKK_TIL_YTELSE_VM)
-                    .collect(DESC_BELOP));
+            ytelseVMer.addAll(
+                    utbetalingVM.getTrekkListe().stream()
+                            .map(TREKK_TIL_YTELSE_VM)
+                            .sorted(DESC_BELOP)
+                            .collect(toList()));
         }
     }
 
     protected void appendUnderytelser(UtbetalingVM utbetalingVM, List<YtelseVM> ytelseVMer) {
         if (utbetalingVM.getUnderytelser() != null) {
-            ytelseVMer.addAll(on(utbetalingVM.getUnderytelser())
+            ytelseVMer.addAll(utbetalingVM.getUnderytelser().stream()
                     .map(UNDERYTELSE_TIL_YTELSE_VM)
-                    .collect(DESC_BELOP));
+                    .sorted(DESC_BELOP)
+                    .collect(toList()));
         }
-
     }
 
     protected ListView createYtelserader(List<YtelseVM> underytelser) {

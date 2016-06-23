@@ -1,15 +1,15 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.widget.async.AsyncWidget;
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.TIL_HOVEDYTELSEVM;
 import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.UtbetalingVMComparator;
@@ -27,16 +27,17 @@ public class UtbetalingWidget extends AsyncWidget<HovedytelseVM> {
         this.fnr = fnr;
     }
 
-    protected static List<HovedytelseVM> transformUtbetalingToVM(List<Record<Hovedytelse>> utbetalinger) {
-        return on(utbetalinger)
+    protected static List<HovedytelseVM> transformUtbetalingToVM(List<Hovedytelse> utbetalinger) {
+        return utbetalinger.stream()
                 .filter(betweenNowAndDaysBefore(NUMBER_OF_DAYS_TO_SHOW))
                 .map(TIL_HOVEDYTELSEVM)
-                .collect(new UtbetalingVMComparator());
+                .sorted(new UtbetalingVMComparator())
+                .collect(toList());
     }
 
     @Override
     public List<HovedytelseVM> getFeedItems() {
-        List<Record<Hovedytelse>> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
+        List<Hovedytelse> hovedytelser = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
         return transformUtbetalingToVM(hovedytelser);
     }
 

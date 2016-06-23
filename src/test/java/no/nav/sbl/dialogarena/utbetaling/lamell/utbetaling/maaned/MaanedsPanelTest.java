@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
-import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
@@ -28,38 +27,40 @@ public class MaanedsPanelTest extends AbstractWicketTest {
 
     @Test
     public void testMaanedsPanelMedUtbetalinger() {
-        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                .with(Hovedytelse.id, ID);
+        Hovedytelse hovedytelse = new Hovedytelse()
+                .withId(ID);
 
-        List<Record<Hovedytelse>> utbetalinger = asList(
+        List<Hovedytelse> utbetalinger = asList(
                 hovedytelse
-                        .with(Hovedytelse.hovedytelsedato, now())
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(5), now()))
-                        .with(Hovedytelse.bruttoUtbetalt, 0d)
-                        .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
-                        .with(Hovedytelse.nettoUtbetalt, 0d)
-                        .with(Hovedytelse.sumTrekk, 0d)
-                        .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))
-                        .with(Hovedytelse.utbetaltTilKonto, "1112233")
-                        .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
-                                .with(Underytelse.ytelsesType, "Tittel")
-                                .with(Underytelse.satsAntall, 3d)
-                                .with(Underytelse.ytelseBeloep, 200.0)
-                                .with(Underytelse.satsAntall, 1.0))),
+                        .withHovedytelsedato(now())
+                        .withYtelse("Ytelse 1")
+                        .withYtelsesperiode(new Interval(now().minusDays(5), now()))
+                        .withBruttoUtbetalt(0d)
+                        .withSammenlagtTrekkBeloep()
+                        .withNettoUtbetalt(0d)
+                        .withSumTrekk(0d)
+                        .withUtbetaltTil(new Aktoer().withNavn("Ola Nordmann"))
+                        .withUtbetaltTilKonto("1112233")
+                        .withUnderytelseListe(asList(new Underytelse()
+                                .withYtelsesType("Tittel")
+                                .withSatsAntall(3d)
+                                .withYtelseBeloep(200.0)
+                                .withSatsAntall(1.0))),
                 hovedytelse
-                        .with(Hovedytelse.hovedytelsedato, now().minusDays(4))
-                        .with(Hovedytelse.bruttoUtbetalt, 0d)
-                        .with(Hovedytelse.sammenlagtTrekkBeloep, 0d)
-                        .with(Hovedytelse.nettoUtbetalt, 0d)
-                        .with(Hovedytelse.sumTrekk, 0d)
-                        .with(Hovedytelse.utbetaltTilKonto, "1112233")
-                        .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))
-                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(10), now()))
-                        .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
-                                .with(Underytelse.ytelsesType, "Tittel2")
-                                .with(Underytelse.satsAntall, 5d)
-                                .with(Underytelse.ytelseBeloep, 700.0)
-                                .with(Underytelse.satsAntall, 2.0)))
+                        .withHovedytelsedato(now().minusDays(4))
+                        .withYtelse("Ytelse 2")
+                        .withBruttoUtbetalt(0d)
+                        .withSammenlagtTrekkBeloep()
+                        .withNettoUtbetalt(0d)
+                        .withSumTrekk(0d)
+                        .withUtbetaltTilKonto("1112233")
+                        .withUtbetaltTil(new Aktoer().withNavn("Ola Nordmann"))
+                        .withYtelsesperiode(new Interval(now().minusDays(10), now()))
+                        .withUnderytelseListe(asList(new Underytelse()
+                                .withYtelsesType("Tittel2")
+                                .withSatsAntall(5d)
+                                .withYtelseBeloep(700.0)
+                                .withSatsAntall(2.0)))
         );
 
         MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", utbetalinger);
@@ -72,7 +73,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
 
     @Test
     public void testMaanedsPanelUtenUtbetalinger() {
-        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", new ArrayList<Record<Hovedytelse>>());
+        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", new ArrayList<>());
         wicketTester.goToPageWith(maanedsPanel);
 
         wicketTester.should().containComponent(ofType(MaanedOppsummeringPanel.class))

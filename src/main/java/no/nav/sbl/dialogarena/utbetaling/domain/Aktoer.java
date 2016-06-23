@@ -1,16 +1,57 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.common.records.Key;
+import java.io.Serializable;
 
 @SuppressWarnings("all")
-public interface Aktoer {
+public class Aktoer implements Serializable {
     public enum AktoerType {
         PERSON, SAMHANDLER, ORGANISASJON
     }
 
-    Key<AktoerType> aktoerType = new Key<>("AKTOER_TYPE");
-    Key<String> aktoerId = new Key<>("AKTOER_ID");
-    Key<String> navn = new Key<>("NAVN");
+    AktoerType aktoerType;
+    String aktoerId;
+    String navn;
 
-    Key<String> diskresjonskode = new Key<>("DISKRESJONSKODE");
+    String diskresjonskode;
+
+    public AktoerType getAktoerType() {
+        return aktoerType;
+    }
+
+    public String getAktoerId() {
+        return aktoerId;
+    }
+
+    public String getNavn() {
+        return navn;
+    }
+
+    public String getDiskresjonskode() {
+        return diskresjonskode;
+    }
+
+
+    public Aktoer withAktoerId(String aktoerId) {
+        this.aktoerId = aktoerId;
+        return this;
+    }
+
+
+    public Aktoer withNavn(String navn) {
+        this.navn = navn;
+        return this;
+    }
+
+    public Aktoer withAktoerType(AktoerType aktoerType) {
+        this.aktoerType = aktoerType;
+        return this;
+    }
+
+
+    public Aktoer withDiskresjonskode(String diskresjonskode) {
+        this.diskresjonskode = diskresjonskode;
+        return this;
+    }
+
+
 }

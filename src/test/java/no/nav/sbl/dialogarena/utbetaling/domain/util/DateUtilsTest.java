@@ -17,8 +17,8 @@ public class DateUtilsTest {
         LocalDate reference = new LocalDate(2014, 1, 2);
         LocalDate future = new LocalDate(2014, 1, 3);
         LocalDate past = new LocalDate(2014, 1, 1);
-        assertTrue(isAfter(reference).evaluate(future));
-        assertFalse(isAfter(reference).evaluate(past));
+        assertTrue(isAfter(reference).test(future));
+        assertFalse(isAfter(reference).test(past));
     }
 
     @Test
@@ -26,14 +26,8 @@ public class DateUtilsTest {
         DateTime start = DateTime.now();
         DateTime end = DateTime.now().plusHours(1);
         Interval interval = new Interval(start, end);
-        assertThat(start, equalTo(START.transform(interval)));
-        assertThat(end, equalTo(END.transform(interval)));
-    }
-
-    @Test
-    public void toLocalDateTransformerTest() {
-        DateTime dateTime = DateTime.now();
-        assertThat(dateTime.toLocalDate(), equalTo(TO_LOCAL_DATE.transform(dateTime)));
+        assertThat(start, equalTo(START.apply(interval)));
+        assertThat(end, equalTo(END.apply(interval)));
     }
 
     @Test

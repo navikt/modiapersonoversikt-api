@@ -1,16 +1,16 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.testdata;
 
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.joda.time.DateTime.now;
 
@@ -25,12 +25,8 @@ public class WSUtbetalingTestData {
         utbetalinger.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14), now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14)));
 
         final Interval periode = new Interval(startDato, sluttDato);
-        Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
-            public boolean evaluate(WSUtbetaling object) {
-                return periode.contains(object.getUtbetalingsdato());
-            }
-        };
-        return on(utbetalinger).filter(innenPeriode).collect();
+        Predicate<WSUtbetaling> innenPeriode = object -> periode.contains(object.getUtbetalingsdato());
+        return utbetalinger.stream().filter(innenPeriode).collect(toList());
     }
 
 
@@ -52,12 +48,12 @@ public class WSUtbetalingTestData {
                                         .withTrekksum(-1500.00)
                                         .withYtelseNettobeloep(5156.00),
                                 LagTestWSYtelse.lagWSYtelse(ytelesestype, testWSPerson, ytelsesperiode, ytelseskomponenter)
-                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withTrekkListe(new ArrayList<>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(1500.00), new WSSkatt().withSkattebeloep(-733.00))
                                         .withTrekksum(767.00)
                                         .withYtelseNettobeloep(7423.00),
                                 LagTestWSYtelse.lagWSYtelse(ytelesestype, testWSPerson, ytelsesperiode, ytelseskomponenter)
-                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withTrekkListe(new ArrayList<>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                                         .withSkattsum(-1500.00)
                                         .withYtelseNettobeloep(5156.00),
@@ -86,7 +82,7 @@ public class WSUtbetalingTestData {
                                                 LagTestWSYtelse.lagYtelseskomponent("Grunnpermisjon", 5200.00),
                                                 LagTestWSYtelse.lagYtelseskomponent("Særtillegg", 1456.00))
                                         .withYtelseskomponentersum(6656.00)
-                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withTrekkListe(new ArrayList<>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                         .withSkattsum(-2267.00)
                                         .withYtelseNettobeloep(4389.00)
@@ -141,7 +137,7 @@ public class WSUtbetalingTestData {
                                 .withYtelseskomponentersum(21419.75)
                                 .withSkattListe(new WSSkatt().withSkattebeloep(2267.00))
                                 .withSkattsum(2267.00)
-                                .withTrekkListe(new ArrayList<WSTrekk>())
+                                .withTrekkListe(new ArrayList<>())
                                 .withTrekksum(0.00)
                                 .withYtelseNettobeloep(21419.75)
                                 .withBilagsnummer("30742-5731"))
@@ -168,7 +164,7 @@ public class WSUtbetalingTestData {
                                 .withYtelseskomponentersum(21419.75)
                                 .withSkattListe(new WSSkatt().withSkattebeloep(2267.00))
                                 .withSkattsum(2267.00)
-                                .withTrekkListe(new ArrayList<WSTrekk>())
+                                .withTrekkListe(new ArrayList<>())
                                 .withTrekksum(0.00)
                                 .withYtelseNettobeloep(21419.75)
                                 .withBilagsnummer("30742-5731"))
