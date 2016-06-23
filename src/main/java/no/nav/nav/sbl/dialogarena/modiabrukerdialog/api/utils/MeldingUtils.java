@@ -103,6 +103,7 @@ public class MeldingUtils {
                 melding.lestStatus = lagLestStatusDokumentVarsel(melding);
                 melding.ferdigstiltDato = dokumentVarsel.getFerdigstiltDato();
                 melding.visningsDato = dokumentVarsel.getFerdigstiltDato();
+                melding.statusKlasse = "statusIkon dokument";
                 return melding;
             }
 
