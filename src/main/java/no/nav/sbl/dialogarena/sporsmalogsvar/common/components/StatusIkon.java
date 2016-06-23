@@ -34,8 +34,12 @@ public class StatusIkon extends Panel {
                 antallMeldinger));
 
 
-        statusIkon.add(hasCssClassIf("ubesvart", not(meldingVM.erBesvart())));
-        statusIkon.add(hasCssClassIf("besvart", meldingVM.erBesvart()));
+        if (meldingVM.erDokumentMelding) {
+            statusIkon.add(hasCssClassIf("dokument", meldingVM.erDokumentMelding()));
+        } else {
+            statusIkon.add(hasCssClassIf("ubesvart", not(meldingVM.erBesvart())));
+            statusIkon.add(hasCssClassIf("besvart", meldingVM.erBesvart()));
+        }
 
         add(statusIkon, statusIkonTekst);
     }

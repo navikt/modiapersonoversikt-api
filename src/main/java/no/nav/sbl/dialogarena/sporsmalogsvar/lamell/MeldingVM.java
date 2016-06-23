@@ -70,6 +70,15 @@ public class MeldingVM implements Serializable {
         };
     }
 
+    public IModel<Boolean> erDokumentMelding() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return melding.erDokumentMelding;
+            }
+        };
+    }
+
     public Optional<String> getMarkertSomFeilsendtAv() {
         return optional(melding.markertSomFeilsendtAv);
     }
