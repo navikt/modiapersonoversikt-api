@@ -54,6 +54,7 @@ public class OrganisasjonEnhetV1Mock {
             private List<WSDetaljertEnhet> lagWSDetaljertEnhet() {
                 final List<WSDetaljertEnhet> enheter = new ArrayList<>();
                 IntStream.rangeClosed(101, 200).forEach(i -> enheter.add(lagWSDetaljertEnhet(i)));
+                enheter.add(new WSDetaljertEnhet().withEnhetId("300").withAntallRessurser(0).withNavn("Enhet uten saksbehandlere").withStatus("AKTIV"));
                 return enheter;
             }
 

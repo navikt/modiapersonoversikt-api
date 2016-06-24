@@ -84,5 +84,5 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
     private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = (o1, o2) -> o1.enhetId.compareTo(o2.enhetId);
 
     private static final Transformer<WSDetaljertEnhet, AnsattEnhet> TIL_ANSATTENHET =
-            respons -> new AnsattEnhet(respons.getEnhetId(), respons.getNavn());
+            respons -> new AnsattEnhet(respons.getEnhetId(), respons.getNavn(), respons.getAntallRessurser());
 }
