@@ -5,6 +5,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
@@ -59,7 +60,13 @@ public class AlleMeldingerPanel extends Panel {
             }
         });
 
-        alletraader.add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
+        initAlleTraader(innboksVM, alletraader);
+
+        add(alletraader);
+    }
+
+    private MarkupContainer initAlleTraader(final InnboksVM innboksVM, RadioGroup<MeldingVM> alletraader) {
+        return alletraader.add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
@@ -117,7 +124,6 @@ public class AlleMeldingerPanel extends Panel {
                 });
             }
         });
-        add(alletraader);
     }
 
     private AbstractReadOnlyModel<Boolean> blirBesvart(final String traadId) {
@@ -136,7 +142,7 @@ public class AlleMeldingerPanel extends Panel {
     }
 
     @RunOnEvents({TRAAD_MERKET, TRAAD_JOURNALFORT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
-    public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target, IEvent<?> event, Object payload) {
+    public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target, IEvent<?> event) {
         //Object payload må være med i metodesignaturen for å tvinge modig-wicket til å populere IEvent med noe annet enn null.
 
         if (this.isVisibleInHierarchy()) {
