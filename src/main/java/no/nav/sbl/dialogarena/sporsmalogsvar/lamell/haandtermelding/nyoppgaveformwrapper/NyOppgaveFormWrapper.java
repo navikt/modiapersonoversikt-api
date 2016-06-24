@@ -387,11 +387,11 @@ public class NyOppgaveFormWrapper extends Panel {
     public static final Predicate<AnsattEnhet> GYLDIG_ENHET = new Predicate<AnsattEnhet>() {
         @Override
         public boolean evaluate(AnsattEnhet ansattEnhet) {
-            return enhetsNummerErLikEllerHoyereEnnHundre(ansattEnhet) && enhetErIkkeAvviklet(ansattEnhet) && enhetenHarTilknyttedeSaksbehandlere(ansattEnhet);
+            return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetErIkkeAvviklet(ansattEnhet) && enhetenHarTilknyttedeSaksbehandlere(ansattEnhet);
         }
     };
 
-    private static boolean enhetsNummerErLikEllerHoyereEnnHundre(AnsattEnhet ansattEnhet) {
+    private static boolean enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(AnsattEnhet ansattEnhet) {
         return Integer.valueOf(ansattEnhet.enhetId) >= 100;
     }
 
