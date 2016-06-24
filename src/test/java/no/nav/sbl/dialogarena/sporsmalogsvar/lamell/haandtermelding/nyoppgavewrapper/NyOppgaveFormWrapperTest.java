@@ -131,7 +131,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
 
     @Test
-    public void enheterMedNavnSomInneholderTekstenAvikletFiltreresBort(){
+    public void enheterMedNavnSomInneholderTekstenAvvikletFiltreresBort(){
         List<AnsattEnhet> enheter = new ArrayList<>();
         enheter.add(createEnhet("111", "avviklet kontor"));
         enheter.add(createEnhet("222", "kontor2 (avviklet)"));
