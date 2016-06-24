@@ -19,8 +19,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavefor
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,10 +30,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper.GYLDIG_ENHET;
 import static org.apache.wicket.util.tester.WicketTesterHelper.findBehavior;
+import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -91,7 +93,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void oppretterOppgave() {
-        when(gsakService.hentForeslatteEnheter(anyString(), anyString(), anyString(), any(Optional.class))).thenReturn(asList(new AnsattEnhet("1231", "Sinsen")));
+        when(gsakService.hentForeslatteEnheter(anyString(), anyString(), anyString(), any(Optional.class))).thenReturn(asList(createEnhet("1231", "Sinsen")));
 
         wicket.goToPageWith(new NyOppgaveFormWrapper("panel", innboksVM));
 
@@ -113,4 +115,53 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
         verify(gsakService).opprettGsakOppgave(any(NyOppgave.class));
     }
+
+    @Test
+    public void enheterMedEnhetsIdUnder100FiltreresBort(){
+        List<AnsattEnhet> enheter = new ArrayList<>();
+        enheter.add(createEnhet( "1", "en"));
+        enheter.add(createEnhet("99", "nittiNi"));
+        enheter.add(createEnhet("100", "hundre"));
+        enheter.add(createEnhet("200", "toHundre"));
+        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(GYLDIG_ENHET).collect();
+
+        Assert.assertThat(gyldigeEnheter.size(), is(2));
+    }
+
+
+
+    @Test
+    public void enheterMedNavnSomInneholderTekstenAvikletFiltreresBort(){
+        List<AnsattEnhet> enheter = new ArrayList<>();
+        enheter.add(createEnhet("111", "avviklet kontor"));
+        enheter.add(createEnhet("222", "kontor2 (avviklet)"));
+        enheter.add(createEnhet("333", "kontor3"));
+        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(GYLDIG_ENHET).collect();
+
+        Assert.assertThat(gyldigeEnheter.size(), is(1));
+    }
+
+    @Test
+    public void enheterMedIngenTilknyttedeAnsatteFiltreresBort(){
+        List<AnsattEnhet> enheter = new ArrayList<>();
+        enheter.add(createEnhet("707", "enmanns kontor", 1));
+        enheter.add(createEnhet("101", "lite kontor", 5));
+        enheter.add(createEnhet("202", "fiktivt kontor 1", 0));
+        enheter.add(createEnhet("303", "mellomstort kontor", 20));
+        enheter.add(createEnhet("404", "fiktivt kontor 2", 0));
+        enheter.add(createEnhet("505", "fiktivt kontor 3", 0));
+        enheter.add(createEnhet("606", "stort kontor", 100));
+        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(GYLDIG_ENHET).collect();
+
+        Assert.assertThat(gyldigeEnheter.size(), is(4));
+    }
+
+    private AnsattEnhet createEnhet(String enhetId, String enhetNavn, int antallRessurser) {
+        return new AnsattEnhet(enhetId, enhetNavn, antallRessurser);
+    }
+
+    private AnsattEnhet createEnhet(String enhetId, String enhetNavn) {
+        return createEnhet(enhetId, enhetNavn, 25);
+    }
+
 }
