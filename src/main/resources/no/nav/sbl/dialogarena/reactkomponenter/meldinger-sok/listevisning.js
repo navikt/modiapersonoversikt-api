@@ -35,13 +35,15 @@ class Listevisning extends React.Component {
 
         return (
             <div className="sok-element" onClick={this.tekstChangedProxy}>
-                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
+                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt}/>
                 <label htmlFor={`melding ${traad.key}`} className={cls}>
                     <div className={traad.statusKlasse} aria-hidden="true"></div>
                     <p className="vekk">{statusIkonTekst}</p>
-                    <p dangerouslySetInnerHTML={{__html: dato }}></p>
-                    <p className={'meldingstatus'} dangerouslySetInnerHTML={{ __html: meldingsStatus }}></p>
-                    <p className="fritekst" dangerouslySetInnerHTML={{ __html: innhold }}></p>
+                    <div className="melding-data">
+                        <p dangerouslySetInnerHTML={{__html: dato }}></p>
+                        <p className={'meldingstatus'} dangerouslySetInnerHTML={{ __html: meldingsStatus }}></p>
+                        <p className="fritekst" dangerouslySetInnerHTML={{ __html: innhold }}></p>
+                    </div>
                 </label>
             </div>
         );
