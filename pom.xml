@@ -106,7 +106,7 @@
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>5.0.1</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>6.0.1-2016-HL3-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>6.0.1</sporsmalogsvar.version>
         <saksoversikt.version>6.0</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
