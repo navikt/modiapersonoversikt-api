@@ -43,7 +43,11 @@ module.exports = function (config) {
             debug: true,
             transform: [
                 'babelify'
-            ]
+            ],
+            configure: function (bundle) {
+                bundle.exclude('react/lib/ReactContext');
+                bundle.exclude('react/lib/ExecutionEnvironment');
+            }
         }
     });
 
