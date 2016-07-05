@@ -25,7 +25,7 @@ describe('Oppgi begrunnelse', () => {
     });
 
     it('avbrytknapp skal fjerne feilmelding og si ifra til wicket', () => {
-        const discardCallback = () => {};
+        const discardCallback = () => undefined;
         const element = shallow(<OppgiBegrunnelse discardCallback={discardCallback}/>);
 
         const wicketSpy = sinon.spy();
