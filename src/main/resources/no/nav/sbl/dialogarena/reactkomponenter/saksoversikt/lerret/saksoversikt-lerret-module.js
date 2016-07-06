@@ -55,7 +55,7 @@ function lagFeilmelding(props) {
     return <noscript />;
 }
 
-class SaksoversiktLerret extends React.Component {
+export class SaksoversiktLerret extends React.Component {
     componentWillMount() {
         this.props.hentLerretData(this.props.fnr);
     }

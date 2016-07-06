@@ -5,7 +5,7 @@ import { expect } from 'chai';
 
 import Skrivestotte from './skrivestotte-module';
 
-describe('Medinger Sok Module', () => {
+describe('Skrivestotte Module', () => {
     it('skal rendre en tom-melding inni en modal når ingen tekster', () => {
         const element = shallow(<Skrivestotte />);
 
@@ -16,7 +16,6 @@ describe('Medinger Sok Module', () => {
         expect(element.is('Modal')).to.be.true;
         expect(element.find('.sok-visning.hidden').length).to.equal(1);
     });
-
 
     it('skal rendre tekstlistekomponenter i en scrollportal når det finnes tekster', () => {
         const element = shallow(<Skrivestotte />);
