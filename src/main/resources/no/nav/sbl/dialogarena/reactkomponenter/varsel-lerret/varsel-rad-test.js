@@ -8,10 +8,10 @@ import ResourceMap from '../utils/resource-map';
 import VarselRad from './varsel-rad';
 
 describe('VarselRad', () => {
-    const resources = new ResourceMap({});
     let store, varsel;
 
     beforeEach(() => {
+        const resources = new ResourceMap({});
         store = {
             toggleEkspandert: sinon.spy(),
             getResources: () => resources
