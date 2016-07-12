@@ -142,7 +142,7 @@ public class AlleMeldingerPanel extends Panel {
     }
 
     @RunOnEvents({TRAAD_MERKET, TRAAD_JOURNALFORT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
-    public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target, IEvent<?> event) {
+    public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target, IEvent<?> event, Object payload) {
         //Object payload må være med i metodesignaturen for å tvinge modig-wicket til å populere IEvent med noe annet enn null.
 
         if (this.isVisibleInHierarchy()) {
