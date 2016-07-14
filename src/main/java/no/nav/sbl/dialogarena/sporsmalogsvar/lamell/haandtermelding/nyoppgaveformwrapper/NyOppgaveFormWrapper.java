@@ -106,6 +106,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
 
         form.add(setupOpprettOppgaveKnapp(innboksVM, feedbackPanelSuccess, feedbackPanelError));
+        add(form, feedbackPanelSuccess);
     }
 
     private IndicatingAjaxButtonWithImageUrl setupOpprettOppgaveKnapp(final InnboksVM innboksVM, final WebMarkupContainer feedbackPanelSuccess, final FeedbackPanel feedbackPanelError) {
