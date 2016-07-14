@@ -80,12 +80,7 @@ public class MeldingerSokImpl implements MeldingerSok {
             JOURNALFORT_DATO,
             JOURNALFORT_SAKSID};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
-    private static final Transformer<DateTime, String> DATO_TIL_STRING = new Transformer<DateTime, String>() {
-        @Override
-        public String transform(DateTime dateTime) {
-            return DateUtils.dateTime(dateTime);
-        }
-    };
+    private static final Transformer<DateTime, String> DATO_TIL_STRING = dateTime -> DateUtils.dateTime(dateTime);
 
     private final Integer timeToLiveMinutes;
 
@@ -100,13 +95,10 @@ public class MeldingerSokImpl implements MeldingerSok {
         String navIdent = getSubjectHandler().getUid();
         String key = key(fnr, navIdent);
 
-        List<Melding> transformerteMeldinger = on(meldinger).map(new Transformer<Melding, Melding>() {
-            @Override
-            public Melding transform(Melding melding) {
-                melding.visningsDatoTekst = optional(melding.getVisningsDato()).map(DATO_TIL_STRING).getOrElse("");
-                melding.journalfortDatoTekst = optional(melding.journalfortDato).map(DATO_TIL_STRING).getOrElse("");
-                return melding;
-            }
+        List<Melding> transformerteMeldinger = on(meldinger).map(melding -> {
+            melding.visningsDatoTekst = optional(melding.getVisningsDato()).map(DATO_TIL_STRING).getOrElse("");
+            melding.journalfortDatoTekst = optional(melding.journalfortDato).map(DATO_TIL_STRING).getOrElse("");
+            return melding;
         }).collect();
 
         MeldingerCacheEntry cacheEntry = new MeldingerCacheEntry(
@@ -321,7 +313,6 @@ public class MeldingerSokImpl implements MeldingerSok {
             return melding;
         };
     }
-
 
 
     public static class MeldingerCacheEntry {
