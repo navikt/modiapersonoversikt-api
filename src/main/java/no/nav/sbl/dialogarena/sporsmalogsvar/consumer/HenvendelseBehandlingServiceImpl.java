@@ -26,10 +26,7 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -191,15 +188,12 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         };
     }
 
-    private final Transformer<Melding, Melding> journalfortTemaTilTemanavn = new Transformer<Melding, Melding>() {
-        @Override
-        public Melding transform(Melding melding) {
-            if (melding.journalfortTema != null) {
-                String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
-                melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
-            }
-            return melding;
+    private final Transformer<Melding, Melding> journalfortTemaTilTemanavn = melding -> {
+        if (melding.journalfortTema != null) {
+            String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
+            melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
         }
+        return melding;
     };
 
 }
