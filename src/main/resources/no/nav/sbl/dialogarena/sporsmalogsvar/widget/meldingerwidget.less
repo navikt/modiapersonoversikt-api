@@ -5,10 +5,6 @@
   .opprettet {
     display: block;
     margin: 0;
-    padding-left: 1rem;
-  }
-  .fritekst {
-    padding-left: 1rem;
   }
   .traadlengde {
     position: absolute;
@@ -20,9 +16,31 @@
     background-size: 8px;
   }
   li a:focus {
-    .statusIkon {
+    .melding-detaljer {
       &.ubesvart {
-        background: url(../img/meldinger/melding_normal.svg) no-repeat;
+        color: #f5f5f5;
+      }
+      color: #f5f5f5;
+    }
+
+    .statusIkon {
+      &.dokument {
+        background: url(../img/meldinger/dokument_normal_valgt.svg) no-repeat;
+        &.ubesvart {
+          background: url(../img/meldinger/dokument_normal_valgt.svg) no-repeat;
+        }
+      }
+      &.flere-meldinger {
+        background: url(../img/meldinger/flere_meldinger_valgt.svg) no-repeat;
+        &.ubesvart {
+          background: url(../img/meldinger/flere_meldinger_valgt.svg) no-repeat;
+        }
+      }
+      &.en-melding {
+        background: url(../img/meldinger/melding_normal_valgt.svg) no-repeat;
+        &.ubesvart {
+          background: url(../img/meldinger/melding_normal_valgt.svg) no-repeat;
+        }
       }
     }
     .traadlengde {
@@ -30,17 +48,40 @@
       background-size: 8px;
     }
   }
+
+  .melding-detaljer {
+    padding-left: 2rem;
+
+    &.ubesvart {
+      color: #005b82;
+    }
+
+    .antall-meldinger-samtale {
+      position: absolute;
+      left: 37px;
+      top: 27px;
+      font-weight: 600;
+    }
+
+  }
   .statusIkon {
     position: absolute;
     height: 26px;
     width: 25px;
-    left: 10px;
+    left: 18px;
     top: 48px;
-    &.besvart {
-      background: url(../img/melding_besvart.svg) no-repeat;
+
+    &.flere-meldinger {
+      background: url(../img/meldinger/flere_meldinger.svg) no-repeat;
+      &.ubesvart {
+        background: url(../img/meldinger/flere_meldinger_ubesvart.svg) no-repeat;
+      }
     }
-    &.ubesvart {
+    &.en-melding {
       background: url(../img/meldinger/melding_normal.svg) no-repeat;
+      &.ubesvart {
+        background: url(../img/meldinger/melding_normal_ulest.svg) no-repeat;
+      }
     }
     &.dokument {
       background: url(../img/meldinger/dokument_normal.svg) no-repeat;
@@ -50,7 +91,6 @@
     margin-top: 16px;
     display: block;
     font-weight: 600;
-    padding-left: 1rem;
     span {
       display: inline-block;
     }

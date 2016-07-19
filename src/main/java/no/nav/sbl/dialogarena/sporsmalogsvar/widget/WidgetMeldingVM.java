@@ -11,7 +11,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagStatusIkonKlasse;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagStatusKlasse;
 
 public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializable {
 
@@ -26,7 +26,7 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
     }
 
     public String getStatusIkonKlasse() {
-        return lagStatusIkonKlasse(melding);
+        return lagStatusKlasse(melding);
     }
 
     public String getVisningsDato() {
