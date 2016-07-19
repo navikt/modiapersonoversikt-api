@@ -157,13 +157,13 @@ public final class UtbetalingLerret extends Lerret {
         target.appendJavaScript("Utbetalinger.addKeyNavigation();");
     }
 
-    protected void oppdaterYtelser(List<Hovedytelse> hovedytelser) {
+    private void oppdaterYtelser(List<Hovedytelse> hovedytelser) {
         Interval intervall = intervalFromStartEndDate(filterParametere.getStartDato(), filterParametere.getSluttDato());
         filterParametere.setYtelser(ytelserAsText(hovedytelserInnenforIntervall(hovedytelser, intervall)));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
-    protected void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger) {
+    private void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger) {
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(synligeUtbetalinger));
     }

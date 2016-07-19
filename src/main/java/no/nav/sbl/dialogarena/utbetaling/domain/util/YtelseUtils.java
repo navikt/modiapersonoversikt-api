@@ -56,7 +56,7 @@ public class YtelseUtils {
                 .collect(toList());
     }
 
-    public static TreeMap<YearMonth, List<Hovedytelse>> ytelserGroupedByYearMonth(List<Hovedytelse> hovedytelser) {
+    public static SortedMap<YearMonth, List<Hovedytelse>> ytelserGroupedByYearMonth(List<Hovedytelse> hovedytelser) {
         Comparator<YearMonth> eldsteForst = (o1, o2) -> o2.compareTo(o1);
 
         Map<YearMonth, List<Hovedytelse>> hovedytelserSortertPaaYearMonth = hovedytelser

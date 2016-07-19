@@ -48,15 +48,12 @@ public class YtelseVM implements Serializable {
         return number;
     }
 
-    public static final Comparator<YtelseVM> DESC_BELOP = new Comparator<YtelseVM>() {
-        @Override
-        public int compare(YtelseVM o1, YtelseVM o2) {
-            if(o1.belop == null) {
-                return 1;
-            } else if(o2.belop == null) {
-                return -1;
-            }
-            return o2.belop.compareTo(o1.belop);
+    public static final Comparator<YtelseVM> DESC_BELOP = (o1, o2) -> {
+        if(o1.belop == null) {
+            return 1;
+        } else if(o2.belop == null) {
+            return -1;
         }
+        return o2.belop.compareTo(o1.belop);
     };
 }
