@@ -31,12 +31,6 @@ var Utbetalinger = (function () {
     };
 
     var toggleFiltrering = function () {
-        $(document).on('click', '.ekspander-pil-filtrering', function () {
-            $('#filter-content').slideToggle();
-            $('#filter-content').parent().toggleClass('skjul-innhold');
-            ariaLabel($('#filter-content').parent());
-        });
-
         var ariaLabel = function ($element) {
             if ($element.hasClass('skjul-innhold')) {
                 $element.find('.ekspander-pil-filtrering span').text(aapneUtbetalingText);
@@ -48,10 +42,16 @@ var Utbetalinger = (function () {
                 $element.find('.ekspander-pil-filtrering').attr('title', lukkUtbetalingText);
             }
         };
+        
+        $(document).on('click', '.ekspander-pil-filtrering', function () {
+            $('#filter-content').slideToggle();
+            $('#filter-content').parent().toggleClass('skjul-innhold');
+            ariaLabel($('#filter-content').parent());
+        });
     };
 
     var addKeyNavigation = function () {
-        $('.utbetaling-ramme').addKeyNavigation({itemsSelector: '.utbetalingslinje'});
+        $('.utbetaling-ramme').addKeyNavigation({ itemsSelector: '.utbetalingslinje' });
     };
 
     var init = function () {
@@ -70,11 +70,11 @@ var Utbetalinger = (function () {
         toggleFiltrering();
     };
 
-    var scrollTilElement = function($element) {
+    var scrollTilElement = function ($element) {
         var $utbetalingslinje = $element.closest('.utbetalingslinje');
         var $lerret = $utbetalingslinje.closest('.lerret');
         var scrollPos = $lerret.get(0).scrollTop + $utbetalingslinje.position().top - HOYDE_MAANED_HEADER;
-        $lerret.animate({scrollTop: scrollPos});
+        $lerret.animate({ scrollTop: scrollPos });
     };
     
     var toggleEkspandertHjelpetekst = function ($element) {
@@ -93,7 +93,7 @@ var Utbetalinger = (function () {
         var $detaljPanel = $('#' + detaljPanelID);
         scrollTilElement($detaljPanel);
 
-        $detaljPanel.animate({height: 'toggle'}, 900);
+        $detaljPanel.animate({ height: 'toggle' }, 900);
         $detaljPanel.parent().toggleClass('ekspandert');
         $detaljPanel.parent().focus();
         toggleEkspandertHjelpetekst($detaljPanel.parent());
@@ -101,7 +101,7 @@ var Utbetalinger = (function () {
 
     var toggleDetaljPanel = function ($element) {
         $element.toggleClass('ekspandert');
-        $element.children('.detaljpanel').animate({height: 'toggle'}, 200);
+        $element.children('.detaljpanel').animate({ height: 'toggle' }, 200);
 
         if ($element.hasClass('ekspandert')) {
             scrollTilElement($element);
