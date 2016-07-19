@@ -5,7 +5,6 @@ class DokumentMelding extends React.Component {
 
     render() {
         const { melding: { statusTekst, erInngaaende, lestStatus, visningsDatoTekst, fritekst } } = this.props;
-        
         const clsExt = erInngaaende ? 'inngaaende' : 'utgaaende';
         const cls = `melding clearfix ${clsExt}`;
         const src = `/modiabrukerdialog/img/nav-logo.svg`;
@@ -33,7 +32,7 @@ class DokumentMelding extends React.Component {
 
 DokumentMelding.propTypes = {
     melding: React.PropTypes.shape({
-        statusTekst: pt.string, 
+        statusTekst: pt.string,
         erInngaaende: pt.bool,
         lestStatus: pt.string,
         visningsDatoTekst: pt.string,
