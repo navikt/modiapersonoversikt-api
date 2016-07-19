@@ -42,7 +42,7 @@ var Utbetalinger = (function () {
                 $element.find('.ekspander-pil-filtrering').attr('title', lukkUtbetalingText);
             }
         };
-        
+
         $(document).on('click', '.ekspander-pil-filtrering', function () {
             $('#filter-content').slideToggle();
             $('#filter-content').parent().toggleClass('skjul-innhold');
@@ -76,7 +76,7 @@ var Utbetalinger = (function () {
         var scrollPos = $lerret.get(0).scrollTop + $utbetalingslinje.position().top - HOYDE_MAANED_HEADER;
         $lerret.animate({ scrollTop: scrollPos });
     };
-    
+
     var toggleEkspandertHjelpetekst = function ($element) {
         if ($element.hasClass('ekspandert')) {
             $element.find('.ekspander-pil span').text(lukkUtbetalingText);
