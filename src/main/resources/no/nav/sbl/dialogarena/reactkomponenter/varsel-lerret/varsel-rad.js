@@ -1,6 +1,6 @@
 import React from 'react';
 import VarselRadElement from './varsel-rad-element';
-import { prettyDate} from './dato-formatering';
+import { prettyDate } from './dato-formatering';
 
 class VarselRad extends React.Component {
     constructor(props) {
@@ -16,7 +16,7 @@ class VarselRad extends React.Component {
     render() {
         const varsel = this.props.varsel;
         const resources = this.props.store.getResources();
-        const datoformat = resources.getOrElse('varsel.ledetekst.rad.datoformat', 'DD. MMM, HH.mm');
+        const datoformat = resources.getOrElse('varsel.ledetekst.rad.datoformat', 'DD. MMM');
         const sendIKanal = varsel.meldingListe
             .map((m) => resources.getOrElse('varsel.kanal.' + m.kanal, m.kanal))
             .join(', ');
