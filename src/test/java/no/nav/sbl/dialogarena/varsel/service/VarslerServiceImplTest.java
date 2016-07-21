@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.varsel.service;
 
 import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
 import no.nav.melding.domene.brukerdialog.varsler.v1.meldinger.WSHentVarslerRequest;
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.xml.ws.soap.SOAPFaultException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -31,6 +31,6 @@ public class VarslerServiceImplTest {
         when(ws.hentVarsler(any(WSHentVarslerRequest.class))).thenThrow(SOAPFaultException.class);
         Optional<List<Varsel>> varsler = impl.hentAlleVarsler("10108000398");
 
-        assertTrue(!varsler.isSome());
+        assertTrue(!varsler.isPresent());
     }
 }

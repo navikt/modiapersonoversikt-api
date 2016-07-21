@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Path("/varsler/{fnr}")
@@ -29,7 +30,11 @@ public class VarslerController {
     @GET
     @Path("/")
     public List<Varsel> hentAlleVarsler(@PathParam("fnr") String fnr) {
-        return varslerService.hentAlleVarsler(fnr).getOrElse(Collections.<Varsel>emptyList());
+        Optional<List<Varsel>> varsler = varslerService.hentAlleVarsler(fnr);
+        if (varsler.isPresent()) {
+            return varsler.get();
+        }
+        return Collections.emptyList();
     }
 
     @GET

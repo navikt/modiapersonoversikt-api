@@ -1,12 +1,10 @@
 package no.nav.sbl.dialogarena.varsel.lamell;
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
-import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -16,11 +14,12 @@ import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import static java.lang.String.format;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 
 public class VarslerOversiktLink extends AjaxLink<String> {
@@ -37,7 +36,12 @@ public class VarslerOversiktLink extends AjaxLink<String> {
         super(id);
         Optional<List<Varsel>> varsler = varselService.hentAlleVarsler(fnr);
 
-        int antallNyeVarsler = on(varsler.getOrElse(Collections.<Varsel>emptyList())).filter(erNyereEnn(EN_UKE)).collect().size();
+
+        int antallNyeVarsler = 0;
+        if (varsler.isPresent()) {
+            antallNyeVarsler = varsler.get().stream().filter(erNyereEnn(EN_UKE)).collect(toList()).size();
+        }
+
         String cmsKeyForVarselLenke = hentCMSKeyForVarselLenke(antallNyeVarsler, varsler);
         String cmsTekstForVarselLenke = cms.hentTekst(cmsKeyForVarselLenke);
 
@@ -50,7 +54,7 @@ public class VarslerOversiktLink extends AjaxLink<String> {
     }
 
     protected static String hentCMSKeyForVarselLenke(int antallNyeVarsler, Optional<List<Varsel>> varsler) {
-        if (!varsler.isSome()) {
+        if (!varsler.isPresent()) {
             return "varsler.oversikt.lenke.feil.uthenting";
         }
 
@@ -61,13 +65,10 @@ public class VarslerOversiktLink extends AjaxLink<String> {
     }
 
     protected static Predicate<Varsel> erNyereEnn(final int antallDager) {
-        return new Predicate<Varsel>() {
-            @Override
-            public boolean evaluate(Varsel varsel) {
-                LocalDate now = LocalDate.now();
-                int dagerSidenVarsel = Days.daysBetween(varsel.mottattTidspunkt.toLocalDate(), now).getDays();
-                return dagerSidenVarsel <= antallDager;
-            }
+        return varsel -> {
+            LocalDate now = LocalDate.now();
+            int dagerSidenVarsel = Days.daysBetween(varsel.mottattTidspunkt.toLocalDate(), now).getDays();
+            return dagerSidenVarsel <= antallDager;
         };
     }
 }

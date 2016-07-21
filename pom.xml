@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl</groupId>
         <artifactId>mor-pom</artifactId>
-        <version>2</version>
+        <version>3.2</version>
     </parent>
 
     <name>modia-varsling</name>
@@ -27,6 +27,7 @@
         <collections-generic.version>4.01</collections-generic.version>
         <reactkomponenter.version>1.25</reactkomponenter.version>
         <modia-felleskomponenter.version>2.0.6</modia-felleskomponenter.version>
+        <brukervarsel.tjeneste.version>1.0.4</brukervarsel.tjeneste.version>
     </properties>
 
     <dependencies>
@@ -34,6 +35,13 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>varsler</artifactId>
             <version>${varsling.tjeneste.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-brukervarsel-v1-tjenestespesifikasjon</artifactId>
+            <version>${brukervarsel.tjeneste.version}</version>
+            <classifier>jaxws</classifier>
         </dependency>
 
         <dependency>
@@ -105,12 +113,6 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-lang</artifactId>
-            <version>2.0.3</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-content</artifactId>
