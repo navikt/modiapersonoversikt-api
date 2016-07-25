@@ -1,8 +1,8 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.modig.lang.option.Optional;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -16,12 +16,12 @@ public class Melding implements Serializable {
 
     public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, fritekst, kontorsperretEnhet, journalfortTema,
             journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, brukersEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
-            lestStatus, opprettetDatoTekst, journalfortDatoTekst;
-    public DateTime lestDato, opprettetDato, journalfortDato;
+            lestStatus, visningsDatoTekst , journalfortDatoTekst;
+    public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, visningsDato;
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
-    public boolean kassert, ingenTilgangJournalfort;
+    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding;
     public Boolean erTilknyttetAnsatt;
     public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
 
@@ -139,45 +139,26 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public static final Comparator<Melding> ELDSTE_FORST = new Comparator<Melding>() {
-        @Override
-        public int compare(Melding o1, Melding o2) {
-            return o1.opprettetDato.compareTo(o2.opprettetDato);
+    public DateTime getVisningsDato() {
+        if (erDokumentMelding){
+            return ferdigstiltDato;
         }
-    };
+        return opprettetDato;
+    }
 
+    public static final Comparator<Melding> ELDSTE_FORST = (o1, o2) -> o1.getVisningsDato().compareTo(o2.getVisningsDato());
 
-    public static final Comparator<Melding> NYESTE_FORST = new Comparator<Melding>() {
-        @Override
-        public int compare(Melding o1, Melding o2) {
-            return o2.opprettetDato.compareTo(o1.opprettetDato);
-        }
-    };
+    public static final Comparator<Melding> NYESTE_FORST = (o1, o2) -> o2.getVisningsDato().compareTo(o1.getVisningsDato());
 
-    public static final Transformer<Melding, String> ID = new Transformer<Melding, String>() {
-        @Override
-        public String transform(Melding melding) {
-            return melding.id;
-        }
-    };
+    public static final Transformer<Melding, String> ID = melding -> melding.id;
 
-    public static final Transformer<Melding, String> TRAAD_ID = new Transformer<Melding, String>() {
-        @Override
-        public String transform(Melding melding) {
-            return melding.traadId;
-        }
-    };
+    public static final Transformer<Melding, String> TRAAD_ID = melding -> melding.traadId;
 
-    public static final Transformer<Melding, Meldingstype> TYPE = new Transformer<Melding, Meldingstype>() {
-        @Override
-        public Meldingstype transform(Melding melding) {
-            return melding.meldingstype;
-        }
-    };
+    public static final Transformer<Melding, Meldingstype> TYPE = melding -> melding.meldingstype;
 
     public static Optional<Melding> siste(List<Melding> traad) {
         List<Melding> sortert = on(traad).collect(NYESTE_FORST);
-        return sortert.isEmpty() ? Optional.<Melding>none() : Optional.optional(sortert.get(0));
+        return sortert.isEmpty() ? Optional.none() : Optional.optional(sortert.get(0));
     }
 
 }

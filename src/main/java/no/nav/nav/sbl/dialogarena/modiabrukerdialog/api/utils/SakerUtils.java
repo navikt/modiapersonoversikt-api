@@ -12,15 +12,12 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 public class SakerUtils {
 
     public static void leggTilFagsystemnavnOgTemanavn(List<Sak> sakerForBruker, final Map<String, String> fagsystemMapping, final StandardKodeverk standardKodeverk) {
-        on(sakerForBruker).forEach(new Closure<Sak>() {
-            @Override
-            public void execute(Sak sak) {
-                String fagsystemnavn = fagsystemMapping.get(sak.fagsystemKode);
-                sak.fagsystemNavn = fagsystemnavn != null ? fagsystemnavn : sak.fagsystemKode;
+        on(sakerForBruker).forEach((Closure<Sak>) sak -> {
+            String fagsystemnavn = fagsystemMapping.get(sak.fagsystemKode);
+            sak.fagsystemNavn = fagsystemnavn != null ? fagsystemnavn : sak.fagsystemKode;
 
-                String temaNavn = standardKodeverk.getArkivtemaNavn(sak.temaKode);
-                sak.temaNavn = temaNavn != null ? temaNavn : sak.temaKode;
-            }
+            String temaNavn = standardKodeverk.getArkivtemaNavn(sak.temaKode);
+            sak.temaNavn = temaNavn != null ? temaNavn : sak.temaKode;
         });
     }
 
