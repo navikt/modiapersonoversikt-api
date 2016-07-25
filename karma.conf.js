@@ -24,7 +24,7 @@ module.exports = function (config) {
 
         singleRun: true,
         captureTimeout: 60000,
-        
+
         //For å hinde disconnect melding når det bygges
         browserDisconnectTimeout: 10000, //Default 2000
         browserDisconnectTolerance: 1, //Default 0
@@ -47,7 +47,11 @@ module.exports = function (config) {
             transform: [
                 'babelify',
                 istanbul({ignore: ['**/*-test.js']})
-            ]
+            ],
+            configure: function (bundle) {
+                bundle.exclude('react/lib/ReactContext');
+                bundle.exclude('react/lib/ExecutionEnvironment');
+            }
         },
 
         coverageReporter: {

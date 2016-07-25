@@ -10,5 +10,8 @@
     "$": false,
     "Wicket": false
   },
-  "extends": "airbnb"
+  "extends": "airbnb",
+  "env": {
+    "mocha": true
+  }
 }
