@@ -72,7 +72,7 @@
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>2.7.34-HL4-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.7.33-HL4</reactkomponenter.version>
         <nav-metrics.version>1.3.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
@@ -83,8 +83,7 @@
 
         <!-- Kan ikke uppes -->
         <jetty.version>9.0.5.v20130815</jetty.version>
-        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.
-        Dette blir oppfylt fra Jetty 9.1. I SimpleLoginModule som vi bruker lokalt får man satt rollen DummyRole uansett.
+        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.rensett.
         Her overrides getName() og "*" returneres. Dette gjør at i sjekken isUserinRole i Jetty sin ConstraintSecurityHandler
         feiler da den finner "*" som navn på rollen. For å fikse dette må rollenavnet som blir overridet i DummyRole endres
         til f. eks dobbelstjerne "**" og SecurityConstrainten må bli overridet i override-web.xml og satt tilsvarende role-name
@@ -94,7 +93,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.1.24-FAMOUS-SHADE</personsok.version>
-        <kjerneinfo.versjon>1.3.7</kjerneinfo.versjon>
+        <kjerneinfo.versjon>3.0.0-2016-HL4-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.10</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -105,8 +104,8 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.52</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>6.0.1</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>5.9-HL4-SNAPSHOT</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>6.0.2-SNAPSHOT</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>6.0.1-SNAPSHOT</sporsmalogsvar.version>
         <saksoversikt.version>5.24-HL2</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
