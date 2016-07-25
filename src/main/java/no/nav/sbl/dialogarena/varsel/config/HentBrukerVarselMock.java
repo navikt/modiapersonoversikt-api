@@ -5,6 +5,8 @@ import no.nav.tjeneste.virksomhet.brukervarsel.v1.binding.HentVarselForBrukerUgy
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.HentVarselForBrukerRequest;
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.HentVarselForBrukerResponse;
 
+import static no.nav.sbl.dialogarena.varsel.config.VarselbestillingMockData.lagVarselbestillingListe;
+
 
 public class HentBrukerVarselMock implements BrukervarselV1 {
 
@@ -16,7 +18,7 @@ public class HentBrukerVarselMock implements BrukervarselV1 {
     @Override
     public no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.HentVarselForBrukerResponse hentVarselForBruker(HentVarselForBrukerRequest request) throws HentVarselForBrukerUgyldigInput {
         HentVarselForBrukerResponse response = new HentVarselForBrukerResponse();
-        response.setBrukervarsel(new BrukervarselMock());
+        response.setBrukervarsel(new BrukervarselMock(lagVarselbestillingListe()));
 
         return response;
     }

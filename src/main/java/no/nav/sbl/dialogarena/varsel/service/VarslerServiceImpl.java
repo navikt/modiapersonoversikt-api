@@ -65,9 +65,13 @@ public class VarslerServiceImpl implements VarslerService {
         String mottakerInformasjon = varsel.getKontaktinfo();
         String statusKode = "";
         XMLGregorianCalendar sendtDato = varsel.getSendt();
+        XMLGregorianCalendar distribuertDato = varsel.getDistribuert();
         DateTime utsendingsTidpunkt = null;
         if (sendtDato != null){
             utsendingsTidpunkt = TIL_DATETIME.apply(sendtDato);
+        }
+        if (distribuertDato != null) {
+            utsendingsTidpunkt = TIL_DATETIME.apply(distribuertDato);
         }
         String feilbeskrivelse = "";
         String epostemne = varsel.getVarseltittel();
@@ -82,6 +86,10 @@ public class VarslerServiceImpl implements VarslerService {
         String varselType = varselBestilling.getVarseltypeId();
 
         DateTime sendtTidspunkt = TIL_DATETIME.apply(varselBestilling.getBestilt());
+        if (varselBestilling.getSisteVarselutsendelse() != null) {
+            sendtTidspunkt = TIL_DATETIME.apply(varselBestilling.getSisteVarselutsendelse());
+        }
+
         String status = "";
 
         List<VarselMelding> varselMeldingliste = varselBestilling.getVarselListe().stream()
