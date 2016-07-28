@@ -132,6 +132,14 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    function visAlleArbeidsgivere() {
+        var arbeidsgiverListe = $('.lamell.selected .arbeisdgiver li');
+        $.each(arbeidsgiverListe, function(index, value) {
+            $(arbeidsgiverListe[index]).css('display','block')
+        });
+        $('.vis-alle-arbeidsgivere').hide();
+    }
+
     function gjennomfoerAvansertSok() {
         var personsokElement = $('.main > .personsok');
         if (personsokElement.is(":visible")) {
