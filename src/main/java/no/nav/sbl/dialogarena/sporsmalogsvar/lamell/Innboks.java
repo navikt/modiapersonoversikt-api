@@ -88,6 +88,13 @@ public class Innboks extends Lerret {
         });
         meldingerSokToggleContainer.add(meldingerSokToggleButton);
 
+        WebMarkupContainer feilmeldingPanel = visFeilMelding(innboksVM);
+
+        meldingsliste.add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel);
+        add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
+    }
+
+    private WebMarkupContainer visFeilMelding(InnboksVM innboksVM) {
         WebMarkupContainer feilmeldingPanel = new WebMarkupContainer("feilmeldingpanel");
         feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
         feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
@@ -98,9 +105,7 @@ public class Innboks extends Lerret {
             innboksVM.setSessionHenvendelseId(null);
             innboksVM.setSessionOppgaveId(null);
         }
-
-        meldingsliste.add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel);
-        add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
+        return feilmeldingPanel;
     }
 
     private Map<String, Object> getMeldingerSokProps() {

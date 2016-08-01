@@ -8,19 +8,10 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.*;
+import org.apache.lucene.queryparser.classic.*;
+import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
@@ -30,9 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -248,7 +237,9 @@ public class MeldingerSokImpl implements MeldingerSok {
         return isBlank(vasketSoketekst) ? "*:*" : on(asList(vasketSoketekst.split(" "))).map(s -> isBlank(s) ? "" : "*" + s + "*").reduce(join(" "));
     }
 
-    private static Map<String, MeldingerSokResultat> hentResultat(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, final String soketekst, ScoreDoc... hits) {
+    private static Map<String, MeldingerSokResultat> hentResultat(
+            final IndexSearcher searcher, final StandardAnalyzer analyzer,
+            final Highlighter highlighter, final String soketekst, ScoreDoc... hits) {
         try {
             Map<String, MeldingerSokResultat> resultat = new HashMap<>();
             boolean gjorHighlighting = soketekst.length() > 0;
@@ -331,78 +322,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         };
     }
 
-    public static class MeldingerSokResultat {
-        public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, lestStatus, kanal, skrevetAvNavn,
-                journalfortAvNavn, journalfortAvIdent, journalfortDato, journalfortSaksId;
 
-        public MeldingerSokResultat() {
-        }
-
-        public MeldingerSokResultat withFritekst(String fritekst) {
-            this.fritekst = fritekst;
-            return this;
-        }
-
-        public MeldingerSokResultat withTemagruppe(String temagruppe) {
-            this.temagruppe = temagruppe;
-            return this;
-        }
-
-        public MeldingerSokResultat withArkivtema(String arkivtema) {
-            this.arkivtema = arkivtema;
-            return this;
-        }
-
-        public MeldingerSokResultat withDato(String dato) {
-            this.dato = dato;
-            return this;
-        }
-
-        public MeldingerSokResultat withNavident(String navIdent) {
-            this.navIdent = navIdent;
-            return this;
-        }
-
-        public MeldingerSokResultat withStatustekst(String statustekst) {
-            this.statustekst = statustekst;
-            return this;
-        }
-
-        public MeldingerSokResultat withLestStatus(String lestStatus) {
-            this.lestStatus = lestStatus;
-            return this;
-        }
-
-        public MeldingerSokResultat withKanal(String kanal) {
-            this.kanal = kanal;
-            return this;
-        }
-
-        public MeldingerSokResultat withSkrevetAvNavn(String skrevetAvNavn) {
-            this.skrevetAvNavn = skrevetAvNavn;
-            return this;
-        }
-
-        public MeldingerSokResultat withJournalfortAvNavn(String journalfortAvNavn) {
-            this.journalfortAvNavn = journalfortAvNavn;
-            return this;
-        }
-
-        public MeldingerSokResultat withJournalfortAvIdent(String journalfortAvIdent) {
-            this.journalfortAvIdent = journalfortAvIdent;
-            return this;
-        }
-
-        public MeldingerSokResultat withJournalfortDato(String journalfortDato) {
-            this.journalfortDato = journalfortDato;
-            return this;
-        }
-
-        public MeldingerSokResultat withJournalfortSaksId(String journalfortSaksId) {
-            this.journalfortSaksId = journalfortSaksId;
-            return this;
-        }
-    }
 
     public static class MeldingerCacheEntry {
         final List<Melding> meldinger;
