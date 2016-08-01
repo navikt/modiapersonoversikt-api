@@ -1,8 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
+import no.nav.modig.modia.model.StringFormatModel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
+
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
 
@@ -10,6 +18,28 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
         super(id, new CompoundPropertyModel<>(model));
         setOutputMarkupId(true);
 
-        add(new WidgetMeldingDetaljer("widgetMeldingDetaljer", getModelObject()));
+        WebMarkupContainer meldingDetaljer = new WebMarkupContainer("meldingDetaljer");
+
+        Label meldingStatus = new Label("meldingsstatus", new StringFormatModel("%s - %s",
+                new PropertyModel<>(model.getObject(), "melding.statusTekst"),
+                new PropertyModel<>(model.getObject(), "melding.temagruppeNavn")
+        ));
+
+        Label dokumentStatus = new Label("dokumentstatus", new StringFormatModel("%s",
+                new PropertyModel<>(model.getObject(), "melding.statusTekst")
+        ));
+
+
+        meldingDetaljer.add(hasCssClassIf("ubesvart", not(model.getObject().erBesvart())));
+        meldingDetaljer.add(hasCssClassIf("besvart", model.getObject().erBesvart()));
+
+        meldingDetaljer.add(new StatusIkon("statusIkon", model.getObject()),
+                new Label("traadlengde").setVisibilityAllowed(model.getObject().traadlengde > 2),
+                new Label("visningsDato"),
+                meldingStatus.setVisibilityAllowed(!model.getObject().erDokumentMelding),
+                dokumentStatus.setVisibilityAllowed(model.getObject().erDokumentMelding),
+                new Label("fritekst").setVisibilityAllowed(model.getObject().erDokumentMelding));
+
+        add(meldingDetaljer);
     }
 }
