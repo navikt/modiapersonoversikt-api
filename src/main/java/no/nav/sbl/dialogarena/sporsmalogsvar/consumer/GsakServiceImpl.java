@@ -72,7 +72,7 @@ public class GsakServiceImpl implements GsakService {
 
             List<WSEnhet> wsEnheter = enhetForOppgaveResponse.getEnhetListe();
 
-            return on(wsEnheter).map(wsEnhet -> new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn())).collect();
+            return on(wsEnheter).map((wsEnhet) -> new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn())).collect();
         } catch (Exception e) {
             return emptyList();
         }

@@ -80,7 +80,7 @@ public class MeldingerSokImpl implements MeldingerSok {
             JOURNALFORT_DATO,
             JOURNALFORT_SAKSID};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
-    private static final Transformer<DateTime, String> DATO_TIL_STRING = dateTime -> DateUtils.dateTime(dateTime);
+    private static final Transformer<DateTime, String> DATO_TIL_STRING = (dateTime) -> DateUtils.dateTime(dateTime);
 
     private final Integer timeToLiveMinutes;
 
@@ -95,7 +95,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         String navIdent = getSubjectHandler().getUid();
         String key = key(fnr, navIdent);
 
-        List<Melding> transformerteMeldinger = on(meldinger).map(melding -> {
+        List<Melding> transformerteMeldinger = on(meldinger).map((melding) -> {
             melding.visningsDatoTekst = optional(melding.getVisningsDato()).map(DATO_TIL_STRING).getOrElse("");
             melding.journalfortDatoTekst = optional(melding.journalfortDato).map(DATO_TIL_STRING).getOrElse("");
             return melding;
@@ -158,7 +158,7 @@ public class MeldingerSokImpl implements MeldingerSok {
                 .map(highlighting(resultat))
                 .reduce(indexBy(TRAAD_ID));
 
-        return on(traader.entrySet()).map(entry -> {
+        return on(traader.entrySet()).map((entry) -> {
             int antallMeldingerIOpprinneligTraad = opprinneligeTraader.get(entry.getKey()).size();
             return new Traad(entry.getKey(), antallMeldingerIOpprinneligTraad, entry.getValue());
         }).collect(NYESTE_FORST);
@@ -226,7 +226,7 @@ public class MeldingerSokImpl implements MeldingerSok {
 
     private static String query(String soketekst) {
         String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING).trim();
-        return isBlank(vasketSoketekst) ? "*:*" : on(asList(vasketSoketekst.split(" "))).map(s -> isBlank(s) ? "" : "*" + s + "*").reduce(join(" "));
+        return isBlank(vasketSoketekst) ? "*:*" : on(asList(vasketSoketekst.split(" "))).map((s) -> isBlank(s) ? "" : "*" + s + "*").reduce(join(" "));
     }
 
     private static Map<String, MeldingerSokResultat> hentResultat(
@@ -295,7 +295,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     }
 
     private static Transformer<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
-        return melding -> {
+        return (melding) -> {
             MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
             melding.fritekst = meldingerSokResultat.fritekst;
             melding.temagruppeNavn = meldingerSokResultat.temagruppe;
