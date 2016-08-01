@@ -1,9 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.modia.model.StringFormatModel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -12,8 +10,6 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -21,11 +17,9 @@ import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.ReactJournalforingsPanel.TRAAD_JOURNALFORT;
@@ -72,38 +66,16 @@ public class AlleMeldingerPanel extends Panel {
                 final MeldingVM meldingVM = item.getModelObject();
                 item.setModel(new CompoundPropertyModel<>(meldingVM));
 
+                item.add(new MeldingDetaljer("meldingDetaljer", innboksVM, meldingVM));
+
                 final Radio<MeldingVM> radio = new Radio<>("meldingslistetraad", item.getModel());
                 radio.setMarkupId("meldingslistetraad-" + meldingVM.melding.id);
 
+                radio.add(hasCssClassIf("besvart", meldingVM.erBesvart()));
+
                 item.setMarkupId(TRAAD_ID_PREFIX + meldingVM.melding.traadId);
-                item.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))).setOutputMarkupPlaceholderTag(true));
-                item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
-                item.add(new Label("visningsDato"));
 
-                item.add(new StatusIkon("statusIkon",
-                                blirBesvart(meldingVM.melding.traadId).getObject(),
-                                meldingVM)
-                );
                 item.add(radio);
-
-                Label meldingstatus = new Label("meldingstatus", new StringFormatModel("%s - %s",
-                        new PropertyModel<>(item.getModel(), "melding.statusTekst"),
-                        new PropertyModel<>(item.getModel(), "melding.temagruppeNavn")
-                ));
-
-                Label dokumentStatus = new Label("meldingstatus", new StringFormatModel("%s",
-                        new PropertyModel<>(item.getModel(), "melding.statusTekst")
-                ));
-
-                if (meldingVM.erDokumentMelding) {
-                    dokumentStatus.setOutputMarkupId(true);
-                    item.add(dokumentStatus);
-                } else {
-                    meldingstatus.setOutputMarkupId(true);
-                    item.add(meldingstatus);
-                }
-
-                item.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 if (innboksVM.getSessionHenvendelseId().isSome() && innboksVM.erValgtMelding(meldingVM).getObject()) {

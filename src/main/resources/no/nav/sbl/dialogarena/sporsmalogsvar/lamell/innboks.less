@@ -43,7 +43,6 @@
     input + label {
       position: static;
       width: 100%;
-      color: @grayDark;
       text-transform: none;
       background-image: none !important;
       font-size: 1rem;
@@ -95,6 +94,13 @@
         display: none;
       }
     }
+    .melding-detaljer {
+      padding-left: 2rem;
+
+      &.ubesvart {
+        color: #005b82;
+      }
+    }
   }
 
   .traadDetaljer {
@@ -142,7 +148,6 @@
       background-color: #333333;
       margin-bottom: 16px;
       padding: 10px;
-      color: @modiagraaskrift;
       font-size: 0.75rem;
       .ikon {
         padding-right: 1.4rem;
@@ -355,13 +360,25 @@
       color: #f5f5f5;
     }
     .statusIkon {
-      &.ubesvart {
-        background: url(../img/meldinger/melding_normal.svg) no-repeat;
+      &.dokument {
+        background: url(../img/meldinger/dokument_normal_valgt.svg) no-repeat;
+        &.ubesvart {
+          background: url(../img/meldinger/dokument_normal_valgt.svg) no-repeat;
+        }
       }
-    }
-    .traadlengde {
-      background: url(../img/melding_flere_innlegg_hvit.svg) no-repeat right;
-      background-size: 8px;
+      &.flere-meldinger {
+        background: url(../img/meldinger/flere_meldinger_valgt.svg) no-repeat;
+        &.ubesvart {
+          background: url(../img/meldinger/flere_meldinger_valgt.svg) no-repeat;
+        }
+      }
+      &.en-melding {
+        background: url(../img/meldinger/melding_normal_valgt.svg) no-repeat;
+        &.ubesvart {
+          background: url(../img/meldinger/melding_normal_valgt.svg) no-repeat;
+        }
+      }
+
     }
     .besvarIndikator {
       background: url(../img/loading_dots_liten_hvit.gif) no-repeat;
@@ -370,6 +387,13 @@
   &:not(.valgt) {
     cursor: pointer;
   }
+  .antall-meldinger-samtale {
+    position: absolute;
+    left: 35px;
+    top: 40px;
+    font-weight: 600;
+  }
+
   .meldingstatus {
     font-weight: 600;
     span {
@@ -397,11 +421,17 @@
     width: 25px;
     left: 15px;
     top: 47px;
-    &.besvart {
-      background: url(../img/melding_besvart.svg) no-repeat;
+    &.flere-meldinger {
+      background: url(../img/meldinger/flere_meldinger.svg) no-repeat;
+      &.ubesvart {
+        background: url(../img/meldinger/flere_meldinger_ubesvart.svg) no-repeat;
+      }
     }
-    &.ubesvart {
+    &.en-melding {
       background: url(../img/meldinger/melding_normal.svg) no-repeat;
+      &.ubesvart {
+        background: url(../img/meldinger/melding_normal_ulest.svg) no-repeat;
+      }
     }
     &.dokument {
       background: url(../img/meldinger/dokument_normal.svg) no-repeat;
@@ -413,15 +443,6 @@
     width: 34px;
     height: 20px;
     margin-right: 10px;
-  }
-  .traadlengde {
-    position: absolute;
-    right: 10px;
-    padding-right: 10px;
-    line-height: 20px;
-    font-weight: bold;
-    background: url(../img/melding_flere_innlegg.svg) no-repeat right;
-    background-size: 8px;
   }
 }
 

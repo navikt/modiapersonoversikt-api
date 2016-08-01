@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.components;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -20,13 +21,27 @@ public class StatusIkon extends Panel {
         super(id);
         WebMarkupContainer statusIkon = new WebMarkupContainer("statusIkon");
 
+        int traadlengde = meldingVM.traadlengde;
+
         String besvartStatusKey = format("innboks.melding.%s", (meldingVM.erBesvart().getObject()) ? "besvart" : "ubesvart");
 
         String besvartStatus = new StringResourceModel(besvartStatusKey, this, null).getString();
         String antallMeldinger = format("%d %s",
-                meldingVM.traadlengde,
-                meldingVM.traadlengde == 1 ? "melding" : "meldinger"
+                traadlengde,
+                traadlengde == 1 ? "melding" : "meldinger"
         );
+
+        String antallMeldingerTekst = "";
+
+        if (traadlengde > 1) {
+            if (traadlengde < 10) {
+                antallMeldingerTekst = traadlengde + "";
+            } else {
+                antallMeldingerTekst = "9+";
+            }
+        }
+
+        Label antallMeldingerIkonTekst = new Label("antallMeldingerIkonTekst", antallMeldingerTekst);
 
         Label statusIkonTekst = new Label("statusIkonTekst", format("%s%s, %s, ",
                 underBehandling ? "Under behandling, " : "",
@@ -37,10 +52,15 @@ public class StatusIkon extends Panel {
         if (meldingVM.erDokumentMelding) {
             statusIkon.add(hasCssClassIf("dokument", meldingVM.erDokumentMelding()));
         } else {
+            if (traadlengde > 1) {
+                statusIkon.add(new AttributeAppender("class", " flere-meldinger"));
+            } else {
+                statusIkon.add(new AttributeAppender("class", " en-melding"));
+            }
             statusIkon.add(hasCssClassIf("ubesvart", not(meldingVM.erBesvart())));
             statusIkon.add(hasCssClassIf("besvart", meldingVM.erBesvart()));
         }
 
-        add(statusIkon, statusIkonTekst);
+        add(statusIkon, antallMeldingerIkonTekst, statusIkonTekst);
     }
 }
