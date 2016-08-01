@@ -61,10 +61,7 @@ public class PdfUtils {
     private static Map<String, Helper<?>> generateHelpers() {
         HashMap<String, Helper<?>> result = new HashMap<>();
 
-        Helper hentMeldingHelper = (Helper<Melding>) (o, options) -> {
-            Melding melding = finnMelding(options.context);
-            return melding.navIdent;
-        };
+        Helper hentMeldingHelper = (Helper<Melding>) (o, options) -> finnMelding(options.context).navIdent;
 
         Helper formaterDatoHelper = (dato, options) -> {
             Locale locale = new Locale("nb", "no");
