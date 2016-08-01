@@ -25,7 +25,7 @@ public class Traad {
         this.temagruppe = forsteMelding.temagruppeNavn;
         this.journalfortTema = forsteMelding.journalfortTemanavn;
         this.dato = sisteMelding.getVisningsDato();
-        this.statusKlasse = sisteMelding.statusKlasse;
+        this.statusKlasse = sisteMelding.statusKlasse + (antallMeldingerIOpprinneligTraad == 1 ? " en-melding" : " flere-meldinger");
         this.statusTekst = sisteMelding.statusTekst;
     }
 

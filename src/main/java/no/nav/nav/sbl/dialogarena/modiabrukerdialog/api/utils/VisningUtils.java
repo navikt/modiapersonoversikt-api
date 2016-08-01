@@ -14,8 +14,8 @@ public class VisningUtils {
     public static final List<Meldingstype> FRA_NAV = asList(SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, SAMTALEREFERAT_OPPMOTE, SAMTALEREFERAT_TELEFON, SPORSMAL_MODIA_UTGAAENDE, DOKUMENT_VARSEL);
     public static final List<Meldingstype> SPORSMAL = asList(SPORSMAL_SKRIFTLIG, SPORSMAL_MODIA_UTGAAENDE);
 
-    public static String lagStatusIkonKlasse(Melding melding) {
-        return String.format("statusIkon %s", melding.status == Status.IKKE_BESVART ? "ubesvart" : "besvart");
+    public static String lagStatusKlasse(Melding melding) {
+        return String.format("%s", melding.status == Status.IKKE_BESVART ? "ubesvart" : "besvart");
     }
 
     public static String lagMeldingStatusTekstKey(Melding melding) {

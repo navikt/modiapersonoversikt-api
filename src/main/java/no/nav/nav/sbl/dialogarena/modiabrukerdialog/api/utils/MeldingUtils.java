@@ -63,7 +63,7 @@ public class MeldingUtils {
             melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
             melding.status = STATUS.transform(xmlHenvendelse);
             melding.lestStatus = lagLestStatus(melding);
-            melding.statusKlasse = VisningUtils.lagStatusIkonKlasse(melding);
+            melding.statusKlasse = VisningUtils.lagStatusKlasse(melding);
             melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
             melding.oppgaveId = xmlHenvendelse.getOppgaveIdGsak();
             melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
@@ -103,7 +103,7 @@ public class MeldingUtils {
                 melding.lestStatus = lagLestStatusDokumentVarsel(melding);
                 melding.ferdigstiltDato = dokumentVarsel.getFerdigstiltDato();
                 melding.visningsDato = dokumentVarsel.getFerdigstiltDato();
-                melding.statusKlasse = "statusIkon dokument";
+                melding.statusKlasse = "dokument";
                 return melding;
             }
 
