@@ -23,6 +23,7 @@ import java.util.List;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createKariNordmannUtbetaling;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetalingMedValgtUtbetalingOgPosteringsdato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.EKSTRA_SOKEPERIODE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.getHovedytelseListe;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.LocalDate.now;
@@ -61,7 +62,8 @@ public class UtbetalingServiceImplTest {
         LocalDate tom = now();
 
         doReturn(createKariNordmannUtbetaling()).when(spyService).getWSUtbetalinger(fnr, fom, tom);
-        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, fom, tom);
+        List<WSUtbetaling> utbetalingerIPerioden = spyService.hentWSUtbetalinger(fnr, fom, tom);
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(utbetalingerIPerioden);
         assertThat(hovedytelser.size(), is(4));
     }
 
@@ -82,7 +84,7 @@ public class UtbetalingServiceImplTest {
     public void finnerUtbetalingerMedPosteringsdatoUtenforSokeperioden() {
         UtbetalingServiceImpl spyService = spy(utbetalingService);
         String fnr = "***REMOVED***";
-        DateTime posteringsdato = DateTime.now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW);
+        DateTime posteringsdato = DateTime.now().minusDays(2 * NUMBER_OF_DAYS_TO_SHOW);
         DateTime utbetalingsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         LocalDate startdato = new LocalDate(posteringsdato.plusDays(10));
         LocalDate sluttdato = new LocalDate(utbetalingsdato.plusDays(10));
@@ -90,14 +92,16 @@ public class UtbetalingServiceImplTest {
         mockUtbetalingsliste.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(posteringsdato, utbetalingsdato));
 
         doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, startdato, sluttdato);
-        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
+        List<WSUtbetaling> utbetalingerIPerioden = spyService.hentWSUtbetalinger(fnr, startdato, sluttdato);
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(utbetalingerIPerioden);
 
-        assertThat(hovedytelser.size(), is(1));
+        assertThat(hovedytelser.size(), is(2));
     }
 
     @Test
-    public void utelaterUtbetalingerMedPosteringsdatoInnenforOgMedUtbetalingsdatoUntenforSokeperioden() {
+    public void utelaterUtbetalingerMedPosteringsdatoInnenforOgMedUtbetalingsdatoUtenforSokeperioden() {
         UtbetalingServiceImpl spyService = spy(utbetalingService);
+
         String fnr = "***REMOVED***";
         DateTime posteringsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         DateTime utbetalingsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW).minusDays(15);
@@ -107,7 +111,9 @@ public class UtbetalingServiceImplTest {
         mockUtbetalingsliste.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(posteringsdato, utbetalingsdato));
 
         doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, startdato, sluttdato);
-        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
+
+        List<WSUtbetaling> filtrertWSUtbetalingListe = spyService.hentWSUtbetalinger(fnr, startdato, sluttdato);
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(filtrertWSUtbetalingListe);
 
         assertThat(hovedytelser.size(), is(0));
     }
@@ -116,20 +122,21 @@ public class UtbetalingServiceImplTest {
     public void finnerRiktigAntallUtbetalingerMedUtbetalingsdatoISokeperioden() {
         UtbetalingServiceImpl spyService = spy(utbetalingService);
         String fnr = "***REMOVED***";
-        DateTime nedreGrense = DateTime.now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW);
+        DateTime nedreGrense = DateTime.now().minusDays(3 * NUMBER_OF_DAYS_TO_SHOW);
         DateTime utbetalingsdato = DateTime.now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         DateTime ovreGrense = DateTime.now().minusDays(3);
         List<WSUtbetaling> mockUtbetalingsliste = new ArrayList<>();
         mockUtbetalingsliste.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(nedreGrense, utbetalingsdato));
         mockUtbetalingsliste.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(nedreGrense.minusDays(3), utbetalingsdato));
         mockUtbetalingsliste.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(nedreGrense.plusDays(2), ovreGrense));
-        
-        LocalDate startdato = new LocalDate(now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW));
+
+        LocalDate startdato = new LocalDate(now().minusDays(3 * NUMBER_OF_DAYS_TO_SHOW));
         LocalDate sluttdato = new LocalDate(now().minusDays(3));
-        
+
         doReturn(mockUtbetalingsliste).when(spyService).getWSUtbetalinger(fnr, startdato, sluttdato);
-        List<Hovedytelse> hovedytelser = spyService.hentUtbetalinger(fnr, startdato, sluttdato);
-        
-        assertThat(hovedytelser.size(), is(3));
+        List<WSUtbetaling> utbetalingerIPerioden = spyService.hentWSUtbetalinger(fnr, startdato, sluttdato);
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(utbetalingerIPerioden);
+
+        assertThat(hovedytelser.size(), is(6));
     }
 }

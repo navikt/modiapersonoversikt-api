@@ -2,8 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonIkkeTilgang;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPersonIkkeFunnet;
@@ -16,9 +14,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.TO_HOVEDYTELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.leggTilEkstraDagerPaaStartdato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.SISTE_HOVEDYTELSESDATO_FORST;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils.finnUtbetalingerMedUtbetalingsdatoISokeperioden;
 
 public class UtbetalingServiceImpl implements UtbetalingService {
 
@@ -26,14 +23,10 @@ public class UtbetalingServiceImpl implements UtbetalingService {
     private UtbetalingV1 utbetalingV1;
 
     @Override
-    public List<Hovedytelse> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden = getWSUtbetalinger(fnr, startDato, sluttDato).stream()
-                .filter(UtbetalingUtils.finnUtbetalingerMedUtbetalingsdatoISokeperioden(startDato, sluttDato))
-                .collect(toList());
+    public List<WSUtbetaling> hentWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
 
-        return utbetalingerMedPosteringInnenPerioden.stream()
-                .flatMap(wsUtbetaling -> TO_HOVEDYTELSE.apply(wsUtbetaling).stream())
-                .sorted(SISTE_HOVEDYTELSESDATO_FORST)
+        return getWSUtbetalinger(fnr, startDato, sluttDato).stream()
+                .filter(finnUtbetalingerMedUtbetalingsdatoISokeperioden(startDato, sluttDato))
                 .collect(toList());
     }
 
@@ -42,7 +35,7 @@ public class UtbetalingServiceImpl implements UtbetalingService {
         utbetalingV1.ping();
     }
 
-    protected List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             return utbetalingV1.hentUtbetalingsinformasjon(createRequest(fnr, leggTilEkstraDagerPaaStartdato(startDato), sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingsinformasjonPeriodeIkkeGyldig ex) {
@@ -56,7 +49,7 @@ public class UtbetalingServiceImpl implements UtbetalingService {
         }
     }
 
-    protected WSHentUtbetalingsinformasjonRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    WSHentUtbetalingsinformasjonRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
         return new WSHentUtbetalingsinformasjonRequest()
             .withId(new WSIdent()
                     .withIdent(fnr)
@@ -66,7 +59,7 @@ public class UtbetalingServiceImpl implements UtbetalingService {
     }
 
 
-    protected WSForespurtPeriode createPeriode(LocalDate startDato, LocalDate sluttDato) {
+    WSForespurtPeriode createPeriode(LocalDate startDato, LocalDate sluttDato) {
         return new WSForespurtPeriode()
             .withFom(startDato.toDateTimeAtStartOfDay())
             .withTom(sluttDato.toDateTimeAtStartOfDay());

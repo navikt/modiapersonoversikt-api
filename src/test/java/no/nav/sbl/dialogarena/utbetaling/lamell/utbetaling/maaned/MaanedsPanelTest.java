@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.SammenlagtUtbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static org.joda.time.DateTime.now;
 
@@ -30,6 +32,8 @@ public class MaanedsPanelTest extends AbstractWicketTest {
         Hovedytelse hovedytelse = new Hovedytelse()
                 .withId(ID);
 
+        SammenlagtUtbetaling sammenlagtUtbetaling = new SammenlagtUtbetaling().withId(ID);
+
         List<Hovedytelse> utbetalinger = asList(
                 hovedytelse
                         .withHovedytelsedato(now())
@@ -41,7 +45,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                         .withSumTrekk(0d)
                         .withUtbetaltTil(new Aktoer().withNavn("Ola Nordmann"))
                         .withUtbetaltTilKonto("1112233")
-                        .withUnderytelseListe(asList(new Underytelse()
+                        .withUnderytelseListe(singletonList(new Underytelse()
                                 .withYtelsesType("Tittel")
                                 .withSatsAntall(3d)
                                 .withYtelseBeloep(200.0)
@@ -56,14 +60,19 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                         .withUtbetaltTilKonto("1112233")
                         .withUtbetaltTil(new Aktoer().withNavn("Ola Nordmann"))
                         .withYtelsesperiode(new Interval(now().minusDays(10), now()))
-                        .withUnderytelseListe(asList(new Underytelse()
+                        .withUnderytelseListe(singletonList(new Underytelse()
                                 .withYtelsesType("Tittel2")
                                 .withSatsAntall(5d)
                                 .withYtelseBeloep(700.0)
                                 .withSatsAntall(2.0)))
         );
 
-        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", utbetalinger);
+        List<SammenlagtUtbetaling> sammenlagteUtbetalinger = singletonList(
+                sammenlagtUtbetaling
+                        .withHovedytelser(utbetalinger)
+        );
+
+        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", sammenlagteUtbetalinger);
         wicketTester.goToPageWith(maanedsPanel);
 
         wicketTester.should().containComponent(ofType(MaanedOppsummeringPanel.class))

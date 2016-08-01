@@ -17,7 +17,7 @@ public class UtbetalingUtils {
         };
     }
 
-    protected static boolean erUtbetalingsdatoISokeperioden(LocalDate utbetalingsdato, LocalDate startDato, LocalDate sluttDato) {
+    static boolean erUtbetalingsdatoISokeperioden(LocalDate utbetalingsdato, LocalDate startDato, LocalDate sluttDato) {
         return (utbetalingsdato.compareTo(startDato) >= 0 && utbetalingsdato.compareTo(sluttDato) <= 0);
     }
 }

@@ -94,7 +94,7 @@ public class WSUtbetalingTestData {
         );
     }
 
-    public static WSUtbetaling createOsloKommuneUtbetaling() {
+    private static WSUtbetaling createOsloKommuneUtbetaling() {
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(19))
                 .withUtbetaltTil(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Oslo kommune Utbetaling 4"))
@@ -120,7 +120,7 @@ public class WSUtbetalingTestData {
                 .withUtbetalingsstatus("Utbetalt");
     }
 
-    public static WSUtbetaling createOlaNordmannUtbetaling() {
+    private static WSUtbetaling createOlaNordmannUtbetaling() {
         WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Ola Nordmann Utbetaling 2");
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
@@ -167,6 +167,20 @@ public class WSUtbetalingTestData {
                                 .withTrekkListe(new ArrayList<>())
                                 .withTrekksum(0.00)
                                 .withYtelseNettobeloep(21419.75)
+                                .withBilagsnummer("30742-5731"),
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Arbeidsavklaringspenger"))
+                                .withRettighetshaver(personOlaNordmann)
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW)))
+                                .withYtelseskomponentListe(
+                                        LagTestWSYtelse.lagYtelseskomponent("Arbeidsavklaringspenger", 2000.00, 00.00, 00.0)
+                                                .withSatstype("AAP"))
+                                .withYtelseskomponentersum(2000.00)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(00.00))
+                                .withSkattsum(00.00)
+                                .withTrekkListe(new ArrayList<>())
+                                .withTrekksum(0.00)
+                                .withYtelseNettobeloep(2000.00)
                                 .withBilagsnummer("30742-5731"))
                 .withForfallsdato(posteringsdato)
                 .withUtbetalingsdato(utbetalingsdato)

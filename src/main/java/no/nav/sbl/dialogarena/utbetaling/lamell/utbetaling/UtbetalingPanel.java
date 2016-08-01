@@ -24,12 +24,12 @@ public class UtbetalingPanel extends Panel {
                 getHovedYtelsesPeriodeLabel(utbetalingVM),
                 forfallsdatoContainer(utbetalingVM),
                 new Label("utbetaltTil", utbetalingVM.getMottakerNavn())
-                );
+        );
     }
 
     private Label createStatusLabel(UtbetalingVM utbetalingVM) {
         Label statusLabel = new Label("status", utbetalingVM.getStatus());
-        if(utbetalingVM.isUtbetalt()) {
+        if (utbetalingVM.isUtbetalt()) {
             statusLabel.add(new AttributeAppender("class", "utbetalt").setSeparator(" "));
         }
         return statusLabel;
@@ -40,7 +40,7 @@ public class UtbetalingPanel extends Panel {
         container.add(
                 new Label("forfallDato", utbetalingVM.getForfallsDatoFormatted()),
                 new Label("forfallDatoLabel", new StringResourceModel("utbetaling.lamell.utbetaling.forfallsdato.label", this, null))
-                ).setVisible(skalViseForfallsdato(utbetalingVM));
+        ).setVisible(skalViseForfallsdato(utbetalingVM));
         return container;
     }
 
@@ -53,15 +53,15 @@ public class UtbetalingPanel extends Panel {
                 .add(new AttributeAppender("class", "kursiv").setSeparator(" "));
     }
 
-    protected boolean skalViseForfallsdato(UtbetalingVM utbetalingVM) {
+    private boolean skalViseForfallsdato(UtbetalingVM utbetalingVM) {
         return !isUtbetalt(utbetalingVM) && hasForfallsdato(utbetalingVM);
     }
 
-    protected boolean isUtbetalt(UtbetalingVM utbetalingVM) {
+    private boolean isUtbetalt(UtbetalingVM utbetalingVM) {
         return utbetalingVM.getUtbetalingDato() != null;
     }
 
-    protected boolean hasForfallsdato(UtbetalingVM utbetalingVM) {
+    private boolean hasForfallsdato(UtbetalingVM utbetalingVM) {
         return utbetalingVM.getForfallsDato() != null;
     }
 
