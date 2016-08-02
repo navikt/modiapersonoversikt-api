@@ -140,6 +140,14 @@ jQuery(document).ready(function ($) {
         $('.vis-alle-arbeidsgivere').hide();
     }
 
+    function visAlleKommendeUtbetalinger() {
+        var utbetalinger = $('.lamell.selected .kommende-utbetalinger ul li');
+        $.each(utbetalinger, function(index, value) {
+            $(utbetalinger[index]).css('display','block')
+        });
+        $('.vis-alle-kommende-utbetalinger').hide();
+    }
+
     function gjennomfoerAvansertSok() {
         var personsokElement = $('.main > .personsok');
         if (personsokElement.is(":visible")) {
