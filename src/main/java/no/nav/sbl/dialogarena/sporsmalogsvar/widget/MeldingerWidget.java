@@ -41,7 +41,7 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
         return on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
     }
 
-    private static final Transformer<List<Melding>, WidgetMeldingVM> TIL_MELDINGVM = traad -> new WidgetMeldingVM(traad);
+    private static final Transformer<List<Melding>, WidgetMeldingVM> TIL_MELDINGVM = (traad) -> new WidgetMeldingVM(traad);
 
     @RunOnEvents(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER)
     public void meldingSendtTilBruker(AjaxRequestTarget target) {

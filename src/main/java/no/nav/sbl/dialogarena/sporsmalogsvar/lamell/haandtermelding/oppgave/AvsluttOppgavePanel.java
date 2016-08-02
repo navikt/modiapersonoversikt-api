@@ -35,7 +35,7 @@ public class AvsluttOppgavePanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final Optional<WSOppgave> oppgave = oppgaveId.map(id1 -> gsakService.hentOppgave(id1));
+        final Optional<WSOppgave> oppgave = oppgaveId.map((id1) -> gsakService.hentOppgave(id1));
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackAvsluttOppgave");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);

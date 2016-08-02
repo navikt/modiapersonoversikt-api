@@ -138,7 +138,7 @@ public class InnboksVM implements Serializable {
         };
     }
 
-    private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = meldinger -> {
+    private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = (meldinger) -> {
         List<Melding> meldingerITraad = on(meldinger).collect(Melding.NYESTE_FORST);
         List<MeldingVM> meldingVMTraad = new ArrayList<>();
         for (Melding melding : meldingerITraad) {

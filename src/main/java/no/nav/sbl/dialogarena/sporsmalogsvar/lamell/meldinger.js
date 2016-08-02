@@ -24,7 +24,7 @@ var Meldinger = (function () {
             $(e.target).closest('.meldingsforhandsvisning').addClass('is-focused');
         }).on('blur', '.meldingsforhandsvisning input', function (e) {
             $(e.target).closest('.meldingsforhandsvisning').removeClass('is-focused');
-        })
+        });
     };
 
     return {

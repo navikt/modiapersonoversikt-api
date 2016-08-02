@@ -104,11 +104,11 @@ public class MeldingVM implements Serializable {
 
     public static final Comparator<MeldingVM> NYESTE_FORST = (o1, o2) -> o2.melding.getVisningsDato().compareTo(o1.melding.getVisningsDato());
 
-    public static final Transformer<MeldingVM, String> ID = meldingVM -> meldingVM.melding.id;
+    public static final Transformer<MeldingVM, String> ID = (meldingVM) -> meldingVM.melding.id;
 
-    public static final Transformer<MeldingVM, String> TRAAD_ID = meldingVM -> meldingVM.melding.traadId;
+    public static final Transformer<MeldingVM, String> TRAAD_ID = (meldingVM) -> meldingVM.melding.traadId;
 
-    public static final Transformer<MeldingVM, Boolean> FEILSENDT = meldingVM -> meldingVM.erFeilsendt();
+    public static final Transformer<MeldingVM, Boolean> FEILSENDT = (meldingVM) -> meldingVM.erFeilsendt();
 
     @Override
     public boolean equals(Object obj) {
