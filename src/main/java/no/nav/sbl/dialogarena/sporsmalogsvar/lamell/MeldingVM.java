@@ -20,7 +20,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtil
 public class MeldingVM implements Serializable {
 
     public static final String NAV_LOGO_SVG = "nav-logo.svg";
-    public static final String BRUKER_LOGO_SVG = "personikon.svg";
+    public static final String BRUKER_LOGO_SVG = "meldinger/personikon.svg";
     public static final String NAV_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.nav";
     public static final String BRUKER_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.bruker";
     public final Melding melding;
@@ -104,11 +104,11 @@ public class MeldingVM implements Serializable {
 
     public static final Comparator<MeldingVM> NYESTE_FORST = (o1, o2) -> o2.melding.getVisningsDato().compareTo(o1.melding.getVisningsDato());
 
-    public static final Transformer<MeldingVM, String> ID = meldingVM -> meldingVM.melding.id;
+    public static final Transformer<MeldingVM, String> ID = (meldingVM) -> meldingVM.melding.id;
 
-    public static final Transformer<MeldingVM, String> TRAAD_ID = meldingVM -> meldingVM.melding.traadId;
+    public static final Transformer<MeldingVM, String> TRAAD_ID = (meldingVM) -> meldingVM.melding.traadId;
 
-    public static final Transformer<MeldingVM, Boolean> FEILSENDT = meldingVM -> meldingVM.erFeilsendt();
+    public static final Transformer<MeldingVM, Boolean> FEILSENDT = (meldingVM) -> meldingVM.erFeilsendt();
 
     @Override
     public boolean equals(Object obj) {

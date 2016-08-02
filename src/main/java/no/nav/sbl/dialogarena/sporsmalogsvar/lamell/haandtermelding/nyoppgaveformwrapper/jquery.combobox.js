@@ -15,7 +15,7 @@
             var currentCategory = undefined;
             $.each(items, function (index, item) {
                 var li;
-                if (item.category != currentCategory) {
+                if (item.category !== currentCategory) {
                     $('<li>' + item.category + '</li>')
                         .addClass('ui-autocomplete-category')
                         .addClass(item.category)
@@ -78,7 +78,7 @@
                 .click(function () {
                     $(this).siblings('button').click();
                 });
-            var widget = this.input.autocomplete('widget').wrap('<div class="ui-autocomplete-wrapper" />');
+            this.input.autocomplete('widget').wrap('<div class="ui-autocomplete-wrapper" />');
 
             this.input.on('keydown', function (e) {
                 //Sjekker at det er en pil-tast som har blitt trykkt og at listen ikke redan er åpen.
@@ -198,5 +198,4 @@
         }
     })
     ;
-})
-(jQuery);
+})(jQuery);

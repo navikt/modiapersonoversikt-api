@@ -163,7 +163,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
-        return melding -> {
+        return (melding) -> {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),
                     resourceId(""),
@@ -179,15 +179,12 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         };
     }
 
-    private final Transformer<Melding, Melding> journalfortTemaTilTemanavn = new Transformer<Melding, Melding>() {
-        @Override
-        public Melding transform(Melding melding) {
-            if (melding.journalfortTema != null) {
-                String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
-                melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
-            }
-            return melding;
+    private final Transformer<Melding, Melding> journalfortTemaTilTemanavn = (melding) -> {
+        if (melding.journalfortTema != null) {
+            String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
+            melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
         }
+        return melding;
     };
 
 }

@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Helper;
-import com.github.jknack.handlebars.Options;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -62,17 +61,11 @@ public class PdfUtils {
     private static Map<String, Helper<?>> generateHelpers() {
         HashMap<String, Helper<?>> result = new HashMap<>();
 
-        Helper hentMeldingHelper = (Helper<Melding>) (o, options) -> {
-            Melding melding = finnMelding(options.context);
-            return melding.navIdent;
-        };
+        Helper hentMeldingHelper = (Helper<Melding>) (o, options) -> finnMelding(options.context).navIdent;
 
-        Helper formaterDatoHelper = new Helper<DateTime>() {
-            @Override
-            public CharSequence apply(DateTime dato, Options options) throws IOException {
-                Locale locale = new Locale("nb", "no");
-                return dato.toString("d. MMMM yyyy HH:mm", locale);
-            }
+        Helper formaterDatoHelper = (dato, options) -> {
+            Locale locale = new Locale("nb", "no");
+            return ((DateTime) dato).toString("d. MMMM yyyy HH:mm", locale);
         };
 
         result.put("hentMeldingHelper", hentMeldingHelper);

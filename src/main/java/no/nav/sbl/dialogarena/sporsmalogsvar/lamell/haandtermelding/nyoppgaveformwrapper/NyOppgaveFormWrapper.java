@@ -80,6 +80,12 @@ public class NyOppgaveFormWrapper extends Panel {
         final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanelError.setOutputMarkupId(true);
 
+        initForm(innboksVM, temaVelger, beskrivelse, feedbackPanelSuccess, feedbackPanelError);
+
+        add(form, feedbackPanelSuccess);
+    }
+
+    private void initForm(final InnboksVM innboksVM, MarkupContainer temaVelger, TextArea<String> beskrivelse, final WebMarkupContainer feedbackPanelSuccess, final FeedbackPanel feedbackPanelError) {
         form.setOutputMarkupId(true);
         form.add(visibleIf(not(oppgaveOpprettet)));
         form.add(
@@ -99,7 +105,12 @@ public class NyOppgaveFormWrapper extends Panel {
         );
 
 
-        form.add(new IndicatingAjaxButtonWithImageUrl("opprettoppgave", "../img/ajaxloader/svart/loader_svart_48.gif") {
+        form.add(setupOpprettOppgaveKnapp(innboksVM, feedbackPanelSuccess, feedbackPanelError));
+        add(form, feedbackPanelSuccess);
+    }
+
+    private IndicatingAjaxButtonWithImageUrl setupOpprettOppgaveKnapp(final InnboksVM innboksVM, final WebMarkupContainer feedbackPanelSuccess, final FeedbackPanel feedbackPanelError) {
+        return new IndicatingAjaxButtonWithImageUrl("opprettoppgave", "../img/ajaxloader/svart/loader_svart_48.gif") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 Timer timer = createTimer("hendelse.opprettoppgave.time");
@@ -125,9 +136,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 target.add(feedbackPanelError);
                 FeedbackLabel.addFormLabelsToTarget(target, form);
             }
-        });
-
-        add(form, feedbackPanelSuccess);
+        };
     }
 
     public final void nullstillSkjema() {
