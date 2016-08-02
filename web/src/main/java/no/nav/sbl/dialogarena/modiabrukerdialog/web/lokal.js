@@ -140,12 +140,12 @@ jQuery(document).ready(function ($) {
         $('.vis-alle-arbeidsgivere').hide();
     }
 
-    function visAlleKommendeUtbetalinger() {
-        var utbetalinger = $('.lamell.selected .kommende-utbetalinger ul li');
+    function visAlleKommendeUtbetalinger(id) {
+        var utbetalinger = $(id).parent().find(".kommende-utbetalinger ul li")
         $.each(utbetalinger, function(index, value) {
             $(utbetalinger[index]).css('display','block')
         });
-        $('.vis-alle-kommende-utbetalinger').hide();
+        $(id).parent().find('.vis-alle-kommende-utbetalinger').hide();
     }
 
     function gjennomfoerAvansertSok() {
