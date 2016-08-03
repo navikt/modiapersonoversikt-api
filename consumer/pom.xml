@@ -192,6 +192,11 @@
             <artifactId>varsler</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+
 
         <!--Dialogarena-->
         <dependency>
