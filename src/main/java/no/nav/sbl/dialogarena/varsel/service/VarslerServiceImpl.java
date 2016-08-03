@@ -2,11 +2,12 @@ package no.nav.sbl.dialogarena.varsel.service;
 
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.binding.BrukervarselV1;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.Person;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.Varselbestilling;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.HentVarselForBrukerRequest;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.HentVarselForBrukerResponse;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSPerson;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarsel;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarselbestilling;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerRequest;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerResponse;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
@@ -30,16 +31,13 @@ public class VarslerServiceImpl implements VarslerService {
 
     @Override
     public Optional<List<Varsel>> hentAlleVarsler(String fnr) {
-        Person bruker = new Person();
-        bruker.setIdent(fnr);
-
-        HentVarselForBrukerRequest request = new HentVarselForBrukerRequest();
-        request.setBruker(bruker);
+        WSHentVarselForBrukerRequest request = new WSHentVarselForBrukerRequest()
+                .withBruker(new WSPerson().withIdent(fnr));
 
         try {
-            HentVarselForBrukerResponse response = brukervarsel.hentVarselForBruker(request);
+            WSHentVarselForBrukerResponse response = brukervarsel.hentVarselForBruker(request);
 
-            List<Varselbestilling> varselbestillingsliste = response.getBrukervarsel().getVarselbestillingListe();
+            List<WSVarselbestilling> varselbestillingsliste = response.getBrukervarsel().getVarselbestillingListe();
 
             List<Varsel> varsler = varselbestillingsliste.stream()
                     .map(TIL_VARSEL)
@@ -57,9 +55,9 @@ public class VarslerServiceImpl implements VarslerService {
 
     }
 
-    private static Function<XMLGregorianCalendar, DateTime> TIL_DATETIME = xmlGregorianCalendar -> new DateTime(xmlGregorianCalendar.toGregorianCalendar().getTime());
+    private static Function<XMLGregorianCalendar, DateTime> TIL_DATETIME = (xmlGregorianCalendar) -> new DateTime(xmlGregorianCalendar.toGregorianCalendar().getTime());
 
-    private static final Function<no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.Varsel, VarselMelding> TIL_VARSEL_MELDING = varsel -> {
+    private static final Function<WSVarsel, VarselMelding> TIL_VARSEL_MELDING = (varsel) -> {
         String kanal = varsel.getKanal();
         String innhold = varsel.getVarseltekst();
         String mottakerInformasjon = varsel.getKontaktinfo();
@@ -82,7 +80,7 @@ public class VarslerServiceImpl implements VarslerService {
     };
 
 
-    private static Function<no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.Varselbestilling, Varsel> TIL_VARSEL = varselBestilling -> {
+    private static Function<WSVarselbestilling, Varsel> TIL_VARSEL = (varselBestilling) -> {
         String varselType = varselBestilling.getVarseltypeId();
 
         DateTime sendtTidspunkt = TIL_DATETIME.apply(varselBestilling.getBestilt());
@@ -95,8 +93,6 @@ public class VarslerServiceImpl implements VarslerService {
         List<VarselMelding> varselMeldingliste = varselBestilling.getVarselListe().stream()
                 .map(TIL_VARSEL_MELDING)
                 .filter(varselmelding -> varselmelding.utsendingsTidspunkt != null)
-                // TODO Trenger vi å sjekke på statuskode? Hvor skal dette gjøres
-//                .filter(varselmelding -> varselmelding.statusKode.equals(STATUSKODE_OK))
                 .collect(toList());
 
         return new Varsel(varselType, sendtTidspunkt, status, varselMeldingliste);

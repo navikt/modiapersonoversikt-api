@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.varsel.service;
 
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.binding.BrukervarselV1;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.binding.HentVarselForBrukerUgyldigInput;
-import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.HentVarselForBrukerRequest;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.HentVarselForBrukerUgyldigInput;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,7 +29,7 @@ public class VarslerServiceImplTest {
 
     @Test
     public void skalIkkeTryneHeleVerdenOmDetSkjerSoapFaults() throws HentVarselForBrukerUgyldigInput {
-        when(brukervarsel.hentVarselForBruker(any(HentVarselForBrukerRequest.class))).thenThrow(SOAPFaultException.class);
+        when(brukervarsel.hentVarselForBruker(any(WSHentVarselForBrukerRequest.class))).thenThrow(SOAPFaultException.class);
         Optional<List<Varsel>> varsler = impl.hentAlleVarsler("10108000398");
 
         assertTrue(!varsler.isPresent());
