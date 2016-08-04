@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Kontaktinformasjon = ({ kanal, mottakerInformasjon, resources }) => {
+function Kontaktinformasjon({ kanal, mottakerInformasjon, resources }) {
     const kanalKontaktet = resources.get(`varsel.tilbakemelding.${kanal}`);
 
     const kontaktInformasjon = kanal !== 'NAV.NO' ? mottakerInformasjon : '';
@@ -11,6 +11,6 @@ const Kontaktinformasjon = ({ kanal, mottakerInformasjon, resources }) => {
           {kontaktInformasjon}
       </span>
     );
-};
+}
 
 export default Kontaktinformasjon;
