@@ -28,7 +28,7 @@ describe('SkrivestotteStore', () => {
 
     it('setter valgt tekst hvis tekster finnes', () => {
         const tekster = [{ id: 1 }];
-        const store = new SkrivestotteStore(assign({}, initialState, { tekster: tekster }));
+        const store = new SkrivestotteStore(assign({}, initialState, { tekster }));
 
         expect(store.state.valgtTekst).to.equal(tekster[0]);
     });
@@ -51,7 +51,7 @@ describe('SkrivestotteStore', () => {
     it('pil opp ger førre tekst men er ikke cyklisk', () => {
         event.which = 38;
         event.keyCode = 38;
-        const store = new SkrivestotteStore(assign({}, initialState, { tekster: tekster }));
+        const store = new SkrivestotteStore(assign({}, initialState, { tekster }));
 
         store.onKeyDown([], event);
 
@@ -65,7 +65,7 @@ describe('SkrivestotteStore', () => {
     it('pil ned ger neste tekst men er ikke cyklisk', () => {
         event.which = 40;
         event.keyCode = 40;
-        const store = new SkrivestotteStore(assign({}, initialState, { tekster: tekster }));
+        const store = new SkrivestotteStore(assign({}, initialState, { tekster }));
         store.state.valgtTekst = t3;
 
         store.onKeyDown([], event);

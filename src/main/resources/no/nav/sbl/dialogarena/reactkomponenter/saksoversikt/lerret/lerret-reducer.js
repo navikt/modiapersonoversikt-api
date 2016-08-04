@@ -51,7 +51,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     const valgtTema = state.valgtTema? state.valgtTema : _sakstema[0];
     return {
         ...state,
-        status: status,
+        status,
         valgtTema,
         filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true },
         data: {

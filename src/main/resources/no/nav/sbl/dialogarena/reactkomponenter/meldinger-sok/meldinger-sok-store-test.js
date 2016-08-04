@@ -27,7 +27,7 @@ describe('MeldingerSokStore', () => {
 
     it('setter valgt tråd hvis tråder finnes', () => {
         const traader = [{ id: 1 }, { id: 2 }];
-        const store = new MeldingerSokStore(assign({}, initialState, { traader: traader }));
+        const store = new MeldingerSokStore(assign({}, initialState, { traader }));
 
         expect(store.state.valgtTraad).to.equal(traader[0]);
     });
@@ -35,7 +35,7 @@ describe('MeldingerSokStore', () => {
     it('indekserer ved update', () => {
         sinon.spy(Ajax, 'get');
         const fnr = '12345678910';
-        const store = new MeldingerSokStore(assign({}, initialState, { fnr: fnr }));
+        const store = new MeldingerSokStore(assign({}, initialState, { fnr }));
 
         store.update();
 

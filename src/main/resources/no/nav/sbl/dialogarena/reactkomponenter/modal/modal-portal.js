@@ -14,9 +14,9 @@ function createAriaOptional(name, data) {
     if (tagComponent.length > 1) {
         className = tagComponent[1];
     }
-    const element = React.createElement(tagType, { id: id, className: className }, data.text);
+    const element = React.createElement(tagType, { id, className }, data.text);
     return {
-        id: id,
+        id,
         hidden: data.show ? null : element,
         visible: data.show ? element : null
     };

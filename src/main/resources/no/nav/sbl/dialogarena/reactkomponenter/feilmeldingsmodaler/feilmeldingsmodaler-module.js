@@ -6,9 +6,9 @@ import OppgiBegrunnelse from './oppgi-begrunnelse';
 
 // Legg til feilmeldingsmodaler her
 export default {
-    FlereApneVinduer: FlereApneVinduer,
-    ForkasteEndringer: ForkasteEndringer,
-    SesjonenHarLoptUt: SesjonenHarLoptUt,
-    TekniskFeil: TekniskFeil,
-    OppgiBegrunnelse: OppgiBegrunnelse
+    FlereApneVinduer,
+    ForkasteEndringer,
+    SesjonenHarLoptUt,
+    TekniskFeil,
+    OppgiBegrunnelse
 };
