@@ -145,9 +145,9 @@ const ModalPortal = React.createClass({
                 <iframe src="about:blank" className="cover" aria-hidden/>
                 {title.hidden}
                 {description.hidden}
-                <div className="centering" style={this.props.width ? {'width': this.props.width + 'px'} : null}>
+                <div className="centering" style={this.props.width ? { 'width': this.props.width + 'px' } : null}>
                     <div className="content" ref="content"
-                         style={this.props.height ? {'height': this.props.height + 'px', 'marginTop': (this.props.height / -2) + 'px'} : null}>
+                         style={this.props.height ? { 'height': this.props.height + 'px', 'marginTop': (this.props.height / -2) + 'px' } : null}>
                         {title.visible}
                         {description.visible}
                         {children}

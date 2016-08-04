@@ -10,7 +10,7 @@ const styling = {
 
 class TekniskFeil extends React.Component {
     render() {
-        const {isOpen, title, closeButton, tekst} = this.props;
+        const { isOpen, title, closeButton, tekst } = this.props;
         const modalProps = { isOpen, title, closeButton };
         return (
             <Modal {...modalProps} width={600} height={180} onClosing={() => {return false;}} ref="modal">

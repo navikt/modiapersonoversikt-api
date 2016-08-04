@@ -21,7 +21,7 @@ describe('HTTP request', () => {
 
         expect(Ajax.toPromise.calledOnce).to.equal(true);
 
-        expect(Ajax.toPromise.calledWith(sinon.match({header: {['Content-Type']: 'text/html'}}))).to.equal(true);
+        expect(Ajax.toPromise.calledWith(sinon.match({ header: { ['Content-Type']: 'text/html' } }))).to.equal(true);
     });
 
     it('should use contentType \'application/json\' if no contentType in RequestModifier', () => {
@@ -29,6 +29,6 @@ describe('HTTP request', () => {
 
         expect(Ajax.toPromise.calledOnce).to.equal(true);
 
-        expect(Ajax.toPromise.calledWith(sinon.match({header: {['Content-Type']: 'application/json'}}))).to.equal(true);
+        expect(Ajax.toPromise.calledWith(sinon.match({ header: { ['Content-Type']: 'application/json' } }))).to.equal(true);
     });
 });

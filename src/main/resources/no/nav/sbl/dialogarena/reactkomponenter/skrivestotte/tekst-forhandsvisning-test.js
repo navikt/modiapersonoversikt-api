@@ -8,7 +8,7 @@ import TekstForhandsvisning from './tekst-forhandsvisning';
 import TestUtils from 'react-addons-test-utils';
 
 describe('TekstForhandsvisning', () => {
-    const tekst = {innhold: {'nb_NO': 'tekst'}, tags: []};
+    const tekst = { innhold: { 'nb_NO': 'tekst' }, tags: [] };
 
     it('splitter tekst i avsnitt', () => {
         sinon.spy(Utils, 'tilParagraf');

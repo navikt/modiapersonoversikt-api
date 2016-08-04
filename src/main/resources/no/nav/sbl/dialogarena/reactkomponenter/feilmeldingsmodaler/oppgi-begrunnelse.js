@@ -39,7 +39,7 @@ class OppgiBegrunnelse extends React.Component {
     }
 
     render() {
-        const {isOpen} = this.props;
+        const { isOpen } = this.props;
         const modalProps = { isOpen };
         const feilmelding = (<span className="feedbacklabel" aria-hidden="false"
                                    aria-live="assertive"
@@ -47,7 +47,7 @@ class OppgiBegrunnelse extends React.Component {
 
         return (
             <Modal {...modalProps} width={600} height={381}
-                                   onClosing={() => {this.setState({showFeilmelding: false}); return true;}}
+                                   onClosing={() => {this.setState({ showFeilmelding: false }); return true;}}
                                    ref="modal">
                 <section className="bekreft-dialog" style={OppgiBegrunnelse.styling.section}>
                     <h1 className="robust-ikon-hjelp-strek"

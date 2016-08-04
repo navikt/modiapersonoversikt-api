@@ -10,7 +10,7 @@ function onClickProxy(tag, event) {
 
 class TekstForhandsvisning extends React.Component {
     render() {
-        const tekst = this.props.tekst.hasOwnProperty('innhold') ? this.props.tekst : {innhold: {nb_NO: ''}, tags: []};
+        const tekst = this.props.tekst.hasOwnProperty('innhold') ? this.props.tekst : { innhold: { nb_NO: '' }, tags: [] };
 
         const paragrafer = Utils.getInnhold(tekst, this.props.locale)
             .split(/[\r\n]+/)

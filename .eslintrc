@@ -8,7 +8,7 @@
     "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
     "react/jsx-indent": "off",
     "react/jsx-indent-props": "off",
-    "import/imports-first": [1, ""]
+    "import/imports-first": [2, ""]
   },
   "globals": {
     "$": false,

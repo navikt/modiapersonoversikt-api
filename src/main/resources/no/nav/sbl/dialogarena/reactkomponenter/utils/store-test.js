@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import './../test-config';
 import Store from './store';
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 class TestStore extends Store {
     constructor(props) {
@@ -16,7 +16,7 @@ class TestStore extends Store {
 
 describe('Store', () => {
     it('Tar vare på initial state', () => {
-        const state = {myState: 1};
+        const state = { myState: 1 };
         const store = new Store(state);
 
         expect(store.getState()).to.equal(state);
@@ -37,7 +37,7 @@ describe('Store', () => {
         ts.addListener(listener1);
         ts.addListener(listener2);
 
-        ts.setState({tull: 'ball'});
+        ts.setState({ tull: 'ball' });
 
         expect(resp1).to.equal(true);
         expect(resp2).to.equal(true);
@@ -58,7 +58,7 @@ describe('Store', () => {
         ts.addListener(listener1);
         ts.addListener(listener2);
 
-        ts.setState({tull: 'ball'});
+        ts.setState({ tull: 'ball' });
 
         expect(resp1).to.equal(true);
         expect(resp2).to.equal(true);
@@ -67,7 +67,7 @@ describe('Store', () => {
         resp2 = null;
         ts.removeListener(listener1);
 
-        ts.setState({mer: 'tullball'});
+        ts.setState({ mer: 'tullball' });
 
 
         expect(resp1).to.equal(null);

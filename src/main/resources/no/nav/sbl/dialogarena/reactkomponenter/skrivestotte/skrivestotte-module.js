@@ -41,7 +41,7 @@ const Skrivestotte = React.createClass({
     componentDidMount: function componentDidMount() {
         this.store.setContainerElement(this.refs.modal.portalElement);
         this.store.addListener(this.storeChanged);
-        this.store.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
+        this.store.onChange({ fritekst: this.state.fritekst, knagger: this.state.knagger });
     },
     componentWillUnmount: function componentDidUnmount() {
         this.store.removeListener(this.storeChanged);

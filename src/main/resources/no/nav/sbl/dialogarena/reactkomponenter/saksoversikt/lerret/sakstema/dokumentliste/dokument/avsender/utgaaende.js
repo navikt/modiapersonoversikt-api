@@ -13,7 +13,7 @@ const Utgaaende = ({ mottaker, mottakerNavn }) => {
     const dokumentMottaker = <span className="typo-egennavn"> {mottakerNavn.toLowerCase()}</span>;
 
     const til = mottaker === 'SLUTTBRUKER' ? <noscript/> :
-        <FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: dokumentMottaker} }/>;
+        <FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: dokumentMottaker } }/>;
 
     return <span className="dokument-avsender">{fra} {til}</span>;
 };

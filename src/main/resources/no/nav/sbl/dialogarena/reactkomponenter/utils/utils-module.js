@@ -69,7 +69,7 @@ export function leggTilLenkerTags(innhold) {
 
 export function tilParagraf(avsnitt, key) {
     const sanitizedAvsnitt = sanitizer(avsnitt, { allowedTags: ['a', 'em'] });
-    return <p key={key} dangerouslySetInnerHTML={{__html: sanitizedAvsnitt}}></p>;
+    return <p key={key} dangerouslySetInnerHTML={{ __html: sanitizedAvsnitt }}></p>;
 }
 
 export function omit(obj, filterkeys) {

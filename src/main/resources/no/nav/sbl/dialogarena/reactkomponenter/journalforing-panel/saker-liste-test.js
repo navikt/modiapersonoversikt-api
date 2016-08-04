@@ -8,7 +8,7 @@ import SakerForTema from './saker-for-tema';
 import TestUtils from 'react-addons-test-utils';
 
 describe('SakerListe', () => {
-    const lagSak = (tema) => ({temaKode: tema, temaNavn: tema});
+    const lagSak = (tema) => ({ temaKode: tema, temaNavn: tema });
 
     const setup = (saker) => {
         const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker}/>);
@@ -65,7 +65,7 @@ describe('SakerListe', () => {
             lagSak('tema2'),
             lagSak('BIL')
         ];
-        const sakerForTema = setupMedTemagruppe(saker, 'ARBD', {ARBD: ['tema1', 'tema2']});
+        const sakerForTema = setupMedTemagruppe(saker, 'ARBD', { ARBD: ['tema1', 'tema2'] });
 
         expect(sakerForTema.map(elem => elem.props.tema)).to.eql(['tema1', 'tema2', 'BIL', 'DAG']);
     });
@@ -76,7 +76,7 @@ describe('SakerListe', () => {
             lagSak('BIL'),
             lagSak('DAG')
         ];
-        const sakerForTema = setupMedTemagruppe(saker, 'ARBD', {ARBD: ['tema1']});
+        const sakerForTema = setupMedTemagruppe(saker, 'ARBD', { ARBD: ['tema1'] });
 
         expect(sakerForTema.map(elem => elem.props.erEkspandert)).to.eql([true, false, false]);
     });

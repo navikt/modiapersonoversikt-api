@@ -15,7 +15,7 @@ class VelgSak extends React.Component {
     }
 
     endreKategori(kategori) {
-        this.setState({valgtKategori: kategori});
+        this.setState({ valgtKategori: kategori });
     }
 
     render() {

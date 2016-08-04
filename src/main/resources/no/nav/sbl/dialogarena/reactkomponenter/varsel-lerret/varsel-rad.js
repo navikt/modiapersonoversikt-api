@@ -1,6 +1,6 @@
 import React from 'react';
 import VarselRadElement from './varsel-rad-element';
-import { prettyDate} from './dato-formatering';
+import { prettyDate } from './dato-formatering';
 
 class VarselRad extends React.Component {
     constructor(props) {

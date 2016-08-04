@@ -116,9 +116,9 @@ const KnaggInput = React.createClass({
     },
     focusHighlighting: function focusHighlighting(event) {
         if (event.type === 'focus') {
-            this.setState({focus: true});
+            this.setState({ focus: true });
         } else {
-            this.setState({focus: false});
+            this.setState({ focus: false });
         }
     },
     render: function render() {

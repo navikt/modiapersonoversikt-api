@@ -13,7 +13,7 @@ class TekstListeKomponent extends React.Component {
                 <input id={'tekstElementRadio' + this.props.tekst.key} name="tekstListeRadio" type="radio"
                        readOnly checked={this.props.tekst === this.props.valgtTekst}/>
                 <label htmlFor={'tekstElementRadio' + this.props.tekst.key}>
-                    <span dangerouslySetInnerHTML={{__html: this.props.tekst.tittel}}></span>
+                    <span dangerouslySetInnerHTML={{ __html: this.props.tekst.tittel }}></span>
                     <span className="vekk">{' | ' + Utils.getInnhold(this.props.tekst, this.props.locale)}</span>
                 </label>
             </div>

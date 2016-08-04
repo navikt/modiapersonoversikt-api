@@ -34,7 +34,7 @@ class MeldingerSokStore extends Store {
         });
         this.state.indeksert = true;
 
-        this.onChange({target: {value: this.state.fritekst}});
+        this.onChange({ target: { value: this.state.fritekst } });
 
         this.fireUpdate(this.listeners);
     }

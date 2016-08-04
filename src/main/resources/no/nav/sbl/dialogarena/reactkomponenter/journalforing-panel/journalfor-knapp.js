@@ -27,7 +27,7 @@ class JournalforKnapp extends React.Component {
             this.props.traadJournalfort();
         });
         journalforPromise.fail(()=> {
-            this.setState({sender: false});
+            this.setState({ sender: false });
             this.props.feiletCallback();
         });
     }

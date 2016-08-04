@@ -1,5 +1,5 @@
 import React from 'react';
-import {generateId} from '../utils/utils-module';
+import { generateId } from '../utils/utils-module';
 
 class TypeValg extends React.Component {
     constructor(props) {

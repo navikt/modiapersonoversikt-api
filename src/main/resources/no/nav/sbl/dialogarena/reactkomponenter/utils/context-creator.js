@@ -4,7 +4,7 @@ function createProviderComponent(contextTypes) {
 
     class Provider extends Component {
         getChildContext() {
-            const {children, ...props} = this.props;
+            const { children, ...props } = this.props;
             return props;
         }
 
@@ -19,7 +19,7 @@ function createProviderComponent(contextTypes) {
     if (contextTypes.hasOwnProperty('children')) {
         Provider.propTypes = contextTypes;
     } else {
-        Provider.propTypes = {...contextTypes, children: PropTypes.element.isRequired};
+        Provider.propTypes = { ...contextTypes, children: PropTypes.element.isRequired };
     }
 
     return Provider;

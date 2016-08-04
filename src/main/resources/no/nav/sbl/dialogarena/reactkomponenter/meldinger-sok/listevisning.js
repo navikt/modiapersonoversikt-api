@@ -39,7 +39,7 @@ class Listevisning extends React.Component {
                 <label htmlFor={`melding ${traad.key}`} className={cls}>
                     <div className={traad.statusKlasse} aria-hidden="true"></div>
                     <p className="vekk">{statusIkonTekst}</p>
-                    <p dangerouslySetInnerHTML={{__html: dato }}></p>
+                    <p dangerouslySetInnerHTML={{ __html: dato }}></p>
                     <p className={'meldingstatus'} dangerouslySetInnerHTML={{ __html: meldingsStatus }}></p>
                     <p className="fritekst" dangerouslySetInnerHTML={{ __html: innhold }}></p>
                 </label>

@@ -45,7 +45,7 @@ function sendToWicket(url, component, action, data) {
         'u': url,
         'c': component,
         'ep': [
-            {'name': action, 'value': JSON.stringify(data)}
+            { 'name': action, 'value': JSON.stringify(data) }
         ]
     });
 

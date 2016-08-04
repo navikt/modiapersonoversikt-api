@@ -12,7 +12,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
 
     toggleEkspandering(event) {
         event.preventDefault();
-        this.setState({ekspandert: !this.state.ekspandert});
+        this.setState({ ekspandert: !this.state.ekspandert });
     }
 
     velgOkonomiskSosialhelp(event) {
