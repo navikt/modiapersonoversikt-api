@@ -9,7 +9,7 @@ export const pilnavigeringScroll = (event, props) => {
     const parent = document.querySelector(".saksoversikt-liste");
     const valgtTema = props.valgtTema;
 
-    let index = 0;
+    let index;
     switch (event.keyCode) {
         //Pil opp
         case 38:

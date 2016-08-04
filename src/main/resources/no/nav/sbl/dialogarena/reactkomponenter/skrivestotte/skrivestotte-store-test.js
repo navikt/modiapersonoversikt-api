@@ -78,7 +78,6 @@ describe('SkrivestotteStore', () => {
 
     it('hent søk resultater gør et søk', () => {
         sinon.spy(Ajax, 'get');
-        const _ = new SkrivestotteStore(assign({}, initialState, {tekster: tekster}));
         const fritekst = 'helloWorld';
         const knagger = 'earth';
         SkrivestotteStore._sok(fritekst, knagger);
