@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.varsel.service;
 
-import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
-import no.nav.melding.domene.brukerdialog.varsler.v1.meldinger.WSHentVarslerRequest;
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.HentVarselForBrukerUgyldigInput;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.xml.ws.soap.SOAPFaultException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -21,16 +22,16 @@ import static org.mockito.Mockito.when;
 public class VarslerServiceImplTest {
 
     @Mock
-    VarslerPorttype ws;
+    private BrukervarselV1 brukervarsel;
 
     @InjectMocks
     VarslerServiceImpl impl;
 
     @Test
-    public void skalIkkeTryneHeleVerdenOmDetSkjerSoapFaults() {
-        when(ws.hentVarsler(any(WSHentVarslerRequest.class))).thenThrow(SOAPFaultException.class);
+    public void skalIkkeTryneHeleVerdenOmDetSkjerSoapFaults() throws HentVarselForBrukerUgyldigInput {
+        when(brukervarsel.hentVarselForBruker(any(WSHentVarselForBrukerRequest.class))).thenThrow(SOAPFaultException.class);
         Optional<List<Varsel>> varsler = impl.hentAlleVarsler("10108000398");
 
-        assertTrue(!varsler.isSome());
+        assertTrue(!varsler.isPresent());
     }
 }

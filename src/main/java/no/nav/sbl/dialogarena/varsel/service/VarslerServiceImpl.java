@@ -1,25 +1,25 @@
 package no.nav.sbl.dialogarena.varsel.service;
 
-import no.nav.melding.domene.brukerdialog.varsler.v1.VarslerPorttype;
-import no.nav.melding.domene.brukerdialog.varsler.v1.meldinger.*;
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
-import no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
-import org.apache.commons.collections15.Transformer;
+import no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSPerson;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarsel;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.informasjon.WSVarselbestilling;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerRequest;
+import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBrukerResponse;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.*;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.varsel.domain.Varsel.*;
-import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.STATUSKODE;
-import static no.nav.sbl.dialogarena.varsel.domain.Varsel.VarselMelding.UTSENDINGSTIDSPUNKT;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class VarslerServiceImpl implements VarslerService {
@@ -27,62 +27,74 @@ public class VarslerServiceImpl implements VarslerService {
     private static final Logger log = getLogger(VarslerServiceImpl.class);
 
     @Inject
-    private VarslerPorttype ws;
+    private BrukervarselV1 brukervarsel;
 
     @Override
     public Optional<List<Varsel>> hentAlleVarsler(String fnr) {
+        WSHentVarselForBrukerRequest request = new WSHentVarselForBrukerRequest()
+                .withBruker(new WSPerson().withIdent(fnr));
+
         try {
-            WSHentVarslerResponse response = ws.hentVarsler(new WSHentVarslerRequest().withIdent(new WSFnr().withValue(fnr)));
+            WSHentVarselForBrukerResponse response = brukervarsel.hentVarselForBruker(request);
 
-            List<Varsel> varsler = on(response.getVarselListe().getVarsel())
-                .map(TIL_VARSEL)
-                .filter(where(STATUS, equalTo(STATUS_FERDIG)))
-                .filter(where(MELDINGLISTE, not(empty())))
-                .collect();
+            List<WSVarselbestilling> varselbestillingsliste = response.getBrukervarsel().getVarselbestillingListe();
 
-            return optional(varsler);
+            List<Varsel> varsler = varselbestillingsliste.stream()
+                    .map(TIL_VARSEL)
+                    .collect(toList());
+
+            if (varsler.size() == 0) {
+                return empty();
+            }
+
+            return of(varsler);
         } catch (Exception ex) {
             log.error("Feilet ved uthenting av varsler.", ex);
-            return none();
+            return empty();
         }
+
     }
 
-    private static Transformer<WSVarsel, Varsel> TIL_VARSEL = new Transformer<WSVarsel, Varsel>() {
-        @Override
-        public Varsel transform(WSVarsel wsVarsel) {
-            String varselType = wsVarsel.getVarseltype();
-            DateTime mottattTidspunkt = optional(wsVarsel.getMottattidspunkt()).map(TIL_DATETIME).getOrElse(null);
-            String status = wsVarsel.getStatus();
-            List<VarselMelding> meldingListe = on(wsVarsel.getMeldingListe().getMelding())
+    private static Function<XMLGregorianCalendar, DateTime> TIL_DATETIME = (xmlGregorianCalendar) -> new DateTime(xmlGregorianCalendar.toGregorianCalendar().getTime());
+
+    private static final Function<WSVarsel, VarselMelding> TIL_VARSEL_MELDING = (varsel) -> {
+        String kanal = varsel.getKanal();
+        String innhold = varsel.getVarseltekst();
+        String mottakerInformasjon = varsel.getKontaktinfo();
+        String statusKode = "";
+        XMLGregorianCalendar sendtDato = varsel.getSendt();
+        XMLGregorianCalendar distribuertDato = varsel.getDistribuert();
+        DateTime utsendingsTidpunkt = null;
+        if (sendtDato != null){
+            utsendingsTidpunkt = TIL_DATETIME.apply(sendtDato);
+        }
+        if (distribuertDato != null) {
+            utsendingsTidpunkt = TIL_DATETIME.apply(distribuertDato);
+        }
+        String feilbeskrivelse = "";
+        String epostemne = varsel.getVarseltittel();
+        String url = varsel.getVarselURL();
+
+        return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, statusKode, feilbeskrivelse, epostemne, url);
+
+    };
+
+
+    private static Function<WSVarselbestilling, Varsel> TIL_VARSEL = (varselBestilling) -> {
+        String varselType = varselBestilling.getVarseltypeId();
+
+        DateTime sendtTidspunkt = TIL_DATETIME.apply(varselBestilling.getBestilt());
+        if (varselBestilling.getSisteVarselutsendelse() != null) {
+            sendtTidspunkt = TIL_DATETIME.apply(varselBestilling.getSisteVarselutsendelse());
+        }
+
+        String status = "";
+
+        List<VarselMelding> varselMeldingliste = varselBestilling.getVarselListe().stream()
                 .map(TIL_VARSEL_MELDING)
-                .filter(where(UTSENDINGSTIDSPUNKT, not(equalTo(null))))
-                .filter(where(STATUSKODE, equalTo(STATUSKODE_OK)))
-                .collect();
+                .filter(varselmelding -> varselmelding.utsendingsTidspunkt != null)
+                .collect(toList());
 
-            return new Varsel(varselType, mottattTidspunkt, status, meldingListe);
-        }
-    };
-
-    private static final Transformer<WSMelding, VarselMelding> TIL_VARSEL_MELDING = new Transformer<WSMelding, VarselMelding>() {
-        @Override
-        public VarselMelding transform(WSMelding wsMelding) {
-            String kanal = wsMelding.getKanal();
-            String innhold = wsMelding.getInnhold();
-            String mottakerInformasjon = wsMelding.getMottakerinformasjon();
-            String statusKode = wsMelding.getStatuskode();
-            DateTime utsendingsTidpunkt = optional(wsMelding.getUtsendingstidspunkt()).map(TIL_DATETIME).getOrElse(null);
-            String feilbeskrivelse = wsMelding.getFeilbeskrivelse();
-            String epostemne = wsMelding.getEpostemne();
-            String url = wsMelding.getUrl();
-
-            return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, statusKode, feilbeskrivelse, epostemne, url);
-        }
-    };
-
-    private static final Transformer<XMLGregorianCalendar, DateTime> TIL_DATETIME = new Transformer<XMLGregorianCalendar, DateTime>() {
-        @Override
-        public DateTime transform(XMLGregorianCalendar xmlGregorianCalendar) {
-            return new DateTime(xmlGregorianCalendar.toGregorianCalendar().getTime());
-        }
+        return new Varsel(varselType, sendtTidspunkt, status, varselMeldingliste);
     };
 }
