@@ -1,6 +1,7 @@
 import React from 'react';
 import VarselRadElement from './varsel-rad-element';
-import { prettyDate} from './dato-formatering';
+import { prettyDate } from './dato-formatering';
+import { uniq } from 'lodash';
 
 class VarselRad extends React.Component {
     constructor(props) {
@@ -16,10 +17,13 @@ class VarselRad extends React.Component {
     render() {
         const varsel = this.props.varsel;
         const resources = this.props.store.getResources();
-        const datoformat = resources.getOrElse('varsel.ledetekst.rad.datoformat', 'DD. MMM, HH.mm');
-        const sendIKanal = varsel.meldingListe
-            .map((m) => resources.getOrElse('varsel.kanal.' + m.kanal, m.kanal))
-            .join(', ');
+        const datoformat = resources.getOrElse('varsel.ledetekst.rad.datoformat', 'DD. MMM');
+
+        const brukteKanaler = varsel.meldingListe
+            .map((m) => resources.getOrElse(`varsel.kanal.${m.kanal}`, m.kanal))
+            .sort();
+
+        const unikeKanaler = uniq(brukteKanaler, false).join(', ');
 
         let headerClassname = 'varsel-rad-header';
         let pilClassname = 'ekspanderingspil';
@@ -28,7 +32,9 @@ class VarselRad extends React.Component {
         if (varsel.ekspandert) {
             headerClassname += ' ekspandert';
             pilClassname += ' opp';
-            meldinger = varsel.meldingListe.map((melding) => <VarselRadElement melding={melding} store={this.props.store}/>);
+            meldinger = varsel.meldingListe
+                .sort((e1, e2) => e1.utsendingsTidspunkt < e2.utsendingsTidspunkt)
+                .map((melding) => <VarselRadElement melding={melding} store={this.props.store}/>);
         } else {
             pilClassname += ' ned';
         }
@@ -39,10 +45,12 @@ class VarselRad extends React.Component {
                 <button className={headerClassname} onClick={this.toggleEkspandert} aria-expanded={varsel.ekspandert}>
                     <span className="header-dato">{prettyDate(varsel.mottattTidspunkt, datoformat)}</span>
                     <span className="vekk"> | </span>
-                    <span className="header-type">{resources.getOrElse('varsel.varseltype.' + varsel.varselType, 'Ukjent nøkkel: ' + varsel.varselType)}</span>
+                    <span className="header-type">
+                        {resources.getOrElse(`varsel.varseltype.${varsel.varselType}`, `Ukjent nøkkel: ${varsel.varselType}`)}
+                    </span>
                     <span className="vekk"> | </span>
                     <span className="header-kanal">
-                        {sendIKanal}
+                        {unikeKanaler}
                         <i className={pilClassname} aria-hidden="true"/>
                     </span>
                 </button>
@@ -55,9 +63,8 @@ class VarselRad extends React.Component {
 }
 
 VarselRad.propTypes = {
-    'store': React.PropTypes.object.isRequired,
-    'toggleEkspandert': React.PropTypes.func.isRequired,
-    'varsel': React.PropTypes.object.isRequired
+    store: React.PropTypes.object.isRequired,
+    varsel: React.PropTypes.object.isRequired
 };
 
 export default VarselRad;

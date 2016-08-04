@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 
 class FilterHeader extends React.Component {
     constructor(props) {
         super(props);
     }
+
     render() {
-        const {style} = this.props;
+        const { style } = this.props;
         return (
             <div className="filter-header" style={style}>
 
@@ -15,7 +16,7 @@ class FilterHeader extends React.Component {
 }
 
 FilterHeader.propTypes = {
-    'style': React.PropTypes.string
+    style: PT.object
 };
 
 export default FilterHeader;
