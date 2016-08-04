@@ -95,7 +95,7 @@ actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({
     filtreringsvalg: action.filtreringsvalg
 });
 
-actionHandlers[AT.PURGE_SCROLL_ID] = (state, action) => ({
+actionHandlers[AT.PURGE_SCROLL_ID] = (state) => ({
     ...state,
     scrollToDokumentId: ''
 });

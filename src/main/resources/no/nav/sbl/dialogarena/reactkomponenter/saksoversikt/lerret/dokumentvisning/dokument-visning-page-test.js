@@ -22,7 +22,7 @@ describe('DokumentVisningPage', () => {
     };
 
     function noop() {}
-    function hentDokumentData(_fnr, _valgtJournalpost) {}
+    function hentDokumentData() {}
     const fnr = '12346578910';
 
     it('Gir feilmelding om dokumentstatus feilet', () => {
