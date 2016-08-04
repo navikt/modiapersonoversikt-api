@@ -7,7 +7,8 @@
     "max-len": [2, 120, 4],
     "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
     "react/jsx-indent": "off",
-    "react/jsx-indent-props": "off"
+    "react/jsx-indent-props": "off",
+    "import/imports-first": [1, ""]
   },
   "globals": {
     "$": false,

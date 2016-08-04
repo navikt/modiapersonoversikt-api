@@ -7,8 +7,9 @@ import sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import SkrivestotteStore from './skrivestotte-store';
-chai.use(sinonChai);
 import Ajax from '../utils/ajax';
+
+chai.use(sinonChai);
 
 describe('SkrivestotteStore', () => {
     before(()=> {
