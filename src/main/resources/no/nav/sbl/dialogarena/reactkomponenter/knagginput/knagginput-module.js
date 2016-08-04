@@ -42,9 +42,9 @@ function IEHack() {
 
     let maxWidth = $knaggcontainer.width();
     $knagger.each((index, knagg) => {
-        maxWidth -= $(knagg).outerWidth() + 4.2;// knagg bredde + margin;
+        maxWidth -= $(knagg).outerWidth() + 4.2; // knagg bredde + margin;
     });
-    maxWidth -= 46;// Forstørrelseglass ikon
+    maxWidth -= 46; // Forstørrelseglass ikon
 
     $input.outerWidth(maxWidth);
     // End IE hack
@@ -130,11 +130,6 @@ const KnaggInput = React.createClass({
                 </span>
             );
         });
-
-        //knagger = React.addons.createFragment({
-        //    knagger: knagger
-        //});
-
 
         return (
             <div ref="knaggcontainer" className="knagg-input">

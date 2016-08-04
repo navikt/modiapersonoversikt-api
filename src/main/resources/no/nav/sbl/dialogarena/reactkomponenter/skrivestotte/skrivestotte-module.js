@@ -93,7 +93,7 @@ const Skrivestotte = React.createClass({
         return (
             <Modal ref="modal" skipFocus={['.knagg > button']} title={modalConfig.title} description={modalConfig.description} closeButton={modalConfig.closeButton}
                 width={904} height={600}>
-                <form className={"sok-layout tekstforslag"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
+                <form className="sok-layout tekstforslag" onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
                     <div tabIndex="-1" className="sok-container">
                         <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tablisteId={this.state.listePanelId} placeholder={'Søk'}/>
                     </div>

@@ -26,7 +26,9 @@ class JournalforSak extends React.Component {
 
     lagFeedbackPanel() {
         const feilmeldinger = this.state.feilmeldinger;
-        if (feilmeldinger.length === 0) return null;
+        if (feilmeldinger.length === 0) {
+            return null;
+        }
 
 
         const feilmeldingerElement = feilmeldinger.map((feilmelding) => <li

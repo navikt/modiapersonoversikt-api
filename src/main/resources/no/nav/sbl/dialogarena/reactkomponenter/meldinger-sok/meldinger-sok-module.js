@@ -111,7 +111,7 @@ const MeldingerSok = React.createClass({
         return (
             <Modal ref="modal" title={modalConfig.title} description={modalConfig.description}
                    closeButton={modalConfig.closeButton}>
-                <form className={"sok-layout meldinger-sok"} onSubmit={this.store.submit.bind(this.store, this.skjul)}
+                <form className="sok-layout meldinger-sok" onSubmit={this.store.submit.bind(this.store, this.skjul)}
                       onKeyDown={this.keyDownHandler}>
                     <div tabIndex="-1" className="sok-container">
                         <div>

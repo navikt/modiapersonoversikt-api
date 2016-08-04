@@ -19,11 +19,11 @@ class Melding extends React.Component {
             meldingsStatusTekst += `${melding.lestStatus} `;
         }
         meldingsStatusTekst += melding.temagruppeNavn;
-        
+
         const paragrafer = melding.fritekst.split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
-        
+
         const datoTekst = melding.visningsDatoTekst; 
 
         const dato = sanitize(datoTekst || 'Fant ingen data', { allowedTags: ['em'] });

@@ -1,12 +1,12 @@
 import Utils from './../../utils/utils-module';
 
 function settFokusPaRadioButton(element) {
-    element.querySelector("input[type=radio]").focus();
+    element.querySelector('input[type=radio]').focus();
 }
 
 export const pilnavigeringScroll = (event, props) => {
-    const elements = document.querySelectorAll(".saksoversikt-liste-element");
-    const parent = document.querySelector(".saksoversikt-liste");
+    const elements = document.querySelectorAll('.saksoversikt-liste-element');
+    const parent = document.querySelector('.saksoversikt-liste');
     const valgtTema = props.valgtTema;
 
     let index;

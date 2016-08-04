@@ -10,7 +10,7 @@ function createProviderComponent(contextTypes) {
 
         render() {
             let { children } = this.props;
-            return Children.only(children)
+            return Children.only(children);
         }
     }
 
