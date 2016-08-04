@@ -1,10 +1,13 @@
 {
   "parser": "babel-eslint",
   "rules": {
+    "linebreak-style": "off",
     "indent": [2, 4, {"SwitchCase": 1}],
     "comma-dangle": [2, "never"],
     "max-len": [2, 120, 4],
-    "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}]
+    "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off"
   },
   "globals": {
     "$": false,
