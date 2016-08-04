@@ -71,7 +71,7 @@ class JournalforSak extends React.Component {
                 </div>
 
                 <JournalforKnapp fnr={this.props.fnr} traadId={this.props.traadId} sak={sak}
-                                 traadJournalfort={this.traadJournalfort} feiletCallback={this.journalforingFeilet}/>
+                                 traadJournalfort={this.traadJournalfort} feiletCallback={this.journalforingFeilet} />
             </div>
         );
     }

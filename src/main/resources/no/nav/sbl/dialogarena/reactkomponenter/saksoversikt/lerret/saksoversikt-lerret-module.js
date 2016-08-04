@@ -48,7 +48,7 @@ function lagFeilmelding(props) {
     if (enonicFeilmeldingKey !== '') {
         return (
             <div className="lamell-feilmelding" role="alert" aria-atomic="true">
-                <FormattedMessage id={`${enonicFeilmeldingKey}`}/>
+                <FormattedMessage id={`${enonicFeilmeldingKey}`} />
             </div>);
     }
 
@@ -64,7 +64,7 @@ export class SaksoversiktLerret extends React.Component {
         if (this.props.status === Const.VOID || this.props.status === Const.LASTER) {
             return (
                 <div className="saksoversikt-snurrepipp">
-                    <Snurrepipp farge="hvit"/>
+                    <Snurrepipp farge="hvit" />
                 </div>
             );
         }

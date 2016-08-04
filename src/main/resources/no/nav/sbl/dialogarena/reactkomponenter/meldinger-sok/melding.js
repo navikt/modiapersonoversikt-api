@@ -31,7 +31,7 @@ class Melding extends React.Component {
 
         return (
             <div className={cls}>
-                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst}/>
+                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst} />
                 <div className="meldingData">
                     <article className="melding-header">
                         <p className="meldingstatus" dangerouslySetInnerHTML={{ __html: meldingsStatusTekst }}></p>

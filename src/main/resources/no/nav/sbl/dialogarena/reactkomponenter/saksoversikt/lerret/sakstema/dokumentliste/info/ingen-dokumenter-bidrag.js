@@ -11,10 +11,10 @@ const IngenDokumenterBidrag = ({ ingenDokumenterHeader }) => {
         <div className="default-error ingendokumenter">
             {ingenDokumenterHeader}
             <p className="ingendokumenterforklaring">
-                <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.bidrag"/>
+                <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.bidrag" />
             </p>
             <a href="#" onClick={openGosys}>
-                <FormattedMessage id="dokumentinfo.sakstema.lenke.gosys"/>
+                <FormattedMessage id="dokumentinfo.sakstema.lenke.gosys" />
             </a>
         </div>);
 };

@@ -96,8 +96,8 @@ class DokumentVisning extends Component {
                     <object ref="pdf" data={pdfData} type="application/pdf" scrolling="no" style={style}
                       key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}
                     >
-                        <param name="view" value="FitV"/>
-                        <GenerellFeilMeldingDokumentvisning aapneSomPDFLink={aapneSomPDFLink}/>
+                        <param name="view" value="FitV" />
+                        <GenerellFeilMeldingDokumentvisning aapneSomPDFLink={aapneSomPDFLink} />
                     </object>
                 </article>
             </Element>

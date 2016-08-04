@@ -59,9 +59,9 @@ class AsyncLoader extends React.Component {
     render() {
         let children;
         if (this.state.status === 'rejected') {
-            children = <AdvarselBoks tekst="Henting av data mislyktes"/>;
+            children = <AdvarselBoks tekst="Henting av data mislyktes" />;
         } else if (this.state.status === 'pending') {
-            children = <Snurrepipp {...this.props.snurrepipp}/>;
+            children = <Snurrepipp {...this.props.snurrepipp} />;
         } else {
             const passingProps = {};
             passingProps[this.props.toProp] = this.state.data;

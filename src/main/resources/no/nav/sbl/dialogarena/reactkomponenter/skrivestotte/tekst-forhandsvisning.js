@@ -32,7 +32,7 @@ class TekstForhandsvisning extends React.Component {
                     {knagger}
                 </ScrollPortal>
                 <div className="velgPanel">
-                    <LocaleSelect tekst={tekst} locale={this.props.locale} store={this.props.store}/>
+                    <LocaleSelect tekst={tekst} locale={this.props.locale} store={this.props.store} />
                     <input type="submit" value="Velg tekst" className="knapp-hoved-liten" />
                 </div>
             </div>

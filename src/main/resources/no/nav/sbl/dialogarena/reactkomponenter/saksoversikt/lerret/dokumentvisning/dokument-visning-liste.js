@@ -5,7 +5,7 @@ function DokumentVisningListe({ dokumenter }) {
     const sortertDokumentliste = hoveddokumentForst(dokumenter);
 
     const dokumentElementer = sortertDokumentliste.map((dokument) => (
-        <DokumentVisning key={dokument.dokumentreferanse} dokument={dokument}/>
+        <DokumentVisning key={dokument.dokumentreferanse} dokument={dokument} />
     ));
 
     return (

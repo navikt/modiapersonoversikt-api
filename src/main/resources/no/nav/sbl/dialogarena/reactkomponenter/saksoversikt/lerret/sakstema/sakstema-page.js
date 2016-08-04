@@ -25,7 +25,7 @@ class SakstemaPage extends React.Component {
                       src="/modiabrukerdialog/img/saksoversikt/dokument_flyttet.svg"
                     />
                     <h1 className="ingen-sakstemaer-tekst">
-                        <FormattedMessage id="sakslamell.ingensaker"/>
+                        <FormattedMessage id="sakslamell.ingensaker" />
                     </h1>
                 </div>);
         }
@@ -33,7 +33,7 @@ class SakstemaPage extends React.Component {
         return (
             <div className="sakstema-container">
                 <section onKeyDown={this.keyDownHandler.bind(this)} className="saksoversikt-liste scrollpanel">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema} />
                 </section>
                 <section className="saksoversikt-innhold side-innhold scrollpanel">
                     <h2 className="vekk">{valgtTema.temanavn}</h2>

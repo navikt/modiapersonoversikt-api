@@ -9,7 +9,7 @@ class VarselListe extends React.Component {
     render() {
         const { style, store, varsler } = this.props;
         const varselRad = varsler.map((varsel) => {
-            return <VarselRad varsel={varsel} store={store}/>;
+            return <VarselRad varsel={varsel} store={store} />;
         });
         const resources = store.getResources();
 

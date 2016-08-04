@@ -31,7 +31,7 @@ class TypeValg extends React.Component {
                        value="FAG"
                        ref="typevalg.FAG"
                        onKeyPress={preventDefault}
-                       onChange={this.endre}/>
+                       onChange={this.endre} />
                 <label className="label" htmlFor={this.id1}>Fagsaker</label>
                 <input name="typeVelger"
                        id={this.id2}
@@ -40,7 +40,7 @@ class TypeValg extends React.Component {
                        value="GEN"
                        ref="typevalg.GEN"
                        onKeyPress={preventDefault}
-                       onChange={this.endre}/>
+                       onChange={this.endre} />
                 <label className="label" htmlFor={this.id2}>Generelle saker</label>
             </div>
         );

@@ -32,7 +32,7 @@ const FiltrerAvsender = ({ alleredeValgt, dispatch, intl: { formatMessage } }) =
     return (
         <div className="filtrering-container">
             <span className="filtrering-forklaring">
-                <FormattedMessage id={'dokumentliste.filtrering.forklaring'}/>
+                <FormattedMessage id={'dokumentliste.filtrering.forklaring'} />
             </span>
             {filtreringsCheckbox}
         </div>

@@ -139,8 +139,8 @@ const KnaggInput = React.createClass({
                            value={this.props.fritekst} title={this.props.placeholder}
                            onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
                            onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
-                           aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']}/>
-                    <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
+                           aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']} />
+                    <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true" />
                 </div>
             </div>
         );

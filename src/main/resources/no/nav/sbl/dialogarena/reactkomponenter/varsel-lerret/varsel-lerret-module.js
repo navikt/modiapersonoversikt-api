@@ -34,9 +34,9 @@ class VarselLerret extends React.Component {
         return (
             <div className="varsel-lerret">
                 <AsyncLoader promises={this.state.promise} snurrepipp={{ farge: 'hvit' }}>
-                    <Infoboks tekst={ingenMeldingerInfotekst} style={visIngenMeldingerInfoboks}/>
-                    <FilterHeader filterSetup={this.state.filtersetup} style={visMeldingsListe}/>
-                    <VarselListe varsler={this.state.varsler} store={this.store} style={visMeldingsListe}/>
+                    <Infoboks tekst={ingenMeldingerInfotekst} style={visIngenMeldingerInfoboks} />
+                    <FilterHeader filterSetup={this.state.filtersetup} style={visMeldingsListe} />
+                    <VarselListe varsler={this.state.varsler} store={this.store} style={visMeldingsListe} />
                 </AsyncLoader>
             </div>
         );

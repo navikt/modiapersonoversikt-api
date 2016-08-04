@@ -75,7 +75,7 @@ class Modal extends React.Component {
             close: () => this.close(false)
         };
 
-        this.modal = render(<Portal {...props} {...state} modal={modal}/>, this.portalElement);
+        this.modal = render(<Portal {...props} {...state} modal={modal} />, this.portalElement);
     }
 
     render() {

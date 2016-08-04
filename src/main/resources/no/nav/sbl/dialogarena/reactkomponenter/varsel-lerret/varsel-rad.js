@@ -28,7 +28,7 @@ class VarselRad extends React.Component {
         if (varsel.ekspandert) {
             headerClassname += ' ekspandert';
             pilClassname += ' opp';
-            meldinger = varsel.meldingListe.map((melding) => <VarselRadElement melding={melding} store={this.props.store}/>);
+            meldinger = varsel.meldingListe.map((melding) => <VarselRadElement melding={melding} store={this.props.store} />);
         } else {
             pilClassname += ' ned';
         }
@@ -43,7 +43,7 @@ class VarselRad extends React.Component {
                     <span className="vekk"> | </span>
                     <span className="header-kanal">
                         {sendIKanal}
-                        <i className={pilClassname} aria-hidden="true"/>
+                        <i className={pilClassname} aria-hidden="true" />
                     </span>
                 </button>
                 <ul className="reset-ul-styling">

@@ -22,7 +22,7 @@ describe('FlereApneVinduer', () => {
 
     it('å trykke på avbryt kaller avbryt-callback', () => {
         const avbrytSpy = sinon.spy();
-        const element = shallow(<FlereApneVinduer avbrytCallback={avbrytSpy}/>);
+        const element = shallow(<FlereApneVinduer avbrytCallback={avbrytSpy} />);
 
         element.find('button').simulate('click');
 
@@ -31,7 +31,7 @@ describe('FlereApneVinduer', () => {
 
     it('å trykke på fortsett kaller fortsett-callback', () => {
         const fortsettSpy = sinon.spy();
-        const element = shallow(<FlereApneVinduer fortsettCallback={fortsettSpy}/>);
+        const element = shallow(<FlereApneVinduer fortsettCallback={fortsettSpy} />);
 
         element.find('a').simulate('click');
 

@@ -25,7 +25,7 @@ describe('Forkaste endringer', () => {
 
     it('avbrytknapp skal sende discard til wicket', () => {
         const discardCallback = () => undefined;
-        const element = shallow(<ForkasteEndringer discardCallback={discardCallback}/>);
+        const element = shallow(<ForkasteEndringer discardCallback={discardCallback} />);
 
         const wicketSpy = sinon.spy();
         element.instance().sendToWicket = wicketSpy;
@@ -37,7 +37,7 @@ describe('Forkaste endringer', () => {
 
     it('fortsett skal sende confirm til wicket', () => {
         const confirmCallback = () => undefined;
-        const element = shallow(<ForkasteEndringer confirmCallback={confirmCallback}/>);
+        const element = shallow(<ForkasteEndringer confirmCallback={confirmCallback} />);
 
         const wicketSpy = sinon.spy();
         element.instance().sendToWicket = wicketSpy;

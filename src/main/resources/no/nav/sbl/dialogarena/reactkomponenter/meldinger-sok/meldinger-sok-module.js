@@ -85,7 +85,7 @@ const MeldingerSok = React.createClass({
                 </ScrollPortal>
                 <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel"
                      id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
-                    <ForhandsvisningKomponent traad={this.state.valgtTraad}/>
+                    <ForhandsvisningKomponent traad={this.state.valgtTraad} />
                 </div>
             </div>
         );
@@ -124,12 +124,12 @@ const MeldingerSok = React.createClass({
                                 onKeyDown={this.store.onKeyDown.bind(this.store, document.getElementById(this.state.listePanelId))}
                                 aria-controls={this.state.listePanelId}
                             />
-                            <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
+                            <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true" />
                         </div>
                     </div>
                     {sokVisning}
                     {tomVisning}
-                    <input type="submit" value="submit" className="hidden"/>
+                    <input type="submit" value="submit" className="hidden" />
                 </form>
             </Modal>
         );

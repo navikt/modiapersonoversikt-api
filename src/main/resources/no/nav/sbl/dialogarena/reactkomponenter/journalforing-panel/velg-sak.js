@@ -23,7 +23,7 @@ class VelgSak extends React.Component {
 
         const advarsler = kvpair(saker)
             .filter(([_, value]) => isUndefined(value))
-            .map(([feiletKall, _]) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
+            .map(([feiletKall, _]) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()} />);
 
         const mergedSaker = kvpair(saker)
             .reduce((acc, [_, value]) => {
@@ -37,13 +37,13 @@ class VelgSak extends React.Component {
 
         return (
             <div>
-                <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori}/>
+                <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori} />
                 {advarsler}
                 <SakerListe
                     saker={sakerSomVises}
                     temagruppe={this.props.temagruppe}
                     velgSak={this.props.velgSak}
-                    temagruppeTemaMapping={this.props.temagruppeTemaMapping}/>
+                    temagruppeTemaMapping={this.props.temagruppeTemaMapping} />
             </div>
         );
     }

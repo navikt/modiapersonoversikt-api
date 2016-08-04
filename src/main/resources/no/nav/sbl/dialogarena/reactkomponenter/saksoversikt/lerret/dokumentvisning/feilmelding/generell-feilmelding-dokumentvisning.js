@@ -15,7 +15,7 @@ const GenerellFeilMeldingDokumentvisning = ({ aapneSomPDFLink }) => {
                     />
                 </h1>
                 <p className="text-center">
-                    <FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold"/>
+                    <FormattedMessage id="dokumentvisning.pdf.feilmelding.innhold" />
                 </p>
                 {visPDFLink}
             </div>

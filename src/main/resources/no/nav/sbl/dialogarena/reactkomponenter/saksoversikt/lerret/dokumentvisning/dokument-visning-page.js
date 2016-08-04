@@ -66,7 +66,7 @@ export class DokumentVisningPage extends React.Component {
                 </div>);
         }
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
-            return <Snurrepipp farge="hvit"/>;
+            return <Snurrepipp farge="hvit" />;
         }
 
         const { intl, journalpostmetadata } = this.props;
@@ -92,16 +92,16 @@ export class DokumentVisningPage extends React.Component {
                             title={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
                     >
                     </button>
-                    <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument}/>
+                    <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument} />
                 </div>
 
                 <section aria-labelledby="journalposttittel" className="scrollpanel side-innhold panel" id="js-kulemeny-scroll">
                     <h1 ref="dokumentvisningOverskrift" className="decorated typo-innholdstittel ikke-fokusmarkering" tabIndex="-1" id="journalposttittel">
-                        <FormattedMessage id="dokumentvisning.retningsstatus" values={values}/>
-                        <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT}/>
+                        <FormattedMessage id="dokumentvisning.retningsstatus" values={values} />
+                        <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT} />
                     </h1>
-                    <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter}/>
-                    <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter}/>
+                    <DokumentVisningListe dokumenter={journalpostmetadata.dokumenter} />
+                    <VedleggFeilmeldingListe feilmeldinger={journalpostmetadata.feilendeDokumenter} />
                 </section>
             </div>
         );

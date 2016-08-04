@@ -11,13 +11,13 @@ describe('SakerListe', () => {
     const lagSak = (tema) => ({ temaKode: tema, temaNavn: tema });
 
     const setup = (saker) => {
-        const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker}/>);
+        const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker} />);
         return TestUtils.scryRenderedComponentsWithType(sakerListe, SakerForTema);
     };
 
     const setupMedTemagruppe = (saker, temagruppe, mapping) => {
         const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker} temagruppe={temagruppe}
-                                                                    temagruppeTemaMapping={mapping}/>);
+                                                                    temagruppeTemaMapping={mapping} />);
         return TestUtils.scryRenderedComponentsWithType(sakerListe, SakerForTema);
     };
 

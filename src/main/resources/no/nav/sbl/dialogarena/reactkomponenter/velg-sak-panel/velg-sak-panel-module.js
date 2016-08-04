@@ -37,11 +37,11 @@ class VelgSakPanel extends React.Component {
 
     render() {
         const okonomiskSosialhjelpValg = this.props.skalViseOkonomiskSosialhjelp ?
-            <OkonomiskSosialhjelpKnapp velgSak={this.velgSak}/> : null;
+            <OkonomiskSosialhjelpKnapp velgSak={this.velgSak} /> : null;
 
         return (
             <AsyncLoader promises={this.promise} toProp="saker">
-                <VelgSak velgSak={this.velgSak}/>
+                <VelgSak velgSak={this.velgSak} />
                 {okonomiskSosialhjelpValg}
             </AsyncLoader>
         );

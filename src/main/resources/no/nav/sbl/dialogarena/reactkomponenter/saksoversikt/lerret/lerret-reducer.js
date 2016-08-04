@@ -10,7 +10,7 @@ const fjernTommeTema = (antallDagerFerdigBehandletStatusErGyldig) => tema => tem
 || tema.behandlingskjeder.filter(underBehandlingEllerNyereEnnGrenseverdi(antallDagerFerdigBehandletStatusErGyldig)).length > 0;
 
 const lagAlleTema = (temaliste) => [{
-    temanavn: <FormattedMessage id="sakslamell.alletemaer"/>,
+    temanavn: <FormattedMessage id="sakslamell.alletemaer" />,
     temakode: 'alle',
     behandlingskjeder: temaliste.reduce((acc, tema) =>
         acc.concat(tema.behandlingskjeder), []),
