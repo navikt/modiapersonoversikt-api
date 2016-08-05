@@ -36,8 +36,8 @@ class ViktigAVitePage extends React.Component {
                         onClick={this._redirect}
                         className="close-document"
                         type="button"
-                        aria-label={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
-                        title={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                        aria-label={intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                        title={intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
                     >
                     </button>
                 </div>

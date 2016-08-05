@@ -8,12 +8,12 @@ const Utgaaende = ({ mottaker, mottakerNavn }) => {
         </span>
     );
 
-    const fra = < FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: dokumentAvsender } } />;
+    const fra = < FormattedMessage id="dokumentinfo.avsender.fra" values={{ avsender: dokumentAvsender }} />;
 
     const dokumentMottaker = <span className="typo-egennavn"> {mottakerNavn.toLowerCase()}</span>;
 
-    const til = mottaker === 'SLUTTBRUKER' ? <noscript/> :
-        <FormattedMessage id="dokumentinfo.avsender.til" values={ { mottaker: dokumentMottaker } } />;
+    const til = mottaker === 'SLUTTBRUKER' ? <noscript /> :
+        <FormattedMessage id="dokumentinfo.avsender.til" values={{ mottaker: dokumentMottaker }} />;
 
     return <span className="dokument-avsender">{fra} {til}</span>;
 };

@@ -10,7 +10,7 @@ import TestUtils from 'react-addons-test-utils';
 describe('Journalforing', () => {
     it('Header should be "Journalføring"', () => {
         const journalforingspanel = TestUtils.renderIntoDocument(
-            <JournalforingsPanel/>
+            <JournalforingsPanel />
         );
         const header = TestUtils.findRenderedDOMComponentWithTag(journalforingspanel, 'h2');
         assert.equal(React.findDOMNode(header).textContent, 'Journalføring');

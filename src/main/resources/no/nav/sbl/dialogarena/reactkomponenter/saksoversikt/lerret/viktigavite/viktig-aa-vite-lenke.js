@@ -29,7 +29,7 @@ class ViktigAViteLenke extends React.Component {
                 </div>
             );
         }
-        return <noscript/>;
+        return <noscript />;
     }
 }
 

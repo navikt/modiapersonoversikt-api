@@ -6,7 +6,7 @@ import ScrollPortal from './../utils/scroll-portal';
 class Forhandsvisning extends React.Component {
     render() {
         if (!this.props.traad.hasOwnProperty('meldinger')) {
-            return <noscript/>;
+            return <noscript />;
         }
 
         const { traad, traad: { meldinger } } = this.props;

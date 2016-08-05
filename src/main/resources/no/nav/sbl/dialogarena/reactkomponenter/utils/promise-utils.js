@@ -10,7 +10,7 @@ class PromiseUtils {
             throw new RangeError(message);
         }
 
-        const promiseArray = Object.keys(wrapperPromise).sort().reduce((acc, key)=> {
+        const promiseArray = Object.keys(wrapperPromise).sort().reduce((acc, key) => {
             acc.push(wrapperPromise[key]);
             return acc;
         }, []);
@@ -22,7 +22,7 @@ class PromiseUtils {
                     return acc;
                 }, {});
 
-                const success = Object.keys(wrapperPromise).reduce((acc, key)=> {
+                const success = Object.keys(wrapperPromise).reduce((acc, key) => {
                     if (wrapperPromise[key].isFulfilled()) {
                         return acc + 1;
                     }

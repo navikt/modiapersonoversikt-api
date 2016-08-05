@@ -21,7 +21,7 @@ class KulemenyListe extends React.Component {
     render() {
         const { dokumentmetadata } = this.props;
         if (dokumentmetadata.length < 2) {
-            return <noscript/>;
+            return <noscript />;
         }
 
         const kulemenypunkter = dokumentmetadata.map(renderKulemeny);

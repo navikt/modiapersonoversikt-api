@@ -31,8 +31,9 @@ class JournalforSak extends React.Component {
         }
 
 
-        const feilmeldingerElement = feilmeldinger.map((feilmelding) => <li
-            className="feedbackPanelERROR">{feilmelding}</li>);
+        const feilmeldingerElement = feilmeldinger.map((feilmelding) =>
+            <li className="feedbackPanelERROR">{feilmelding}</li>
+        );
         return (<div className="feedback" role="alert" aria-live="assertive" aria-atomic="true">
             <ul className="feedbackPanel">
                 {feilmeldingerElement}

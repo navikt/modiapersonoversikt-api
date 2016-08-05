@@ -63,31 +63,31 @@ describe('DokumentVisningListe', () => {
     });
 
     it('Skal sortere slik at hoveddokumentet havner først i listen', () => {
-            const dokumenter =  [
-                {
-                    antallSider: 5,
-                    dokumentreferanse: '3',
-                    journalpostId: '321',
-                    pdfUrl: '2134',
-                    erHoveddokument: false
+        const dokumenter = [
+            {
+                antallSider: 5,
+                dokumentreferanse: '3',
+                journalpostId: '321',
+                pdfUrl: '2134',
+                erHoveddokument: false
 
-                },
-                {
-                    antallSider: 2,
-                    dokumentreferanse: '2',
-                    journalpostId: '654',
-                    pdfUrl: '2134',
-                    erHoveddokument: true
-                },
-                {
-                    antallSider: 1,
-                    dokumentreferanse: '1',
-                    journalpostId: '654',
-                    pdfUrl: '2134',
-                    erHoveddokument: false
+            },
+            {
+                antallSider: 2,
+                dokumentreferanse: '2',
+                journalpostId: '654',
+                pdfUrl: '2134',
+                erHoveddokument: true
+            },
+            {
+                antallSider: 1,
+                dokumentreferanse: '1',
+                journalpostId: '654',
+                pdfUrl: '2134',
+                erHoveddokument: false
 
-                }
-            ];
+            }
+        ];
 
         const sortertDokumentliste = hoveddokumentForst(dokumenter);
         expect(sortertDokumentliste.length).to.equal(3);

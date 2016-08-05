@@ -23,10 +23,10 @@ class JournalforKnapp extends React.Component {
 
         const journalforPromise = Ajax.post(url, data);
 
-        journalforPromise.done(()=> {
+        journalforPromise.done(() => {
             this.props.traadJournalfort();
         });
-        journalforPromise.fail(()=> {
+        journalforPromise.fail(() => {
             this.setState({ sender: false });
             this.props.feiletCallback();
         });

@@ -74,14 +74,15 @@ const MeldingerSok = React.createClass({
         const erTom = this.state.traader.length === 0;
         const sokVisning = (
             <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
-                <ScrollPortal 
+                <ScrollPortal
                     id={this.state.listePanelId}
                     className="sok-liste"
                     role="tablist"
                     tabIndex="-1"
                     aria-live="assertive"
                     aria-atomic="true"
-                    aria-controls={this.state.forhandsvisningsPanelId}>
+                    aria-controls={this.state.forhandsvisningsPanelId}
+                >
                     {tekstlistekomponenter}
                 </ScrollPortal>
                 <div

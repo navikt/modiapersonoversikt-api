@@ -37,7 +37,8 @@ class SakerForTema extends React.Component {
                                 <span className="text-cell text-transform-uppercase">saksid</span>
                                 <span className="vekk"> | </span>
                                 <span
-                                    className="text-cell text-align-right text-transform-uppercase">{datoHeader}</span>
+                                    className="text-cell text-align-right text-transform-uppercase"
+                                >{datoHeader}</span>
                                 <span className="vekk"> | </span>
                                 <span className="text-cell text-transform-uppercase">fagsystem</span>
                             </div>

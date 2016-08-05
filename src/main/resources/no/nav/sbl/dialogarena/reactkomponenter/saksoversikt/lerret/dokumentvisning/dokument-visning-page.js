@@ -62,7 +62,7 @@ export class DokumentVisningPage extends React.Component {
                     <div className="fixed-header blokk-s">
                         <a href="#" onClick={this._redirect} className="close-document"></a>
                     </div>
-                    <GenerellFeilMeldingDokumentvisning/>
+                    <GenerellFeilMeldingDokumentvisning />
                 </div>);
         }
         if (this.props.lerretstatus !== Const.LASTET || this.props.dokumentstatus !== Const.LASTET) {
@@ -89,15 +89,24 @@ export class DokumentVisningPage extends React.Component {
                         onClick={this._redirect}
                         className="close-document"
                         type="button"
-                        aria-label={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
-                        title={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                        aria-label={intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                        title={intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
                     >
                     </button>
                     <KulemenyListe dokumentmetadata={kulelisteVM} indexValgtDokument={indexValgtDokument} />
                 </div>
 
-                <section aria-labelledby="journalposttittel" className="scrollpanel side-innhold panel" id="js-kulemeny-scroll">
-                    <h1 ref="dokumentvisningOverskrift" className="decorated typo-innholdstittel ikke-fokusmarkering" tabIndex="-1" id="journalposttittel">
+                <section
+                    aria-labelledby="journalposttittel"
+                    className="scrollpanel side-innhold panel"
+                    id="js-kulemeny-scroll"
+                >
+                    <h1
+                        ref="dokumentvisningOverskrift"
+                        className="decorated typo-innholdstittel ikke-fokusmarkering"
+                        tabIndex="-1"
+                        id="journalposttittel"
+                    >
                         <FormattedMessage id="dokumentvisning.retningsstatus" values={values} />
                         <FormattedDate value={values.dato} {...datoformat.NUMERISK_2_DIGIT} />
                     </h1>

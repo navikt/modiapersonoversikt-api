@@ -24,7 +24,7 @@ class Melding extends React.Component {
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        const datoTekst = melding.visningsDatoTekst; 
+        const datoTekst = melding.visningsDatoTekst;
 
         const dato = sanitize(datoTekst || 'Fant ingen data', { allowedTags: ['em'] });
         const skrevetMelding = melding.erDokumentMelding ? '' : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;

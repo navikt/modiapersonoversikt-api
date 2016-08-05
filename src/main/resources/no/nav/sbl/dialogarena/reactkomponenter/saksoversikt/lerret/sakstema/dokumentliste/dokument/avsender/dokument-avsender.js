@@ -6,7 +6,7 @@ import Intern from './intern';
 
 const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn, kategoriNotat }) => {
     const ukjentAvsender = <FormattedMessage id="dokumentinfo.avsender.ukjent" />;
-    const ukjentMessage = <FormattedMessage id="dokumentinfo.avsender.fra" values={ { avsender: ukjentAvsender } } />;
+    const ukjentMessage = <FormattedMessage id="dokumentinfo.avsender.fra" values={{ avsender: ukjentAvsender }} />;
     const ukjent = (<span className={retning}>/ {ukjentMessage}</span>);
 
     const tekstBasertPaaRetning = {

@@ -43,7 +43,8 @@ class VelgSak extends React.Component {
                     saker={sakerSomVises}
                     temagruppe={this.props.temagruppe}
                     velgSak={this.props.velgSak}
-                    temagruppeTemaMapping={this.props.temagruppeTemaMapping} />
+                    temagruppeTemaMapping={this.props.temagruppeTemaMapping}
+                />
             </div>
         );
     }

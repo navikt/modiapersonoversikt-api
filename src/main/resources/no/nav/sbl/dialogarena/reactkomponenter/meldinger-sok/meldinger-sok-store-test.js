@@ -7,14 +7,15 @@ import assign from 'object-assign';
 import MeldingerSokStore from './meldinger-sok-store';
 import Ajax from '../utils/ajax';
 import sinonChai from 'sinon-chai';
+
 chai.use(sinonChai);
 
 describe('MeldingerSokStore', () => {
-    before(()=> {
+    before(() => {
         sinon.stub(MeldingerSokStore, '_updateScroll');
     });
 
-    after(()=> {
+    after(() => {
         MeldingerSokStore._updateScroll.restore();
     });
 

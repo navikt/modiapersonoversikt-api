@@ -7,7 +7,7 @@ import Snurrepipp from './snurrepipp';
 
 describe('Snurrepipp test', () => {
     it('Skal rendre default farge og størrelse på bilde', () => {
-        const { dom } = render(<Snurrepipp/>);
+        const { dom } = render(<Snurrepipp />);
 
         const image = dom.querySelector('img');
 

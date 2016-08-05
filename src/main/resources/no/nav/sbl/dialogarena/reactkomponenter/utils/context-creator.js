@@ -1,7 +1,6 @@
 import React, { PropTypes, Children, Component } from 'react';
 
 function createProviderComponent(contextTypes) {
-
     class Provider extends Component {
         getChildContext() {
             const { children, ...props } = this.props;

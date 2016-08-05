@@ -7,7 +7,7 @@ class Journalfort extends React.Component {
         const erJournalfort = journalfortTemanavn;
 
         if (!erJournalfort) {
-            return <noscript/>;
+            return <noscript />;
         }
 
         const journalFortInformasjon = `Journalført av: ${journalfortAv.navn} (${journalfortAvNavIdent}) | ${journalfortDatoTekst} | ${journalfortTemanavn}`;

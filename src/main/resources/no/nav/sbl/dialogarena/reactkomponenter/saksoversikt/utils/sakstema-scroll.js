@@ -11,21 +11,21 @@ export const pilnavigeringScroll = (event, props) => {
 
     let index;
     switch (event.keyCode) {
-        //Pil opp
+        // Pil opp
         case 38:
             event.preventDefault();
 
-            index = props.sakstema.indexOf(valgtTema) - 1 < 0 ? props.sakstema.length - 1 : props.sakstema.indexOf(valgtTema) -1;
+            index = props.sakstema.indexOf(valgtTema) - 1 < 0 ? props.sakstema.length - 1 : props.sakstema.indexOf(valgtTema) - 1;
             props.velgSak(props.sakstema[index]);
 
             settFokusPaRadioButton(elements[index]);
             Utils.adjustScroll(parent, elements[index]);
             break;
-        //Pil ned
+        // Pil ned
         case 40:
             event.preventDefault();
 
-            index = props.sakstema.indexOf(valgtTema) + 1 >= props.sakstema.length? 0 : props.sakstema.indexOf(valgtTema) + 1;
+            index = props.sakstema.indexOf(valgtTema) + 1 >= props.sakstema.length ? 0 : props.sakstema.indexOf(valgtTema) + 1;
             props.velgSak(props.sakstema[index]);
 
             settFokusPaRadioButton(elements[index]);

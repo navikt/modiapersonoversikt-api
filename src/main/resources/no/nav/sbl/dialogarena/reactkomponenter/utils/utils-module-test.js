@@ -28,7 +28,7 @@ describe('utils test', () => {
         fn();
         fn();
         expect(c).to.equal(0);
-        delayed(()=>{
+        delayed(() => {
             expect(c).to.equal(1);
             done();
         }, 0);

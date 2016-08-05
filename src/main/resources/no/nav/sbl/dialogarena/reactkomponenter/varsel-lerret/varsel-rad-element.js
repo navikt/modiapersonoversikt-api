@@ -28,7 +28,7 @@ class VarselRadElement extends React.Component {
         const innholdInfo = this.getInnholdInfo(melding);
         const resources = this.props.store.getResources();
         const epostEmne = melding.kanal === 'EPOST' && melding.epostemne ?
-            <div><span className="innhold-epostemne">{melding.epostemne}</span><br/></div> :
+            <div><span className="innhold-epostemne">{melding.epostemne}</span><br /></div> :
             undefined;
 
         return (

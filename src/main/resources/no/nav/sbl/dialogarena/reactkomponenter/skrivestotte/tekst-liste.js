@@ -15,7 +15,8 @@ class TekstListeKomponent extends React.Component {
                     name="tekstListeRadio"
                     type="radio"
                     readOnly
-                    checked={this.props.tekst === this.props.valgtTekst} />
+                    checked={this.props.tekst === this.props.valgtTekst}
+                />
                 <label htmlFor={'tekstElementRadio' + this.props.tekst.key}>
                     <span dangerouslySetInnerHTML={{ __html: this.props.tekst.tittel }}></span>
                     <span className="vekk">{' | ' + Utils.getInnhold(this.props.tekst, this.props.locale)}</span>

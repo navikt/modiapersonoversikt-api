@@ -37,7 +37,7 @@ class AsyncLoader extends React.Component {
             if (ensureArray(this.props.promises).length === 1) {
                 dataargs = args[0][0];
 
-                newdataargs = Object.keys(dataargs).reduce((acc, key)=> {
+                newdataargs = Object.keys(dataargs).reduce((acc, key) => {
                     acc[key] = dataargs[key].value;
                     return acc;
                 }, {});

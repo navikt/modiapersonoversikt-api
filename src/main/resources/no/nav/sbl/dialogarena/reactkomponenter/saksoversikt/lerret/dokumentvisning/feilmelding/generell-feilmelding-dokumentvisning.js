@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 const GenerellFeilMeldingDokumentvisning = ({ aapneSomPDFLink }) => {
-    const visPDFLink = aapneSomPDFLink ? <p className="text-center">{aapneSomPDFLink}</p> : <noscript/>;
+    const visPDFLink = aapneSomPDFLink ? <p className="text-center">{aapneSomPDFLink}</p> : <noscript />;
     return (
         <div className="feilmelding-container">
             <img

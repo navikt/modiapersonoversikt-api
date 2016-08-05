@@ -6,6 +6,7 @@ import chai, { expect } from 'chai';
 import Journalfort from './journalfort';
 import sinonChai from 'sinon-chai';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
+
 chai.use(sinonChai);
 
 describe('Journalfort', () => {

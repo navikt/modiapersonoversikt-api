@@ -56,7 +56,7 @@ class OppgiBegrunnelse extends React.Component {
                 {...modalProps}
                 width={600}
                 height={381}
-                onClosing={() => {this.setState({ showFeilmelding: false }); return true;}}
+                onClosing={() => { this.setState({ showFeilmelding: false }); return true; }}
                 ref="modal"
             >
                 <section className="bekreft-dialog" style={OppgiBegrunnelse.styling.section}>

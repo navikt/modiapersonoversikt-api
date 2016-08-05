@@ -37,7 +37,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     let status = Const.LASTET;
 
     const [tekster, miljovariabler, sakstema] = action.data;
-    const { resultat, feilendeSystemer } = sakstema.value ? sakstema.value: { result: [], feilendeSystemer: [] };
+    const { resultat, feilendeSystemer } = sakstema.value ? sakstema.value : { result: [], feilendeSystemer: [] };
 
     const feilendeKall = action.data.filter(object => object.state === 'rejected');
     if (feilendeKall.length > 0) {
@@ -48,7 +48,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
         .filter(fjernTommeTema(parseInt(miljovariabler.value['behandlingsstatus.synlig.antallDager'], 10))).sort(nyesteSakstema) : [];
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
-    const valgtTema = state.valgtTema? state.valgtTema : _sakstema[0];
+    const valgtTema = state.valgtTema ? state.valgtTema : _sakstema[0];
     return {
         ...state,
         status,

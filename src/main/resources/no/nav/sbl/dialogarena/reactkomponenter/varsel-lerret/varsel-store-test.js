@@ -7,6 +7,7 @@ import Ajax from '../utils/ajax';
 import sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
+
 chai.use(sinonChai);
 
 describe('VarselStore', () => {

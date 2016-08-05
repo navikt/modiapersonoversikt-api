@@ -12,11 +12,11 @@ import Ajax from '../utils/ajax';
 chai.use(sinonChai);
 
 describe('SkrivestotteStore', () => {
-    before(()=> {
+    before(() => {
         sinon.stub(SkrivestotteStore, '_updateScroll');
     });
 
-    after(()=> {
+    after(() => {
         SkrivestotteStore._updateScroll.restore();
     });
 

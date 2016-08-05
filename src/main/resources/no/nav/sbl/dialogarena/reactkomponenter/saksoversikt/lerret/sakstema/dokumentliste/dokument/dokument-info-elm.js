@@ -25,7 +25,7 @@ class DokumentInfoElm extends React.Component {
         const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
         const { retning, avsender, mottaker, navn, hoveddokument, vedlegg,
             temakodeVisning, feilWrapper, kategoriNotat } = dokumentinfo;
-        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript/>;
+        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript />;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ?
             'dokument-kan-vises' : 'dokument-kan-ikke-vises';

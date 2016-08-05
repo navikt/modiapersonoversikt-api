@@ -18,7 +18,7 @@ const FiltrerteDokumenter = props => {
     const filtrerteDokumenter = dokumentMetadata.filter(dokument => skalViseDokument(dokument, filtreringsvalg));
 
     const dokumentliste = filtrerteDokumenter.length === 0 ?
-        <noscript/> :
+        <noscript /> :
         <DokumentListe dokumentMetadata={filtrerteDokumenter} {...dokumentlisteParam} />;
 
     return <div>{dokumentliste}</div>;

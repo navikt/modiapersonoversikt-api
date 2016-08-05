@@ -60,17 +60,21 @@ class JournalforingsPanel extends React.Component {
                     <VelgSak
                         temagruppe={this.state.temagruppe}
                         velgSak={this.velgSak}
-                        temagruppeTemaMapping={this.props.temagruppeTemaMapping} />
+                        temagruppeTemaMapping={this.props.temagruppeTemaMapping}
+                    />
                 </AsyncLoader>
             );
         } else {
-            aktivtVindu = (<JournalforSak
-                fnr={this.props.fnr}
-                traadId={this.state.traadId}
-                sak={this.state.valgtSak}
-                tilbake={this.tilbake}
-                wicketurl={this.props.wicketurl}
-                wicketcomponent={this.props.wicketcomponent} />);
+            aktivtVindu = (
+                <JournalforSak
+                    fnr={this.props.fnr}
+                    traadId={this.state.traadId}
+                    sak={this.state.valgtSak}
+                    tilbake={this.tilbake}
+                    wicketurl={this.props.wicketurl}
+                    wicketcomponent={this.props.wicketcomponent}
+                />
+            );
         }
         return (
             <form className="journalforings-panel shadow">
