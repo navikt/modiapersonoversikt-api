@@ -31,9 +31,9 @@ class VarselListe extends React.Component {
 }
 
 VarselListe.propTypes = {
-    'style': React.PropTypes.string,
-    'store': React.PropTypes.object.isRequired,
-    'varsler': React.PropTypes.array
+    style: React.PropTypes.string,
+    store: React.PropTypes.object.isRequired,
+    varsler: React.PropTypes.array
 };
 
 export default VarselListe;

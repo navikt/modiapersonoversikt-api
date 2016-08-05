@@ -44,7 +44,7 @@ class VarselLerret extends React.Component {
 }
 
 VarselLerret.propTypes = {
-    'fnr': React.PropTypes.string.isRequired
+    fnr: React.PropTypes.string.isRequired
 };
 
 export default VarselLerret;

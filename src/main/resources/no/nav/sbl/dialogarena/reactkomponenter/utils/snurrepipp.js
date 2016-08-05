@@ -13,13 +13,13 @@ class Snurrepipp extends React.Component {
 }
 
 Snurrepipp.propTypes = {
-    'storrelse': React.PropTypes.number,
-    'farge': React.PropTypes.string
+    storrelse: React.PropTypes.number,
+    farge: React.PropTypes.string
 };
 
 Snurrepipp.defaultProps = {
-    'storrelse': 128,
-    'farge': 'graa'
+    storrelse: 128,
+    farge: 'graa'
 };
 
 export default Snurrepipp;

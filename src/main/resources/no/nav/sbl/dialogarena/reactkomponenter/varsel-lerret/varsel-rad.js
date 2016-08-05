@@ -55,9 +55,9 @@ class VarselRad extends React.Component {
 }
 
 VarselRad.propTypes = {
-    'store': React.PropTypes.object.isRequired,
-    'toggleEkspandert': React.PropTypes.func.isRequired,
-    'varsel': React.PropTypes.object.isRequired
+    store: React.PropTypes.object.isRequired,
+    toggleEkspandert: React.PropTypes.func.isRequired,
+    varsel: React.PropTypes.object.isRequired
 };
 
 export default VarselRad;

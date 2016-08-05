@@ -66,7 +66,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
 }
 
 OkonomiskSosialhjelpKnapp.propTypes = {
-    'velgSak': React.PropTypes.func.isRequired
+    velgSak: React.PropTypes.func.isRequired
 };
 
 export default OkonomiskSosialhjelpKnapp;

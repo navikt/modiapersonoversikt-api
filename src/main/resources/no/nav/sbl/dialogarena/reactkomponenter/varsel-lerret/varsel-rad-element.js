@@ -47,8 +47,8 @@ class VarselRadElement extends React.Component {
 }
 
 VarselRadElement.propTypes = {
-    'store': React.PropTypes.object.isRequired,
-    'melding': React.PropTypes.object.isRequired
+    store: React.PropTypes.object.isRequired,
+    melding: React.PropTypes.object.isRequired
 };
 
 export default VarselRadElement;

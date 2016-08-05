@@ -51,11 +51,11 @@ class VelgSak extends React.Component {
 }
 
 VelgSak.propTypes = {
-    'temagruppe': React.PropTypes.string.isRequired,
-    'temagruppeTemaMapping': React.PropTypes.object.isRequired,
-    'valgtKategori': React.PropTypes.string.isRequired,
-    'saker': React.PropTypes.array.isRequired,
-    'velgSak': React.PropTypes.func.isRequired
+    temagruppe: React.PropTypes.string.isRequired,
+    temagruppeTemaMapping: React.PropTypes.object.isRequired,
+    valgtKategori: React.PropTypes.string.isRequired,
+    saker: React.PropTypes.array.isRequired,
+    velgSak: React.PropTypes.func.isRequired
 };
 
 export default VelgSak;

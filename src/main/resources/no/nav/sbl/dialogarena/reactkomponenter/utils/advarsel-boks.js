@@ -15,7 +15,7 @@ class AdvarselBoks extends React.Component {
 }
 
 AdvarselBoks.propTypes = {
-    'tekst': React.PropTypes.string.isRequired
+    tekst: React.PropTypes.string.isRequired
 };
 
 export default AdvarselBoks;

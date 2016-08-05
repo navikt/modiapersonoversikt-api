@@ -41,9 +41,9 @@ class TekstForhandsvisning extends React.Component {
 }
 
 TekstForhandsvisning.propTypes = {
-    'tekst': React.PropTypes.object.isRequired,
-    'locale': React.PropTypes.string.isRequired,
-    'store': React.PropTypes.object.isRequired
+    tekst: React.PropTypes.object.isRequired,
+    locale: React.PropTypes.string.isRequired,
+    store: React.PropTypes.object.isRequired
 };
 
 export default TekstForhandsvisning;

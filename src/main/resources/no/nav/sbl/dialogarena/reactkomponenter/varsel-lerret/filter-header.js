@@ -15,7 +15,7 @@ class FilterHeader extends React.Component {
 }
 
 FilterHeader.propTypes = {
-    'style': React.PropTypes.string
+    style: React.PropTypes.string
 };
 
 export default FilterHeader;

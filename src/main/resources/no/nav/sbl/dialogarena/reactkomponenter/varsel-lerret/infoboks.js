@@ -17,8 +17,8 @@ class Infoboks extends React.Component {
 }
 
 Infoboks.propTypes = {
-    'tekst': React.PropTypes.string.isRequired,
-    'style': React.PropTypes.string
+    tekst: React.PropTypes.string.isRequired,
+    style: React.PropTypes.string
 };
 
 export default Infoboks;

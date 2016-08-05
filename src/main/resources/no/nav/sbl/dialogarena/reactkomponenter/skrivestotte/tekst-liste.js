@@ -27,10 +27,10 @@ class TekstListeKomponent extends React.Component {
 }
 
 TekstListeKomponent.propTypes = {
-    'store': React.PropTypes.object.isRequired,
-    'tekst': React.PropTypes.object.isRequired,
-    'valgtTekst': React.PropTypes.object.isRequired,
-    'locale': React.PropTypes.string.isRequired
+    store: React.PropTypes.object.isRequired,
+    tekst: React.PropTypes.object.isRequired,
+    valgtTekst: React.PropTypes.object.isRequired,
+    locale: React.PropTypes.string.isRequired
 };
 
 export default TekstListeKomponent;

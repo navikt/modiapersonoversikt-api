@@ -1,22 +1,22 @@
 const React = require('react');
 
 const spraak = {
-    'nb_NO': 'Norsk (Bokmål)',
-    'nn_NO': 'Norsk (Nynorsk)',
-    'en_US': 'Engelsk',
-    'se_NO': 'Samisk',
-    'de_DE': 'Tysk',
-    'fr_FR': 'Fransk',
-    'es_ES': 'Spansk',
-    'pl_PL': 'Polsk',
-    'ru_RU': 'Russisk',
-    'ur': 'Urdu'
+    nb_NO: 'Norsk (Bokmål)',
+    nn_NO: 'Norsk (Nynorsk)',
+    en_US: 'Engelsk',
+    se_NO: 'Samisk',
+    de_DE: 'Tysk',
+    fr_FR: 'Fransk',
+    es_ES: 'Spansk',
+    pl_PL: 'Polsk',
+    ru_RU: 'Russisk',
+    ur: 'Urdu'
 };
 const LocaleSelect = React.createClass({
     propTypes: {
-        'tekst': React.PropTypes.object.isRequired,
-        'store': React.PropTypes.object.isRequired,
-        'locale': React.PropTypes.string
+        tekst: React.PropTypes.object.isRequired,
+        store: React.PropTypes.object.isRequired,
+        locale: React.PropTypes.string
     },
     onChange: function onChange(event) {
         this.props.store.setLocale(event.target.value);
