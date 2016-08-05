@@ -9,6 +9,7 @@
     "react/jsx-indent": [2, 4],
     "react/jsx-indent-props": [2, 4],
     "react/jsx-filename-extension": [ 2, { "extensions": [ ".jsx", ".js"]}],
+    "react/prefer-stateless-function": 1,
     "import/imports-first": [2, ""],
     "import/no-extraneous-dependencies": [2, {}],
     "react/no-string-refs": 1
