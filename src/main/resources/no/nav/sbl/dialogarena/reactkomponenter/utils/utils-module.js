@@ -63,7 +63,7 @@ export function leggTilLenkerTags(innhold) {
 
     return innhold.replace(uriRegex, (match) => {
         const processedMatch = match.match(httpRegex) ? match : 'http://' + match;
-        return '<a target="_blank" href="' + processedMatch + '">' + processedMatch + '</a>';
+        return `<a target="_blank" href="${processedMatch}" rel="noopener noreferrer">${processedMatch}</a>`;
     });
 }
 

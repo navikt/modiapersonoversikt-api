@@ -76,7 +76,7 @@ class DokumentVisning extends Component {
         const pdfData = `${dokument.pdfUrl}#view=FitH&scrollbar=0&toolbar=0&statusbar=0&messages=0&navpanes=0`;
         const style = { ...this.state };
         const aapneSomPDFLink = (
-            <a target="_blank" href={dokument.pdfUrl}>
+            <a target="_blank" href={dokument.pdfUrl} rel="noopener noreferrer">
                 { formatMessage({ id: 'dokumentvisning.pdf.aapne.pdf' }) }
             </a>
         );

@@ -49,8 +49,8 @@ describe('utils test', () => {
         `;
         const result = leggTilLenkerTags(fritekst);
 
-        assert.isTrue(result.indexOf('<a target="_blank" href="http://www.vg.no">') >= 0);
-        assert.isTrue(result.indexOf('<a target="_blank" href="https://www.vg.no">') >= 0);
+        assert.isTrue(result.indexOf('<a target="_blank" href="http://www.vg.no" rel="noopener noreferrer">') >= 0);
+        assert.isTrue(result.indexOf('<a target="_blank" href="https://www.vg.no" rel="noopener noreferrer">') >= 0);
     });
 
     it('omit kopierer object med unntatt av verdier', () => {
