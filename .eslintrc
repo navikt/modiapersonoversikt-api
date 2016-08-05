@@ -6,14 +6,15 @@
     "comma-dangle": [2, "never"],
     "max-len": [2, 120, 4],
     "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
+    "prefer-template": 0,
     "react/jsx-indent": [2, 4],
     "react/jsx-indent-props": [2, 4],
     "react/jsx-filename-extension": [ 2, { "extensions": [ ".jsx", ".js"]}],
     "react/prefer-stateless-function": 1,
+    "react/no-string-refs": 1,
     "react/self-closing-comp": [2, {"component": true, "html": false}],
     "import/imports-first": [2, ""],
-    "import/no-extraneous-dependencies": [2, {}],
-    "react/no-string-refs": 1
+    "import/no-extraneous-dependencies": [2, {}]
   },
   "globals": {
     "$": false,
