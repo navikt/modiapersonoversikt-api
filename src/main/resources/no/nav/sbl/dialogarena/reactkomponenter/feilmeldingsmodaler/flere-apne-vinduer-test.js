@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions:0 */
 import './../test-config';
 import React from 'react';
 import { shallow } from 'enzyme';
@@ -37,5 +38,4 @@ describe('FlereApneVinduer', () => {
 
         expect(fortsettSpy).to.have.been.called;
     });
-
 });
