@@ -122,14 +122,12 @@ const KnaggInput = React.createClass({
         }
     },
     render: function render() {
-        let knagger = this.props.knagger.map((knagg) => {
-            return (
-                <span className="knagg">
-                    {knagg}
-                    <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}></button>
-                </span>
-            );
-        });
+        let knagger = this.props.knagger.map((knagg) => (
+            <span className="knagg">
+                {knagg}
+                <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}></button>
+            </span>
+        ));
 
         return (
             <div ref="knaggcontainer" className="knagg-input">

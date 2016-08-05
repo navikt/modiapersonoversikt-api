@@ -23,12 +23,12 @@ class VelgSak extends React.Component {
 
         const advarsler = kvpair(saker)
             .filter(([_, value]) => isUndefined(value))
-            .map(([feiletKall, _]) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()} />);
+            .map(([feiletKall, _]) => (
+                <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()} />
+            ));
 
         const mergedSaker = kvpair(saker)
-            .reduce((acc, [_, value]) => {
-                return acc.concat(value || []);
-            }, []);
+            .reduce((acc, [_, value]) => acc.concat(value || []), []);
 
         const kategorier = partition(mergedSaker, sak => sak.sakstype === 'GEN');
         const generelle = kategorier[0];

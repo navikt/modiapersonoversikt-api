@@ -48,26 +48,24 @@ class SakerListe extends React.Component {
         const grouped = grupperSaker.apply(this);
         const velgSak = this.props.velgSak;
         const sakerGruppert = toArray(mapValues(grouped, (group) => {
-            const saker = group.map((sak) => {
-                return (
-                    <li className="text-row-list">
-                        <a
-                            href="javascript:void(0)"
-                            role="button"
-                            className="content-row-list"
-                            onClick={() => velgSak(sak)}
-                        >
-                            <div>
-                                <span className="text-cell">{sak.saksIdVisning}</span>
-                                <span className="vekk"> | </span>
-                                <span className="text-cell text-align-right">{sak.opprettetDatoFormatert}</span>
-                                <span className="vekk"> | </span>
-                                <span className="text-cell">{sak.fagsystemNavn}</span>
-                            </div>
-                        </a>
-                    </li>
-                );
-            });
+            const saker = group.map((sak) => (
+                <li className="text-row-list">
+                    <a
+                        href="javascript:void(0)"
+                        role="button"
+                        className="content-row-list"
+                        onClick={() => velgSak(sak)}
+                    >
+                        <div>
+                            <span className="text-cell">{sak.saksIdVisning}</span>
+                            <span className="vekk"> | </span>
+                            <span className="text-cell text-align-right">{sak.opprettetDatoFormatert}</span>
+                            <span className="vekk"> | </span>
+                            <span className="text-cell">{sak.fagsystemNavn}</span>
+                        </div>
+                    </a>
+                </li>
+            ));
             const temagruppe = this.props.temagruppe;
             const temaKode = group[0].temaKode;
             const erPesysSak = !!group[0].erPesysSak;

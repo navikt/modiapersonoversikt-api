@@ -15,9 +15,7 @@ describe('HTTP request', () => {
 
 
     it('should use contentType in RequestModifier if set', () => {
-        Ajax.post('http://localhost:9876/echo', {}, (req) => {
-            return req.type('text/html');
-        });
+        Ajax.post('http://localhost:9876/echo', {}, (req) => req.type('text/html'));
 
         expect(Ajax.toPromise.calledOnce).to.equal(true);
 
@@ -29,6 +27,7 @@ describe('HTTP request', () => {
 
         expect(Ajax.toPromise.calledOnce).to.equal(true);
 
-        expect(Ajax.toPromise.calledWith(sinon.match({ header: { ['Content-Type']: 'application/json' } }))).to.equal(true);
+        expect(Ajax.toPromise.calledWith(sinon.match({ header: { ['Content-Type']: 'application/json' } })))
+            .to.equal(true);
     });
 });

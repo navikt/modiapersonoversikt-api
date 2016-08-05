@@ -96,8 +96,8 @@ SaksoversiktLerret.propTypes = {
     miljovariabler: React.PropTypes.object
 };
 
-const mapStateToProps = (state) => {
-    return {
+const mapStateToProps = (state) => (
+    {
         valgtside: state.lerret.valgtside,
         sakstema: state.lerret.data.sakstema,
         feilendeSystemer: state.lerret.data.feilendeSystemer,
@@ -107,8 +107,8 @@ const mapStateToProps = (state) => {
         miljovariabler: state.lerret.data.miljovariabler,
         filtreringsvalg: state.lerret.filtreringsvalg,
         scrollToDokumentId: state.lerret.scrollToDokumentId
-    };
-};
+    }
+);
 
 export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,

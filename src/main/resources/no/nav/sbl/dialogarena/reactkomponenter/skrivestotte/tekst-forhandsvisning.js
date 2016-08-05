@@ -17,13 +17,11 @@ class TekstForhandsvisning extends React.Component {
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
 
-        const knagger = tekst.tags.map((tag) => {
-            return (
-                <button key={tag} className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>
-                    <span>{'#' + tag}</span>
-                </button>
-            );
-        });
+        const knagger = tekst.tags.map((tag) => (
+            <button key={tag} className="knagg" onClick={onClickProxy.bind(this.props.store, tag)}>
+                <span>{'#' + tag}</span>
+            </button>
+        ));
 
         return (
             <div>
