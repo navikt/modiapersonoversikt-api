@@ -1094,7 +1094,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-8.0.28</tag>
+        <tag>modiabrukerdialog-8.0.29-PDFBOX-SNAPSHOT</tag>
     </scm>
 
     <profiles>
