@@ -10,8 +10,12 @@ class TekstListeKomponent extends React.Component {
     render() {
         return (
             <div className="sok-element" onClick={this._onClick.bind(this)}>
-                <input id={'tekstElementRadio' + this.props.tekst.key} name="tekstListeRadio" type="radio"
-                       readOnly checked={this.props.tekst === this.props.valgtTekst} />
+                <input
+                    id={'tekstElementRadio' + this.props.tekst.key}
+                    name="tekstListeRadio"
+                    type="radio"
+                    readOnly
+                    checked={this.props.tekst === this.props.valgtTekst} />
                 <label htmlFor={'tekstElementRadio' + this.props.tekst.key}>
                     <span dangerouslySetInnerHTML={{ __html: this.props.tekst.tittel }}></span>
                     <span className="vekk">{' | ' + Utils.getInnhold(this.props.tekst, this.props.locale)}</span>

@@ -9,9 +9,9 @@ import FlereApneVinduer from './flere-apne-vinduer';
 describe('FlereApneVinduer', () => {
     it('skal vise riktige tekster i en modal', () => {
         const element = shallow(<FlereApneVinduer
-          hovedtekst="test-hoved"
-          avbryttekst="test-avbryt"
-          fortsetttekst="test-fortsett"
+            hovedtekst="test-hoved"
+            avbryttekst="test-avbryt"
+            fortsetttekst="test-fortsett"
         />);
 
         expect(element.is('Modal')).to.be.true;

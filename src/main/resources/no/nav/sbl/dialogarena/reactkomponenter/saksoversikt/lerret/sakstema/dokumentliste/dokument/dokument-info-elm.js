@@ -39,8 +39,13 @@ class DokumentInfoElm extends React.Component {
                     <div className="datodokumentliste">
                         <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                         <span> / </span>
-                        <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker}
-                          brukerNavn={brukerNavn} navn={navn} kategoriNotat={kategoriNotat}
+                        <DokumentAvsender
+                            retning={retning}
+                            avsender={avsender}
+                            mottaker={mottaker}
+                            brukerNavn={brukerNavn}
+                            navn={navn}
+                            kategoriNotat={kategoriNotat}
                         />
                     </div>
                     <div className="hoveddokument-tittel-wrapper">
@@ -49,8 +54,10 @@ class DokumentInfoElm extends React.Component {
                         </a>
                     </div>
                     <div className="typo-info">
-                        <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost}
-                          dokumentinfo={dokumentinfo}
+                        <DokumentinfoVedlegg
+                            visSide={visSide}
+                            velgJournalpost={velgJournalpost}
+                            dokumentinfo={dokumentinfo}
                         />
                     </div>
                     {temaHvisAlleTemaer}

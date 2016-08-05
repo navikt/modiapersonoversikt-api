@@ -15,9 +15,9 @@ describe('SaksoversiktLerret module', () => {
     it('skal hente lerret data for fnr når den mountes', () => {
         const lerretSpy = sinon.spy();
         shallow(<SaksoversiktLerret
-          hentLerretData={lerretSpy}
-          fnr="12345678901"
-          status={LASTER}
+            hentLerretData={lerretSpy}
+            fnr="12345678901"
+            status={LASTER}
         />);
 
         expect(lerretSpy).to.have.been.calledWith('12345678901');

@@ -68,18 +68,31 @@ const Skrivestotte = React.createClass({
         const erTom = this.state.tekster.length === 0;
         const sokVisning = (
             <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
-                <ScrollPortal id={this.state.listePanelId}
-                              className="sok-liste"
-                              role="tablist"
-                              tabIndex="-1"
-                              aria-live="assertive"
-                              aria-atomic="true"
-                              aria-controls={this.state.forhandsvisningsPanelId}>
+                <ScrollPortal
+                    id={this.state.listePanelId}
+                    className="sok-liste"
+                    role="tablist"
+                    tabIndex="-1"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                    aria-controls={this.state.forhandsvisningsPanelId}
+                >
                     {tekstlistekomponenter}
                 </ScrollPortal>
 
-                <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
-                    <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store} />
+                <div
+                    tabIndex="-1"
+                    className="sok-forhandsvisning"
+                    role="tabpanel"
+                    id={this.state.forhandsvisningsPanelId}
+                    aria-atomic="true"
+                    aria-live="polite"
+                >
+                    <TekstForhandsvisning
+                        tekst={this.state.valgtTekst}
+                        locale={this.state.valgtLocale}
+                        store={this.store}
+                    />
                 </div>
             </div>
         );
@@ -91,11 +104,28 @@ const Skrivestotte = React.createClass({
         );
 
         return (
-            <Modal ref="modal" skipFocus={['.knagg > button']} title={modalConfig.title} description={modalConfig.description} closeButton={modalConfig.closeButton}
-                width={904} height={600}>
-                <form className="sok-layout tekstforslag" onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
+            <Modal
+                ref="modal"
+                skipFocus={['.knagg > button']}
+                title={modalConfig.title}
+                description={modalConfig.description}
+                closeButton={modalConfig.closeButton}
+                width={904}
+                height={600}
+            >
+                <form
+                    className="sok-layout tekstforslag"
+                    onSubmit={this.store.submit.bind(this.store, this.skjul)}
+                    onKeyDown={this.keyDownHandler}
+                >
                     <div tabIndex="-1" className="sok-container">
-                        <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tablisteId={this.state.listePanelId} placeholder={'Søk'} />
+                        <KnaggInput
+                            knagger={this.state.knagger}
+                            fritekst={this.state.fritekst}
+                            store={this.store}
+                            tablisteId={this.state.listePanelId}
+                            placeholder={'Søk'}
+                        />
                     </div>
                     <fieldset className="wcag">
                         <legend>Tekst liste</legend>

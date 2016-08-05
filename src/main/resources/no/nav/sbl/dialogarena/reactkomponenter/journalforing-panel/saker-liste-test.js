@@ -16,8 +16,9 @@ describe('SakerListe', () => {
     };
 
     const setupMedTemagruppe = (saker, temagruppe, mapping) => {
-        const sakerListe = TestUtils.renderIntoDocument(<SakerListe saker={saker} temagruppe={temagruppe}
-                                                                    temagruppeTemaMapping={mapping} />);
+        const sakerListe = TestUtils.renderIntoDocument(
+            <SakerListe saker={saker} temagruppe={temagruppe} temagruppeTemaMapping={mapping} />
+        );
         return TestUtils.scryRenderedComponentsWithType(sakerListe, SakerForTema);
     };
 

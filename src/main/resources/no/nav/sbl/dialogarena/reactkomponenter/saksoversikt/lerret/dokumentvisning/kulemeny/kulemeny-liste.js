@@ -3,10 +3,10 @@ import Kulemeny from './kulemeny';
 
 const renderKulemeny = (kulemenypunkt, index) => (
     <Kulemeny
-      dokref={kulemenypunkt.dokumentreferanse}
-      tittel={kulemenypunkt.tittel}
-      key={kulemenypunkt.dokumentreferanse}
-      initialState={index === 0}
+        dokref={kulemenypunkt.dokumentreferanse}
+        tittel={kulemenypunkt.tittel}
+        key={kulemenypunkt.dokumentreferanse}
+        initialState={index === 0}
     />);
 
 class KulemenyListe extends React.Component {

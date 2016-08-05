@@ -139,15 +139,27 @@ const ModalPortal = React.createClass({
         // iframe må være her for å fikse en rendering bug i IE, uten iframe'n vil inline-pdf-visningen alltid legge
         // seg over modal-vinduene.
         return (
-            <div tabIndex="-1" className={cls} aria-hidden={!this.props.isOpen} onKeyDown={this.keyHandler}
-                 role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
+            <div
+                tabIndex="-1"
+                className={cls}
+                aria-hidden={!this.props.isOpen}
+                onKeyDown={this.keyHandler}
+                role="dialog" 
+                aria-labelledby={title.id}
+                aria-describedby={description.id}
+            >
                 <div className="backdrop" onClick={this.props.modal.close}></div>
                 <iframe src="about:blank" className="cover" aria-hidden/>
                 {title.hidden}
                 {description.hidden}
                 <div className="centering" style={this.props.width ? { 'width': this.props.width + 'px' } : null}>
-                    <div className="content" ref="content"
-                         style={this.props.height ? { 'height': this.props.height + 'px', 'marginTop': (this.props.height / -2) + 'px' } : null}>
+                    <div
+                        className="content"
+                        ref="content"
+                        style={this.props.height ?
+                        { 'height': this.props.height + 'px', 'marginTop': (this.props.height / -2) + 'px' }
+                         : null}
+                    >
                         {title.visible}
                         {description.visible}
                         {children}

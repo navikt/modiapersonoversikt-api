@@ -32,16 +32,22 @@ class ViktigAVitePage extends React.Component {
         return (
             <div className="viktig-a-vite-page">
                 <div className="fixed-header blokk-s">
-                    <button onClick={this._redirect}
-                            className="close-document"
-                            type="button"
-                            aria-label={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
-                            title={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                    <button
+                        onClick={this._redirect}
+                        className="close-document"
+                        type="button"
+                        aria-label={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
+                        title={ intl.formatMessage({ id: 'dokumentvisning.aria.lukk' })}
                     >
                     </button>
                 </div>
                 <section aria-labelledby="viktigaviteOverskrift" className="panel scrollpanel side-innhold">
-                    <h1 ref="viktigaviteOverskrift" id="viktigaviteOverskrift" className="decorated typo-innholdstittel ikke-fokusmarkering" tabIndex="-1">{sidetittel}</h1>
+                    <h1
+                        ref="viktigaviteOverskrift"
+                        id="viktigaviteOverskrift"
+                        className="decorated typo-innholdstittel ikke-fokusmarkering"
+                        tabIndex="-1"
+                    >{sidetittel}</h1>
                     <article>
                         <div dangerouslySetInnerHTML={createMarkup(innhold)} />
                     </article>

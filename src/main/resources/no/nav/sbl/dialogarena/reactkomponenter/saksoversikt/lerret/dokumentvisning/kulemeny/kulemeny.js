@@ -9,16 +9,16 @@ const isInside = (y, elemTopBound, elemBottomBound) => {
 const Kulemeny = ({ dokref, tittel, initialState }) => (
     <li>
         <Button
-          activeClass="active"
-          to={dokref}
-          spy smooth
-          duration={500}
-          offset={-80}
-          title={tittel}
-          isInside={isInside}
-          initialState={initialState}
-          type="button"
-          containerId="js-kulemeny-scroll"
+            activeClass="active"
+            to={dokref}
+            spy smooth
+            duration={500}
+            offset={-80}
+            title={tittel}
+            isInside={isInside}
+            initialState={initialState}
+            type="button"
+            containerId="js-kulemeny-scroll"
         />
     </li>
 );

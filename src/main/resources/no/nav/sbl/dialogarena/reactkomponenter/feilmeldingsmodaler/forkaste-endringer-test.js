@@ -9,10 +9,10 @@ import ForkasteEndringer from './forkaste-endringer';
 describe('Forkaste endringer', () => {
     it('skal rendre informasjon inni en modal', () => {
         const element = shallow(<ForkasteEndringer
-          beskrivendeTekst="test-beskrivende"
-          avbryttekst="test-avbryt"
-          fortsetttekst="test-fortsett"
-          title="test-tittel"
+            beskrivendeTekst="test-beskrivende"
+            avbryttekst="test-avbryt"
+            fortsetttekst="test-fortsett"
+            title="test-tittel"
         />);
 
         expect(element.is('Modal')).to.be.true;

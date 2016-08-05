@@ -12,9 +12,10 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
     dokumentlisteParam.visTema = valgtTema.temakode === 'alle';
 
     const dokumentliste = (
-        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata}
-          filtreringsvalg={filtreringsvalg}
-          dokumentlisteParam={dokumentlisteParam}
+        <FiltrerteDokumenter
+            dokumentMetadata={valgtTema.dokumentMetadata}
+            filtreringsvalg={filtreringsvalg}
+            dokumentlisteParam={dokumentlisteParam}
         />);
 
     const ingendokumenter = (
@@ -37,7 +38,7 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
     const infoMeldingDokumenterBidrag = valgtTema.temakode === 'BID' ?
         <div className="infoingenbidrag">
             <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.bidrag" />
-        </div> : <noscript/>;
+        </div> : <noscript />;
 
     return (
         <div>

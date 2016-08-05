@@ -13,8 +13,14 @@ class TilbakeKnapp extends React.Component {
     render() {
         const tilbake = this.props.tilbake;
         return (
-            <a href="javascript:void(0)" className="tilbake-knapp" aria-label="tilbake" role="button" onClick={tilbake}
-               ref="knapp">Tilbake</a>
+            <a
+                href="javascript:void(0)"
+                className="tilbake-knapp"
+                aria-label="tilbake"
+                role="button"
+                onClick={tilbake}
+                ref="knapp"
+            >Tilbake</a>
         );
     }
 }

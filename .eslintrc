@@ -6,8 +6,9 @@
     "comma-dangle": [2, "never"],
     "max-len": [2, 120, 4],
     "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
-    "react/jsx-indent": "off",
-    "react/jsx-indent-props": "off",
+    "react/jsx-indent": [2, 4],
+    "react/jsx-indent-props": [2, 4],
+    "react/jsx-filename-extension": [ 2, { "extensions": [ ".jsx", ".js"]}],
     "import/imports-first": [2, ""],
     "import/no-extraneous-dependencies": [2, {}]
   },

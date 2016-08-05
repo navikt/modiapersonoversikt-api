@@ -41,37 +41,54 @@ class OppgiBegrunnelse extends React.Component {
     render() {
         const { isOpen } = this.props;
         const modalProps = { isOpen };
-        const feilmelding = (<span className="feedbacklabel" aria-hidden="false"
-                                   aria-live="assertive"
-                                   aria-atomic="true" role="alert">Tekstfeltet kan ikke være tomt.</span>);
+        const feilmelding = (
+            <span
+                className="feedbacklabel"
+                aria-hidden="false"
+                aria-live="assertive"
+                aria-atomic="true"
+                role="alert"
+            >Tekstfeltet kan ikke være tomt.</span>
+        );
 
         return (
-            <Modal {...modalProps} width={600} height={381}
-                                   onClosing={() => {this.setState({ showFeilmelding: false }); return true;}}
-                                   ref="modal">
+            <Modal
+                {...modalProps}
+                width={600}
+                height={381}
+                onClosing={() => {this.setState({ showFeilmelding: false }); return true;}}
+                ref="modal"
+            >
                 <section className="bekreft-dialog" style={OppgiBegrunnelse.styling.section}>
-                    <h1 className="robust-ikon-hjelp-strek"
-                        style={OppgiBegrunnelse.styling.text}>
-                        {this.props.title}</h1>
-                    <form id="begrunnelseForm" onSubmit={(e) => e.preventDefault()}
-                          style={OppgiBegrunnelse.styling.form}>
+                    <h1 className="robust-ikon-hjelp-strek" style={OppgiBegrunnelse.styling.text}>
+                        {this.props.title}
+                    </h1>
+                    <form
+                        id="begrunnelseForm"
+                        onSubmit={(e) => e.preventDefault()}
+                        style={OppgiBegrunnelse.styling.form}
+                    >
                         <div style={OppgiBegrunnelse.styling.inputDiv}>
-                        <textarea id="begrunnelse"
-                                  className={'begrunnelsestekst ' + (this.state.showFeilmelding ? 'invalid' : '')}
-                                  required="" name="begrunnelse"
-                                  aria-label="Begrunnelse" style={OppgiBegrunnelse.styling.textarea}
-                                  ref="begrunnelse" rows="4">
-                        </textarea>
+                            <textarea
+                                id="begrunnelse"
+                                className={'begrunnelsestekst ' + (this.state.showFeilmelding ? 'invalid' : '')}
+                                required="" name="begrunnelse"
+                                aria-label="Begrunnelse" style={OppgiBegrunnelse.styling.textarea}
+                                ref="begrunnelse" rows="4"
+                            ></textarea>
                             {this.state.showFeilmelding ? feilmelding : null}
                         </div>
                         <div>
-                            <button className="knapp-hoved" style={OppgiBegrunnelse.styling.buttonFortsett}
-                                    onClick={this.fortsettCallback.bind(this)}>{this.props.lagretekst}
-                            </button>
-                            <button className="knapp-lenke"
-                                    style={assign(OppgiBegrunnelse.styling.buttonAvbryt, OppgiBegrunnelse.styling.button)}
-                                    onClick={this.avbrytCallback.bind(this)}>{this.props.avbryttekst}
-                            </button>
+                            <button
+                                className="knapp-hoved"
+                                style={OppgiBegrunnelse.styling.buttonFortsett}
+                                onClick={this.fortsettCallback.bind(this)}
+                            >{this.props.lagretekst}</button>
+                            <button
+                                className="knapp-lenke"
+                                style={assign(OppgiBegrunnelse.styling.buttonAvbryt, OppgiBegrunnelse.styling.button)}
+                                onClick={this.avbrytCallback.bind(this)}
+                            >{this.props.avbryttekst}</button>
                         </div>
                     </form>
                 </section>

@@ -70,8 +70,13 @@ class JournalforSak extends React.Component {
                     </div>
                 </div>
 
-                <JournalforKnapp fnr={this.props.fnr} traadId={this.props.traadId} sak={sak}
-                                 traadJournalfort={this.traadJournalfort} feiletCallback={this.journalforingFeilet} />
+                <JournalforKnapp
+                    fnr={this.props.fnr}
+                    traadId={this.props.traadId}
+                    sak={sak}
+                    traadJournalfort={this.traadJournalfort}
+                    feiletCallback={this.journalforingFeilet}
+                />
             </div>
         );
     }
