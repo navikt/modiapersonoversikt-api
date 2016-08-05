@@ -1,5 +1,4 @@
 import React, { PropTypes as PT } from 'react';
-import ReactDOM from 'react-dom';
 import { hentDokumentData } from './../../actions';
 import { wrapWithProvider } from './../../utils/redux-utils';
 import { store } from './../../store';

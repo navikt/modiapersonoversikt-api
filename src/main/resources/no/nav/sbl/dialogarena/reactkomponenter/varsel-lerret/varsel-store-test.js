@@ -1,11 +1,10 @@
 /* eslint-env mocha */
 /* eslint no-unused-expressions:0 */
 import './../test-config';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import VarselStore from './varsel-store';
 import Ajax from '../utils/ajax';
 import sinon from 'sinon';
-import chai from 'chai';
 import sinonChai from 'sinon-chai';
 
 chai.use(sinonChai);

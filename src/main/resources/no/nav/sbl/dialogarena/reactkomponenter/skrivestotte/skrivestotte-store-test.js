@@ -1,10 +1,9 @@
 /* eslint-env mocha */
 /* eslint no-unused-expressions:0 new-cap:0 */
 import './../test-config';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import assign from 'object-assign';
 import sinon from 'sinon';
-import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import SkrivestotteStore from './skrivestotte-store';
 import Ajax from '../utils/ajax';

@@ -15,7 +15,10 @@
     "react/no-string-refs": 1,
     "react/self-closing-comp": [2, {"component": true, "html": false}],
     "import/imports-first": [2, ""],
-    "import/no-extraneous-dependencies": [2, {}]
+    "import/no-extraneous-dependencies": [2, {}],
+    "import/prefer-default-export": 0,
+    "import/no-named-as-default": 1,
+    "import/no-named-as-default-member": 1
   },
   "globals": {
     "$": false,
