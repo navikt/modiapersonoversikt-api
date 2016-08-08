@@ -50,6 +50,7 @@ function IEHack() {
     // End IE hack
 }
 
+/* eslint "react/prefer-es6-class": 1 */
 const KnaggInput = React.createClass({
     propTypes: {
         'auto-focus': React.PropTypes.bool,

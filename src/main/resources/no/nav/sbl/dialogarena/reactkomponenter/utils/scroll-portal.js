@@ -2,6 +2,7 @@
 import React from 'react';
 import { omit } from './../utils/utils-module';
 
+/* eslint "react/prefer-es6-class": 1 */
 const ScrollPortal = React.createClass({
     propTypes: {
         innerClassName: React.PropTypes.string,

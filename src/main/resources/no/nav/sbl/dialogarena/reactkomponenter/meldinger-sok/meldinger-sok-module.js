@@ -24,6 +24,7 @@ const modalConfig = {
     }
 };
 
+/* eslint "react/prefer-es6-class": 1 */
 const MeldingerSok = React.createClass({
     getInitialState: function getInitialState() {
         this.store = new MeldingerSokStore($.extend({}, {

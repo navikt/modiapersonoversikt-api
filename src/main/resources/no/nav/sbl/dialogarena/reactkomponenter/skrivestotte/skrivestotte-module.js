@@ -25,6 +25,7 @@ const modalConfig = {
     }
 };
 
+/* eslint "react/prefer-es6-class": 1 */
 const Skrivestotte = React.createClass({
     getInitialState: function getInitialState() {
         this.store = new SkrivestotteStore($.extend({}, {

@@ -12,6 +12,8 @@ const spraak = {
     ru_RU: 'Russisk',
     ur: 'Urdu'
 };
+
+/* eslint "react/prefer-es6-class": 1 */
 const LocaleSelect = React.createClass({
     propTypes: {
         tekst: React.PropTypes.object.isRequired,

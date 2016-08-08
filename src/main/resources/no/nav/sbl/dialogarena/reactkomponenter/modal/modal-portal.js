@@ -22,6 +22,7 @@ function createAriaOptional(name, data) {
     };
 }
 
+/* eslint "react/prefer-es6-class": 1 */
 const ModalPortal = React.createClass({
     propTypes: {
         description: pt.object,
