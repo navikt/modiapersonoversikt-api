@@ -4,10 +4,6 @@ import Store from './store';
 import { expect } from 'chai';
 
 class TestStore extends Store {
-    constructor(props) {
-        super(props);
-    }
-
     setState(nState) {
         this.state = nState;
         this.fireUpdate();

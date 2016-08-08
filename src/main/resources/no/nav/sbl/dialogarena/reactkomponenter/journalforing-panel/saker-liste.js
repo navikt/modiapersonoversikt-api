@@ -41,9 +41,6 @@ function grupperSaker() {
 }
 
 class SakerListe extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const grouped = grupperSaker.apply(this);

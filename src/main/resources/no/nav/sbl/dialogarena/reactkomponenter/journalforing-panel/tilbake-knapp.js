@@ -2,10 +2,6 @@
 import React from 'react';
 
 class TilbakeKnapp extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         React.findDOMNode(this.refs.knapp).focus();
     }

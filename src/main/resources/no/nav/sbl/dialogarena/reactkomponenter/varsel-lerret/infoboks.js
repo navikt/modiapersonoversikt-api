@@ -1,10 +1,6 @@
 import React from 'react';
 
 class Infoboks extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { tekst, style } = this.props;
         return (

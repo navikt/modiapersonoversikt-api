@@ -2,10 +2,6 @@ import React from 'react';
 import VarselRad from './varsel-rad';
 
 class VarselListe extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { style, store, varsler } = this.props;
         const varselRad = varsler.map((varsel) => (
