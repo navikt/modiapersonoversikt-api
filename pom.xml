@@ -106,8 +106,8 @@
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>4.5</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>5.8</sporsmalogsvar.version>
-        <saksoversikt.version>5.24-HL2</saksoversikt.version>
+        <sporsmalogsvar.version>5.9-PDFBOX-SNAPSHOT</sporsmalogsvar.version>
+        <saksoversikt.version>5.25-PDFBOX-SNAPSHOT</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
@@ -1094,7 +1094,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-8.0.28</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <profiles>
