@@ -11,6 +11,7 @@
     "no-prototype-builtins": 1,
     "prefer-rest-params": 1,
     "no-script-url": 1,
+    "jsx-a11y/href-no-hash": 1,
     "react/jsx-indent": [2, 4],
     "react/jsx-indent-props": [2, 4],
     "react/jsx-filename-extension": [ 2, { "extensions": [ ".jsx", ".js"]}],
