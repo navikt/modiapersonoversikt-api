@@ -1,4 +1,5 @@
 import React, { PropTypes as pt } from 'react';
+import ReactDOM from 'react-dom';
 import Modal from './../modal/modal-module';
 import { autobind } from './../utils/utils-module';
 import sendToWicket from './../react-wicket-mixin/wicket-sender';
@@ -19,7 +20,7 @@ class OppgiBegrunnelse extends React.Component {
     }
 
     fortsettCallback() {
-        const begrunnelseNode = React.findDOMNode(this.refs.begrunnelse);
+        const begrunnelseNode = ReactDOM.findDOMNode(this.refs.begrunnelse);
         const begrunnelse = begrunnelseNode.value;
         begrunnelseNode.value = '';
 

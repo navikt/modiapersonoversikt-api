@@ -1,9 +1,10 @@
 /* eslint no-script-url:0 */
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 class TilbakeKnapp extends React.Component {
     componentDidMount() {
-        React.findDOMNode(this.refs.knapp).focus();
+        ReactDOM.findDOMNode(this.refs.knapp).focus();
     }
 
     render() {

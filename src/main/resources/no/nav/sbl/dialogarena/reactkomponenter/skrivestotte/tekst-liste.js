@@ -1,9 +1,10 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Utils from './../utils/utils-module';
 
 class TekstListeKomponent extends React.Component {
     _onClick() {
-        const DOMNode = React.findDOMNode(this);
+        const DOMNode = ReactDOM.findDOMNode(this);
         this.props.store.tekstChanged(this.props.tekst, DOMNode.parentNode);
         DOMNode.querySelector('input').focus();
     }

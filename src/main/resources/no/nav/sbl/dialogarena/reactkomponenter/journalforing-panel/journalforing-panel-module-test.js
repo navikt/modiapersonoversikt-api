@@ -4,6 +4,7 @@
 import './../test-config';
 import { assert } from 'chai';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import JournalforingsPanel from './journalforing-panel-module';
 import TestUtils from 'react-addons-test-utils';
 
@@ -13,6 +14,6 @@ describe('Journalforing', () => {
             <JournalforingsPanel />
         );
         const header = TestUtils.findRenderedDOMComponentWithTag(journalforingspanel, 'h2');
-        assert.equal(React.findDOMNode(header).textContent, 'Journalføring');
+        assert.equal(ReactDOM.findDOMNode(header).textContent, 'Journalføring');
     });
 });

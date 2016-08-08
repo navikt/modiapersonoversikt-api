@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { generateId } from '../utils/utils-module';
 
 class TypeValg extends React.Component {
@@ -13,7 +14,7 @@ class TypeValg extends React.Component {
 
     componentDidMount() {
         const elementReference = 'typevalg.' + (this.props.valgtKategori || 'FAG');
-        React.findDOMNode(this.refs[elementReference]).focus();
+        ReactDOM.findDOMNode(this.refs[elementReference]).focus();
     }
 
     endre(event) {
