@@ -3,14 +3,21 @@ import React, { PropTypes as pt } from 'react';
 class Journalfort extends React.Component {
     render() {
         const { melding } = this.props;
-        const { journalfortAv, journalfortAvNavIdent, journalfortDatoTekst, journalfortTemanavn, journalfortSaksId } = melding;
+        const {
+            journalfortAv,
+            journalfortAvNavIdent,
+            journalfortDatoTekst,
+            journalfortTemanavn,
+            journalfortSaksId
+        } = melding;
         const erJournalfort = journalfortTemanavn;
 
         if (!erJournalfort) {
             return <noscript />;
         }
 
-        const journalFortInformasjon = `Journalført av: ${journalfortAv.navn} (${journalfortAvNavIdent}) | ${journalfortDatoTekst} | ${journalfortTemanavn}`;
+        const journalFortInformasjon = `Journalført av: ${journalfortAv.navn} (${journalfortAvNavIdent}) |
+            ${journalfortDatoTekst} | ${journalfortTemanavn}`;
         const saksIdInformasjon = `Saksid ${journalfortSaksId}`;
         const journalfortMelding = `${journalFortInformasjon} | ${saksIdInformasjon}`;
 

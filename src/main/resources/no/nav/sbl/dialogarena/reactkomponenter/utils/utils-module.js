@@ -9,7 +9,9 @@ export function getInnhold(valgtTekst, valgtLocale) {
     if (!valgtTekst || !valgtTekst.hasOwnProperty('innhold')) {
         return '';
     }
-    return valgtTekst.innhold[valgtLocale] ? valgtTekst.innhold[valgtLocale] : valgtTekst.innhold[Constants.LOCALE_DEFAULT];
+    return valgtTekst.innhold[valgtLocale]
+        ? valgtTekst.innhold[valgtLocale]
+        : valgtTekst.innhold[Constants.LOCALE_DEFAULT];
 }
 
 export function debounce(func, wait, immediate) {

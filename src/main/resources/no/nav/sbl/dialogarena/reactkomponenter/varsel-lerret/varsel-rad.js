@@ -28,7 +28,9 @@ class VarselRad extends React.Component {
         if (varsel.ekspandert) {
             headerClassname += ' ekspandert';
             pilClassname += ' opp';
-            meldinger = varsel.meldingListe.map((melding) => <VarselRadElement melding={melding} store={this.props.store} />);
+            meldinger = varsel.meldingListe.map((melding) => (
+                <VarselRadElement melding={melding} store={this.props.store} />
+            ));
         } else {
             pilClassname += ' ned';
         }
@@ -39,7 +41,11 @@ class VarselRad extends React.Component {
                 <button className={headerClassname} onClick={this.toggleEkspandert} aria-expanded={varsel.ekspandert}>
                     <span className="header-dato">{prettyDate(varsel.mottattTidspunkt, datoformat)}</span>
                     <span className="vekk"> | </span>
-                    <span className="header-type">{resources.getOrElse('varsel.varseltype.' + varsel.varselType, 'Ukjent nøkkel: ' + varsel.varselType)}</span>
+                    <span className="header-type">{
+                        resources.getOrElse(
+                            'varsel.varseltype.' + varsel.varselType,
+                            'Ukjent nøkkel: ' + varsel.varselType)
+                    }</span>
                     <span className="vekk"> | </span>
                     <span className="header-kanal">
                         {sendIKanal}

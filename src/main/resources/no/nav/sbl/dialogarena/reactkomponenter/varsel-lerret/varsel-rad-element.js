@@ -35,7 +35,9 @@ class VarselRadElement extends React.Component {
         return (
             <li className="varsel-rad-element">
                 <div className="varsel-innhold-container">
-                    <span className="innhold-kanal">{resources.getOrElse('varsel.kanal.' + melding.kanal, melding.kanal) + ': '}</span>
+                    <span className="innhold-kanal">{
+                        resources.getOrElse('varsel.kanal.' + melding.kanal, melding.kanal) + ': '
+                    }</span>
                     <div className="innhold-melding">
                         {epostEmne}
                         <span>{melding.innhold}</span>

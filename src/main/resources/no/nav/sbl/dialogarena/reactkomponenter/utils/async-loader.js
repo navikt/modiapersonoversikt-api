@@ -29,7 +29,8 @@ class AsyncLoader extends React.Component {
     }
 
     componentDidMount() {
-        Q.all(ensureArray(this.props.promises)).then(function allResolved() { // fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
+        // fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
+        Q.all(ensureArray(this.props.promises)).then(function allResolved() {
             let dataargs;
             const args = toArray(arguments);
             let newdataargs;
@@ -66,7 +67,9 @@ class AsyncLoader extends React.Component {
             const passingProps = {};
             passingProps[this.props.toProp] = this.state.data;
 
-            const reactChildren = isArray(this.props.children) ? this.props.children.filter((child) => child !== null) : this.props.children;
+            const reactChildren = isArray(this.props.children)
+                ? this.props.children.filter((child) => child !== null)
+                : this.props.children;
 
             children = React.Children.map(reactChildren, (elem) => React.cloneElement(elem, passingProps));
         }

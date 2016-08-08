@@ -60,7 +60,11 @@ class MeldingerSokStore extends Store {
         switch (event.keyCode) {
             case 38:
                 event.preventDefault();
-                this.state.valgtTraad = MeldingerSokStore.hentMelding(MeldingerSokStore.forrigeMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTraad = MeldingerSokStore.hentMelding(
+                    MeldingerSokStore.forrigeMelding,
+                    this.state.traader,
+                    this.state.valgtTraad
+                );
 
                 MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
@@ -68,7 +72,11 @@ class MeldingerSokStore extends Store {
                 break;
             case 40:
                 event.preventDefault();
-                this.state.valgtTraad = MeldingerSokStore.hentMelding(MeldingerSokStore.nesteMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTraad = MeldingerSokStore.hentMelding(
+                    MeldingerSokStore.nesteMelding,
+                    this.state.traader,
+                    this.state.valgtTraad
+                );
 
                 MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 

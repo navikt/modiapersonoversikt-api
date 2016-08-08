@@ -6,8 +6,12 @@ import { basicReducer } from './../utils/redux-utils';
 import { nyesteSakstema } from './../utils/dato-sortering';
 import { underBehandlingEllerNyereEnnGrenseverdi } from './../utils/siste-oppdatering/behandlingsstatus';
 
-const fjernTommeTema = (antallDagerFerdigBehandletStatusErGyldig) => tema => tema.dokumentMetadata.length > 0
-|| tema.behandlingskjeder.filter(underBehandlingEllerNyereEnnGrenseverdi(antallDagerFerdigBehandletStatusErGyldig)).length > 0;
+const fjernTommeTema = (antallDagerFerdigBehandletStatusErGyldig) =>
+    tema =>
+        tema.dokumentMetadata.length > 0
+        || tema.behandlingskjeder
+            .filter(underBehandlingEllerNyereEnnGrenseverdi(antallDagerFerdigBehandletStatusErGyldig))
+            .length > 0;
 
 const lagAlleTema = (temaliste) => [{
     temanavn: <FormattedMessage id="sakslamell.alletemaer" />,

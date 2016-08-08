@@ -15,7 +15,9 @@ export const pilnavigeringScroll = (event, props) => {
         case 38:
             event.preventDefault();
 
-            index = props.sakstema.indexOf(valgtTema) - 1 < 0 ? props.sakstema.length - 1 : props.sakstema.indexOf(valgtTema) - 1;
+            index = props.sakstema.indexOf(valgtTema) - 1 < 0
+                ? props.sakstema.length - 1
+                : props.sakstema.indexOf(valgtTema) - 1;
             props.velgSak(props.sakstema[index]);
 
             settFokusPaRadioButton(elements[index]);
@@ -25,7 +27,9 @@ export const pilnavigeringScroll = (event, props) => {
         case 40:
             event.preventDefault();
 
-            index = props.sakstema.indexOf(valgtTema) + 1 >= props.sakstema.length ? 0 : props.sakstema.indexOf(valgtTema) + 1;
+            index = props.sakstema.indexOf(valgtTema) + 1 >= props.sakstema.length
+                ? 0
+                : props.sakstema.indexOf(valgtTema) + 1;
             props.velgSak(props.sakstema[index]);
 
             settFokusPaRadioButton(elements[index]);

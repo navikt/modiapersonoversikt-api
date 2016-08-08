@@ -6,7 +6,8 @@ class PromiseUtils {
         const deferred = Q.defer();
         const numPromises = Object.keys(wrapperPromise).length;
         if (n < 0 || n > numPromises || typeof n !== 'number') {
-            const message = 'n = ' + n + '. n must be a number greater than zero, and less than or equal to the number of promises. ';
+            const message = 'n = ' + n + '. n must be a number greater than zero, ' +
+                'and less than or equal to the number of promises. ';
             throw new RangeError(message);
         }
 

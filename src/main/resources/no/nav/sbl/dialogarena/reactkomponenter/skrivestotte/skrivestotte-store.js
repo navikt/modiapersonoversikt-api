@@ -56,7 +56,11 @@ class SkrivstotteStore extends Store {
         switch (event.keyCode) {
             case 38:
                 event.preventDefault();
-                this.state.valgtTekst = SkrivstotteStore.hentTekst(SkrivstotteStore.forrigeTekst, this.state.tekster, this.state.valgtTekst);
+                this.state.valgtTekst = SkrivstotteStore.hentTekst(
+                    SkrivstotteStore.forrigeTekst,
+                    this.state.tekster,
+                    this.state.valgtTekst
+                );
 
                 SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
@@ -64,7 +68,11 @@ class SkrivstotteStore extends Store {
                 break;
             case 40:
                 event.preventDefault();
-                this.state.valgtTekst = SkrivstotteStore.hentTekst(SkrivstotteStore.nesteTekst, this.state.tekster, this.state.valgtTekst);
+                this.state.valgtTekst = SkrivstotteStore.hentTekst(
+                    SkrivstotteStore.nesteTekst,
+                    this.state.tekster,
+                    this.state.valgtTekst
+                );
 
                 SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
 
@@ -84,7 +92,10 @@ class SkrivstotteStore extends Store {
             let eksisterendeTekst = typeof tekstfelt.value === 'undefined' ? '' : tekstfelt.value;
             eksisterendeTekst += eksisterendeTekst.length === 0 ? '' : '\n';
             tekstfelt.focus();
-            tekstfelt.value = eksisterendeTekst + SkrivstotteStore.autofullfor(SkrivstotteStore.stripEmTags(Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)), this.state.autofullfor);
+            tekstfelt.value = eksisterendeTekst + SkrivstotteStore.autofullfor(
+                    SkrivstotteStore.stripEmTags(
+                        Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)
+                    ), this.state.autofullfor);
             const thisEvent = document.createEvent('Event');
             thisEvent.initEvent('input', true, true);
             tekstfelt.dispatchEvent(thisEvent);

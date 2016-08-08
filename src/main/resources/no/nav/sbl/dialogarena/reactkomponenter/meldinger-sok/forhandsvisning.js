@@ -19,7 +19,8 @@ class Forhandsvisning extends React.Component {
         });
 
         const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
-        const antallInformasjon = `Viser <b>${meldinger.length}</b> av <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
+        const antallInformasjon = `Viser <b>${meldinger.length}</b> av 
+                <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
 
         return (
             <div>
