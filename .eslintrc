@@ -19,6 +19,7 @@
     "react/prefer-stateless-function": 1,
     "react/no-string-refs": 1,
     "react/self-closing-comp": [2, {"component": true, "html": false}],
+    "react/no-find-dom-node": 1,
     "import/imports-first": [2, ""],
     "import/no-extraneous-dependencies": [2, {}],
     "import/prefer-default-export": 0,
