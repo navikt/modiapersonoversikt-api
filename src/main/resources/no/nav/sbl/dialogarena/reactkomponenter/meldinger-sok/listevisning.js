@@ -56,7 +56,8 @@ Listevisning.propTypes = {
         temagruppe: pt.string,
         innhold: pt.string
     }),
-    valgtTraad: pt.object.isRequired
+    valgtTraad: pt.object.isRequired,
+    store: pt.object.isRequired
 };
 
 export default Listevisning;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import { Button } from 'react-scroll';
 
 const isInside = (y, elemTopBound, elemBottomBound) => {
@@ -24,8 +24,9 @@ const Kulemeny = ({ dokref, tittel, initialState }) => (
 );
 
 Kulemeny.propTypes = {
-    dokref: React.PropTypes.string.isRequired,
-    tittel: React.PropTypes.string.isRequired
+    dokref: pt.string.isRequired,
+    tittel: pt.string.isRequired,
+    initialState: pt.bool.isRequired
 };
 
 export default Kulemeny;

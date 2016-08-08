@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import DokumentVisning from './dokument-visning';
 
 export function hoveddokumentForst(dokumenter) {
@@ -21,5 +21,8 @@ function DokumentVisningListe({ dokumenter }) {
     );
 }
 
+DokumentVisningListe.propTypes = {
+    dokumenter: pt.object.isRequired
+};
 
 export default DokumentVisningListe;

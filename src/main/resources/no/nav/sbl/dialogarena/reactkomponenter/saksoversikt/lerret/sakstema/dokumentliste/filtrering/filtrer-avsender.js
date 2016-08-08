@@ -45,7 +45,9 @@ const FiltrerAvsender = ({ alleredeValgt, dispatch, intl: { formatMessage } }) =
 };
 
 FiltrerAvsender.propTypes = {
-    alleredeValgt: pt.object.isRequired
+    alleredeValgt: pt.object.isRequired,
+    dispatch: pt.func.isRequired,
+    intl: pt.object.isRequired
 };
 
 export default injectIntl(connect(({ filtreringsvalg }) => ({ filtreringsvalg }))(FiltrerAvsender));
