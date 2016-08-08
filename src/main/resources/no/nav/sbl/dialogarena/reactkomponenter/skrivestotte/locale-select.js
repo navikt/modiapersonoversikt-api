@@ -26,9 +26,9 @@ const LocaleSelect = React.createClass({
         if (uniqueLocales.length <= 1) {
             return null;
         }
-        const options = uniqueLocales.map(function tilOptionsValg(locale) {
-            return <option key={locale} value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>;
-        });
+        const options = uniqueLocales.map((locale) => (
+            <option key={locale} value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>
+        ));
         return (
             <select onChange={this.onChange} value={this.props.locale}>
                 {options}

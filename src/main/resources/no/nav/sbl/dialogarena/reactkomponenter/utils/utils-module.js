@@ -76,7 +76,7 @@ export function omit(obj, filterkeys) {
     const nObj = Object.create(null);
     const filters = filterkeys.hasOwnProperty('length') ? filterkeys : [filterkeys];
 
-    for (const key in obj) {
+    for (const key in obj) { // eslint-disable-line no-restricted-syntax
         if (obj.hasOwnProperty(key) && filters.indexOf(key) < 0) {
             nObj[key] = obj[key];
         }

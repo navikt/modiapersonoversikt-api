@@ -7,7 +7,7 @@ describe('utils test', () => {
     it('debounce test immediate', (done) => {
         let c = 0;
         const fn = debounce(() => {
-            c = c + 1;
+            c++;
         }, 100, true);
 
         fn();
@@ -21,7 +21,7 @@ describe('utils test', () => {
     it('debounce test', (done) => {
         let c = 0;
         const fn = debounce(() => {
-            c = c + 1;
+            c++;
         }, 0);
 
         fn();
@@ -64,7 +64,10 @@ describe('utils test', () => {
         const filterListe = omit(myObj, ['a', 'b']);
 
         assert.isTrue(Object.keys(filterVerdi).length === 2);
+        assert.isTrue(filterVerdi.a === undefined);
+
         assert.isTrue(Object.keys(filterListe).length === 1);
+        assert.isTrue(filterListe.b === undefined);
     });
 
     it('kvpair mapper object til double-array', () => {

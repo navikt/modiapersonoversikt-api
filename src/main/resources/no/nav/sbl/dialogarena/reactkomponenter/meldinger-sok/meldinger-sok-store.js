@@ -105,6 +105,7 @@ class MeldingerSokStore extends Store {
                 return hentElement(elementer, i);
             }
         }
+        return undefined;
     }
 
     static nesteMelding(elementer, index) {

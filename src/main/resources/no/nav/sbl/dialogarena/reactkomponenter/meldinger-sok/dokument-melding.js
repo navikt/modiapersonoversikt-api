@@ -8,7 +8,7 @@ class DokumentMelding extends React.Component {
 
         const clsExt = erInngaaende ? 'inngaaende' : 'utgaaende';
         const cls = `melding clearfix ${clsExt}`;
-        const src = `/modiabrukerdialog/img/nav-logo.svg`;
+        const src = '/modiabrukerdialog/img/nav-logo.svg';
         const altTekst = 'Melding om dokument';
         let meldingOgLestStatus = `${statusTekst}, `;
         if (!erInngaaende) {

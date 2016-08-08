@@ -61,9 +61,15 @@ const Skrivestotte = React.createClass({
         this.setState(this.store.getState());
     },
     render: function render() {
-        const tekstlistekomponenter = this.state.tekster.map(function tekstListeVM(tekst) {
-            return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store} />;
-        }.bind(this));
+        const tekstlistekomponenter = this.state.tekster.map((tekst) => (
+            <TekstListeKomponent
+                key={tekst.key}
+                tekst={tekst}
+                valgtTekst={this.state.valgtTekst}
+                locale={this.state.valgtLocale}
+                store={this.store}
+            />
+        ));
 
         const erTom = this.state.tekster.length === 0;
         const sokVisning = (

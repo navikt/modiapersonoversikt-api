@@ -49,11 +49,11 @@ class AsyncLoader extends React.Component {
                 data: newdataargs,
                 status: 'ok'
             });
-        }.bind(this), function rejectHandler() {
+        }.bind(this), () => {
             this.setState({
                 status: 'rejected'
             });
-        }.bind(this));// Binding må til siden vi ikke bruker fat-arrow
+        });
     }
 
     render() {
@@ -68,9 +68,7 @@ class AsyncLoader extends React.Component {
 
             const reactChildren = isArray(this.props.children) ? this.props.children.filter((child) => child !== null) : this.props.children;
 
-            children = React.Children.map(reactChildren, function passPropsToChildren(elem) {
-                return React.cloneElement(elem, passingProps);
-            });
+            children = React.Children.map(reactChildren, (elem) => React.cloneElement(elem, passingProps));
         }
         return (
             <div className="async-loader">

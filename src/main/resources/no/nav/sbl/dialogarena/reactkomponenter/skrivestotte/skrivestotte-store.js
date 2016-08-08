@@ -114,6 +114,7 @@ class SkrivstotteStore extends Store {
                 return hentElement(elementer, i);
             }
         }
+        return undefined;
     }
 
     static forrigeTekst(elementer, index) {
@@ -153,12 +154,12 @@ class SkrivstotteStore extends Store {
 
 SkrivstotteStore.hentSokeresultater =
     Utils.debounce(function debouncedSok(fritekst, knagger) {
-        SkrivstotteStore._sok(fritekst, knagger).done(function sokCB(resultat) {
+        SkrivstotteStore._sok(fritekst, knagger).done((resultat) => {
             this.state.tekster = resultat;
             this.state.valgtTekst = resultat[0] || {};
             SkrivstotteStore._updateScroll(this.container.querySelector('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
-        }.bind(this));
+        });
     }, 150);
 
 export default SkrivstotteStore;

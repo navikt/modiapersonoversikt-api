@@ -5,7 +5,7 @@ import { FormattedDate, injectIntl } from 'react-intl';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../../../utils/dato-utils';
 import dokumentinfoShape from './dokumentinfo-shape';
 
-const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
+const kanViseVedlegg = vedleggListe => (vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false);
 const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
 
 class DokumentInfoElm extends React.Component {

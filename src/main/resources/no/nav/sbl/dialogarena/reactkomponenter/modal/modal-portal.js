@@ -99,7 +99,7 @@ const ModalPortal = React.createClass({
     focusFirst: function focusFirst() {
         this.focusAfterClose = document.activeElement;
         let tabbables = $(ReactDOM.findDOMNode(this.refs.content)).find(':tabbable');
-        this.props.skipFocus.forEach(function removeFromTabbables(skipFocusTag) {
+        this.props.skipFocus.forEach((skipFocusTag) => {
             tabbables = tabbables.not(skipFocusTag);
         });
 
@@ -119,9 +119,7 @@ const ModalPortal = React.createClass({
             children = [children];
         }
 
-        children.map(function addModalProp(child) {
-            return React.cloneElement(child, { modal: this.props.modal });
-        }.bind(this));
+        children.map((child) => React.cloneElement(child, { modal: this.props.modal }));
 
         const title = this.state.title;
         const description = this.state.description;

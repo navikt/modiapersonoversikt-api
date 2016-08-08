@@ -3,10 +3,15 @@ import format from 'string-format';
 
 class Snurrepipp extends React.Component {
     render() {
-        const src = format('/modiabrukerdialog/img/ajaxloader/{}/loader_{}_{}.gif', this.props.farge, this.props.farge, this.props.storrelse);
+        const src = format(
+            '/modiabrukerdialog/img/ajaxloader/{}/loader_{}_{}.gif',
+            this.props.farge,
+            this.props.farge,
+            this.props.storrelse
+        );
         return (
             <div className="snurrepipp">
-                <img src={src} />
+                <img src={src} role="presentation" />
             </div>
         );
     }

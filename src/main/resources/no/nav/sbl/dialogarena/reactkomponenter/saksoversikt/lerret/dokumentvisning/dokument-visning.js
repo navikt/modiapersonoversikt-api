@@ -69,6 +69,7 @@ class DokumentVisning extends Component {
             };
             return false;
         }
+        return undefined;
     }
 
     render() {

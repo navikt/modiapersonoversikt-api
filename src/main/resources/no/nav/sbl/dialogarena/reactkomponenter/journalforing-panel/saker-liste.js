@@ -32,7 +32,8 @@ function grupperSaker() {
     const saker = this.props.saker;
     const temagruppe = this.props.temagruppe;
     if (temagruppe) {
-        const gruppert = skillUtPrioriterteSaker(saker, temagruppe, this.props.temagruppeTemaMapping).map(grupperPaaTemakodeOgSorter);
+        const gruppert = skillUtPrioriterteSaker(saker, temagruppe, this.props.temagruppeTemaMapping)
+            .map(grupperPaaTemakodeOgSorter);
         return flatten(gruppert);
     }
 

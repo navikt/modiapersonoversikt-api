@@ -24,6 +24,7 @@ class SakstemaPage extends React.Component {
                     <img
                         className="ingensakstemaerimage"
                         src="/modiabrukerdialog/img/saksoversikt/dokument_flyttet.svg"
+                        role="presentation"
                     />
                     <h1 className="ingen-sakstemaer-tekst">
                         <FormattedMessage id="sakslamell.ingensaker" />

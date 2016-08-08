@@ -14,6 +14,7 @@ class VarselRadElement extends React.Component {
             const prefix = resources.getOrElse('varsel.tilbakemelding.' + melding.kanal, melding.kanal);
             return <p className="innhold-informasjon ok">{prefix + this.getMottakerInfo(melding)}</p>;
         }
+        return undefined;
     }
 
     getMottakerInfo(melding) {
