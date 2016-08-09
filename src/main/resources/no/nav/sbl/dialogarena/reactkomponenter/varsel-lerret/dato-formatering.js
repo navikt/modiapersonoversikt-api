@@ -3,6 +3,6 @@ require('moment/locale/nb');
 
 moment.locale('nb');
 
-export function prettyDate(date, format = 'DD. MMM, HH.mm') {
+export function prettyDate(date, format = 'DD. MMM') {
     return moment(date).format(format);
 }

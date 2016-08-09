@@ -10,7 +10,7 @@ class DokumentMelding extends React.Component {
         const cls = `melding clearfix ${clsExt}`;
         const src = '/modiabrukerdialog/img/nav-logo.svg';
         const altTekst = 'Melding om dokument';
-        let meldingOgLestStatus = `${statusTekst}, `;
+        let meldingOgLestStatus = `${statusTekst} - `;
         if (!erInngaaende) {
             meldingOgLestStatus += `${lestStatus} `;
         }

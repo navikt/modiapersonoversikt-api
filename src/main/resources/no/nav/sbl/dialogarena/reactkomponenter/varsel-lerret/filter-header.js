@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 
 class FilterHeader extends React.Component {
+
     render() {
         const { style } = this.props;
         return (
@@ -12,7 +13,7 @@ class FilterHeader extends React.Component {
 }
 
 FilterHeader.propTypes = {
-    style: React.PropTypes.string
+    style: PT.object
 };
 
 export default FilterHeader;

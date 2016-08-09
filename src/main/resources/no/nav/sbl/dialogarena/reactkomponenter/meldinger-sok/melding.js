@@ -13,9 +13,9 @@ class Melding extends React.Component {
 
         const clsExt = melding.erInngaaende ? 'inngaaende' : 'utgaaende';
         const cls = `melding clearfix ${clsExt}`;
-        const src = `/modiabrukerdialog/img/${(melding.erInngaaende ? 'personikon.svg' : 'nav-logo.svg')}`;
+        const src = `/modiabrukerdialog/img/${(melding.erInngaaende ? 'meldinger/personikon.svg' : 'nav-logo.svg')}`;
         const altTekst = melding.erInngaaende ? 'Melding fra bruker' : 'Melding fra NAV';
-        let meldingsStatusTekst = `${melding.statusTekst}, `;
+        let meldingsStatusTekst = `${melding.statusTekst} - `;
         if (!melding.erInngaaende) {
             meldingsStatusTekst += `${melding.lestStatus} `;
         }

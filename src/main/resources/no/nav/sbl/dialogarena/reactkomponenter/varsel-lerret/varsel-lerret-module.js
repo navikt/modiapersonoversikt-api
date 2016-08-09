@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 import AsyncLoader from './../utils/async-loader';
 import VarselStore from './varsel-store';
 import FilterHeader from './filter-header';
@@ -47,7 +47,7 @@ class VarselLerret extends React.Component {
 }
 
 VarselLerret.propTypes = {
-    fnr: React.PropTypes.string.isRequired
+    fnr: PT.string.isRequired
 };
 
 export default VarselLerret;
