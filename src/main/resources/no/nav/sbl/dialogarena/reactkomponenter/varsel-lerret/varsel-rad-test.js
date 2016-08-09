@@ -28,7 +28,7 @@ describe('VarselRad', () => {
         const element = shallow(<VarselRad store={store} varsel={varsel} />);
 
         expect(element.find('.header-kanal').text()).to.contain('kanal1, kanal2');
-        expect(element.find('.header-dato').text()).to.contain('01. jan., 00.00');
+        expect(element.find('.header-dato').text()).to.contain('01. jan.');
         expect(element.find('.ekspanderingspil.ned').length).to.equal(1);
         expect(element.find('VarselRadElement').length).to.equal(0);
     });
