@@ -20,7 +20,7 @@ public class PesysPolicyTest extends AbstractPDPTest {
 		checkDecisionForRole("0000-GA-PENSJON_BRUKERHJELPA", PERMIT);
 		checkDecisionForRole("0000-GA-PENSJON_SAKSBEHANDLER", PERMIT);
 		checkDecisionForRole("0000-GA-PENSJON_KLAGEBEH", PERMIT);
-		checkDecisionForRole("0000-GA-Pensjon_Okonomi", PERMIT);
+		checkDecisionForRole("0000-GA-PENSJON_OKONOMI", PERMIT);
 	}
 
 	@Test
