@@ -1,5 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pdp;
 
+import org.jboss.security.xacml.core.model.context.DecisionType;
 import org.jboss.security.xacml.interfaces.RequestContext;
 import org.junit.Test;
 
@@ -13,20 +14,27 @@ public class PesysPolicyTest extends AbstractPDPTest {
 
 	@Test
 	public void allowAccessPensjonSaksbehandler() throws Exception {
-		RequestContext request = createRequestBuilder()
-				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-PENSJON_SAKSBEHANDLER")
-				.withActionAttr(ATTRIBUTEID_ACTION_ID, "pensaksbeh")
-				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, "")
-				.build();
-		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
+		checkDecisionForRole("0000-GA-PENSJON_SAKSBEHANDLER", PERMIT);
+		checkDecisionForRole("0000-GA-PENSJON_VEILEDER", PERMIT);
+		checkDecisionForRole("0000-GA-PENSJON_BEGRENSET_VEILEDER", PERMIT);
+		checkDecisionForRole("0000-GA-PENSJON_BRUKERHJELPA", PERMIT);
+		checkDecisionForRole("0000-GA-PENSJON_SAKSBEHANDLER", PERMIT);
+		checkDecisionForRole("0000-GA-PENSJON_KLAGEBEH", PERMIT);
+		checkDecisionForRole("0000-GA-Pensjon_Okonomi", PERMIT);
 	}
 
 	@Test
 	public void denyAccessPensjonSaksbehandler() throws Exception {
+		checkDecisionForRole("", DENY);
+		checkDecisionForRole("0000-SUPER-DUMMY-ROLE", DENY);
+	}
+
+	private void checkDecisionForRole(String role, DecisionType decision) {
 		RequestContext request = createRequestBuilder()
+				.withSubjectAttr(ATTRIBUTEID_ROLE, role)
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, "pensaksbeh")
 				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, "")
 				.build();
-		assertThat(pdp.evaluate(request)).hasDecision(DENY);
+		assertThat(pdp.evaluate(request)).hasDecision(decision);
 	}
 }
