@@ -28,7 +28,7 @@
 					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_BRUKERHJELPA</AttributeValue>
 					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_SAKSBEHANDLER</AttributeValue>
 					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_KLAGEBEH</AttributeValue>
-					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Pensjon_Okonomi</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_OKONOMI</AttributeValue>
 				</Apply>
 				<SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
 											AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
