@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
@@ -44,7 +45,7 @@ public class VarslerServiceImpl implements VarslerService {
                     .collect(toList());
 
             if (varsler.size() == 0) {
-                return empty();
+                return of(emptyList());
             }
 
             return of(varsler);
