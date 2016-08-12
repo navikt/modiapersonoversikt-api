@@ -25,8 +25,15 @@ public class Traad {
         this.temagruppe = forsteMelding.temagruppeNavn;
         this.journalfortTema = forsteMelding.journalfortTemanavn;
         this.dato = sisteMelding.getVisningsDato();
-        this.statusKlasse = sisteMelding.statusKlasse + (antallMeldingerIOpprinneligTraad == 1 ? " en-melding" : " flere-meldinger");
+        this.statusKlasse = lagStatusKlasse(sisteMelding);
         this.statusTekst = sisteMelding.statusTekst;
+    }
+
+    private String lagStatusKlasse(Melding sisteMelding) {
+        if (sisteMelding.erDokumentMelding) {
+            return sisteMelding.statusKlasse;
+        }
+        return sisteMelding.statusKlasse + (antallMeldingerIOpprinneligTraad == 1 ? " en-melding" : " flere-meldinger");
     }
 
     public static final Transformer<Traad, DateTime> DATO = traad -> traad.dato;
