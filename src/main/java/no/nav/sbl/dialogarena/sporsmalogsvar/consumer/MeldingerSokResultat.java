@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 public class MeldingerSokResultat {
-    public static String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, lestStatus, kanal, skrevetAvNavn,
+    public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, lestStatus, kanal, skrevetAvNavn,
             journalfortAvNavn, journalfortAvIdent, journalfortDato, journalfortSaksId;
 
     public MeldingerSokResultat withFritekst(String fritekst) {
