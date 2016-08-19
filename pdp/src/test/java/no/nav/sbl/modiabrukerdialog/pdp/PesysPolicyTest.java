@@ -15,12 +15,12 @@ public class PesysPolicyTest extends AbstractPDPTest {
 	@Test
 	public void allowAccessPensjonSaksbehandler() throws Exception {
 		checkDecisionForRole("0000-GA-PENSJON_SAKSBEHANDLER", PERMIT);
-		checkDecisionForRole("0000-GA-PENSJON_VEILEDER", PERMIT);
-		checkDecisionForRole("0000-GA-PENSJON_BEGRENSET_VEILEDER", PERMIT);
+		checkDecisionForRole("0000-GA-Pensjon_VEILEDER", PERMIT);
+		checkDecisionForRole("0000-GA-Pensjon_BEGRENSET_VEILEDER", PERMIT);
 		checkDecisionForRole("0000-GA-PENSJON_BRUKERHJELPA", PERMIT);
 		checkDecisionForRole("0000-GA-PENSJON_SAKSBEHANDLER", PERMIT);
 		checkDecisionForRole("0000-GA-PENSJON_KLAGEBEH", PERMIT);
-		checkDecisionForRole("0000-GA-PENSJON_OKONOMI", PERMIT);
+		checkDecisionForRole("0000-GA-Pensjon_Okonomi", PERMIT);
 	}
 
 	@Test
