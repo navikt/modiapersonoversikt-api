@@ -141,11 +141,15 @@ jQuery(document).ready(function ($) {
     }
 
     function visAlleKommendeUtbetalinger(id) {
-        var utbetalinger = $(id).parent().find(".kommende-utbetalinger ul li")
+        var utbetalinger = $(id).parent().find(".kommende-utbetalinger ul li");
         $.each(utbetalinger, function(index, value) {
             $(utbetalinger[index]).css('display','block')
         });
         $(id).parent().find('.vis-alle-kommende-utbetalinger').hide();
+    }
+
+    function visAlleHistoriskeUtbetalinger(id) {
+        $(id).parent().find('.vis-alle-historiske-utbetalinger').hide();
     }
 
     function gjennomfoerAvansertSok() {
