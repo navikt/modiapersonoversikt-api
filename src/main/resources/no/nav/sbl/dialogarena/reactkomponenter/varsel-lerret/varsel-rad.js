@@ -17,7 +17,7 @@ class VarselRad extends React.Component {
     render() {
         const varsel = this.props.varsel;
         const resources = this.props.store.getResources();
-        const datoformat = resources.getOrElse('varsel.ledetekst.rad.datoformat', 'DD. MMM');
+        const datoformat = resources.getOrElse('varsel.ledetekst.rad.datoformat', 'DD. MMM YYYY');
 
         const brukteKanaler = varsel.meldingListe
             .map((m) => resources.getOrElse(`varsel.kanal.${m.kanal}`, m.kanal))
@@ -39,6 +39,8 @@ class VarselRad extends React.Component {
             pilClassname += ' ned';
         }
 
+        const varselType = resources.getOrElse(`varsel.varseltype.${varsel.varselType}`, `Ukjent nøkkel: ${varsel.varselType}`);
+        const revarsling = varsel.erRevarsling ? ` - ${resources.getOrElse('varsler.revarsel', 'Revarsling')}` : '';
 
         return (
             <li className="varsel-rad">
@@ -46,10 +48,7 @@ class VarselRad extends React.Component {
                     <span className="header-dato">{prettyDate(varsel.mottattTidspunkt, datoformat)}</span>
                     <span className="vekk"> | </span>
                     <span className="header-type">
-                        {resources.getOrElse(
-                            `varsel.varseltype.${varsel.varselType}`,
-                            `Ukjent nøkkel: ${varsel.varselType}`
-                        )}
+                        {`${varselType} ${revarsling}`}
                     </span>
                     <span className="vekk"> | </span>
                     <span className="header-kanal">
