@@ -62,7 +62,6 @@ public class VarslerServiceImpl implements VarslerService {
         String kanal = varsel.getKanal();
         String innhold = varsel.getVarseltekst();
         String mottakerInformasjon = varsel.getKontaktinfo();
-        String statusKode = "";
         XMLGregorianCalendar sendtDato = varsel.getSendt();
         XMLGregorianCalendar distribuertDato = varsel.getDistribuert();
         DateTime utsendingsTidpunkt = null;
@@ -75,8 +74,9 @@ public class VarslerServiceImpl implements VarslerService {
         String feilbeskrivelse = "";
         String epostemne = varsel.getVarseltittel();
         String url = varsel.getVarselURL();
+        boolean erRevarsel = varsel.isReVarsel();
 
-        return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, statusKode, feilbeskrivelse, epostemne, url);
+        return new VarselMelding(kanal, innhold, mottakerInformasjon, utsendingsTidpunkt, feilbeskrivelse, epostemne, url, erRevarsel);
 
     };
 
@@ -89,13 +89,16 @@ public class VarslerServiceImpl implements VarslerService {
             sendtTidspunkt = TIL_DATETIME.apply(varselBestilling.getSisteVarselutsendelse());
         }
 
-        String status = "";
-
         List<VarselMelding> varselMeldingliste = varselBestilling.getVarselListe().stream()
                 .map(TIL_VARSEL_MELDING)
                 .filter(varselmelding -> varselmelding.utsendingsTidspunkt != null)
                 .collect(toList());
 
-        return new Varsel(varselType, sendtTidspunkt, status, varselMeldingliste);
+        boolean erRevarsling = varselMeldingliste.stream()
+                .filter(varselMelding -> varselMelding.erRevarsel)
+                .findAny()
+                .isPresent();
+
+        return new Varsel(varselType, sendtTidspunkt, varselMeldingliste, erRevarsling);
     };
 }
