@@ -3,7 +3,8 @@ import Utils from './../utils/utils-module';
 import sanitize from 'sanitize-html';
 import Journalfort from './journalfort';
 
-const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
 class Melding extends React.Component {
 
@@ -19,19 +20,21 @@ class Melding extends React.Component {
             meldingsStatusTekst += `${melding.lestStatus} `;
         }
         meldingsStatusTekst += melding.temagruppeNavn;
-        
+
         const paragrafer = melding.fritekst.split(/[\r\n]+/)
             .map(Utils.leggTilLenkerTags)
             .map(Utils.tilParagraf);
-        
+
         const datoTekst = melding.visningsDatoTekst;
 
         const dato = sanitize(datoTekst || 'Fant ingen data', { allowedTags: ['em'] });
-        const skrevetMelding = melding.erDokumentMelding ? '' : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;
+        const skrevetMelding = melding.erDokumentMelding
+            ? ''
+            : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;
 
         return (
             <div className={cls}>
-                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst}/>
+                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst} />
                 <div className="meldingData">
                     <article className="melding-header">
                         <p className="meldingstatus" dangerouslySetInnerHTML={{ __html: meldingsStatusTekst }}></p>

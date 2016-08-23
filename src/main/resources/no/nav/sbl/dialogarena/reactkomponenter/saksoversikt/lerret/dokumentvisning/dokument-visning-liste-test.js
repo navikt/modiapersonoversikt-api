@@ -5,9 +5,8 @@ import React from 'react';
 import { expect } from 'chai';
 import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
-import DokumentVisningListe from './dokument-visning-liste';
+import DokumentVisningListe, { hoveddokumentForst } from './dokument-visning-liste';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
-import { hoveddokumentForst } from './dokument-visning-liste';
 
 describe('DokumentVisningListe', () => {
     const messages = {
@@ -63,31 +62,31 @@ describe('DokumentVisningListe', () => {
     });
 
     it('Skal sortere slik at hoveddokumentet havner først i listen', () => {
-            const dokumenter =  [
-                {
-                    antallSider: 5,
-                    dokumentreferanse: '3',
-                    journalpostId: '321',
-                    pdfUrl: '2134',
-                    erHoveddokument: false
+        const dokumenter = [
+            {
+                antallSider: 5,
+                dokumentreferanse: '3',
+                journalpostId: '321',
+                pdfUrl: '2134',
+                erHoveddokument: false
 
-                },
-                {
-                    antallSider: 2,
-                    dokumentreferanse: '2',
-                    journalpostId: '654',
-                    pdfUrl: '2134',
-                    erHoveddokument: true
-                },
-                {
-                    antallSider: 1,
-                    dokumentreferanse: '1',
-                    journalpostId: '654',
-                    pdfUrl: '2134',
-                    erHoveddokument: false
+            },
+            {
+                antallSider: 2,
+                dokumentreferanse: '2',
+                journalpostId: '654',
+                pdfUrl: '2134',
+                erHoveddokument: true
+            },
+            {
+                antallSider: 1,
+                dokumentreferanse: '1',
+                journalpostId: '654',
+                pdfUrl: '2134',
+                erHoveddokument: false
 
-                }
-            ];
+            }
+        ];
 
         const sortertDokumentliste = hoveddokumentForst(dokumenter);
         expect(sortertDokumentliste.length).to.equal(3);

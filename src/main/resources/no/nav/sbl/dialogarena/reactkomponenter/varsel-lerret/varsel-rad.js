@@ -34,7 +34,7 @@ class VarselRad extends React.Component {
             pilClassname += ' opp';
             meldinger = varsel.meldingListe
                 .sort((e1, e2) => e1.utsendingsTidspunkt < e2.utsendingsTidspunkt)
-                .map((melding) => <VarselRadElement melding={melding} store={this.props.store}/>);
+                .map((melding) => <VarselRadElement melding={melding} store={this.props.store} />);
         } else {
             pilClassname += ' ned';
         }
@@ -46,12 +46,15 @@ class VarselRad extends React.Component {
                     <span className="header-dato">{prettyDate(varsel.mottattTidspunkt, datoformat)}</span>
                     <span className="vekk"> | </span>
                     <span className="header-type">
-                        {resources.getOrElse(`varsel.varseltype.${varsel.varselType}`, `Ukjent nøkkel: ${varsel.varselType}`)}
+                        {resources.getOrElse(
+                            `varsel.varseltype.${varsel.varselType}`,
+                            `Ukjent nøkkel: ${varsel.varselType}`
+                        )}
                     </span>
                     <span className="vekk"> | </span>
                     <span className="header-kanal">
                         {unikeKanaler}
-                        <i className={pilClassname} aria-hidden="true"/>
+                        <i className={pilClassname} aria-hidden="true" />
                     </span>
                 </button>
                 <ul className="reset-ul-styling">

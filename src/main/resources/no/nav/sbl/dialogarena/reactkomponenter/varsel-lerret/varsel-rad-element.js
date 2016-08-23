@@ -16,6 +16,7 @@ class VarselRadElement extends React.Component {
             const prefix = resources.getOrElse(`varsel.tilbakemelding.${melding.kanal}`, melding.kanal);
             return <p className="innhold-informasjon ok">{prefix}{this.getMottakerInfo(melding)}</p>;
         }
+        return undefined;
     }
 
     getMottakerInfo(melding) {
@@ -30,7 +31,7 @@ class VarselRadElement extends React.Component {
         const innholdInfo = this.getInnholdInfo(melding);
         const resources = this.props.store.getResources();
         const epostEmne = melding.kanal === 'EPOST' && melding.epostemne ?
-            <div><span className="innhold-epostemne">{melding.epostemne}</span><br/></div> :
+            <div><span className="innhold-epostemne">{melding.epostemne}</span><br /></div> :
             undefined;
 
         const kanal = `${resources.getOrElse(`varsel.kanal.${melding.kanal}`, melding.kanal)}: `;
@@ -45,7 +46,11 @@ class VarselRadElement extends React.Component {
                     </div>
                     <p>
                         <span className="varsel-dato">{varselDato}</span>
-                        <Kontaktinformasjon kanal={melding.kanal} mottakerInformasjon={melding.mottakerInformasjon} resources={resources} />
+                        <Kontaktinformasjon
+                            kanal={melding.kanal}
+                            mottakerInformasjon={melding.mottakerInformasjon}
+                            resources={resources}
+                        />
                     </p>
                 </div>
                 {innholdInfo}

@@ -13,6 +13,7 @@ import Snurrepipp from './../../utils/snurrepipp';
 import { IntlProvider, addLocaleData, FormattedMessage } from 'react-intl';
 import MiljovariablerProvider from './../miljovariabler-provider';
 import nbLocale from 'react-intl/locale-data/nb';
+
 addLocaleData(nbLocale);
 
 const contextRoutes = {
@@ -48,7 +49,7 @@ function lagFeilmelding(props) {
     if (enonicFeilmeldingKey !== '') {
         return (
             <div className="lamell-feilmelding" role="alert" aria-atomic="true">
-                <FormattedMessage id={`${enonicFeilmeldingKey}`}/>
+                <FormattedMessage id={`${enonicFeilmeldingKey}`} />
             </div>);
     }
 
@@ -64,7 +65,7 @@ export class SaksoversiktLerret extends React.Component {
         if (this.props.status === Const.VOID || this.props.status === Const.LASTER) {
             return (
                 <div className="saksoversikt-snurrepipp">
-                    <Snurrepipp farge="hvit"/>
+                    <Snurrepipp farge="hvit" />
                 </div>
             );
         }
@@ -95,8 +96,8 @@ SaksoversiktLerret.propTypes = {
     miljovariabler: React.PropTypes.object
 };
 
-const mapStateToProps = (state) => {
-    return {
+const mapStateToProps = (state) => (
+    {
         valgtside: state.lerret.valgtside,
         sakstema: state.lerret.data.sakstema,
         feilendeSystemer: state.lerret.data.feilendeSystemer,
@@ -106,8 +107,8 @@ const mapStateToProps = (state) => {
         miljovariabler: state.lerret.data.miljovariabler,
         filtreringsvalg: state.lerret.filtreringsvalg,
         scrollToDokumentId: state.lerret.scrollToDokumentId
-    };
-};
+    }
+);
 
 export default wrapWithProvider(connect(mapStateToProps, {
     velgSak,

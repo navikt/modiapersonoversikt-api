@@ -7,7 +7,8 @@ import ResourceMap from '../utils/resource-map';
 import VarselRadElement from './varsel-rad-element';
 
 describe('VarselRadElement', () => {
-    let store, melding;
+    let store;
+    let melding;
 
     beforeEach(() => {
         const resources = new ResourceMap({});

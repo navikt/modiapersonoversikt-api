@@ -1,8 +1,7 @@
 /* eslint-env mocha */
 import './../../test-config';
 import { expect } from 'chai';
-import { nyesteSakstema } from './dato-sortering';
-import { nyesteElementISakstema } from './dato-sortering';
+import { nyesteSakstema, nyesteElementISakstema } from './dato-sortering';
 
 const sakstema1 = {
     temakode: 'AAP',

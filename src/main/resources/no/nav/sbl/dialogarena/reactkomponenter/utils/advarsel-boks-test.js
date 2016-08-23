@@ -2,15 +2,16 @@
 import './../test-config';
 import { expect } from 'chai';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import AdvarselBoks from './advarsel-boks';
 import TestUtils from 'react-addons-test-utils';
 
 describe('AdvarselBoks test', () => {
     it('Skal vise tekst og ha klassen warn', () => {
         const text = 'TEXT';
-        const advarselboks = TestUtils.renderIntoDocument(<AdvarselBoks tekst={text}/>);
+        const advarselboks = TestUtils.renderIntoDocument(<AdvarselBoks tekst={text} />);
 
-        const rendered = React.findDOMNode(advarselboks);
+        const rendered = ReactDOM.findDOMNode(advarselboks);
 
         expect(rendered.tagName).to.equal('DIV');
         expect(rendered.classList[0]).to.equal('advarsel-boks');

@@ -12,7 +12,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
 
     toggleEkspandering(event) {
         event.preventDefault();
-        this.setState({ekspandert: !this.state.ekspandert});
+        this.setState({ ekspandert: !this.state.ekspandert });
     }
 
     velgOkonomiskSosialhelp(event) {
@@ -39,8 +39,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
             content = (
                 <ul className="list-saker">
                     <li className="text-row-list">
-                        <a href="#" role="button" className="content-row-list"
-                           onClick={this.velgOkonomiskSosialhelp}>
+                        <a href="#" role="button" className="content-row-list" onClick={this.velgOkonomiskSosialhelp}>
                             Ø - Ikke i bruk - vil ikke bli journalført
                         </a>
                     </li>
@@ -49,7 +48,11 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
         }
         return (
             <div className="saker-tema">
-                <button className="sosialhjelp-knapp" onClick={this.toggleEkspandering} aria-expanded={this.state.ekspandert}>
+                <button
+                    className="sosialhjelp-knapp"
+                    onClick={this.toggleEkspandering}
+                    aria-expanded={this.state.ekspandert}
+                >
                     <div className="tema-bar">
                         <h3 className="tema-overskrift">Ø - Ikke i bruk</h3>
 
@@ -63,7 +66,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
 }
 
 OkonomiskSosialhjelpKnapp.propTypes = {
-    'velgSak': React.PropTypes.func.isRequired
+    velgSak: React.PropTypes.func.isRequired
 };
 
 export default OkonomiskSosialhjelpKnapp;

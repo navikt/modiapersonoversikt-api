@@ -21,11 +21,13 @@ class SakstemaPage extends React.Component {
         if (!sakstema || sakstema.length === 0) {
             return (
                 <div className="ingen-sakstemaer">
-                    <img className="ingensakstemaerimage"
-                      src="/modiabrukerdialog/img/saksoversikt/dokument_flyttet.svg"
+                    <img
+                        className="ingensakstemaerimage"
+                        src="/modiabrukerdialog/img/saksoversikt/dokument_flyttet.svg"
+                        role="presentation"
                     />
                     <h1 className="ingen-sakstemaer-tekst">
-                        <FormattedMessage id="sakslamell.ingensaker"/>
+                        <FormattedMessage id="sakslamell.ingensaker" />
                     </h1>
                 </div>);
         }
@@ -33,13 +35,16 @@ class SakstemaPage extends React.Component {
         return (
             <div className="sakstema-container">
                 <section onKeyDown={this.keyDownHandler.bind(this)} className="saksoversikt-liste scrollpanel">
-                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema}/>
+                    <SakstemaListe sakstema={sakstema} velgSak={velgSak} valgtTema={valgtTema} />
                 </section>
                 <section className="saksoversikt-innhold side-innhold scrollpanel">
                     <h2 className="vekk">{valgtTema.temanavn}</h2>
-                    <VisningDokumentliste visSide={visSide} valgtTema={valgtTema}
-                      brukerNavn={brukerNavn} velgJournalpost={velgJournalpost}
-                      filtreringsvalg={filtreringsvalg}
+                    <VisningDokumentliste
+                        visSide={visSide}
+                        valgtTema={valgtTema}
+                        brukerNavn={brukerNavn}
+                        velgJournalpost={velgJournalpost}
+                        filtreringsvalg={filtreringsvalg}
                     />
                 </section>
             </div>

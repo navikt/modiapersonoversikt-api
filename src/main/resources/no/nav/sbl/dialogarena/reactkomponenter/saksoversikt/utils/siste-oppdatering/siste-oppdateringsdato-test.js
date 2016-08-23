@@ -1,4 +1,4 @@
-/* eslint-env mocha */
+/* eslint no-unused-expressions:0 */
 import './../../../test-config';
 import { expect } from 'chai';
 import { sisteOppdatering } from './siste-oppdateringsdato';

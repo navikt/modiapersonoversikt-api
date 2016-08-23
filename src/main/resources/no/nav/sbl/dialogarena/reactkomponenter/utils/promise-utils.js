@@ -6,11 +6,12 @@ class PromiseUtils {
         const deferred = Q.defer();
         const numPromises = Object.keys(wrapperPromise).length;
         if (n < 0 || n > numPromises || typeof n !== 'number') {
-            const message = 'n = ' + n + '. n must be a number greater than zero, and less than or equal to the number of promises. ';
+            const message = 'n = ' + n + '. n must be a number greater than zero, ' +
+                'and less than or equal to the number of promises. ';
             throw new RangeError(message);
         }
 
-        const promiseArray = Object.keys(wrapperPromise).sort().reduce((acc, key)=> {
+        const promiseArray = Object.keys(wrapperPromise).sort().reduce((acc, key) => {
             acc.push(wrapperPromise[key]);
             return acc;
         }, []);
@@ -22,7 +23,7 @@ class PromiseUtils {
                     return acc;
                 }, {});
 
-                const success = Object.keys(wrapperPromise).reduce((acc, key)=> {
+                const success = Object.keys(wrapperPromise).reduce((acc, key) => {
                     if (wrapperPromise[key].isFulfilled()) {
                         return acc + 1;
                     }

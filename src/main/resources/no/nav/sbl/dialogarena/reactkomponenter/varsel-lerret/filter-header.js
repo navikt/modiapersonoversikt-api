@@ -1,9 +1,6 @@
 import React, { PropTypes as PT } from 'react';
 
 class FilterHeader extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const { style } = this.props;

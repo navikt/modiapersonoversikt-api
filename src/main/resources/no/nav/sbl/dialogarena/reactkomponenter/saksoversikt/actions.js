@@ -28,7 +28,7 @@ export const hentLerretData = (fnr) => (dispatch) => {
 export const hentDokumentData = (fnr, valgtjournalpost) => (dispatch) => {
     const promisedDispatch = dataDispatch.bind(null, dispatch);
 
-    const journalpostmetadata = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/journalpostmetadata/${valgtjournalpost.journalpostId}?temakode=${valgtjournalpost.temakode}`);
+    const journalpostmetadata = Ajax.get(`/modiabrukerdialog/rest/saksoversikt/${fnr}/journalpostmetadata/${valgtjournalpost.journalpostId}?temakode=${valgtjournalpost.temakode}`); // eslint-disable-line max-len
 
     dispatch({ type: AT.LAST_DOKUMENT_DATA_START });
     return journalpostmetadata

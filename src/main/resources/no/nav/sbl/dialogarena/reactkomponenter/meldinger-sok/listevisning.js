@@ -23,7 +23,7 @@ class Listevisning extends React.Component {
         const cls = erValgt ? 'meldingsforhandsvisning valgt' : 'meldingsforhandsvisning';
         const visningsDato = traad.visningsDato;
         const dato = sanitize(visningsDato, { allowedTags: ['em'] });
-        
+
         const temagruppe = !traad.temagruppe ? '' : `, ${traad.temagruppe}`;
         let meldingsStatus = `${traad.statusTekst}${temagruppe}`;
         meldingsStatus = sanitize(meldingsStatus, { allowedTags: ['em'] });
@@ -37,7 +37,7 @@ class Listevisning extends React.Component {
 
         return (
             <div className="sok-element" onClick={this.tekstChangedProxy}>
-                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt}/>
+                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
                 <label htmlFor={`melding ${traad.key}`} className={cls}>
                     <div className={`melding-detaljer ${statusKlasse}`}>
                         <div className={`statusIkon ${statusKlasse}`} aria-hidden="true"></div>
@@ -63,7 +63,8 @@ Listevisning.propTypes = {
         temagruppe: pt.string,
         innhold: pt.string
     }),
-    valgtTraad: pt.object.isRequired
+    valgtTraad: pt.object.isRequired,
+    store: pt.object.isRequired
 };
 
 export default Listevisning;

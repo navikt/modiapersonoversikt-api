@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions:0 */
 import './../test-config';
 import React from 'react';
 import { shallow } from 'enzyme';
@@ -8,7 +9,7 @@ import OppgiBegrunnelse from './oppgi-begrunnelse';
 
 describe('Oppgi begrunnelse', () => {
     it('skal rendre et tekstfelt med lagre og avbryt inni en modal', () => {
-        const element = shallow(<OppgiBegrunnelse lagretekst="testlagre" avbryttekst="testavbryt"/>);
+        const element = shallow(<OppgiBegrunnelse lagretekst="testlagre" avbryttekst="testavbryt" />);
 
         expect(element.is('Modal')).to.be.true;
         expect(element.find('textarea').length).to.equal(1);
@@ -17,7 +18,7 @@ describe('Oppgi begrunnelse', () => {
     });
 
     it('skal vise feilmelding', () => {
-        const element = shallow(<OppgiBegrunnelse lagretekst="testlagre" avbryttekst="testavbryt"/>);
+        const element = shallow(<OppgiBegrunnelse lagretekst="testlagre" avbryttekst="testavbryt" />);
 
         element.setState({ showFeilmelding: true });
 
@@ -26,7 +27,7 @@ describe('Oppgi begrunnelse', () => {
 
     it('avbrytknapp skal fjerne feilmelding og si ifra til wicket', () => {
         const discardCallback = () => undefined;
-        const element = shallow(<OppgiBegrunnelse discardCallback={discardCallback}/>);
+        const element = shallow(<OppgiBegrunnelse discardCallback={discardCallback} />);
 
         const wicketSpy = sinon.spy();
         element.instance().sendToWicket = wicketSpy;

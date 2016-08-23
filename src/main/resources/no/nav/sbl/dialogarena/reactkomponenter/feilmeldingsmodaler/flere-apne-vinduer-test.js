@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions:0 */
 import './../test-config';
 import React from 'react';
 import { shallow } from 'enzyme';
@@ -9,9 +10,9 @@ import FlereApneVinduer from './flere-apne-vinduer';
 describe('FlereApneVinduer', () => {
     it('skal vise riktige tekster i en modal', () => {
         const element = shallow(<FlereApneVinduer
-          hovedtekst="test-hoved"
-          avbryttekst="test-avbryt"
-          fortsetttekst="test-fortsett"
+            hovedtekst="test-hoved"
+            avbryttekst="test-avbryt"
+            fortsetttekst="test-fortsett"
         />);
 
         expect(element.is('Modal')).to.be.true;
@@ -22,7 +23,7 @@ describe('FlereApneVinduer', () => {
 
     it('å trykke på avbryt kaller avbryt-callback', () => {
         const avbrytSpy = sinon.spy();
-        const element = shallow(<FlereApneVinduer avbrytCallback={avbrytSpy}/>);
+        const element = shallow(<FlereApneVinduer avbrytCallback={avbrytSpy} />);
 
         element.find('button').simulate('click');
 
@@ -31,11 +32,10 @@ describe('FlereApneVinduer', () => {
 
     it('å trykke på fortsett kaller fortsett-callback', () => {
         const fortsettSpy = sinon.spy();
-        const element = shallow(<FlereApneVinduer fortsettCallback={fortsettSpy}/>);
+        const element = shallow(<FlereApneVinduer fortsettCallback={fortsettSpy} />);
 
         element.find('a').simulate('click');
 
         expect(fortsettSpy).to.have.been.called;
     });
-
 });

@@ -9,7 +9,9 @@ export function getInnhold(valgtTekst, valgtLocale) {
     if (!valgtTekst || !valgtTekst.hasOwnProperty('innhold')) {
         return '';
     }
-    return valgtTekst.innhold[valgtLocale] ? valgtTekst.innhold[valgtLocale] : valgtTekst.innhold[Constants.LOCALE_DEFAULT];
+    return valgtTekst.innhold[valgtLocale]
+        ? valgtTekst.innhold[valgtLocale]
+        : valgtTekst.innhold[Constants.LOCALE_DEFAULT];
 }
 
 export function debounce(func, wait, immediate) {
@@ -63,20 +65,20 @@ export function leggTilLenkerTags(innhold) {
 
     return innhold.replace(uriRegex, (match) => {
         const processedMatch = match.match(httpRegex) ? match : 'http://' + match;
-        return '<a target="_blank" href="' + processedMatch + '">' + processedMatch + '</a>';
+        return `<a target="_blank" href="${processedMatch}" rel="noopener noreferrer">${processedMatch}</a>`;
     });
 }
 
 export function tilParagraf(avsnitt, key) {
-    const sanitizedAvsnitt = sanitize(avsnitt, { allowedTags: ['a', 'em'] });
-    return <p key={key} dangerouslySetInnerHTML={{__html: sanitizedAvsnitt}}></p>;
+    const sanitizedAvsnitt = sanitizer(avsnitt, { allowedTags: ['a', 'em'] });
+    return <p key={key} dangerouslySetInnerHTML={{ __html: sanitizedAvsnitt }}></p>;
 }
 
 export function omit(obj, filterkeys) {
     const nObj = Object.create(null);
     const filters = filterkeys.hasOwnProperty('length') ? filterkeys : [filterkeys];
 
-    for (const key in obj) {
+    for (const key in obj) { // eslint-disable-line no-restricted-syntax
         if (obj.hasOwnProperty(key) && filters.indexOf(key) < 0) {
             nObj[key] = obj[key];
         }

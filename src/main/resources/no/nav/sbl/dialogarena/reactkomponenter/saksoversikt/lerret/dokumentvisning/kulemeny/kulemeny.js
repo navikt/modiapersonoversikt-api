@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import { Button } from 'react-scroll';
 
 const isInside = (y, elemTopBound, elemBottomBound) => {
@@ -9,23 +9,24 @@ const isInside = (y, elemTopBound, elemBottomBound) => {
 const Kulemeny = ({ dokref, tittel, initialState }) => (
     <li>
         <Button
-          activeClass="active"
-          to={dokref}
-          spy smooth
-          duration={500}
-          offset={-80}
-          title={tittel}
-          isInside={isInside}
-          initialState={initialState}
-          type="button"
-          containerId="js-kulemeny-scroll"
+            activeClass="active"
+            to={dokref}
+            spy smooth
+            duration={500}
+            offset={-80}
+            title={tittel}
+            isInside={isInside}
+            initialState={initialState}
+            type="button"
+            containerId="js-kulemeny-scroll"
         />
     </li>
 );
 
 Kulemeny.propTypes = {
-    dokref: React.PropTypes.string.isRequired,
-    tittel: React.PropTypes.string.isRequired
+    dokref: pt.string.isRequired,
+    tittel: pt.string.isRequired,
+    initialState: pt.bool.isRequired
 };
 
 export default Kulemeny;

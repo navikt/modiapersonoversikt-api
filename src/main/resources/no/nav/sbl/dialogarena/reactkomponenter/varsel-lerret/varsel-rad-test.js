@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions:0 */
 import './../test-config';
 import React from 'react';
 import { shallow } from 'enzyme';
@@ -7,7 +8,8 @@ import ResourceMap from '../utils/resource-map';
 import VarselRad from './varsel-rad';
 
 describe('VarselRad', () => {
-    let store, varsel;
+    let store;
+    let varsel;
 
     beforeEach(() => {
         const resources = new ResourceMap({});

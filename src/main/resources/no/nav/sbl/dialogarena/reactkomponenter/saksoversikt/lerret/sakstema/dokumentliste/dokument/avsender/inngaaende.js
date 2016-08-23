@@ -2,8 +2,10 @@ import React, { PropTypes as pt } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 const Inngaaende = ({ brukerNavn, navn, avsender }) => {
-    const dokumentAvsender = avsender === 'SLUTTBRUKER' ? brukerNavn: <span className="typo-egennavn"> {navn.toLowerCase()}</span>;
-    const ingaandeMessage = <FormattedMessage id="dokumentinfo.avsender.fra" values={{ avsender: dokumentAvsender }}/>;
+    const dokumentAvsender = avsender === 'SLUTTBRUKER'
+        ? brukerNavn
+        : <span className="typo-egennavn"> {navn.toLowerCase()}</span>;
+    const ingaandeMessage = <FormattedMessage id="dokumentinfo.avsender.fra" values={{ avsender: dokumentAvsender }} />;
 
     return <span className="dokument-avsender">{ingaandeMessage}</span>;
 };
