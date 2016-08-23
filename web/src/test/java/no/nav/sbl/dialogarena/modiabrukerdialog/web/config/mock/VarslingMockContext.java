@@ -31,7 +31,7 @@ public class VarslingMockContext {
     public VarslerService varslerService() {
         VarslerService varslerServiceMock = mock(VarslerService.class);
         List<Varsel> varselList = new ArrayList<>();
-        varselList.add(new Varsel("", now(), "", new ArrayList<>()));
+        varselList.add(new Varsel("", now(), new ArrayList<>(), true));
         when(varslerServiceMock.hentAlleVarsler(anyString())).thenReturn(of(varselList));
         return varslerServiceMock;
     }
