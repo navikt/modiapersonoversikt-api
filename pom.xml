@@ -105,8 +105,8 @@
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.52</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>6.0.2-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>6.0.1-SNAPSHOT</sporsmalogsvar.version>
-        <saksoversikt.version>6.0</saksoversikt.version>
+        <sporsmalogsvar.version>6.1.0-SNAPSHOT</sporsmalogsvar.version>
+        <saksoversikt.version>5.26.1-U34-SNAPSHOT</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
