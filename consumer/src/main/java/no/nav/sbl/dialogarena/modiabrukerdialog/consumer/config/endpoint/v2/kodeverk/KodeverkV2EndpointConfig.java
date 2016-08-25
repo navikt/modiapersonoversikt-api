@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static java.util.Optional.empty;
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
 
 @Configuration
@@ -25,14 +25,14 @@ public class KodeverkV2EndpointConfig {
         KodeverkPortType prod = lagKodeverkPortType();
         KodeverkPortType mock = KodeverkV2PortTypeMock.kodeverkPortType();
 
-        return createSwitcher(prod, mock, KODEVERK_KEY, KodeverkPortType.class);
+        return createMetricsProxyWithInstanceSwitcher("KodeverkPortTypeV2", prod, mock, KODEVERK_KEY, KodeverkPortType.class);
     }
 
     @Bean
     public KodeverkClient kodeverkClient() {
         KodeverkClient prod = lagKodeverkClient();
         KodeverkClient mock = KodeverkV2PortTypeMock.kodeverkClient();
-        return createSwitcher(prod, mock, KODEVERK_KEY, KodeverkClient.class);
+        return createMetricsProxyWithInstanceSwitcher("KodeverkClient", prod, mock, KODEVERK_KEY, KodeverkClient.class);
     }
 
     @Bean

@@ -10,7 +10,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgavebehandlingV3PortTypeMock.createOppgavebehandlingPortTypeMock;
 
@@ -22,7 +22,7 @@ public class GsakOppgavebehandlingV3EndpointConfig {
         OppgavebehandlingV3 prod = createOppgavebehandlingPortType(new UserSAMLOutInterceptor());
         OppgavebehandlingV3 mock = createOppgavebehandlingPortTypeMock();
 
-        return createSwitcher(prod, mock, GSAK_V3_KEY, OppgavebehandlingV3.class);
+        return createMetricsProxyWithInstanceSwitcher("OppgavebehandlingV3", prod, mock, GSAK_V3_KEY, OppgavebehandlingV3.class);
     }
 
     @Bean

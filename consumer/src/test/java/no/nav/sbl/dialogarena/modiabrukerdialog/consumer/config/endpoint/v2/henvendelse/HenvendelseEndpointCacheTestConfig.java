@@ -4,7 +4,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static org.mockito.Mockito.mock;
 
 @Configuration
@@ -14,6 +14,6 @@ public class HenvendelseEndpointCacheTestConfig {
     public HenvendelsePortType henvendelsePortType() {
         String key = "henvendelse-key";
         System.setProperty(key, "true");
-        return createSwitcher(null, mock(HenvendelsePortType.class), key, HenvendelsePortType.class);
+        return createMetricsProxyWithInstanceSwitcher("", null, mock(HenvendelsePortType.class), key, HenvendelsePortType.class);
     }
 }
