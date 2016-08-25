@@ -16,9 +16,27 @@ class VarselbestillingMockData {
     static List<WSVarselbestilling> lagVarselbestillingListe() {
         return asList(
                 lagVarselbestilling(),
-                lagDokumentVarselbestilling()
+                lagDokumentVarselbestilling(),
+                lagGammelVarselbestilling()
         );
     }
+
+    private static WSVarselbestilling lagGammelVarselbestilling() {
+        DateTime ifjor = DateTime.now().minusYears(1);
+
+        return new WSVarselbestilling()
+                .withVarseltypeId("MOTE")
+                .withAktoerId(new WSAktoerId().withAktoerId("321654987"))
+                .withPerson(new WSPerson().withIdent("***REMOVED***"))
+                .withBestilt(new XMLGregorianCalendarImpl(ifjor.toGregorianCalendar()))
+                .withSisteVarselutsendelse(new XMLGregorianCalendarImpl(ifjor.toGregorianCalendar()))
+                .withVarselListe(asList(
+                        lagSMSVarsel(ifjor),
+                        lagEpostVarsel(ifjor),
+                        lagNAVVarsel(ifjor)
+                ));
+    }
+
 
     private static WSVarselbestilling lagVarselbestilling() {
         DateTime now = DateTime.now();
@@ -45,13 +63,14 @@ class VarselbestillingMockData {
                 .withPerson(new WSPerson().withIdent("***REMOVED***"))
                 .withBestilt(new XMLGregorianCalendarImpl(now.minusDays(10).minusMinutes(60).toGregorianCalendar()))
                 .withSisteVarselutsendelse(new XMLGregorianCalendarImpl(now.minusMinutes(60).toGregorianCalendar()))
+                .withReVarselingsintervall(7)
                 .withVarselListe(asList(
                         lagSMSVarsel(now.minusDays(10)),
                         lagEpostVarsel(now.minusDays(10)),
                         lagNAVVarsel(now.minusDays(10)),
-                        lagSMSVarsel(now.minusMonths(2)),
-                        lagEpostVarsel(now.minusMonths(2)),
-                        lagNAVVarsel(now.minusMonths(2))));
+                        lagSMSVarsel(now.minusMonths(2)).withReVarsel(true),
+                        lagEpostVarsel(now.minusMonths(2)).withReVarsel(true),
+                        lagNAVVarsel(now.minusMonths(2)).withReVarsel(true)));
     }
 
     private static WSVarsel lagSMSVarsel(DateTime time) {
@@ -69,7 +88,8 @@ class VarselbestillingMockData {
                 .withSendt(new XMLGregorianCalendarImpl(time.minusMinutes(60).toGregorianCalendar()))
                 .withDistribuert(new XMLGregorianCalendarImpl(time.minusMinutes(60).toGregorianCalendar()))
                 .withKontaktinfo("test@testesen.com")
-                .withVarseltekst("Du har mottatt et varsel på epost");
+                .withVarseltekst("Du har mottatt et varsel på epost")
+                .withVarseltittel("Emne: Du har mottatt et varsel på epost");
     }
 
 
