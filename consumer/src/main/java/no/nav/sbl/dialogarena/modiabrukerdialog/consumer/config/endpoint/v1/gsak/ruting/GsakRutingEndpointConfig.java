@@ -12,7 +12,7 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakRutingPortTypeMock.createRutingPortTypeMock;
 
 @Configuration
@@ -26,7 +26,7 @@ public class GsakRutingEndpointConfig {
         Ruting prod = createRutingPortType();
         Ruting mock = createRutingPortTypeMock();
 
-        return createSwitcher(prod, mock, GSAK_RUTING_KEY, Ruting.class);
+        return createMetricsProxyWithInstanceSwitcher("Ruting", prod, mock, GSAK_RUTING_KEY, Ruting.class);
     }
 
     @Bean

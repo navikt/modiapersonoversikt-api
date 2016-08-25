@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import org.apache.commons.collections15.Closure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class ScheduledAnsattListePrefetch {
     Logger logger = LoggerFactory.getLogger(ScheduledAnsattListePrefetch.class);
 
     @Inject
-    private EnhetService enhetService;
+    private OrganisasjonEnhetService organisasjonEnhetService;
 
     @Inject
     private GOSYSNAVansatt ansattWS;
@@ -37,7 +37,7 @@ public class ScheduledAnsattListePrefetch {
 
         cacheManager.getCache(CACHE_NAME).clear();
 
-        List<AnsattEnhet> alleEnheter = enhetService.hentAlleEnheter();
+        List<AnsattEnhet> alleEnheter = organisasjonEnhetService.hentAlleEnheter();
         on(alleEnheter).forEach((Closure<AnsattEnhet>) ansattEnhet -> {
             ASBOGOSYSNavEnhet hentNAVAnsattListeRequest = new ASBOGOSYSNavEnhet();
             hentNAVAnsattListeRequest.setEnhetsId(ansattEnhet.enhetId);

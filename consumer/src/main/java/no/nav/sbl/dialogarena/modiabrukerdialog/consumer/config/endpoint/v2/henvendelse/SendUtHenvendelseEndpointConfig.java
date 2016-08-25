@@ -14,7 +14,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.Send
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendUtHenvendelsePortTypeMock.createSendUtHenvendelsePortTypeMock;
 
@@ -26,7 +26,7 @@ public class SendUtHenvendelseEndpointConfig {
         SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType(new UserSAMLOutInterceptor());
         SendUtHenvendelsePortType mock = createSendUtHenvendelsePortTypeMock();
 
-        return createSwitcher(prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
+        return createMetricsProxyWithInstanceSwitcher("SendUtHenvendelse", prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
     }
 
     @Bean
