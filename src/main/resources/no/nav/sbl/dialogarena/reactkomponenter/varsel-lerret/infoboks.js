@@ -1,12 +1,8 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 
 class Infoboks extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        const {tekst, style} = this.props;
+        const { tekst, style } = this.props;
         return (
             <div className="feilmelding" style={style}>
                 <div className="robust-ikon-feil-gra"></div>
@@ -17,8 +13,8 @@ class Infoboks extends React.Component {
 }
 
 Infoboks.propTypes = {
-    'tekst': React.PropTypes.string.isRequired,
-    'style': React.PropTypes.string
+    tekst: PT.string.isRequired,
+    style: PT.object
 };
 
 export default Infoboks;

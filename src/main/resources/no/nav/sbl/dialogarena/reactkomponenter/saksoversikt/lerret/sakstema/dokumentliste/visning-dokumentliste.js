@@ -12,24 +12,25 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
     dokumentlisteParam.visTema = valgtTema.temakode === 'alle';
 
     const dokumentliste = (
-        <FiltrerteDokumenter dokumentMetadata={valgtTema.dokumentMetadata}
-          filtreringsvalg={filtreringsvalg}
-          dokumentlisteParam={dokumentlisteParam}
+        <FiltrerteDokumenter
+            dokumentMetadata={valgtTema.dokumentMetadata}
+            filtreringsvalg={filtreringsvalg}
+            dokumentlisteParam={dokumentlisteParam}
         />);
 
     const ingendokumenter = (
         <h2 className="robust-ikon-feil-strek ingendokumenterheader">
-            <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.header"/>
+            <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.header" />
         </h2>);
 
     if (valgtTema.dokumentMetadata.length === 0) {
         if (valgtTema.temakode === 'BID') {
-            return <IngenDokumenterBidrag ingenDokumenterHeader={ingendokumenter}/>;
+            return <IngenDokumenterBidrag ingenDokumenterHeader={ingendokumenter} />;
         }
         return (
             <div>
-                <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
-                <IngenDokumenter ingenDokumenterHeader={ingendokumenter}/>
+                <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide} />
+                <IngenDokumenter ingenDokumenterHeader={ingendokumenter} />
             </div>
         );
     }
@@ -37,12 +38,12 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
     const infoMeldingDokumenterBidrag = valgtTema.temakode === 'BID' ?
         <div className="infoingenbidrag">
             <FormattedMessage id="dokumentinfo.sakstema.ingen.dokumenter.bidrag" />
-        </div> : <noscript/>;
+        </div> : <noscript />;
 
     return (
         <div>
-            <FiltrerAvsender alleredeValgt={filtreringsvalg}/>
-            <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide}/>
+            <FiltrerAvsender alleredeValgt={filtreringsvalg} />
+            <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide} />
             {infoMeldingDokumenterBidrag}
             { dokumentliste }
             <TidligereDokumenter />

@@ -7,7 +7,7 @@ describe('utils test', () => {
     it('debounce test immediate', (done) => {
         let c = 0;
         const fn = debounce(() => {
-            c = c + 1;
+            c++;
         }, 100, true);
 
         fn();
@@ -21,14 +21,14 @@ describe('utils test', () => {
     it('debounce test', (done) => {
         let c = 0;
         const fn = debounce(() => {
-            c = c + 1;
+            c++;
         }, 0);
 
         fn();
         fn();
         fn();
         expect(c).to.equal(0);
-        delayed(()=>{
+        delayed(() => {
             expect(c).to.equal(1);
             done();
         }, 0);
@@ -49,8 +49,8 @@ describe('utils test', () => {
         `;
         const result = leggTilLenkerTags(fritekst);
 
-        assert.isTrue(result.indexOf('<a target="_blank" href="http://www.vg.no">') >= 0);
-        assert.isTrue(result.indexOf('<a target="_blank" href="https://www.vg.no">') >= 0);
+        assert.isTrue(result.indexOf('<a target="_blank" href="http://www.vg.no" rel="noopener noreferrer">') >= 0);
+        assert.isTrue(result.indexOf('<a target="_blank" href="https://www.vg.no" rel="noopener noreferrer">') >= 0);
     });
 
     it('omit kopierer object med unntatt av verdier', () => {
@@ -64,7 +64,10 @@ describe('utils test', () => {
         const filterListe = omit(myObj, ['a', 'b']);
 
         assert.isTrue(Object.keys(filterVerdi).length === 2);
+        assert.isTrue(filterVerdi.a === undefined);
+
         assert.isTrue(Object.keys(filterListe).length === 1);
+        assert.isTrue(filterListe.b === undefined);
     });
 
     it('kvpair mapper object til double-array', () => {

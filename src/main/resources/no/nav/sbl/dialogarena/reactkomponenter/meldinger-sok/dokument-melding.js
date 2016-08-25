@@ -5,12 +5,12 @@ class DokumentMelding extends React.Component {
 
     render() {
         const { melding: { statusTekst, erInngaaende, lestStatus, visningsDatoTekst, fritekst } } = this.props;
-        
+
         const clsExt = erInngaaende ? 'inngaaende' : 'utgaaende';
         const cls = `melding clearfix ${clsExt}`;
-        const src = `/modiabrukerdialog/img/nav-logo.svg`;
+        const src = '/modiabrukerdialog/img/nav-logo.svg';
         const altTekst = 'Melding om dokument';
-        let meldingOgLestStatus = `${statusTekst}, `;
+        let meldingOgLestStatus = `${statusTekst} - `;
         if (!erInngaaende) {
             meldingOgLestStatus += `${lestStatus} `;
         }
@@ -18,7 +18,7 @@ class DokumentMelding extends React.Component {
 
         return (
             <div className={cls}>
-                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst}/>
+                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst} />
                 <div className="meldingData">
                     <article className="melding-header">
                         <p className="meldingstatus" dangerouslySetInnerHTML={{ __html: meldingOgLestStatus }}></p>
@@ -33,7 +33,7 @@ class DokumentMelding extends React.Component {
 
 DokumentMelding.propTypes = {
     melding: React.PropTypes.shape({
-        statusTekst: pt.string, 
+        statusTekst: pt.string,
         erInngaaende: pt.bool,
         lestStatus: pt.string,
         visningsDatoTekst: pt.string,

@@ -6,11 +6,15 @@ import { basicReducer } from './../utils/redux-utils';
 import { nyesteSakstema } from './../utils/dato-sortering';
 import { underBehandlingEllerNyereEnnGrenseverdi } from './../utils/siste-oppdatering/behandlingsstatus';
 
-const fjernTommeTema = (antallDagerFerdigBehandletStatusErGyldig) => tema => tema.dokumentMetadata.length > 0
-|| tema.behandlingskjeder.filter(underBehandlingEllerNyereEnnGrenseverdi(antallDagerFerdigBehandletStatusErGyldig)).length > 0;
+const fjernTommeTema = (antallDagerFerdigBehandletStatusErGyldig) =>
+    tema =>
+        tema.dokumentMetadata.length > 0
+        || tema.behandlingskjeder
+            .filter(underBehandlingEllerNyereEnnGrenseverdi(antallDagerFerdigBehandletStatusErGyldig))
+            .length > 0;
 
 const lagAlleTema = (temaliste) => [{
-    temanavn: <FormattedMessage id="sakslamell.alletemaer"/>,
+    temanavn: <FormattedMessage id="sakslamell.alletemaer" />,
     temakode: 'alle',
     behandlingskjeder: temaliste.reduce((acc, tema) =>
         acc.concat(tema.behandlingskjeder), []),
@@ -37,7 +41,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     let status = Const.LASTET;
 
     const [tekster, miljovariabler, sakstema] = action.data;
-    const { resultat, feilendeSystemer } = sakstema.value ? sakstema.value: { result: [], feilendeSystemer: [] };
+    const { resultat, feilendeSystemer } = sakstema.value ? sakstema.value : { result: [], feilendeSystemer: [] };
 
     const feilendeKall = action.data.filter(object => object.state === 'rejected');
     if (feilendeKall.length > 0) {
@@ -45,13 +49,14 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     }
 
     let _sakstema = resultat && resultat.length > 0 ? resultat
-        .filter(fjernTommeTema(parseInt(miljovariabler.value['behandlingsstatus.synlig.antallDager'], 10))).sort(nyesteSakstema) : [];
+        .filter(fjernTommeTema(parseInt(miljovariabler.value['behandlingsstatus.synlig.antallDager'], 10)))
+        .sort(nyesteSakstema) : [];
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
-    const valgtTema = state.valgtTema? state.valgtTema : _sakstema[0];
+    const valgtTema = state.valgtTema ? state.valgtTema : _sakstema[0];
     return {
         ...state,
-        status: status,
+        status,
         valgtTema,
         filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true },
         data: {
@@ -82,20 +87,20 @@ actionHandlers[AT.VELG_SAK] = (state, action) => ({
     valgtTema: action.data,
     filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
 });
-actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => {
-    return {
+actionHandlers[AT.VELG_JOURNALPOST] = (state, action) => (
+    {
         ...state,
         valgtJournalpost: action.data,
         scrollToDokumentId: action.data.journalpostId
-    };
-};
+    }
+);
 actionHandlers[AT.VIS_SIDE] = (state, action) => ({ ...state, valgtside: action.data });
 actionHandlers[AT.VELG_FILTRERING_AVSENDER] = (state, action) => ({
     ...state,
     filtreringsvalg: action.filtreringsvalg
 });
 
-actionHandlers[AT.PURGE_SCROLL_ID] = (state, action) => ({
+actionHandlers[AT.PURGE_SCROLL_ID] = (state) => ({
     ...state,
     scrollToDokumentId: ''
 });

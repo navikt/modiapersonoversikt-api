@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import { expect, assert } from 'chai';
 import PromiseUtils from './promise-utils';
-import {createTestPromise, delayed, shouldThrowException} from './../test-utils';
+import { createTestPromise, delayed, shouldThrowException } from './../test-utils';
 
 describe('PromiseUtils', () => {
     it('Should throw exception if N is negative', (done) => {
@@ -21,7 +21,7 @@ describe('PromiseUtils', () => {
         const p1 = createTestPromise();
         const p2 = createTestPromise();
 
-        PromiseUtils.atLeastN(1, {p1: p1.promise, p2: p2.promise})
+        PromiseUtils.atLeastN(1, { p1: p1.promise, p2: p2.promise })
             .then((results) => {
                 expect(results.p1.value).to.equal(data);
                 expect(results.p2.value).to.be.an('undefined');
@@ -41,7 +41,7 @@ describe('PromiseUtils', () => {
         const p2 = createTestPromise();
         const p3 = createTestPromise();
 
-        PromiseUtils.atLeastN(2, {p1: p1.promise, p2: p2.promise, p3: p3.promise})
+        PromiseUtils.atLeastN(2, { p1: p1.promise, p2: p2.promise, p3: p3.promise })
             .then((results) => {
                 expect(results.p1.value).to.equal(data);
                 expect(results.p2.value).to.equal(data2);
@@ -62,7 +62,7 @@ describe('PromiseUtils', () => {
         const p2 = createTestPromise();
         const p3 = createTestPromise();
 
-        PromiseUtils.atLeastN(3, {p1: p1.promise, p2: p2.promise, p3: p3.promise})
+        PromiseUtils.atLeastN(3, { p1: p1.promise, p2: p2.promise, p3: p3.promise })
             .catch(() => {
                 done();
             });

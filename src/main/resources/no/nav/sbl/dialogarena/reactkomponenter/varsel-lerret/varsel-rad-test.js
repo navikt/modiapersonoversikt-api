@@ -1,14 +1,15 @@
+/* eslint no-unused-expressions:0 */
 import './../test-config';
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import ResourceMap from '../utils/resource-map';
-
 import VarselRad from './varsel-rad';
 
 describe('VarselRad', () => {
-    let store, varsel;
+    let store;
+    let varsel;
 
     beforeEach(() => {
         const resources = new ResourceMap({});
@@ -26,7 +27,7 @@ describe('VarselRad', () => {
         const element = shallow(<VarselRad store={store} varsel={varsel} />);
 
         expect(element.find('.header-kanal').text()).to.contain('kanal1, kanal2');
-        expect(element.find('.header-dato').text()).to.contain('01. jan., 00.00');
+        expect(element.find('.header-dato').text()).to.contain('01. jan.');
         expect(element.find('.ekspanderingspil.ned').length).to.equal(1);
         expect(element.find('VarselRadElement').length).to.equal(0);
     });

@@ -6,7 +6,7 @@ import ScrollPortal from './../utils/scroll-portal';
 class Forhandsvisning extends React.Component {
     render() {
         if (!this.props.traad.hasOwnProperty('meldinger')) {
-            return <noscript/>;
+            return <noscript />;
         }
 
         const { traad, traad: { meldinger } } = this.props;
@@ -19,7 +19,8 @@ class Forhandsvisning extends React.Component {
         });
 
         const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
-        const antallInformasjon = `Viser <b>${meldinger.length}</b> av <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
+        const antallInformasjon = `Viser <b>${meldinger.length}</b> av 
+                <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
 
         return (
             <div>

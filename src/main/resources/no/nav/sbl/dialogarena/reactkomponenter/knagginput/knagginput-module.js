@@ -42,14 +42,15 @@ function IEHack() {
 
     let maxWidth = $knaggcontainer.width();
     $knagger.each((index, knagg) => {
-        maxWidth -= $(knagg).outerWidth() + 4.2;// knagg bredde + margin;
+        maxWidth -= $(knagg).outerWidth() + 4.2; // knagg bredde + margin;
     });
-    maxWidth -= 46;// Forstørrelseglass ikon
+    maxWidth -= 46; // Forstørrelseglass ikon
 
     $input.outerWidth(maxWidth);
     // End IE hack
 }
 
+/* eslint "react/prefer-es6-class": 1 */
 const KnaggInput = React.createClass({
     propTypes: {
         'auto-focus': React.PropTypes.bool,
@@ -116,36 +117,39 @@ const KnaggInput = React.createClass({
     },
     focusHighlighting: function focusHighlighting(event) {
         if (event.type === 'focus') {
-            this.setState({focus: true});
+            this.setState({ focus: true });
         } else {
-            this.setState({focus: false});
+            this.setState({ focus: false });
         }
     },
     render: function render() {
-        let knagger = this.props.knagger.map((knagg) => {
-            return (
-                <span className="knagg">
-                    {knagg}
-                    <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}></button>
-                </span>
-            );
-        });
-
-        //knagger = React.addons.createFragment({
-        //    knagger: knagger
-        //});
-
+        let knagger = this.props.knagger.map((knagg) => (
+            <span className="knagg">
+                {knagg}
+                <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}></button>
+            </span>
+        ));
 
         return (
             <div ref="knaggcontainer" className="knagg-input">
                 <div className={'knagger' + (this.state.focus ? ' focus' : '')}>
                     {knagger}
-                    <input type="text" ref="search" className="search" placeholder={this.props.placeholder}
-                           value={this.props.fritekst} title={this.props.placeholder}
-                           onChange={this.onChangeProxy} onKeyDown={this.onKeyDownProxy} onKeyUp={this.handleKeyUp}
-                           onFocus={this.focusHighlighting} onBlur={this.focusHighlighting}
-                           aria-label={ariaLabel(this.props)} aria-controls={this.props['aria-controls']}/>
-                    <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
+                    <input
+                        type="text"
+                        ref="search"
+                        className="search"
+                        placeholder={this.props.placeholder}
+                        value={this.props.fritekst}
+                        title={this.props.placeholder}
+                        onChange={this.onChangeProxy}
+                        onKeyDown={this.onKeyDownProxy}
+                        onKeyUp={this.handleKeyUp}
+                        onFocus={this.focusHighlighting}
+                        onBlur={this.focusHighlighting}
+                        aria-label={ariaLabel(this.props)}
+                        aria-controls={this.props['aria-controls']}
+                    />
+                    <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true" />
                 </div>
             </div>
         );

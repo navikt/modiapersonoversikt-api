@@ -9,12 +9,12 @@ describe('DatoFormatering', () => {
         const dato = new Date();
         const datoStreng = prettyDate(dato);
 
-        assert.isTrue(moment(datoStreng, 'DD. MMM, HH.mm').isValid());
+        assert.isTrue(moment(datoStreng, 'DD. MMM').isValid());
     });
 
     it('Bruker innsendt datoformat', () => {
         const dato = new Date();
-        const datoFormat = 'DD. MMMM, HH.mm';
+        const datoFormat = 'DD. MMMM';
 
         const datoStreng = prettyDate(dato, datoFormat);
 

@@ -14,14 +14,15 @@ function createAriaOptional(name, data) {
     if (tagComponent.length > 1) {
         className = tagComponent[1];
     }
-    const element = React.createElement(tagType, { id: id, className: className }, data.text);
+    const element = React.createElement(tagType, { id, className }, data.text);
     return {
-        id: id,
+        id,
         hidden: data.show ? null : element,
         visible: data.show ? element : null
     };
 }
 
+/* eslint "react/prefer-es6-class": 1 */
 const ModalPortal = React.createClass({
     propTypes: {
         description: pt.object,
@@ -99,7 +100,7 @@ const ModalPortal = React.createClass({
     focusFirst: function focusFirst() {
         this.focusAfterClose = document.activeElement;
         let tabbables = $(ReactDOM.findDOMNode(this.refs.content)).find(':tabbable');
-        this.props.skipFocus.forEach(function removeFromTabbables(skipFocusTag) {
+        this.props.skipFocus.forEach((skipFocusTag) => {
             tabbables = tabbables.not(skipFocusTag);
         });
 
@@ -119,9 +120,7 @@ const ModalPortal = React.createClass({
             children = [children];
         }
 
-        children.map(function addModalProp(child) {
-            return React.cloneElement(child, { modal: this.props.modal });
-        }.bind(this));
+        children.map((child) => React.cloneElement(child, { modal: this.props.modal }));
 
         const title = this.state.title;
         const description = this.state.description;
@@ -139,15 +138,27 @@ const ModalPortal = React.createClass({
         // iframe må være her for å fikse en rendering bug i IE, uten iframe'n vil inline-pdf-visningen alltid legge
         // seg over modal-vinduene.
         return (
-            <div tabIndex="-1" className={cls} aria-hidden={!this.props.isOpen} onKeyDown={this.keyHandler}
-                 role="dialog" aria-labelledby={title.id} aria-describedby={description.id}>
+            <div
+                tabIndex="-1"
+                className={cls}
+                aria-hidden={!this.props.isOpen}
+                onKeyDown={this.keyHandler}
+                role="dialog"
+                aria-labelledby={title.id}
+                aria-describedby={description.id}
+            >
                 <div className="backdrop" onClick={this.props.modal.close}></div>
-                <iframe src="about:blank" className="cover" aria-hidden/>
+                <iframe src="about:blank" className="cover" aria-hidden />
                 {title.hidden}
                 {description.hidden}
-                <div className="centering" style={this.props.width ? {'width': this.props.width + 'px'} : null}>
-                    <div className="content" ref="content"
-                         style={this.props.height ? {'height': this.props.height + 'px', 'marginTop': (this.props.height / -2) + 'px'} : null}>
+                <div className="centering" style={this.props.width ? { width: this.props.width + 'px' } : null}>
+                    <div
+                        className="content"
+                        ref="content"
+                        style={this.props.height ?
+                        { height: this.props.height + 'px', marginTop: (this.props.height / -2) + 'px' }
+                         : null}
+                    >
                         {title.visible}
                         {description.visible}
                         {children}

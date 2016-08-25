@@ -22,13 +22,8 @@ describe('DokumentVisningPage', () => {
     };
 
     function noop() {}
-    function hentDokumentData(_fnr, _valgtJournalpost) {}
+    function hentDokumentData() {}
     const fnr = '12346578910';
-    const valgtJournalpost = {
-        journalpostId: '123',
-        temakode: 'DAG',
-        dato: fromDateToJSON(new Date())
-    };
 
     it('Gir feilmelding om dokumentstatus feilet', () => {
         const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
