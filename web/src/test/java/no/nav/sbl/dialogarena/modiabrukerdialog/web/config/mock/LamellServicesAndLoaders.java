@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerService;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
 import org.springframework.context.annotation.Bean;
@@ -59,6 +60,11 @@ public class LamellServicesAndLoaders {
     @Bean
     public SykepengerServiceBi sykepengerServiceBi() {
         return mock(SykepengerServiceBi.class);
+    }
+
+    @Bean
+    public UtbetalingerService utbetalingerService() {
+        return mock(UtbetalingerService.class);
     }
 
     @Bean

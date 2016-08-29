@@ -43,7 +43,7 @@ public class SykepengerWidgetServiceMock {
     private static ForeldrepengerListeResponse getForeldrepengerListeResponse() {
         ForeldrepengerListeResponse foreldrepengerListeResponse = new ForeldrepengerListeResponse();
         Foreldrepengerettighet foreldrepengerettighet = new Foreldrepengerettighet();
-        foreldrepengerettighet.setBruker(bruker);
+        foreldrepengerettighet.setForelder(bruker);
         foreldrepengerettighet.setAndreForeldersFnr("01014513371");
         foreldrepengerettighet.setAntallBarn(3);
         foreldrepengerettighet.setBarnetsFoedselsdato(new LocalDate().minusDays(1000));
@@ -51,7 +51,7 @@ public class SykepengerWidgetServiceMock {
         foreldrepengerettighet.setFedrekvoteTom(new LocalDate().plusDays(1000));
         foreldrepengerettighet.setGraderingsdager(3);
         foreldrepengerettighet.setMoedrekvoteTom(new LocalDate().plusDays(1000));
-        foreldrepengerettighet.setMaksdato(new LocalDate().plusDays(1000));
+        foreldrepengerettighet.setSlutt(new LocalDate().plusDays(1000));
         foreldrepengerListeResponse.setForeldrepengerettighet(foreldrepengerettighet);
         return foreldrepengerListeResponse;
     }

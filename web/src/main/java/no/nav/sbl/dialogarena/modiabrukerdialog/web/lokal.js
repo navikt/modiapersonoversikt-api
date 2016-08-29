@@ -132,6 +132,26 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    function visAlleArbeidsgivere() {
+        var arbeidsgiverListe = $('.lamell.selected .arbeisdgiver li');
+        $.each(arbeidsgiverListe, function(index, value) {
+            $(arbeidsgiverListe[index]).css('display','block')
+        });
+        $('.vis-alle-arbeidsgivere').hide();
+    }
+
+    function visAlleKommendeUtbetalinger(id) {
+        var utbetalinger = $(id).parent().find(".kommende-utbetalinger ul li");
+        $.each(utbetalinger, function(index, value) {
+            $(utbetalinger[index]).css('display','block')
+        });
+        $(id).parent().find('.vis-alle-kommende-utbetalinger').hide();
+    }
+
+    function visAlleHistoriskeUtbetalinger(id) {
+        $(id).parent().find('.vis-alle-historiske-utbetalinger').hide();
+    }
+
     function gjennomfoerAvansertSok() {
         var personsokElement = $('.main > .personsok');
         if (personsokElement.is(":visible")) {
