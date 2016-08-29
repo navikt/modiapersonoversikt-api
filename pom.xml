@@ -83,7 +83,8 @@
 
         <!-- Kan ikke uppes -->
         <jetty.version>9.0.5.v20130815</jetty.version>
-        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.rensett.
+        <!--Kan ikke oppgraderes pga. serlvet 3.1 speccen sier at role-name=* ikke er tillatt.
+        Dette blir oppfylt fra Jetty 9.1. I SimpleLoginModule som vi bruker lokalt får man satt rollen DummyRole uansett.
         Her overrides getName() og "*" returneres. Dette gjør at i sjekken isUserinRole i Jetty sin ConstraintSecurityHandler
         feiler da den finner "*" som navn på rollen. For å fikse dette må rollenavnet som blir overridet i DummyRole endres
         til f. eks dobbelstjerne "**" og SecurityConstrainten må bli overridet i override-web.xml og satt tilsvarende role-name
