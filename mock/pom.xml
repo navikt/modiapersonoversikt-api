@@ -111,6 +111,8 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>arena-arbeid-og-aktivitet</artifactId>
         </dependency>
+
+        <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
