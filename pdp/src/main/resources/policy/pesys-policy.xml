@@ -18,10 +18,18 @@
 	</Target>
 
 	<Rule RuleId="ident-har-pesys-tilgang" Effect="Permit">
-		<Description>Vis pesys-lenke for bruker med saksbehandlertilgang i Pesys.</Description>
+		<Description>Vis pesys-lenke for bruker med enkelte tilganger i Pesys.</Description>
 		<Condition>
-			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_SAKSBEHANDLER</AttributeValue>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_SAKSBEHANDLER</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Pensjon_VEILEDER</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Pensjon_BEGRENSET_VEILEDER</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_BRUKERHJELPA</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_SAKSBEHANDLER</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-PENSJON_KLAGEBEH</AttributeValue>
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Pensjon_Okonomi</AttributeValue>
+				</Apply>
 				<SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
 											AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
 			</Apply>
