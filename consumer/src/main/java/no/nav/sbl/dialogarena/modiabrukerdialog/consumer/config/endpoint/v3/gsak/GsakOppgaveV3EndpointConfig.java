@@ -2,9 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsa
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.modig.security.ws.*;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +25,9 @@ public class GsakOppgaveV3EndpointConfig {
     }
 
     @Bean
-    public Pingable gsakPing() {
+    public Pingable gsakOppgavePing() {
         final OppgaveV3 ws = createOppgavePortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("GSAK_V3", ws);
+        return new PingableWebService("Gsak - oppgave", ws);
     }
 
     private static OppgaveV3 createOppgavePortType(AbstractSAMLOutInterceptor interceptor) {
