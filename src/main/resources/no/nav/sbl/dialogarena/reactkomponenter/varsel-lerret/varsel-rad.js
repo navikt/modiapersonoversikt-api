@@ -39,7 +39,10 @@ class VarselRad extends React.Component {
             pilClassname += ' ned';
         }
 
-        const varselType = resources.getOrElse(`varsel.varseltype.${varsel.varselType}`, `Ukjent nøkkel: ${varsel.varselType}`);
+        const varselType = resources.getOrElse(
+            `varsel.varseltype.${varsel.varselType}`,
+            `Ukjent nøkkel: ${varsel.varselType}`
+        );
         const revarsling = varsel.erRevarsling ? ` - ${resources.getOrElse('varsler.revarsel', 'Revarsling')}` : '';
 
         return (
