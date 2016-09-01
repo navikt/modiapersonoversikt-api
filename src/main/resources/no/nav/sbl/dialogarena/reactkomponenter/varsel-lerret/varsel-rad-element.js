@@ -34,7 +34,7 @@ class VarselRadElement extends React.Component {
             <div><span className="innhold-epostemne">{melding.epostemne}</span><br /></div> :
             undefined;
 
-        const kanal = `${resources.getOrElse(`varsel.kanal.${melding.kanal}`, melding.kanal)}: `;
+        const kanal = `${resources.getOrElse(`varsel.kanal.${melding.kanal}`, melding.kanal)}: `;
         const varselDato = melding.utsendingsTidspunkt ? prettyDate(melding.utsendingsTidspunkt) : 'ikke sendt';
         return (
             <li className="varsel-rad-element">
