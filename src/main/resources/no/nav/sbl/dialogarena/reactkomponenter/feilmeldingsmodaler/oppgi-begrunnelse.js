@@ -1,3 +1,4 @@
+/* eslint "react/jsx-no-bind": 1 */
 import React, { PropTypes as pt } from 'react';
 import ReactDOM from 'react-dom';
 import Modal from './../modal/modal-module';

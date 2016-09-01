@@ -1,3 +1,4 @@
+/* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import Utils from './../utils/utils-module';
 import ScrollPortal from './../utils/scroll-portal';

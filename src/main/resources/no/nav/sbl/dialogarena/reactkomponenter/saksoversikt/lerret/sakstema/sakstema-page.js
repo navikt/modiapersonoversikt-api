@@ -1,3 +1,4 @@
+/* eslint "react/jsx-no-bind": 1 */
 import React, { PropTypes as PT } from 'react';
 import SakstemaListe from './sakstema-liste';
 import { connect } from 'react-redux';
