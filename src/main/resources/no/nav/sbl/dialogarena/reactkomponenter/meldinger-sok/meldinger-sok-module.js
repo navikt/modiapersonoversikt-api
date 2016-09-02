@@ -1,3 +1,4 @@
+/* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import Modal from './../modal/modal-module';
 import ListevisningKomponent from './listevisning';
