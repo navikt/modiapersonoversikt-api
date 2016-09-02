@@ -133,7 +133,7 @@ public class DokumentMetadataService {
                 .filter(erHoveddokument)
                 .map(dokument ->
                         new Dokument()
-                                .withTittel(kodeverk.getTittel(dokument.getKodeverkRef()))
+                                .withTittel(bulletproofKodeverkService.getSkjematittelForSkjemanummer(dokument.getKodeverkRef()))
                                 .withKanVises(kanVises)
                                 .withLogiskDokument(false)
                                 .withDokumentreferanse(dokument.getArkivreferanse())
@@ -147,7 +147,7 @@ public class DokumentMetadataService {
                 .filter(erLastetOpp)
                 .map(dokument ->
                         new Dokument()
-                                .withTittel(kodeverk.getTittel(dokument.getKodeverkRef()))
+                                .withTittel(bulletproofKodeverkService.getSkjematittelForSkjemanummer(dokument.getKodeverkRef()))
                                 .withKanVises(kanVises)
                                 .withLogiskDokument(false)
                                 .withDokumentreferanse(dokument.getArkivreferanse())
