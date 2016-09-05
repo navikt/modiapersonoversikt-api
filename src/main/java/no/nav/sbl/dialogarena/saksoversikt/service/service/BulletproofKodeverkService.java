@@ -50,7 +50,7 @@ public class BulletproofKodeverkService {
 
             return tittel;
         } catch (Exception e) {
-            LOG.warn("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId + "'. Bruker generisk tittel.", e);
+            LOG.error("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId + "'. Bruker generisk tittel.", e);
             return vedleggsIdOrSkjemaId;
         }
     }
