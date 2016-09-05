@@ -22,7 +22,8 @@ public class WSUtbetalingTestData {
         utbetalinger.add(createOlaNordmannUtbetaling());
         utbetalinger.add(createOsloKommuneUtbetaling());
         utbetalinger.addAll(createKariNordmannUtbetaling());
-        utbetalinger.add(createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14), now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14)));
+        utbetalinger.add(createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14), now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14), null));
+        utbetalinger.add(createUtbetalingUtenUtbetalingsdato(now(), now()));
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = object -> periode.contains(object.getUtbetalingsdato());
@@ -147,10 +148,10 @@ public class WSUtbetalingTestData {
                 .withUtbetalingsstatus("Sendt kontofører, avventer forfallsdato");
     }
 
-    public static WSUtbetaling createUtbetalingMedValgtUtbetalingOgPosteringsdato(DateTime posteringsdato, DateTime utbetalingsdato ) {
+    public static WSUtbetaling createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(DateTime utbetalingsdato, DateTime forfallsdato, DateTime posteringsdato ) {
         WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Ola Nordmann Utbetaling 2");
         return new WSUtbetaling()
-                .withPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
+                .withPosteringsdato(posteringsdato)
                 .withUtbetaltTil(personOlaNordmann)
                 .withUtbetalingsmelding("Utbetalt dagpenger")
                 .withYtelseListe(
@@ -182,11 +183,54 @@ public class WSUtbetalingTestData {
                                 .withTrekksum(0.00)
                                 .withYtelseNettobeloep(2000.00)
                                 .withBilagsnummer("30742-5731"))
-                .withForfallsdato(posteringsdato)
+                .withForfallsdato(forfallsdato)
                 .withUtbetalingsdato(utbetalingsdato)
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
+    }
+
+    public static WSUtbetaling createUtbetalingUtenUtbetalingsdato(DateTime forfallsdato, DateTime posteringsdato ) {
+        WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Utbetaling uten utbetalingsdato");
+        return new WSUtbetaling()
+                .withUtbetalingsdato(null)
+                .withForfallsdato(forfallsdato)
+                .withPosteringsdato(posteringsdato)
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetalingsmetode("Bankkonto")
+                .withUtbetalingsstatus("")
+                .withUtbetaltTil(personOlaNordmann)
+                .withUtbetalingsmelding("")
+                .withYtelseListe(
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
+                                .withRettighetshaver(personOlaNordmann)
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW)))
+                                .withYtelseskomponentListe(
+                                        LagTestWSYtelse.lagYtelseskomponent("Dagpenger", 2222.22, 389.45, 55.0)
+                                                .withSatstype("DAG"))
+                                .withYtelseskomponentersum(2222.22)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(2267.00))
+                                .withSkattsum(2267.00)
+                                .withTrekkListe(new ArrayList<>())
+                                .withTrekksum(0.00)
+                                .withYtelseNettobeloep(2222.22)
+                                .withBilagsnummer("30742-57312"),
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Arbeidsavklaringspenger"))
+                                .withRettighetshaver(personOlaNordmann)
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW)))
+                                .withYtelseskomponentListe(
+                                        LagTestWSYtelse.lagYtelseskomponent("Arbeidsavklaringspenger", 2000.00, 00.00, 00.0)
+                                                .withSatstype("AAP"))
+                                .withYtelseskomponentersum(2000.00)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(00.00))
+                                .withSkattsum(00.00)
+                                .withTrekkListe(new ArrayList<>())
+                                .withTrekksum(0.00)
+                                .withYtelseNettobeloep(2000.00)
+                                .withBilagsnummer("30742-57312"));
+
     }
 
 }

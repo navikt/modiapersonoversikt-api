@@ -15,7 +15,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.leggTilEkstraDagerPaaStartdato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils.finnUtbetalingerMedUtbetalingsdatoISokeperioden;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils.finnUtbetalingerISokeperioden;
 
 public class UtbetalingServiceImpl implements UtbetalingService {
 
@@ -26,7 +26,7 @@ public class UtbetalingServiceImpl implements UtbetalingService {
     public List<WSUtbetaling> hentWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
 
         return getWSUtbetalinger(fnr, startDato, sluttDato).stream()
-                .filter(finnUtbetalingerMedUtbetalingsdatoISokeperioden(startDato, sluttDato))
+                .filter(finnUtbetalingerISokeperioden(startDato, sluttDato))
                 .collect(toList());
     }
 

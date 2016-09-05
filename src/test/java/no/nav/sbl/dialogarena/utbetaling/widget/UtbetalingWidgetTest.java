@@ -12,7 +12,7 @@ import org.mockito.Matchers;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetalingMedValgtUtbetalingOgPosteringsdato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -84,8 +84,8 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
     @Test
     public void viserToUtbetalingerSisteTrettiDagerMedToAktuelle() throws Exception {
         List<WSUtbetaling> liste = asList(
-                createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 10), now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 10)),
-                createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 10), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 10)),
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
         );
 
         when(utbetalingService.hentWSUtbetalinger(Matchers.matches(FNR), any(LocalDate.class), any(LocalDate.class))).thenReturn(liste);
@@ -99,8 +99,8 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
     public void viserFireUtbetalingerSisteTreTrettiDagerMedFireAktuelle() throws Exception {
 
         List<WSUtbetaling> liste = asList(
-                createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now().minusDays(NUMBER_OF_DAYS_TO_SHOW)),
-                createUtbetalingMedValgtUtbetalingOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW)),
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
         );
 
         when(utbetalingService.hentWSUtbetalinger(Matchers.matches(FNR), any(LocalDate.class), any(LocalDate.class))).thenReturn(liste);

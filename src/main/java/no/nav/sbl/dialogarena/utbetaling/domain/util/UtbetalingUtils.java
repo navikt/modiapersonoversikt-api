@@ -8,12 +8,23 @@ import java.util.function.Predicate;
 
 
 public class UtbetalingUtils {
-    public static Predicate<WSUtbetaling> finnUtbetalingerMedUtbetalingsdatoISokeperioden(final LocalDate startDato, final LocalDate sluttDato) {
+    public static Predicate<WSUtbetaling> finnUtbetalingerISokeperioden(final LocalDate startDato, final LocalDate sluttDato) {
 
         return utbetaling -> {
 
             DateTime utbetalingsDato = utbetaling.getUtbetalingsdato();
-            return utbetalingsDato != null && erUtbetalingsdatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
+            if (utbetalingsDato != null) {
+                return erUtbetalingsdatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
+            }
+            DateTime forfallsdato = utbetaling.getForfallsdato();
+            if (forfallsdato != null) {
+                return erUtbetalingsdatoISokeperioden(forfallsdato.toLocalDate(), startDato, sluttDato);
+            }
+            DateTime posteringsdato = utbetaling.getPosteringsdato();
+            if (posteringsdato != null){
+                return erUtbetalingsdatoISokeperioden(posteringsdato.toLocalDate(), startDato, sluttDato);
+            }
+            return false;
         };
     }
 
