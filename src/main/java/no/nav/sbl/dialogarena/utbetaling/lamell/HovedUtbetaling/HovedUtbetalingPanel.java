@@ -1,8 +1,8 @@
-package no.nav.sbl.dialogarena.utbetaling.lamell.SammenlagtUtbetaling;
+package no.nav.sbl.dialogarena.utbetaling.lamell.Hovedutbetaling;
 
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.SammenlagtUtbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,16 +15,16 @@ import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.summingDouble;
 
-public class SammenlagtUtbetalingPanel extends Panel {
+public class HovedutbetalingPanel extends Panel {
 
     private static Collector<Double, ?, Double> sumDouble = summingDouble((d) -> d);
 
-    public SammenlagtUtbetalingPanel(String id, SammenlagtUtbetaling sammenlagtUtbetaling) {
+    public HovedutbetalingPanel(String id, Hovedutbetaling hovedutbetaling) {
         super(id);
-        List<Hovedytelse> synligeHovedytelser = sammenlagtUtbetaling.getSynligeHovedytelser();
+        List<Hovedytelse> synligeHovedytelser = hovedutbetaling.getSynligeHovedytelser();
         add(createUtbetalingListView(synligeHovedytelser));
-        add(new Label("utbetalingsdato", WidgetDateFormatter.date(sammenlagtUtbetaling.getUtbetalingsdato())).setVisible(sammenlagtUtbetaling.skalViseSammenlagtUtbetaling()));
-        add(new Label("sammenlagtUtbetalingSum", finnSumAvHovedytelser(synligeHovedytelser)).setVisible(sammenlagtUtbetaling.skalViseSammenlagtUtbetaling()));
+        add(new Label("utbetalingsdato", WidgetDateFormatter.date(hovedutbetaling.getHovedytelsesdato())).setVisible(hovedutbetaling.skalViseHovedutbetaling()));
+        add(new Label("hovedutbetalingSum", finnSumAvHovedytelser(synligeHovedytelser)).setVisible(hovedutbetaling.skalViseHovedutbetaling()));
     }
 
     private Double finnSumAvHovedytelser(List<Hovedytelse> hovedytelser) {

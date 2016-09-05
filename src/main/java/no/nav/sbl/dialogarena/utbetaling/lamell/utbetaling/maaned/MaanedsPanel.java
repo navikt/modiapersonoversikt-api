@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.SammenlagtUtbetaling;
-import no.nav.sbl.dialogarena.utbetaling.lamell.SammenlagtUtbetaling.SammenlagtUtbetalingPanel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.Hovedutbetaling.HovedutbetalingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -18,12 +18,12 @@ import static org.joda.time.LocalDate.now;
 
 public class MaanedsPanel extends Panel {
 
-    public MaanedsPanel(String id, List<SammenlagtUtbetaling> sammenlagtUtbetalingList) {
+    public MaanedsPanel(String id, List<Hovedutbetaling> hovedutbetalingList) {
         super(id);
-        List<Hovedytelse> utbetalingsliste = hentAlleSynligeHovedytelser(sammenlagtUtbetalingList);
+        List<Hovedytelse> utbetalingsliste = hentAlleSynligeHovedytelser(hovedutbetalingList);
         add(
                 createOppsummeringsPanel(utbetalingsliste),
-                createSammenlagtUtbetalinger(sammenlagtUtbetalingList)
+                createHovedUtbetalinger(hovedutbetalingList)
         );
     }
 
@@ -32,11 +32,11 @@ public class MaanedsPanel extends Panel {
                 createOppsummeringVM(utbetalingsliste));
     }
 
-    private ListView<SammenlagtUtbetaling> createSammenlagtUtbetalinger(List<SammenlagtUtbetaling> sammenlagtUtbetalingList) {
-        return new ListView<SammenlagtUtbetaling>("sammenlagtUtbetalinger", sammenlagtUtbetalingList) {
+    private ListView<Hovedutbetaling> createHovedUtbetalinger(List<Hovedutbetaling> hovedutbetalingList) {
+        return new ListView<Hovedutbetaling>("hovedutbetalinger", hovedutbetalingList) {
             @Override
-            protected void populateItem(ListItem<SammenlagtUtbetaling> item) {
-                item.add(new SammenlagtUtbetalingPanel("sammenlagtUtbetaling", item.getModelObject()));
+            protected void populateItem(ListItem<Hovedutbetaling> item) {
+                item.add(new HovedutbetalingPanel("hovedutbetaling", item.getModelObject()));
             }
         };
     }

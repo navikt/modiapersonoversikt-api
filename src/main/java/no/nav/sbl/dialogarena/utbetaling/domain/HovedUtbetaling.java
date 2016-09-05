@@ -8,27 +8,28 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class SammenlagtUtbetaling implements Serializable {
+public class Hovedutbetaling implements Serializable {
 
     private String id;
 
-    private DateTime utbetalingsdato;
+    private DateTime hovedytelsesdato;
     private Double nettoUtbetalt;
     private List<Hovedytelse> hovedytelser;
     private boolean skalVises;
     private List<Hovedytelse> synligeHovedytelser;
 
-    public SammenlagtUtbetaling() {
+    public Hovedutbetaling() {
         this.skalVises = true;
     }
 
-    public void skalViseSammenlagtUtbetaling(boolean skalVises) {
+    public void skalViseHovedutbetaling(boolean skalVises) {
         this.skalVises = skalVises;
     }
 
-    public DateTime getUtbetalingsdato() {
-        return utbetalingsdato;
+    public DateTime getHovedytelsesdato() {
+        return hovedytelsesdato;
     }
+
 
     public Double getNettoUtbetalt() {
         return nettoUtbetalt;
@@ -42,23 +43,23 @@ public class SammenlagtUtbetaling implements Serializable {
         return synligeHovedytelser;
     }
 
-    public SammenlagtUtbetaling withUtbetaltSum(double nettoUtbetalt) {
+    public Hovedutbetaling withUtbetaltSum(double nettoUtbetalt) {
         this.nettoUtbetalt = nettoUtbetalt;
         return this;
     }
 
-    public SammenlagtUtbetaling withUtbetalingsdato(DateTime utbetalingsdato) {
-        this.utbetalingsdato = utbetalingsdato;
+    public Hovedutbetaling withHovedytelsesdato(DateTime hovedytelsesdato) {
+        this.hovedytelsesdato = hovedytelsesdato;
         return this;
     }
 
-    public SammenlagtUtbetaling withHovedytelser(List<Hovedytelse> hovedytelser) {
+    public Hovedutbetaling withHovedytelser(List<Hovedytelse> hovedytelser) {
         this.hovedytelser = hovedytelser;
         this.synligeHovedytelser = hovedytelser;
         return this;
     }
 
-    public SammenlagtUtbetaling withId(String id) {
+    public Hovedutbetaling withId(String id) {
         this.id = id;
         return this;
     }
@@ -71,7 +72,7 @@ public class SammenlagtUtbetaling implements Serializable {
         return synligeHovedytelser;
     }
 
-    public boolean skalViseSammenlagtUtbetaling() {
+    public boolean skalViseHovedutbetaling() {
         return skalVises && synligeHovedytelser.size() != 0 && hovedytelser.size() != 1;
     }
 }

@@ -5,8 +5,8 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.SammenlagtUtbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.components.ExternalLinkWithLabel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
@@ -105,7 +105,7 @@ public final class UtbetalingLerret extends Lerret {
 
         List<WSUtbetaling> utbetalingerInnenPerioden = getWSUtbetalingerListe(fnr, defaultStartDato(), defaultSluttDato());
 
-        List<SammenlagtUtbetaling> sammenlagtUtbetalinger = getSammenlagtUtbetalinger(utbetalingerInnenPerioden);
+        List<Hovedutbetaling> hovedutbetalinger = getHovedUtbetalinger(utbetalingerInnenPerioden);
 
         List<Hovedytelse> alleHovedytelsesTyper = getHovedytelseListe(utbetalingerInnenPerioden);
         filterParametere = new FilterParametere(ytelserAsText(alleHovedytelsesTyper));
@@ -116,7 +116,7 @@ public final class UtbetalingLerret extends Lerret {
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
 
         utbetalingslisteContainer = createUtbetalinglisteContainer();
-        utbetalingslisteContainer.add(createMaanedsPanelListe(sammenlagtUtbetalinger));
+        utbetalingslisteContainer.add(createMaanedsPanelListe(hovedutbetalinger));
         utbetalingslisteContainer.setOutputMarkupPlaceholderTag(true);
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
@@ -143,14 +143,14 @@ public final class UtbetalingLerret extends Lerret {
         return new TotalOppsummeringPanel("totalOppsummeringPanel", new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()));
     }
 
-    private ListView<List<SammenlagtUtbetaling>> createMaanedsPanelListe(List<SammenlagtUtbetaling> sammenlagteUtbetalinger) {
-        Map<YearMonth, List<SammenlagtUtbetaling>> yearMonthListMap = sammenlagteUtbetalingerGroupedByYearMonth(sammenlagteUtbetalinger);
+    private ListView<List<Hovedutbetaling>> createMaanedsPanelListe(List<Hovedutbetaling> hovedutbetalinger) {
+        Map<YearMonth, List<Hovedutbetaling>> yearMonthListMap = hovedutbetalingerGroupedByYearMonth(hovedutbetalinger);
 
-        return new ListView<List<SammenlagtUtbetaling>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
+        return new ListView<List<Hovedutbetaling>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
-            protected void populateItem(ListItem<List<SammenlagtUtbetaling>> item) {
+            protected void populateItem(ListItem<List<Hovedutbetaling>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
-                item.add(visibleIf(new Model<>(!sammenlagteUtbetalinger.isEmpty())));
+                item.add(visibleIf(new Model<>(!hovedutbetalinger.isEmpty())));
             }
         };
     }
@@ -167,9 +167,9 @@ public final class UtbetalingLerret extends Lerret {
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
-    private void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger, List<SammenlagtUtbetaling> sammenlagteUtbetalinger) {
+    private void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger, List<Hovedutbetaling> hovedutbetalinger) {
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
-        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(sammenlagteUtbetalinger));
+        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(hovedutbetalinger));
     }
 
     private void endreSynligeKomponenter(boolean synligeUtbetalinger) {
@@ -216,15 +216,15 @@ public final class UtbetalingLerret extends Lerret {
                 .filter(hovedytelse -> filterParametere.test(hovedytelse))
                 .collect(toList());
 
-        List<SammenlagtUtbetaling> sammenlagteUtbetalinger = getSammenlagtUtbetalinger(utbetalingerInnenPerioden);
+        List<Hovedutbetaling> hovedutbetalinger = getHovedUtbetalinger(utbetalingerInnenPerioden);
 
-        sammenlagteUtbetalinger.stream()
-                .forEach(sammenlagtUtbetaling -> {
-                    sammenlagtUtbetaling.finnSynligeHovedytelser(filterParametere);
-                    sammenlagtUtbetaling.skalViseSammenlagtUtbetaling(filterParametere.isAlleYtelserValgt());
+        hovedutbetalinger.stream()
+                .forEach(hovedutbetaling -> {
+                    hovedutbetaling.finnSynligeHovedytelser(filterParametere);
+                    hovedutbetaling.skalViseHovedutbetaling(filterParametere.isAlleYtelserValgt());
                 });
 
-        oppdaterUtbetalingsvisning(synligeUtbetalinger, sammenlagteUtbetalinger);
+        oppdaterUtbetalingsvisning(synligeUtbetalinger, hovedutbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
@@ -245,14 +245,14 @@ public final class UtbetalingLerret extends Lerret {
                 .filter(hovedytelse -> filterParametere.test(hovedytelse))
                 .collect(toList());
 
-        List<SammenlagtUtbetaling> sammenlagteUtbetalinger = getSammenlagtUtbetalinger(utbetalingerInnenPerioden);
-        sammenlagteUtbetalinger.stream()
-                .forEach(sammenlagtUtbetaling -> {
-                    sammenlagtUtbetaling.finnSynligeHovedytelser(filterParametere);
-                    sammenlagtUtbetaling.skalViseSammenlagtUtbetaling(filterParametere.isAlleYtelserValgt());
+        List<Hovedutbetaling> hovedutbetalinger = getHovedUtbetalinger(utbetalingerInnenPerioden);
+        hovedutbetalinger.stream()
+                .forEach(hovedutbetaling -> {
+                    hovedutbetaling.finnSynligeHovedytelser(filterParametere);
+                    hovedutbetaling.skalViseHovedutbetaling(filterParametere.isAlleYtelserValgt());
                 });
 
-        oppdaterUtbetalingsvisning(synligeUtbetalinger, sammenlagteUtbetalinger);
+        oppdaterUtbetalingsvisning(synligeUtbetalinger, hovedutbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);

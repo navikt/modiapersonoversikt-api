@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.SammenlagtUtbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -32,7 +32,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
         Hovedytelse hovedytelse = new Hovedytelse()
                 .withId(ID);
 
-        SammenlagtUtbetaling sammenlagtUtbetaling = new SammenlagtUtbetaling().withId(ID);
+        Hovedutbetaling hovedutbetaling = new Hovedutbetaling().withId(ID);
 
         List<Hovedytelse> utbetalinger = asList(
                 hovedytelse
@@ -67,12 +67,12 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                                 .withSatsAntall(2.0)))
         );
 
-        List<SammenlagtUtbetaling> sammenlagteUtbetalinger = singletonList(
-                sammenlagtUtbetaling
+        List<Hovedutbetaling> hovedutbetalinger = singletonList(
+                hovedutbetaling
                         .withHovedytelser(utbetalinger)
         );
 
-        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", sammenlagteUtbetalinger);
+        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", hovedutbetalinger);
         wicketTester.goToPageWith(maanedsPanel);
 
         wicketTester.should().containComponent(ofType(MaanedOppsummeringPanel.class))

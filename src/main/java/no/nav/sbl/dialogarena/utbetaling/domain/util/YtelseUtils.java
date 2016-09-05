@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
-import no.nav.sbl.dialogarena.utbetaling.domain.SammenlagtUtbetaling;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPerson;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
@@ -53,7 +53,7 @@ public class YtelseUtils {
                 .collect(toList());
     }
 
-    public static List<SammenlagtUtbetaling> getSammenlagtUtbetalinger(List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden) {
+    public static List<Hovedutbetaling> getHovedUtbetalinger(List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden) {
         return utbetalingerMedPosteringInnenPerioden.stream()
                 .map(SAMMENLAGT_UTBETALING_TRANSFORMER)
                 .collect(toList());
@@ -73,20 +73,20 @@ public class YtelseUtils {
                 .collect(toList());
     }
 
-    public static SortedMap<YearMonth, List<SammenlagtUtbetaling>> sammenlagteUtbetalingerGroupedByYearMonth(List<SammenlagtUtbetaling> sammelagteUtbetalinger) {
+    public static SortedMap<YearMonth, List<Hovedutbetaling>> hovedutbetalingerGroupedByYearMonth(List<Hovedutbetaling> hovedutbetalinger) {
         Comparator<YearMonth> eldsteForst = (o1, o2) -> o2.compareTo(o1);
 
-        Map<YearMonth, List<SammenlagtUtbetaling>> sammenlagteUtbetalingerSortertPaaYearMonth = sammelagteUtbetalinger.stream()
-                .collect(groupingBy(sammenlagtUtbetaling -> new YearMonth(sammenlagtUtbetaling.getUtbetalingsdato().getYear(), sammenlagtUtbetaling.getUtbetalingsdato().getMonthOfYear())));
+        Map<YearMonth, List<Hovedutbetaling>> hovedutbetalingerSortertPaaYearMonth = hovedutbetalinger.stream()
+                .collect(groupingBy(hovedutbetaling -> new YearMonth(hovedutbetaling.getHovedytelsesdato().getYear(), hovedutbetaling.getHovedytelsesdato().getMonthOfYear())));
 
-        TreeMap<YearMonth, List<SammenlagtUtbetaling>> yearMonthListTreeMap = new TreeMap<>(eldsteForst);
-        yearMonthListTreeMap.putAll(sammenlagteUtbetalingerSortertPaaYearMonth);
+        TreeMap<YearMonth, List<Hovedutbetaling>> yearMonthListTreeMap = new TreeMap<>(eldsteForst);
+        yearMonthListTreeMap.putAll(hovedutbetalingerSortertPaaYearMonth);
         return yearMonthListTreeMap;
     }
 
-    public static List<Hovedytelse> hentAlleSynligeHovedytelser(List<SammenlagtUtbetaling> sammenlagteUtbetalinger) {
-        return sammenlagteUtbetalinger.stream()
-                .flatMap(sammenlagtUtbetaling -> sammenlagtUtbetaling.getSynligeHovedytelser().stream())
+    public static List<Hovedytelse> hentAlleSynligeHovedytelser(List<Hovedutbetaling> hovedutbetalinger) {
+        return hovedutbetalinger.stream()
+                .flatMap(hovedutbetaling -> hovedutbetaling.getSynligeHovedytelser().stream())
                 .collect(toList());
     }
 

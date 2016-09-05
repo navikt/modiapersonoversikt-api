@@ -67,9 +67,9 @@ public class Transformers {
                     .withSammenlagtTrekkBeloep()
             )).collect(toList());
 
-    public static final Function<WSUtbetaling, SammenlagtUtbetaling> SAMMENLAGT_UTBETALING_TRANSFORMER = wsUtbetaling -> new SammenlagtUtbetaling()
+    public static final Function<WSUtbetaling, Hovedutbetaling> SAMMENLAGT_UTBETALING_TRANSFORMER = wsUtbetaling -> new Hovedutbetaling()
             .withUtbetaltSum(0)
-            .withUtbetalingsdato(wsUtbetaling.getUtbetalingsdato())
+            .withHovedytelsesdato(determineHovedytelseDato(wsUtbetaling))
             .withHovedytelser(TO_HOVEDYTELSE.apply(wsUtbetaling));
 
     /**

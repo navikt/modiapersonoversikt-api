@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.SammenlagtUtbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -40,7 +40,7 @@ public class YtelseUtilsTest {
     private static final DateTime SEPT_2012_DATE = new DateTime(2012, 9, 1, 0, 0);
 
     private List<Hovedytelse> hovedytelseListe;
-    private List<SammenlagtUtbetaling> sammenlagteUtbetalinger;
+    private List<Hovedutbetaling> hovedutbetalinger;
 
     @Before
     public void settOppUtbetalingsliste() {
@@ -71,11 +71,11 @@ public class YtelseUtilsTest {
                 hovedytelseMars,
                 hovedytelseSeptember);
 
-        sammenlagteUtbetalinger = asList(
-                new SammenlagtUtbetaling().withHovedytelser(singletonList(hovedytelseJanuar)).withUtbetalingsdato(JAN_2012_DATE),
-                new SammenlagtUtbetaling().withHovedytelser(singletonList(hovedytelseJanuar2)).withUtbetalingsdato(JAN_2012_DATE_2),
-                new SammenlagtUtbetaling().withHovedytelser(singletonList(hovedytelseMars)).withUtbetalingsdato(MAR_2012_DATE),
-                new SammenlagtUtbetaling().withHovedytelser(singletonList(hovedytelseSeptember)).withUtbetalingsdato(SEPT_2012_DATE)
+        hovedutbetalinger = asList(
+                new Hovedutbetaling().withHovedytelser(singletonList(hovedytelseJanuar)).withHovedytelsesdato(JAN_2012_DATE),
+                new Hovedutbetaling().withHovedytelser(singletonList(hovedytelseJanuar2)).withHovedytelsesdato(JAN_2012_DATE_2),
+                new Hovedutbetaling().withHovedytelser(singletonList(hovedytelseMars)).withHovedytelsesdato(MAR_2012_DATE),
+                new Hovedutbetaling().withHovedytelser(singletonList(hovedytelseSeptember)).withHovedytelsesdato(SEPT_2012_DATE)
         );
     }
 
@@ -91,16 +91,16 @@ public class YtelseUtilsTest {
 
     @Test
     public void ytelserGroupedByYearMonth_sortertSynkende() {
-        List<SammenlagtUtbetaling> sammenlagteUtbetalinger = new ArrayList<>(asList(
-                new SammenlagtUtbetaling().withUtbetalingsdato(new DateTime(2015, 1, 1, 1, 1)),
-                new SammenlagtUtbetaling().withUtbetalingsdato(new DateTime(2015, 3, 1, 1, 1)),
-                new SammenlagtUtbetaling().withUtbetalingsdato(new DateTime(2015, 2, 1, 1, 1))
+        List<Hovedutbetaling> hovedutbetalinger = new ArrayList<>(asList(
+                new Hovedutbetaling().withHovedytelsesdato(new DateTime(2015, 1, 1, 1, 1)),
+                new Hovedutbetaling().withHovedytelsesdato(new DateTime(2015, 3, 1, 1, 1)),
+                new Hovedutbetaling().withHovedytelsesdato(new DateTime(2015, 2, 1, 1, 1))
         ));
 
 
-        Map<YearMonth, List<SammenlagtUtbetaling>> yearMonthListMap = YtelseUtils.sammenlagteUtbetalingerGroupedByYearMonth(sammenlagteUtbetalinger);
+        Map<YearMonth, List<Hovedutbetaling>> yearMonthListMap = YtelseUtils.hovedutbetalingerGroupedByYearMonth(hovedutbetalinger);
 
-        Iterator<Map.Entry<YearMonth, List<SammenlagtUtbetaling>>> iterator = yearMonthListMap.entrySet().iterator();
+        Iterator<Map.Entry<YearMonth, List<Hovedutbetaling>>> iterator = yearMonthListMap.entrySet().iterator();
         assertThat(iterator.next().getKey(), is(new YearMonth(2015, 3)));
         assertThat(iterator.next().getKey(), is(new YearMonth(2015, 2)));
         assertThat(iterator.next().getKey(), is(new YearMonth(2015, 1)));
@@ -108,28 +108,28 @@ public class YtelseUtilsTest {
 
     @Test
     public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaanederOverToAar() {
-        List<SammenlagtUtbetaling> sammenlagtUtbetalinger = new ArrayList<>(sammenlagteUtbetalinger);
+        List<Hovedutbetaling> hovedutbetalinger = new ArrayList<>(this.hovedutbetalinger);
 
-        SammenlagtUtbetaling utbetaling = new SammenlagtUtbetaling()
+        Hovedutbetaling utbetaling = new Hovedutbetaling()
                 .withHovedytelser(singletonList(new Hovedytelse()
                         .withHovedytelsedato(new DateTime(2014, 1, 1, 0, 0))
                         .withUtbetalingsmelding("1. jan 2014 nr1")))
-                .withUtbetalingsdato(new DateTime(2014, 1, 1, 0, 0));
+                .withHovedytelsesdato(new DateTime(2014, 1, 1, 0, 0));
 
-        sammenlagtUtbetalinger.add(utbetaling);
+        hovedutbetalinger.add(utbetaling);
 
-        assertThat(sammenlagteUtbetalingerGroupedByYearMonth(sammenlagtUtbetalinger).size(), is(4));
+        assertThat(hovedutbetalingerGroupedByYearMonth(hovedutbetalinger).size(), is(4));
     }
 
     @Test
     public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaaneder() {
-        Map<YearMonth, List<SammenlagtUtbetaling>> maanedsMap = sammenlagteUtbetalingerGroupedByYearMonth(sammenlagteUtbetalinger);
+        Map<YearMonth, List<Hovedutbetaling>> maanedsMap = hovedutbetalingerGroupedByYearMonth(hovedutbetalinger);
         assertThat(maanedsMap.size(), is(3));
     }
 
     @Test
     public void splittUtbetalingerPerMaaned_hverMaanedHarRiktigAntallUtbetalinger() {
-        Map<YearMonth, List<SammenlagtUtbetaling>> maanedsMap = sammenlagteUtbetalingerGroupedByYearMonth(sammenlagteUtbetalinger);
+        Map<YearMonth, List<Hovedutbetaling>> maanedsMap = hovedutbetalingerGroupedByYearMonth(hovedutbetalinger);
 
         assertThat(maanedsMap.get(new YearMonth(2012, 9)).size(), is(1));
         assertThat(maanedsMap.get(new YearMonth(2012, 3)).size(), is(1));
@@ -138,7 +138,7 @@ public class YtelseUtilsTest {
 
     @Test
     public void splittUtbetalingerPerMaaned_inneholderRiktigUtbetalingPerMaaned() {
-        Map<YearMonth, List<SammenlagtUtbetaling>> maanedsMap = sammenlagteUtbetalingerGroupedByYearMonth(sammenlagteUtbetalinger);
+        Map<YearMonth, List<Hovedutbetaling>> maanedsMap = hovedutbetalingerGroupedByYearMonth(hovedutbetalinger);
 
         assertThat(maanedsMap.get(new YearMonth(2012, 9)).get(0).getHovedytelser().get(0).getUtbetalingsmelding(), is(SEP_2012_NR1));
         assertThat(maanedsMap.get(new YearMonth(2012, 3)).get(0).getHovedytelser().get(0).getUtbetalingsmelding(), is(MAR_2012_NR1));
