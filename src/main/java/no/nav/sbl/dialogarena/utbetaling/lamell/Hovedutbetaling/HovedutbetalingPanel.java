@@ -86,7 +86,3 @@ public class HovedutbetalingPanel extends Panel {
     }
 
 }
-
-
-
-HovedutbetalingPanel
