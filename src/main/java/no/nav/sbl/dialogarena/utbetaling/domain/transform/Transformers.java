@@ -70,7 +70,10 @@ public class Transformers {
     public static final Function<WSUtbetaling, Hovedutbetaling> SAMMENLAGT_UTBETALING_TRANSFORMER = wsUtbetaling -> new Hovedutbetaling()
             .withUtbetaltSum(0)
             .withHovedytelsesdato(determineHovedytelseDato(wsUtbetaling))
-            .withHovedytelser(TO_HOVEDYTELSE.apply(wsUtbetaling));
+            .withHovedytelser(TO_HOVEDYTELSE.apply(wsUtbetaling))
+            .withUtbetalingStatus(wsUtbetaling.getUtbetalingsstatus())
+            .withIsUtbetalt(wsUtbetaling.getUtbetalingsdato() != null);
+
 
     /**
      * HovedytelseDato baserer seg på følgende prioritert rekkefølge:

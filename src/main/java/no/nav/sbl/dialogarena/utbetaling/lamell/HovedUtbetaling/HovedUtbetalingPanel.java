@@ -5,15 +5,21 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.summingDouble;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 
 public class HovedutbetalingPanel extends Panel {
 
@@ -21,10 +27,46 @@ public class HovedutbetalingPanel extends Panel {
 
     public HovedutbetalingPanel(String id, Hovedutbetaling hovedutbetaling) {
         super(id);
+
+
         List<Hovedytelse> synligeHovedytelser = hovedutbetaling.getSynligeHovedytelser();
-        add(createUtbetalingListView(synligeHovedytelser));
-        add(new Label("utbetalingsdato", WidgetDateFormatter.date(hovedutbetaling.getHovedytelsesdato())).setVisible(hovedutbetaling.skalViseHovedutbetaling()));
-        add(new Label("hovedutbetalingSum", finnSumAvHovedytelser(synligeHovedytelser)).setVisible(hovedutbetaling.skalViseHovedutbetaling()));
+        IModel<Boolean> skalVises = Model.of(hovedutbetaling.skalViseHovedutbetaling());
+
+        add(hasCssClassIf("hovedutbetaling-synlig", skalVises));
+        add(
+                createHovedutbetalingDetaljPanel(synligeHovedytelser, hovedutbetaling),
+                createUtbetalingListView(synligeHovedytelser)
+        );
+    }
+
+    private WebMarkupContainer createHovedutbetalingDetaljPanel(List<Hovedytelse> synligeHovedytelser, Hovedutbetaling hovedutbetaling) {
+
+        WebMarkupContainer hovedutbetalingDetaljPanel = new WebMarkupContainer("hovedutbetalingDetaljPanel");
+        hovedutbetalingDetaljPanel.add(
+                new Label("utbetalingDato", lagVisningsdato(hovedutbetaling.getHovedytelsesdato())),
+                createStatusLabel(hovedutbetaling),
+                new Label("ytelse", "Diverse utbetalinger"),
+                new Label("belop", finnSumAvHovedytelser(synligeHovedytelser))
+        );
+
+        hovedutbetalingDetaljPanel.setVisibilityAllowed(hovedutbetaling.skalViseHovedutbetaling());
+        return hovedutbetalingDetaljPanel;
+    }
+
+    private String lagVisningsdato(DateTime visningsdato) {
+        if(visningsdato == null) {
+            return "Ingen utbetalingsdato";
+        }
+
+        return WidgetDateFormatter.date(visningsdato);
+    }
+
+    private Label createStatusLabel(Hovedutbetaling hovedutbetaling) {
+        Label statusLabel = new Label("status", hovedutbetaling.getStatus());
+        if (hovedutbetaling.isUtbetalt()) {
+            statusLabel.add(new AttributeAppender("class", "utbetalt").setSeparator(" "));
+        }
+        return statusLabel;
     }
 
     private Double finnSumAvHovedytelser(List<Hovedytelse> hovedytelser) {

@@ -17,6 +17,9 @@ public class Hovedutbetaling implements Serializable {
     private List<Hovedytelse> hovedytelser;
     private boolean skalVises;
     private List<Hovedytelse> synligeHovedytelser;
+    private String status;
+    private boolean erUtbetalt;
+
 
     public Hovedutbetaling() {
         this.skalVises = true;
@@ -64,6 +67,16 @@ public class Hovedutbetaling implements Serializable {
         return this;
     }
 
+    public Hovedutbetaling withUtbetalingStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public Hovedutbetaling withIsUtbetalt(boolean erUtbetalt) {
+        this.erUtbetalt = erUtbetalt;
+        return this;
+    }
+
     public List<Hovedytelse> finnSynligeHovedytelser(FilterParametere filterParametere) {
         synligeHovedytelser = hovedytelser.stream()
                 .filter(hovedytelse -> filterParametere.test(hovedytelse))
@@ -74,5 +87,13 @@ public class Hovedutbetaling implements Serializable {
 
     public boolean skalViseHovedutbetaling() {
         return skalVises && synligeHovedytelser.size() != 0 && hovedytelser.size() != 1;
+    }
+
+    public boolean isUtbetalt() {
+        return erUtbetalt;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
