@@ -382,7 +382,7 @@
 	<scm>
 		<developerConnection>scm:git:http://stash.devillo.no/scm/bruk/modia-utbetalinger.git</developerConnection>
 		<url>http://stash.devillo.no/scm/bruk/modia-utbetalinger.git</url>
-		<tag>modia-utbetalinger_2.0.74</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 </project>

@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSAktoer;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPerson;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -18,6 +20,8 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.SAMMENLAGT_UTBETALING_TRANSFORMER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.TO_HOVEDYTELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.minusDaysAndFixedAtMidnightAtDayBefore;
 import static org.joda.time.LocalDate.now;
 
@@ -42,6 +46,19 @@ public class YtelseUtils {
         return compareDato;
     };
 
+    public static List<Hovedytelse> getHovedytelseListe(List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden) {
+        return utbetalingerMedPosteringInnenPerioden.stream()
+                .flatMap(wsUtbetaling -> TO_HOVEDYTELSE.apply(wsUtbetaling).stream())
+                .sorted(SISTE_HOVEDYTELSESDATO_FORST)
+                .collect(toList());
+    }
+
+    public static List<Hovedutbetaling> getHovedUtbetalinger(List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden) {
+        return utbetalingerMedPosteringInnenPerioden.stream()
+                .map(SAMMENLAGT_UTBETALING_TRANSFORMER)
+                .collect(toList());
+    }
+
     public static Mottakertype mottakertypeForAktoer(WSAktoer wsAktoer) {
         if (wsAktoer instanceof WSPerson) {
             return Mottakertype.BRUKER;
@@ -56,19 +73,24 @@ public class YtelseUtils {
                 .collect(toList());
     }
 
-    public static SortedMap<YearMonth, List<Hovedytelse>> ytelserGroupedByYearMonth(List<Hovedytelse> hovedytelser) {
+    public static SortedMap<YearMonth, List<Hovedutbetaling>> hovedutbetalingerGroupedByYearMonth(List<Hovedutbetaling> hovedutbetalinger) {
         Comparator<YearMonth> eldsteForst = (o1, o2) -> o2.compareTo(o1);
 
-        Map<YearMonth, List<Hovedytelse>> hovedytelserSortertPaaYearMonth = hovedytelser
-                .stream()
-                .collect(groupingBy(hovedytelse -> new YearMonth(hovedytelse.getHovedytelsedato().getYear(), hovedytelse.getHovedytelsedato().getMonthOfYear())));
+        Map<YearMonth, List<Hovedutbetaling>> hovedutbetalingerSortertPaaYearMonth = hovedutbetalinger.stream()
+                .collect(groupingBy(hovedutbetaling -> new YearMonth(hovedutbetaling.getHovedytelsesdato().getYear(), hovedutbetaling.getHovedytelsesdato().getMonthOfYear())));
 
-        TreeMap<YearMonth, List<Hovedytelse>> yearMonthListTreeMap = new TreeMap<>(eldsteForst);
-        yearMonthListTreeMap.putAll(hovedytelserSortertPaaYearMonth);
+        TreeMap<YearMonth, List<Hovedutbetaling>> yearMonthListTreeMap = new TreeMap<>(eldsteForst);
+        yearMonthListTreeMap.putAll(hovedutbetalingerSortertPaaYearMonth);
         return yearMonthListTreeMap;
     }
 
-    protected static Predicate<List<Hovedytelse>> erISammePeriodeSom(Hovedytelse hovedytelse) {
+    public static List<Hovedytelse> hentAlleSynligeHovedytelser(List<Hovedutbetaling> hovedutbetalinger) {
+        return hovedutbetalinger.stream()
+                .flatMap(hovedutbetaling -> hovedutbetaling.getSynligeHovedytelser().stream())
+                .collect(toList());
+    }
+
+    private static Predicate<List<Hovedytelse>> erISammePeriodeSom(Hovedytelse hovedytelse) {
         return utbetalinger -> {
             DateTime start = hovedytelse.getYtelsesperiode().getStart().minusDays(1);
             return utbetalinger
@@ -131,10 +153,10 @@ public class YtelseUtils {
         };
     }
 
-    protected static List<List<Hovedytelse>> grupperHovedytelseBasertPaaYtelse(List<Hovedytelse> ytelser) {
+    private static List<List<Hovedytelse>> grupperHovedytelseBasertPaaYtelse(List<Hovedytelse> ytelser) {
         Map<String, List<Hovedytelse>> hovedytelserGruppertPaaYtelse = ytelser
                 .stream()
-                .collect(groupingBy(hovedytelse -> hovedytelse.getYtelse()));
+                .collect(groupingBy(Hovedytelse::getYtelse));
         ArrayList<List<Hovedytelse>> lists = new ArrayList<>();
         lists.addAll(hovedytelserGruppertPaaYtelse.values());
         return lists;

@@ -5,6 +5,7 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.components.ExternalLinkWithLabel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterPanel;
@@ -14,6 +15,7 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPa
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.ComponentTag;
@@ -101,26 +103,30 @@ public final class UtbetalingLerret extends Lerret {
         feilmelding = createFeilmeldingPanel();
         feilmelding.setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
-        List<Hovedytelse> ytelser = getHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
-        filterParametere = new FilterParametere(ytelserAsText(ytelser));
+        List<WSUtbetaling> utbetalingerInnenPerioden = getWSUtbetalingerListe(fnr, defaultStartDato(), defaultSluttDato());
 
-        List<Hovedytelse> synligeUtbetalinger = ytelser.stream()
+        List<Hovedutbetaling> hovedutbetalinger = getHovedUtbetalinger(utbetalingerInnenPerioden);
+
+        List<Hovedytelse> alleHovedytelsesTyper = getHovedytelseListe(utbetalingerInnenPerioden);
+        filterParametere = new FilterParametere(ytelserAsText(alleHovedytelsesTyper));
+
+        List<Hovedytelse> synligeUtbetalinger = alleHovedytelsesTyper.stream()
                 .filter(hovedytelse -> filterParametere.test(hovedytelse))
                 .collect(toList());
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
 
         utbetalingslisteContainer = createUtbetalinglisteContainer();
-        utbetalingslisteContainer.add(createMaanedsPanelListe(synligeUtbetalinger));
+        utbetalingslisteContainer.add(createMaanedsPanelListe(hovedutbetalinger));
         utbetalingslisteContainer.setOutputMarkupPlaceholderTag(true);
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
-    private List<Hovedytelse> getHovedytelseListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    private List<WSUtbetaling> getWSUtbetalingerListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
-            return service.hentUtbetalinger(fnr, startDato, sluttDato);
+            return service.hentWSUtbetalinger(fnr, startDato, sluttDato);
         } catch (ApplicationException | SystemException e) {
-            LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, e);
+            LOG.warn("Noe feilet ved henting av utbetalinger for fnr " + fnr, e);
 
             if (e.getId() != null) {
                 feilmelding.endreMessageKey(e.getId());
@@ -137,16 +143,14 @@ public final class UtbetalingLerret extends Lerret {
         return new TotalOppsummeringPanel("totalOppsummeringPanel", new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()));
     }
 
-    private ListView<List<Hovedytelse>> createMaanedsPanelListe(List<Hovedytelse> hovedytelseListe) {
-        Map<YearMonth, List<Hovedytelse>> yearMonthListMap = ytelserGroupedByYearMonth(hovedytelseListe.stream()
-                .filter(hovedytelse -> filterParametere.test(hovedytelse))
-                .collect(toList()));
+    private ListView<List<Hovedutbetaling>> createMaanedsPanelListe(List<Hovedutbetaling> hovedutbetalinger) {
+        Map<YearMonth, List<Hovedutbetaling>> yearMonthListMap = hovedutbetalingerGroupedByYearMonth(hovedutbetalinger);
 
-        return new ListView<List<Hovedytelse>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
+        return new ListView<List<Hovedutbetaling>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
-            protected void populateItem(ListItem<List<Hovedytelse>> item) {
+            protected void populateItem(ListItem<List<Hovedutbetaling>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
-                item.add(visibleIf(new Model<>(!item.getModelObject().isEmpty())));
+                item.add(visibleIf(new Model<>(!hovedutbetalinger.isEmpty())));
             }
         };
     }
@@ -163,9 +167,9 @@ public final class UtbetalingLerret extends Lerret {
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
-    private void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger) {
+    private void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger, List<Hovedutbetaling> hovedutbetalinger) {
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
-        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(synligeUtbetalinger));
+        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(hovedutbetalinger));
     }
 
     private void endreSynligeKomponenter(boolean synligeUtbetalinger) {
@@ -193,7 +197,8 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private List<Hovedytelse> hentHovedytelseListe() {
-        return getHovedytelseListe(fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+        List<WSUtbetaling> utbetalingerInnenPerioden = getWSUtbetalingerListe(fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+        return getHovedytelseListe(utbetalingerInnenPerioden);
     }
 
     @SuppressWarnings("unused")
@@ -203,19 +208,29 @@ public final class UtbetalingLerret extends Lerret {
         DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
         DateTime filterSlutt = filterParametere.getSluttDato().plusDays(1).toDateTimeAtStartOfDay();
 
-
-        List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        List<WSUtbetaling> utbetalingerInnenPerioden = getWSUtbetalingerListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(utbetalingerInnenPerioden);
         oppdaterYtelser(hovedytelser);
 
         List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream()
                 .filter(hovedytelse -> filterParametere.test(hovedytelse))
                 .collect(toList());
-        oppdaterUtbetalingsvisning(synligeUtbetalinger);
+
+        List<Hovedutbetaling> hovedutbetalinger = getHovedUtbetalinger(utbetalingerInnenPerioden);
+
+        hovedutbetalinger.stream()
+                .forEach(hovedutbetaling -> {
+                    hovedutbetaling.finnSynligeHovedytelser(filterParametere);
+                    hovedutbetaling.skalViseHovedutbetaling(filterParametere.isAlleYtelserValgt());
+                });
+
+        oppdaterUtbetalingsvisning(synligeUtbetalinger, hovedutbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
         target.appendJavaScript("Utbetalinger.addKeyNavigation();");
     }
+
     @SuppressWarnings("unused")
     @RunOnEvents(YTELSE_FILTER_KLIKKET)
     private void oppdaterUtbetalingslisteFraYtelsesvalg(AjaxRequestTarget target) {
@@ -223,13 +238,21 @@ public final class UtbetalingLerret extends Lerret {
         DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
         DateTime filterSlutt = filterParametere.getSluttDato().plusDays(1).toDateTimeAtStartOfDay();
 
-
-        List<Hovedytelse> hovedytelser = getHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        List<WSUtbetaling> utbetalingerInnenPerioden = getWSUtbetalingerListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        List<Hovedytelse> hovedytelser = getHovedytelseListe(utbetalingerInnenPerioden);
 
         List<Hovedytelse> synligeUtbetalinger = hovedytelser.stream()
                 .filter(hovedytelse -> filterParametere.test(hovedytelse))
                 .collect(toList());
-        oppdaterUtbetalingsvisning(synligeUtbetalinger);
+
+        List<Hovedutbetaling> hovedutbetalinger = getHovedUtbetalinger(utbetalingerInnenPerioden);
+        hovedutbetalinger.stream()
+                .forEach(hovedutbetaling -> {
+                    hovedutbetaling.finnSynligeHovedytelser(filterParametere);
+                    hovedutbetaling.skalViseHovedutbetaling(filterParametere.isAlleYtelserValgt());
+                });
+
+        oppdaterUtbetalingsvisning(synligeUtbetalinger, hovedutbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
@@ -249,7 +272,7 @@ public final class UtbetalingLerret extends Lerret {
     private static Set<String> ytelserAsText(List<Hovedytelse> ytelser) {
         return ytelser
                 .stream()
-                .map(hovedytelse -> hovedytelse.getYtelse())
+                .map(Hovedytelse::getYtelse)
                 .collect(Collectors.toSet());
     }
 }

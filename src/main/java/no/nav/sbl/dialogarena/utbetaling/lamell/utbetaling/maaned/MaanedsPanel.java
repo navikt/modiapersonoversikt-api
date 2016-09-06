@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.lamell.Hovedutbetaling.HovedutbetalingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
-import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
-import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -13,14 +13,18 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.hentAlleSynligeHovedytelser;
 import static org.joda.time.LocalDate.now;
 
 public class MaanedsPanel extends Panel {
 
-    public MaanedsPanel(String id, List<Hovedytelse> utbetalingsliste) {
+    public MaanedsPanel(String id, List<Hovedutbetaling> hovedutbetalingList) {
         super(id);
-        add(createOppsummeringsPanel(utbetalingsliste),
-            createUtbetalingListView(utbetalingsliste));
+        List<Hovedytelse> utbetalingsliste = hentAlleSynligeHovedytelser(hovedutbetalingList);
+        add(
+                createOppsummeringsPanel(utbetalingsliste),
+                createHovedUtbetalinger(hovedutbetalingList)
+        );
     }
 
     private MaanedOppsummeringPanel createOppsummeringsPanel(List<Hovedytelse> utbetalingsliste) {
@@ -28,11 +32,11 @@ public class MaanedsPanel extends Panel {
                 createOppsummeringVM(utbetalingsliste));
     }
 
-    private ListView<Hovedytelse> createUtbetalingListView(List<Hovedytelse> utbetalingsliste) {
-        return new ListView<Hovedytelse>("utbetalinger", utbetalingsliste) {
+    private ListView<Hovedutbetaling> createHovedUtbetalinger(List<Hovedutbetaling> hovedutbetalingList) {
+        return new ListView<Hovedutbetaling>("hovedutbetalinger", hovedutbetalingList) {
             @Override
-            protected void populateItem(ListItem<Hovedytelse> item) {
-                item.add(new UtbetalingPanel("utbetaling", new UtbetalingVM(item.getModelObject())));
+            protected void populateItem(ListItem<Hovedutbetaling> item) {
+                item.add(new HovedutbetalingPanel("hovedutbetaling", item.getModelObject()));
             }
         };
     }
@@ -48,11 +52,11 @@ public class MaanedsPanel extends Panel {
         return new OppsummeringVM(liste, startDato, sluttDato);
     }
 
-    protected LocalDate getSluttDato(List<Hovedytelse> liste) {
+    private LocalDate getSluttDato(List<Hovedytelse> liste) {
         return liste.get(0).getHovedytelsedato().dayOfMonth().withMaximumValue().toLocalDate();
     }
 
-    protected LocalDate getStartDato(List<Hovedytelse> liste) {
+    private LocalDate getStartDato(List<Hovedytelse> liste) {
         return liste.get(liste.size() - 1).getHovedytelsedato().dayOfMonth().withMinimumValue().toLocalDate();
     }
 

@@ -4,19 +4,21 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
-import org.joda.time.Interval;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.mockito.Matchers;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,32 +40,32 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
 
     @Test
     public void transformererKorrekteUtbetalingerTilVMer() {
-        List<Hovedytelse> hovedytelser = Arrays.asList(
-            new Hovedytelse()
-                .withId("1")
-                .withNettoUtbetalt(0D)
-                .withUtbetaltTil(dummyAktoer())
-                .withHovedytelsedato(now().minusDays(MIDNIGHT_AT_DAY_BEFORE)),
-            new Hovedytelse()
-                    .withId("2")
-                    .withNettoUtbetalt(0D)
-                    .withUtbetaltTil(dummyAktoer())
-                    .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE - 1)),
-            new Hovedytelse()
-                    .withId("3")
-                    .withNettoUtbetalt(0D)
-                    .withUtbetaltTil(dummyAktoer())
-                    .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE)),
-            new Hovedytelse()
-                    .withId("4")
-                    .withNettoUtbetalt(0D)
-                    .withUtbetaltTil(dummyAktoer())
-                    .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE).toDateMidnight().toDateTime().minusMillis(1)),
-            new Hovedytelse()
-                    .withId("5")
-                    .withNettoUtbetalt(0D)
-                    .withUtbetaltTil(dummyAktoer())
-                    .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE + 1))
+        List<Hovedytelse> hovedytelser = asList(
+                new Hovedytelse()
+                        .withId("1")
+                        .withNettoUtbetalt(0D)
+                        .withUtbetaltTil(dummyAktoer())
+                        .withHovedytelsedato(now().minusDays(MIDNIGHT_AT_DAY_BEFORE)),
+                new Hovedytelse()
+                        .withId("2")
+                        .withNettoUtbetalt(0D)
+                        .withUtbetaltTil(dummyAktoer())
+                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE - 1)),
+                new Hovedytelse()
+                        .withId("3")
+                        .withNettoUtbetalt(0D)
+                        .withUtbetaltTil(dummyAktoer())
+                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE)),
+                new Hovedytelse()
+                        .withId("4")
+                        .withNettoUtbetalt(0D)
+                        .withUtbetaltTil(dummyAktoer())
+                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE).toDateMidnight().toDateTime().minusMillis(1)),
+                new Hovedytelse()
+                        .withId("5")
+                        .withNettoUtbetalt(0D)
+                        .withUtbetaltTil(dummyAktoer())
+                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE + 1))
         );
 
         List<HovedytelseVM> hovedytelseVMs = UtbetalingWidget.transformUtbetalingToVM(hovedytelser);
@@ -80,81 +82,32 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
     }
 
     @Test
-    public void viserFireUtbetalingerSisteTreMaanedeneMedFireAktuelle() throws Exception {
-        List<Hovedytelse> list = Arrays.asList(
-                new Hovedytelse()
-                        .withId("1")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
-                new Hovedytelse()
-                        .withId("2")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
-                new Hovedytelse()
-                        .withId("3")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
-                new Hovedytelse()
-                        .withId("4")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now()))
+    public void viserToUtbetalingerSisteTrettiDagerMedToAktuelle() throws Exception {
+        List<WSUtbetaling> liste = asList(
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 10), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW + 10)),
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
         );
 
-        when(utbetalingService.hentUtbetalinger(Matchers.matches(FNR), Matchers.any(LocalDate.class), Matchers.any(LocalDate.class))).thenReturn(list);
+        when(utbetalingService.hentWSUtbetalinger(Matchers.matches(FNR), any(LocalDate.class), any(LocalDate.class))).thenReturn(liste);
+
+        List<HovedytelseVM> feedItems = new UtbetalingWidget("utbetalingWidget", "initial", FNR).getFeedItems();
+
+        assertThat(feedItems, hasSize(2));
+    }
+
+    @Test
+    public void viserFireUtbetalingerSisteTreTrettiDagerMedFireAktuelle() throws Exception {
+
+        List<WSUtbetaling> liste = asList(
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW)),
+                createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), null, now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
+        );
+
+        when(utbetalingService.hentWSUtbetalinger(Matchers.matches(FNR), any(LocalDate.class), any(LocalDate.class))).thenReturn(liste);
 
         List<HovedytelseVM> feedItems = new UtbetalingWidget("utbetalingWidget", "initial", FNR).getFeedItems();
 
         assertThat(feedItems, hasSize(4));
-    }
-
-    @Test
-    public void viserFemUtbetalingerSisteTreMaanedeneMedFemAktuelle() throws Exception {
-        List<Hovedytelse> list = Arrays.asList(
-                new Hovedytelse()
-                        .withId("1")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
-                new Hovedytelse()
-                        .withId("2")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
-                new Hovedytelse()
-                        .withId("3")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
-                new Hovedytelse()
-                        .withId("4")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now())),
-                new Hovedytelse()
-                        .withId("5")
-                        .withNettoUtbetalt(0D)
-                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTil(dummyAktoer())
-                        .withYtelsesperiode(new Interval(now().minusDays(NUMBER_OF_DAYS_TO_SHOW), now()))
-        );
-
-        when(utbetalingService.hentUtbetalinger(Matchers.matches(FNR), Matchers.any(LocalDate.class), Matchers.any(LocalDate.class))).thenReturn(list);
-
-        List<HovedytelseVM> feedItems = new UtbetalingWidget("utbetalingWidget", "initial", FNR).getFeedItems();
-
-        assertThat(feedItems, hasSize(5));
     }
 
 }

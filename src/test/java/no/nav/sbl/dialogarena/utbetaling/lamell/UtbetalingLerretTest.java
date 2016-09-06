@@ -43,7 +43,7 @@ public class UtbetalingLerretTest extends AbstractWicketTest{
 
     @Test
     public void skalViseFeilmeldingpanelNaarTjenestenFeiler() {
-        when(service.hentUtbetalinger(any(String.class), any(LocalDate.class), any(LocalDate.class))).thenThrow(new ApplicationException("OMG"));
+        when(service.hentWSUtbetalinger(any(String.class), any(LocalDate.class), any(LocalDate.class))).thenThrow(new ApplicationException("OMG"));
 
         UtbetalingLerret utbetalingLerretMedException = new UtbetalingLerret("lerret", "");
         wicketTester.goToPageWith(utbetalingLerretMedException);

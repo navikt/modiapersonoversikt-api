@@ -1,8 +1,8 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <div class="utbetaling-head utbetaling-detalj">
+
+    <div wicket:id="hovedutbetalingDetaljPanel" class="hovedutbetaling-head utbetaling-head utbetaling-detalj">
         <div class="utbetaling-metadata">
-         <wicket:container wicket:id="printEkspander"></wicket:container>
             <p class="utbetaling-dato">
                 <span class="vekk">Utbetalingsdato: </span>
                 <span wicket:id="utbetalingDato"></span>
@@ -20,24 +20,15 @@
             </p>
             <p class="ytelsesbelop">
                 <span class="vekk">Utbetalt beløp: </span>
-                <span wicket:id="belop" ></span>
-            </p>
-            <div class="dato-wrapper clearfix">
-                <p class="periode">
-                    <span class="vekk">Periode: </span>
-                    <span wicket:id="periode"></span>
-                </p>
-                <div class="forfallsdato" wicket:id="forfallsdatoContainer">
-                    <span wicket:id="forfallDatoLabel" class="dato-label"></span>
-                    <span wicket:id="forfallDato"></span>
-                </div>
-            </div>
-            <p class="utbetaling-til">
-                <span><wicket:message key="utbetaling.lamell.utbetalt.til" /></span>
-                <span wicket:id="utbetaltTil"></span>
+                <span wicket:id="belop"></span>
             </p>
         </div>
     </div>
-    <div wicket:id="detaljpanel" class="detaljpanel"></div>
+
+    <wicket:container wicket:id="hovedytelser">
+        <article wicket:id="ytelseUtbetaling" tabindex="0" class="utbetalingslinje clearfix"
+                 aria-label="Utbetaling"></article>
+    </wicket:container>
+
 </wicket:panel>
 </html>

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.util;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils.erUtbetalingsdatoISokeperioden;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils.erDatoISokeperioden;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.LocalDate.now;
@@ -17,7 +17,7 @@ public class UtbetalingUtilsTest {
         LocalDate sluttDato = now();
         LocalDate testDato = now().minusDays(NUMBER_OF_DAYS_TO_SHOW).minusDays(1);
 
-        assertThat(erUtbetalingsdatoISokeperioden(testDato, startDato, sluttDato), is(false));
+        assertThat(erDatoISokeperioden(testDato, startDato, sluttDato), is(false));
     }
 
     @Test
@@ -26,7 +26,7 @@ public class UtbetalingUtilsTest {
         LocalDate sluttDato = now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
         LocalDate testDato = now();
 
-        assertThat(erUtbetalingsdatoISokeperioden(testDato, startDato, sluttDato), is(false));
+        assertThat(erDatoISokeperioden(testDato, startDato, sluttDato), is(false));
     }
 
     @Test
@@ -35,7 +35,7 @@ public class UtbetalingUtilsTest {
         LocalDate sluttDato = now();
         LocalDate testDato = now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
 
-        assertThat(erUtbetalingsdatoISokeperioden(testDato, startDato, sluttDato), is(true));
+        assertThat(erDatoISokeperioden(testDato, startDato, sluttDato), is(true));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class UtbetalingUtilsTest {
         LocalDate sluttDato = now();
         LocalDate testDato = now();
 
-        assertThat(erUtbetalingsdatoISokeperioden(testDato, startDato, sluttDato), is(true));
+        assertThat(erDatoISokeperioden(testDato, startDato, sluttDato), is(true));
     }
 
     @Test
@@ -53,6 +53,6 @@ public class UtbetalingUtilsTest {
         LocalDate sluttDato = now();
         LocalDate testDato = now().minusDays(NUMBER_OF_DAYS_TO_SHOW);
 
-        assertThat(erUtbetalingsdatoISokeperioden(testDato, startDato, sluttDato), is(true));
+        assertThat(erDatoISokeperioden(testDato, startDato, sluttDato), is(true));
     }
 }
