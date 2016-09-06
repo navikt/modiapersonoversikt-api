@@ -69,7 +69,6 @@ public class UtbetalingVM {
     }
 
     public String getVisningsdatoFormatted() {
-//        return lagVisningsdato(ytelse.getHovedytelsedato());
         DateTime ytelseDato = ytelse.getHovedytelsedato();
         if(ytelseDato == null) {
             return "Ingen utbetalingsdato";

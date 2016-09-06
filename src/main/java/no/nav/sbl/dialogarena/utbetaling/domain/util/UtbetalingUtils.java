@@ -14,21 +14,19 @@ public class UtbetalingUtils {
 
             DateTime utbetalingsDato = utbetaling.getUtbetalingsdato();
             if (utbetalingsDato != null) {
-                return erUtbetalingsdatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
+                return erDatoISokeperioden(utbetalingsDato.toLocalDate(), startDato, sluttDato);
             }
             DateTime forfallsdato = utbetaling.getForfallsdato();
             if (forfallsdato != null) {
-                return erUtbetalingsdatoISokeperioden(forfallsdato.toLocalDate(), startDato, sluttDato);
+                return erDatoISokeperioden(forfallsdato.toLocalDate(), startDato, sluttDato);
             }
             DateTime posteringsdato = utbetaling.getPosteringsdato();
-            if (posteringsdato != null){
-                return erUtbetalingsdatoISokeperioden(posteringsdato.toLocalDate(), startDato, sluttDato);
-            }
-            return false;
+
+            return posteringsdato != null && erDatoISokeperioden(posteringsdato.toLocalDate(), startDato, sluttDato);
         };
     }
 
-    static boolean erUtbetalingsdatoISokeperioden(LocalDate utbetalingsdato, LocalDate startDato, LocalDate sluttDato) {
-        return (utbetalingsdato.compareTo(startDato) >= 0 && utbetalingsdato.compareTo(sluttDato) <= 0);
+    static boolean erDatoISokeperioden(LocalDate dato, LocalDate startDato, LocalDate sluttDato) {
+        return (dato.compareTo(startDato) >= 0 && dato.compareTo(sluttDato) <= 0);
     }
 }
