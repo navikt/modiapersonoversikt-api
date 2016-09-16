@@ -27,11 +27,13 @@ public class MeldingVM implements Serializable {
 
     public final int traadlengde;
     public boolean erDokumentMelding;
+    public boolean erOppgaveMelding;
 
     public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
         this.traadlengde = traadLengde;
         this.erDokumentMelding = melding.erDokumentMelding;
+        this.erOppgaveMelding = melding.erOppgaveMelding;
     }
 
     public String getVisningsDato() {
@@ -78,6 +80,16 @@ public class MeldingVM implements Serializable {
             }
         };
     }
+
+    public IModel<Boolean> erOppgaveMelding() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return melding.erOppgaveMelding;
+            }
+        };
+    }
+
 
     public Optional<String> getMarkertSomFeilsendtAv() {
         return optional(melding.markertSomFeilsendtAv);

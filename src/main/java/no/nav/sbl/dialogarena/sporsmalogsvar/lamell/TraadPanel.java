@@ -40,7 +40,7 @@ public class TraadPanel extends Panel {
                 meldingstatusContainer.add(new Label("lestStatus", lestStatusModel).add(visibleIf(not(isEqualTo(lestStatusModel, "")))));
                 meldingstatusContainer.add(
                         new Label("temagruppe", new PropertyModel<String>(item.getModel(), "melding.temagruppeNavn"))
-                                .setVisibilityAllowed(!item.getModelObject().erDokumentMelding)
+                                .setVisibilityAllowed(!item.getModelObject().erDokumentMelding && !item.getModelObject().erOppgaveMelding)
                 );
 
                 item.add(meldingstatusContainer);
@@ -55,7 +55,7 @@ public class TraadPanel extends Panel {
                 skrevetAvContainer.add(visibleIf(new PropertyModel<>(item.getModel(), "erFraSaksbehandler()")));
                 skrevetAvContainer.add(new Label("skrevetAvLabel", new ResourceModel("melding.skrevet-av")));
                 skrevetAvContainer.add(new Label("skrevetAv", String.format("%s (%s)", skrevetAvNavn, navIdent)));
-                skrevetAvContainer.setVisible(!item.getModelObject().erDokumentMelding);
+                skrevetAvContainer.setVisible(!item.getModelObject().erDokumentMelding && !item.getModelObject().erOppgaveMelding);
                 item.add(skrevetAvContainer);
             }
         });

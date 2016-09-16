@@ -51,6 +51,8 @@ public class StatusIkon extends Panel {
 
         if (meldingVM.erDokumentMelding) {
             statusIkon.add(hasCssClassIf("dokument", meldingVM.erDokumentMelding()));
+        } else if (meldingVM.erOppgaveMelding) {
+            statusIkon.add(hasCssClassIf("oppgave", meldingVM.erOppgaveMelding()));
         } else {
             if (traadlengde > 1) {
                 statusIkon.add(new AttributeAppender("class", " flere-meldinger"));

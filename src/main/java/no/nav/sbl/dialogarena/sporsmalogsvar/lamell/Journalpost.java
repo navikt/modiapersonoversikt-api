@@ -21,10 +21,11 @@ public class Journalpost extends Panel {
 
         PropertyModel<Boolean> meldingErJournalfort = new PropertyModel<>(meldingVM, "journalfort");
         PropertyModel<Boolean> meldingErDokumentMelding = new PropertyModel<>(meldingVM, "erDokumentMelding");
+        PropertyModel<Boolean> meldingErOppgaveMelding = new PropertyModel<>(meldingVM, "erOppgaveMelding");
 
         WebMarkupContainer ingenJournalpostInformasjon = new WebMarkupContainer("ingenJournalpostInformasjon");
         ingenJournalpostInformasjon.setOutputMarkupPlaceholderTag(true);
-        ingenJournalpostInformasjon.add(visibleIf(both(not(meldingErJournalfort)).and(not(meldingErDokumentMelding))));
+        ingenJournalpostInformasjon.add(visibleIf(both(not(meldingErJournalfort)).and(not(meldingErDokumentMelding)).and(not(meldingErOppgaveMelding))));
         add(ingenJournalpostInformasjon);
 
         final JournalpostInformasjon journalpostInformasjon = new JournalpostInformasjon("journalpostInformasjon", meldingVM);

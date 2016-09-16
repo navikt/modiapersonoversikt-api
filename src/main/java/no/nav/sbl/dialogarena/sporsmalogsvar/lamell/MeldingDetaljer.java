@@ -46,7 +46,11 @@ public class MeldingDetaljer extends Panel {
             dokumentStatus.setOutputMarkupId(true);
             meldingDetaljer.add(dokumentStatus);
             meldingDetaljer.add(hasCssClassIf("dokument", meldingVM.erDokumentMelding()));
-        } else {
+        } else if(meldingVM.erOppgaveMelding) {
+            dokumentStatus.setOutputMarkupId(true);
+            meldingDetaljer.add(dokumentStatus);
+            meldingDetaljer.add(hasCssClassIf("oppgave", meldingVM.erDokumentMelding()));
+        } else{
             meldingstatus.setOutputMarkupId(true);
             meldingDetaljer.add(meldingstatus);
             if (meldingVM.traadlengde > 2) {

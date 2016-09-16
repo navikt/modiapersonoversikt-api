@@ -79,7 +79,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 REFERAT_TELEFON.name(),
                 SPORSMAL_MODIA_UTGAAENDE.name(),
                 SVAR_SBL_INNGAAENDE.name(),
-                DOKUMENT_VARSEL.name());
+                DOKUMENT_VARSEL.name(),
+                OPPGAVE_VARSEL.name()
+                );
 
 
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
