@@ -21,7 +21,7 @@ public class Melding implements Serializable {
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
-    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding;
+    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding;
     public Boolean erTilknyttetAnsatt;
     public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
 

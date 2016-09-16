@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static java.lang.String.format;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -106,6 +107,18 @@ public class MeldingUtils {
                 melding.statusKlasse = "dokument";
                 return melding;
             }
+            if (OPPGAVE_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
+                XMLOppgaveVarsel oppgaveVarsel = ((XMLOppgaveVarsel) xmlMetadata);
+
+                melding.statusTekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s", oppgaveVarsel.getOppgaveType()), "oppgave.GEN");
+                melding.fritekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s.fritekst", oppgaveVarsel.getOppgaveType()), "oppgave.GEN.fritekst");
+                melding.erOppgaveMelding = true;
+                melding.traadId = xmlHenvendelse.getBehandlingsId();
+                melding.lestStatus = lagLestStatusDokumentVarsel(melding);
+                melding.statusKlasse = "oppgave";
+
+                return melding;
+            }
 
             melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
             if (xmlMetadata instanceof XMLMeldingFraBruker) {
@@ -134,6 +147,14 @@ public class MeldingUtils {
         } catch(NoSuchElementException exception) {
             logger.error("Finner ikke cms-oppslag for " + key, exception.getMessage());
             return key;
+        }
+    }
+
+    private static String hentEnonicTekstDynamic(PropertyResolver resolver, String key, String defaultKey) {
+        try {
+            return resolver.getProperty(key);
+        } catch (Exception e) {
+            return resolver.getProperty(defaultKey);
         }
     }
 
@@ -198,6 +219,7 @@ public class MeldingUtils {
             put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, SPORSMAL_MODIA_UTGAAENDE);
             put(XMLHenvendelseType.SVAR_SBL_INNGAAENDE, SVAR_SBL_INNGAAENDE);
             put(XMLHenvendelseType.DOKUMENT_VARSEL, DOKUMENT_VARSEL);
+            put(XMLHenvendelseType.OPPGAVE_VARSEL, OPPGAVE_VARSEL);
         }
     };
 }

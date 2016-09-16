@@ -30,7 +30,7 @@ public class Traad {
     }
 
     private String lagStatusKlasse(Melding sisteMelding) {
-        if (sisteMelding.erDokumentMelding) {
+        if (sisteMelding.erDokumentMelding || sisteMelding.erOppgaveMelding) {
             return sisteMelding.statusKlasse;
         }
         return sisteMelding.statusKlasse + (antallMeldingerIOpprinneligTraad == 1 ? " en-melding" : " flere-meldinger");
