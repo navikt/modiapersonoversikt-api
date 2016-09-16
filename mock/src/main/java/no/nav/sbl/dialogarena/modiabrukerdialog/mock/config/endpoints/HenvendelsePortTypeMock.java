@@ -68,6 +68,7 @@ public class HenvendelsePortTypeMock {
 
     public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
             lagDokumentVarsel("Dagpenger", "Vedtaksbrev"),
+            lagOppgaveVarsel(),
 
             createXMLHenvendelse(BEHANDLINGS_ID1, BEHANDLINGS_ID1, now().minusWeeks(1), null,
                     createXMLMeldingFraBruker("OVRG", LANG_TEKST), valueOf(oppgaveId), createXMLJourfortInformasjon(null, null, null, null))
@@ -129,6 +130,20 @@ public class HenvendelsePortTypeMock {
             henvendelseMedGjeldendeTemagruppe(BEHANDLINGS_ID8, "ANSOS")
 
     ));
+
+    private static XMLHenvendelse lagOppgaveVarsel() {
+        String id = randomId();
+        return new XMLHenvendelse()
+                .withBehandlingsId(id)
+                .withBehandlingskjedeId(id)
+                .withOpprettetDato(DateTime.now().minusMinutes(3))
+                .withKorrelasjonsId("a1-b4")
+                .withHenvendelseType(OPPGAVE_VARSEL.value())
+                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLOppgaveVarsel()
+                        .withOppgaveType("SEND_SYKMELDING")
+                        .withOppgaveURL("https://wwww.google.com")
+                        .withTemagruppe("SYK")));
+    }
 
     private static XMLHenvendelse henvendelseMedGjeldendeTemagruppe(String behandlingsId, String gjeldendeTemagruppe) {
         return createXMLHenvendelse(behandlingsId, behandlingsId, DateTime.now().minusDays(3), null, createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), createXMLJourfortInformasjon(null, null, null, null))
