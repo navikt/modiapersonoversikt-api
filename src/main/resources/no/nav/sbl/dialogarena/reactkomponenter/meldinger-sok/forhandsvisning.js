@@ -1,6 +1,7 @@
 import React from 'react';
 import Melding from './melding';
 import DokumentMelding from './dokument-melding';
+import OppgaveMelding from './oppgave-melding';
 import ScrollPortal from './../utils/scroll-portal';
 
 class Forhandsvisning extends React.Component {
@@ -14,6 +15,9 @@ class Forhandsvisning extends React.Component {
         const meldingElementer = meldinger.map((melding) => {
             if (melding.erDokumentMelding) {
                 return <DokumentMelding key={melding.id} melding={melding} />;
+            }
+            if (melding.erOppgaveMelding) {
+                return <OppgaveMelding key={melding.id} melding={melding} />
             }
             return <Melding key={melding.id} melding={melding} />;
         });
