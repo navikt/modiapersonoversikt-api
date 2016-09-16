@@ -4,12 +4,12 @@ import DokumentMelding from './dokument-melding';
 import OppgaveMelding from './oppgave-melding';
 import ScrollPortal from './../utils/scroll-portal';
 
-function Forhandsvisning() {
-    if (!this.props.traad.hasOwnProperty('meldinger')) {
+function Forhandsvisning(props) {
+    if (!props.traad.hasOwnProperty('meldinger')) {
         return <noscript />;
     }
 
-    const { traad, traad: { meldinger } } = this.props;
+    const { traad, traad: { meldinger } } = props;
 
     const meldingElementer = meldinger.map((melding) => {
         if (melding.erDokumentMelding) {
