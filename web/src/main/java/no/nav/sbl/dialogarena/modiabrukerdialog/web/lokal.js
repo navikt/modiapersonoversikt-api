@@ -148,8 +148,13 @@ jQuery(document).ready(function ($) {
         $(id).parent().find('.vis-alle-kommende-utbetalinger').hide();
     }
 
+    function visAlleUtbetalingerSpinner() {
+        $('.vis-alle-historiske-utbetalinger .vis-alle-historiske-utbetalinger-link').hide();
+        $('.vis-alle-historiske-utbetalinger .spinner').show();
+    }
+
     function visAlleHistoriskeUtbetalinger(id) {
-        $(id).parent().find('.vis-alle-historiske-utbetalinger').hide();
+        $(id).parent('.vis-alle-historiske-utbetalinger').hide();
     }
 
     function gjennomfoerAvansertSok() {
