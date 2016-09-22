@@ -73,8 +73,10 @@ var Utbetalinger = (function () {
     var scrollTilElement = function ($element) {
         var $utbetalingslinje = $element.closest('.utbetalingslinje');
         var $lerret = $utbetalingslinje.closest('.lerret');
-        var scrollPos = $lerret.get(0).scrollTop + $utbetalingslinje.position().top - HOYDE_MAANED_HEADER;
-        $lerret.animate({ scrollTop: scrollPos });
+        if ($lerret.get(0) !== undefined) {
+            var scrollPos = $lerret.get(0).scrollTop + $utbetalingslinje.position().top - HOYDE_MAANED_HEADER;
+            $lerret.animate({ scrollTop: scrollPos });
+        }
     };
 
     var toggleEkspandertHjelpetekst = function ($element) {
@@ -87,6 +89,13 @@ var Utbetalinger = (function () {
             $element.find('.ekspander-pil').attr('aria-label', aapneUtbetalingText);
             $element.find('.ekspander-pil').attr('title', aapneUtbetalingText);
         }
+    };
+
+    var haandterHovedutbetalingPanelVisning = function (hovedutbetalingID) {
+        var $hovedutbetalingPanel = $('#' + hovedutbetalingID);
+        scrollTilElement($hovedutbetalingPanel);
+
+        $hovedutbetalingPanel.focus();
     };
 
     var haandterDetaljPanelVisning = function (detaljPanelID) {
@@ -151,6 +160,7 @@ var Utbetalinger = (function () {
     return {
         init: init,
         addKeyNavigation: addKeyNavigation,
+        haandterHovedutbetalingPanelVisning: haandterHovedutbetalingPanelVisning,
         haandterDetaljPanelVisning: haandterDetaljPanelVisning,
         toggleDetaljPanel: toggleDetaljPanel,
         toggleEkspandertHjelpetekst: toggleEkspandertHjelpetekst,

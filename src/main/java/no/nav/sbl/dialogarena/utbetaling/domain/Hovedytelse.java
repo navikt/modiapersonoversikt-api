@@ -36,6 +36,7 @@ public class Hovedytelse implements Serializable {
     DateTime hovedytelsedato;
     Double bruttoUtbetalt;
     Double sammenlagtTrekkBeloep;
+    boolean erHovedUtbetaling;
 
     public Double aggregateTrekkBeloep() {
         Double trekk = this.getSumTrekk();
@@ -147,6 +148,10 @@ public class Hovedytelse implements Serializable {
 
     public Double getSammenlagtTrekkBeloep() {
         return sammenlagtTrekkBeloep;
+    }
+
+    public boolean isErHovedUtbetaling() {
+        return erHovedUtbetaling;
     }
 
     public Hovedytelse withMottakertype(Mottakertype mottakertype) {
@@ -266,6 +271,11 @@ public class Hovedytelse implements Serializable {
 
     public Hovedytelse withSammenlagtTrekkBeloep() {
         this.sammenlagtTrekkBeloep = aggregateTrekkBeloep();
+        return this;
+    }
+
+    public Hovedytelse withErHovedutbetaling(boolean erHovedutbetaling) {
+        this.erHovedUtbetaling = erHovedutbetaling;
         return this;
     }
 

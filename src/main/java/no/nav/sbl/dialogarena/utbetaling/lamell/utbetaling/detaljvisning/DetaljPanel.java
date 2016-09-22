@@ -11,7 +11,7 @@ import org.apache.wicket.model.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -22,7 +22,9 @@ public class DetaljPanel extends Panel {
 
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
         super(id);
-        setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
+        if (utbetalingVM.isErHovedUtbetaling()) {
+            setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
+        }
         IModel<String> melding = Model.of(utbetalingVM.getMelding());
         List<YtelseVM> ytelseVMer = createYtelseVMerList(utbetalingVM);
 

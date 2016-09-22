@@ -46,6 +46,20 @@ public class YtelseUtils {
         return compareDato;
     };
 
+    public static final Comparator<Hovedutbetaling> SISTE_UTBETALING_FORST = (hovedutbetaling1, hovedutbetaling2) -> {
+        DateTime ytelse1Hovedytelsedato = hovedutbetaling1.getHovedytelsesdato().toLocalDate().toDateTimeAtStartOfDay();
+        DateTime ytelse2Hovedytelsedato = hovedutbetaling2.getHovedytelsesdato().toLocalDate().toDateTimeAtStartOfDay();
+
+        int compareDato = ytelse2Hovedytelsedato.compareTo(ytelse1Hovedytelsedato);
+        if (compareDato == 0) {
+            String ytelsenavn1 = hovedutbetaling1.getHovedytelser().get(0).getYtelse();
+            String ytelsenavn2 = hovedutbetaling2.getHovedytelser().get(0).getYtelse();
+            return ytelsenavn1.compareTo(ytelsenavn2);
+        }
+
+        return compareDato;
+    };
+
     public static List<Hovedytelse> getHovedytelseListe(List<WSUtbetaling> utbetalingerMedPosteringInnenPerioden) {
         return utbetalingerMedPosteringInnenPerioden.stream()
                 .flatMap(wsUtbetaling -> TO_HOVEDYTELSE.apply(wsUtbetaling).stream())
@@ -139,15 +153,15 @@ public class YtelseUtils {
     }
 
     /**
-     * true hvis hovedytelsen er mellom now() og antall dager tilbake i tid, gitt ved <em>numberOfDaysToShow</em><br>
+     * true hvis hovedutbetalingen er mellom now() og antall dager tilbake i tid, gitt ved <em>numberOfDaysToShow</em><br>
      * F.eks<br>
      * now: 2015-03-04 <br>
      * numberOfDaysToShow: 30 <br>
      * gyldig periode: 2014-12-05 - 2015-01-04 <br>
      */
-    public static Predicate<Hovedytelse> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
+    public static Predicate<Hovedutbetaling> betweenNowAndDaysBefore(final int numberOfDaysToShow) {
         return hovedytelse -> {
-            DateTime hovedytelseDato = hovedytelse.getHovedytelsedato();
+            DateTime hovedytelseDato = hovedytelse.getHovedytelsesdato();
             DateTime threshold = minusDaysAndFixedAtMidnightAtDayBefore(DateTime.now(), numberOfDaysToShow);
             return hovedytelseDato.isAfter(threshold);
         };

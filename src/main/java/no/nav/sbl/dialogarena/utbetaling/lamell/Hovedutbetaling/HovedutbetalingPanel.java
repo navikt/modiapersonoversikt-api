@@ -29,7 +29,7 @@ public class HovedutbetalingPanel extends Panel {
     public HovedutbetalingPanel(String id, Hovedutbetaling hovedutbetaling) {
         super(id);
 
-
+        setMarkupId("hovedutbetaling-" + hovedutbetaling.getId());
         List<Hovedytelse> synligeHovedytelser = hovedutbetaling.getSynligeHovedytelser();
         IModel<Boolean> skalVises = Model.of(hovedutbetaling.skalViseHovedutbetaling());
 
