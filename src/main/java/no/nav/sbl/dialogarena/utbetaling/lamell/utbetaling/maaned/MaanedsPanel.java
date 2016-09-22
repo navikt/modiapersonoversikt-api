@@ -22,7 +22,7 @@ public class MaanedsPanel extends Panel {
         super(id);
         List<Hovedytelse> utbetalingsliste = hentAlleSynligeHovedytelser(hovedutbetalingList);
         add(
-                createOppsummeringsPanel(utbetalingsliste),
+                createOppsummeringsPanel(utbetalingsliste).setVisibilityAllowed(utbetalingsliste.size() > 0),
                 createHovedUtbetalinger(hovedutbetalingList)
         );
     }
