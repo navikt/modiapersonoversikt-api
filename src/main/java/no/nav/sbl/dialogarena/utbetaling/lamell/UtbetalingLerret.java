@@ -265,6 +265,10 @@ public final class UtbetalingLerret extends Lerret {
         filterParametere = new FilterParametere(ytelserAsText(hentHovedytelseListe()));
         addOrReplace(createFilterPanel());
         oppdaterUtbetalingsliste(target);
+
+        String hovedutbetalingPanelID = "hovedutbetaling-" + payload.getItemId();
+        target.appendJavaScript("Utbetalinger.haandterHovedutbetalingPanelVisning('" + hovedutbetalingPanelID + "');");
+
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('" + detaljPanelID + "');");
     }

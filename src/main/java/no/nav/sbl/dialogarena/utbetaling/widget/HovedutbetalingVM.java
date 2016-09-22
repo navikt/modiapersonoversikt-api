@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.joda.time.DateTime;
@@ -13,9 +14,9 @@ import java.util.Locale;
 import java.util.function.Function;
 
 
-public class HovedytelseVM implements FeedItemVM, Serializable {
+public class HovedutbetalingVM implements FeedItemVM, Serializable {
 
-    public static final Function<Hovedytelse, HovedytelseVM> TIL_HOVEDYTELSEVM = hovedytelse -> new HovedytelseVM(hovedytelse);
+    public static final Function<Hovedutbetaling, HovedutbetalingVM> TIL_HOVEDUTBETALINGVM = hovedytelse -> new HovedutbetalingVM(hovedytelse);
 
     private String beskrivelse;
     private DateTime hovedytelseDato;
@@ -26,18 +27,26 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
     private Mottakertype mottakertype;
     private String mottaker;
     private boolean isUtbetalt;
+    private boolean isFlereHovedytelser;
 
 
-    public HovedytelseVM(Hovedytelse hovedytelse) {
-        this.beskrivelse = hovedytelse.getYtelse();
-        this.hovedytelseDato = hovedytelse.getHovedytelsedato();
-        this.belop = formaterBelop(hovedytelse.getNettoUtbetalt());
-        this.status = hovedytelse.getUtbetalingsstatus();
-        this.periode = hovedytelse.getYtelsesperiode();
-        this.utbetalingId = hovedytelse.getId().toString();
-        this.mottakertype = hovedytelse.getMottakertype();
-        this.mottaker = hovedytelse.getUtbetaltTil().getNavn();
-        this.isUtbetalt = hovedytelse.getUtbetalingsDato() != null;
+    public HovedutbetalingVM(Hovedutbetaling hovedutbetaling) {
+        this.isFlereHovedytelser =  hovedutbetaling.getHovedytelser().size() > 1;
+        Hovedytelse forsteYtelse = hovedutbetaling.getHovedytelser().get(0);
+
+        if (isFlereHovedytelser) {
+            this.beskrivelse = "Diverse ytelser";
+        } else {
+            this.beskrivelse = forsteYtelse.getYtelse();
+        }
+        this.hovedytelseDato = hovedutbetaling.getHovedytelsesdato();
+        this.belop = formaterBelop(hovedutbetaling.getNettoUtbetalt());
+        this.status = hovedutbetaling.getStatus();
+        this.periode = forsteYtelse.getYtelsesperiode();
+        this.utbetalingId = hovedutbetaling.getId();
+        this.mottakertype = forsteYtelse.getMottakertype();
+        this.mottaker = forsteYtelse.getUtbetaltTil().getNavn();
+        this.isUtbetalt = hovedutbetaling.isUtbetalt();
     }
 
     public boolean isUtbetalt() {
@@ -101,22 +110,19 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
         return nf.format(nettoBelop);
     }
 
-    /**
-     * Sorterer i omvendt kronologisk rekkefølge på utbetalingsdato
-     */
-    public static class UtbetalingVMComparator implements Comparator<HovedytelseVM> {
+    public static class UtbetalingVMComparator implements Comparator<HovedutbetalingVM> {
         @Override
-        public int compare(HovedytelseVM hovedytelseVM1, HovedytelseVM hovedytelseVM2) {
-            if (hovedytelseVM1.getHovedytelseDato() == null && hovedytelseVM2.getHovedytelseDato() == null) {
+        public int compare(HovedutbetalingVM hovedutbetalingVM1, HovedutbetalingVM hovedutbetalingVM2) {
+            if (hovedutbetalingVM1.getHovedytelseDato() == null && hovedutbetalingVM2.getHovedytelseDato() == null) {
                 return 0;
             }
-            if (hovedytelseVM1.getHovedytelseDato() == null) {
+            if (hovedutbetalingVM1.getHovedytelseDato() == null) {
                 return -1;
             }
-            if (hovedytelseVM2.getHovedytelseDato() == null) {
+            if (hovedutbetalingVM2.getHovedytelseDato() == null) {
                 return 1;
             }
-            return hovedytelseVM2.getHovedytelseDato().compareTo(hovedytelseVM1.getHovedytelseDato());
+            return hovedutbetalingVM2.getHovedytelseDato().compareTo(hovedutbetalingVM1.getHovedytelseDato());
         }
     }
 }

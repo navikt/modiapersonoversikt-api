@@ -13,40 +13,41 @@ import org.joda.time.DateTime;
 import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 import static no.nav.sbl.dialogarena.utbetaling.util.VMUtils.erGyldigStartSluttVerdier;
 
-public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
+public class UtbetalingWidgetPanel extends GenericPanel<HovedutbetalingVM> {
 
-    public UtbetalingWidgetPanel(String id, IModel<HovedytelseVM> model) {
+    public UtbetalingWidgetPanel(String id, IModel<HovedutbetalingVM> model) {
         super(id, model);
         setOutputMarkupId(true);
-        HovedytelseVM hovedytelseVM = model.getObject();
+        HovedutbetalingVM hovedutbetalingVM = model.getObject();
+        setMarkupId("hovedutbetalingwidget-" + hovedutbetalingVM.getId());
 
         add(
-                createUtbetalingsDatoLabel(hovedytelseVM),
-                new Label("ytelse", hovedytelseVM.getBeskrivelse()),
-                createPeriodeLabel(hovedytelseVM),
-                new Label("belop", hovedytelseVM.getBelop()),
-                createStatusLabel(hovedytelseVM),
-                new Label("utbetaltTil", hovedytelseVM.getMottaker())
+                createUtbetalingsDatoLabel(hovedutbetalingVM),
+                new Label("ytelse", hovedutbetalingVM.getBeskrivelse()),
+                createPeriodeLabel(hovedutbetalingVM),
+                new Label("belop", hovedutbetalingVM.getBelop()),
+                createStatusLabel(hovedutbetalingVM),
+                new Label("utbetaltTil", hovedutbetalingVM.getMottaker())
         );
     }
 
-    private Label createStatusLabel(HovedytelseVM hovedytelseVM) {
-        Label label = new Label("statusTekst", hovedytelseVM.getStatus());
-        if(hovedytelseVM.isUtbetalt()) {
+    private Label createStatusLabel(HovedutbetalingVM hovedutbetalingVM) {
+        Label label = new Label("statusTekst", hovedutbetalingVM.getStatus());
+        if(hovedutbetalingVM.isUtbetalt()) {
             label.add(new AttributeAppender("class", "utbetalt").setSeparator(" "));
         }
         return label;
     }
 
-    private Label createUtbetalingsDatoLabel(HovedytelseVM hovedytelseVM) {
-        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getHovedytelseDato(), Datoformat.Date, "utbetalingdato.mangler"));
+    private Label createUtbetalingsDatoLabel(HovedutbetalingVM hovedutbetalingVM) {
+        return new Label("utbetalingsDato", getDatoModel(hovedutbetalingVM.getHovedytelseDato(), Datoformat.Date, "utbetalingdato.mangler"));
     }
 
-    private Label createPeriodeLabel(HovedytelseVM hovedytelseVM) {
-        if (erGyldigStartSluttVerdier(hovedytelseVM.getStartDato(), hovedytelseVM.getSluttDato())) {
+    private Label createPeriodeLabel(HovedutbetalingVM hovedutbetalingVM) {
+        if (erGyldigStartSluttVerdier(hovedutbetalingVM.getStartDato(), hovedutbetalingVM.getSluttDato())) {
             return new Label("periode", getPeriodeModel(
-                    getDatoModel(hovedytelseVM.getStartDato(), Datoformat.KortDatoUtenLiteral, "startdato.mangler"),
-                    getDatoModel(hovedytelseVM.getSluttDato(), Datoformat.KortDatoUtenLiteral, "sluttdato.mangler")
+                    getDatoModel(hovedutbetalingVM.getStartDato(), Datoformat.KortDatoUtenLiteral, "startdato.mangler"),
+                    getDatoModel(hovedutbetalingVM.getSluttDato(), Datoformat.KortDatoUtenLiteral, "sluttdato.mangler")
             ));
         }
         return (Label) new Label("periode",

@@ -46,6 +46,10 @@ public class Hovedutbetaling implements Serializable {
         return synligeHovedytelser;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public Hovedutbetaling withUtbetaltSum(double nettoUtbetalt) {
         this.nettoUtbetalt = nettoUtbetalt;
         return this;

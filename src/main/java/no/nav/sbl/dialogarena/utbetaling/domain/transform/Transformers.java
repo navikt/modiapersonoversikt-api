@@ -65,10 +65,12 @@ public class Transformers {
                     .withRefundertForOrg(createAktoer(wsYtelse.getRefundertForOrg()))
                     .withBruttoUtbetalt(wsYtelse.getYtelseskomponentersum())
                     .withSammenlagtTrekkBeloep()
+                    .withErHovedutbetaling(wsUtbetaling.getYtelseListe().size() == 1)
             )).collect(toList());
 
     public static final Function<WSUtbetaling, Hovedutbetaling> SAMMENLAGT_UTBETALING_TRANSFORMER = wsUtbetaling -> new Hovedutbetaling()
-            .withUtbetaltSum(0)
+            .withId(String.valueOf(createHovedutbetalingId(wsUtbetaling)))
+            .withUtbetaltSum(wsUtbetaling.getUtbetalingNettobeloep())
             .withHovedytelsesdato(determineHovedytelseDato(wsUtbetaling))
             .withHovedytelser(TO_HOVEDYTELSE.apply(wsUtbetaling))
             .withUtbetalingStatus(wsUtbetaling.getUtbetalingsstatus())
@@ -196,5 +198,9 @@ public class Transformers {
                 wsYtelse.getTrekksum() +
                 wsYtelse.getYtelseNettobeloep())
                 .hashCode();
+    }
+
+    private static int createHovedutbetalingId(WSUtbetaling utbetaling) {
+        return createHovedytelseId(utbetaling.getYtelseListe().get(0));
     }
 }

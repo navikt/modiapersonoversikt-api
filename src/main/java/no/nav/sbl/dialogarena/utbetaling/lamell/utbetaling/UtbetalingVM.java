@@ -99,7 +99,6 @@ public class UtbetalingVM {
         return getBelopString(ytelse.getBruttoUtbetalt());
     }
 
-
     public String getTrekk() {
         return getBelopString(ytelse.getSammenlagtTrekkBeloep());
     }
@@ -115,4 +114,9 @@ public class UtbetalingVM {
     public DateTime getSluttDato() {
         return ytelse.getYtelsesperiode().getEnd();
     }
+
+    public boolean isErHovedUtbetaling() {
+        return ytelse.isErHovedUtbetaling();
+    }
+
 }
