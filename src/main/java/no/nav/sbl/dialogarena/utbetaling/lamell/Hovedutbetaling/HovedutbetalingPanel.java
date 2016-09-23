@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -32,6 +33,10 @@ public class HovedutbetalingPanel extends Panel {
         setMarkupId("hovedutbetaling-" + hovedutbetaling.getId());
         List<Hovedytelse> synligeHovedytelser = hovedutbetaling.getSynligeHovedytelser();
         IModel<Boolean> skalVises = Model.of(hovedutbetaling.skalViseHovedutbetaling());
+
+        if (!hovedutbetaling.skalViseHovedutbetaling()) {
+            add(new AttributeModifier("tabindex", -1));
+        }
 
         add(hasCssClassIf("hovedutbetaling-synlig", skalVises));
         add(
