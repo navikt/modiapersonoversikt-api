@@ -35,6 +35,7 @@ public class JoarkEndpointConfig {
 
     private static JournalV2 createJournalV2PortType(AbstractSAMLOutInterceptor interceptor) {
         return new CXFClient<>(JournalV2.class)
+                .timeout(30000, 30000)
                 .address(getProperty("journal.v2.url"))
                 .enableMtom()
                 .withOutInterceptor(interceptor)
