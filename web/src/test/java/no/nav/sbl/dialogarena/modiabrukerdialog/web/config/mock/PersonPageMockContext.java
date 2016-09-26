@@ -6,13 +6,14 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,10 +35,11 @@ public class PersonPageMockContext {
     }
 
     @Bean
-    public EnhetService enhetService() {
-        EnhetService enhetService = mock(EnhetService.class);
-        when(enhetService.hentEnhet(anyString())).thenReturn(new AnsattEnhet("", ""));
-        return enhetService;
+    public OrganisasjonEnhetService organisasjonEnhetService() {
+        OrganisasjonEnhetService organisasjonEnhetService = mock(OrganisasjonEnhetService.class);
+        when(organisasjonEnhetService.hentEnhetGittGeografiskNedslagsfelt(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
+        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
+        return organisasjonEnhetService;
     }
 
     @Bean

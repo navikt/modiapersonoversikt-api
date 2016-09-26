@@ -1,6 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import junit.framework.Assert;
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
+import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
+import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
@@ -42,15 +49,10 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {PersonPageMockContext.class})
@@ -61,10 +63,14 @@ public class PersonPageTest extends WicketPageTest {
     @Inject
     private GsakKodeverk gsakKodeverk;
 
+    @Inject
+    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
+
     private final static String testFnr = "12037649749";
 
     @Before
     public void setUp() {
+        when(personKjerneinfoServiceBi.hentKjerneinformasjon(any())).thenReturn(lagHentKjerneinformasjonResponse());
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding()));
         when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(asList(
                 new GsakKodeTema.Tema("kode", "tekst",
@@ -239,4 +245,14 @@ public class PersonPageTest extends WicketPageTest {
         return new Melding().withId("id").withOpprettetDato(now()).withTemagruppe(ARBD.name()).withOppgaveId("id");
     }
 
+    private HentKjerneinformasjonResponse lagHentKjerneinformasjonResponse() {
+        final HentKjerneinformasjonResponse respons = new HentKjerneinformasjonResponse();
+        final Person person = new Person();
+        final Personfakta personfakta = new Personfakta();
+        personfakta.setPersonnavn(new Personnavn.With().fornavn("etFornavn").etternavn("etEtternavn").done());
+        personfakta.setHarAnsvarligEnhet(new AnsvarligEnhet.With().organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId("0000").done()).done());
+        person.setPersonfakta(personfakta);
+        respons.setPerson(person);
+        return respons;
+    }
 }
