@@ -93,7 +93,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>1.2.0-2016-U40-SNAPSHOT</personsok.version>
+        <personsok.version>1.2.0</personsok.version>
         <kjerneinfo.versjon>2.0.1</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.8</utbetaling.version>
@@ -107,7 +107,7 @@
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>5.0.1</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>6.0.2</sporsmalogsvar.version>
-        <saksoversikt.version>6.2-SNAPSHOT</saksoversikt.version>
+        <saksoversikt.version>6.2</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
