@@ -3,7 +3,7 @@
     <parent>
         <artifactId>modiabrukerdialog</artifactId>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <version>9.0.6-2016-U40-SNAPSHOT</version>
+        <version>9.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
