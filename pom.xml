@@ -13,7 +13,7 @@
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>5.10.1-SNAPSHOT</version>
+    <version>6.0.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -25,7 +25,7 @@
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <kjerneinfo.versjon>1.1.34-FAMOUS-SHADE</kjerneinfo.versjon>
+        <kjerneinfo.versjon>2.0.0-2016-HL3</kjerneinfo.versjon>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.23</modig.security.version>
@@ -33,7 +33,7 @@
         <send.ut.henvendelse.version>0.4</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
-        <modiabrukerdialog-api.version>4.5</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>5.0.1</modiabrukerdialog-api.version>
         <reactkomponenter.version>2.6-FAMOUS-SHADE</reactkomponenter.version>
         <modia-felleskomponenter.version>3.3</modia-felleskomponenter.version>
         <nav-metrics.version>1.3.1</nav-metrics.version>
@@ -549,7 +549,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/sporsmalogsvar.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/sporsmalogsvar/</url>
-        <tag>sporsmal-og-svar-5.8</tag>
+        <tag>sporsmal-og-svar-6.0.2</tag>
     </scm>
 
     <reporting>
