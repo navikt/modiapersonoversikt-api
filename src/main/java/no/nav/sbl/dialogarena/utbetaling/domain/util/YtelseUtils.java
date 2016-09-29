@@ -27,12 +27,14 @@ import static org.joda.time.LocalDate.now;
 
 public class YtelseUtils {
 
+    public static final int ANTALL_DAGER_FRAMOVER_I_TID = 100;
+
     public static LocalDate defaultStartDato() {
         return now().minusDays(30);
     }
 
     public static LocalDate defaultSluttDato() {
-        return now();
+        return now().plusDays(ANTALL_DAGER_FRAMOVER_I_TID);
     }
 
     public static final Comparator<Hovedytelse> SISTE_HOVEDYTELSESDATO_FORST = (ytelse1, ytelse2) -> {

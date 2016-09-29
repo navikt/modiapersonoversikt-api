@@ -274,7 +274,7 @@ public class YtelseUtilsTest {
 
     @Test
     public void korrektDefaultSluttDato() {
-        DateTime sluttDato = now();
+        DateTime sluttDato = now().plusDays(ANTALL_DAGER_FRAMOVER_I_TID);
         assertThat(YtelseUtils.defaultSluttDato().getYear(), is(sluttDato.getYear()));
         assertThat(YtelseUtils.defaultSluttDato().getMonthOfYear(), is(sluttDato.getMonthOfYear()));
         assertThat(YtelseUtils.defaultSluttDato().getDayOfMonth(), is(sluttDato.getDayOfMonth()));

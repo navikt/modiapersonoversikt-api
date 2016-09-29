@@ -13,8 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
@@ -167,14 +166,14 @@ public class FilterParametereTest {
     public void intervallHvisSiste3Dager() {
         Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.SISTE_30_DAGER);
         assertThat(LocalDate.now().minusDays(30), is(interval.getStart().toLocalDate()));
-        assertThat(LocalDate.now(), is(interval.getEnd().toLocalDate()));
+        assertThat(LocalDate.now().plusDays(ANTALL_DAGER_FRAMOVER_I_TID), is(interval.getEnd().toLocalDate()));
     }
 
     @Test
     public void intervalHvisInnevaerendeAar() {
         Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.INNEVAERENDE_AAR);
         assertThat(new LocalDate(now().getYear(), 1, 1), is(interval.getStart().toLocalDate()));
-        assertThat(LocalDate.now(), is(interval.getEnd().toLocalDate()));
+        assertThat(new LocalDate(now().getYear(), 31, 12), is(interval.getEnd().toLocalDate()));
     }
 
     @Test

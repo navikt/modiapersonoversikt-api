@@ -13,8 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.apache.commons.collections15.CollectionUtils.isEqualCollection;
 import static org.joda.time.DateTime.now;
 
@@ -161,11 +160,11 @@ public class FilterParametere implements Serializable, Predicate {
         switch(valg) {
             case SISTE_30_DAGER:
                 start = now().minusDays(30);
-                end = now();
+                end = now().plusDays(ANTALL_DAGER_FRAMOVER_I_TID);
                 return new Interval(start, end);
             case INNEVAERENDE_AAR:
                 start = new DateTime(now().getYear(), 1, 1, 1, 1);
-                end = now();
+                end = new DateTime(now().getYear(), 31, 12, 23, 59);
                 return new Interval(start, end);
             case I_FJOR:
                 int year = now().getYear() -1;
