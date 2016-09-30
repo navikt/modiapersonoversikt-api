@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
-import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 
@@ -12,6 +11,7 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagStatusKlasse;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.dateTime;
 
 public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializable {
 
@@ -30,7 +30,7 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
     }
 
     public String getVisningsDato() {
-        return WidgetDateFormatter.dateTime(melding.getVisningsDato());
+        return dateTime(melding.getVisningsDato());
     }
 
     public String getFritekst() {

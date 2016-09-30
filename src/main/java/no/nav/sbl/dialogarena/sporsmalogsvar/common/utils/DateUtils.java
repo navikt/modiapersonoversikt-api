@@ -20,7 +20,7 @@ public class DateUtils {
     }
 
     public static String date(DateTime dateTime) {
-        return DateTimeFormat.forPattern("d. MMM. yyyy").withLocale(locale.create()).print(dateTime);
+        return DateTimeFormat.forPattern("d. MMMM yyyy").withLocale(locale.create()).print(dateTime);
     }
 
     public static String time(DateTime dateTime) {
@@ -28,6 +28,6 @@ public class DateUtils {
     }
 
     public static String dateTime(DateTime dateTime) {
-        return format("%s, kl. %s", date(dateTime), time(dateTime));
+        return format("%s, klokken %s", date(dateTime), time(dateTime));
     }
 }

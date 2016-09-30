@@ -5,6 +5,10 @@
   .opprettet {
     display: block;
     margin: 0;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.3;
+    color: #675C53;
   }
   .traadlengde {
     position: absolute;
@@ -17,10 +21,10 @@
   }
   li a:focus {
     .melding-detaljer {
-      &.ubesvart {
+      color: #f5f5f5;
+      .opprettet {
         color: #f5f5f5;
       }
-      color: #f5f5f5;
     }
 
     .statusIkon {
@@ -48,18 +52,20 @@
 
     .antall-meldinger-samtale {
       position: absolute;
-      left: 37px;
-      top: 27px;
+      left: 39px;
+      top: 10px;
       font-weight: 600;
     }
 
+    .melding-detaljer-tekst p {
+      margin-bottom: 0;
+    }
   }
   .statusIkon {
     position: absolute;
     height: 26px;
     width: 25px;
     left: 18px;
-    top: 48px;
 
     &.flere-meldinger {
       background: url(../img/meldinger/flere_meldinger.svg) no-repeat;
@@ -75,9 +81,10 @@
     }
   }
   .widget-meldingstatus {
-    margin-top: 16px;
     display: block;
     font-weight: 600;
+    margin-top: 8px;
+    font-size: 16px;
     span {
       display: inline-block;
     }
