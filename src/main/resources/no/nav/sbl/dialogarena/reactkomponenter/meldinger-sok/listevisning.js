@@ -44,7 +44,7 @@ class Listevisning extends React.Component {
                         <AntallMeldinger antall={antallMeldingerIOpprinneligTraad} />
                         <p className="vekk">{statusIkonTekst}</p>
                         <div className="melding-data">
-                            <p dangerouslySetInnerHTML={{ __html: dato }}></p>
+                            <p className="opprettet" dangerouslySetInnerHTML={{ __html: dato }}></p>
                             <p className={'meldingstatus'} dangerouslySetInnerHTML={{ __html: meldingsStatus }}></p>
                             <p className="fritekst" dangerouslySetInnerHTML={{ __html: innhold }}></p>
                         </div>
