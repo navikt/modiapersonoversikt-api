@@ -26,19 +26,30 @@ public class OppsummeringVM implements Serializable {
 
     public LocalDate sluttDato;
     public LocalDate startDato;
+    public LocalDate visningSluttDato;
     public List<HovedYtelseVM> hovedytelser;
     public String utbetalt, trekk, brutto;
 
     public static Collector<Double, ?, Double> sumDouble = summingDouble((d) -> d.doubleValue());
 
 
-    public OppsummeringVM(List<Hovedytelse> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
+    public OppsummeringVM(List<Hovedytelse> hovedytelser, LocalDate startDato, LocalDate sluttDato, LocalDate visningSluttDato) {
         this.sluttDato = sluttDato;
         this.startDato = startDato;
-        this.utbetalt = getBelopString(nettoUtbetaltForAlle(hovedytelser));
-        this.trekk = getBelopString(trekkBeloepForAlle(hovedytelser));
-        this.brutto = getBelopString(bruttoUtbetaltForAlle(hovedytelser));
-        this.hovedytelser = lagHovetytelseVMer(hovedytelser);
+        this.visningSluttDato = visningSluttDato;
+
+        List<Hovedytelse> utbetalteHovedytelser = finnUtbetalteHovedytelser(hovedytelser);
+
+        this.utbetalt = getBelopString(nettoUtbetaltForAlle(utbetalteHovedytelser));
+        this.trekk = getBelopString(trekkBeloepForAlle(utbetalteHovedytelser));
+        this.brutto = getBelopString(bruttoUtbetaltForAlle(utbetalteHovedytelser));
+        this.hovedytelser = lagHovetytelseVMer(utbetalteHovedytelser);
+    }
+
+    private List<Hovedytelse> finnUtbetalteHovedytelser(List<Hovedytelse> hovedytelser) {
+        return hovedytelser.stream()
+                .filter(hovedytelse -> hovedytelse.getUtbetalingsDato() != null)
+                .collect(toList());
     }
 
     public static Double bruttoUtbetaltForAlle(List<Hovedytelse> hovedytelser) {
@@ -100,7 +111,7 @@ public class OppsummeringVM implements Serializable {
             return new StringResourceModel("utbetaling.lamell.total.oppsummering.udefinertperiode", null).getString();
         }
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
-                Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
+                Datoformat.kortUtenLiteral(visningSluttDato.toDateTimeAtCurrentTime());
     }
 
 

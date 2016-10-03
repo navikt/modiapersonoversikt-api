@@ -13,6 +13,7 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultVisningSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.hentAlleSynligeHovedytelser;
 import static org.joda.time.LocalDate.now;
 
@@ -43,13 +44,13 @@ public class MaanedsPanel extends Panel {
 
     private OppsummeringVM createOppsummeringVM(List<Hovedytelse> liste) {
         if (liste.isEmpty()) {
-            return new OppsummeringVM(new ArrayList<>(), now(), now());
+            return new OppsummeringVM(new ArrayList<>(), now(), now(), now());
         }
 
         LocalDate startDato = getStartDato(liste);
         LocalDate sluttDato = getSluttDato(liste);
 
-        return new OppsummeringVM(liste, startDato, sluttDato);
+        return new OppsummeringVM(liste, startDato, sluttDato, defaultVisningSluttDato());
     }
 
     private LocalDate getSluttDato(List<Hovedytelse> liste) {

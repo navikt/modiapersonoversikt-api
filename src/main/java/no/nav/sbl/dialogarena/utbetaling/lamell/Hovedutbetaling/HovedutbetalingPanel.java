@@ -22,6 +22,7 @@ import java.util.stream.Collector;
 import static java.util.stream.Collectors.summingDouble;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
+import static org.apache.wicket.AttributeModifier.append;
 
 public class HovedutbetalingPanel extends Panel {
 
@@ -34,8 +35,11 @@ public class HovedutbetalingPanel extends Panel {
         List<Hovedytelse> synligeHovedytelser = hovedutbetaling.getSynligeHovedytelser();
         IModel<Boolean> skalVises = Model.of(hovedutbetaling.skalViseHovedutbetaling());
 
-        if (!hovedutbetaling.skalViseHovedutbetaling()) {
-            add(new AttributeModifier("tabindex", -1));
+        if (hovedutbetaling.skalViseHovedutbetaling()) {
+            add(new AttributeModifier("tabindex", 0));
+            add(new Label("hovedutbetalingSkjermleserOverskrift", createHovedutbetalingSkjermleserOverskrift(hovedutbetaling)));
+        } else {
+            add(new Label("hovedutbetalingSkjermleserOverskrift", ""));
         }
 
         add(hasCssClassIf("hovedutbetaling-synlig", skalVises));
@@ -43,6 +47,10 @@ public class HovedutbetalingPanel extends Panel {
                 createHovedutbetalingDetaljPanel(synligeHovedytelser, hovedutbetaling),
                 createUtbetalingListView(synligeHovedytelser)
         );
+    }
+
+    private String createHovedutbetalingSkjermleserOverskrift(Hovedutbetaling hovedutbetaling) {
+        return lagVisningsdato(hovedutbetaling.getHovedytelsesdato()) + " : Diverse ytelser";
     }
 
     private WebMarkupContainer createHovedutbetalingDetaljPanel(List<Hovedytelse> synligeHovedytelser, Hovedutbetaling hovedutbetaling) {
@@ -81,11 +89,19 @@ public class HovedutbetalingPanel extends Panel {
                 .collect(sumDouble));
     }
 
+    private String getHovedutbetalingPanelMarkupId() {
+        return getMarkupId();
+    }
+
     private ListView<Hovedytelse> createUtbetalingListView(List<Hovedytelse> utbetalingsliste) {
         return new ListView<Hovedytelse>("hovedytelser", utbetalingsliste) {
             @Override
             protected void populateItem(ListItem<Hovedytelse> item) {
-                item.add(new UtbetalingPanel("ytelseUtbetaling", new UtbetalingVM(item.getModelObject())));
+
+                UtbetalingPanel utbetalingPanel = new UtbetalingPanel("ytelseUtbetaling", new UtbetalingVM(item.getModelObject()));
+                utbetalingPanel.add(append("aria-labelledby", getHovedutbetalingPanelMarkupId()));
+
+                item.add(utbetalingPanel);
             }
         };
     }

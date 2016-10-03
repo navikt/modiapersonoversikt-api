@@ -111,6 +111,7 @@ public class FilterParametereTest {
 
         LocalDate sluttDato = now().plusDays(1).toLocalDate();
         filterparams.setSluttDato(sluttDato);
+        filterparams.setVisningSluttDato(sluttDato);
         assertThat(filterparams.getSluttDato(), is(sluttDato));
     }
 
@@ -173,7 +174,7 @@ public class FilterParametereTest {
     public void intervalHvisInnevaerendeAar() {
         Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.INNEVAERENDE_AAR);
         assertThat(new LocalDate(now().getYear(), 1, 1), is(interval.getStart().toLocalDate()));
-        assertThat(new LocalDate(now().getYear(), 31, 12), is(interval.getEnd().toLocalDate()));
+        assertThat(new LocalDate(now().getYear(), 12, 31), is(interval.getEnd().toLocalDate()));
     }
 
     @Test
@@ -187,6 +188,7 @@ public class FilterParametereTest {
     public void intervalHvisEgendefinert() {
         filterparams.setStartDato(new LocalDate(2013, 1, 2));
         filterparams.setSluttDato(new LocalDate(2013, 12, 31));
+        filterparams.setVisningSluttDato(new LocalDate(2013, 12, 31));
 
         Interval interval = filterparams.intervalBasertPaaPeriodevalg(PeriodeVelger.EGENDEFINERT);
         assertThat(new LocalDate(2013, 1, 2), is(interval.getStart().toLocalDate()));

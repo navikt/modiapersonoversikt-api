@@ -58,6 +58,7 @@ public class FilterParametere implements Serializable, Predicate {
 
     private LocalDate startDato;
     private LocalDate sluttDato;
+    private LocalDate visningSluttDato;
 
     private Map<Mottakertype, Boolean> mottakere;
 
@@ -69,6 +70,7 @@ public class FilterParametere implements Serializable, Predicate {
         this.periodeVelgerValg = PeriodeVelger.SISTE_30_DAGER;
         this.startDato = defaultStartDato();
         this.sluttDato = defaultSluttDato();
+        this.visningSluttDato = defaultVisningSluttDato();
 
         this.mottakere = new HashMap<>();
         this.mottakere.put(Mottakertype.ANNEN_MOTTAKER, true);
@@ -82,9 +84,19 @@ public class FilterParametere implements Serializable, Predicate {
         return intervalBasertPaaPeriodevalg(this.periodeVelgerValg).getEnd().toLocalDate();
     }
 
+    public LocalDate getVisningSluttDato() {
+        return visningSluttDato;
+    }
+
     public void setSluttDato(LocalDate sluttDato) {
         if (sluttDato != null) {
             this.sluttDato = sluttDato;
+        }
+    }
+
+    public void setVisningSluttDato(LocalDate visningSluttDato) {
+        if (sluttDato != null) {
+            this.visningSluttDato = visningSluttDato;
         }
     }
 
@@ -161,19 +173,25 @@ public class FilterParametere implements Serializable, Predicate {
             case SISTE_30_DAGER:
                 start = now().minusDays(30);
                 end = now().plusDays(ANTALL_DAGER_FRAMOVER_I_TID);
+                startDato = LocalDate.now().minusDays(30);
+                visningSluttDato = LocalDate.now();
                 return new Interval(start, end);
             case INNEVAERENDE_AAR:
                 start = new DateTime(now().getYear(), 1, 1, 1, 1);
-                end = new DateTime(now().getYear(), 31, 12, 23, 59);
+                end = new DateTime(now().getYear(), 12, 31, 23, 59);
+                startDato = new LocalDate(now().getYear(), 1, 1);
+                visningSluttDato = LocalDate.now();
                 return new Interval(start, end);
             case I_FJOR:
                 int year = now().getYear() -1;
                 start = new DateTime(year, 1, 1, 1, 1);
                 end = new DateTime(year, 12, 31, 1, 1);
+                startDato = new LocalDate(year, 1, 1);
+                visningSluttDato = new LocalDate(year, 12, 31);
                 return new Interval(start, end);
             case EGENDEFINERT:
             default:
-                return new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight());
+                return new Interval(startDato.toDateTimeAtStartOfDay(), visningSluttDato.toDateMidnight());
         }
     }
 

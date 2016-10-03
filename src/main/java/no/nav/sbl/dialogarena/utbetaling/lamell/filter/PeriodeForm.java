@@ -82,6 +82,7 @@ public class PeriodeForm extends Panel {
 
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                setStartDateRange();
                 FilterParametere.PeriodeVelger valgtPeriode = filterParametere.periodeVelgerValg;
                 if (valgtPeriode.equals(EGENDEFINERT)) {
                     datovelgerContainer.setVisibilityAllowed(true);
@@ -95,6 +96,11 @@ public class PeriodeForm extends Panel {
         });
 
         return velger;
+    }
+
+    private void setStartDateRange() {
+        filterParametere.setStartDato(now().minusDays(30));
+        filterParametere.setVisningSluttDato(now());
     }
 
     private DateRangePicker createDateRangePicker(String id) {
@@ -112,7 +118,7 @@ public class PeriodeForm extends Panel {
 
         DateRangeModel dateRangeModel = new DateRangeModel(
                 new PropertyModel<>(filterParametere, "startDato"),
-                new PropertyModel<>(filterParametere, "sluttDato"));
+                new PropertyModel<>(filterParametere, "visningSluttDato"));
 
         return new StrictDateRangePicker(id, dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }

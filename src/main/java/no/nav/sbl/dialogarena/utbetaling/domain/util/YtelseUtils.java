@@ -37,6 +37,10 @@ public class YtelseUtils {
         return now().plusDays(ANTALL_DAGER_FRAMOVER_I_TID);
     }
 
+    public static LocalDate defaultVisningSluttDato() {
+        return now();
+    }
+
     public static final Comparator<Hovedytelse> SISTE_HOVEDYTELSESDATO_FORST = (ytelse1, ytelse2) -> {
         DateTime ytelse1Hovedytelsedato = ytelse1.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();
         DateTime ytelse2Hovedytelsedato = ytelse2.getHovedytelsedato().toLocalDate().toDateTimeAtStartOfDay();

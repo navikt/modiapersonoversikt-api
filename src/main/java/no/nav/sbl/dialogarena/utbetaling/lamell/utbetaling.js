@@ -84,6 +84,7 @@ var Utbetalinger = (function () {
             $element.find('.ekspander-pil span').text(lukkUtbetalingText);
             $element.find('.ekspander-pil').attr('aria-label', lukkUtbetalingText);
             $element.find('.ekspander-pil').attr('title', lukkUtbetalingText);
+            $element.attr('aria-expanded', 'true');
         } else {
             $element.find('.ekspander-pil span').text(aapneUtbetalingText);
             $element.find('.ekspander-pil').attr('aria-label', aapneUtbetalingText);

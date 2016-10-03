@@ -140,7 +140,11 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Hovedytelse> liste) {
-        return new TotalOppsummeringPanel("totalOppsummeringPanel", new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()));
+        return new TotalOppsummeringPanel("totalOppsummeringPanel", new OppsummeringVM(
+                liste,
+                filterParametere.getStartDato(),
+                filterParametere.getSluttDato(),
+                filterParametere.getVisningSluttDato()));
     }
 
     private ListView<List<Hovedutbetaling>> createMaanedsPanelListe(List<Hovedutbetaling> hovedutbetalinger) {
@@ -168,7 +172,11 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private void oppdaterUtbetalingsvisning(List<Hovedytelse> synligeUtbetalinger, List<Hovedutbetaling> hovedutbetalinger) {
-        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
+        totalOppsummeringPanel.setDefaultModelObject(
+                new OppsummeringVM(synligeUtbetalinger,
+                        filterParametere.getStartDato(),
+                        filterParametere.getVisningSluttDato(),
+                        filterParametere.getVisningSluttDato()));
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe(hovedutbetalinger));
     }
 

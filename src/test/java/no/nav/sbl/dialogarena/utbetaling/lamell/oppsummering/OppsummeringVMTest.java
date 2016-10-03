@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -31,7 +30,7 @@ public class OppsummeringVMTest {
         String formatertDato = dato.toString(LANG_DATO_FORMAT);
         List<Hovedytelse> utbetalinger = asList(getYtelse(dato));
 
-        OppsummeringVM vm = new OppsummeringVM(utbetalinger, dato.toLocalDate(), dato.toLocalDate());
+        OppsummeringVM vm = new OppsummeringVM(utbetalinger, dato.toLocalDate(), dato.toLocalDate(), dato.toLocalDate());
         String oppsummertPeriode = vm.getOppsummertPeriode();
 
         assertThat(oppsummertPeriode, is(formatertDato));
@@ -42,11 +41,12 @@ public class OppsummeringVMTest {
         DateTime dato = now().minusDays(1);
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
+        LocalDate visningSluttDato = defaultSluttDato();
         String formatertDato = Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
                 Datoformat.kortUtenLiteral(sluttDato.toDateTime(new LocalTime(23, 59)));
         List<Hovedytelse> utbetalinger = asList(getYtelse(dato));
 
-        OppsummeringVM vm = new OppsummeringVM(utbetalinger, startDato, sluttDato);
+        OppsummeringVM vm = new OppsummeringVM(utbetalinger, startDato, sluttDato, visningSluttDato);
         String oppsummertPeriode = vm.getOppsummertPeriode();
 
         assertThat(oppsummertPeriode, is(formatertDato));
@@ -72,6 +72,7 @@ public class OppsummeringVMTest {
                 .withId(ID)
                 .withYtelse("Dagpenger")
                 .withHovedytelsedato(now())
+                .withUtbetalingsDato(now())
                 .withYtelsesperiode(new Interval(now(), now()))
                 .withUnderytelseListe(asList(ytelse1))
                 .withSumSkatt(skattTrekkListe.get(0))
@@ -85,6 +86,7 @@ public class OppsummeringVMTest {
                 .withId(ID)
                 .withYtelse("Dagpenger")
                 .withHovedytelsedato(now())
+                .withUtbetalingsDato(now())
                 .withYtelsesperiode(new Interval(now(), now()))
                 .withUnderytelseListe(asList(ytelse2))
                 .withSkattListe(skattTrekkListe)
@@ -98,6 +100,7 @@ public class OppsummeringVMTest {
                 .withId(ID)
                 .withYtelse("Helseprodukter")
                 .withHovedytelsedato(now())
+                .withUtbetalingsDato(now())
                 .withNettoUtbetalt(0d)
                 .withSumTrekk(0d)
                 .withBruttoUtbetalt(0d)
@@ -107,7 +110,7 @@ public class OppsummeringVMTest {
 
         List<Hovedytelse> hovedytelser = asList(dagpenger, dagpenger1, dagpenger2);
 
-        OppsummeringVM vm = new OppsummeringVM(hovedytelser, defaultStartDato(), defaultSluttDato());
+        OppsummeringVM vm = new OppsummeringVM(hovedytelser, defaultStartDato(), defaultSluttDato(), defaultVisningSluttDato());
 
         List<String> navn = asList("Grunnbeløp", "Tillegg", "Skatt");
         List<Double> belop = asList(1000.0, 500.0, -400.0);
@@ -151,6 +154,7 @@ public class OppsummeringVMTest {
                 .withYtelse("Våren")
                 .withUnderytelseListe(underytelser)
                 .withHovedytelsedato(now())
+                .withUtbetalingsDato(now())
                 .withNettoUtbetalt(0d)
                 .withSumTrekk(0d)
                 .withBruttoUtbetalt(0d)
@@ -159,7 +163,7 @@ public class OppsummeringVMTest {
 
         List<Hovedytelse> utbetalinger = asList(hovedytelse);
 
-        OppsummeringVM vm = new OppsummeringVM(utbetalinger, defaultStartDato(), defaultSluttDato());
+        OppsummeringVM vm = new OppsummeringVM(utbetalinger, defaultStartDato(), defaultSluttDato(), defaultVisningSluttDato());
 
         assertThat(vm.hovedytelser.size(), is(1));
         assertThat(vm.hovedytelser.get(0).getHovedYtelsesBeskrivelse(), is("Våren"));
