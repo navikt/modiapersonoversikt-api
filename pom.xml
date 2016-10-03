@@ -12,7 +12,7 @@
     <description>Fellesbibliotek for React-komponenter</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>reactkomponenter</artifactId>
-    <version>2.7.37-HL4-SNAPSHOT</version>
+    <version>2.7.37-HL4</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -278,6 +278,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/reactkomponenter.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/sbl/repos/reactkomponenter/</url>
-        <tag>HEAD</tag>
+        <tag>reactkomponenter-2.7.37-HL4</tag>
     </scm>
 </project>
