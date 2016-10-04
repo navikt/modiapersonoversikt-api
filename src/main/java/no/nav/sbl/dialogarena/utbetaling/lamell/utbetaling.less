@@ -38,6 +38,8 @@
   }
 
   .hovedutbetaling-synlig {
+    border-bottom: 2px solid #d1cfcf;
+    border-top: 2px solid #d1cfcf;
     &:focus {
       .focus-sammensatt-inset-mixin;
     }
@@ -62,8 +64,6 @@
   }
 
   .hovedutbetaling {
-    border-bottom: 2px solid @borderColor;
-
     &.hovedutbetaling-synlig {
       .hovedutbetaling-head {
         padding-bottom: 0px;
@@ -356,7 +356,6 @@
     .utbetaling-ramme-innhold {
       background-color: white;
       font-size: 0.9rem;
-
       &:focus {
         .focus-sammensatt-inset-mixin;
       }
@@ -488,7 +487,8 @@
   }
 
   .utbetaling-liste {
-    border-bottom: none;
+    border-bottom: 2px solid #d1cfcf;
+
   }
   .detaljpanel {
     margin: 6px 20px 32px 20px;
