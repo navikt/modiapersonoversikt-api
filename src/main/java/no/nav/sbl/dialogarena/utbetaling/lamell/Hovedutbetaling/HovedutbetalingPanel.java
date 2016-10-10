@@ -19,6 +19,7 @@ import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.summingDouble;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.either;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.lagVisningUtbetalingsdato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static org.apache.wicket.AttributeModifier.append;
@@ -33,7 +34,7 @@ public class HovedutbetalingPanel extends Panel {
         setMarkupId("utbetaling-" + hovedutbetaling.getId());
         List<Hovedytelse> synligeHovedytelser = hovedutbetaling.getSynligeHovedytelser();
         IModel<Boolean> skalVises = Model.of(hovedutbetaling.skalViseHovedutbetaling());
-        IModel<Boolean> skalViseSkillestrek = Model.of(synligeHovedytelser.size() != 0);
+        IModel<Boolean> harSynligeHovedytelser = Model.of(synligeHovedytelser.size() != 0);
 
         if (hovedutbetaling.skalViseHovedutbetaling()) {
             add(new AttributeModifier("tabindex", 0));
@@ -41,7 +42,7 @@ public class HovedutbetalingPanel extends Panel {
         add(append("aria-describedBy", "skjermleser-hovedutbetaling-" + hovedutbetaling.getId()));
         add(
                 hasCssClassIf("hovedutbetaling-synlig", skalVises),
-                hasCssClassIf("hovedutbetaling-skillestrek", skalViseSkillestrek)
+                hasCssClassIf("hovedutbetaling-skillestrek", either(harSynligeHovedytelser).or(skalVises))
         );
         add(
                 createHovedutbetalingDetaljPanel(synligeHovedytelser, hovedutbetaling),
