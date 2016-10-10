@@ -1,9 +1,8 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="utbetaling-head utbetaling-detalj">
-        <p class="vekk" wicket:id="utbetalingSkjermleserOverskrift"></p>
+        <wicket:container wicket:id="printEkspander"></wicket:container>
         <div class="utbetaling-metadata">
-         <wicket:container wicket:id="printEkspander"></wicket:container>
             <p class="utbetaling-dato">
                 <span class="vekk">Utbetalingsdato: </span>
                 <span wicket:id="utbetalingDato"></span>
@@ -15,8 +14,8 @@
             </p>
         </div>
         <div class="utbetaling">
-            <p class="ytelse" aria-labelledby="utbetalingYtelseLabel">
-                <span class="vekk" id="utbetalingYtelseLabel">Ytelse: </span>
+            <p class="ytelse">
+                <span class="vekk">Ytelse: </span>
                 <span wicket:id="ytelse"></span>
             </p>
             <p class="ytelsesbelop">

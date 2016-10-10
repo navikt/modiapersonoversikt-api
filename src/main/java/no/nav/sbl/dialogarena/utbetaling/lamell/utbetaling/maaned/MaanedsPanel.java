@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.Hovedutbetaling.HovedutbetalingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -13,6 +14,7 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.lagVisningUtbetalingsdato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultVisningSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.hentAlleSynligeHovedytelser;
 import static org.joda.time.LocalDate.now;
@@ -37,9 +39,30 @@ public class MaanedsPanel extends Panel {
         return new ListView<Hovedutbetaling>("hovedutbetalinger", hovedutbetalingList) {
             @Override
             protected void populateItem(ListItem<Hovedutbetaling> item) {
-                item.add(new HovedutbetalingPanel("hovedutbetaling", item.getModelObject()));
+                item.add(
+                        createHovedutbetalingSkjermleserLabel(item.getModelObject()),
+                        new HovedutbetalingPanel("hovedutbetaling", item.getModelObject())
+                );
             }
         };
+    }
+
+    private Label createHovedutbetalingSkjermleserLabel(Hovedutbetaling hovedutbetaling) {
+        String skjermleserOverskrift = createHovedutbetalingSkjermleserOverskrift(hovedutbetaling);
+        Label skjermleserLabel = new Label("hovedutbetalingSkjermleserOverskrift", skjermleserOverskrift);
+        skjermleserLabel.setMarkupId("skjermleser-hovedutbetaling-" + hovedutbetaling.getId());
+
+        return skjermleserLabel;
+    }
+
+    private String createHovedutbetalingSkjermleserOverskrift(Hovedutbetaling hovedutbetaling) {
+        String skjermleserOverskrift = lagVisningUtbetalingsdato(hovedutbetaling.getHovedytelsesdato());
+        if (hovedutbetaling.skalViseHovedutbetaling()) {
+            skjermleserOverskrift += ": Diverse ytelser";
+        } else {
+            skjermleserOverskrift += ": " + hovedutbetaling.getHovedytelser().get(0).getYtelse();
+        }
+        return skjermleserOverskrift;
     }
 
     private OppsummeringVM createOppsummeringVM(List<Hovedytelse> liste) {
