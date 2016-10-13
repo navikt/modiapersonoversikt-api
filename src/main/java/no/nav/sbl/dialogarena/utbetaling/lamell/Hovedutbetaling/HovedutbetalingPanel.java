@@ -80,7 +80,7 @@ public class HovedutbetalingPanel extends Panel {
     }
 
     private String lagYtelseSkjermleserOverskrift(Hovedytelse hovedytelse) {
-        if (hovedytelse.isErHovedUtbetaling()) {
+        if (!hovedytelse.isErHovedUtbetaling()) {
             return lagVisningUtbetalingsdato(hovedytelse.getHovedytelsedato()) + " : " + hovedytelse.getYtelse();
         }
         return "";
