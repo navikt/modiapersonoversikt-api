@@ -146,7 +146,10 @@ public class OppsummeringVM implements Serializable {
 
             if (!ytelser.isEmpty()) {
                 Double sum = ytelser.stream().map(underytelse -> underytelse.getYtelseBeloep()).collect(sumDouble);
-                acc.add(ytelser.get(0).withYtelseBeloep(sum));
+                Underytelse sammenlagtUnderytelse = kopierUnderytelse(ytelser.get(0))
+                        .withYtelseBeloep(sum);
+
+                acc.add(sammenlagtUnderytelse);
             }
             return acc;
         };
@@ -166,6 +169,15 @@ public class OppsummeringVM implements Serializable {
                 .stream()
                 .sorted(((o1, o2) -> o2.getYtelseBeloep().compareTo(o1.getYtelseBeloep())))
                 .collect(toList());
+    }
+
+    protected static Underytelse kopierUnderytelse(Underytelse underytelse) {
+        return new Underytelse()
+                .withYtelsesType(underytelse.getYtelsesType())
+                .withSatsBeloep(underytelse.getSatsBeloep())
+                .withSatsType(underytelse.getSatsType())
+                .withYtelseBeloep(underytelse.getYtelseBeloep())
+                .withSatsAntall(underytelse.getSatsAntall());
     }
 
     protected static Map<String, List<Underytelse>> groupUnderytelseByType(List<Hovedytelse> sammen) {

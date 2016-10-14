@@ -27,11 +27,10 @@ public class HovedutbetalingVM implements FeedItemVM, Serializable {
     private Mottakertype mottakertype;
     private String mottaker;
     private boolean isUtbetalt;
-    private boolean isFlereHovedytelser;
 
 
     public HovedutbetalingVM(Hovedutbetaling hovedutbetaling) {
-        this.isFlereHovedytelser =  hovedutbetaling.getHovedytelser().size() > 1;
+        boolean isFlereHovedytelser = hovedutbetaling.getHovedytelser().size() > 1;
         Hovedytelse forsteYtelse = hovedutbetaling.getHovedytelser().get(0);
 
         if (isFlereHovedytelser) {

@@ -10,7 +10,9 @@ import org.joda.time.LocalTime;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
@@ -231,6 +233,66 @@ public class OppsummeringVMTest {
         hovedytelser.add(getYtelse(DateTime.now()).withSumTrekk(-300.0).withSammenlagtTrekkBeloep());
 
         assertThat(OppsummeringVM.trekkBeloepForAlle(hovedytelser), is(500.0));
+    }
+
+    @Test
+    public void sjekkerAtBelopetPaaUnderytelseneIkkeBlirEndret() {
+        List<Underytelse> underytelser = asList(
+                new Underytelse()
+                        .withYtelsesType("Sykpenger")
+                        .withYtelseBeloep(1000.0),
+                new Underytelse()
+                        .withYtelsesType("Sykpenger")
+                        .withYtelseBeloep(500.0)
+        );
+
+        Map<String, List<Underytelse>> indekserteUnderytelser = new HashMap<>();
+        indekserteUnderytelser.put("sykepenger", underytelser);
+        OppsummeringVM.combineUnderytelser(indekserteUnderytelser);
+
+
+        assertThat(underytelser.get(0).getYtelseBeloep(), is(1000.0));
+        assertThat(underytelser.get(1).getYtelseBeloep(), is(500.0));
+    }
+
+    @Test
+    public void combineUnderytelserreturnererSummenAvIndekserteUnderytelsene() {
+        List<Underytelse> underytelser = asList(
+                new Underytelse()
+                        .withYtelsesType("Sykpenger")
+                        .withYtelseBeloep(1000.0),
+                new Underytelse()
+                        .withYtelsesType("Sykpenger")
+                        .withYtelseBeloep(500.0)
+        );
+
+        Map<String, List<Underytelse>> indekserteUnderytelser = new HashMap<>();
+        indekserteUnderytelser.put("sykepenger", underytelser);
+        List<Underytelse> sammenlagteUnderytelser = OppsummeringVM.combineUnderytelser(indekserteUnderytelser);
+
+
+        assertThat(sammenlagteUnderytelser.get(0).getYtelseBeloep(), is(1500.0));
+    }
+
+    @Test
+    public void testKopieringAvUnderytelser() {
+        Underytelse underytelse = new Underytelse()
+                                        .withSatsAntall(1.0)
+                                        .withSatsBeloep(10.0)
+                                        .withSatsType("Satstype")
+                                        .withYtelseBeloep(1000.0)
+                                        .withYtelsesType("Ytelsestype");
+
+        Underytelse underytelseKopi = OppsummeringVM.kopierUnderytelse(underytelse);
+
+        assertThat(underytelse.getYtelseBeloep(), is(underytelseKopi.getYtelseBeloep()));
+        assertThat(underytelse.getSatsAntall(), is(underytelseKopi.getSatsAntall()));
+        assertThat(underytelse.getSatsBeloep(), is(underytelseKopi.getSatsBeloep()));
+        assertThat(underytelse.getSatsType(), is(underytelseKopi.getSatsType()));
+        assertThat(underytelse.getYtelsesType(), is(underytelseKopi.getYtelsesType()));
+
+        assertThat(underytelse == underytelseKopi, is(false));
+
     }
 
     private Hovedytelse getYtelse(DateTime dato) {
