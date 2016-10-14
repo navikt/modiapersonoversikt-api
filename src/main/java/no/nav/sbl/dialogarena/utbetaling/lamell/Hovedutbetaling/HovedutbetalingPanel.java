@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.Hovedutbetaling;
 
-import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedutbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -14,13 +13,14 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.summingDouble;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.either;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.lagVisningUtbetalingsdato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static org.apache.wicket.AttributeModifier.append;
 
@@ -31,33 +31,30 @@ public class HovedutbetalingPanel extends Panel {
     public HovedutbetalingPanel(String id, Hovedutbetaling hovedutbetaling) {
         super(id);
 
-        setMarkupId("hovedutbetaling-" + hovedutbetaling.getId());
+        setMarkupId("utbetaling-" + hovedutbetaling.getId());
         List<Hovedytelse> synligeHovedytelser = hovedutbetaling.getSynligeHovedytelser();
         IModel<Boolean> skalVises = Model.of(hovedutbetaling.skalViseHovedutbetaling());
+        IModel<Boolean> harSynligeHovedytelser = Model.of(synligeHovedytelser.size() != 0);
 
         if (hovedutbetaling.skalViseHovedutbetaling()) {
             add(new AttributeModifier("tabindex", 0));
-            add(new Label("hovedutbetalingSkjermleserOverskrift", createHovedutbetalingSkjermleserOverskrift(hovedutbetaling)));
-        } else {
-            add(new Label("hovedutbetalingSkjermleserOverskrift", ""));
         }
-
-        add(hasCssClassIf("hovedutbetaling-synlig", skalVises));
+        add(append("aria-describedBy", "skjermleser-hovedutbetaling-" + hovedutbetaling.getId()));
+        add(
+                hasCssClassIf("hovedutbetaling-synlig", skalVises),
+                hasCssClassIf("hovedutbetaling-skillestrek", either(harSynligeHovedytelser).or(skalVises))
+        );
         add(
                 createHovedutbetalingDetaljPanel(synligeHovedytelser, hovedutbetaling),
-                createUtbetalingListView(synligeHovedytelser)
+                createUtbetalingListView(hovedutbetaling, synligeHovedytelser)
         );
-    }
-
-    private String createHovedutbetalingSkjermleserOverskrift(Hovedutbetaling hovedutbetaling) {
-        return lagVisningsdato(hovedutbetaling.getHovedytelsesdato()) + " : Diverse ytelser";
     }
 
     private WebMarkupContainer createHovedutbetalingDetaljPanel(List<Hovedytelse> synligeHovedytelser, Hovedutbetaling hovedutbetaling) {
 
         WebMarkupContainer hovedutbetalingDetaljPanel = new WebMarkupContainer("hovedutbetalingDetaljPanel");
         hovedutbetalingDetaljPanel.add(
-                new Label("utbetalingDato", lagVisningsdato(hovedutbetaling.getHovedytelsesdato())),
+                new Label("utbetalingDato", lagVisningUtbetalingsdato(hovedutbetaling.getHovedytelsesdato())),
                 createStatusLabel(hovedutbetaling),
                 new Label("ytelse", "Diverse ytelser"),
                 new Label("belop", finnSumAvHovedytelser(synligeHovedytelser))
@@ -67,13 +64,6 @@ public class HovedutbetalingPanel extends Panel {
         return hovedutbetalingDetaljPanel;
     }
 
-    private String lagVisningsdato(DateTime visningsdato) {
-        if(visningsdato == null) {
-            return "Ingen utbetalingsdato";
-        }
-
-        return WidgetDateFormatter.date(visningsdato);
-    }
 
     private Label createStatusLabel(Hovedutbetaling hovedutbetaling) {
         Label statusLabel = new Label("status", hovedutbetaling.getStatus());
@@ -89,18 +79,31 @@ public class HovedutbetalingPanel extends Panel {
                 .collect(sumDouble));
     }
 
-    private String getHovedutbetalingPanelMarkupId() {
-        return getMarkupId();
+    private String lagYtelseSkjermleserOverskrift(Hovedytelse hovedytelse) {
+        if (!hovedytelse.isErHovedUtbetaling()) {
+            return lagVisningUtbetalingsdato(hovedytelse.getHovedytelsedato()) + " : " + hovedytelse.getYtelse();
+        }
+        return "";
     }
 
-    private ListView<Hovedytelse> createUtbetalingListView(List<Hovedytelse> utbetalingsliste) {
+    private Label createHovedtytelseSkjermleserOverskrift(Hovedytelse hovedytelse) {
+        Label skjermleserLabel = new Label("utbetalingSkjermleserOverskrift", lagYtelseSkjermleserOverskrift(hovedytelse));
+        skjermleserLabel.setMarkupId("skjermleser-hovedytelse-" + hovedytelse.getId());
+        return skjermleserLabel;
+    }
+
+    private ListView<Hovedytelse> createUtbetalingListView(Hovedutbetaling hovedutbetaling, List<Hovedytelse> utbetalingsliste) {
         return new ListView<Hovedytelse>("hovedytelser", utbetalingsliste) {
             @Override
             protected void populateItem(ListItem<Hovedytelse> item) {
 
                 UtbetalingPanel utbetalingPanel = new UtbetalingPanel("ytelseUtbetaling", new UtbetalingVM(item.getModelObject()));
-                utbetalingPanel.add(append("aria-labelledby", getHovedutbetalingPanelMarkupId()));
-
+                if (hovedutbetaling.skalViseHovedutbetaling()) {
+                    utbetalingPanel.add(append("aria-describedby", "skjermleser-hovedytelse-" + hovedutbetaling.getId()));
+                } else {
+                    utbetalingPanel.add(append("aria-describedby", "skjermleser-hovedutbetaling-" + hovedutbetaling.getId()));
+                }
+                item.add(createHovedtytelseSkjermleserOverskrift(item.getModelObject()));
                 item.add(utbetalingPanel);
             }
         };

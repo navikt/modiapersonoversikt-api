@@ -16,7 +16,6 @@ public class UtbetalingPanel extends Panel {
         super(id);
 
         add(
-                new Label("utbetalingSkjermleserOverskrift", lagUtbetalingSkjermleserOverskrift(utbetalingVM)),
                 new DetaljPanel("detaljpanel", utbetalingVM),
                 new PrintEkspanderContainer("printEkspander", UtbetalingPanel.this.getMarkupId()),
                 new Label("utbetalingDato", utbetalingVM.getVisningsdatoFormatted()),
@@ -27,10 +26,6 @@ public class UtbetalingPanel extends Panel {
                 forfallsdatoContainer(utbetalingVM),
                 new Label("utbetaltTil", utbetalingVM.getMottakerNavn())
         );
-    }
-
-    private String lagUtbetalingSkjermleserOverskrift(UtbetalingVM utbetalingVM) {
-        return utbetalingVM.getVisningsdatoFormatted() + " : " + utbetalingVM.getYtelse();
     }
 
     private Label createStatusLabel(UtbetalingVM utbetalingVM) {

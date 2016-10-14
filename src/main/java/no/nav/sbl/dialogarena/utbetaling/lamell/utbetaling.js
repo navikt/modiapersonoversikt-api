@@ -84,7 +84,6 @@ var Utbetalinger = (function () {
             $element.find('.ekspander-pil span').text(lukkUtbetalingText);
             $element.find('.ekspander-pil').attr('aria-label', lukkUtbetalingText);
             $element.find('.ekspander-pil').attr('title', lukkUtbetalingText);
-            $element.attr('aria-expanded', 'true');
         } else {
             $element.find('.ekspander-pil span').text(aapneUtbetalingText);
             $element.find('.ekspander-pil').attr('aria-label', aapneUtbetalingText);
@@ -101,12 +100,18 @@ var Utbetalinger = (function () {
 
     var haandterDetaljPanelVisning = function (detaljPanelID) {
         var $detaljPanel = $('#' + detaljPanelID);
-        scrollTilElement($detaljPanel);
+        if($detaljPanel.length === 1) {
+            scrollTilElement($detaljPanel);
+            $detaljPanel.animate({ height: 'toggle' }, 900);
+            $detaljPanel.parent().toggleClass('ekspandert');
+            $detaljPanel.parent().focus();
+            toggleEkspandertHjelpetekst($detaljPanel.parent());
+        }
+    };
 
-        $detaljPanel.animate({ height: 'toggle' }, 900);
-        $detaljPanel.parent().toggleClass('ekspandert');
-        $detaljPanel.parent().focus();
-        toggleEkspandertHjelpetekst($detaljPanel.parent());
+    var haandterPanelVisning = function(payloadItemID) {
+        haandterHovedutbetalingPanelVisning("utbetaling-" + payloadItemID);
+        haandterDetaljPanelVisning("detaljpanel-" + payloadItemID);
     };
 
     var toggleDetaljPanel = function ($element) {
@@ -163,6 +168,7 @@ var Utbetalinger = (function () {
         addKeyNavigation: addKeyNavigation,
         haandterHovedutbetalingPanelVisning: haandterHovedutbetalingPanelVisning,
         haandterDetaljPanelVisning: haandterDetaljPanelVisning,
+        haandterPanelVisning: haandterPanelVisning,
         toggleDetaljPanel: toggleDetaljPanel,
         toggleEkspandertHjelpetekst: toggleEkspandertHjelpetekst,
         skrivUt: skrivUt,

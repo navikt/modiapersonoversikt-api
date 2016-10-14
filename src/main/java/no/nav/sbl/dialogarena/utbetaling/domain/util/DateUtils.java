@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -40,5 +41,12 @@ public final class DateUtils {
         LocalDate nyStartdato = startdato.minusDays(EKSTRA_SOKEPERIODE);
 
         return (nyStartdato.compareTo(minsteDato) < 0) ? minsteDato : nyStartdato;
+    }
+
+    public static String lagVisningUtbetalingsdato(DateTime visningsdato) {
+        if (visningsdato == null) {
+            return "Ingen utbetalingsdato";
+        }
+        return WidgetDateFormatter.date(visningsdato);
     }
 }

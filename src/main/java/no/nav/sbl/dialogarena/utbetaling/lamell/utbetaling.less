@@ -37,6 +37,9 @@
     }
   }
 
+  .hovedutbetaling-skillestrek {
+    border-bottom: 2px solid #d1cfcf;
+  }
   .hovedutbetaling-synlig {
     &:focus {
       .focus-sammensatt-inset-mixin;
@@ -62,8 +65,6 @@
   }
 
   .hovedutbetaling {
-    border-bottom: 2px solid @borderColor;
-
     &.hovedutbetaling-synlig {
       .hovedutbetaling-head {
         padding-bottom: 0px;
@@ -141,17 +142,17 @@
 
   // Widget
   &.widget-navigasjon {
-
-    .hent-utbetalinger {
-      text-align: center;
-      a {
-        margin: 0;
-        padding: 0;
-        color: #0067cf;
-      }
-      span {
-        display: block;
-        margin: 0.5em 0;
+    a {
+      padding: 0;
+      &:focus {
+        .utbetaling-head {
+          .utbetaling-metadata p {
+            color: @white;
+          }
+          .utbetaling p {
+            color: @white;
+          }
+        }
       }
     }
 
@@ -161,16 +162,6 @@
       margin-top: 1em;
       width: 64px;
       height: 64px;
-    }
-
-    & > ul > li > a {
-      padding: 0;
-      &:focus h2 {
-        color: #fff;
-      }
-      &:focus span {
-        color: #fff;
-      }
     }
   }
 
@@ -356,7 +347,6 @@
     .utbetaling-ramme-innhold {
       background-color: white;
       font-size: 0.9rem;
-
       &:focus {
         .focus-sammensatt-inset-mixin;
       }
@@ -488,7 +478,7 @@
   }
 
   .utbetaling-liste {
-    border-bottom: none;
+    border-bottom: 2px solid #d1cfcf;
   }
   .detaljpanel {
     margin: 6px 20px 32px 20px;
@@ -548,11 +538,12 @@
       background-color: #E0DED8;
       box-sizing: border-box;
       padding: 5px 20px;
-      h3 {
+      h2 {
         font-size: 14px;
         font-family: @font-family-sans-serif;
         font-weight: bold;
         margin: 0;
+        text-transform: uppercase;
       }
     }
   }

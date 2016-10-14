@@ -24,6 +24,7 @@ public class WSUtbetalingTestData {
         utbetalinger.addAll(createKariNordmannUtbetaling());
         utbetalinger.add(createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14), now().minusDays(NUMBER_OF_DAYS_TO_SHOW).plusDays(14), null));
         utbetalinger.add(createUtbetalingUtenUtbetalingsdato(now(), now()));
+        utbetalinger.add(createRefusjonSykepenger());
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = object -> periode.contains(object.getUtbetalingsdato());
@@ -188,6 +189,55 @@ public class WSUtbetalingTestData {
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
+    }
+
+    public static WSUtbetaling createRefusjonSykepenger() {
+        WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Utbetaling uten utbetalingsdato");
+
+        return new WSUtbetaling()
+                .withPosteringsdato(now())
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetalingsmetode("Bankkonto")
+                .withUtbetalingsstatus("")
+                .withUtbetaltTil(personOlaNordmann)
+                .withUtbetalingsmelding("")
+                .withYtelseListe(
+                        new WSYtelse()
+                        .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger refusjon arbeidsgiver"))
+                        .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(2)).withTom(now()))
+                        .withYtelseskomponentListe(
+                                new WSYtelseskomponent()
+                                        .withYtelseskomponenttype("Oppgavepliktig")
+                                        .withSatsbeloep(0.0)
+                                        .withYtelseskomponentbeloep(6960.0))
+                        .withYtelseskomponentListe(
+                                new WSYtelseskomponent()
+                                        .withYtelseskomponenttype("Oppgavepliktig")
+                                        .withSatsbeloep(0.0)
+                                        .withYtelseskomponentbeloep(6960.0)
+                        )
+                        .withYtelseskomponentersum(13920.0)
+                        .withTrekksum(-0.0)
+                        .withSkattListe(new WSSkatt().withSkattebeloep(-1398.0))
+                        .withSkattListe(new WSSkatt().withSkattebeloep(-1398.0))
+                        .withSkattsum(-2798.0)
+                        .withYtelseNettobeloep(11124.0)
+                        .withBilagsnummer("321321321"),
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
+                                .withRettighetshaver(personOlaNordmann)
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*NUMBER_OF_DAYS_TO_SHOW)).withTom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW)))
+                                .withYtelseskomponentListe(
+                                        LagTestWSYtelse.lagYtelseskomponent("Dagpenger", 21419.75, 389.45, 55.0)
+                                                .withSatstype("DAG"))
+                                .withYtelseskomponentersum(21419.75)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(2267.00))
+                                .withSkattsum(2267.00)
+                                .withTrekkListe(new ArrayList<>())
+                                .withTrekksum(0.00)
+                                .withYtelseNettobeloep(21419.75)
+                                .withBilagsnummer("30742-5731")
+                );
     }
 
     public static WSUtbetaling createUtbetalingUtenUtbetalingsdato(DateTime forfallsdato, DateTime posteringsdato ) {
