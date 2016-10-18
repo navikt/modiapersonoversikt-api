@@ -50,12 +50,13 @@ public class DokumentMetadataServiceTest {
     @Before
     public void setup() {
         when(kodeverk.getKode(anyString(), any())).thenReturn("DAG");
+        when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn("DAG");
     }
 
     @Test
     public void hvisEndretTemaFarViToDokumentMetadataOgEnMedFeilmelding() throws DatatypeConfigurationException {
         mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
-        when(kodeverk.getKode(anyString(), any())).thenReturn("FOR");
+        when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn("FOR");
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");

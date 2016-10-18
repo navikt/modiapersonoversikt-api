@@ -125,7 +125,7 @@ public class DokumentMetadataService {
 
 
     private DokumentMetadata dokumentMetadataFraHenvendelse(Soknad soknad) {
-        String temakode = kodeverk.getKode(soknad.getSkjemanummerRef(), Kodeverk.Nokkel.TEMA);
+        String temakode = bulletproofKodeverkService.getKode(soknad.getSkjemanummerRef(), Kodeverk.Nokkel.TEMA);
         boolean kanVises = !"BID".equals(temakode);
 
         Dokument hovedDokument = soknad.getDokumenter()

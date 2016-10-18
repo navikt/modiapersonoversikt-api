@@ -69,4 +69,14 @@ public class BulletproofKodeverkService {
         }
     }
 
+    public String getKode(String vedleggsIdOrSkjemaId, Kodeverk.Nokkel nokkel) {
+        try {
+            String kodeverdi = lokaltKodeverk.getKoder(vedleggsIdOrSkjemaId).get(nokkel);
+            return kodeverdi == null ? vedleggsIdOrSkjemaId : kodeverdi;
+        } catch(Exception e) {
+            LOG.error("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId, e);
+            return vedleggsIdOrSkjemaId;
+        }
+    }
+
 }
