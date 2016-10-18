@@ -34,12 +34,10 @@ var Utbetalinger = (function () {
         var ariaLabel = function ($element) {
             if ($element.hasClass('skjul-innhold')) {
                 $element.find('.ekspander-pil-filtrering span').text(aapneUtbetalingText);
-                $element.find('.ekspander-pil-filtrering').attr('aria-label', aapneUtbetalingText);
-                $element.find('.ekspander-pil-filtrering').attr('title', aapneUtbetalingText);
+                $element.find('.ekspander-pil-filtrering').attr('aria-expanded', "false");
             } else {
                 $element.find('.ekspander-pil-filtrering span').text(lukkUtbetalingText);
-                $element.find('.ekspander-pil-filtrering').attr('aria-label', lukkUtbetalingText);
-                $element.find('.ekspander-pil-filtrering').attr('title', lukkUtbetalingText);
+                $element.find('.ekspander-pil-filtrering').attr('aria-expanded', "true");
             }
         };
 
@@ -81,13 +79,9 @@ var Utbetalinger = (function () {
 
     var toggleEkspandertHjelpetekst = function ($element) {
         if ($element.hasClass('ekspandert')) {
-            $element.find('.ekspander-pil span').text(lukkUtbetalingText);
-            $element.find('.ekspander-pil').attr('aria-label', lukkUtbetalingText);
-            $element.find('.ekspander-pil').attr('title', lukkUtbetalingText);
+            $element.find('.ekspander-pil').attr('aria-expanded', "true");
         } else {
-            $element.find('.ekspander-pil span').text(aapneUtbetalingText);
-            $element.find('.ekspander-pil').attr('aria-label', aapneUtbetalingText);
-            $element.find('.ekspander-pil').attr('title', aapneUtbetalingText);
+            $element.find('.ekspander-pil').attr('aria-expanded', "false");
         }
     };
 
