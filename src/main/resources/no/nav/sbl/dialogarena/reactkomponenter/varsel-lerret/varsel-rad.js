@@ -1,6 +1,6 @@
 import React from 'react';
 import VarselRadElement from './varsel-rad-element';
-import { prettyDate } from './dato-formatering';
+import { prettyDate, nyesteDatoForst } from './dato-formatering';
 import { uniq } from 'lodash';
 
 class VarselRad extends React.Component {
@@ -33,7 +33,7 @@ class VarselRad extends React.Component {
             headerClassname += ' ekspandert';
             pilClassname += ' opp';
             meldinger = varsel.meldingListe
-                .sort((e1, e2) => e1.utsendingsTidspunkt < e2.utsendingsTidspunkt)
+                .sort(nyesteDatoForst)
                 .map((melding) => <VarselRadElement melding={melding} store={this.props.store} />);
         } else {
             pilClassname += ' ned';
