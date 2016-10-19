@@ -1,15 +1,11 @@
 import React, { PropTypes as PT } from 'react';
 
-class FilterHeader extends React.Component {
+function FilterHeader({ style }) {
+    return (
+        <div className="filter-header" style={style}>
 
-    render() {
-        const { style } = this.props;
-        return (
-            <div className="filter-header" style={style}>
-
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 FilterHeader.propTypes = {
