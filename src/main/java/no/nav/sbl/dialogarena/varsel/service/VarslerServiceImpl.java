@@ -91,7 +91,6 @@ public class VarslerServiceImpl implements VarslerService {
 
         List<VarselMelding> varselMeldingliste = varselBestilling.getVarselListe().stream()
                 .map(TIL_VARSEL_MELDING)
-                .filter(varselmelding -> varselmelding.utsendingsTidspunkt != null)
                 .collect(toList());
 
         boolean erRevarsling = varselMeldingliste.stream()
