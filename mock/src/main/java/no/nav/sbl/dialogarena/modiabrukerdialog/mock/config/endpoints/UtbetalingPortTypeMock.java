@@ -46,11 +46,7 @@ public class UtbetalingPortTypeMock {
         utbetalinger.addAll(kariNordmannUtbetaling());
 
         final Interval periode = new Interval(startDato, sluttDato);
-        Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
-            public boolean evaluate(WSUtbetaling object) {
-                return periode.contains(object.getPosteringsdato());
-            }
-        };
+        Predicate<WSUtbetaling> innenPeriode = object -> periode.contains(object.getPosteringsdato());
         return on(utbetalinger).filter(innenPeriode).collect();
     }
 
@@ -88,7 +84,7 @@ public class UtbetalingPortTypeMock {
                                                         .withYtelseskomponenttype("Særtillegg")
                                                         .withYtelseskomponentbeloep(1456.00))
                                         .withYtelseskomponentersum(6656.00)
-                                        .withTrekkListe(new ArrayList<WSTrekk>())
+                                        .withTrekkListe(new ArrayList<>())
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                         .withSkattsum(-2267.00)
                                         .withYtelseNettobeloep(4389.00)
@@ -134,7 +130,7 @@ public class UtbetalingPortTypeMock {
                                 .withYtelseskomponenttype("Særtillegg")
                                 .withYtelseskomponentbeloep(1456.00))
                 .withYtelseskomponentersum(6656.00)
-                .withTrekkListe(new ArrayList<WSTrekk>())
+                .withTrekkListe(new ArrayList<>())
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                 .withSkattsum(-1500.00)
                 .withYtelseNettobeloep(5156.00)
@@ -154,7 +150,7 @@ public class UtbetalingPortTypeMock {
                                 .withYtelseskomponenttype("Særtillegg")
                                 .withYtelseskomponentbeloep(1456.00))
                 .withYtelseskomponentersum(6656.00)
-                .withTrekkListe(new ArrayList<WSTrekk>())
+                .withTrekkListe(new ArrayList<>())
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                 .withSkattsum(-1500.00)
                 .withYtelseNettobeloep(5156.00)
@@ -241,7 +237,7 @@ public class UtbetalingPortTypeMock {
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(11840.00)
                                 .withBilagsnummer("10201498456"))
-                .withUtbetalingsdato(now().minusDays(2*30))
+                .withUtbetalingsdato(now().minusDays(2 * 30))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
@@ -261,7 +257,7 @@ public class UtbetalingPortTypeMock {
                                 .withRettighetshaver(new WSPerson()
                                         .withAktoerId("22222222222")
                                         .withNavn("Ola Nordmann Utbetaling 2"))
-                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*30)).withTom(now().minusDays(2*30)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3 * 30)).withTom(now().minusDays(2 * 30)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponenttype("Dagpenger")
@@ -270,7 +266,7 @@ public class UtbetalingPortTypeMock {
                                                 .withSatsantall(55.0)
                                                 .withYtelseskomponentbeloep(21419.75))
                                 .withYtelseskomponentersum(21419.75)
-                                .withTrekkListe(new ArrayList<WSTrekk>())
+                                .withTrekkListe(new ArrayList<>())
                                 .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(19152.75)
