@@ -24,6 +24,7 @@ public class AktorEndpointConfig {
 
     private AktoerPortType aktoerPort() {
         return new CXFClient<>(AktoerPortType.class)
+                .timeout(15000, 15000)
                 .address(aktoerUrl)
                 .wsdl("classpath:Aktoer.wsdl")
                 .withOutInterceptor(new SystemSAMLOutInterceptor())

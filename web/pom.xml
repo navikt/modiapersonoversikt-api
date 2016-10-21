@@ -31,6 +31,7 @@
             <artifactId>modiabrukerdialog-pep</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!--Personsok-->
         <dependency>
             <groupId>no.nav</groupId>

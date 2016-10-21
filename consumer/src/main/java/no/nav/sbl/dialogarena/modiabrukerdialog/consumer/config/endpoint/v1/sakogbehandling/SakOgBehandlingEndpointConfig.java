@@ -34,6 +34,7 @@ public class SakOgBehandlingEndpointConfig {
 
     private SakOgBehandling_v1PortType createSakogbehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
         return new CXFClient<>(SakOgBehandling_v1PortType.class)
+                .timeout(15000, 15000)
                 .wsdl("classpath:sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/sakOgBehandling.wsdl")
                 .address(System.getProperty("sakogbehandling.ws.url"))
                 .withOutInterceptor(interceptor)

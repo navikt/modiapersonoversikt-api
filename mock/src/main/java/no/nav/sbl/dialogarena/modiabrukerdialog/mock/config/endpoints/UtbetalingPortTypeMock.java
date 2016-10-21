@@ -257,7 +257,7 @@ public class UtbetalingPortTypeMock {
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(11840.00)
                                 .withBilagsnummer("10201498456"))
-                .withUtbetalingsdato(now().minusDays(2*30))
+                .withUtbetalingsdato(now().minusDays(2 * 30))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
@@ -277,7 +277,7 @@ public class UtbetalingPortTypeMock {
                                 .withRettighetshaver(new WSPerson()
                                         .withAktoerId("22222222222")
                                         .withNavn("Ola Nordmann Utbetaling 2"))
-                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3*30)).withTom(now().minusDays(2*30)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(3 * 30)).withTom(now().minusDays(2 * 30)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponenttype("Dagpenger")
