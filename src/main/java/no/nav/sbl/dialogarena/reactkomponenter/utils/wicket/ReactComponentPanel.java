@@ -8,9 +8,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
+
 import javax.inject.Inject;
-
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
@@ -114,7 +113,8 @@ public class ReactComponentPanel extends MarkupContainer {
     }
 
     String renderScript() {
-        return format("%s.%s = %s.render(%s.%s, document.getElementById('%s'));", JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), JS_REF_REACTDOM, JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), this.getMarkupId());
+        return format("%s.%s = %s.render(%s.%s, document.getElementById('%s'));", JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(),
+                JS_REF_REACTDOM, JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), this.getMarkupId());
     }
 
     String createScript(String componentName, Map<String, Object> props) {
