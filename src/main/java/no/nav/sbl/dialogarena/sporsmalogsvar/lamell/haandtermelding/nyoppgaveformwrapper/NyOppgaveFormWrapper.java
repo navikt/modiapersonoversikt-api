@@ -60,7 +60,9 @@ public class NyOppgaveFormWrapper extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         this.innboksVM = innboksVM;
-        this.enheter = on(organisasjonEnhetService.hentAlleEnheter()).filter(GYLDIG_ENHET).collect();
+        this.enheter = on(organisasjonEnhetService.hentAlleEnheter())
+                .filter(enhet -> erGyldigEnhet(enhet))
+                .collect();
         this.foreslatteEnheter = new ArrayList<>();
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
@@ -392,12 +394,9 @@ public class NyOppgaveFormWrapper extends Panel {
         }
     }
 
-    public static final Predicate<AnsattEnhet> GYLDIG_ENHET = new Predicate<AnsattEnhet>() {
-        @Override
-        public boolean evaluate(AnsattEnhet ansattEnhet) {
-            return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetErIkkeAvviklet(ansattEnhet) && enhetenHarTilknyttedeSaksbehandlere(ansattEnhet);
-        }
-    };
+    public static boolean erGyldigEnhet(AnsattEnhet ansattEnhet) {
+        return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetErIkkeAvviklet(ansattEnhet) && enhetenHarTilknyttedeSaksbehandlere(ansattEnhet);
+    }
 
     private static boolean enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(AnsattEnhet ansattEnhet) {
         return Integer.valueOf(ansattEnhet.enhetId) >= 100;
