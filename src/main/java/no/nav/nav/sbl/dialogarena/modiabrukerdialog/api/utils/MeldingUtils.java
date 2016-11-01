@@ -75,49 +75,21 @@ public class MeldingUtils {
             melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null && !"".equals(xmlHenvendelse.getGjeldendeTemagruppe())
                     ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
 
-            XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
-            if (journalfortInformasjon != null) {
-                melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
-                melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
-                melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
-                melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
-                melding.journalfortAvNavIdent = journalfortInformasjon.getJournalforerNavIdent();
-                melding.journalfortAv = ldapService.hentSaksbehandler(journalfortInformasjon.getJournalforerNavIdent());
-            }
+            oppdaterMeldingMedJournalfortInformasjon(propertyResolver, ldapService, xmlHenvendelse, melding);
 
             if (innholdErKassert(xmlHenvendelse)) {
-                settTemagruppe(melding, null, propertyResolver);
-                melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
-                melding.fritekst = propertyResolver.getProperty("innhold.kassert");
-                melding.kanal = null;
-                melding.navIdent = null;
-                melding.kassert = true;
+                oppdaterMeldingMedKasseringData(propertyResolver, melding);
                 return melding;
             }
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
             if(DOKUMENT_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
-                XMLDokumentVarsel dokumentVarsel = (XMLDokumentVarsel) xmlMetadata;
-                melding.statusTekst = dokumentVarsel.getDokumenttittel();
-                melding.fritekst = dokumentVarsel.getTemanavn();
-                melding.erDokumentMelding = true;
-                melding.withTraadId(xmlHenvendelse.getBehandlingsId());
-                melding.lestStatus = lagLestStatusDokumentVarsel(melding);
-                melding.ferdigstiltDato = dokumentVarsel.getFerdigstiltDato();
-                melding.visningsDato = dokumentVarsel.getFerdigstiltDato();
-                melding.statusKlasse = "dokument";
+                oppdaterMeldingMedDokumentVarselData(xmlHenvendelse, melding, xmlMetadata);
                 return melding;
             }
+
             if (OPPGAVE_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
-                XMLOppgaveVarsel oppgaveVarsel = ((XMLOppgaveVarsel) xmlMetadata);
-
-                melding.statusTekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s", oppgaveVarsel.getOppgaveType()), "oppgave.GEN");
-                melding.fritekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s.fritekst", oppgaveVarsel.getOppgaveType()), "oppgave.GEN.fritekst");
-                melding.erOppgaveMelding = true;
-                melding.traadId = xmlHenvendelse.getBehandlingsId();
-                melding.lestStatus = lagLestStatusDokumentVarsel(melding);
-                melding.statusKlasse = "oppgave";
-
+                oppdaterMedlingMedOppgaveVarselData(propertyResolver, xmlHenvendelse, melding, xmlMetadata);
                 return melding;
             }
 
@@ -141,17 +113,59 @@ public class MeldingUtils {
         };
     }
 
-    private static String hentEnonicTekstForDynamiskNokkel(PropertyResolver propertyResolver, String key) {
+    private static void oppdaterMeldingMedJournalfortInformasjon(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
+        XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
+        if (journalfortInformasjon != null) {
+            melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
+            melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
+            melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
+            melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
+            melding.journalfortAvNavIdent = journalfortInformasjon.getJournalforerNavIdent();
+            melding.journalfortAv = ldapService.hentSaksbehandler(journalfortInformasjon.getJournalforerNavIdent());
+        }
+    }
+
+    private static void oppdaterMeldingMedKasseringData(final PropertyResolver propertyResolver, final Melding melding) {
+        settTemagruppe(melding, null, propertyResolver);
+        melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
+        melding.fritekst = propertyResolver.getProperty("innhold.kassert");
+        melding.kanal = null;
+        melding.navIdent = null;
+        melding.kassert = true;
+    }
+
+    private static void oppdaterMeldingMedDokumentVarselData(final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
+        XMLDokumentVarsel dokumentVarsel = (XMLDokumentVarsel) xmlMetadata;
+        melding.statusTekst = dokumentVarsel.getDokumenttittel();
+        melding.fritekst = dokumentVarsel.getTemanavn();
+        melding.erDokumentMelding = true;
+        melding.withTraadId(xmlHenvendelse.getBehandlingsId());
+        melding.lestStatus = lagLestStatusDokumentVarsel(melding);
+        melding.ferdigstiltDato = dokumentVarsel.getFerdigstiltDato();
+        melding.visningsDato = dokumentVarsel.getFerdigstiltDato();
+        melding.statusKlasse = "dokument";
+    }
+
+    private static void oppdaterMedlingMedOppgaveVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
+        XMLOppgaveVarsel oppgaveVarsel = (XMLOppgaveVarsel) xmlMetadata;
+        melding.statusTekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s", oppgaveVarsel.getOppgaveType()), "oppgave.GEN");
+        melding.fritekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s.fritekst", oppgaveVarsel.getOppgaveType()), "oppgave.GEN.fritekst");
+        melding.erOppgaveMelding = true;
+        melding.traadId = xmlHenvendelse.getBehandlingsId();
+        melding.lestStatus = lagLestStatusDokumentVarsel(melding);
+        melding.statusKlasse = "oppgave";
+    }
+
+    protected static String hentEnonicTekstForDynamiskNokkel(PropertyResolver propertyResolver, String key) {
         try {
-            String result = propertyResolver.getProperty(key);
-            return result;
+            return propertyResolver.getProperty(key);
         } catch(NoSuchElementException exception) {
             logger.error("Finner ikke cms-oppslag for " + key, exception.getMessage());
             return key;
         }
     }
 
-    private static String hentEnonicTekstDynamic(PropertyResolver resolver, String key, String defaultKey) {
+    protected static String hentEnonicTekstDynamic(PropertyResolver resolver, String key, String defaultKey) {
         try {
             return resolver.getProperty(key);
         } catch (Exception e) {
