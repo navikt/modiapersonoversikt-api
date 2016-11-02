@@ -89,7 +89,7 @@ public class MeldingUtils {
             }
 
             if (OPPGAVE_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
-                oppdaterMedlingMedOppgaveVarselData(propertyResolver, xmlHenvendelse, melding, xmlMetadata);
+                oppdaterMeldingMedOppgaveVarselData(propertyResolver, xmlHenvendelse, melding, xmlMetadata);
                 return melding;
             }
 
@@ -146,7 +146,7 @@ public class MeldingUtils {
         melding.statusKlasse = "dokument";
     }
 
-    private static void oppdaterMedlingMedOppgaveVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
+    private static void oppdaterMeldingMedOppgaveVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
         XMLOppgaveVarsel oppgaveVarsel = (XMLOppgaveVarsel) xmlMetadata;
         melding.statusTekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s", oppgaveVarsel.getOppgaveType()), "oppgave.GEN");
         melding.fritekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s.fritekst", oppgaveVarsel.getOppgaveType()), "oppgave.GEN.fritekst");
