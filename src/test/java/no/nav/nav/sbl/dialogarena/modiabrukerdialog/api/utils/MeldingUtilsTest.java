@@ -8,14 +8,16 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.DOKUMENT_VARSEL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.OPPGAVE_VARSEL;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -41,13 +43,15 @@ public class MeldingUtilsTest {
     public static final DateTime JOURNALFORT_DATO = DateTime.now().minusDays(1);
     public static final String JOURNALFORT_TEMA = "journalfortTema";
     public static final String JOURNALFORT_SAKSID = "journalfortSaksId1";
+    private final String mockVerdiFraPropertyResolver = "value";
 
     private PropertyResolver propertyResolver = mock(PropertyResolver.class);
     private LDAPService ldapService = mock(LDAPService.class);
 
     @Before
     public void init() {
-        when(propertyResolver.getProperty(anyString(), anyString())).thenReturn("value");
+        when(propertyResolver.getProperty(anyString(), anyString())).thenReturn(mockVerdiFraPropertyResolver);
+        when(propertyResolver.getProperty(anyString())).thenReturn(mockVerdiFraPropertyResolver);
     }
 
     @Test
@@ -133,7 +137,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
-        assertThat(melding.fritekst, is(nullValue()));
+        assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.erDokumentMelding, is(false));
     }
@@ -174,7 +178,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.eksternAktor, is(NAVIDENT));
-        assertThat(melding.fritekst, is(nullValue()));
+        assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
         assertThat(melding.navIdent, is(nullValue()));
@@ -216,7 +220,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.eksternAktor, is(NAVIDENT));
-        assertThat(melding.fritekst, is(nullValue()));
+        assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
         assertThat(melding.navIdent, is(nullValue()));
@@ -269,7 +273,7 @@ public class MeldingUtilsTest {
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
         assertThat(sporsmal.temagruppe, is(nullValue()));
-        assertThat(sporsmal.fritekst, is(nullValue()));
+        assertThat(sporsmal.fritekst, is(mockVerdiFraPropertyResolver));
         assertThat(sporsmal.erDokumentMelding, is(false));
     }
 
@@ -293,6 +297,66 @@ public class MeldingUtilsTest {
         assertThat(dokumentVarsel.erDokumentMelding, is(true));
         assertThat(dokumentVarsel.temagruppe, is(nullValue()));
 
+    }
+
+    @Test
+    public void hentEnonicTekstForDynamiskNokkelSkalReturnereKeyBruktSomParameterDersomKeyIkkeEksiserer() throws Exception {
+        final String key = "key-parameter";
+        final PropertyResolver propertyResolver = mock(PropertyResolver.class);
+        when(propertyResolver.getProperty(anyString())).thenThrow(new NoSuchElementException());
+
+        final String returVerdi = hentEnonicTekstForDynamiskNokkel(propertyResolver, key);
+
+        assertThat(returVerdi, is(key));
+    }
+
+    @Test
+    public void hentEnonicTekstDynamicSkalBrukeDefaultKeyDersomUthentingMedParameterKeyFeiler() throws Exception {
+        final String keySomFeiler = "key-som-feiler";
+        final String defaultKey = "default-key";
+        final String valueForDefaultKey = "value-for-default-key";
+        final PropertyResolver propertyResolver = mock(PropertyResolver.class);
+        when(propertyResolver.getProperty(keySomFeiler)).thenThrow(new NoSuchElementException());
+        when(propertyResolver.getProperty(defaultKey)).thenReturn(valueForDefaultKey);
+
+        final String returVerdi = hentEnonicTekstDynamic(propertyResolver, keySomFeiler, defaultKey);
+
+        assertThat(returVerdi, is(valueForDefaultKey));
+    }
+
+    @Test
+    public void lagerMeldingSomErOppgaveMeldingOmOppgaveVarsel() throws Exception {
+        XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseMedOppgaveVarsel();
+
+        Melding oppgaveVarsel = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+
+        assertThat(oppgaveVarsel.id, is(xmlHenvendelse.getBehandlingsId()));
+        assertThat(oppgaveVarsel.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
+        assertThat(oppgaveVarsel.statusTekst, is(mockVerdiFraPropertyResolver));
+        assertThat(oppgaveVarsel.fritekst, is(mockVerdiFraPropertyResolver));
+        assertThat(oppgaveVarsel.traadId, is(xmlHenvendelse.getBehandlingsId()));
+        assertThat(oppgaveVarsel.erOppgaveMelding, is(true));
+        assertThat(oppgaveVarsel.erDokumentMelding, is(false));
+        assertThat(oppgaveVarsel.temagruppe, is(nullValue()));
+        assertThat(oppgaveVarsel.statusKlasse, is("oppgave"));
+    }
+
+    private XMLHenvendelse lagXMLHenvendelseMedOppgaveVarsel() {
+        return new XMLHenvendelse()
+                .withBehandlingsId("123999123")
+                .withBehandlingskjedeId("999222333")
+                .withOpprettetDato(DateTime.now())
+                .withTema("dagpenger")
+                .withLestDato(null)
+                .withKorrelasjonsId("a1-b2")
+                .withHenvendelseType(OPPGAVE_VARSEL.value())
+                .withMetadataListe(new XMLMetadataListe().withMetadata(
+                        new XMLOppgaveVarsel()
+                                .withFritekst("fritekst")
+                                .withOppgaveType("min_oppgavetype")
+                                .withOppgaveURL("")
+                                .withStoppRepeterendeVarsel(false)
+                                .withTemagruppe("DAG")));
     }
 
     private XMLHenvendelse createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType type) {
@@ -363,7 +427,7 @@ public class MeldingUtilsTest {
                 .withNavident(NAVIDENT);
     }
 
-    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, String behandlingskjedeId, DateTime opprettetDato, DateTime lestDato, String henvendelseType, String eksternAktor, XMLMetadataListe XMLMetadataListe) {
+    private static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, String behandlingskjedeId, DateTime opprettetDato, DateTime lestDato, String henvendelseType, String eksternAktor, XMLMetadataListe XMLMetadataListe) {
         return new XMLHenvendelse()
                 .withBehandlingsId(behandlingsId)
                 .withBehandlingskjedeId(behandlingskjedeId)
