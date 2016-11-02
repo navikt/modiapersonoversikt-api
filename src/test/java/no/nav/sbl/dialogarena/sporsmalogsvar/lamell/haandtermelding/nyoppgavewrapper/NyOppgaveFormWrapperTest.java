@@ -34,7 +34,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper.GYLDIG_ENHET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper.erGyldigEnhet;
 import static org.apache.wicket.util.tester.WicketTesterHelper.findBehavior;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -123,7 +123,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("99", "nittiNi"));
         enheter.add(createEnhet("100", "hundre"));
         enheter.add(createEnhet("200", "toHundre"));
-        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(GYLDIG_ENHET).collect();
+        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
 
         Assert.assertThat(gyldigeEnheter.size(), is(2));
     }
@@ -136,7 +136,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("111", "avviklet kontor"));
         enheter.add(createEnhet("222", "kontor2 (avviklet)"));
         enheter.add(createEnhet("333", "kontor3"));
-        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(GYLDIG_ENHET).collect();
+        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
 
         Assert.assertThat(gyldigeEnheter.size(), is(1));
     }
@@ -151,7 +151,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("404", "fiktivt kontor 2", 0));
         enheter.add(createEnhet("505", "fiktivt kontor 3", 0));
         enheter.add(createEnhet("606", "stort kontor", 100));
-        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(GYLDIG_ENHET).collect();
+        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
 
         Assert.assertThat(gyldigeEnheter.size(), is(4));
     }

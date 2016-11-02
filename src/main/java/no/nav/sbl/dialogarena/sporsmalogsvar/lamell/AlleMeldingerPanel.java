@@ -98,15 +98,6 @@ public class AlleMeldingerPanel extends Panel {
         });
     }
 
-    private AbstractReadOnlyModel<Boolean> blirBesvart(final String traadId) {
-        return new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return traadId.equals(innboksVM.traadBesvares);
-            }
-        };
-    }
-
     @RunOnEvents({Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
     public void oppdaterMeldingerEtterNyMelding(AjaxRequestTarget target) {
         innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
