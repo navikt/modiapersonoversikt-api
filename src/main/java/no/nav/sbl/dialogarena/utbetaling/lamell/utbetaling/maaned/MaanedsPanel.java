@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.lagVisningUtbetalingsdato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.SISTE_UTBETALING_FORST;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultVisningSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.hentAlleSynligeHovedytelser;
 import static org.joda.time.LocalDate.now;
@@ -23,6 +24,9 @@ public class MaanedsPanel extends Panel {
 
     public MaanedsPanel(String id, List<Hovedutbetaling> hovedutbetalingList) {
         super(id);
+
+        hovedutbetalingList.sort(SISTE_UTBETALING_FORST);
+
         List<Hovedytelse> utbetalingsliste = hentAlleSynligeHovedytelser(hovedutbetalingList);
         add(
                 createOppsummeringsPanel(utbetalingsliste).setVisibilityAllowed(utbetalingsliste.size() > 0),

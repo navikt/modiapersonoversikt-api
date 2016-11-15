@@ -13,7 +13,6 @@ import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.SAMMENLAGT_UTBETALING_TRANSFORMER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
 import static no.nav.sbl.dialogarena.utbetaling.widget.HovedutbetalingVM.TIL_HOVEDUTBETALINGVM;
-import static no.nav.sbl.dialogarena.utbetaling.widget.HovedutbetalingVM.UtbetalingVMComparator;
 
 public class UtbetalingWidget extends AsyncWidget<HovedutbetalingVM> {
 
@@ -29,10 +28,10 @@ public class UtbetalingWidget extends AsyncWidget<HovedutbetalingVM> {
     }
 
     static List<HovedutbetalingVM> transformUtbetalingToVM(List<Hovedutbetaling> utbetalinger) {
+        utbetalinger.sort(SISTE_UTBETALING_FORST);
         return utbetalinger.stream()
                 .filter(betweenNowAndDaysBefore(NUMBER_OF_DAYS_TO_SHOW))
                 .map(TIL_HOVEDUTBETALINGVM)
-                .sorted(new UtbetalingVMComparator())
                 .collect(toList());
     }
 

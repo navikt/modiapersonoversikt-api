@@ -153,6 +153,8 @@ public final class UtbetalingLerret extends Lerret {
         return new ListView<List<Hovedutbetaling>>("maanedsPaneler", new ArrayList<>(yearMonthListMap.values())) {
             @Override
             protected void populateItem(ListItem<List<Hovedutbetaling>> item) {
+
+
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
                 item.add(visibleIf(new Model<>(!hovedutbetalinger.isEmpty())));
             }
