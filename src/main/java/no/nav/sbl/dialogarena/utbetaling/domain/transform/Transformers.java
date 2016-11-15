@@ -70,9 +70,9 @@ public class Transformers {
 
     public static final Function<WSUtbetaling, Hovedutbetaling> SAMMENLAGT_UTBETALING_TRANSFORMER = wsUtbetaling -> new Hovedutbetaling()
             .withId(String.valueOf(createHovedutbetalingId(wsUtbetaling)))
-            .withUtbetaltSum(wsUtbetaling.getUtbetalingNettobeloep())
             .withHovedytelsesdato(determineHovedytelseDato(wsUtbetaling))
             .withHovedytelser(TO_HOVEDYTELSE.apply(wsUtbetaling))
+            .settUtbetaltSum()
             .withUtbetalingStatus(wsUtbetaling.getUtbetalingsstatus())
             .withIsUtbetalt(wsUtbetaling.getUtbetalingsdato() != null);
 

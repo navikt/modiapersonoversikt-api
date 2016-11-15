@@ -45,7 +45,7 @@ public class UtbetalingWidgetPanelTest extends AbstractWicketTest{
                         .withHovedytelser(Collections.singletonList(lagHovedytelse()))
                         .withIsUtbetalt(true)
                         .withUtbetalingStatus("Utbetalt")
-                        .withUtbetaltSum(12345)
+                        .settUtbetaltSum()
         );
     }
 

@@ -40,7 +40,7 @@ public class HovedutbetalingVMTest {
 
         Hovedutbetaling hovedutbetaling = new Hovedutbetaling()
                 .withHovedytelser(singletonList(ytelse))
-                .withUtbetaltSum(belop);
+                .settUtbetaltSum();
 
         HovedutbetalingVM vm = new HovedutbetalingVM(hovedutbetaling);
 
@@ -109,7 +109,7 @@ public class HovedutbetalingVMTest {
                         .withHovedytelser(singletonList(lagHovedytelse(utbetalingsdato)))
                         .withIsUtbetalt(true)
                         .withUtbetalingStatus("Utbetalt")
-                        .withUtbetaltSum(12345)
+                        .settUtbetaltSum()
         );
     }
 

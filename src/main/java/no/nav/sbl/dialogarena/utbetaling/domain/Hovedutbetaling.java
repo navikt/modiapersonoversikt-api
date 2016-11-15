@@ -5,7 +5,9 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collector;
 
+import static java.util.stream.Collectors.summingDouble;
 import static java.util.stream.Collectors.toList;
 
 public class Hovedutbetaling implements Serializable {
@@ -20,9 +22,19 @@ public class Hovedutbetaling implements Serializable {
     private String status;
     private boolean erUtbetalt;
 
+    private static Collector<Double, ?, Double> sumDouble = summingDouble((d) -> d);
 
     public Hovedutbetaling() {
         this.skalVises = true;
+    }
+
+    public Hovedutbetaling settUtbetaltSum() {
+        this.nettoUtbetalt = synligeHovedytelser
+                .stream()
+                .map( hovedytelse -> hovedytelse.getNettoUtbetalt() )
+                .collect(sumDouble);
+
+        return this;
     }
 
     public void skalViseHovedutbetaling(boolean skalVises) {
@@ -48,11 +60,6 @@ public class Hovedutbetaling implements Serializable {
 
     public String getId() {
         return id;
-    }
-
-    public Hovedutbetaling withUtbetaltSum(double nettoUtbetalt) {
-        this.nettoUtbetalt = nettoUtbetalt;
-        return this;
     }
 
     public Hovedutbetaling withHovedytelsesdato(DateTime hovedytelsesdato) {
