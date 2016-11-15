@@ -13,9 +13,8 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
@@ -59,7 +58,13 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe) {
-        return plukkOppgaveFraGsak(temagruppe, ANTALL_PLUKK_FORSOK);
+        Optional<WSOppgave> tilordnetOptional = tildelEldsteIkkeTilordnedeOppgave(temagruppe);
+        if (tilordnetOptional.isSome()) {
+            WSOppgave tilordnet = tilordnetOptional.get();
+            return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
+        } else {
+            return none();
+        }
     }
 
     private Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe, int antallForsokIgjen) {
@@ -179,6 +184,34 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
         }
+    }
+
+    private Optional<WSOppgave> tildelEldsteIkkeTilordnedeOppgave(Temagruppe temagruppe) {
+        WSOppgave oppgave;
+        int enhetsId = Integer.parseInt(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        try {
+            String tildeltOppgaveId = (oppgavebehandlingWS.tildelOppgave(
+                    new WSTildelOppgaveRequest()
+                            .withFilter(new WSTildelOppgaveFilter()
+                                    .withOppgavetypeKodeListe("SPM_OG_SVR")
+                                    .withUnderkategoriKode(underkategoriKode(temagruppe)))
+                            .withSok(new WSTildelOppgaveSok()
+                                    .withAnsvarligEnhetId(enhetFor(temagruppe))
+                                    .withFagomradeKodeListe("KNA"))
+                            .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
+                            .withTildeltAvEnhetId(enhetsId))
+                    .getOppgaveId());
+
+            oppgave = oppgaveWS.hentOppgave(
+                    new WSHentOppgaveRequest()
+                            .withOppgaveId(tildeltOppgaveId))
+                    .getOppgave();
+
+        } catch (TildelOppgaveUgyldigInput | HentOppgaveOppgaveIkkeFunnet exc) {
+            oppgave = null;
+        }
+
+        return optional(oppgave);
     }
 
     private Optional<WSOppgave> finnEldsteIkkeTilordnedeOppgave(Temagruppe temagruppe) {

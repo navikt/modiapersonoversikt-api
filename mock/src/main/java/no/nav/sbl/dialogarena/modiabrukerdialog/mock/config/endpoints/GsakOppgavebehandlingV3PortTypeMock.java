@@ -7,20 +7,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFu
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.SlettMappeMappeIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.SlettMappeMappeIkkeTom;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFeilregistrerOppgaveRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkResponse;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreMappeRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveBolkResponse;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettMappeRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettMappeResponse;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveBolkResponse;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveResponse;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSSlettMappeRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -67,6 +54,11 @@ public class GsakOppgavebehandlingV3PortTypeMock {
             @Override
             public WSOpprettOppgaveResponse opprettOppgave(WSOpprettOppgaveRequest request) {
                 return new WSOpprettOppgaveResponse();
+            }
+
+            @Override
+            public WSTildelOppgaveResponse tildelOppgave(WSTildelOppgaveRequest request) {
+                return new WSTildelOppgaveResponse();
             }
 
             @Override
