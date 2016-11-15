@@ -42,6 +42,7 @@ public class HovedutbetalingPanel extends Panel {
         add(append("aria-describedBy", "skjermleser-hovedutbetaling-" + hovedutbetaling.getId()));
         add(
                 hasCssClassIf("hovedutbetaling-synlig", skalVises),
+                hasCssClassIf("navigerbar-utbetaling", skalVises),
                 hasCssClassIf("hovedutbetaling-skillestrek", either(harSynligeHovedytelser).or(skalVises))
         );
         add(

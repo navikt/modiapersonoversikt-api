@@ -49,7 +49,7 @@ var Utbetalinger = (function () {
     };
 
     var addKeyNavigation = function () {
-        $('.utbetaling-ramme').addKeyNavigation({ itemsSelector: '.utbetalingslinje' });
+        $('.utbetaling-ramme').addKeyNavigation({ itemsSelector: '.navigerbar-utbetaling' });
     };
 
     var init = function () {
