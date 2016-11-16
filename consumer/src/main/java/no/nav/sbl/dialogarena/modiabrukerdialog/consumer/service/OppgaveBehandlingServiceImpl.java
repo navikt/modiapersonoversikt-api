@@ -190,7 +190,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         WSOppgave oppgave;
         int enhetsId = Integer.parseInt(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         try {
-            String tildeltOppgaveId = (oppgavebehandlingWS.tildelOppgave(
+            String tildeltOppgaveId = oppgavebehandlingWS.tildelOppgave(
                     new WSTildelOppgaveRequest()
                             .withFilter(new WSTildelOppgaveFilter()
                                     .withOppgavetypeKodeListe("SPM_OG_SVR")
@@ -200,7 +200,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                     .withFagomradeKodeListe("KNA"))
                             .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
                             .withTildeltAvEnhetId(enhetsId))
-                    .getOppgaveId());
+                    .getOppgaveId();
 
             oppgave = oppgaveWS.hentOppgave(
                     new WSHentOppgaveRequest()
@@ -208,6 +208,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                     .getOppgave();
 
         } catch (TildelOppgaveUgyldigInput | HentOppgaveOppgaveIkkeFunnet exc) {
+
             oppgave = null;
         }
 
