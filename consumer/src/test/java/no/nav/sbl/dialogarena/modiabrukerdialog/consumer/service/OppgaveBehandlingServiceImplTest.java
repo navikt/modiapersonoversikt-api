@@ -88,43 +88,31 @@ public class OppgaveBehandlingServiceImplTest {
         assertThat(request.getEndreOppgave().getAnsvarligId(), is(SubjectHandler.getSubjectHandler().getUid()));
         assertThat(request.getEndretAvEnhetId(), is(DEFAULT_ENHET));
     }
-
-    @Test
-    public void skalPlukkeOppgaveFraGsak() {
-        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
-        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
-
-        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
-        verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(0));
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
-    }
-
-    @Test
-    public void skalPlukkeNyOppgaveHvisTilordningFeiler() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
-        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
-        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
-        doThrow(LagreOppgaveOptimistiskLasing.class).doNothing().when(oppgavebehandlingWS).lagreOppgave(any(WSLagreOppgaveRequest.class));
-
-        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
-        verify(oppgaveWS, times(2)).finnOppgaveListe(any(WSFinnOppgaveListeRequest.class));
-        verify(oppgavebehandlingWS, times(2)).lagreOppgave(any(WSLagreOppgaveRequest.class));
-    }
-
-    @Test
-    public void skalIkkePlukkeEvigOmIngenOppgaverKanTilordnes() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
-        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
-        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
-        doThrow(LagreOppgaveOptimistiskLasing.class).when(oppgavebehandlingWS).lagreOppgave(any(WSLagreOppgaveRequest.class));
-
-        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
-        verify(oppgaveWS, times(ANTALL_PLUKK_FORSOK)).finnOppgaveListe(any(WSFinnOppgaveListeRequest.class));
-        verify(oppgavebehandlingWS, times(ANTALL_PLUKK_FORSOK)).lagreOppgave(any(WSLagreOppgaveRequest.class));
-    }
+//
+//    @Test
+//    public void skalPlukkeOppgaveFraGsak() {
+//        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
+//        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
+//        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
+//
+//        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
+//        verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
+//        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
+//        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(0));
+//        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
+//    }
+//
+//    @Test
+//    public void skalPlukkeNyOppgaveHvisTilordningFeiler() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
+//        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
+//        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
+//        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
+//        doThrow(LagreOppgaveOptimistiskLasing.class).doNothing().when(oppgavebehandlingWS).lagreOppgave(any(WSLagreOppgaveRequest.class));
+//
+//        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
+//        verify(oppgaveWS, times(2)).finnOppgaveListe(any(WSFinnOppgaveListeRequest.class));
+//        verify(oppgavebehandlingWS, times(2)).lagreOppgave(any(WSLagreOppgaveRequest.class));
+//    }
 
     @Test
     public void skalFerdigstilleOppgaveFraGsak() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
