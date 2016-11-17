@@ -199,7 +199,8 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                     .withAnsvarligEnhetId(enhetFor(temagruppe))
                                     .withFagomradeKodeListe("KNA"))
                             .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
-                            .withTildeltAvEnhetId(enhetsId))
+                            .withTildeltAvEnhetId(enhetsId)
+                            .withTildelesSaksbehandlerId(getSubjectHandler().getUid()))
                     .getOppgaveId();
 
             oppgave = oppgaveWS.hentOppgave(
