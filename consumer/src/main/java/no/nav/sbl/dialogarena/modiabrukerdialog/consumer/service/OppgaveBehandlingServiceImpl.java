@@ -25,7 +25,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
@@ -63,24 +62,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         if (tilordnetOptional.isSome()) {
             WSOppgave tilordnet = tilordnetOptional.get();
             return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
-        } else {
-            return none();
-        }
-    }
-
-    private Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe, int antallForsokIgjen) {
-        if (antallForsokIgjen <= 0) {
-            return none();
-        }
-
-        Optional<WSOppgave> oppgave = finnEldsteIkkeTilordnedeOppgave(temagruppe);
-        if (oppgave.isSome()) {
-            try {
-                WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get(), temagruppe);
-                return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
-            } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
-                return plukkOppgaveFraGsak(temagruppe, antallForsokIgjen - 1);
-            }
         } else {
             return none();
         }
@@ -214,25 +195,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
 
         return optional(oppgave);
-    }
-
-    private Optional<WSOppgave> finnEldsteIkkeTilordnedeOppgave(Temagruppe temagruppe) {
-        return on(oppgaveWS.finnOppgaveListe(
-                new WSFinnOppgaveListeRequest()
-                        .withFilter(new WSFinnOppgaveListeFilter()
-                                .withOppgavetypeKodeListe("SPM_OG_SVR")
-                                .withUnderkategoriKode(underkategoriKode(temagruppe))
-                                .withMaxAntallSvar(0)
-                                .withUfordelte(true))
-                        .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligEnhetId(enhetFor(temagruppe))
-                                .withFagomradeKodeListe("KNA"))
-                        .withSorteringKode(new WSFinnOppgaveListeSortering()
-                                .withSorteringKode("STIGENDE")
-                                .withSorteringselementKode("OPPRETTET_DATO"))
-                        .withIkkeTidligereFordeltTil(getSubjectHandler().getUid()))
-                .getOppgaveListe())
-                .head();
     }
 
     private String enhetFor(Temagruppe temagruppe) {
