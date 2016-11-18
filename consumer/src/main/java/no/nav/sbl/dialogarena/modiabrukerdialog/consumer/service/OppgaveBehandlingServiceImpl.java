@@ -192,8 +192,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                     .getOppgave();
 
         } catch (TildelOppgaveUgyldigInput | HentOppgaveOppgaveIkkeFunnet exc) {
-
-            oppgave = null;
+            return none();
         }
 
         return optional(oppgave);
