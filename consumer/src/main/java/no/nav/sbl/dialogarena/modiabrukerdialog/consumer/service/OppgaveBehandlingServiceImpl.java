@@ -38,6 +38,8 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     public static final Integer DEFAULT_ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
+    public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
+    public static final String KONTAKT_NAV = "KNA";
 
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
@@ -174,11 +176,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             String tildeltOppgaveId = oppgavebehandlingWS.tildelOppgave(
                     new WSTildelOppgaveRequest()
                             .withFilter(new WSTildelOppgaveFilter()
-                                    .withOppgavetypeKodeListe("SPM_OG_SVR")
+                                    .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)
                                     .withUnderkategoriKode(underkategoriKode(temagruppe)))
                             .withSok(new WSTildelOppgaveSok()
                                     .withAnsvarligEnhetId(enhetFor(temagruppe))
-                                    .withFagomradeKodeListe("KNA"))
+                                    .withFagomradeKodeListe(KONTAKT_NAV))
                             .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
                             .withTildeltAvEnhetId(enhetsId)
                             .withTildelesSaksbehandlerId(getSubjectHandler().getUid()))
