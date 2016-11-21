@@ -121,7 +121,8 @@ public class HovedutbetalingVMTest {
                         new DateTime().withDate(2015,2,1),
                         new DateTime().withDate(2015,3,1)))
                 .withUtbetaltTilKonto("123")
-                .withUtbetaltTil(new Aktoer().withAktoerId("***REMOVED***"));
+                .withUtbetaltTil(new Aktoer().withAktoerId("***REMOVED***"))
+                .withNettoUtbetalt(123.4);
     }
 
     private Aktoer dummyAktoer() {

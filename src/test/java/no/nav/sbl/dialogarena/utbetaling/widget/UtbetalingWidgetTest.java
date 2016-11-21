@@ -51,7 +51,9 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                                         .withId("1")
                                         .withNettoUtbetalt(0D)
                                         .withUtbetaltTil(dummyAktoer())
-                                        .withHovedytelsedato(now().minusDays(MIDNIGHT_AT_DAY_BEFORE)))),
+                                        .withHovedytelsedato(now().minusDays(MIDNIGHT_AT_DAY_BEFORE))
+                                        .withNettoUtbetalt(123.4)
+                                        .withYtelse("testytelse"))),
                 new Hovedutbetaling()
                         .withId("2")
                         .withHovedytelsesdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE - 1))
@@ -60,8 +62,10 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                                         .withId("2")
                                         .withNettoUtbetalt(0D)
                                         .withUtbetaltTil(dummyAktoer())
-                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE - 1)))),
-                new Hovedutbetaling()
+                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE - 1))
+                                        .withNettoUtbetalt(123.4)
+                                        .withYtelse("testytelse"))),
+        new Hovedutbetaling()
                         .withId("3")
                         .withHovedytelsesdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE))
                         .withHovedytelser(singletonList(
@@ -69,7 +73,9 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                                         .withId("3")
                                         .withNettoUtbetalt(0D)
                                         .withUtbetaltTil(dummyAktoer())
-                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE)))),
+                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE))
+                                        .withNettoUtbetalt(123.4)
+                                        .withYtelse("testytelse"))),
                 new Hovedutbetaling()
                         .withId("4")
                         .withHovedytelsesdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE).toDateMidnight().toDateTime().minusMillis(1))
@@ -78,7 +84,9 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                                         .withId("4")
                                         .withNettoUtbetalt(0D)
                                         .withUtbetaltTil(dummyAktoer())
-                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE).toDateMidnight().toDateTime().minusMillis(1)))),
+                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE).toDateMidnight().toDateTime().minusMillis(1))
+                                        .withNettoUtbetalt(123.4)
+                                        .withYtelse("testytelse"))),
                 new Hovedutbetaling()
                         .withId("5")
                         .withHovedytelsesdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE + 1))
@@ -87,8 +95,10 @@ public class UtbetalingWidgetTest extends AbstractWicketTest {
                                         .withId("5")
                                         .withNettoUtbetalt(0D)
                                         .withUtbetaltTil(dummyAktoer())
-                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE + 1))))
-                        );
+                                        .withHovedytelsedato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW + MIDNIGHT_AT_DAY_BEFORE + 1))
+                                        .withNettoUtbetalt(123.4)
+                                        .withYtelse("testytelse")))
+                );
 
         List<HovedutbetalingVM> hovedutbetalingVMs = UtbetalingWidget.transformUtbetalingToVM(hovedutbetalinger);
 
