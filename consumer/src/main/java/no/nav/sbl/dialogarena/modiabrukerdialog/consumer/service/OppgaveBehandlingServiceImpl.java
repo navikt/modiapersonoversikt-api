@@ -5,6 +5,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -19,6 +20,8 @@ import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -35,6 +38,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
@@ -191,7 +195,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                             .withOppgaveId(tildeltOppgaveId))
                     .getOppgave();
 
-        } catch (TildelOppgaveUgyldigInput | HentOppgaveOppgaveIkkeFunnet exc) {
+        } catch (TildelOppgaveUgyldigInput exc) {
+            logger.warn(exc.getFaultInfo().getErrorMessage());
+            return none();
+        } catch (HentOppgaveOppgaveIkkeFunnet exc) {
+            logger.warn(exc.getFaultInfo().getErrorMessage());
             return none();
         }
 
