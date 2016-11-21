@@ -60,7 +60,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     @Override
     public Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe) {
         int enhetsId = Integer.parseInt(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
-        Optional<WSOppgave> tilordnetOptional = tildelEldsteIkkeTilordnedeOppgave(temagruppe, enhetsId);
+        Optional<WSOppgave> tilordnetOptional = tildelEldsteLedigeOppgave(temagruppe, enhetsId);
         if (tilordnetOptional.isSome()) {
             WSOppgave tilordnet = tilordnetOptional.get();
             return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
@@ -170,7 +170,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
-    private Optional<WSOppgave> tildelEldsteIkkeTilordnedeOppgave(Temagruppe temagruppe, int enhetsId) {
+    private Optional<WSOppgave> tildelEldsteLedigeOppgave(Temagruppe temagruppe, int enhetsId) {
         WSOppgave oppgave;
         try {
             String tildeltOppgaveId = oppgavebehandlingWS.tildelOppgave(
