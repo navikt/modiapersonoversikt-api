@@ -44,6 +44,7 @@ public class UtbetalingPortTypeMock {
         utbetalinger.add(createOsloKommuneUtbetaling());
         utbetalinger.add(createOsloKommuneUtbetalingUtenPeriode());
         utbetalinger.addAll(kariNordmannUtbetaling());
+        utbetalinger.add(utbetalingUtenUtbetalingsdatoOgForfallsdatoIFramtida());
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = object -> periode.contains(object.getPosteringsdato());
@@ -95,6 +96,25 @@ public class UtbetalingPortTypeMock {
                         .withUtbetalingsstatus("Under saksbehandling")
         );
     }
+
+    private static WSUtbetaling utbetalingUtenUtbetalingsdatoOgForfallsdatoIFramtida() {
+        return new WSUtbetaling()
+                        .withPosteringsdato(now().plusDays(30))
+                        .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                        .withUtbetalingNettobeloep(19724.00)
+                        .withUtbetalingsmelding("Alderspensjon som ikke er utbetalt ennå")
+                        .withYtelseListe(
+                                kariNordmannYtelse1(),
+                                kariNordmannYtelse2(),
+                                kariNordmannYtelse3(),
+                                kariNordmannYtelse4())
+                        .withUtbetalingsdato(null)
+                        .withForfallsdato(now().plusDays(10))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype("Konto - Utland"))
+                        .withUtbetalingsmetode("Bankkonto")
+                        .withUtbetalingsstatus("Ligger hos banken");
+    }
+
 
     private static WSYtelse kariNordmannYtelse4() {
         return new WSYtelse()

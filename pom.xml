@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>9.1.3-PROD-SNAPSHOT</version>
+    <version>10.0.14</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -68,12 +68,12 @@
         <common-time.version>2.5</common-time.version>
         <common-collections.version>1.0</common-collections.version>
         <common-integrasjonsutils.version>0.0.7</common-integrasjonsutils.version>
-        <common-cxf.version>3.1.7</common-cxf.version>
+        <common-cxf.version>3.2.18</common-cxf.version>
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>2.7.32-HL2</reactkomponenter.version>
-        <nav-metrics.version>2.0.0</nav-metrics.version>
+        <reactkomponenter.version>2.7.38-HL4</reactkomponenter.version>
+        <nav-metrics.version>3.1.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -94,7 +94,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.2.0</personsok.version>
-        <kjerneinfo.versjon>2.0.2-U42</kjerneinfo.versjon>
+        <kjerneinfo.versjon>3.0.5</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.17</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
@@ -107,18 +107,24 @@
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>5.0.1</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>6.0.2</sporsmalogsvar.version>
-        <saksoversikt.version>6.3</saksoversikt.version>
+        <saksoversikt.version>7.1</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
+        <modiabrukerdialog-api.version>6.0.3</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>6.1.3</sporsmalogsvar.version>
+        <saksoversikt.version>7.0</saksoversikt.version>
+        <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>3.3</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
-        <nav-fellessystemer-environment.version>6.0.3</nav-fellessystemer-environment.version>
+        <nav-fellessystemer-environment.version>8.0.15</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
         <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.4</organisasjonenhet.tjenestespesifikasjon.versjon>
+        <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
     </properties>
@@ -431,6 +437,11 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>varsler</artifactId>
                 <version>${varsling.tjeneste.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl</groupId>
+                <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
+                <version>${brukervarsel.tjeneste.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -1106,7 +1117,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-9.1.2</tag>
+        <tag>modiabrukerdialog-10.0.14</tag>
     </scm>
 
 </project>

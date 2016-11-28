@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.of;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -31,8 +31,8 @@ public class VarslingMockContext {
     public VarslerService varslerService() {
         VarslerService varslerServiceMock = mock(VarslerService.class);
         List<Varsel> varselList = new ArrayList<>();
-        varselList.add(new Varsel("", now(), "", new ArrayList<>()));
-        when(varslerServiceMock.hentAlleVarsler(anyString())).thenReturn(optional(varselList));
+        varselList.add(new Varsel("", now(), new ArrayList<>(), true));
+        when(varslerServiceMock.hentAlleVarsler(anyString())).thenReturn(of(varselList));
         return varslerServiceMock;
     }
 }

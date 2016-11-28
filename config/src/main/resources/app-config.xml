@@ -48,8 +48,8 @@
         <webservice alias="virksomhet:BehandleBrukerprofil_v2" mapToProperty="behandlebrukerprofilendpoint"/>
         <webservice alias="virksomhet:Ytelseskontrakt_v3" mapToProperty="ytelseskontraktendpoint"/>
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>
-        <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
-        <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
+        <webservice alias="virksomhet:foreldrepenger_v2" mapToProperty="foreldrepengerendpoint"/>
+        <webservice alias="virksomhet:sykepenger_v2" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:DigitalKontakinformasjon_v1" mapToProperty="dkifendpoint"/>
         <webservice alias="virksomhet:OrganisasjonEnhet_v1" mapToProperty="norg2.organisasjonenhet.v1"/>
         <webservice alias="Utbetaling_v1" mapToProperty="utbetalingendpoint"/>
@@ -57,7 +57,7 @@
         <webservice alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
         <webservice alias="domene.Brukerdialog:HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
-        <webservice alias="domene.Brukerdialog:Varsler_v1" mapToProperty="varsler.ws"/>
+        <webservice alias="BrukervarselV1" mapToProperty="varsler.ws"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <webservice alias="pensjon:PensjonSak_v1" mapToProperty="pensjon.sak.v1"/>
         <webservice alias="Journal_v2" mapToProperty="journal.v2"/>
