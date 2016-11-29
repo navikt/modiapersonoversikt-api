@@ -13,7 +13,7 @@
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>6.1.4-SNAPSHOT</version>
+    <version>6.1.4-PROD-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
