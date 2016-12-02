@@ -123,7 +123,7 @@
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
-        <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.4</organisasjonenhet.tjenestespesifikasjon.versjon>
+        <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.6</organisasjonenhet.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>

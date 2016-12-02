@@ -3,19 +3,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.norg2;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.HentEnhetBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSKriterier;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
 import org.apache.commons.collections15.Transformer;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -29,6 +25,29 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
 
     @Inject
     private OrganisasjonEnhetV1 enhetWS;
+
+    public List<String> hentArbeidsfordeling(final String enhetId) {
+        WSKriterier kriterier = new WSKriterier().withEnhetId(enhetId);
+        WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
+                .withKriterierListe(kriterier);
+
+        try {
+            final WSFinnArbeidsfordelingForEnhetBolkResponse wsResponse = enhetWS.finnArbeidsfordelingForEnhetBolk(request);
+            return transform(wsResponse);
+        } catch (FinnArbeidsfordelingForEnhetBolkUgyldigInput e) {
+            logger.warn("Kall til OrganisasjonEnhetV1.finnArbeidsfordelingForEnhetBolk() kastet exception " +
+                    "for enhetId=\"" + enhetId + "\".", e);
+            return Collections.emptyList();
+        }
+    }
+
+    private List<String> transform(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
+        return response.getArbeidsfordelingerForEnhetListe().stream()
+                .map(arbeidsfordelingforenhet -> arbeidsfordelingforenhet
+                        .getArbeidsfordelingskriterier()
+                        .getGeografiskNedslagsfelt())
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<AnsattEnhet> hentAlleEnheter() {

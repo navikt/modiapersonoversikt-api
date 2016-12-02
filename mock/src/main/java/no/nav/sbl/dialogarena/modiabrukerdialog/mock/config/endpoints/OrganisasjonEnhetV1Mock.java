@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.*;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSEnheterForGeografiskNedslagsfelt;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +24,18 @@ public class OrganisasjonEnhetV1Mock {
             @Override
             public WSFinnArbeidsfordelingBolkResponse finnArbeidsfordelingBolk(final WSFinnArbeidsfordelingBolkRequest wsFinnArbeidsfordelingBolkRequest) throws FinnArbeidsfordelingBolkUgyldigInput {
                 return null;
+            }
+
+            @Override
+            public WSFinnArbeidsfordelingForEnhetBolkResponse finnArbeidsfordelingForEnhetBolk(WSFinnArbeidsfordelingForEnhetBolkRequest wsFinnArbeidsfordelingForEnhetBolkRequest) throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+                String enhetIdFraRequest = wsFinnArbeidsfordelingForEnhetBolkRequest.getKriterierListe().get(0).getEnhetId();
+                WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
+                        .withEnhetId(enhetIdFraRequest)
+                        .withArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier()
+                                .withGeografiskNedslagsfelt(enhetIdFraRequest));
+                
+                return new WSFinnArbeidsfordelingForEnhetBolkResponse()
+                        .withArbeidsfordelingerForEnhetListe(arbeidsfordelingerForEnhet);
             }
 
             @Override
