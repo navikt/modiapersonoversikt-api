@@ -11,4 +11,6 @@ public interface OrganisasjonEnhetService {
     Optional<AnsattEnhet> hentEnhetGittGeografiskNedslagsfelt(final String geografiskNedslagsfelt);
 
     Optional<AnsattEnhet> hentEnhetGittEnhetId(final String enhetId);
+
+    List<String> hentArbeidsfordeling(final String enhetId);
 }
