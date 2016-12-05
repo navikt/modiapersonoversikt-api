@@ -123,7 +123,7 @@ public class OrganisasjonEnhetServiceImplTest {
         WSKriterier kriterier = new WSKriterier().withEnhetId(SAKSBEHANDLERS_VALGTE_ENHET);
         WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
                 .withKriterierListe(kriterier);
-        WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse = createMockArbeidsfordelingForEnhetResponse();
+        WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse = createMockArbeidsfordelingForEnhet();
         when(enhetWS.finnArbeidsfordelingForEnhetBolk(request)).thenReturn(mockResponse);
 
         final List<String> geografiskeNedslagsfelt = organisasjonEnhetServiceImpl.hentArbeidsfordeling(SAKSBEHANDLERS_VALGTE_ENHET);
@@ -132,21 +132,45 @@ public class OrganisasjonEnhetServiceImplTest {
         assertThat(geografiskeNedslagsfelt, containsInAnyOrder("1802", "1800", "1801"));
     }
 
-    private WSFinnArbeidsfordelingForEnhetBolkResponse createMockArbeidsfordelingForEnhetResponse() {
-        return new WSFinnArbeidsfordelingForEnhetBolkResponse()
-                .withArbeidsfordelingerForEnhetListe(
-                        getMockArbeidsfordelingForEnhet("1800", "BIL"),
-                        getMockArbeidsfordelingForEnhet("1801", "BIL"),
-                        getMockArbeidsfordelingForEnhet("1802", "BIL"));
+    public void hentArbeidsfordelingSkalFiltrereBortArbeidsfordelingUtenGeografiskNedslagsfelt() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+        WSKriterier kriterier = new WSKriterier().withEnhetId(SAKSBEHANDLERS_VALGTE_ENHET);
+        WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
+                .withKriterierListe(kriterier);
+        WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse = createMockArbeidsfordelingWithOneMissingGeografiskNedslagsfelt();
+        when(enhetWS.finnArbeidsfordelingForEnhetBolk(request)).thenReturn(mockResponse);
+
+        final List<String> geografiskeNedslagsfelt = organisasjonEnhetServiceImpl.hentArbeidsfordeling(SAKSBEHANDLERS_VALGTE_ENHET);
+
+        assertThat(geografiskeNedslagsfelt.size(), is(3));
+        assertThat(geografiskeNedslagsfelt, containsInAnyOrder("1802", "1800", "1801"));
     }
 
-    private WSArbeidsfordelingerForEnhet getMockArbeidsfordelingForEnhet(String enhetId, String arkivTema) {
-        WSArbeidsfordelingskriterier arbeidsfordelingskriterier = new WSArbeidsfordelingskriterier()
-                .withGeografiskNedslagsfelt(enhetId)
-                .withArkivtema(new WSArkivtemaer().withValue(arkivTema));
+    private WSFinnArbeidsfordelingForEnhetBolkResponse createMockArbeidsfordelingWithOneMissingGeografiskNedslagsfelt() {
+        WSArbeidsfordelingskriterier kriterie = new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1337");
+        WSArbeidsfordelingskriterier kriterieUtenGeografiskNedslagsfelt = new WSArbeidsfordelingskriterier()
+                .withArkivtema(new WSArkivtemaer().withValue("BIL"));
+        WSArbeidsfordeling arbeidsfordeling1 = new WSArbeidsfordeling().withUnderliggendeArbeidsfordelingskriterier(kriterie);
+        WSArbeidsfordeling arbeidsfordeling2 = new WSArbeidsfordeling().withUnderliggendeArbeidsfordelingskriterier(kriterieUtenGeografiskNedslagsfelt);
 
-        return new WSArbeidsfordelingerForEnhet()
-                .withEnhetId(SAKSBEHANDLERS_VALGTE_ENHET)
-                .withArbeidsfordelingskriterier(arbeidsfordelingskriterier);
+        WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
+                .withArbeidsfordelingListe(arbeidsfordeling1, arbeidsfordeling2);
+
+        return new WSFinnArbeidsfordelingForEnhetBolkResponse()
+                .withArbeidsfordelingerForEnhetListe(arbeidsfordelingerForEnhet);
+    }
+
+    private WSFinnArbeidsfordelingForEnhetBolkResponse createMockArbeidsfordelingForEnhet() {
+        WSArbeidsfordeling geografiskNedslagsfelt1 = new WSArbeidsfordeling()
+                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1800"));
+        WSArbeidsfordeling geografiskNedslagsfelt2 = new WSArbeidsfordeling()
+                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1801"));
+        WSArbeidsfordeling geografiskNedslagsfelt3 = new WSArbeidsfordeling()
+                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1802"));
+
+        WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
+                .withArbeidsfordelingListe(geografiskNedslagsfelt1, geografiskNedslagsfelt2, geografiskNedslagsfelt3);
+
+        return new WSFinnArbeidsfordelingForEnhetBolkResponse()
+                .withArbeidsfordelingerForEnhetListe(arbeidsfordelingerForEnhet);
     }
 }

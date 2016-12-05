@@ -3,25 +3,19 @@ package no.nav.sbl.modiabrukerdialog.pip.geografisk.support;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * Delegate that retrieves enhet information from NORG and NAVAnsatt services.
- */
 public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocatorDelegate {
 
     private static Logger logger = LoggerFactory.getLogger(EnhetAttributeLocator.class);
@@ -29,9 +23,19 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
     private GOSYSNAVansatt ansattService;
     @Inject
     private GOSYSNAVOrgEnhet enhetService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private OrganisasjonEnhetService orgEnhetService;
 
 
     public DefaultEnhetAttributeLocatorDelegate() {
+    }
+
+    @Override
+    public Set<String> getArbeidsfordelingForValgtEnhet(){
+        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        return new HashSet<>(orgEnhetService.hentArbeidsfordeling(valgtEnhet));
     }
 
     /**

@@ -8,6 +8,7 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEn
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSKriterier;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -43,9 +44,15 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
 
     private List<String> transform(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
         return response.getArbeidsfordelingerForEnhetListe().stream()
-                .map(arbeidsfordelingforenhet -> arbeidsfordelingforenhet
-                        .getArbeidsfordelingskriterier()
-                        .getGeografiskNedslagsfelt())
+                .flatMap(arbeidsfordelingforenhet -> arbeidsfordelingforenhet
+                        .getArbeidsfordelingListe()
+                        .stream()
+                        .filter(kriterie -> StringUtils.isNotEmpty(kriterie
+                                .getUnderliggendeArbeidsfordelingskriterier()
+                                .getGeografiskNedslagsfelt()))
+                        .map(kriterie->  kriterie
+                                .getUnderliggendeArbeidsfordelingskriterier()
+                                .getGeografiskNedslagsfelt()))
                 .collect(Collectors.toList());
     }
 

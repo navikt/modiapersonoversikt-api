@@ -5,9 +5,7 @@ import no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator;
 import org.jboss.security.xacml.interfaces.XACMLConstants;
 import org.jboss.security.xacml.locators.AttributeLocator;
 import org.jboss.security.xacml.sunxacml.EvaluationCtx;
-import org.jboss.security.xacml.sunxacml.attr.AttributeDesignator;
-import org.jboss.security.xacml.sunxacml.attr.AttributeValue;
-import org.jboss.security.xacml.sunxacml.attr.BagAttribute;
+import org.jboss.security.xacml.sunxacml.attr.*;
 import org.jboss.security.xacml.sunxacml.cond.EvaluationResult;
 import org.jboss.security.xacml.util.JBossXACMLUtil;
 
@@ -15,9 +13,6 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Mock LDAP Role attribute locator.
- */
 public class MockAttributeLocator extends AttributeLocator {
 
 	private static final URI STRING_TYPE = URI.create("http://www.w3.org/2001/XMLSchema#string");
@@ -29,8 +24,8 @@ public class MockAttributeLocator extends AttributeLocator {
 		this.attributeSelectorSupported = true;
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET);
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET);
+		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT);
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_ROLLE);
-
 
 		this.designatorTypes.add(0);
 	}
@@ -53,6 +48,8 @@ public class MockAttributeLocator extends AttributeLocator {
 			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET)) {
 				addEnhetValue(subjectId, values);
 			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET)) {
+				addEnhetValue(subjectId, values);
+			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT)){
 				addEnhetValue(subjectId, values);
 			}
 		}

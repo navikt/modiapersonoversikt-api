@@ -29,6 +29,18 @@
         </Condition>
     </Rule>
 
+    <Rule RuleId="valgt-enhet-har-geografisk-nedslagsfelt" Effect="Permit">
+        <Description>Gi tilgang hvis saksbehandlers valgte enhet har geografisk nedslagsfelt for brukers lokalenhet.</Description>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                    <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"/>
+                </Apply>
+                <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:subject:geografisk-nedslagsfelt"/>
+            </Apply>
+        </Condition>
+    </Rule>
+
     <Rule RuleId="ident-har-nasjonal-tilgang" Effect="Permit">
         <Description>Gi tilgang hvis saksbehandler har nasjonal rolle.</Description>
         <Condition>
