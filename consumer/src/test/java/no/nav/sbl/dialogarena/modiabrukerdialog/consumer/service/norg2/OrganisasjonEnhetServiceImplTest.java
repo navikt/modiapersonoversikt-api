@@ -146,6 +146,22 @@ public class OrganisasjonEnhetServiceImplTest {
         assertThat(geografiskeNedslagsfelt, containsInAnyOrder("1337"));
     }
 
+    @Test
+    public void hentArbeidsfordelingForIkkeEksisterendeEnhetSkalReturnereTomListe() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+        String ikkeEksisterendeEnhet = "6666";
+        WSKriterier kriterier = new WSKriterier().withEnhetId(ikkeEksisterendeEnhet);
+        WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
+                .withKriterierListe(kriterier);
+        WSFeiletEnhet feiletEnhet = new WSFeiletEnhet().withEnhetId(ikkeEksisterendeEnhet).withFeilmelding("Ingen enhet");
+        WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse =  new WSFinnArbeidsfordelingForEnhetBolkResponse()
+                .withFeiletEnhetListe(feiletEnhet);
+        when(enhetWS.finnArbeidsfordelingForEnhetBolk(request)).thenReturn(mockResponse);
+
+        final List<String> geografiskeNedslagsfelt = organisasjonEnhetServiceImpl.hentArbeidsfordeling(ikkeEksisterendeEnhet);
+
+        assertThat(geografiskeNedslagsfelt.isEmpty(), is(true));
+    }
+
     private WSFinnArbeidsfordelingForEnhetBolkResponse createMockArbeidsfordelingWithOneMissingGeografiskNedslagsfelt() {
         WSArbeidsfordelingskriterier kriterie = new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1337");
         WSArbeidsfordelingskriterier kriterieUtenGeografiskNedslagsfelt = new WSArbeidsfordelingskriterier()
