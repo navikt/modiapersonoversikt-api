@@ -132,6 +132,7 @@ public class OrganisasjonEnhetServiceImplTest {
         assertThat(geografiskeNedslagsfelt, containsInAnyOrder("1802", "1800", "1801"));
     }
 
+    @Test
     public void hentArbeidsfordelingSkalFiltrereBortArbeidsfordelingUtenGeografiskNedslagsfelt() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
         WSKriterier kriterier = new WSKriterier().withEnhetId(SAKSBEHANDLERS_VALGTE_ENHET);
         WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
@@ -141,8 +142,8 @@ public class OrganisasjonEnhetServiceImplTest {
 
         final List<String> geografiskeNedslagsfelt = organisasjonEnhetServiceImpl.hentArbeidsfordeling(SAKSBEHANDLERS_VALGTE_ENHET);
 
-        assertThat(geografiskeNedslagsfelt.size(), is(3));
-        assertThat(geografiskeNedslagsfelt, containsInAnyOrder("1802", "1800", "1801"));
+        assertThat(geografiskeNedslagsfelt.size(), is(1));
+        assertThat(geografiskeNedslagsfelt, containsInAnyOrder("1337"));
     }
 
     private WSFinnArbeidsfordelingForEnhetBolkResponse createMockArbeidsfordelingWithOneMissingGeografiskNedslagsfelt() {
