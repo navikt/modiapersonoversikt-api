@@ -28,7 +28,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
     private static final String ANSATT_ID = "Z900001";
     private static final String LOKAL_ENHET_ID = "1222";
     private static final String FYLKES_ENHET_ID = "1111";
-    private static final String ENHET_ID_I_SAMME_FYLE = "1333";
+    private static final String ENHET_ID_I_SAMME_FYLKE = "1333";
     private static final String ENHET_ID_I_ANNET_FYLKE = "2525";
     private static final String VALGT_ENHET = "1333";
 
@@ -67,7 +67,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
     public void getFylkesenheterForReelAnsatt() throws Exception {
         when(ansattService.hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(getEnhetList(LOKAL_ENHET_ID));
         when(enhetService.hentNAVEnhetListe(any(ASBOGOSYSHentNAVEnhetListeRequest.class))).thenReturn(getEnhetList(FYLKES_ENHET_ID));
-        when(enhetService.hentNAVEnhetGruppeListe(any(ASBOGOSYSNavEnhet.class))).thenReturn(getEnhetList(ENHET_ID_I_SAMME_FYLE));
+        when(enhetService.hentNAVEnhetGruppeListe(any(ASBOGOSYSNavEnhet.class))).thenReturn(getEnhetList(ENHET_ID_I_SAMME_FYLKE));
 
         Set<String> values = delegate.getFylkesenheterForAnsatt(ANSATT_ID);
         assertThat(values.size(), is(3));
@@ -78,7 +78,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
         ASBOGOSYSNAVEnhetListe enhetListe = getEnhetList(LOKAL_ENHET_ID);
         enhetListe.getNAVEnheter().get(0).setOrgNivaKode("SPESEN");
         when(ansattService.hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(enhetListe);
-        when(enhetService.hentNAVEnhetGruppeListe(any(ASBOGOSYSNavEnhet.class))).thenReturn(getEnhetList(ENHET_ID_I_SAMME_FYLE));
+        when(enhetService.hentNAVEnhetGruppeListe(any(ASBOGOSYSNavEnhet.class))).thenReturn(getEnhetList(ENHET_ID_I_SAMME_FYLKE));
 
         Set<String> values = delegate.getFylkesenheterForAnsatt(ANSATT_ID);
         assertThat("Should not contain fylkesenhet", values.size(), is(2));
@@ -101,7 +101,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
     @Test
     public void getArbeidsfordelingForValgtEnhet() {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
-        when(orgEnhetservice.hentArbeidsfordeling(VALGT_ENHET)).thenReturn(getArbeidsfordeling(ENHET_ID_I_SAMME_FYLE, ENHET_ID_I_ANNET_FYLKE));
+        when(orgEnhetservice.hentArbeidsfordeling(VALGT_ENHET)).thenReturn(getArbeidsfordeling(ENHET_ID_I_SAMME_FYLKE, ENHET_ID_I_ANNET_FYLKE));
         Set<String> values = delegate.getArbeidsfordelingForValgtEnhet();
         assertThat(values.size(), is(2));
     }
