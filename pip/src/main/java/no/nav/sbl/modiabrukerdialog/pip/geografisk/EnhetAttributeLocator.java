@@ -1,5 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pip.geografisk;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.support.EnhetAttributeLocatorDelegate;
 import org.jboss.security.xacml.interfaces.XACMLConstants;
 import org.jboss.security.xacml.locators.AttributeLocator;
@@ -55,10 +56,20 @@ public class EnhetAttributeLocator extends AttributeLocator {
         } else if (attributeId.equals(ATTRIBUTEID_FYLKESENHET)) {
             values = convertSet(delegate.getFylkesenheterForAnsatt(subjectId));
         } else if (attributeId.equals(ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT)) {
-            values = convertSet(delegate.getArbeidsfordelingForValgtEnhet());
+            Set<String> geografiskeNedslagsfelt = getGeografiskeNedslagsfelt();
+            values = convertSet(geografiskeNedslagsfelt);
         }
 
         return new EvaluationResult(new BagAttribute(attributeType, values));
+    }
+
+    private Set<String> getGeografiskeNedslagsfelt() {
+        return delegate.getArbeidsfordelingForValgtEnhet()
+                        .stream()
+                        .map(Arbeidsfordeling::getGeografiskNedslagsfelt)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toSet());
     }
 
     private Set<AttributeValue> convertSet(Set<String> inputSet) {

@@ -5,6 +5,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.*;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.GeografiskPipConfig;
@@ -102,12 +103,15 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
     public void getArbeidsfordelingForValgtEnhet() {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(orgEnhetservice.hentArbeidsfordeling(VALGT_ENHET)).thenReturn(getArbeidsfordeling(ENHET_ID_I_SAMME_FYLKE, ENHET_ID_I_ANNET_FYLKE));
-        Set<String> values = delegate.getArbeidsfordelingForValgtEnhet();
+        Set<Arbeidsfordeling> values = delegate.getArbeidsfordelingForValgtEnhet();
         assertThat(values.size(), is(2));
     }
 
-    private List<String> getArbeidsfordeling(String... enheter) {
-        return Arrays.stream(enheter).collect(Collectors.toList());
+    private List<Arbeidsfordeling> getArbeidsfordeling(String... enheter) {
+        String arkivTema = null;
+        return Arrays.stream(enheter)
+                .map(enhetId -> new Arbeidsfordeling(enhetId, arkivTema))
+                .collect(Collectors.toList());
     }
 
     private ASBOGOSYSNavEnhet getEnhet(String enhetId) {

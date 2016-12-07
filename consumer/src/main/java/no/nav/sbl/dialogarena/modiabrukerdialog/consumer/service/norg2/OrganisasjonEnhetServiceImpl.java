@@ -2,13 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.norg2;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.*;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSKriterier;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
 import org.apache.commons.collections15.Transformer;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -27,14 +26,15 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
     @Inject
     private OrganisasjonEnhetV1 enhetWS;
 
-    public List<String> hentArbeidsfordeling(final String enhetId) {
+    @Override
+    public List<Arbeidsfordeling> hentArbeidsfordeling(final String enhetId) {
         WSKriterier kriterier = new WSKriterier().withEnhetId(enhetId);
         WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
                 .withKriterierListe(kriterier);
 
         try {
             final WSFinnArbeidsfordelingForEnhetBolkResponse wsResponse = enhetWS.finnArbeidsfordelingForEnhetBolk(request);
-            return transform(wsResponse);
+            return extractArbeidsfordelinger(wsResponse);
         } catch (FinnArbeidsfordelingForEnhetBolkUgyldigInput e) {
             logger.warn("Kall til OrganisasjonEnhetV1.finnArbeidsfordelingForEnhetBolk() kastet exception " +
                     "for enhetId=\"" + enhetId + "\".", e);
@@ -42,18 +42,19 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
         }
     }
 
-    private List<String> transform(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
-        return response.getArbeidsfordelingerForEnhetListe().stream()
-                .flatMap(arbeidsfordelingforenhet -> arbeidsfordelingforenhet
+    private List<Arbeidsfordeling> extractArbeidsfordelinger(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
+        List<WSArbeidsfordelingskriterier> wsArbeidsfordelingskriterier = response.getArbeidsfordelingerForEnhetListe()
+                .stream()
+                .flatMap(arbeidsfordelingForEnhet -> arbeidsfordelingForEnhet
                         .getArbeidsfordelingListe()
                         .stream()
-                        .filter(kriterie -> StringUtils.isNotEmpty(kriterie
-                                .getUnderliggendeArbeidsfordelingskriterier()
-                                .getGeografiskNedslagsfelt()))
-                        .map(kriterie->  kriterie
-                                .getUnderliggendeArbeidsfordelingskriterier()
-                                .getGeografiskNedslagsfelt()))
+                        .map(WSArbeidsfordeling::getUnderliggendeArbeidsfordelingskriterier))
                 .collect(Collectors.toList());
+
+       return wsArbeidsfordelingskriterier
+               .stream()
+               .map(TIL_ARBEIDSFORDELING::transform)
+               .collect(Collectors.toList());
     }
 
     @Override
@@ -111,4 +112,7 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
 
     private static final Transformer<WSDetaljertEnhet, AnsattEnhet> TIL_ANSATTENHET =
             respons -> new AnsattEnhet(respons.getEnhetId(), respons.getNavn(), respons.getAntallRessurser());
+
+    private static final Transformer<WSArbeidsfordelingskriterier, Arbeidsfordeling> TIL_ARBEIDSFORDELING =
+            wsArbeidsfordelingskriterier -> new Arbeidsfordeling(wsArbeidsfordelingskriterier.getGeografiskNedslagsfelt(), wsArbeidsfordelingskriterier.getArkivtema().getKodeRef());
 }

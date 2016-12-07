@@ -1,5 +1,7 @@
 package no.nav.sbl.modiabrukerdialog.pip.geografisk.support;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
+
 import java.util.Set;
 
 public interface EnhetAttributeLocatorDelegate {
@@ -8,5 +10,5 @@ public interface EnhetAttributeLocatorDelegate {
 
 	Set<String> getLokalEnheterForAnsatt(String ansattId);
 
-	Set<String> getArbeidsfordelingForValgtEnhet();
+	Set<Arbeidsfordeling> getArbeidsfordelingForValgtEnhet();
 }
