@@ -34,7 +34,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
     }
 
     @Override
-    public Set<Arbeidsfordeling> getArbeidsfordelingForValgtEnhet(){
+    public Set<Arbeidsfordeling> getArbeidsfordelingForValgtEnhet() {
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
         return new HashSet<>(orgEnhetService.hentArbeidsfordeling(valgtEnhet));
     }

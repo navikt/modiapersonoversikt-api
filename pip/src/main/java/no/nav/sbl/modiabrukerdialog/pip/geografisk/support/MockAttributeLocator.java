@@ -49,7 +49,7 @@ public class MockAttributeLocator extends AttributeLocator {
 				addEnhetValue(subjectId, values);
 			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET)) {
 				addEnhetValue(subjectId, values);
-			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT)){
+			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT)) {
 				addEnhetValue(subjectId, values);
 			}
 		}
