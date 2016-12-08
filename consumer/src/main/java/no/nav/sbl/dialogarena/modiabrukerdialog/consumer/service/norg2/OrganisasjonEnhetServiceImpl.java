@@ -35,7 +35,7 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
 
         try {
             final WSFinnArbeidsfordelingForEnhetBolkResponse wsResponse = enhetWS.finnArbeidsfordelingForEnhetBolk(request);
-            return extractArbeidsfordelinger(wsResponse);
+            return getArbeidsfordelinger(wsResponse);
         } catch (FinnArbeidsfordelingForEnhetBolkUgyldigInput e) {
             logger.warn("Kall til OrganisasjonEnhetV1.finnArbeidsfordelingForEnhetBolk() kastet exception " +
                     "for enhetId=\"" + enhetId + "\".", e);
@@ -43,18 +43,27 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
         }
     }
 
-    private List<Arbeidsfordeling> extractArbeidsfordelinger(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
-        Stream<WSArbeidsfordelingskriterier> wsArbeidsfordelingskriterier = response.getArbeidsfordelingerForEnhetListe()
-                .stream()
-                .flatMap(arbeidsfordelingForEnhet -> arbeidsfordelingForEnhet
-                        .getArbeidsfordelingListe()
-                        .stream()
-                        .map(WSArbeidsfordeling::getUnderliggendeArbeidsfordelingskriterier));
-
-       return wsArbeidsfordelingskriterier
-               .map(TIL_ARBEIDSFORDELING::transform)
-               .collect(Collectors.toList());
+    private List<Arbeidsfordeling> getArbeidsfordelinger(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
+        Stream<WSArbeidsfordelingskriterier> wsArbeidsfordelingskriterier = getWsArbeidsfordelingskriterier(response);
+        return mapToArbeidsfordeling(wsArbeidsfordelingskriterier);
     }
+
+    private Stream<WSArbeidsfordelingskriterier> getWsArbeidsfordelingskriterier(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
+        Stream<WSArbeidsfordeling> arbeidsfordelinger= response.getArbeidsfordelingerForEnhetListe()
+                .stream()
+                .flatMap(arbeidsfordelingForEnhet -> arbeidsfordelingForEnhet.getArbeidsfordelingListe().stream());
+
+        return arbeidsfordelinger.map(WSArbeidsfordeling::getUnderliggendeArbeidsfordelingskriterier);
+    }
+
+    private List<Arbeidsfordeling> mapToArbeidsfordeling(Stream<WSArbeidsfordelingskriterier> wsArbeidsfordelingskriterier) {
+        return wsArbeidsfordelingskriterier
+                .map(TIL_ARBEIDSFORDELING::transform)
+                .collect(Collectors.toList());
+    }
+
+    private static final Transformer<WSArbeidsfordelingskriterier, Arbeidsfordeling> TIL_ARBEIDSFORDELING =
+            wsArbeidsfordelingskriterier -> new Arbeidsfordeling(wsArbeidsfordelingskriterier.getGeografiskNedslagsfelt(), wsArbeidsfordelingskriterier.getArkivtema().getKodeRef());
 
     @Override
     public List<AnsattEnhet> hentAlleEnheter() {
@@ -112,6 +121,4 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
     private static final Transformer<WSDetaljertEnhet, AnsattEnhet> TIL_ANSATTENHET =
             respons -> new AnsattEnhet(respons.getEnhetId(), respons.getNavn(), respons.getAntallRessurser());
 
-    private static final Transformer<WSArbeidsfordelingskriterier, Arbeidsfordeling> TIL_ARBEIDSFORDELING =
-            wsArbeidsfordelingskriterier -> new Arbeidsfordeling(wsArbeidsfordelingskriterier.getGeografiskNedslagsfelt(), wsArbeidsfordelingskriterier.getArkivtema().getKodeRef());
 }
