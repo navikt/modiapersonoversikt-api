@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
@@ -43,16 +44,14 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
     }
 
     private List<Arbeidsfordeling> extractArbeidsfordelinger(WSFinnArbeidsfordelingForEnhetBolkResponse response) {
-        List<WSArbeidsfordelingskriterier> wsArbeidsfordelingskriterier = response.getArbeidsfordelingerForEnhetListe()
+        Stream<WSArbeidsfordelingskriterier> wsArbeidsfordelingskriterier = response.getArbeidsfordelingerForEnhetListe()
                 .stream()
                 .flatMap(arbeidsfordelingForEnhet -> arbeidsfordelingForEnhet
                         .getArbeidsfordelingListe()
                         .stream()
-                        .map(WSArbeidsfordeling::getUnderliggendeArbeidsfordelingskriterier))
-                .collect(Collectors.toList());
+                        .map(WSArbeidsfordeling::getUnderliggendeArbeidsfordelingskriterier));
 
        return wsArbeidsfordelingskriterier
-               .stream()
                .map(TIL_ARBEIDSFORDELING::transform)
                .collect(Collectors.toList());
     }

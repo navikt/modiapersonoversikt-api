@@ -146,50 +146,57 @@ public class OrganisasjonEnhetServiceImplTest {
 
     @Test
     public void hentArbeidsfordelingForIkkeEksisterendeEnhetSkalReturnereTomListe() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
-        String ikkeEksisterendeEnhet = "6666";
-        WSKriterier kriterier = new WSKriterier().withEnhetId(ikkeEksisterendeEnhet);
+        String ikkeEksisterendeEnhetId = "6666";
+        WSKriterier kriterier = new WSKriterier().withEnhetId(ikkeEksisterendeEnhetId);
         WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
                 .withKriterierListe(kriterier);
-        WSFeiletEnhet feiletEnhet = new WSFeiletEnhet().withEnhetId(ikkeEksisterendeEnhet).withFeilmelding("Ingen enhet");
+        WSFeiletEnhet feiletEnhet = new WSFeiletEnhet().withEnhetId(ikkeEksisterendeEnhetId).withFeilmelding("Ingen enhet");
         WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse =  new WSFinnArbeidsfordelingForEnhetBolkResponse()
                 .withFeiletEnhetListe(feiletEnhet);
         when(enhetWS.finnArbeidsfordelingForEnhetBolk(request)).thenReturn(mockResponse);
 
-        final List<Arbeidsfordeling> arbeidsfordelinger = organisasjonEnhetServiceImpl.hentArbeidsfordeling(ikkeEksisterendeEnhet);
+        final List<Arbeidsfordeling> arbeidsfordelinger = organisasjonEnhetServiceImpl.hentArbeidsfordeling(ikkeEksisterendeEnhetId);
+
+        assertThat(arbeidsfordelinger.isEmpty(), is(true));
+    }
+
+    @Test
+    public void hentArbeidsfordelingMedUgyldigInputReturnererTomListe() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+        when(enhetWS.finnArbeidsfordelingForEnhetBolk(any())).thenThrow(new FinnArbeidsfordelingForEnhetBolkUgyldigInput());
+
+        List<Arbeidsfordeling> arbeidsfordelinger = organisasjonEnhetServiceImpl.hentArbeidsfordeling(null);
 
         assertThat(arbeidsfordelinger.isEmpty(), is(true));
     }
 
     private WSFinnArbeidsfordelingForEnhetBolkResponse createWSArbeidsfordelingWithOneMissingGeografiskNedslagsfelt() {
-        WSArkivtemaer arkivTeama = new WSArkivtemaer().withValue("BIL");
-        WSArbeidsfordelingskriterier kriterie = new WSArbeidsfordelingskriterier()
-                .withGeografiskNedslagsfelt("1337")
-                .withArkivtema(arkivTeama);
-        WSArbeidsfordelingskriterier arbeidsfordelingUtenGeografiskNedslagsfelt = new WSArbeidsfordelingskriterier()
-                .withArkivtema(arkivTeama);
-        WSArbeidsfordeling arbeidsfordeling1 = new WSArbeidsfordeling().withUnderliggendeArbeidsfordelingskriterier(kriterie);
-        WSArbeidsfordeling arbeidsfordeling2 = new WSArbeidsfordeling().withUnderliggendeArbeidsfordelingskriterier(arbeidsfordelingUtenGeografiskNedslagsfelt);
+        WSArbeidsfordeling arbeidsfordeling = createArbeidsfordeling("1337", "BIL");
+        WSArbeidsfordeling arbeidsfordelingUtenGeografiskNedslagsfelt = createArbeidsfordeling(null, "BIL");
 
         WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
-                .withArbeidsfordelingListe(arbeidsfordeling1, arbeidsfordeling2);
+                .withArbeidsfordelingListe(arbeidsfordeling, arbeidsfordelingUtenGeografiskNedslagsfelt);
 
         return new WSFinnArbeidsfordelingForEnhetBolkResponse()
                 .withArbeidsfordelingerForEnhetListe(arbeidsfordelingerForEnhet);
     }
 
     private WSFinnArbeidsfordelingForEnhetBolkResponse createMockArbeidsfordelingForEnhet() {
-        WSArkivtemaer  arkivTema = new WSArkivtemaer().withValue("BIL");
-        WSArbeidsfordeling arbeidsfordeling1 = new WSArbeidsfordeling()
-                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1800").withArkivtema(arkivTema));
-        WSArbeidsfordeling arbeidsfordeling2 = new WSArbeidsfordeling()
-                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1801").withArkivtema(arkivTema));
-        WSArbeidsfordeling arbeidsfordeling3 = new WSArbeidsfordeling()
-                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier().withGeografiskNedslagsfelt("1802").withArkivtema(arkivTema));
+        String arkivtema = "BIL";
+        WSArbeidsfordeling arbeidsfordeling1 = createArbeidsfordeling("1800", arkivtema);
+        WSArbeidsfordeling arbeidsfordeling2 = createArbeidsfordeling("1801", arkivtema);
+        WSArbeidsfordeling arbeidsfordeling3 = createArbeidsfordeling("1802", arkivtema);
 
         WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
                 .withArbeidsfordelingListe(arbeidsfordeling1, arbeidsfordeling2, arbeidsfordeling3);
 
         return new WSFinnArbeidsfordelingForEnhetBolkResponse()
                 .withArbeidsfordelingerForEnhetListe(arbeidsfordelingerForEnhet);
+    }
+
+    private WSArbeidsfordeling createArbeidsfordeling(String geografiskNedslagsfelt, String arkivtema) {
+        return new WSArbeidsfordeling()
+                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier()
+                        .withGeografiskNedslagsfelt(geografiskNedslagsfelt)
+                        .withArkivtema(new WSArkivtemaer().withKodeRef(arkivtema)));
     }
 }
