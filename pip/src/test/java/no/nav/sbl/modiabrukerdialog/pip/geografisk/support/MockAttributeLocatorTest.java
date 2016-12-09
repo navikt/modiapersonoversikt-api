@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.net.URI;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -58,20 +59,27 @@ public class MockAttributeLocatorTest {
 	public void testFindAttribute() throws Exception {
 		when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID2)));
 		EvaluationResult result = mockAttributeLocator.findAttribute(EnhetAttributeLocator.STRING_TYPE, EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET, null, EnhetAttributeLocator.SUBJECT_CATEGORY, context, 0);
-		assertTrue(!((BagAttribute) result.getAttributeValue()).isEmpty());
+		assertFalse(((BagAttribute) result.getAttributeValue()).isEmpty());
 	}
 
 	@Test
 	public void testFindAttributeFylkesenhet() throws Exception {
 		when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID3)));
 		EvaluationResult result = mockAttributeLocator.findAttribute(EnhetAttributeLocator.STRING_TYPE, EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET, null, EnhetAttributeLocator.SUBJECT_CATEGORY, context, 0);
-		assertTrue(!((BagAttribute) result.getAttributeValue()).isEmpty());
+		assertFalse(((BagAttribute) result.getAttributeValue()).isEmpty());
+	}
+
+	@Test
+	public void testFindAttributeGeografiskNedslagsfelt() throws Exception {
+		when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID3)));
+		EvaluationResult result = mockAttributeLocator.findAttribute(EnhetAttributeLocator.STRING_TYPE, EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT, null, EnhetAttributeLocator.SUBJECT_CATEGORY, context, 0);
+		assertFalse(((BagAttribute) result.getAttributeValue()).isEmpty());
 	}
 
 	@Test
 	public void testFindAttributeRoller() throws Exception {
 		when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID)));
 		EvaluationResult result = mockAttributeLocator.findAttribute(EnhetAttributeLocator.STRING_TYPE, EnhetAttributeLocator.ATTRIBUTEID_ROLLE, null, EnhetAttributeLocator.SUBJECT_CATEGORY, context, 0);
-		assertTrue(!((BagAttribute) result.getAttributeValue()).isEmpty());
+		assertFalse(((BagAttribute) result.getAttributeValue()).isEmpty());
 	}
 }

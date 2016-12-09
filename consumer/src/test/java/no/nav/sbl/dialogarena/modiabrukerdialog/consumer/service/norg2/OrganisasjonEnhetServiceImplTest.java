@@ -2,11 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.norg2;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.HentEnhetBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSDetaljertEnhet;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.WSEnheterForGeografiskNedslagsfelt;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.*;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +25,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrganisasjonEnhetServiceImplTest {
+
+    private final String SAKSBEHANDLERS_VALGTE_ENHET = "0447";
 
     @Mock
     private OrganisasjonEnhetV1 enhetWS;
@@ -116,5 +116,87 @@ public class OrganisasjonEnhetServiceImplTest {
         when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenThrow(new HentEnhetBolkUgyldigInput());
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
         assertFalse(enhetFraTjenesten.isSome());
+    }
+
+    @Test
+    public void hentArbeidsfordelingSkalReturnereListeAvArbeidsfordelinger() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+        WSKriterier kriterier = new WSKriterier().withEnhetId(SAKSBEHANDLERS_VALGTE_ENHET);
+        WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
+                .withKriterierListe(kriterier);
+        WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse = createMockArbeidsfordelingForEnhet();
+        when(enhetWS.finnArbeidsfordelingForEnhetBolk(request)).thenReturn(mockResponse);
+
+        final List<Arbeidsfordeling> arbeidsfordelinger = organisasjonEnhetServiceImpl.hentArbeidsfordeling(SAKSBEHANDLERS_VALGTE_ENHET);
+
+        assertThat(arbeidsfordelinger.size(), is(3));
+    }
+
+    @Test
+    public void hentArbeidsfordelingSkalAkseptereArbeidsfordelingUtenGeografiskNedslagsfelt() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+        WSKriterier kriterier = new WSKriterier().withEnhetId(SAKSBEHANDLERS_VALGTE_ENHET);
+        WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
+                .withKriterierListe(kriterier);
+        WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse = createWSArbeidsfordelingWithOneMissingGeografiskNedslagsfelt();
+        when(enhetWS.finnArbeidsfordelingForEnhetBolk(request)).thenReturn(mockResponse);
+
+        final List<Arbeidsfordeling> arbeidsfordelinger = organisasjonEnhetServiceImpl.hentArbeidsfordeling(SAKSBEHANDLERS_VALGTE_ENHET);
+
+        assertThat(arbeidsfordelinger.size(), is(2));
+    }
+
+    @Test
+    public void hentArbeidsfordelingForIkkeEksisterendeEnhetSkalReturnereTomListe() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+        String ikkeEksisterendeEnhetId = "6666";
+        WSKriterier kriterier = new WSKriterier().withEnhetId(ikkeEksisterendeEnhetId);
+        WSFinnArbeidsfordelingForEnhetBolkRequest request = new WSFinnArbeidsfordelingForEnhetBolkRequest()
+                .withKriterierListe(kriterier);
+        WSFeiletEnhet feiletEnhet = new WSFeiletEnhet().withEnhetId(ikkeEksisterendeEnhetId).withFeilmelding("Ingen enhet");
+        WSFinnArbeidsfordelingForEnhetBolkResponse mockResponse =  new WSFinnArbeidsfordelingForEnhetBolkResponse()
+                .withFeiletEnhetListe(feiletEnhet);
+        when(enhetWS.finnArbeidsfordelingForEnhetBolk(request)).thenReturn(mockResponse);
+
+        final List<Arbeidsfordeling> arbeidsfordelinger = organisasjonEnhetServiceImpl.hentArbeidsfordeling(ikkeEksisterendeEnhetId);
+
+        assertThat(arbeidsfordelinger.isEmpty(), is(true));
+    }
+
+    @Test
+    public void hentArbeidsfordelingMedUgyldigInputReturnererTomListe() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
+        when(enhetWS.finnArbeidsfordelingForEnhetBolk(any())).thenThrow(new FinnArbeidsfordelingForEnhetBolkUgyldigInput());
+
+        List<Arbeidsfordeling> arbeidsfordelinger = organisasjonEnhetServiceImpl.hentArbeidsfordeling(null);
+
+        assertThat(arbeidsfordelinger.isEmpty(), is(true));
+    }
+
+    private WSFinnArbeidsfordelingForEnhetBolkResponse createWSArbeidsfordelingWithOneMissingGeografiskNedslagsfelt() {
+        WSArbeidsfordeling arbeidsfordeling = createArbeidsfordeling("1337", "BIL");
+        WSArbeidsfordeling arbeidsfordelingUtenGeografiskNedslagsfelt = createArbeidsfordeling(null, "BIL");
+
+        WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
+                .withArbeidsfordelingListe(arbeidsfordeling, arbeidsfordelingUtenGeografiskNedslagsfelt);
+
+        return new WSFinnArbeidsfordelingForEnhetBolkResponse()
+                .withArbeidsfordelingerForEnhetListe(arbeidsfordelingerForEnhet);
+    }
+
+    private WSFinnArbeidsfordelingForEnhetBolkResponse createMockArbeidsfordelingForEnhet() {
+        String arkivtema = "BIL";
+        WSArbeidsfordeling arbeidsfordeling1 = createArbeidsfordeling("1800", arkivtema);
+        WSArbeidsfordeling arbeidsfordeling2 = createArbeidsfordeling("1801", arkivtema);
+        WSArbeidsfordeling arbeidsfordeling3 = createArbeidsfordeling("1802", arkivtema);
+
+        WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
+                .withArbeidsfordelingListe(arbeidsfordeling1, arbeidsfordeling2, arbeidsfordeling3);
+
+        return new WSFinnArbeidsfordelingForEnhetBolkResponse()
+                .withArbeidsfordelingerForEnhetListe(arbeidsfordelingerForEnhet);
+    }
+
+    private WSArbeidsfordeling createArbeidsfordeling(String geografiskNedslagsfelt, String arkivtema) {
+        return new WSArbeidsfordeling()
+                .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier()
+                        .withGeografiskNedslagsfelt(geografiskNedslagsfelt)
+                        .withArkivtema(new WSArkivtemaer().withValue(arkivtema)));
     }
 }

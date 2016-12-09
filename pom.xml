@@ -105,12 +105,11 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>5.0.1</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>6.0.2</sporsmalogsvar.version>
         <saksoversikt.version>7.1</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>6.0.3</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>7.0.1</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>6.1.3</sporsmalogsvar.version>
         <saksoversikt.version>7.0</saksoversikt.version>
         <varsling.modia.version>1.10</varsling.modia.version>
@@ -123,7 +122,7 @@
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
-        <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.4</organisasjonenhet.tjenestespesifikasjon.versjon>
+        <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.6</organisasjonenhet.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
