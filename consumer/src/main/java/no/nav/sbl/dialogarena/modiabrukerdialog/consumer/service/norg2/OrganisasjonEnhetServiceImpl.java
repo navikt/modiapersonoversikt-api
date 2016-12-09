@@ -63,7 +63,7 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
     }
 
     private static final Transformer<WSArbeidsfordelingskriterier, Arbeidsfordeling> TIL_ARBEIDSFORDELING =
-            wsArbeidsfordelingskriterier -> new Arbeidsfordeling(wsArbeidsfordelingskriterier.getGeografiskNedslagsfelt(), wsArbeidsfordelingskriterier.getArkivtema().getKodeRef());
+            wsArbeidsfordelingskriterier -> new Arbeidsfordeling(wsArbeidsfordelingskriterier.getGeografiskNedslagsfelt(), wsArbeidsfordelingskriterier.getArkivtema().getValue());
 
     @Override
     public List<AnsattEnhet> hentAlleEnheter() {

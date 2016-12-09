@@ -197,6 +197,6 @@ public class OrganisasjonEnhetServiceImplTest {
         return new WSArbeidsfordeling()
                 .withUnderliggendeArbeidsfordelingskriterier(new WSArbeidsfordelingskriterier()
                         .withGeografiskNedslagsfelt(geografiskNedslagsfelt)
-                        .withArkivtema(new WSArkivtemaer().withKodeRef(arkivtema)));
+                        .withArkivtema(new WSArkivtemaer().withValue(arkivtema)));
     }
 }

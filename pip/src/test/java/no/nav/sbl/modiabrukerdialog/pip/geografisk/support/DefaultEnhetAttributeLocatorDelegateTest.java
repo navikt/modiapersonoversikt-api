@@ -108,7 +108,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
     }
 
     private List<Arbeidsfordeling> getArbeidsfordeling(String... enheter) {
-        String arkivTema = null;
+        String arkivTema = "BIL";
         return Arrays.stream(enheter)
                 .map(enhetId -> new Arbeidsfordeling(enhetId, arkivTema))
                 .collect(Collectors.toList());
