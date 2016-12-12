@@ -190,6 +190,9 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                             .withTildelesSaksbehandlerId(getSubjectHandler().getUid()))
                     .getOppgaveId();
 
+            if (tildeltOppgaveId == null) {
+                return none();
+            }
             oppgave = oppgaveWS.hentOppgave(
                     new WSHentOppgaveRequest()
                             .withOppgaveId(tildeltOppgaveId))
