@@ -40,6 +40,7 @@ public class HenvendelseEndpointConfig {
         return new CXFClient<>(HenvendelsePortType.class)
                 .wsdl("classpath:Henvendelse.wsdl")
                 .address(System.getProperty("henvendelse.v2.url"))
+                .timeout(10000, 60000)
                 .withOutInterceptor(interceptor)
                 .withProperty("jaxb.additionalContextClasses", new Class[]{
                         XMLHenvendelse.class,
