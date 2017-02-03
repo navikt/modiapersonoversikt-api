@@ -50,6 +50,9 @@
         <web-resource-collection>
             <web-resource-name>Public</web-resource-name>
             <url-pattern>/img/*</url-pattern>
+            <url-pattern>/css/*</url-pattern>
+            <url-pattern>/js/*</url-pattern>
+            <url-pattern>/wicket/resource/*</url-pattern>
             <url-pattern>/internal/selftest</url-pattern>
             <url-pattern>/internal/selftest.json</url-pattern>
             <url-pattern>/internal/isAlive</url-pattern>
