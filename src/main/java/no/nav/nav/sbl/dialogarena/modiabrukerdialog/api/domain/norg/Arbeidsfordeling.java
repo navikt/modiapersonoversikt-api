@@ -5,18 +5,18 @@ import java.util.Optional;
 public class Arbeidsfordeling {
 
     private final Optional<String> geografiskNedslagsfelt;
-    private final String arkivTema;
+    private final Optional<String> arkivTema;
 
     public Arbeidsfordeling(String geografiskNedslagsfelt, String arkivTema) {
         this.geografiskNedslagsfelt = Optional.ofNullable(geografiskNedslagsfelt);
-        this.arkivTema = arkivTema;
+        this.arkivTema = Optional.ofNullable(arkivTema);
     }
 
     public Optional<String> getGeografiskNedslagsfelt() {
         return geografiskNedslagsfelt;
     }
 
-    public String getArkivTema() {
+    public Optional<String> getArkivTema() {
         return arkivTema;
     }
 
