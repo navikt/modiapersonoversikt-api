@@ -10,5 +10,5 @@ public interface EnhetAttributeLocatorDelegate {
 
 	Set<String> getLokalEnheterForAnsatt(String ansattId);
 
-	Set<Arbeidsfordeling> getArbeidsfordelingForValgtEnhet();
+	Set<Arbeidsfordeling> getArbeidsfordelingForEnhet(String enhet);
 }
