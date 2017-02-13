@@ -30,7 +30,7 @@
     </Rule>
 
     <Rule RuleId="valgt-enhet-har-geografisk-nedslagsfelt" Effect="Permit">
-        <Description>Gi tilgang hvis saksbehandlers valgte enhet har geografisk nedslagsfelt for brukers lokalenhet.</Description>
+        <Description>Gi tilgang hvis saksbehandlers valgte enhet har geografisk nedslagsfelt for brukers geografiske nedslagsfelt.</Description>
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
