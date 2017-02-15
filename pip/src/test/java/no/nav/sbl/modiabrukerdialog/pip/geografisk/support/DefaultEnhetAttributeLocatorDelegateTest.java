@@ -103,7 +103,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
     public void getArbeidsfordelingForValgtEnhet() {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(orgEnhetservice.hentArbeidsfordeling(VALGT_ENHET)).thenReturn(getArbeidsfordeling(ENHET_ID_I_SAMME_FYLKE, ENHET_ID_I_ANNET_FYLKE));
-        Set<Arbeidsfordeling> values = delegate.getArbeidsfordelingForValgtEnhet();
+        Set<Arbeidsfordeling> values = delegate.getArbeidsfordelingForEnhet(VALGT_ENHET);
         assertThat(values.size(), is(2));
     }
 

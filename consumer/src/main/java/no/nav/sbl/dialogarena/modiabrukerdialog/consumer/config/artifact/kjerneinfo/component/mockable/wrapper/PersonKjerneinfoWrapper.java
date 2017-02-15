@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.config.PersonKjerneinfoConsumerConfig;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.KjerneinfoMapperConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.PersonKjerneinfoConsumerConfigImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
@@ -44,10 +45,13 @@ public class PersonKjerneinfoWrapper {
     @Inject
     private OrganisasjonEnhetService organisasjonEnhetService;
 
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     @Bean
     @Qualifier("personKjerneinfoServiceDefault")
     public Wrapper<PersonKjerneinfoServiceBi> personKjerneinfoServiceDefault() {
-        return new Wrapper<>(new PersonKjerneinfoConsumerConfigImpl(personPortType, selfTestPersonPortType, kjerneinfoMapperBean, kjerneinfoPep, organisasjonEnhetService).personKjerneinfoServiceBi());
+        return new Wrapper<>(new PersonKjerneinfoConsumerConfigImpl(personPortType, selfTestPersonPortType, kjerneinfoMapperBean, kjerneinfoPep, organisasjonEnhetService, saksbehandlerInnstillingerService).personKjerneinfoServiceBi());
     }
 
     @Bean

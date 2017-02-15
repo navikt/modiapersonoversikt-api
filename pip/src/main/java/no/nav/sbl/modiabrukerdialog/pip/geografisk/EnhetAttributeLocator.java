@@ -24,6 +24,7 @@ public class EnhetAttributeLocator extends AttributeLocator {
     public static final URI STRING_TYPE = URI.create("http://www.w3.org/2001/XMLSchema#string");
     public static final URI SUBJECT_CATEGORY = URI.create(AttributeDesignator.SUBJECT_CATEGORY_DEFAULT);
     public static final URI SUBJECT_ID = URI.create(XACMLConstants.ATTRIBUTEID_SUBJECT_ID);
+    public static final URI ATTRIBUTEID_SUBJECT_VALGT_ENHET = URI.create("urn:oasis:names:tc:xacml:1.0:subject:valgt-enhet");
     public static final URI ATTRIBUTEID_LOCAL_ENHET = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet");
     public static final URI ATTRIBUTEID_FYLKESENHET = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:fylkesenhet");
     public static final URI ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:geografisk-nedslagsfelt");
@@ -56,15 +57,16 @@ public class EnhetAttributeLocator extends AttributeLocator {
         } else if (attributeId.equals(ATTRIBUTEID_FYLKESENHET)) {
             values = convertSet(delegate.getFylkesenheterForAnsatt(subjectId));
         } else if (attributeId.equals(ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT)) {
-            Set<String> geografiskeNedslagsfelt = getGeografiskeNedslagsfelt();
+            String saksbehandlersValgteEnhet = getSaksbehandlerValgteEnhet(context);
+            Set<String> geografiskeNedslagsfelt = getGeografiskeNedslagsfelt(saksbehandlersValgteEnhet);
             values = convertSet(geografiskeNedslagsfelt);
         }
 
         return new EvaluationResult(new BagAttribute(attributeType, values));
     }
 
-    private Set<String> getGeografiskeNedslagsfelt() {
-        return delegate.getArbeidsfordelingForValgtEnhet()
+    private Set<String> getGeografiskeNedslagsfelt(String enhet) {
+        return delegate.getArbeidsfordelingForEnhet(enhet)
                         .stream()
                         .map(Arbeidsfordeling::getGeografiskNedslagsfelt)
                         .filter(Optional::isPresent)
@@ -80,5 +82,9 @@ public class EnhetAttributeLocator extends AttributeLocator {
 
     private String getSubjectId(EvaluationCtx context) {
         return (String) context.getSubjectAttribute(STRING_TYPE, SUBJECT_ID, SUBJECT_CATEGORY).getAttributeValue().getValue();
+    }
+
+    private String getSaksbehandlerValgteEnhet(EvaluationCtx context) {
+        return (String) context.getSubjectAttribute(STRING_TYPE, ATTRIBUTEID_SUBJECT_VALGT_ENHET, SUBJECT_CATEGORY ).getAttributeValue().getValue();
     }
 }

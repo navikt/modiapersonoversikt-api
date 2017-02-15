@@ -56,7 +56,7 @@ public class EnhetAttributeLocatorTest {
 
         when(mockDelegate.getLokalEnheterForAnsatt(anyString())).thenReturn(new HashSet<>(Arrays.asList(LOKAL_ENHET_ID)));
         when(mockDelegate.getFylkesenheterForAnsatt(anyString())).thenReturn(new HashSet<>(Arrays.asList(LOKAL_ENHET_ID)));
-        when(mockDelegate.getArbeidsfordelingForValgtEnhet()).thenReturn(new HashSet<>(Arrays.asList(arbeidsfordeling)));
+        when(mockDelegate.getArbeidsfordelingForEnhet(anyString())).thenReturn(new HashSet<>(Arrays.asList(arbeidsfordeling)));
         when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID)));
     }
 
@@ -95,7 +95,7 @@ public class EnhetAttributeLocatorTest {
     @Test
     public void testFindGeografiskNedslagsfeltAttributeFiltererUtArbeidsfordelingerUtenGeografiskNedslagsfelt() {
         Arbeidsfordeling utenGeografiskNedslagsfeltArbeidsfordeling = new Arbeidsfordeling(null, "BIL");
-        when(mockDelegate.getArbeidsfordelingForValgtEnhet()).thenReturn(new HashSet<>(Arrays.asList(arbeidsfordeling, utenGeografiskNedslagsfeltArbeidsfordeling)));
+        when(mockDelegate.getArbeidsfordelingForEnhet(anyString())).thenReturn(new HashSet<>(Arrays.asList(arbeidsfordeling, utenGeografiskNedslagsfeltArbeidsfordeling)));
 
         EvaluationResult result = findAttribute(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT);
 
