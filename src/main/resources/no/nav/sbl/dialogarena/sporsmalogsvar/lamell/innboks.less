@@ -41,13 +41,13 @@
       }
     }
     input + label {
-      position: static;
       width: 100%;
       text-transform: none;
       background-image: none !important;
       font-size: 1rem;
       line-height: 1rem;
       margin: 0;
+      color: @grayDark;
     }
   }
 
@@ -93,9 +93,6 @@
         margin-right: 1.5rem;
         display: none;
       }
-    }
-    .melding-detaljer {
-      padding-left: 2rem;
     }
     .melding-detaljer-tekst {
       .opprettet {
@@ -400,8 +397,8 @@
   }
   .antall-meldinger-samtale {
     position: absolute;
-    left: 39px;
-    top: 10px;
+    left: 7px;
+    top: -2px;
     font-weight: 600;
   }
 
@@ -419,6 +416,7 @@
     overflow: hidden;
     white-space: nowrap;
     max-width: 294px;
+    line-height: 1.2rem;
     &.tom {
       display: none;
     }
