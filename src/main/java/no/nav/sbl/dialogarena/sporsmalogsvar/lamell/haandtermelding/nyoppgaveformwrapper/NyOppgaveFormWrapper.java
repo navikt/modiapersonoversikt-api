@@ -11,7 +11,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.Organisasj
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -60,7 +59,9 @@ public class NyOppgaveFormWrapper extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         this.innboksVM = innboksVM;
-        this.enheter = on(organisasjonEnhetService.hentAlleEnheter()).filter(GYLDIG_ENHET).collect();
+        this.enheter = on(organisasjonEnhetService.hentAlleEnheter())
+                .filter(enhet -> erGyldigEnhet(enhet))
+                .collect();
         this.foreslatteEnheter = new ArrayList<>();
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
@@ -392,12 +393,9 @@ public class NyOppgaveFormWrapper extends Panel {
         }
     }
 
-    public static final Predicate<AnsattEnhet> GYLDIG_ENHET = new Predicate<AnsattEnhet>() {
-        @Override
-        public boolean evaluate(AnsattEnhet ansattEnhet) {
-            return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetErIkkeAvviklet(ansattEnhet) && enhetenHarTilknyttedeSaksbehandlere(ansattEnhet);
-        }
-    };
+    public static boolean erGyldigEnhet(AnsattEnhet ansattEnhet) {
+        return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetErIkkeAvviklet(ansattEnhet) && enhetenHarTilknyttedeSaksbehandlere(ansattEnhet);
+    }
 
     private static boolean enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(AnsattEnhet ansattEnhet) {
         return Integer.valueOf(ansattEnhet.enhetId) >= 100;

@@ -549,7 +549,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/sporsmalogsvar.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/sporsmalogsvar/</url>
-        <tag>sporsmal-og-svar-6.1.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <reporting>
