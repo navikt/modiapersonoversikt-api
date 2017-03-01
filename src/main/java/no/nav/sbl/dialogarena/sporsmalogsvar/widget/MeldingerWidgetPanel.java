@@ -33,12 +33,16 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
         meldingDetaljer.add(hasCssClassIf("ubesvart", not(model.getObject().erBesvart())));
         meldingDetaljer.add(hasCssClassIf("besvart", model.getObject().erBesvart()));
 
+
+        Label fritekst = new Label("fritekst");
+        fritekst.add(hasCssClassIf("vekk", not(model.getObject().erDokumentMelding())));
+
         meldingDetaljer.add(new StatusIkon("statusIkon", model.getObject()),
                 new Label("traadlengde").setVisibilityAllowed(model.getObject().traadlengde > 2),
                 new Label("visningsDato"),
                 meldingStatus.setVisibilityAllowed(!model.getObject().erDokumentMelding && !model.getObject().erOppgaveMelding),
                 dokumentStatus.setVisibilityAllowed(model.getObject().erDokumentMelding || model.getObject().erOppgaveMelding),
-                new Label("fritekst").setVisibilityAllowed(model.getObject().erDokumentMelding));
+                fritekst);
 
         add(meldingDetaljer);
     }
