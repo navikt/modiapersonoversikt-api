@@ -17,15 +17,13 @@
         </Actions>
     </Target>
 
-    <Rule RuleId="ident-har-oppfolging-rolle" Effect="Permit">
+    <Rule RuleId="saksbehandler-skal-ha-tilgang" Effect="Permit">
         <Description>Gi tilgang hvis saksbehandler har oppfølgingsrollen.</Description>
         <Condition>
-            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-Modia-Oppfolging</AttributeValue>
                     <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
                 </Apply>
-            </Apply>
         </Condition>
     </Rule>
 
