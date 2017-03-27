@@ -100,7 +100,6 @@ public class PersonPage extends BasePage {
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
     public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
-    public static final String OPPFOLGING_ACTION = "oppfolging";
 
     private final String fnr;
     private final GrunnInfo grunnInfo;
@@ -236,8 +235,7 @@ public class PersonPage extends BasePage {
 
                 boolean hasAaregTilgang = pep.hasAccess(forRequest(actionId("aaregles"), resourceId("")));
                 boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
-                boolean hasOppfolgingTilgang = pep.hasAccess(forRequest(actionId(OPPFOLGING_ACTION), resourceId("")));
-                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang, hasPesysTilgang, hasOppfolgingTilgang);
+                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang, hasPesysTilgang);
             }
         });
 

@@ -2,11 +2,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.sikkerhetstiltak.SikkerhetstiltakPersonPanel;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.lenkepanel.LenkePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
@@ -17,9 +19,18 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.Cookie;
+
+import java.util.Optional;
+
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
@@ -30,6 +41,9 @@ import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_SEARCH_PERFORMED;
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
@@ -37,20 +51,25 @@ import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
 public class HentPersonPage extends BasePage {
 
 	public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
-	public static final String FNR = "fnr";
 	public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
+    public static final String OPPFOLGING_ACTION = "oppfolging";
+    @Inject
+    @Named("pep")
+    private EnforcementPoint pep;
 
     public HentPersonPage(PageParameters pageParameters) {
         super(pageParameters);
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel", pageParameters);
         setupErrorText(pageParameters, hentPersonPanel);
+        boolean hasOppfolgingTilgang = pep.hasAccess(forRequest(actionId(OPPFOLGING_ACTION), resourceId("")));
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
                 saksbehandlerInnstillingerPanel,
                 new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukkOppgave"),
+                new LenkePanel("lenkePanel", hasOppfolgingTilgang, getVeiledersEnhetParameter()),
                 new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true)
         );
@@ -146,4 +165,13 @@ public class HentPersonPage extends BasePage {
 			return null;
 		}
 	}
+
+    //temp fix for å få med enhet til digisyfo.
+    private String getVeiledersEnhetParameter() {
+        WebRequest webRequest = (WebRequest) RequestCycle.get().getRequest();
+        Optional<Cookie> maybeNavEnhetCookie = webRequest.getCookies().stream()
+                .filter(cookie -> cookie.getName().equals("saksbehandlerinnstillinger-" + getSubjectHandler().getUid()))
+                .findAny();
+        return maybeNavEnhetCookie.isPresent() ? "?valgtEnhet=" + maybeNavEnhetCookie.get().getValue() : "";
+    }
 }
