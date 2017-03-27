@@ -41,12 +41,9 @@ public class LenkePanel extends Panel {
 
     public LenkePanel(String id, boolean oppfolgingVisibility, String enhetNr) {
         super(id);
-        add(accessRestriction(RENDER).withAttributes(actionId("lenkePanel"), resourceId("")));
         boolean oppfolgingVisiblityLocal = oppfolgingVisibility;
         addOppfolgingLink(oppfolgingVisiblityLocal, enhetNr);
-
     }
-
 
     private void addOppfolgingLink(boolean oppfolgingVisiblityLocal, String enhetNr) {
         ExternalLink enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet/" + enhetNr));
