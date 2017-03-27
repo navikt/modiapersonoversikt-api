@@ -46,8 +46,8 @@ public class LenkePanel extends Panel {
     }
 
     private void addOppfolgingLink(boolean oppfolgingVisiblityLocal, String enhetNr) {
-        ExternalLink enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet/" + enhetNr));
-        ExternalLink veilederlink = (new ExternalLink("veilederLenke", "/veilarbportefoljeflatefs/portefolje/"  + enhetNr));
+        ExternalLink enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet?" + enhetNr));
+        ExternalLink veilederlink = (new ExternalLink("veilederLenke", "/veilarbportefoljeflatefs/portefolje?"  + enhetNr));
         add(enhetlink);
         add(veilederlink);
         if (oppfolgingVisiblityLocal) {
