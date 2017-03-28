@@ -5,6 +5,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -13,20 +14,20 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
@@ -37,9 +38,12 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
+    public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
+    public static final String KONTAKT_NAV = "KNA";
 
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
@@ -59,22 +63,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe) {
-        return plukkOppgaveFraGsak(temagruppe, ANTALL_PLUKK_FORSOK);
-    }
-
-    private Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe, int antallForsokIgjen) {
-        if (antallForsokIgjen <= 0) {
-            return none();
-        }
-
-        Optional<WSOppgave> oppgave = finnEldsteIkkeTilordnedeOppgave(temagruppe);
-        if (oppgave.isSome()) {
-            try {
-                WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get(), temagruppe);
-                return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
-            } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
-                return plukkOppgaveFraGsak(temagruppe, antallForsokIgjen - 1);
-            }
+        int enhetsId = Integer.parseInt(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        Optional<WSOppgave> tilordnetOptional = tildelEldsteLedigeOppgave(temagruppe, enhetsId);
+        if (tilordnetOptional.isSome()) {
+            WSOppgave tilordnet = tilordnetOptional.get();
+            return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
         } else {
             return none();
         }
@@ -181,23 +174,39 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
-    private Optional<WSOppgave> finnEldsteIkkeTilordnedeOppgave(Temagruppe temagruppe) {
-        return on(oppgaveWS.finnOppgaveListe(
-                new WSFinnOppgaveListeRequest()
-                        .withFilter(new WSFinnOppgaveListeFilter()
-                                .withOppgavetypeKodeListe("SPM_OG_SVR")
-                                .withUnderkategoriKode(underkategoriKode(temagruppe))
-                                .withMaxAntallSvar(0)
-                                .withUfordelte(true))
-                        .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligEnhetId(enhetFor(temagruppe))
-                                .withFagomradeKodeListe("KNA"))
-                        .withSorteringKode(new WSFinnOppgaveListeSortering()
-                                .withSorteringKode("STIGENDE")
-                                .withSorteringselementKode("OPPRETTET_DATO"))
-                        .withIkkeTidligereFordeltTil(getSubjectHandler().getUid()))
-                .getOppgaveListe())
-                .head();
+    private Optional<WSOppgave> tildelEldsteLedigeOppgave(Temagruppe temagruppe, int enhetsId) {
+        WSOppgave oppgave;
+        try {
+            String tildeltOppgaveId = oppgavebehandlingWS.tildelOppgave(
+                    new WSTildelOppgaveRequest()
+                            .withFilter(new WSTildelOppgaveFilter()
+                                    .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)
+                                    .withUnderkategoriKode(underkategoriKode(temagruppe)))
+                            .withSok(new WSTildelOppgaveSok()
+                                    .withAnsvarligEnhetId(enhetFor(temagruppe))
+                                    .withFagomradeKodeListe(KONTAKT_NAV))
+                            .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
+                            .withTildeltAvEnhetId(enhetsId)
+                            .withTildelesSaksbehandlerId(getSubjectHandler().getUid()))
+                    .getOppgaveId();
+
+            if (tildeltOppgaveId == null) {
+                return none();
+            }
+            oppgave = oppgaveWS.hentOppgave(
+                    new WSHentOppgaveRequest()
+                            .withOppgaveId(tildeltOppgaveId))
+                    .getOppgave();
+
+        } catch (TildelOppgaveUgyldigInput exc) {
+            logger.warn(exc.getFaultInfo().getErrorMessage());
+            return none();
+        } catch (HentOppgaveOppgaveIkkeFunnet exc) {
+            logger.warn(exc.getFaultInfo().getErrorMessage());
+            return none();
+        }
+
+        return optional(oppgave);
     }
 
     private String enhetFor(Temagruppe temagruppe) {

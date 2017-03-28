@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
         PolicyId="urn:xacml:2.0:nav.modia:policysetid:geografisk"
-        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides">
     <Description>Rules for regional access control</Description>
 
     <Target>
@@ -25,6 +25,18 @@
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
                     <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"/>
                 </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+
+    <Rule RuleId="valgt-enhet-har-geografisk-nedslagsfelt" Effect="Permit">
+        <Description>Gi tilgang hvis saksbehandlers valgte enhet har geografisk nedslagsfelt for brukers geografiske nedslagsfelt.</Description>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                    <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:brukers-geografiske-nedslagsfelt"/>
+                </Apply>
+                <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:subject:geografisk-nedslagsfelt"/>
             </Apply>
         </Condition>
     </Rule>

@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>10.2.1</version>
+    <version>11.0.13</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -94,10 +94,10 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.2.0</personsok.version>
-        <kjerneinfo.versjon>3.1.3-PROD</kjerneinfo.versjon>
+        <kjerneinfo.versjon>4.0.4</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
-        <gsak.oppgave.tjenestespesifikasjon>0.0.12</gsak.oppgave.tjenestespesifikasjon>
+        <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
@@ -105,24 +105,22 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>5.0.1</modiabrukerdialog-api.version>
-        <saksoversikt.version>7.1</saksoversikt.version>
+        <saksoversikt.version>8.0.0</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>6.0.3</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>7.0.2</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>6.2.1</sporsmalogsvar.version>
-        <saksoversikt.version>7.0</saksoversikt.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>3.3</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
-        <nav-fellessystemer-environment.version>8.0.15</nav-fellessystemer-environment.version>
+        <nav-fellessystemer-environment.version>9.0.19</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
-        <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.4</organisasjonenhet.tjenestespesifikasjon.versjon>
+        <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.6</organisasjonenhet.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
@@ -1116,7 +1114,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-10.2.1</tag>
+        <tag>modiabrukerdialog-11.0.13</tag>
     </scm>
 
 </project>

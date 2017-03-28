@@ -7,10 +7,7 @@ import org.junit.Test;
 import static no.nav.sbl.modiabrukerdialog.pdp.test.util.DecisionTypeAssert.assertThat;
 import static org.jboss.security.xacml.core.model.context.DecisionType.DENY;
 import static org.jboss.security.xacml.core.model.context.DecisionType.PERMIT;
-import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_ACTION_ID;
-import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_RESOURCE_ID;
-import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_ROLE;
-import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_SUBJECT_ID;
+import static org.jboss.security.xacml.interfaces.XACMLConstants.*;
 
 
 public class GeografiskPolicyTest extends AbstractPDPTest {
@@ -124,5 +121,33 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
         assertThat(pdp.evaluate(request)).hasDecision(DENY);
+	}
+
+	@Test
+	public void allowAccessEnhetHarGeografiskNedslagsfeltForBrukersGeografiskeNedslagsfelt() {
+		RequestContext request = XACMLRequestBuilder.create()
+				.withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID)
+				.withSubjectAttr(ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT, "1783")
+				.withSubjectAttr(ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT, "1784")
+				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
+				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, "1999")
+				.withResourceAttr(ATTRIBUTEID_BRUKERS_GEOGRAFISKE_NEDSLAGSFELT, "1783")
+				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
+				.build();
+		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
+	}
+
+	@Test
+	public void denyAccessEnhetHarIkkeGeografiskNedslagsfeltForBrukersGeografiskeNedslagsfelt() {
+		RequestContext request = XACMLRequestBuilder.create()
+				.withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID)
+				.withSubjectAttr(ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT, "1782")
+				.withSubjectAttr(ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT, "1784")
+				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
+				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, "1999")
+				.withResourceAttr(ATTRIBUTEID_BRUKERS_GEOGRAFISKE_NEDSLAGSFELT, "1783")
+				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
+				.build();
+ 		assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
 }

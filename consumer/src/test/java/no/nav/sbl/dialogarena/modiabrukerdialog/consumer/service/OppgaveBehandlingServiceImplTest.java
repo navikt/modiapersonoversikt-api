@@ -19,9 +19,8 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
@@ -35,6 +34,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.inject.Inject;
+
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl.ANTALL_PLUKK_FORSOK;
@@ -42,6 +43,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveB
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -56,6 +58,10 @@ public class OppgaveBehandlingServiceImplTest {
     ArgumentCaptor<WSFerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
     @Captor
     ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor;
+    @Captor
+    ArgumentCaptor<WSTildelOppgaveRequest> tildelOppgaveRequestCaptor;
+    @Captor
+    ArgumentCaptor<WSHentOppgaveRequest> hentOppgaveRequestCaptor;
 
     @Mock
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
@@ -90,40 +96,24 @@ public class OppgaveBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalPlukkeOppgaveFraGsak() {
-        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
-        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
+    public void skalPlukkeOppgaveFraGsak() throws TildelOppgaveUgyldigInput, HentOppgaveOppgaveIkkeFunnet {
+        WSTildelOppgaveResponse tildelOppgaveResponse = new WSTildelOppgaveResponse();
+        tildelOppgaveResponse.setOppgaveId(lagWSOppgave().getOppgaveId());
+
+        WSHentOppgaveResponse hentOppgaveResponse = new WSHentOppgaveResponse();
+        hentOppgaveResponse.setOppgave(lagWSOppgave());
+
+        when(oppgavebehandlingWS.tildelOppgave(any(WSTildelOppgaveRequest.class))).thenReturn(tildelOppgaveResponse);
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(hentOppgaveResponse);
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("4100");
 
         oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
-        verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(0));
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
-    }
-
-    @Test
-    public void skalPlukkeNyOppgaveHvisTilordningFeiler() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
-        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
-        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
-        doThrow(LagreOppgaveOptimistiskLasing.class).doNothing().when(oppgavebehandlingWS).lagreOppgave(any(WSLagreOppgaveRequest.class));
-
-        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
-        verify(oppgaveWS, times(2)).finnOppgaveListe(any(WSFinnOppgaveListeRequest.class));
-        verify(oppgavebehandlingWS, times(2)).lagreOppgave(any(WSLagreOppgaveRequest.class));
-    }
-
-    @Test
-    public void skalIkkePlukkeEvigOmIngenOppgaverKanTilordnes() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
-        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
-        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
-        doThrow(LagreOppgaveOptimistiskLasing.class).when(oppgavebehandlingWS).lagreOppgave(any(WSLagreOppgaveRequest.class));
-
-        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
-        verify(oppgaveWS, times(ANTALL_PLUKK_FORSOK)).finnOppgaveListe(any(WSFinnOppgaveListeRequest.class));
-        verify(oppgavebehandlingWS, times(ANTALL_PLUKK_FORSOK)).lagreOppgave(any(WSLagreOppgaveRequest.class));
+        verify(oppgavebehandlingWS).tildelOppgave(tildelOppgaveRequestCaptor.capture());
+        verify(oppgaveWS).hentOppgave(hentOppgaveRequestCaptor.capture());
+        assertNotNull(tildelOppgaveRequestCaptor.getValue().getSok());
+        assertThat(tildelOppgaveRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
+        assertThat(tildelOppgaveRequestCaptor.getValue().getFilter().getOppgavetypeKodeListe().get(0), is("SPM_OG_SVR"));
+        assertThat(hentOppgaveRequestCaptor.getValue().getOppgaveId(), is(tildelOppgaveResponse.getOppgaveId()));
     }
 
     @Test
