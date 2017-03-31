@@ -47,6 +47,7 @@ import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forReque
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HentPersonPage extends BasePage {
 
@@ -69,11 +70,12 @@ public class HentPersonPage extends BasePage {
                 new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukkOppgave"),
-                new LenkePanel("lenkePanel", hasOppfolgingTilgang, getVeiledersEnhetParameter()),
                 new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true)
         );
 
+        LenkePanel lenkePanel = new LenkePanel("lenkePanel", hasOppfolgingTilgang, getVeiledersEnhetParameter());
+        add(lenkePanel);
 		setUpSikkerhetstiltakspanel(pageParameters);
     }
 
@@ -166,8 +168,7 @@ public class HentPersonPage extends BasePage {
 		}
 	}
 
-    //temp fix for å få med enhet til digisyfo.
-    private String getVeiledersEnhetParameter() {
+    public String getVeiledersEnhetParameter() {
         WebRequest webRequest = (WebRequest) RequestCycle.get().getRequest();
         Optional<Cookie> maybeNavEnhetCookie = webRequest.getCookies().stream()
                 .filter(cookie -> cookie.getName().equals("saksbehandlerinnstillinger-" + getSubjectHandler().getUid()))

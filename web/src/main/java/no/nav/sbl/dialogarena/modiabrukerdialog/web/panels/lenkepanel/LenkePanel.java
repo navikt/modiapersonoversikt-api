@@ -4,9 +4,13 @@ import no.nav.metrics.Timer;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -33,30 +37,50 @@ import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resour
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLERINNSTILLINGER_TOGGLET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.ajax.attributes.AjaxRequestAttributes.EventPropagation;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class LenkePanel extends Panel {
 
+    ExternalLink enhetlink;
+    ExternalLink veilederlink;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
+
     public LenkePanel(String id, boolean oppfolgingVisibility, String enhetNr) {
         super(id);
-        boolean oppfolgingVisiblityLocal = oppfolgingVisibility;
-        addOppfolgingLink(oppfolgingVisiblityLocal, enhetNr);
+        addOppfolgingLink(oppfolgingVisibility, enhetNr);
+        setOutputMarkupId(true);
     }
 
-    private void addOppfolgingLink(boolean oppfolgingVisiblityLocal, String enhetNr) {
-        ExternalLink enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet?" + enhetNr));
-        ExternalLink veilederlink = (new ExternalLink("veilederLenke", "/veilarbportefoljeflatefs/portefolje?"  + enhetNr));
-        add(enhetlink);
-        add(veilederlink);
-        if (oppfolgingVisiblityLocal) {
-            enhetlink.setVisible(true);
-            veilederlink.setVisible(true);
-        } else {
-            enhetlink.setVisible(false);
-            veilederlink.setVisible(false);
-        }
+    public void addOppfolgingLink(boolean oppfolgingVisiblityLocal, String enhetNr) {
+            enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet" + enhetNr));
+            veilederlink = (new ExternalLink("veilederLenke", "/veilarbportefoljeflatefs/portefolje" + enhetNr));
+            add(enhetlink);
+            add(veilederlink);
+            if (oppfolgingVisiblityLocal && isNotBlank(enhetNr)) {
+                enhetlink.setVisible(true);
+                veilederlink.setVisible(true);
+            } else {
+                enhetlink.setVisible(false);
+                veilederlink.setVisible(false);
+            }
+
     }
 
+    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
+    private void updateValgtEnhet(AjaxRequestTarget target) {
+        enhetlink.setVisible(true);
+        veilederlink.setVisible(true);
+        String enhetNr = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet" + enhetNr));
+        veilederlink = (new ExternalLink("veilederLenke", "/veilarbportefoljeflatefs/portefolje" + enhetNr));
+        target.add(this);
+    }
 }
