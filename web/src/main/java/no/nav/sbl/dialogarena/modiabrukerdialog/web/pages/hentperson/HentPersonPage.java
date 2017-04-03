@@ -41,13 +41,9 @@ import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_SEARCH_PERFORMED;
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
-import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
-import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
 
 public class HentPersonPage extends BasePage {
 
