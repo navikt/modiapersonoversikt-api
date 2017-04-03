@@ -47,23 +47,19 @@ import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forReque
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
 
 public class HentPersonPage extends BasePage {
 
 	public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
 	public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
-    public static final String OPPFOLGING_ACTION = "oppfolging";
-    @Inject
-    @Named("pep")
-    private EnforcementPoint pep;
+
 
     public HentPersonPage(PageParameters pageParameters) {
         super(pageParameters);
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel", pageParameters);
         setupErrorText(pageParameters, hentPersonPanel);
-        boolean hasOppfolgingTilgang = pep.hasAccess(forRequest(actionId(OPPFOLGING_ACTION), resourceId("")));
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
                 saksbehandlerInnstillingerPanel,
@@ -74,7 +70,7 @@ public class HentPersonPage extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true)
         );
 
-        LenkePanel lenkePanel = new LenkePanel("lenkePanel", hasOppfolgingTilgang, getVeiledersEnhetParameter());
+        LenkePanel lenkePanel = new LenkePanel("lenkePanel", getVeiledersEnhetParameter());
         add(lenkePanel);
 		setUpSikkerhetstiltakspanel(pageParameters);
     }

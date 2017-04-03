@@ -57,14 +57,17 @@ public class LenkePanel extends Panel {
     public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
     public static final String SAKSBEHANDLERINNSTILLINGER_TOGGLET = "saksbehandlerinnstillinger.togglet";
     public final String VALGT_ENHET_PARAMETER = "?valgtEnhet=";
+    public static final String OPPFOLGING_ACTION = "oppfolging";
 
-    public LenkePanel(String id, boolean oppfolgingVisibility, String enhetNr) {
+    public LenkePanel(String id, String enhetNr) {
         super(id);
-        addOppfolgingLink(oppfolgingVisibility, enhetNr);
+        add(accessRestriction(RENDER).withAttributes(actionId(OPPFOLGING_ACTION), resourceId("")));
+        addOppfolgingLink(enhetNr);
+
         setOutputMarkupId(true);
     }
 
-    public void addOppfolgingLink(boolean oppfolgingVisiblityLocal, String enhetNr) {
+    public void addOppfolgingLink(String enhetNr) {
         lenkeoverskrift = new Label("lenkeoverskrift", "ARBEIDSRETTET OPPFØLGING");
         add(lenkeoverskrift);
         enhetlink = (new ExternalLink("enhetLenke", new AbstractReadOnlyModel<String>() {
@@ -83,7 +86,7 @@ public class LenkePanel extends Panel {
         add(enhetlink);
         add(veilederlink);
 
-        if (oppfolgingVisiblityLocal && isNotBlank(enhetNr)) {
+        if (isNotBlank(enhetNr)) {
             makeLinkPanelVisible();
         } else {
             makeLinkPanelInvisible();
