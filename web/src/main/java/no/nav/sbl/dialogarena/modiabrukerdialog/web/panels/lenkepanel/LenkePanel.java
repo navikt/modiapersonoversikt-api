@@ -49,8 +49,9 @@ import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class LenkePanel extends Panel {
 
-    ExternalLink enhetlink;
-    ExternalLink veilederlink;
+    private ExternalLink enhetlink;
+    private ExternalLink veilederlink;
+    private Label lenkeoverskrift;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
@@ -64,13 +65,15 @@ public class LenkePanel extends Panel {
     }
 
     public void addOppfolgingLink(boolean oppfolgingVisiblityLocal, String enhetNr) {
+        lenkeoverskrift = new Label("lenkeoverskrift", "ARBEIDSRETTET OPPFØLGING");
+        add(lenkeoverskrift);
         enhetlink = (new ExternalLink("enhetLenke", new AbstractReadOnlyModel<String>() {
             @Override
             public String getObject() {
                 return unescapeHtml3(getString("enhetlenke.href")) + enhetNr;
             }
         }));
-        veilederlink =  (new ExternalLink("veilederLenke", new AbstractReadOnlyModel<String>() {
+        veilederlink = (new ExternalLink("veilederLenke", new AbstractReadOnlyModel<String>() {
             @Override
             public String getObject() {
                 return unescapeHtml3(getString("veilederlenke.href")) + enhetNr;
@@ -80,13 +83,10 @@ public class LenkePanel extends Panel {
         add(enhetlink);
         add(veilederlink);
 
-
         if (oppfolgingVisiblityLocal && isNotBlank(enhetNr)) {
-            enhetlink.setVisible(true);
-            veilederlink.setVisible(true);
+            makeLinkPanelVisible();
         } else {
-            enhetlink.setVisible(false);
-            veilederlink.setVisible(false);
+            makeLinkPanelInvisible();
         }
 
     }
@@ -100,24 +100,38 @@ public class LenkePanel extends Panel {
                 return unescapeHtml3(getString("veilederlenke.href")) + VALGT_ENHET_PARAMETER + enhetNr;
             }
         }));
-       enhetlink.add(new AttributeModifier("href", new AbstractReadOnlyModel() {
+        enhetlink.add(new AttributeModifier("href", new AbstractReadOnlyModel() {
             @Override
             public Object getObject() {
                 return unescapeHtml3(getString("enhetlenke.href")) + VALGT_ENHET_PARAMETER + enhetNr;
             }
         }));
-        veilederlink.setVisible(true);
-        enhetlink.setVisible(true);
+        makeLinkPanelVisible();
         target.add(this);
 
     }
-
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void updatePorfolioLinks(AjaxRequestTarget target) {
-        veilederlink.setVisible(!veilederlink.isVisible());
+        lenkeoverskrift.setVisible(!lenkeoverskrift.isVisible());
         enhetlink.setVisible(!enhetlink.isVisible());
+        veilederlink.setVisible(!veilederlink.isVisible());
         target.add(this);
 
     }
+
+
+    private void makeLinkPanelVisible() {
+        lenkeoverskrift.setVisible(true);
+        enhetlink.setVisible(true);
+        veilederlink.setVisible(true);
+    }
+
+
+    private void makeLinkPanelInvisible() {
+        lenkeoverskrift.setVisible(false);
+        enhetlink.setVisible(false);
+        veilederlink.setVisible(false);
+    }
+
 }
