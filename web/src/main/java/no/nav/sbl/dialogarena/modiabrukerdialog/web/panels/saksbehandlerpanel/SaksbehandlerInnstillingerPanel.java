@@ -75,7 +75,6 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie(valgtEnhet);
-
                 send(getPage(), Broadcast.DEPTH, SAKSBEHANDLERINNSTILLINGER_VALGT);
                 toggleSaksbehandlerPanel(target);
             }

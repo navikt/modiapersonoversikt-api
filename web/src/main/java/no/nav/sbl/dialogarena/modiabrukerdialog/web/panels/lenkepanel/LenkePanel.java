@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -31,14 +32,15 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 import java.io.Serializable;
 
+import static java.lang.String.format;
 import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLERINNSTILLINGER_TOGGLET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -52,6 +54,8 @@ public class LenkePanel extends Panel {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
+    public static final String SAKSBEHANDLERINNSTILLINGER_TOGGLET = "saksbehandlerinnstillinger.togglet";
+    public final String VALGT_ENHET_PARAMETER = "?valgtEnhet=";
 
     public LenkePanel(String id, boolean oppfolgingVisibility, String enhetNr) {
         super(id);
@@ -60,27 +64,60 @@ public class LenkePanel extends Panel {
     }
 
     public void addOppfolgingLink(boolean oppfolgingVisiblityLocal, String enhetNr) {
-            enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet" + enhetNr));
-            veilederlink = (new ExternalLink("veilederLenke", "/veilarbportefoljeflatefs/portefolje" + enhetNr));
-            add(enhetlink);
-            add(veilederlink);
-            if (oppfolgingVisiblityLocal && isNotBlank(enhetNr)) {
-                enhetlink.setVisible(true);
-                veilederlink.setVisible(true);
-            } else {
-                enhetlink.setVisible(false);
-                veilederlink.setVisible(false);
+        enhetlink = (new ExternalLink("enhetLenke", new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                return unescapeHtml3(getString("enhetlenke.href")) + enhetNr;
             }
+        }));
+        veilederlink =  (new ExternalLink("veilederLenke", new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                return unescapeHtml3(getString("veilederlenke.href")) + enhetNr;
+            }
+        }));
+
+        add(enhetlink);
+        add(veilederlink);
+
+
+        if (oppfolgingVisiblityLocal && isNotBlank(enhetNr)) {
+            enhetlink.setVisible(true);
+            veilederlink.setVisible(true);
+        } else {
+            enhetlink.setVisible(false);
+            veilederlink.setVisible(false);
+        }
 
     }
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
     private void updateValgtEnhet(AjaxRequestTarget target) {
-        enhetlink.setVisible(true);
-        veilederlink.setVisible(true);
         String enhetNr = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-        enhetlink = (new ExternalLink("enhetLenke", "/veilarbportefoljeflatefs/enhet" + enhetNr));
-        veilederlink = (new ExternalLink("veilederLenke", "/veilarbportefoljeflatefs/portefolje" + enhetNr));
+        veilederlink.add(new AttributeModifier("href", new AbstractReadOnlyModel() {
+            @Override
+            public Object getObject() {
+                return unescapeHtml3(getString("veilederlenke.href")) + VALGT_ENHET_PARAMETER + enhetNr;
+            }
+        }));
+       enhetlink.add(new AttributeModifier("href", new AbstractReadOnlyModel() {
+            @Override
+            public Object getObject() {
+                return unescapeHtml3(getString("enhetlenke.href")) + VALGT_ENHET_PARAMETER + enhetNr;
+            }
+        }));
+        veilederlink.setVisible(true);
+        enhetlink.setVisible(true);
         target.add(this);
+
+    }
+
+
+    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
+    private void updatePorfolioLinks(AjaxRequestTarget target) {
+        veilederlink.setVisible(!veilederlink.isVisible());
+        enhetlink.setVisible(!enhetlink.isVisible());
+        target.add(this);
+
     }
 }
