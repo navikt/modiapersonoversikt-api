@@ -56,7 +56,7 @@ public class LenkePanel extends Panel {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
     public static final String SAKSBEHANDLERINNSTILLINGER_TOGGLET = "saksbehandlerinnstillinger.togglet";
-    public final String VALGT_ENHET_PARAMETER = "?valgtEnhet=";
+    public final String VALGT_ENHET_PARAMETER = "?enhet=";
     public static final String OPPFOLGING_ACTION = "oppfolging";
 
     public LenkePanel(String id, String enhetNr) {
