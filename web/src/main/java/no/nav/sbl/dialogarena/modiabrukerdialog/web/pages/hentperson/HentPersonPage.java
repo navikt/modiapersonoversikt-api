@@ -160,11 +160,11 @@ public class HentPersonPage extends BasePage {
 		}
 	}
 
-    public String getVeiledersEnhetParameter() {
+    private String getVeiledersEnhetParameter() {
         WebRequest webRequest = (WebRequest) RequestCycle.get().getRequest();
         Optional<Cookie> maybeNavEnhetCookie = webRequest.getCookies().stream()
                 .filter(cookie -> cookie.getName().equals("saksbehandlerinnstillinger-" + getSubjectHandler().getUid()))
                 .findAny();
-        return maybeNavEnhetCookie.isPresent() ? "?valgtEnhet=" + maybeNavEnhetCookie.get().getValue() : "";
+        return maybeNavEnhetCookie.isPresent() ? maybeNavEnhetCookie.get().getValue() : "";
     }
 }
