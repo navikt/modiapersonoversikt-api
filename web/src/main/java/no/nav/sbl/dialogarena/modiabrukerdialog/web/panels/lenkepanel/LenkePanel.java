@@ -61,8 +61,8 @@ public class LenkePanel extends Panel {
         add(enhetlink);
         add(veilederlink);
 
-        if ((isNotBlank(enhetId)) && ((ansattService.hentEnhetsliste().size() == 1) || ! (saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()))){
-            makeLinkPanelVisible();
+        if (isNotBlank(enhetId)) {
+             makeLinkPanelVisible();
         } else {
             makeLinkPanelInvisible();
         }
