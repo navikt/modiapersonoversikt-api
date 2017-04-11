@@ -36,7 +36,6 @@ public class LenkePanel extends Panel {
         super(id);
         add(accessRestriction(RENDER).withAttributes(actionId(OPPFOLGING_ACTION), resourceId("")));
         addOppfolgingLink(saksbehandlersValgteEnhet);
-
         setOutputMarkupId(true);
     }
 
@@ -59,7 +58,7 @@ public class LenkePanel extends Panel {
         add(enhetlink);
         add(veilederlink);
 
-        if (isNotBlank(enhetId)) {
+        if ((isNotBlank(enhetId)) && ! (saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert())) {
             makeLinkPanelVisible();
         } else {
             makeLinkPanelInvisible();
