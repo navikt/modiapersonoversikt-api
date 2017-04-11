@@ -3,12 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.lenkepanel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 
@@ -17,6 +19,7 @@ import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resour
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class LenkePanel extends Panel {
     public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
@@ -29,11 +32,9 @@ public class LenkePanel extends Panel {
     private ExternalLink enhetlink;
     private ExternalLink veilederlink;
     private Label lenkeoverskrift;
-
+    private static final Logger logger = getLogger(LenkePanel.class);
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private AnsattService ansattService;
 
     public LenkePanel(String id, String saksbehandlersValgteEnhet) {
         super(id);
@@ -62,7 +63,7 @@ public class LenkePanel extends Panel {
         add(veilederlink);
 
         if (isNotBlank(enhetId)) {
-             makeLinkPanelVisible();
+            makeLinkPanelVisible();
         } else {
             makeLinkPanelInvisible();
         }
@@ -96,16 +97,15 @@ public class LenkePanel extends Panel {
         }));
         makeLinkPanelVisible();
         target.add(this);
-
     }
 
-    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
-    private void updatePorfolioLinks(AjaxRequestTarget target) {
-        lenkeoverskrift.setVisible(!lenkeoverskrift.isVisible());
-        enhetlink.setVisible(!enhetlink.isVisible());
-        veilederlink.setVisible(!veilederlink.isVisible());
-        target.add(this);
 
+    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
+    private void updatePortfolioLinks(AjaxRequestTarget target) {
+            lenkeoverskrift.setVisible(!lenkeoverskrift.isVisible());
+            enhetlink.setVisible(!enhetlink.isVisible());
+            veilederlink.setVisible(!veilederlink.isVisible());
+            target.add(this);
     }
 
 
