@@ -19,7 +19,6 @@ import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resour
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class LenkePanel extends Panel {
     public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
@@ -32,7 +31,7 @@ public class LenkePanel extends Panel {
     private ExternalLink enhetlink;
     private ExternalLink veilederlink;
     private Label lenkeoverskrift;
-    private static final Logger logger = getLogger(LenkePanel.class);
+
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
