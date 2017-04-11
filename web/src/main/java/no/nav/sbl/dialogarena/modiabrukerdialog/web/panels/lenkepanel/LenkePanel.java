@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.lenkepanel;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,6 +32,8 @@ public class LenkePanel extends Panel {
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private AnsattService ansattService;
 
     public LenkePanel(String id, String saksbehandlersValgteEnhet) {
         super(id);
@@ -58,7 +61,7 @@ public class LenkePanel extends Panel {
         add(enhetlink);
         add(veilederlink);
 
-        if ((isNotBlank(enhetId)) && ! (saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert())) {
+        if ((isNotBlank(enhetId)) && ((ansattService.hentEnhetsliste().size() == 1) || ! (saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()))){
             makeLinkPanelVisible();
         } else {
             makeLinkPanelInvisible();
