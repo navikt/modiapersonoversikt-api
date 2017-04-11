@@ -101,10 +101,12 @@ public class LenkePanel extends Panel {
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void updatePortfolioLinks(AjaxRequestTarget target) {
+            updateValgtEnhet(target);
             lenkeoverskrift.setVisible(!lenkeoverskrift.isVisible());
             enhetlink.setVisible(!enhetlink.isVisible());
             veilederlink.setVisible(!veilederlink.isVisible());
             target.add(this);
+
     }
 
 
