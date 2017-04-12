@@ -7,17 +7,19 @@ import java.io.Serializable;
 public class AnsattEnhet implements Serializable {
     public String enhetId;
     public String enhetNavn;
-    public int antallRessurser;
+    public String status;
+
 
     public AnsattEnhet(String enhetId, String enhetNavn) {
         this.enhetId = enhetId;
         this.enhetNavn = enhetNavn;
     }
 
-    public AnsattEnhet(String enhetId, String enhetNavn, int antallRessurser) {
+    public AnsattEnhet(String enhetId, String enhetNavn, String status) {
         this.enhetId = enhetId;
         this.enhetNavn = enhetNavn;
-        this.antallRessurser = antallRessurser;
+        this.status = status;
+
     }
 
     public static final Transformer<AnsattEnhet, String> ENHET_ID = ansattEnhet -> ansattEnhet.enhetId;
