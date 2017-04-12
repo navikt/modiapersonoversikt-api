@@ -61,6 +61,13 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
+    <cache:advice id="organisasjonEnhetV2Advice" key-generator="defaultkeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
+        <cache:caching cache="organisasjonEnhetV2">
+            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="finn*"/>
+        </cache:caching>
+    </cache:advice>
     <cache:advice id="aktorAdvice" key-generator="userkeygenerator">
         <cache:caching cache="aktorIdCache">
             <cache:cacheable method="hent*"/>
@@ -105,6 +112,7 @@
         <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
         <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
         <aop:advisor advice-ref="organisasjonEnhetV1Advice" pointcut="bean(organisasjonEnhetV1)"/>
+        <aop:advisor advice-ref="organisasjonEnhetV2Advice" pointcut="bean(organisasjonEnhetV2)"/>
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>

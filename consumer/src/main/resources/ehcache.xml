@@ -179,7 +179,16 @@
 		   diskPersistent="false"
 		   memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="ldap" maxElementsInMemory="20000"
+	<cache name="organisasjonEnhetV2" maxElementsInMemory="10000"
+		   eternal="false"
+		   timeToIdleSeconds="86400"
+		   timeToLiveSeconds="86400"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+
+	<cache name="ldap" maxElementsInMemory="20000"
            eternal="false"
            timeToIdleSeconds="3600"
            timeToLiveSeconds="3600"

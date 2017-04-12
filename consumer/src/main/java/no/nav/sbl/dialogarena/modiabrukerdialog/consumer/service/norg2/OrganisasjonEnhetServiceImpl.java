@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -69,19 +68,6 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
             };
 
     @Override
-    public List<AnsattEnhet> hentAlleEnheter() {
-        final List<AnsattEnhet> enheter = new ArrayList<>();
-
-        final WSHentFullstendigEnhetListeRequest request = new WSHentFullstendigEnhetListeRequest();
-        request.setInkluderNedlagte(false);
-        final WSHentFullstendigEnhetListeResponse wsHentFullstendigEnhetListeResponse = enhetWS.hentFullstendigEnhetListe(request);
-
-        enheter.addAll(wsHentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET::transform).collect(Collectors.toList()));
-
-        return on(enheter).collect(ENHET_ID_STIGENDE);
-    }
-
-    @Override
     public Optional<AnsattEnhet> hentEnhetGittGeografiskNedslagsfelt(final String geografiskNedslagsfelt) {
         try {
             final WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest request = new WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest();
@@ -102,26 +88,9 @@ public class OrganisasjonEnhetServiceImpl implements OrganisasjonEnhetService {
         }
     }
 
-    @Override
-    public Optional<AnsattEnhet> hentEnhetGittEnhetId(final String enhetId) {
-        try {
-            final WSHentEnhetBolkRequest wsHentEnhetBolkRequest = new WSHentEnhetBolkRequest();
-            wsHentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
-            final WSHentEnhetBolkResponse response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
-            if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
-                return optional(TIL_ANSATTENHET.transform(response.getEnhetListe().get(0)));
-            } else {
-                return none();
-            }
-        } catch (HentEnhetBolkUgyldigInput e) {
-            logger.warn("Kall til OrganisasjonEnhetV1.hentEnhetGittEnhetId() kastet exception for enhetId=\"" + enhetId + "\".", e);
-            return none();
-        }
-    }
-
     private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = (o1, o2) -> o1.enhetId.compareTo(o2.enhetId);
 
     private static final Transformer<WSDetaljertEnhet, AnsattEnhet> TIL_ANSATTENHET =
-            respons -> new AnsattEnhet(respons.getEnhetId(), respons.getNavn(), respons.getAntallRessurser());
+            respons -> new AnsattEnhet(respons.getEnhetId(), respons.getNavn());
 
 }
