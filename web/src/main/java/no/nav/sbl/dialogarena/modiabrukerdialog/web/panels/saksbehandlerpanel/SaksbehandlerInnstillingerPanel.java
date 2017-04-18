@@ -22,6 +22,7 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static java.lang.System.getProperty;
+;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLERINNSTILLINGER_TOGGLET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
@@ -40,7 +41,6 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
     public SaksbehandlerInnstillingerPanel(String id) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
-
         setVisibilityAllowed(
                 ansattService.hentEnhetsliste().size() > 1 &&
                         saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert());
@@ -70,7 +70,6 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         });
 
         oppdaterAriaLabel();
-
         add(form);
         add(new ExternalLink("opplaeringslenke", new AbstractReadOnlyModel<String>() {
             @Override
@@ -79,6 +78,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             }
         }));
         add(new ExternalLink("skrivestotteForslagLenke", getProperty("modiabrukerdialog.standardtekster.tilbakemelding.url")));
+
     }
 
     public final void oppdaterAriaLabel() {
@@ -92,5 +92,6 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         target.appendJavaScript("SaksbehandlerInnstillinger.focus();");
         target.add(this);
     }
+
 
 }

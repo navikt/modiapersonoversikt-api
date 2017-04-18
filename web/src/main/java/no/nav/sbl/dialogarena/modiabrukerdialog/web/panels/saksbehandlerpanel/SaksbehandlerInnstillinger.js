@@ -2,12 +2,16 @@
     var SaksbehandlerInnstillinger = {};
 
     function focusValgEnhet() {
+        var portfolio = $('#portfolio');
+        portfolio.show();
         var $valg = $('.saksbehandlerinnstillinger .enhetsvalg');
         $valg.find(':checked').focus();
+
     }
+
     function delay(func, time) {
-        return function(){
-            setTimeout(function(){
+        return function () {
+            setTimeout(function () {
                 func();
             }, time);
         }
@@ -20,7 +24,6 @@
 
 $(document).ready(function () {
     var ENTER = 13;
-
     $(document).on('keydown', '.saksbehandlerinnstillinger > .enhetsform > .enhetsvalg', function (e) {
         if (e.keyCode == ENTER) {
             $(e.currentTarget).closest('.enhetsform').find('a.send').click();
