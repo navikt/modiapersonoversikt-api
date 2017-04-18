@@ -38,9 +38,6 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
         System.setProperty("no.nav.modig.security.systemuser.password", "");
     }
 
-
-    //TODO: Wtf? classloading.
-    @Ignore
     @Test
     public void cacheManager_harEntryForEndpointCache_etterKallTilEnhetWS() {
         final WSHentEnhetBolkRequest request_1 = new WSHentEnhetBolkRequest()
