@@ -52,6 +52,7 @@
         <webservice alias="virksomhet:sykepenger_v2" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:DigitalKontakinformasjon_v1" mapToProperty="dkifendpoint"/>
         <webservice alias="virksomhet:OrganisasjonEnhet_v1" mapToProperty="norg2.organisasjonenhet.v1"/>
+        <webservice alias="virksomhet:OrganisasjonEnhet_v2" mapToProperty="norg2.organisasjonenhet.v2"/>
         <webservice alias="Utbetaling_v1" mapToProperty="utbetalingendpoint"/>
         <webservice alias="domene.Brukerdialog:Henvendelse_v2" mapToProperty="henvendelse.v2"/>
         <webservice alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
