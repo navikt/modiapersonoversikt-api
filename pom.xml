@@ -124,6 +124,7 @@
         <organisasjonenhet-v2.tjenestespesifikasjon.versjon>1.0.4</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
         <egenansatt-tjenestespesifikasjon.version>1.0.5</egenansatt-tjenestespesifikasjon.version>
+        <pensjon-sak.version>1.0.3</pensjon-sak.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
     </properties>
@@ -460,7 +461,7 @@
             <dependency>
                 <groupId>no.nav.sbl</groupId>
                 <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
-                <version>1.0.3</version>
+                <version>${pensjon-sak.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl</groupId>
