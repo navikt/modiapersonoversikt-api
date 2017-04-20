@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.Cms
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.JoarkEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet.ArbeidOgAktivitetEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.behandlesak.GsakOpprettSakEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakSakV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting.GsakRutingEndpointConfig;
@@ -51,7 +52,8 @@ import org.springframework.context.annotation.Import;
         PensjonSakEndpointConfig.class,
         VarslingEndpointConfig.class,
         OrganisasjonEnhetEndpointConfig.class,
-        OrganisasjonEnhetV2EndpointConfig.class
+        OrganisasjonEnhetV2EndpointConfig.class,
+        EgenAnsattV1EndpointConfig.class
 })
 public class EndpointsConfig {
 
