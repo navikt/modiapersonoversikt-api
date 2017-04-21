@@ -206,10 +206,10 @@ public class PersonPage extends BasePage {
     }
 
     private String hentEnhet(Personfakta personfakta) {
-        if (personfakta != null && personfakta.getHarAnsvarligEnhet() != null
-                && personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet() != null
-                && StringUtils.isNotEmpty(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn())) {
-            return personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn();
+        if (personfakta != null && personfakta.getAnsvarligEnhet() != null
+                && personfakta.getAnsvarligEnhet().getOrganisasjonsenhet() != null
+                && StringUtils.isNotEmpty(personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn())) {
+            return personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn();
         } else {
             return "";
         }

@@ -250,7 +250,7 @@ public class PersonPageTest extends WicketPageTest {
         final Person person = new Person();
         final Personfakta personfakta = new Personfakta();
         personfakta.setPersonnavn(new Personnavn.With().fornavn("etFornavn").etternavn("etEtternavn").done());
-        personfakta.setHarAnsvarligEnhet(new AnsvarligEnhet.With().organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId("0000").done()).done());
+        personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With().organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId("0000").done()).done());
         person.setPersonfakta(personfakta);
         respons.setPerson(person);
         return respons;

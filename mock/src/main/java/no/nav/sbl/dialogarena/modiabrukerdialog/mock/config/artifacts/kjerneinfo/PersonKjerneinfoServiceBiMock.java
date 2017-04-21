@@ -74,7 +74,7 @@ public class PersonKjerneinfoServiceBiMock {
                                 .gatenavn("Testgata")
                                 .postnummer("1337")
                                 .poststed("Test").done())
-                        .harAnsvarligEnhet(new AnsvarligEnhet.With()
+                        .ansvarligEnhet(new AnsvarligEnhet.With()
                                 .organisasjonsenhet(new Organisasjonsenhet.With()
                                         .organisasjonselementId("1234")
                                         .done())

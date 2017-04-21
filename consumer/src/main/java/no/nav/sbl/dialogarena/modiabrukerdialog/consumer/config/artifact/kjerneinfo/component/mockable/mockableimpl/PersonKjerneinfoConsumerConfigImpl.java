@@ -6,23 +6,21 @@ import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoServ
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.tjeneste.virksomhet.person.v2.PersonV2;
+import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
 
 public class PersonKjerneinfoConsumerConfigImpl {
 
     private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    private PersonV2 personPortType;
-    private PersonV2 selfTestPersonPortType;
+    private PersonV3 personPortType;
     private KjerneinfoMapper kjerneinfoMapperBean;
     private EnforcementPoint kjerneinfoPep;
     private OrganisasjonEnhetService organisasjonEnhetService;
 
-    public PersonKjerneinfoConsumerConfigImpl(PersonV2 personPortType, PersonV2 selfTestPersonPortType,
+    public PersonKjerneinfoConsumerConfigImpl(PersonV3 personPortType,
                                               KjerneinfoMapper kjerneinfoMapperBean, EnforcementPoint kjerneinfoPep,
                                               final OrganisasjonEnhetService organisasjonEnhetService,
                                               SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
         this.personPortType = personPortType;
-        this.selfTestPersonPortType = selfTestPersonPortType;
         this.kjerneinfoMapperBean = kjerneinfoMapperBean;
         this.kjerneinfoPep = kjerneinfoPep;
         this.organisasjonEnhetService = organisasjonEnhetService;
@@ -30,7 +28,7 @@ public class PersonKjerneinfoConsumerConfigImpl {
     }
 
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return new DefaultPersonKjerneinfoService(personPortType, selfTestPersonPortType, kjerneinfoMapperBean,
+        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapperBean,
                 kjerneinfoPep, organisasjonEnhetService, saksbehandlerInnstillingerService);
     }
 
