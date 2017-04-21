@@ -7,7 +7,6 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +32,6 @@ public class OrganisasjonEnhetV2Mock {
             @Override
             public WSHentEnhetBolkResponse hentEnhetBolk(final WSHentEnhetBolkRequest wsHentEnhetBolkRequest) {
                 return new WSHentEnhetBolkResponse().withEnhetListe(lagWSDetaljertEnhet());
-            }
-
-            @Override
-            public WSHentOverordnetEnhetRequest hentOverordnetEnhet(WSHentOverordnetEnhetRequest wsHentOverordnetEnhetRequest) throws HentOverordnetEnhetEnhetIkkeFunnet, HentOverordnetEnhetEnhetenErVirtuell {
-                throw new NotImplementedException();
-            }
-
-            @Override
-            public WSFinnNAVKontorResponse finnNAVKontor(WSFinnNAVKontorRequest wsFinnNAVKontorRequest) throws FinnNAVKontorUgyldigInput {
-                throw new NotImplementedException();
             }
 
             private List<WSOrganisasjonsenhet> lagWSDetaljertEnhet() {

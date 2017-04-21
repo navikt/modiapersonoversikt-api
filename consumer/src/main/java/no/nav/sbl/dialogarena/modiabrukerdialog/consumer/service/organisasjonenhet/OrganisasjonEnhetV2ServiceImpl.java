@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
@@ -37,12 +38,18 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
     public Optional<AnsattEnhet> hentEnhetGittEnhetId(String enhetId) {
         final WSHentEnhetBolkRequest wsHentEnhetBolkRequest = new WSHentEnhetBolkRequest();
         wsHentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
-        final WSHentEnhetBolkResponse response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
-        if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
-            return optional(TIL_ANSATTENHET.transform(response.getEnhetListe().get(0)));
-        } else {
+        final WSHentEnhetBolkResponse response;
+        try {
+            response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
+            if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
+                return optional(TIL_ANSATTENHET.transform(response.getEnhetListe().get(0)));
+            } else {
+                return none();
+            }
+        } catch (HentEnhetBolkUgyldigInput hentEnhetBolkUgyldigInput) {
             return none();
         }
+
     }
 
     private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = (o1, o2) -> o1.enhetId.compareTo(o2.enhetId);

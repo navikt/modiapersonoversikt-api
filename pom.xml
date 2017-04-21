@@ -94,7 +94,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.2.0</personsok.version>
-        <kjerneinfo.versjon>4.0.4</kjerneinfo.versjon>
+        <kjerneinfo.versjon>4.1.5-2017-U17-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
@@ -109,7 +109,7 @@
         <varsling.modia.version>1.8</varsling.modia.version>
         <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>8.0.0-2017-HL3-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>6.2.1</sporsmalogsvar.version>
+        <sporsmalogsvar.version>7.0.0-2017-HL3-SNAPSHOT</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
@@ -121,7 +121,7 @@
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
         <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.6</organisasjonenhet.tjenestespesifikasjon.versjon>
-        <organisasjonenhet-v2.tjenestespesifikasjon.versjon>1.0.3</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
+        <organisasjonenhet-v2.tjenestespesifikasjon.versjon>1.0.4</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhet;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentEnhetBolkRequest;
 import org.junit.*;
@@ -39,7 +40,7 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
     }
 
     @Test
-    public void cacheManager_harEntryForEndpointCache_etterKallTilEnhetWS() {
+    public void cacheManager_harEntryForEndpointCache_etterKallTilEnhetWS() throws HentEnhetBolkUgyldigInput {
         final WSHentEnhetBolkRequest request_1 = new WSHentEnhetBolkRequest()
                 .withEnhetIdListe("1234");
 
