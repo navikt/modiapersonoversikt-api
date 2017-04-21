@@ -7,7 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -36,13 +36,14 @@ import static no.nav.modig.wicket.model.ModelUtils.*;
 public class NyOppgaveFormWrapper extends Panel {
 
     public static final String PRIORITET_NORMAL = "NORM";
+    public static final String ENHETSTATUS_AKTIV = "AKTIV";
 
     @Inject
     private GsakService gsakService;
     @Inject
     private GsakKodeverk gsakKodeverk;
     @Inject
-    private OrganisasjonEnhetService organisasjonEnhetService;
+    private OrganisasjonEnhetV2Service organisasjonEnhetService;
     @Inject
     private AnsattService ansattService;
 
@@ -394,18 +395,14 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
     public static boolean erGyldigEnhet(AnsattEnhet ansattEnhet) {
-        return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetErIkkeAvviklet(ansattEnhet) && enhetenHarTilknyttedeSaksbehandlere(ansattEnhet);
+        return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetenErAktiv(ansattEnhet);
     }
 
     private static boolean enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(AnsattEnhet ansattEnhet) {
         return Integer.valueOf(ansattEnhet.enhetId) >= 100;
     }
 
-    private static boolean enhetErIkkeAvviklet(AnsattEnhet ansattEnhet) {
-        return !ansattEnhet.enhetNavn.toLowerCase().contains("avviklet");
-    }
-
-    private static boolean enhetenHarTilknyttedeSaksbehandlere(AnsattEnhet ansattEnhet) {
-        return ansattEnhet.antallRessurser != 0;
+    private static boolean enhetenErAktiv(AnsattEnhet ansattEnhet) {
+        return ansattEnhet.status.equals(ENHETSTATUS_AKTIV);
     }
 }
