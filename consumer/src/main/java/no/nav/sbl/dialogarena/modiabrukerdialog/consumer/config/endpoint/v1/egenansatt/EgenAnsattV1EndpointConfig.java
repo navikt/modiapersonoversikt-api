@@ -8,8 +8,26 @@ import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+
 @Configuration
 public class EgenAnsattV1EndpointConfig {
+
+    private static final String EGEN_ANSATT_KEY = "egenansatt.v1.url" ;
+
+    @Bean
+    public EgenAnsattV1 egenAnsattV1() {
+        final EgenAnsattV1 egenAnsattV1= lagEndpoint();
+        final EgenAnsattV1 egenAnsattV1Mock = lagMockEndpoint();
+
+        return createMetricsProxyWithInstanceSwitcher("egenAnsattV1", egenAnsattV1, egenAnsattV1Mock, EGEN_ANSATT_KEY, EgenAnsattV1.class);
+    }
+
+    private EgenAnsattV1 lagMockEndpoint() {
+        return EgenAnsattV1Mock.egenAnsattV1();
+    }
+
+
     @Bean
     public Pingable egenAnsattPing() {
         return new PingableWebService("EgenAnsatt", lagEndpoint());
