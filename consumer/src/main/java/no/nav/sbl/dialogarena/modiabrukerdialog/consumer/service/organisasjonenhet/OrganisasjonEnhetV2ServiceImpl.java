@@ -7,12 +7,13 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
-import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
@@ -29,7 +30,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         final WSHentFullstendigEnhetListeRequest request = new WSHentFullstendigEnhetListeRequest();
         final WSHentFullstendigEnhetListeResponse wsHentFullstendigEnhetListeResponse = enhetWS.hentFullstendigEnhetListe(request);
 
-        enheter.addAll(wsHentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET::transform).collect(Collectors.toList()));
+        enheter.addAll(wsHentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
 
         return on(enheter).collect(ENHET_ID_STIGENDE);
     }
@@ -42,7 +43,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         try {
             response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
             if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
-                return optional(TIL_ANSATTENHET.transform(response.getEnhetListe().get(0)));
+                return optional(response.getEnhetListe().stream().map(TIL_ANSATTENHET).findFirst().get());
             } else {
                 return none();
             }
@@ -52,9 +53,13 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     }
 
-    private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = (o1, o2) -> o1.enhetId.compareTo(o2.enhetId);
+    private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = comparing(o -> o.enhetId);
 
-    private static final Transformer<WSOrganisasjonsenhet, AnsattEnhet> TIL_ANSATTENHET =
-            respons -> new AnsattEnhet(respons.getEnhetId(), respons.getEnhetNavn(), respons.getStatus().value());
+    private static final Function<WSOrganisasjonsenhet, AnsattEnhet> TIL_ANSATTENHET =
+            wsOrganisasjonsenhet -> new AnsattEnhet(
+                    wsOrganisasjonsenhet.getEnhetId(),
+                    wsOrganisasjonsenhet.getEnhetNavn(),
+                    wsOrganisasjonsenhet.getStatus().value()
+            );
 
 }
