@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSEnhetsstatus;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
 import org.junit.Test;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSEnhetsstatus.AKTIV;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,19 +36,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     @Test
     public void skalSortereEnheterIStigendeRekkefolge() {
         final WSHentFullstendigEnhetListeResponse response = new WSHentFullstendigEnhetListeResponse();
-        final WSOrganisasjonsenhet navEnhet1 = new WSOrganisasjonsenhet();
-        navEnhet1.setEnhetId("1111");
-        navEnhet1.setEnhetNavn("Enhet");
-        navEnhet1.setStatus(WSEnhetsstatus.AKTIV);
-        final WSOrganisasjonsenhet navEnhet2 = new WSOrganisasjonsenhet();
-        navEnhet2.setEnhetId("2222");
-        navEnhet2.setEnhetNavn("Enhet");
-        navEnhet2.setStatus(WSEnhetsstatus.AKTIV);
-        final WSOrganisasjonsenhet navEnhet3 = new WSOrganisasjonsenhet();
-        navEnhet3.setEnhetId("3333");
-        navEnhet3.setEnhetNavn("Enhet");
-        navEnhet3.setStatus(WSEnhetsstatus.AKTIV);
-        response.getEnhetListe().addAll(asList(navEnhet3, navEnhet2, navEnhet1));
+        response.getEnhetListe().addAll(asList(lagEnhet("3333"), lagEnhet("2222"), lagEnhet("1111")));
         when(enhetWS.hentFullstendigEnhetListe(any(WSHentFullstendigEnhetListeRequest.class))).thenReturn(response);
 
         final List<AnsattEnhet> enheter = organisasjonEnhetServiceImpl.hentAlleEnheter();
@@ -58,14 +46,10 @@ public class OrganisasjonEnhetV2ServiceImplTest {
         assertThat(enheter.get(2).enhetId, is(equalTo("3333")));
     }
 
-
     @Test
     public void hentEnhetGittEnhetIdSkalReturnereHenteEnkeltEnhetGittEnhetId() throws Exception {
-        final WSOrganisasjonsenhet navEnhet = new WSOrganisasjonsenhet();
-        navEnhet.setEnhetId("0100");
-        navEnhet.setEnhetNavn("Nav Østfold");
-        navEnhet.setStatus(WSEnhetsstatus.AKTIV);
         final WSHentEnhetBolkResponse response = new WSHentEnhetBolkResponse();
+        final WSOrganisasjonsenhet navEnhet = lagEnhet("0100");
         response.getEnhetListe().add(navEnhet);
         when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(response);
 
@@ -97,5 +81,9 @@ public class OrganisasjonEnhetV2ServiceImplTest {
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
 
         assertThat(ansattEnhet.isPresent(), is(false));
+    }
+
+    private WSOrganisasjonsenhet lagEnhet(final String enhetId) {
+        return new WSOrganisasjonsenhet().withEnhetId(enhetId).withEnhetNavn("Enhet").withStatus(AKTIV);
     }
 }
