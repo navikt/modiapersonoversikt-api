@@ -128,40 +128,27 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         Assert.assertThat(gyldigeEnheter.size(), is(2));
     }
 
-
-
     @Test
-    public void enheterMedNavnSomInneholderTekstenAvvikletFiltreresBort(){
+    public void enheterSomIkkeErAktiveFiltreresBort(){
         List<AnsattEnhet> enheter = new ArrayList<>();
-        enheter.add(createEnhet("111", "avviklet kontor"));
-        enheter.add(createEnhet("222", "kontor2 (avviklet)"));
-        enheter.add(createEnhet("333", "kontor3"));
-        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
-
-        Assert.assertThat(gyldigeEnheter.size(), is(1));
-    }
-
-    @Test
-    public void enheterMedIngenTilknyttedeAnsatteFiltreresBort(){
-        List<AnsattEnhet> enheter = new ArrayList<>();
-        enheter.add(createEnhet("707", "enmanns kontor", 1));
-        enheter.add(createEnhet("101", "lite kontor", 5));
-        enheter.add(createEnhet("202", "fiktivt kontor 1", 0));
-        enheter.add(createEnhet("303", "mellomstort kontor", 20));
-        enheter.add(createEnhet("404", "fiktivt kontor 2", 0));
-        enheter.add(createEnhet("505", "fiktivt kontor 3", 0));
-        enheter.add(createEnhet("606", "stort kontor", 100));
+        enheter.add(createEnhet("707", "enmanns kontor", "AKTIV"));
+        enheter.add(createEnhet("101", "lite kontor", "AKTIV"));
+        enheter.add(createEnhet("202", "fiktivt kontor 1", "underEtablering"));
+        enheter.add(createEnhet("303", "mellomstort kontor", "AKTIV"));
+        enheter.add(createEnhet("404", "fiktivt kontor 2", "underAvvikling"));
+        enheter.add(createEnhet("505", "fiktivt kontor 3", "nedlagt"));
+        enheter.add(createEnhet("606", "stort kontor", "AKTIV"));
         List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
 
         Assert.assertThat(gyldigeEnheter.size(), is(4));
     }
 
-    private AnsattEnhet createEnhet(String enhetId, String enhetNavn, int antallRessurser) {
-        return new AnsattEnhet(enhetId, enhetNavn, antallRessurser);
+    private AnsattEnhet createEnhet(String enhetId, String enhetNavn, String status) {
+        return new AnsattEnhet(enhetId, enhetNavn, status);
     }
 
     private AnsattEnhet createEnhet(String enhetId, String enhetNavn) {
-        return createEnhet(enhetId, enhetNavn, 25);
+        return createEnhet(enhetId, enhetNavn, "AKTIV");
     }
 
 }
