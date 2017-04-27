@@ -14,7 +14,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,28 +34,6 @@ public class OrganisasjonEnhetServiceImplTest {
     private OrganisasjonEnhetServiceImpl organisasjonEnhetServiceImpl;
 
     @Test
-    public void skalSortereEnheterIStigendeRekkefolge() {
-        final WSHentFullstendigEnhetListeResponse response = new WSHentFullstendigEnhetListeResponse();
-        final WSDetaljertEnhet navEnhet1 = new WSDetaljertEnhet();
-        navEnhet1.setEnhetId("1111");
-        navEnhet1.setNavn("Enhet");
-        final WSDetaljertEnhet navEnhet2 = new WSDetaljertEnhet();
-        navEnhet2.setEnhetId("2222");
-        navEnhet2.setNavn("Enhet");
-        final WSDetaljertEnhet navEnhet3 = new WSDetaljertEnhet();
-        navEnhet3.setEnhetId("3333");
-        navEnhet3.setNavn("Enhet");
-        response.getEnhetListe().addAll(asList(navEnhet3, navEnhet2, navEnhet1));
-        when(enhetWS.hentFullstendigEnhetListe(any(WSHentFullstendigEnhetListeRequest.class))).thenReturn(response);
-
-        final List<AnsattEnhet> enheter = organisasjonEnhetServiceImpl.hentAlleEnheter();
-
-        assertThat(enheter.get(0).enhetId, is(equalTo("1111")));
-        assertThat(enheter.get(1).enhetId, is(equalTo("2222")));
-        assertThat(enheter.get(2).enhetId, is(equalTo("3333")));
-    }
-
-    @Test
     public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereEnkeltEnhetGittGeografiskNedslagsfelt() throws Exception {
         final WSDetaljertEnhet navEnhet = new WSDetaljertEnhet();
         navEnhet.setEnhetId("0219");
@@ -75,22 +52,6 @@ public class OrganisasjonEnhetServiceImplTest {
     }
 
     @Test
-    public void hentEnhetGittEnhetIdSkalReturnereHenteEnkeltEnhetGittEnhetId() throws Exception {
-        final WSDetaljertEnhet navEnhet = new WSDetaljertEnhet();
-        navEnhet.setEnhetId("0100");
-        navEnhet.setNavn("Nav Østfold");
-        final WSHentEnhetBolkResponse response = new WSHentEnhetBolkResponse();
-        response.getEnhetListe().add(navEnhet);
-        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(response);
-
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
-
-        assertTrue(enhetFraTjenesten.isSome());
-        assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.get().enhetId)));
-        assertThat(navEnhet.getNavn(), is(equalTo(enhetFraTjenesten.get().enhetNavn)));
-    }
-
-    @Test
     public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereTomOptionalDersomGeografiskNedslagsfeltReturnererTomRespons() throws Exception {
         when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenReturn(new WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse());
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("0219");
@@ -101,20 +62,6 @@ public class OrganisasjonEnhetServiceImplTest {
     public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereTomOptionalDersomGeografiskNedslagsfeltInneholderUgyldigInput() throws Exception {
         when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenThrow(new FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput());
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("Ikke Gyldig Input");
-        assertFalse(enhetFraTjenesten.isSome());
-    }
-
-    @Test
-    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
-        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
-        assertFalse(enhetFraTjenesten.isSome());
-    }
-
-    @Test
-    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdInneholderUgyldigInput() throws Exception {
-        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenThrow(new HentEnhetBolkUgyldigInput());
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
         assertFalse(enhetFraTjenesten.isSome());
     }
 
