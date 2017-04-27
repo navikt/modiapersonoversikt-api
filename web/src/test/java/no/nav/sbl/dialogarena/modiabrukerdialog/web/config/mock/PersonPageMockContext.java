@@ -12,6 +12,8 @@ import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.springframework.context.annotation.*;
 
+import java.util.Optional;
+
 import static no.nav.modig.lang.option.Optional.optional;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -44,7 +46,7 @@ public class PersonPageMockContext {
     @Bean
     public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
         OrganisasjonEnhetV2Service organisasjonEnhetService = mock(OrganisasjonEnhetV2Service.class);
-        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
+        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString())).thenReturn(Optional.of(new AnsattEnhet("", "")));
         return organisasjonEnhetService;
     }
 

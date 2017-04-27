@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
@@ -14,9 +13,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
+import static java.util.Optional.empty;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 
 public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Service {
 
@@ -43,12 +41,12 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         try {
             response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
             if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
-                return optional(response.getEnhetListe().stream().map(TIL_ANSATTENHET).findFirst().get());
+                return response.getEnhetListe().stream().map(TIL_ANSATTENHET).findFirst();
             } else {
-                return none();
+                return empty();
             }
         } catch (HentEnhetBolkUgyldigInput hentEnhetBolkUgyldigInput) {
-            return none();
+            return empty();
         }
 
     }

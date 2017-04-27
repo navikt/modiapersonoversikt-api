@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
@@ -14,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -71,7 +71,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
 
-        assertTrue(enhetFraTjenesten.isSome());
+        assertTrue(enhetFraTjenesten.isPresent());
         assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.get().enhetId)));
         assertThat(navEnhet.getEnhetNavn(), is(equalTo(enhetFraTjenesten.get().enhetNavn)));
     }
@@ -80,14 +80,14 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
         when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
-        assertFalse(enhetFraTjenesten.isSome());
+        assertFalse(enhetFraTjenesten.isPresent());
     }
 
     @Test
     public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdInneholderUgyldigInput() throws Exception {
         when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("x0100");
-        assertFalse(enhetFraTjenesten.isSome());
+        assertFalse(enhetFraTjenesten.isPresent());
     }
 
     @Test
@@ -96,6 +96,6 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
 
-        assertThat(ansattEnhet.isSome(), is(false));
+        assertThat(ansattEnhet.isPresent(), is(false));
     }
 }

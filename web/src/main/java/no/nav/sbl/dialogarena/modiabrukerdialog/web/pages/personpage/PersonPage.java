@@ -12,7 +12,6 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.*;
 import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
@@ -55,8 +54,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -194,7 +192,7 @@ public class PersonPage extends BasePage {
 
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetV2Service.hentEnhetGittEnhetId(valgtEnhet);
         return new GrunnInfo.Saksbehandler(
-                ansattEnhet.isSome() ? ansattEnhet.get().enhetNavn : "",
+                ansattEnhet.map(ae -> ae.enhetNavn).orElse(""),
                 saksbehandler.fornavn,
                 saksbehandler.etternavn
         );
