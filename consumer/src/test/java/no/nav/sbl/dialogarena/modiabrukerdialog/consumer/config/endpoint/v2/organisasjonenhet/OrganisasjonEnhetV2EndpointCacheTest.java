@@ -40,7 +40,7 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
     }
 
     @Test
-    public void cacheManager_harEntryForEndpointCache_etterKallTilEnhetWS() throws HentEnhetBolkUgyldigInput {
+    public void cacheManagerHarEntryForEndpointCacheEtterKallTilEnhetWS() throws HentEnhetBolkUgyldigInput {
         final WSHentEnhetBolkRequest request_1 = new WSHentEnhetBolkRequest()
                 .withEnhetIdListe("1234");
 
