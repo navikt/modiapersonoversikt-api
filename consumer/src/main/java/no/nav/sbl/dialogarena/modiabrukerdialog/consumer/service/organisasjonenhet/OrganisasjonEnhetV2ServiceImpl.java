@@ -6,6 +6,8 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -17,6 +19,8 @@ import static java.util.Optional.empty;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Service {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrganisasjonEnhetV2ServiceImpl.class);
 
     @Inject
     private OrganisasjonEnhetV2 enhetWS;
@@ -45,7 +49,8 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
             } else {
                 return empty();
             }
-        } catch (HentEnhetBolkUgyldigInput hentEnhetBolkUgyldigInput) {
+        } catch (HentEnhetBolkUgyldigInput e) {
+            logger.error("Ugyldig input \"" + enhetId + "\" til OrganisasjonEnhetV2.hentEnhetBolk.", e);
             return empty();
         }
 
