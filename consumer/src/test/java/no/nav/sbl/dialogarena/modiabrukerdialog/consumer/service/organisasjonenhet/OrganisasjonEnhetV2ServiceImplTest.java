@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSEnhetsstatus;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
@@ -89,4 +90,12 @@ public class OrganisasjonEnhetV2ServiceImplTest {
         assertFalse(enhetFraTjenesten.isSome());
     }
 
+    @Test
+    public void hentEnhetGittEnhetIdReturnererTomOptionalDersomExceptionKastesFraOrganisasjonEnhetV2() throws Exception {
+        when(enhetWS.hentEnhetBolk(any())).thenThrow(new HentEnhetBolkUgyldigInput());
+
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
+
+        assertThat(ansattEnhet.isSome(), is(false));
+    }
 }
