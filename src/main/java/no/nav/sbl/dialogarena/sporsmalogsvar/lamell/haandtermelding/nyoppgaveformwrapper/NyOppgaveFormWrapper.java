@@ -36,7 +36,6 @@ import static no.nav.modig.wicket.model.ModelUtils.*;
 public class NyOppgaveFormWrapper extends Panel {
 
     public static final String PRIORITET_NORMAL = "NORM";
-    public static final String ENHETSTATUS_AKTIV = "AKTIV";
 
     @Inject
     private GsakService gsakService;
@@ -395,14 +394,11 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
     public static boolean erGyldigEnhet(AnsattEnhet ansattEnhet) {
-        return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && enhetenErAktiv(ansattEnhet);
+        return enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(ansattEnhet) && ansattEnhet.erAktiv();
     }
 
     private static boolean enhetsIdErInnenforIntervallSomBrukesForBetjeningAvOppgaver(AnsattEnhet ansattEnhet) {
         return Integer.valueOf(ansattEnhet.enhetId) >= 100;
     }
 
-    private static boolean enhetenErAktiv(AnsattEnhet ansattEnhet) {
-        return ansattEnhet.status.equals(ENHETSTATUS_AKTIV);
-    }
 }
