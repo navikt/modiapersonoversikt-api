@@ -7,11 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsforde
 import java.util.List;
 
 public interface OrganisasjonEnhetService {
-    List<AnsattEnhet> hentAlleEnheter();
-
     Optional<AnsattEnhet> hentEnhetGittGeografiskNedslagsfelt(final String geografiskNedslagsfelt);
-
-    Optional<AnsattEnhet> hentEnhetGittEnhetId(final String enhetId);
-
+    
     List<Arbeidsfordeling> hentArbeidsfordeling(final String enhetId);
 }
