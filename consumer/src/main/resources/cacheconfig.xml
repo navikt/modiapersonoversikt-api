@@ -65,7 +65,6 @@
         <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
         <cache:caching cache="organisasjonEnhetV2">
             <cache:cacheable method="hent*"/>
-            <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
     <cache:advice id="aktorAdvice" key-generator="userkeygenerator">
