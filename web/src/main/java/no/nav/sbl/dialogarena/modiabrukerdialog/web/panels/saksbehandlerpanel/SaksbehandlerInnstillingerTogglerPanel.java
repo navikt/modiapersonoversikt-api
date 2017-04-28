@@ -40,7 +40,7 @@ public class SaksbehandlerInnstillingerTogglerPanel extends Panel {
         toggleWrapper.add(attributeIf("aria-pressed", "true", ekspandertModel, true));
         toggleWrapper.add(attributeIf("aria-pressed", "false", not(ekspandertModel), true));
 
-        toggleWrapper.add(new ContextImage("togglebilde", "img/modiaLogo.svg"));
+        toggleWrapper.add(new ContextImage("togglebilde", "svg/NAV-Modia-logo.svg"));
         toggleWrapper.add(new WebMarkupContainer("togglepil")
                 .add(hasCssClassIf("ned", not(ekspandertModel)))
                 .add(hasCssClassIf("opp", ekspandertModel)));

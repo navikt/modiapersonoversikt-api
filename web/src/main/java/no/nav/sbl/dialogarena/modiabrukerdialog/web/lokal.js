@@ -109,6 +109,13 @@ jQuery(document).ready(function ($) {
     }
 
     function toggleAvansertSok() {
+        var portfolio = $('#portfolio');
+        if (portfolio.is(':visible')) {
+            portfolio.hide();
+        }
+        else {
+            portfolio.show();
+        }
         var personsokElement = $('#personsok'), toppmeny = $('.main > .menu-intern'),
             fornavnInput = $('#utvidetPersonsokForm').find('input[name="fornavn"]'), sokKnapp = $('#toggle-personsok'),
             dataApne = sokKnapp.attr('data-apne'),
