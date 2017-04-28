@@ -62,7 +62,7 @@ public class MockSetupPage extends BasePage {
         super(pageParameters);
         mockSetupModeller = lagModeller();
 
-        add(new ContextImage("modiaLogo", "img/modiaLogo.svg"));
+        add(new ContextImage("modiaLogo", "svg/NAV-Modia-logo.svg"));
         Form form = new Form("velgMockForm") {
             @Override
             protected void onSubmit() {

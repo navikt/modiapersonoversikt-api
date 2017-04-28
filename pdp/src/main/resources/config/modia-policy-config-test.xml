@@ -38,6 +38,9 @@
 			<ns:Policy>
 				<ns:Location>policy/pesys-policy.xml</ns:Location>
 			</ns:Policy>
+            <ns:Policy>
+                <ns:Location>policy/oppfolging-policy.xml</ns:Location>
+            </ns:Policy>
         </ns:PolicySet>
     </ns:Policies>
     <ns:Locators>
