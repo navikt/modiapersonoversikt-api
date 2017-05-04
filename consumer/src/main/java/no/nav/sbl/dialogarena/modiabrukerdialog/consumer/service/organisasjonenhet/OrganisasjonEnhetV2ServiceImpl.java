@@ -2,10 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.FinnNAVKontorUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Service {
@@ -42,18 +44,33 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         final WSHentEnhetBolkRequest wsHentEnhetBolkRequest = new WSHentEnhetBolkRequest();
         wsHentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
         final WSHentEnhetBolkResponse response;
+        response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
+        if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
+            return of(TIL_ANSATTENHET.apply(response.getEnhetListe().get(0)));
+        } else {
+            return empty();
+        }
+    }
+
+    @Override
+    public Optional<AnsattEnhet> finnNAVKontor(final String geografiskTilknytning, final String diskresjonskode) {
+        final WSFinnNAVKontorRequest wsFinnNAVKontorRequest = new WSFinnNAVKontorRequest();
+        wsFinnNAVKontorRequest.setGeografiskTilknytning(new WSGeografiskeOmraader().withValue(geografiskTilknytning));
+        if (StringUtils.isNotBlank(diskresjonskode)) {
+            wsFinnNAVKontorRequest.setDiskresjonskode(new WSDiskresjonskoder().withValue(diskresjonskode));
+        }
         try {
-            response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
-            if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
-                return response.getEnhetListe().stream().map(TIL_ANSATTENHET).findFirst();
+            final WSFinnNAVKontorResponse wsFinnNAVKontorResponse = enhetWS.finnNAVKontor(wsFinnNAVKontorRequest);
+            if (wsFinnNAVKontorResponse.getNAVKontor() != null) {
+                return of(TIL_ANSATTENHET.apply(wsFinnNAVKontorResponse.getNAVKontor()));
             } else {
                 return empty();
             }
-        } catch (HentEnhetBolkUgyldigInput e) {
-            logger.error("Ugyldig input \"" + enhetId + "\" til OrganisasjonEnhetV2.hentEnhetBolk.", e);
+        } catch (FinnNAVKontorUgyldigInput e) {
+            logger.error("Ugyldig input geografiskTilknytning=\"" + geografiskTilknytning +
+                    "\", diskresjonskode=\"" + diskresjonskode + "\" til OrganisasjonEnhetV2.hentNAVKontor.", e);
             return empty();
         }
-
     }
 
     private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = comparing(o -> o.enhetId);

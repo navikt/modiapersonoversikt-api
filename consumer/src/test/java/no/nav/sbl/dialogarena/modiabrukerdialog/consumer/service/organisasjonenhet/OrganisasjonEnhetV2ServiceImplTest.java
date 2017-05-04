@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.FinnNAVKontorUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
@@ -75,10 +75,41 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     }
 
     @Test
-    public void hentEnhetGittEnhetIdReturnererTomOptionalDersomExceptionKastesFraOrganisasjonEnhetV2() throws Exception {
-        when(enhetWS.hentEnhetBolk(any())).thenThrow(new HentEnhetBolkUgyldigInput());
+    public void finnNAVKontorReturnererOptionalMedAnsattEnhetDersomWebserviceReturnererNAVKontor() throws Exception {
+        when(enhetWS.finnNAVKontor(any())).thenReturn(new WSFinnNAVKontorResponse().withNAVKontor(lagEnhet("1234")));
 
-        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
+
+        assertThat(ansattEnhet.isPresent(), is(true));
+    }
+
+    @Test
+    @SuppressWarnings("ConstantConditions")
+    public void finnNAVKontorReturnererOptionalMedKorrektMappetAnsattEnhetDersomWebserviceReturnererNAVKontor() throws Exception {
+        when(enhetWS.finnNAVKontor(any())).thenReturn(new WSFinnNAVKontorResponse().withNAVKontor(lagEnhet("1234")));
+
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
+
+        assertThat(ansattEnhet.isPresent(), is(true));
+        assertThat(ansattEnhet.get().enhetId, is("1234"));
+        assertThat(ansattEnhet.get().enhetNavn, is("Enhet"));
+        assertThat(ansattEnhet.get().status, is("AKTIV"));
+    }
+
+    @Test
+    public void finnNAVKontorReturnererTomOptionalDersomWebserviceReturnererNull() throws Exception {
+        when(enhetWS.finnNAVKontor(any())).thenReturn(new WSFinnNAVKontorResponse().withNAVKontor(null));
+
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
+
+        assertThat(ansattEnhet.isPresent(), is(false));
+    }
+
+    @Test
+    public void finnNAVKontorReturnererTomOptionalDersomExcetpionKastesFraWebservice() throws Exception {
+        when(enhetWS.finnNAVKontor(any())).thenThrow(new FinnNAVKontorUgyldigInput());
+
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
 
         assertThat(ansattEnhet.isPresent(), is(false));
     }

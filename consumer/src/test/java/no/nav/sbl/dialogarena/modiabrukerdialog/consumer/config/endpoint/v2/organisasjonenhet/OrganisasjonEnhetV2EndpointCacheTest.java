@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhet;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.FinnNAVKontorUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSDiskresjonskoder;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSGeografiskeOmraader;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSFinnNAVKontorRequest;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentEnhetBolkRequest;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -40,7 +43,7 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
     }
 
     @Test
-    public void cacheManagerHarEntryForEndpointCacheEtterKallTilEnhetWS() throws HentEnhetBolkUgyldigInput {
+    public void cacheManagerHarEntryForEndpointCacheEtterKallTilEnhetWS() {
         final WSHentEnhetBolkRequest request_1 = new WSHentEnhetBolkRequest()
                 .withEnhetIdListe("1234");
 
@@ -51,6 +54,25 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
         enhetWS.hentEnhetBolk(request_2);
         enhetWS.hentEnhetBolk(request_1);
         enhetWS.hentEnhetBolk(request_2);
+
+        assertThat(getCache().getName(), is(CACHE_NAME));
+        assertThat(getCache().getKeys().size(), is(2));
+    }
+
+    @Test
+    public void cacheManagerCacherKallTilFinnNAVKontor() throws FinnNAVKontorUgyldigInput {
+        final WSFinnNAVKontorRequest request_1 = new WSFinnNAVKontorRequest()
+                .withGeografiskTilknytning(new WSGeografiskeOmraader().withValue("1234"))
+                .withDiskresjonskode(new WSDiskresjonskoder().withValue("1234"));
+
+        final WSFinnNAVKontorRequest request_2 = new WSFinnNAVKontorRequest()
+                .withGeografiskTilknytning(new WSGeografiskeOmraader().withValue("4321"))
+                .withDiskresjonskode(new WSDiskresjonskoder().withValue("4321"));
+
+        enhetWS.finnNAVKontor(request_1);
+        enhetWS.finnNAVKontor(request_2);
+        enhetWS.finnNAVKontor(request_1);
+        enhetWS.finnNAVKontor(request_2);
 
         assertThat(getCache().getName(), is(CACHE_NAME));
         assertThat(getCache().getKeys().size(), is(2));
