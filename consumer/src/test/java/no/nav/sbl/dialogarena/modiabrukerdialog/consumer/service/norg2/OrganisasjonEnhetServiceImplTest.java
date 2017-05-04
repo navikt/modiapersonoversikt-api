@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.norg2;
 
-import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.*;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.FinnArbeidsfordelingForEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.OrganisasjonEnhetV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.*;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSFinnArbeidsfordelingForEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v1.meldinger.WSFinnArbeidsfordelingForEnhetBolkResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,11 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -32,38 +29,6 @@ public class OrganisasjonEnhetServiceImplTest {
 
     @InjectMocks
     private OrganisasjonEnhetServiceImpl organisasjonEnhetServiceImpl;
-
-    @Test
-    public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereEnkeltEnhetGittGeografiskNedslagsfelt() throws Exception {
-        final WSDetaljertEnhet navEnhet = new WSDetaljertEnhet();
-        navEnhet.setEnhetId("0219");
-        navEnhet.setNavn("Nav Bærum");
-        final WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse response = new WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse();
-        final WSEnheterForGeografiskNedslagsfelt wsEnheterForGeografiskNedslagsfelt = new WSEnheterForGeografiskNedslagsfelt();
-        wsEnheterForGeografiskNedslagsfelt.getEnhetListe().add(navEnhet);
-        response.getEnheterForGeografiskNedslagsfeltListe().add(wsEnheterForGeografiskNedslagsfelt);
-        when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenReturn(response);
-
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("0219");
-
-        assertTrue(enhetFraTjenesten.isSome());
-        assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.get().enhetId)));
-        assertThat(navEnhet.getNavn(), is(equalTo(enhetFraTjenesten.get().enhetNavn)));
-    }
-
-    @Test
-    public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereTomOptionalDersomGeografiskNedslagsfeltReturnererTomRespons() throws Exception {
-        when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenReturn(new WSFinnNAVKontorForGeografiskNedslagsfeltBolkResponse());
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("0219");
-        assertFalse(enhetFraTjenesten.isSome());
-    }
-
-    @Test
-    public void hentEnhetGittGeografiskNedslagsfeltSkalReturnereTomOptionalDersomGeografiskNedslagsfeltInneholderUgyldigInput() throws Exception {
-        when(enhetWS.finnNAVKontorForGeografiskNedslagsfeltBolk(any(WSFinnNAVKontorForGeografiskNedslagsfeltBolkRequest.class))).thenThrow(new FinnNAVKontorForGeografiskNedslagsfeltBolkUgyldigInput());
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittGeografiskNedslagsfelt("Ikke Gyldig Input");
-        assertFalse(enhetFraTjenesten.isSome());
-    }
 
     @Test
     public void hentArbeidsfordelingSkalReturnereListeAvArbeidsfordelinger() throws FinnArbeidsfordelingForEnhetBolkUgyldigInput {
@@ -142,8 +107,7 @@ public class OrganisasjonEnhetServiceImplTest {
 
     private WSFinnArbeidsfordelingForEnhetBolkResponse createWSArbeidsfordelingWithMissingArkivtema() {
         WSArbeidsfordeling arbeidsfordeling = createArbeidsfordeling("1337", new WSArkivtemaer().withValue("BIL"));
-        WSArkivtemaer arkivTema = null;
-        WSArbeidsfordeling arbeidsfordelingUtenGeografiskNedslagsfelt = createArbeidsfordeling("1337", arkivTema);
+        WSArbeidsfordeling arbeidsfordelingUtenGeografiskNedslagsfelt = createArbeidsfordeling("1337", null);
 
         WSArbeidsfordelingerForEnhet arbeidsfordelingerForEnhet = new WSArbeidsfordelingerForEnhet()
                 .withArbeidsfordelingListe(arbeidsfordeling, arbeidsfordelingUtenGeografiskNedslagsfelt);

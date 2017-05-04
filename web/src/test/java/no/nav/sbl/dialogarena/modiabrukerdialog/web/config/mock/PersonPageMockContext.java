@@ -14,7 +14,6 @@ import org.springframework.context.annotation.*;
 
 import java.util.Optional;
 
-import static no.nav.modig.lang.option.Optional.optional;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -37,11 +36,8 @@ public class PersonPageMockContext {
 
     @Bean
     public OrganisasjonEnhetService organisasjonEnhetService() {
-        OrganisasjonEnhetService organisasjonEnhetService = mock(OrganisasjonEnhetService.class);
-        when(organisasjonEnhetService.hentEnhetGittGeografiskNedslagsfelt(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
-        return organisasjonEnhetService;
+        return mock(OrganisasjonEnhetService.class);
     }
-
 
     @Bean
     public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
