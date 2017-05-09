@@ -16,8 +16,6 @@ import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
 /**
  * Starter MODIA Brukerdialog lokalt på Jetty.
- * <p/>
- * NB!
  * Sett start.properties for å styre integrasjon.
  */
 public class StartJetty {
@@ -40,7 +38,7 @@ public class StartJetty {
                 .overrideWebXml(new File(TEST_RESOURCES, "override-web.xml"))
                 .withLoginService(createLoginService())
                 .buildJetty();
-        jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
+        jetty.start();
     }
 
     public static JAASLoginService createLoginService() {
