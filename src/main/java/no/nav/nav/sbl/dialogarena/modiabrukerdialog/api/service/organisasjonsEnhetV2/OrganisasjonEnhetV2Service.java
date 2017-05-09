@@ -9,4 +9,6 @@ public interface OrganisasjonEnhetV2Service {
     List<AnsattEnhet> hentAlleEnheter();
 
     Optional<AnsattEnhet> hentEnhetGittEnhetId(final String enhetId);
+
+    Optional<AnsattEnhet> finnNAVKontor(final String geografiskTilknytning, final String diskresjonskode);
 }
