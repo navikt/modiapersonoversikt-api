@@ -106,7 +106,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     }
 
     @Test
-    public void finnNAVKontorReturnererTomOptionalDersomExcetpionKastesFraWebservice() throws Exception {
+    public void finnNAVKontorReturnererTomOptionalDersomExceptionKastesFraWebservice() throws Exception {
         when(enhetWS.finnNAVKontor(any())).thenThrow(new FinnNAVKontorUgyldigInput());
 
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
