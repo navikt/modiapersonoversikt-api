@@ -61,7 +61,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         }
         try {
             final WSFinnNAVKontorResponse wsFinnNAVKontorResponse = enhetWS.finnNAVKontor(wsFinnNAVKontorRequest);
-            if (wsFinnNAVKontorResponse.getNAVKontor() != null) {
+            if (wsFinnNAVKontorResponse != null && wsFinnNAVKontorResponse.getNAVKontor() != null) {
                 return of(TIL_ANSATTENHET.apply(wsFinnNAVKontorResponse.getNAVKontor()));
             } else {
                 return empty();
