@@ -20,7 +20,8 @@ public class OrganisasjonEnhetEndpointConfig {
         final OrganisasjonEnhetV1 organisasjonEnhetV1 = lagEndpoint();
         final OrganisasjonEnhetV1 organisasjonEnhetV1Mock = lagMockEnpoint();
 
-        return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetV1", organisasjonEnhetV1, organisasjonEnhetV1Mock, NORG2_ORGANISASJON_ENHET_KEY, OrganisasjonEnhetV1.class);
+        return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetV1", organisasjonEnhetV1,
+                organisasjonEnhetV1Mock, NORG2_ORGANISASJON_ENHET_KEY, OrganisasjonEnhetV1.class);
     }
 
     @Bean

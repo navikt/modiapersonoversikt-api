@@ -15,10 +15,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pensjonsak.PensjonSakEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.BehandleHenvendelseEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.SendUtHenvendelseEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk.KodeverkV2EndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhet.OrganisasjonEnhetV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgavebehandlingV3EndpointConfig;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +50,8 @@ import org.springframework.context.annotation.Import;
         ArbeidOgAktivitetEndpointConfig.class,
         PensjonSakEndpointConfig.class,
         VarslingEndpointConfig.class,
-        OrganisasjonEnhetEndpointConfig.class
+        OrganisasjonEnhetEndpointConfig.class,
+        OrganisasjonEnhetV2EndpointConfig.class
 })
 public class EndpointsConfig {
 

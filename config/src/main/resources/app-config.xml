@@ -34,6 +34,7 @@
         <baseUrl alias="server.pesys" mapToProperty="server.pesys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
+        <baseUrl alias="server.veilarbportefoljeflatefs" mapToProperty="server.veilarbportefoljeflatefs"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
@@ -52,6 +53,7 @@
         <webservice alias="virksomhet:sykepenger_v2" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:DigitalKontakinformasjon_v1" mapToProperty="dkifendpoint"/>
         <webservice alias="virksomhet:OrganisasjonEnhet_v1" mapToProperty="norg2.organisasjonenhet.v1"/>
+        <webservice alias="virksomhet:OrganisasjonEnhet_v2" mapToProperty="norg2.organisasjonenhet.v2"/>
         <webservice alias="Utbetaling_v1" mapToProperty="utbetalingendpoint"/>
         <webservice alias="domene.Brukerdialog:Henvendelse_v2" mapToProperty="henvendelse.v2"/>
         <webservice alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
