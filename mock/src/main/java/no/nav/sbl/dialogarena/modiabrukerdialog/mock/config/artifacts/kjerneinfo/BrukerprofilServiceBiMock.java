@@ -4,7 +4,7 @@ import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilResponse;
 import no.nav.brukerprofil.domain.Bruker;
-import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon;
+import no.nav.brukerprofil.domain.TilrettelagtKommunikasjon;
 import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserPersonIdentErUtgaatt;
 import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
