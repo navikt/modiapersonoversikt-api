@@ -49,7 +49,7 @@ public class PlukkOppgaveServiceImplTest {
     static {
         personResponse.setPerson(new Person.With()
                 .personfakta(new Personfakta.With()
-                        .harAnsvarligEnhet(new AnsvarligEnhet.With()
+                        .ansvarligEnhet(new AnsvarligEnhet.With()
                                 .organisasjonsenhet(new Organisasjonsenhet.With()
                                         .organisasjonselementId("1").done()).done()).done()).done());
         personResponse.getPerson().getPersonfakta().setDiskresjonskode("7");

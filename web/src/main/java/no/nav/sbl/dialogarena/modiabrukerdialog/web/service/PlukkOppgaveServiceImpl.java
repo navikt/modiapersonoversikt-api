@@ -61,7 +61,7 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
             Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(kjerneinfoRequest).getPerson().getPersonfakta();
 
             String brukersDiskresjonskode = defaultString(personfakta.getDiskresjonskode());
-            String brukersEnhet = defaultString(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
+            String brukersEnhet = defaultString(personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
 
             return pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)))
                     && pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));

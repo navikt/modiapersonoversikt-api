@@ -6,17 +6,17 @@ import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoServ
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.tjeneste.virksomhet.person.v2.PersonV2;
+import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
 
 public class PersonKjerneinfoConsumerConfigImpl {
 
     private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    private PersonV2 personPortType;
+    private PersonV3 personPortType;
     private KjerneinfoMapper kjerneinfoMapperBean;
     private EnforcementPoint kjerneinfoPep;
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
 
-    public PersonKjerneinfoConsumerConfigImpl(PersonV2 personPortType,
+    public PersonKjerneinfoConsumerConfigImpl(PersonV3 personPortType,
                                               KjerneinfoMapper kjerneinfoMapperBean, EnforcementPoint kjerneinfoPep,
                                               final OrganisasjonEnhetV2Service organisasjonEnhetV2Service,
                                               SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
