@@ -16,8 +16,9 @@ public class PersonKjerneinfoConsumerConfigImpl {
     private EnforcementPoint kjerneinfoPep;
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
 
-    public PersonKjerneinfoConsumerConfigImpl(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapperBean,
-                                              EnforcementPoint kjerneinfoPep, final OrganisasjonEnhetV2Service organisasjonEnhetV2Service,
+    public PersonKjerneinfoConsumerConfigImpl(PersonV3 personPortType,
+                                              KjerneinfoMapper kjerneinfoMapperBean, EnforcementPoint kjerneinfoPep,
+                                              final OrganisasjonEnhetV2Service organisasjonEnhetV2Service,
                                               SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
         this.personPortType = personPortType;
         this.kjerneinfoMapperBean = kjerneinfoMapperBean;

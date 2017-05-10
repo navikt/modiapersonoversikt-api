@@ -29,8 +29,8 @@ public class OrganisasjonEnhetV2Mock {
             }
 
             @Override
-            public WSHentOverordnetEnhetListeRequest hentOverordnetEnhetListe(final WSHentOverordnetEnhetListeRequest request) throws HentOverordnetEnhetListeEnhetenErVirtuell, HentOverordnetEnhetListeEnhetIkkeFunnet {
-                return new WSHentOverordnetEnhetListeRequest(); // Request?? Er noe krøll med WSDLen, gir beskjed til Integrasjon.
+            public WSHentOverordnetEnhetListeResponse hentOverordnetEnhetListe(final WSHentOverordnetEnhetListeRequest request) {
+                return new WSHentOverordnetEnhetListeResponse();
             }
 
             @Override
