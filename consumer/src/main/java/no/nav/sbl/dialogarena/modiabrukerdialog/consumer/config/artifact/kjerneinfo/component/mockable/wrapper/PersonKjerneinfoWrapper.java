@@ -11,9 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjernei
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;

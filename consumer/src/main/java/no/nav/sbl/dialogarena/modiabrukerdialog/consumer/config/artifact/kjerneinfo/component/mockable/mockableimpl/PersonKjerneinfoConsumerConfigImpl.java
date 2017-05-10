@@ -28,8 +28,8 @@ public class PersonKjerneinfoConsumerConfigImpl {
     }
 
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapperBean,
-                kjerneinfoPep, organisasjonEnhetV2Service, saksbehandlerInnstillingerService);
+        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapperBean, kjerneinfoPep,
+                organisasjonEnhetV2Service, saksbehandlerInnstillingerService);
     }
 
 }
