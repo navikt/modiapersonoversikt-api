@@ -121,7 +121,7 @@
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
         <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.6</organisasjonenhet.tjenestespesifikasjon.versjon>
-        <organisasjonenhet-v2.tjenestespesifikasjon.versjon>1.0.5-SNAPSHOT</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
+        <organisasjonenhet-v2.tjenestespesifikasjon.versjon>1.0.5</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
