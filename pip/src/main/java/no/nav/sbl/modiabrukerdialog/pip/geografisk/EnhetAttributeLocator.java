@@ -1,6 +1,5 @@
 package no.nav.sbl.modiabrukerdialog.pip.geografisk;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.support.EnhetAttributeLocatorDelegate;
 import org.jboss.security.xacml.interfaces.XACMLConstants;
 import org.jboss.security.xacml.locators.AttributeLocator;
@@ -66,12 +65,19 @@ public class EnhetAttributeLocator extends AttributeLocator {
     }
 
     private Set<String> getGeografiskeNedslagsfelt(String enhet) {
-        return delegate.getArbeidsfordelingForEnhet(enhet)
+        // Svært temporær løsning fordi OrganisasjonEnhetV1.hentArbeidsfordeling(...) fases ut, og ikke er tilgjengelig
+        // i T9. Det er mulig at all kode relatert til tilgangskontroll gitt saksbehanlders enhets geografiske
+        // nedslagsfelt som ble innført i 2017-HL1 skal fjernes, men inntil det blir avgjort lar vi denne koden alltid
+        // returnere et geografisk nedslagsfelt som ikke eksisterer. Om jeg har forstått rule
+        // valgt-enhet-har-geografisk-nedslagsfelt i geografisk-med-begrunnelse-policy.xml og
+        // geografisk-policy.xml korrekt, vil det bety at svaret alltid er "nei".
+        return new HashSet<>(Collections.singletonList("123456789"));
+        /*return delegate.getArbeidsfordelingForEnhet(enhet)
                         .stream()
                         .map(Arbeidsfordeling::getGeografiskNedslagsfelt)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.toSet());*/
     }
 
     private Set<AttributeValue> convertSet(Set<String> inputSet) {

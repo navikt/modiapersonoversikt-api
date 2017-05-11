@@ -77,6 +77,7 @@ public class PersonKjerneinfoServiceBiMock {
                         .ansvarligEnhet(new AnsvarligEnhet.With()
                                 .organisasjonsenhet(new Organisasjonsenhet.With()
                                         .organisasjonselementId("1234")
+                                        .organisasjonselementNavn("NAV Mockenhet")
                                         .done())
                                 .done())
                         .familierelasjoner(Arrays.asList(familierelasjon))
