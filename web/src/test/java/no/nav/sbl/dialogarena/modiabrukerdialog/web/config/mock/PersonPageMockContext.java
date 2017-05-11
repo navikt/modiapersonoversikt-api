@@ -62,15 +62,6 @@ public class PersonPageMockContext {
         return personKjerneinfoServiceBi;
     }
 
-    private HentKjerneinformasjonResponse lagMockKjerneinfoResponse() {
-        Personfakta personFakta = new Personfakta();
-        Person person = new Person();
-        person.setPersonfakta(personFakta);
-        HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
-        hentKjerneinformasjonResponse.setPerson(person);
-        return hentKjerneinformasjonResponse;
-    }
-
     @Bean
     public PersonsokServiceBi personsokServiceBi() {
         return mock(PersonsokServiceBi.class);
@@ -87,5 +78,14 @@ public class PersonPageMockContext {
         when(mock.getDefaultLocale()).thenReturn("nb");
         when(mock.hentTekst(anyString())).thenReturn("Tekst fra mock-cms");
         return mock;
+    }
+
+    private HentKjerneinformasjonResponse lagMockKjerneinfoResponse() {
+        Personfakta personFakta = new Personfakta();
+        Person person = new Person();
+        person.setPersonfakta(personFakta);
+        HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
+        hentKjerneinformasjonResponse.setPerson(person);
+        return hentKjerneinformasjonResponse;
     }
 }
