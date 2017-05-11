@@ -45,12 +45,13 @@ Denne jobben kjøres derfor hver halvtime for å få oppdatert data fra enonic.
 
 
 ## Oppstart av appen på Jetty
+Via StartJetty klassen kan du starte Modiabrukerdialog lokalt. Integrasjon mot andre tjenester kan konfigureres i jetty-environment.properties files.
 - Hvis man får OutOfMemoryError ved lokal kjøring så kan man sette opp PermGen space i prosessen som kjører StartJetty,
 ved å legge til -XX:MaxPermSize=256M som VM Option.
 I IntelliJ gjøres dette i ved å klikke "Edit Configurations" i nedtrekksmenyen for prosessen "StartJetty" i topplinjen.
 
 ### Testing
-- Java tester køres hver gang man bygger Modia og subset av tester kan også køres i IntelliJ. I terminalen `mvn test`, evt. `mvn clean install`.
+- Java tester kjøres hver gang man bygger Modia og subset av tester kan også kjøres i IntelliJ. I terminalen `mvn test`, evt. `mvn clean install`.
 - Js-tester må køres manuellt. Kør filen test_runner.html.
 
 ### IntelliJ

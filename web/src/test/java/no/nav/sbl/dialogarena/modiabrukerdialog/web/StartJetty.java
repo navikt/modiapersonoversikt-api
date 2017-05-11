@@ -13,11 +13,6 @@ import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustSto
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
-
-/**
- * Starter MODIA Brukerdialog lokalt på Jetty.
- * Sett start.properties for å styre integrasjon.
- */
 public class StartJetty {
 
     public static void main(String[] args) {
