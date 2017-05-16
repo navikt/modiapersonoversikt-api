@@ -4,20 +4,17 @@ import no.nav.kjerneinfo.consumer.fim.mapping.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.config.PersonKjerneinfoConsumerConfig;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.KjerneinfoMapperConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.PersonKjerneinfoConsumerConfigImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import no.nav.tjeneste.virksomhet.person.v2.PersonV2;
+import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock;
 
@@ -29,12 +26,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class PersonKjerneinfoWrapper {
 
     @Inject
-    @Named("hentPersonKjerneinfoJaxWsPortProxyFactoryBean")
-    private PersonV2 personPortType;
-
-    @Inject
-    @Named("hentSelftestPersonKjerneinfoJaxWsPortProxyFactoryBean")
-    private PersonV2 selfTestPersonPortType;
+    private PersonV3 personPortType;
 
     @Inject
     private KjerneinfoMapper kjerneinfoMapperBean;
@@ -43,7 +35,7 @@ public class PersonKjerneinfoWrapper {
     private EnforcementPoint kjerneinfoPep;
 
     @Inject
-    private OrganisasjonEnhetService organisasjonEnhetService;
+    private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
@@ -53,10 +45,9 @@ public class PersonKjerneinfoWrapper {
     public Wrapper<PersonKjerneinfoServiceBi> personKjerneinfoServiceDefault() {
         PersonKjerneinfoConsumerConfigImpl kjerneinfoConfig = new PersonKjerneinfoConsumerConfigImpl(
                 personPortType,
-                selfTestPersonPortType,
                 kjerneinfoMapperBean,
                 kjerneinfoPep,
-                organisasjonEnhetService,
+                organisasjonEnhetV2Service,
                 saksbehandlerInnstillingerService);
         return new Wrapper<>(kjerneinfoConfig.personKjerneinfoServiceBi());
     }

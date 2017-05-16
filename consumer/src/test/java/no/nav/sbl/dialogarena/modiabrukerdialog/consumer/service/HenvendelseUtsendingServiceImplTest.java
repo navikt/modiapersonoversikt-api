@@ -125,9 +125,9 @@ public class HenvendelseUtsendingServiceImplTest {
         Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
         organisasjonsenhet.setOrganisasjonselementId(ENHET);
         ansvarligEnhet.setOrganisasjonsenhet(organisasjonsenhet);
-        personfakta.setHarAnsvarligEnhet(ansvarligEnhet);
+        personfakta.setAnsvarligEnhet(ansvarligEnhet);
         person.setPersonfakta(personfakta);
-        person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
         kjerneinformasjonResponse.setPerson(person);
         when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
     }

@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.*;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSEnhetsstatus;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +26,21 @@ public class OrganisasjonEnhetV2Mock {
             public WSHentFullstendigEnhetListeResponse hentFullstendigEnhetListe(
                     final WSHentFullstendigEnhetListeRequest wsHentFullstendigEnhetListeRequest) {
                 return new WSHentFullstendigEnhetListeResponse().withEnhetListe(lagWSDetaljertEnhet());
+            }
+
+            @Override
+            public WSHentOverordnetEnhetListeResponse hentOverordnetEnhetListe(final WSHentOverordnetEnhetListeRequest request) {
+                return new WSHentOverordnetEnhetListeResponse();
+            }
+
+            @Override
+            public WSFinnNAVKontorResponse finnNAVKontor(final WSFinnNAVKontorRequest request) throws FinnNAVKontorUgyldigInput {
+                return new WSFinnNAVKontorResponse().withNAVKontor(
+                        new WSOrganisasjonsenhet()
+                                .withEnhetId("1234")
+                                .withEnhetNavn("NAV Mockenhet")
+                                .withStatus(WSEnhetsstatus.AKTIV)
+                );
             }
 
             @Override
