@@ -6,9 +6,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({
-        BrukerprofilConsumerConfigResolver.class,
-        BrukerprofilWrapper.class,
-
         BehandleBrukerprofilConsumerConfigResolver.class,
         BehandleBrukerprofilWrapper.class,
 

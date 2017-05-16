@@ -47,12 +47,12 @@ public class PlukkOppgaveServiceImplTest {
     private static HentKjerneinformasjonResponse personResponse = new HentKjerneinformasjonResponse();
 
     static {
+        Personfakta personfakta = new Personfakta();
+        personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
+                .organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId("1").done()).done());
+        personfakta.setDiskresjonskode("7");
         personResponse.setPerson(new Person.With()
-                .personfakta(new Personfakta.With()
-                        .ansvarligEnhet(new AnsvarligEnhet.With()
-                                .organisasjonsenhet(new Organisasjonsenhet.With()
-                                        .organisasjonselementId("1").done()).done()).done()).done());
-        personResponse.getPerson().getPersonfakta().setDiskresjonskode("7");
+                .personfakta(personfakta).done());
     }
 
     @Before

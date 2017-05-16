@@ -4,13 +4,8 @@ import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.domain.person.Adresse;
-import no.nav.kjerneinfo.domain.person.Person;
-import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.kjerneinfo.domain.person.Personnavn;
-import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
-import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
-import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
+import no.nav.kjerneinfo.domain.person.*;
+import no.nav.kjerneinfo.domain.person.fakta.*;
 
 import java.util.Arrays;
 
@@ -38,51 +33,54 @@ public class PersonKjerneinfoServiceBiMock {
     }
 
     private static Person createPerson() {
-        Person barn = new Person.With()
-                .fodselsnummer("***REMOVED***")
-                .personfakta(new Personfakta.With()
-                        .sivilstand(new Kodeverdi.With()
-                                .value("SINGEL")
-                                .done())
-                        .navn(new Personnavn.With()
-                                .fornavn("Barn")
-                                .etternavn("Testesen")
-                                .done())
-                        .adresse(new Adresse.With()
-                                .gatenavn("Testgata")
-                                .postnummer("1337")
-                                .poststed("Test").done())
-                        .done())
-                .done();
-
+        Person barn = lagBarn();
         Familierelasjon familierelasjon = new Familierelasjon();
         familierelasjon.setHarSammeBosted(true);
         familierelasjon.setTilRolle(BARN.toString().toUpperCase());
         familierelasjon.setTilPerson(barn);
 
+        Personfakta personfakta = new Personfakta();
+        personfakta.setSivilstand(new Kodeverdi.With().value("SINGEL").done());
+        personfakta.setPersonnavn(lagPersonnavn("Test", "Testesen"));
+        personfakta.setAdresse(lagMockAdresse());
+        personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
+                .organisasjonsenhet(new Organisasjonsenhet.With()
+                        .organisasjonselementId("1234")
+                        .organisasjonselementNavn("NAV Mockenhet")
+                        .done())
+                .done());
+        personfakta.setHarFraRolleIList(Arrays.asList(familierelasjon));
+
         return new Person.With()
                 .fodselsnummer(FODSELSNUMMER)
-                .personfakta(new Personfakta.With()
-                        .sivilstand(new Kodeverdi.With()
-                                .value("SINGEL")
-                                .done())
-                        .navn(new Personnavn.With()
-                                .fornavn("Test")
-                                .etternavn("Testesen")
-                                .done())
-                        .adresse(new Adresse.With()
-                                .gatenavn("Testgata")
-                                .postnummer("1337")
-                                .poststed("Test").done())
-                        .ansvarligEnhet(new AnsvarligEnhet.With()
-                                .organisasjonsenhet(new Organisasjonsenhet.With()
-                                        .organisasjonselementId("1234")
-                                        .organisasjonselementNavn("NAV Mockenhet")
-                                        .done())
-                                .done())
-                        .familierelasjoner(Arrays.asList(familierelasjon))
-                        .done())
+                .personfakta(personfakta).done();
+    }
+
+    private static Person lagBarn() {
+        Personfakta personfakta = new Personfakta();
+        personfakta.setSivilstand(new Kodeverdi.With().value("SINGEL").done());
+        personfakta.setPersonnavn(lagPersonnavn("Barn", "Testesen"));
+        personfakta.setAdresse(lagMockAdresse());
+        Person barn = new Person.With()
+                .fodselsnummer("***REMOVED***")
+                .personfakta(personfakta)
                 .done();
+
+        return barn;
+    }
+
+    private static Adresse lagMockAdresse() {
+        return new Adresse.With()
+                .gatenavn("Testgata")
+                .postnummer("1337")
+                .poststed("Test").done();
+    }
+
+    private static Personnavn lagPersonnavn(String fornavn, String etternavn) {
+        Personnavn personnavn = new Personnavn();
+        personnavn.setFornavn(fornavn);
+        personnavn.setEtternavn(etternavn);
+        return  personnavn;
     }
 
 }

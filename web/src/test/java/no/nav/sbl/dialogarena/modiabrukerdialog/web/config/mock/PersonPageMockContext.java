@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
@@ -14,6 +17,7 @@ import org.springframework.context.annotation.*;
 
 import java.util.Optional;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -53,17 +57,14 @@ public class PersonPageMockContext {
 
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return mock(PersonKjerneinfoServiceBi.class);
+        PersonKjerneinfoServiceBi personKjerneinfoServiceBi = mock(PersonKjerneinfoServiceBi.class);
+        when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(lagMockKjerneinfoResponse());
+        return personKjerneinfoServiceBi;
     }
 
     @Bean
     public PersonsokServiceBi personsokServiceBi() {
         return mock(PersonsokServiceBi.class);
-    }
-
-    @Bean
-    public BrukerprofilServiceBi brukerprofilServiceBi() {
-        return mock(BrukerprofilServiceBi.class);
     }
 
     @Bean
@@ -77,5 +78,14 @@ public class PersonPageMockContext {
         when(mock.getDefaultLocale()).thenReturn("nb");
         when(mock.hentTekst(anyString())).thenReturn("Tekst fra mock-cms");
         return mock;
+    }
+
+    private HentKjerneinformasjonResponse lagMockKjerneinfoResponse() {
+        Personfakta personFakta = new Personfakta();
+        Person person = new Person();
+        person.setPersonfakta(personFakta);
+        HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
+        hentKjerneinformasjonResponse.setPerson(person);
+        return hentKjerneinformasjonResponse;
     }
 }
