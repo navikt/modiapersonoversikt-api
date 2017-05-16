@@ -4,22 +4,14 @@ import no.nav.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimBruker;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimDagpengekontrakt;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimPeriode;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimRettighetsgruppe;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimVedtak;
-import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.FimYtelseskontrakt;
+import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt.*;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
 
 import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateToXmlGregorianCalendar;
-import static no.nav.kjerneinfo.common.mockutils.DateUtils.getDate;
-import static no.nav.kjerneinfo.common.mockutils.DateUtils.getRandomDate;
-import static no.nav.kjerneinfo.common.mockutils.DateUtils.getRandomDatePair;
+import static no.nav.kjerneinfo.common.mockutils.DateUtils.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
