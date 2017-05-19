@@ -93,8 +93,8 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>1.2.2-2017-HL3-SNAPSHOT</personsok.version>
-        <kjerneinfo.versjon>5.0.0</kjerneinfo.versjon>
+        <personsok.version>2.0.0-2017-HL3</personsok.version>
+        <kjerneinfo.versjon>5.0.1-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
@@ -299,17 +299,6 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>brukerprofil-domain</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>brukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
