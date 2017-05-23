@@ -13,7 +13,7 @@
                 <!-- if resource is flagged code 6 -->
                 <Resource>
                     <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">6</AttributeValue>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SPSF</AttributeValue>
                         <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code" />
                     </ResourceMatch>
                 </Resource>
@@ -36,7 +36,7 @@
                 <!-- if resource is flagged code 7 -->
                 <Resource>
                     <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">7</AttributeValue>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SPFO</AttributeValue>
                         <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code" />
                     </ResourceMatch>
                 </Resource>

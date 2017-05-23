@@ -23,7 +23,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 	public void denyIfInternBrukerNotKode7AndRessursKode7() throws Exception {
 		RequestContext request = createRequestBuilder()
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE3")
-				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "7")
+				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "SPFO")
 				.build();
 		assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
@@ -32,7 +32,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 	public void allowIfInternBrukerKode7AndRessursKode7() throws Exception {
 		RequestContext request = createRequestBuilder()
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE7")
-				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "7")
+				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "SPFO")
 				.build();
 		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
 	}
@@ -41,7 +41,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 	public void denyIfInternBrukerNotKode6AndRessursKode6() throws Exception {
 		RequestContext request = createRequestBuilder()
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE3")
-				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "6")
+				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "SPSF")
 				.build();
 		assertThat(pdp.evaluate(request)).hasDecision(DENY);
 	}
@@ -50,7 +50,7 @@ public class DiskresjonPolicyTest extends AbstractPDPTest {
 	public void allowIfInternBrukerKode6AndRessursKode6() throws Exception {
 		RequestContext request = createRequestBuilder()
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_KODE6")
-				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "6")
+				.withResourceAttr(ATTR_ID_DISCRETION_CODE, "SPSF")
 				.build();
 		assertThat(pdp.evaluate(request)).hasDecision(PERMIT);
 	}
