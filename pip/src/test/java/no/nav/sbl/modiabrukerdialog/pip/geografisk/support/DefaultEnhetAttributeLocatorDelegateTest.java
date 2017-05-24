@@ -99,7 +99,7 @@ public class DefaultEnhetAttributeLocatorDelegateTest {
         assertTrue(values.isEmpty());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void getArbeidsfordelingForValgtEnhet() {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(orgEnhetservice.hentArbeidsfordeling(VALGT_ENHET)).thenReturn(getArbeidsfordeling(ENHET_ID_I_SAMME_FYLKE, ENHET_ID_I_ANNET_FYLKE));
