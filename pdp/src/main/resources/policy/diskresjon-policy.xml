@@ -10,7 +10,7 @@
     <Rule RuleId="modia-deny-if-not-kode6" Effect="Deny" >
         <Target>
             <Resources>
-                <!-- if resource is flagged code 6 -->
+                <!-- if resource is flagged code 6 / SPSF (SPerret adresse Strengt Fortrolig) -->
                 <Resource>
                     <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SPSF</AttributeValue>
@@ -33,7 +33,7 @@
     <Rule RuleId="modia-deny-if-not-kode7" Effect="Deny" >
         <Target>
             <Resources>
-                <!-- if resource is flagged code 7 -->
+                <!-- if resource is flagged code 7 / SPFO (SPerret adresse FOrtrolig) -->
                 <Resource>
                     <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SPFO</AttributeValue>
