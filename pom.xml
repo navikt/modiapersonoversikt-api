@@ -93,7 +93,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>2.0.0-2017-HL3</personsok.version>
+        <personsok.version>2.0.1</personsok.version>
         <kjerneinfo.versjon>5.0.1-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
