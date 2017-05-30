@@ -251,7 +251,6 @@ public class PersonPageTest extends WicketPageTest {
         final HentKjerneinformasjonResponse respons = new HentKjerneinformasjonResponse();
         final Person person = new Person();
         final Personfakta personfakta = new Personfakta();
-        person.setFodselsnummer(new Fodselsnummer(testFnr));
         personfakta.setPersonnavn(new Personnavn.With().fornavn("etFornavn").etternavn("etEtternavn").done());
         personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With().organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId("0000").done()).done());
         person.setPersonfakta(personfakta);
