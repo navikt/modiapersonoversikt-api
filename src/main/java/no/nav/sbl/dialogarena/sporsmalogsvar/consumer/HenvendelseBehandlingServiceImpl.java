@@ -128,7 +128,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
         kjerneinfoRequest.setBegrunnet(true);
         Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
-        return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
     protected Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
