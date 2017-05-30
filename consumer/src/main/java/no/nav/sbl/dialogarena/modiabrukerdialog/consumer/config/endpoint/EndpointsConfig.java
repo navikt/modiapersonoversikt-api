@@ -12,7 +12,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg2.OrganisasjonEnhetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pensjonsak.PensjonSakEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
@@ -51,7 +50,6 @@ import org.springframework.context.annotation.Import;
         ArbeidOgAktivitetEndpointConfig.class,
         PensjonSakEndpointConfig.class,
         VarslingEndpointConfig.class,
-        OrganisasjonEnhetEndpointConfig.class,
         OrganisasjonEnhetV2EndpointConfig.class,
         EgenAnsattV1EndpointConfig.class
 })

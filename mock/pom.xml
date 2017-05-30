@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>13.0.0-2017-HL3-SNAPSHOT</version>
+        <version>13.0.3-2017-HL3-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-mock</artifactId>
@@ -62,10 +62,6 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-domain</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
@@ -144,10 +140,6 @@
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>dkif-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>organisasjonenhet-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

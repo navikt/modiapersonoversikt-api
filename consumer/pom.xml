@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>13.0.0-2017-HL3-SNAPSHOT</version>
+        <version>13.0.3-2017-HL3-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -74,11 +74,6 @@
             <artifactId>sykmeldingsperioder-consumer</artifactId>
         </dependency>
 
-        <!--Brukerprofil-->
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-consumer</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
@@ -186,10 +181,6 @@
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>dkif-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>organisasjonenhet-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
