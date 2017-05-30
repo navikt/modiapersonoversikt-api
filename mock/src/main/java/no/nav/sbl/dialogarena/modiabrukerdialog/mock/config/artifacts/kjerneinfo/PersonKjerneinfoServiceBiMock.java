@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo;
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
+import no.nav.kjerneinfo.common.domain.Periode;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -50,6 +51,13 @@ public class PersonKjerneinfoServiceBiMock {
                         .done())
                 .done());
         personfakta.setHarFraRolleIList(Arrays.asList(familierelasjon));
+        Sikkerhetstiltak sikkerhetstiltak = new Sikkerhetstiltak();
+        Periode periode = new Periode();
+
+        sikkerhetstiltak.setPeriode(periode);
+        sikkerhetstiltak.setSikkerhetstiltaksbeskrivelse("sikkerhetsbeskrivelse");
+        sikkerhetstiltak.setSikkerhetstiltakskode("KODE");
+        personfakta.setSikkerhetstiltak(sikkerhetstiltak);
 
         return new Person.With()
                 .fodselsnummer(FODSELSNUMMER)
