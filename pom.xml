@@ -94,7 +94,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>2.0.1</personsok.version>
-        <kjerneinfo.versjon>5.0.1</kjerneinfo.versjon>
+        <kjerneinfo.versjon>5.0.2-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
