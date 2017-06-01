@@ -78,10 +78,11 @@ public class PersonKjerneinfoServiceBiMock {
     }
 
     private static Adresse lagMockAdresse() {
-        return new Adresse.With()
-                .gatenavn("Testgata")
-                .postnummer("1337")
-                .poststed("Test").done();
+        Adresse adresse = new Adresse();
+        adresse.setGatenavn("Testgata");
+        adresse.setPostnummer("1337");
+        adresse.setPoststednavn("Test");
+        return adresse;
     }
 
     private static Personnavn lagPersonnavn(String fornavn, String etternavn) {
