@@ -85,7 +85,6 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-domain</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!-- Dkif -->
