@@ -70,13 +70,6 @@ public class MockAttributeLocatorTest {
 	}
 
 	@Test
-	public void testFindAttributeGeografiskNedslagsfelt() throws Exception {
-		when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID3)));
-		EvaluationResult result = mockAttributeLocator.findAttribute(EnhetAttributeLocator.STRING_TYPE, EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT, null, EnhetAttributeLocator.SUBJECT_CATEGORY, context, 0);
-		assertFalse(((BagAttribute) result.getAttributeValue()).isEmpty());
-	}
-
-	@Test
 	public void testFindAttributeRoller() throws Exception {
 		when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID)));
 		EvaluationResult result = mockAttributeLocator.findAttribute(EnhetAttributeLocator.STRING_TYPE, EnhetAttributeLocator.ATTRIBUTEID_ROLLE, null, EnhetAttributeLocator.SUBJECT_CATEGORY, context, 0);

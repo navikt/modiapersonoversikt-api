@@ -120,14 +120,6 @@
 		   timeToLiveSeconds="86400"
 		   memoryStoreEvictionPolicy="FIFO"/>
 
-	<cache name="pip.geografisk-nedslagsfelt" maxElementsInMemory="25000"
-		   overflowToDisk="false"
-		   diskPersistent="false"
-		   eternal="false"
-		   timeToIdleSeconds="3600"
-		   timeToLiveSeconds="86400"
-		   memoryStoreEvictionPolicy="FIFO"/>
-
 	<cache name="pdp.decision" maxElementsInMemory="25000"
 		   overflowToDisk="false"
 		   diskPersistent="false"
