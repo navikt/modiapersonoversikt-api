@@ -22,7 +22,10 @@ import org.springframework.context.annotation.Import;
         PersonKjerneinfoWrapper.class,
 
         SykmeldingsperioderPanelConfigResolver.class,
-        SykmeldingsperioderWrapper.class
+        SykmeldingsperioderWrapper.class,
+
+        EgenAnsattConsumerConfigResolver.class,
+        EgenAnsattWrapper.class
 })
 public class MockableContext {
 

@@ -43,7 +43,13 @@ public class PersonKjerneinfoWrapper {
     @Bean
     @Qualifier("personKjerneinfoServiceDefault")
     public Wrapper<PersonKjerneinfoServiceBi> personKjerneinfoServiceDefault() {
-        return new Wrapper<>(new PersonKjerneinfoConsumerConfigImpl(personPortType, kjerneinfoMapperBean, kjerneinfoPep, organisasjonEnhetV2Service, saksbehandlerInnstillingerService).personKjerneinfoServiceBi());
+        PersonKjerneinfoConsumerConfigImpl kjerneinfoConfig = new PersonKjerneinfoConsumerConfigImpl(
+                personPortType,
+                kjerneinfoMapperBean,
+                kjerneinfoPep,
+                organisasjonEnhetV2Service,
+                saksbehandlerInnstillingerService);
+        return new Wrapper<>(kjerneinfoConfig.personKjerneinfoServiceBi());
     }
 
     @Bean
