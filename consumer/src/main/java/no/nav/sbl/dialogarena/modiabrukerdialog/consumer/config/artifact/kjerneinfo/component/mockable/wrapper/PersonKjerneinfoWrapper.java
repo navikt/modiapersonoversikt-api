@@ -37,9 +37,6 @@ public class PersonKjerneinfoWrapper {
     @Inject
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
 
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
     @Bean
     @Qualifier("personKjerneinfoServiceDefault")
     public Wrapper<PersonKjerneinfoServiceBi> personKjerneinfoServiceDefault() {
@@ -47,8 +44,7 @@ public class PersonKjerneinfoWrapper {
                 personPortType,
                 kjerneinfoMapperBean,
                 kjerneinfoPep,
-                organisasjonEnhetV2Service,
-                saksbehandlerInnstillingerService);
+                organisasjonEnhetV2Service);
         return new Wrapper<>(kjerneinfoConfig.personKjerneinfoServiceBi());
     }
 
