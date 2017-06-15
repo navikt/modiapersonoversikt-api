@@ -333,6 +333,31 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
+    public void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() throws Exception {
+        String brukersEnhet = null;
+
+        HentKjerneinformasjonResponse kjerneinformasjonResponse = new HentKjerneinformasjonResponse();
+        Person person = new Person();
+        Personfakta personfakta = new Personfakta();
+        personfakta.setAnsvarligEnhet(null);
+        person.setPersonfakta(personfakta);
+        kjerneinformasjonResponse.setPerson(person);
+        when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
+
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(FRITEKST)
+                .withType(SAMTALEREFERAT_OPPMOTE)
+                .withTemagruppe(Temagruppe.ARBD.toString())
+                .withBrukersEnhet(brukersEnhet);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+
+        verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
+        XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(brukersEnhet));
+    }
+
+    @Test
     public void sjekkerTilgangPaaOkonomiskSosialhjelp() {
         String valgtEnhet = "1234";
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtEnhet);

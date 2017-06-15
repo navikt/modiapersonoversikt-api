@@ -216,7 +216,11 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
         kjerneinfoRequest.setBegrunnet(true);
         Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
-        return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
-    }
 
+        if (person.getPersonfakta().getAnsvarligEnhet() != null) {
+            return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        } else {
+            return null;
+        }
+    }
 }
