@@ -100,7 +100,7 @@ public class Innboks extends Lerret {
         feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
 
         if (innboksVM.harFeilmelding().getObject().equals(true)) {
-            String beskrivelse = "Legger tilbake en oppgave som du ikke har rett at se";
+            String beskrivelse = "Teknisk feil modiabrukerdialog, oppgave lagt tilbake.";
             oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId(), beskrivelse, Optional.none());
             innboksVM.setSessionHenvendelseId(null);
             innboksVM.setSessionOppgaveId(null);
