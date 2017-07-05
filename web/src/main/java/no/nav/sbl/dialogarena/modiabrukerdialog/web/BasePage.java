@@ -34,12 +34,15 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.wicket.request.resource.UrlResourceReference;
 
 import static java.lang.String.format;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class BasePage extends WebPage {
+    private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
     private static String currentDomain = System.getProperty("current.domain", "");
 
     public static final String SIDE_LASTET = "basepage.lastet";
@@ -102,6 +105,7 @@ public class BasePage extends WebPage {
         add(new ExceptionHandlingBehavior() {
                 @Override
                 public IRequestHandler handleException(Component source, Exception ex) {
+                    logger.error("Teknisk feil:", ex.getCause());
                     PageProvider pageProvider = new PageProvider(getPage().getClass(), new PageParameters().set("tekniskfeil", true));
                     return new RenderPageRequestHandler(pageProvider);
                 }
