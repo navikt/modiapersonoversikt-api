@@ -11,6 +11,7 @@ import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
+import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
 
 import java.util.Arrays;
 
@@ -79,6 +80,9 @@ public class PersonKjerneinfoServiceBiMock {
                                         .organisasjonselementId("1234")
                                         .done())
                                 .done())
+                        .sikkerhetsTiltak(new Sikkerhetstiltak.With()
+                            .sikkerhetstiltaksbeskrivelse("Egen ansatt")
+                            .done())
                         .familierelasjoner(Arrays.asList(familierelasjon))
                         .done())
                 .done();

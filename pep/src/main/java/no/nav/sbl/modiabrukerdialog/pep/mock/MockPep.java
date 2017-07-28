@@ -29,6 +29,9 @@ public class MockPep implements EnforcementPoint{
 					|| "7".equals(((StringValue) policyAttribute.getAttributeValue()).getValue()))) {
 				return false;
 			}
+			if("plukkOppgave".equals(policyAttribute.getAttributeValue().getValue())) {
+				return false;
+			}
 		}
 		return true;
 	}

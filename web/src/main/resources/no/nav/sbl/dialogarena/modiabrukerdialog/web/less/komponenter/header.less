@@ -1,6 +1,6 @@
 .navbar {
   margin-bottom: 0;
-  padding: 40px 30px 40px 30px;
+  padding: 20px 30px 20px 30px;
   background-color: @modiaBackground;
   white-space: no-wrap;
   position: relative;
@@ -17,30 +17,32 @@
   min-width: 37rem;
 }
 
-.personsok-button {
+.personsok-button, #toggle-personsok {
   #hentPerson & {
     margin: -3px 0 0 17px;
   }
   .personpanel & {
     margin: -6px 0 0 17px;
   }
-  width: 72px;
-  height: 72px;
-  border-radius: 72px;
+  width: 54px;
+  height: 54px;
+  border-radius: 54px;
   background: none;
   border: none;
-  font-size: 1.8rem;
+  font-size: 1.2em;
   padding: 0;
+  margin-right: 1.5em;
 
   span {
-    width: 66px;
-    height: 66px;
-    border-radius: 66px;
+    color: black;
+    width: 48px;
+    height: 48px;
+    border-radius: 48px;
     text-align: center;
     vertical-align: middle;
     background-color: #fff;
     display: inline-block;
-    padding-top: 15px;
+    padding-top: 9px;
   }
   &:hover span {
     background-color: @blue;

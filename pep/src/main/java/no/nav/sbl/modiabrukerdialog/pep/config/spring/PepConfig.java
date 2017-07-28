@@ -7,6 +7,7 @@ import no.nav.modig.security.tilgangskontroll.policy.pdp.DecisionPoint;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.pep.PEPImpl;
 import no.nav.sbl.modiabrukerdialog.pdp.config.spring.PdpConfig;
+import no.nav.sbl.modiabrukerdialog.pep.mock.MockPep;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -29,8 +30,9 @@ public class PepConfig {
 
 	@Bean(name="pep")
 	public EnforcementPoint pep() {
-		PEPImpl pep = new PEPImpl(modiaPdp);
-		pep.setRequestEnrichers(Arrays.asList(new SecurityContextRequestEnricher(), new EnvironmentRequestEnricher()));
-		return pep;
+//		PEPImpl pep = new PEPImpl(modiaPdp);
+//		pep.setRequestEnrichers(Arrays.asList(new SecurityContextRequestEnricher(), new EnvironmentRequestEnricher()));
+		return new MockPep();
+//		return pep;
 	}
 }

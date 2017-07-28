@@ -4,7 +4,6 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
 import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.eksternelenker.EksterneLenkerPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
@@ -34,10 +33,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContain
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.HodeCallbackWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import org.apache.commons.collections15.Closure;
@@ -52,7 +53,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -106,6 +106,7 @@ public class PersonPage extends BasePage {
 
     private LamellContainer lamellContainer;
     private ReactSjekkForlatModal redirectPopup;
+    private ReactBegrunnelseModal oppgiBegrunnelseModal = null;
 
     @Inject
     @Named("pep")
@@ -144,18 +145,20 @@ public class PersonPage extends BasePage {
 
         lamellContainer = new LamellContainer("lameller", fnr, getSession(), grunnInfo);
 
-        SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
+
+        oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
+        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo);
+        hode.addCallback("fjernperson", new VoidCallback((target, component) -> {
+            clearSession();
+            handleRedirect(target, new PageParameters(), HentPersonPage.class);
+        }));
+
         add(
-                new HentPersonPanel("searchPanel", false, pageParameters),
-                new Button("toggle-sok"),
-                new NullstillLink("nullstill"),
+                hode,
                 lamellContainer,
                 redirectPopup,
-                saksbehandlerInnstillingerPanel,
-                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
-                new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
@@ -166,6 +169,7 @@ public class PersonPage extends BasePage {
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
+        HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
     }
 
     private void clearSession() {
@@ -303,9 +307,9 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
     public void gotoHentPersonPage(AjaxRequestTarget target, String query) throws JSONException {
-        String errorText = getTextFromPayload(query, HentPersonPanel.JSON_ERROR_TEXT);
-        String sikkerhetstiltak = getTextFromPayload(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
-        String soktFnr = getTextFromPayload(query, HentPersonPanel.JSON_SOKT_FNR);
+        String errorText = getTextFromPayload(query, SokOppBrukerCallback.JSON_ERROR_TEXT);
+        String sikkerhetstiltak = getTextFromPayload(query, SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        String soktFnr = getTextFromPayload(query, SokOppBrukerCallback.JSON_SOKT_FNR);
 
         PageParameters pageParameters = new PageParameters();
         if (!StringUtils.isEmpty(sikkerhetstiltak)) {

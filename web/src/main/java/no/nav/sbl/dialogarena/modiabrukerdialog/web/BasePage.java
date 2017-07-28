@@ -23,20 +23,24 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptUrlReferenceHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.UrlResourceReference;
 
 import static java.lang.String.format;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class BasePage extends WebPage {
+    private static String currentDomain = System.getProperty("current.domain", "");
 
     public static final String SIDE_LASTET = "basepage.lastet";
 
@@ -46,6 +50,7 @@ public class BasePage extends WebPage {
     public static final ConditionalCssResource KJERNEINFO_IE9_CSS = new ConditionalCssResource(
             new CssResourceReference(Kjerneinfo.class, "kjerneinfo_ie9.css"), "screen", "lt IE 10");
 
+    public static final UrlResourceReference INTERN_DECORATOR = new UrlResourceReference(Url.parse(currentDomain + "/internarbeidsflatedecorator/js/head.min.js"));
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(BasePage.class, "lokal.js");
     public static final JavaScriptResourceReference JS_SESSION_TIMEOUT = new JavaScriptResourceReference(BasePage.class, "sessionTimeout.js");
     public static final JavaScriptResourceReference JS_TAB_POPUP_RESOURCE = new JavaScriptResourceReference(BasePage.class, "tabPopup.js");
@@ -123,6 +128,7 @@ public class BasePage extends WebPage {
                 new StringResourceModel("feilmelding.flerevinduer.lenke.fortsett", this, null).getString()
         );
 
+        response.render(JavaScriptUrlReferenceHeaderItem.forReference(INTERN_DECORATOR));
         response.render(forScript(script));
     }
 }
