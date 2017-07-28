@@ -52,7 +52,7 @@ describe('Oppgi begrunnelse', () => {
             }
         };
 
-        element.instance().vis();
+        element.instance().vis('fnr');
         expect(visSpy).to.have.been.called;
 
         element.instance().skjul();
