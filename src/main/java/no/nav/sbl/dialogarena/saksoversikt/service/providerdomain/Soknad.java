@@ -16,6 +16,7 @@ public class Soknad {
     private DateTime sistendretDato;
     private String skjemanummerRef;
     private Boolean ettersending;
+    private boolean oversendtDokmot;
     private List<DokumentFraHenvendelse> dokumenter;
     private HenvendelseType type;
 
@@ -53,6 +54,10 @@ public class Soknad {
 
     public Boolean getEttersending() {
         return ettersending;
+    }
+
+    public boolean getOversendtDokmot() {
+        return oversendtDokmot;
     }
 
     public List<DokumentFraHenvendelse> getDokumenter() {
@@ -105,6 +110,11 @@ public class Soknad {
 
     public Soknad withEttersending(Boolean ettersending) {
         this.ettersending = ettersending;
+        return this;
+    }
+
+    public Soknad withOversendtDokmot(boolean oversendtDokmot) {
+        this.oversendtDokmot = oversendtDokmot;
         return this;
     }
 

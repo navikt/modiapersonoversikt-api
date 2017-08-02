@@ -24,6 +24,7 @@ public class DokumentMetadata {
     private String temakode;
     private String temakodeVisning;
     private boolean ettersending;
+    private boolean oversendtDokmot;
     private boolean erJournalfort = TRUE;
     private FeilWrapper feilWrapper = new FeilWrapper();
     private KategoriNotat kategoriNotat;
@@ -33,8 +34,17 @@ public class DokumentMetadata {
         return ettersending;
     }
 
+    public boolean isOversendtDokmot() {
+        return oversendtDokmot;
+    }
+
     public DokumentMetadata withEttersending(boolean ettersending) {
         this.ettersending = ettersending;
+        return this;
+    }
+
+    public DokumentMetadata withOversendtDokmot(boolean oversendtDokmot) {
+        this.oversendtDokmot = oversendtDokmot;
         return this;
     }
 

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,7 +92,7 @@ public class DokumentMetadataServiceTest {
                 .withAvsender(Entitet.NAV)
                 .withMottaker(Entitet.SLUTTBRUKER)
                 .withBaksystem(Baksystem.JOARK)
-                .withDato(LocalDateTime.now());
+                .withDato(LocalDateTime.of(2017, 7, 24, 15, 33, 0));
     }
 
     @Test
@@ -186,6 +187,24 @@ public class DokumentMetadataServiceTest {
 
     }
 
+
+    @Test
+    public void hvisOversendtDokmotSjekkPaDato() {
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DAGPENGER, ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om foreldrepenger");
+
+        Soknad henvendelse = lagHenvendelse(null).withOversendtDokmot(true);
+        when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(henvendelse));
+
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+
+        assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(2));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.JOARK));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.HENVENDELSE));
+    }
+
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
         when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any(), anyString()))
                 .thenReturn(new ResultatWrapper<>(asList(joarkDokumentMetadata),emptySet()));
@@ -198,7 +217,7 @@ public class DokumentMetadataServiceTest {
                 .withBehandlingskjedeId("98765")
                 .withStatus(Soknad.HenvendelseStatus.FERDIG)
                 .withOpprettetDato(now())
-                .withInnsendtDato(now())
+                .withInnsendtDato(new DateTime(2017, 7, 24, 15, 33, 0))
                 .withSistEndretDato(now())
                 .withSkjemanummerRef("NAV---")
                 .withEttersending(true)
