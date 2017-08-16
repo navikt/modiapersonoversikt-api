@@ -5,11 +5,16 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerMockService;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
+import no.nav.sykmeldingsperioder.pleiepenger.loader.PleiepengerLoader;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,10 +45,19 @@ public class SykmeldingsperioderPanelConfigResolver {
     @Qualifier("foreldrepengerServiceMock")
     private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock;
 
+    @Inject
+    @Qualifier("pleiepengerServiceDefault")
+    private Wrapper<PleiepengerServiceBi> pleiepengerServiceDefault;
+
+    @Inject
+    @Qualifier("pleiepengerServiceMock")
+    private Wrapper<PleiepengerServiceBi> pleiepengerServiceMock;
+
+
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
-        return new SykepengerWidgetServiceImpl(getSykepengerService(), getForeldrepengerService());
+        return new SykepengerWidgetServiceImpl(getSykepengerService(), getForeldrepengerService(), getPleiepengerService());
     }
 
     @Bean
@@ -58,6 +72,13 @@ public class SykmeldingsperioderPanelConfigResolver {
         ForeldrepengerLoader foreldrepengerLoader = new SykmeldingsperioderPanelConfigImpl().foreldrepengerLoader();
         foreldrepengerLoader.setForeldrepengerService(getForeldrepengerService());
         return foreldrepengerLoader;
+    }
+
+    @Bean
+    public PleiepengerLoader pleiepengerLoader() {
+        PleiepengerLoader pleiepengerLoader = new SykmeldingsperioderPanelConfigImpl().pleiepengerLoader();
+        pleiepengerLoader.setPleiepengerServiceBi(getPleiepengerService());
+        return pleiepengerLoader;
     }
 
     private ForeldrepengerServiceBi getForeldrepengerService() {
@@ -86,4 +107,15 @@ public class SykmeldingsperioderPanelConfigResolver {
         };
     }
 
+    private PleiepengerServiceBi getPleiepengerService() {
+        return new PleiepengerServiceBi() {
+            @Override
+            public PleiepengerListeResponse hentPleiepengerListe(PleiepengerListeRequest request) {
+                if(mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
+                    return pleiepengerServiceMock.wrappedObject.hentPleiepengerListe(request);
+                }
+                return pleiepengerServiceDefault.wrappedObject.hentPleiepengerListe(request);
+            }
+        };
+    }
 }

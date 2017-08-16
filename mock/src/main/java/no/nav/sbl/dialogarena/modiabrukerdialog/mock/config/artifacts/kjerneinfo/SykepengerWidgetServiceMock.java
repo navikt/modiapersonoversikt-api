@@ -3,17 +3,21 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinf
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
 import no.nav.sykmeldingsperioder.domain.Bruker;
 import no.nav.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengerettighet;
+import no.nav.sykmeldingsperioder.domain.pleiepenger.Pleiepengeperiode;
+import no.nav.sykmeldingsperioder.domain.pleiepenger.Pleiepengerrettighet;
 import no.nav.sykmeldingsperioder.domain.sykepenger.Sykmeldingsperiode;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import org.joda.time.LocalDate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
@@ -37,6 +41,12 @@ public class SykepengerWidgetServiceMock {
     public static SykepengerServiceBi getSykepengerServiceBiMock() {
         SykepengerServiceBi mock = mock(SykepengerServiceBi.class);
         when(mock.hentSykmeldingsperioder(any(SykepengerRequest.class))).thenReturn(getSykepengerResponse());
+        return mock;
+    }
+
+    public static PleiepengerServiceBi getPleiepengerServiceBiMock() {
+        PleiepengerServiceBi mock = mock(PleiepengerServiceBi.class);
+        when(mock.hentPleiepengerListe(any(PleiepengerListeRequest.class))).thenReturn(getPleiepengerResponse());
         return mock;
     }
 
@@ -65,5 +75,18 @@ public class SykepengerWidgetServiceMock {
         sykmeldingsperioder.addAll(asList(sykmeldingsperiode1, sykmeldingsperiode2));
         sykepengerResponse.setSykmeldingsperioder(sykmeldingsperioder);
         return sykepengerResponse;
+    }
+
+    private static PleiepengerListeResponse getPleiepengerResponse() {
+        PleiepengerListeResponse pleiepengerListeResponse = new PleiepengerListeResponse();
+        pleiepengerListeResponse.setPleieepengerettighetListe(
+                Arrays.asList(new Pleiepengerrettighet()
+                        .withPeriode(
+                                Arrays.asList(
+                                        new Pleiepengeperiode()
+                                                .withFodselsnummer("10108000398"
+                                                ).withFrom(new LocalDate())))));
+
+        return pleiepengerListeResponse;
     }
 }

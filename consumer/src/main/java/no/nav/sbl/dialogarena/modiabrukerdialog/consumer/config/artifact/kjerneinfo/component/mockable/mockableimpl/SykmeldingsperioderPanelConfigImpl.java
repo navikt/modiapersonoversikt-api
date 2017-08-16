@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
+import no.nav.sykmeldingsperioder.pleiepenger.loader.PleiepengerLoader;
 
 public class SykmeldingsperioderPanelConfigImpl {
 
@@ -13,4 +14,5 @@ public class SykmeldingsperioderPanelConfigImpl {
         return new ForeldrepengerLoader();
     }
 
+    public PleiepengerLoader pleiepengerLoader() { return new PleiepengerLoader(); }
 }
