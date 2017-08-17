@@ -124,6 +124,11 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     @Override
+    public void merkSomAvsluttet(TraadVM valgtTraad) {
+        behandleHenvendelsePortType.ferdigstillUtenSvar(valgtTraad.getEldsteMelding().melding.id);
+    }
+
+    @Override
     public String getEnhet(String fnr) {
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
         kjerneinfoRequest.setBegrunnet(true);

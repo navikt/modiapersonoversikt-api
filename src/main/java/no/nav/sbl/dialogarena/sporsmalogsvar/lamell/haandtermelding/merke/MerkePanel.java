@@ -64,7 +64,7 @@ public class MerkePanel extends AnimertPanel {
 
         PropertyModel<Boolean> valgtTraadErKontorsperret = new PropertyModel<>(innboksVM, "valgtTraad.erKontorsperret()");
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(innboksVM, "valgtTraad.erTemagruppeSosialeTjenester()");
-
+        IModel<Boolean> erMeldingstypeSporsmal = new PropertyModel<>(innboksVM, "valgtTraad.erMeldingstypeSporsmal()");
 
         merkRadioGroup.setRequired(true);
         merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
@@ -74,6 +74,8 @@ public class MerkePanel extends AnimertPanel {
         merkRadioGroup.add(new WebMarkupContainer("kontorsperretRadioValg")
                 .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
                 .add(visibleIf(not(valgtTraadErKontorsperret))));
+        merkRadioGroup.add(new Radio<>("avsluttRadio", Model.of(AVSLUTT)))
+                .add(visibleIf(erMeldingstypeSporsmal));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));
@@ -129,7 +131,8 @@ public class MerkePanel extends AnimertPanel {
             add(visibleIf(
                     either(new PropertyModel<>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
                             .or(new PropertyModel<>(merkVM, "erFeilsendt()"))
-                            .or(new PropertyModel<>(merkVM, "erMerketBidrag()"))));
+                            .or(new PropertyModel<>(merkVM, "erMerketBidrag()"))
+                            .or(new PropertyModel<>(merkVM, "erAvsluttet()"))));
             setOutputMarkupPlaceholderTag(true);
         }
 
@@ -148,6 +151,8 @@ public class MerkePanel extends AnimertPanel {
                     case KONTORSPERRET:
                         haandterKontorsperring(target, form);
                         break;
+                    case AVSLUTT:
+                        haandterAvsluttet(target);
                 }
             } finally {
                 timer.stop();
@@ -175,6 +180,12 @@ public class MerkePanel extends AnimertPanel {
             } else {
                 onError(target, form);
             }
+        }
+
+        private void haandterAvsluttet(AjaxRequestTarget target) {
+            henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad());
+            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            lukkPanel(target);
         }
 
         @Override

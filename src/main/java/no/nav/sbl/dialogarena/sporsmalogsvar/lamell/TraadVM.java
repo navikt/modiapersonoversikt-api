@@ -115,8 +115,12 @@ public class TraadVM implements Serializable {
         return asList(Temagruppe.OKSOS, Temagruppe.ANSOS).contains(gjeldendeTemagruppe);
     }
 
+    public boolean erMeldingstypeSporsmal() {
+        return getEldsteMelding().melding.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG;
+    }
+
     private boolean erEnkeltstaaendeSpsmFraBruker() {
-        return meldinger.size() == 1 && getEldsteMelding().melding.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG;
+        return meldinger.size() == 1 && erMeldingstypeSporsmal();
     }
 
 }
