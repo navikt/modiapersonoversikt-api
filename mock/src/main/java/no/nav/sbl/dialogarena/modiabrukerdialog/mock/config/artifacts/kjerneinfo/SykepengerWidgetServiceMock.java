@@ -81,11 +81,11 @@ public class SykepengerWidgetServiceMock {
         PleiepengerListeResponse pleiepengerListeResponse = new PleiepengerListeResponse();
         pleiepengerListeResponse.setPleieepengerettighetListe(
                 Arrays.asList(new Pleiepengerrettighet()
+                        .withFodselsnummer("10108000398")
                         .withPeriode(
                                 Arrays.asList(
                                         new Pleiepengeperiode()
-                                                .withFodselsnummer("10108000398"
-                                                ).withFrom(new LocalDate())))));
+                                                .withFrom(new LocalDate())))));
 
         return pleiepengerListeResponse;
     }
