@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
-import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerMockService;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;

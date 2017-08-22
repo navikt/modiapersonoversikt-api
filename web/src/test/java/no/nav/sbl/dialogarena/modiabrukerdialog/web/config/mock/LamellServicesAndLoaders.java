@@ -7,10 +7,12 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktSer
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerService;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
@@ -19,7 +21,9 @@ import no.nav.sykmeldingsperioder.pleiepenger.loader.PleiepengerLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class LamellServicesAndLoaders {
@@ -66,7 +70,7 @@ public class LamellServicesAndLoaders {
 
     @Bean
     public PleiepengerServiceBi pleiepengerServiceBi() {
-        return mock(PleiepengerServiceBi.class);
+        return SykepengerWidgetServiceMock.getPleiepengerServiceBiMock();
     }
 
     @Bean
