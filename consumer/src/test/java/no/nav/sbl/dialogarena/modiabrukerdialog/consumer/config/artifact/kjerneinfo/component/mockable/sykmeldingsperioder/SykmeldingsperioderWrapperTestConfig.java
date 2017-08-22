@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
-import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +29,8 @@ public class SykmeldingsperioderWrapperTestConfig {
     }
 
     @Bean
-    public PleiepengerServiceBi pleiepengerService() {
-        return mock(PleiepengerServiceBi.class);
+    public PleiepengerService pleiepengerService() {
+        return mock(PleiepengerService.class);
     }
 
     @Bean
@@ -58,15 +58,15 @@ public class SykmeldingsperioderWrapperTestConfig {
     }
 
     @Bean
-    @Qualifier("pleiepengerServiceDefault")
-    public Wrapper<PleiepengerServiceBi> pleiepengerServiceDefault() {
+    @Qualifier("pleiepengerServiceImpl")
+    public Wrapper<PleiepengerService> pleiepengerServiceImpl() {
         return new Wrapper<>(pleiepengerService());
     }
 
     @Bean
     @Qualifier("pleiepengerServiceMock")
-    public Wrapper<PleiepengerServiceBi> pleiepengerServiceMock() {
-        return new Wrapper<>(mock(PleiepengerServiceBi.class));
+    public Wrapper<PleiepengerService> pleiepengerServiceMock() {
+        return new Wrapper<>(mock(PleiepengerService.class));
     }
 
 }

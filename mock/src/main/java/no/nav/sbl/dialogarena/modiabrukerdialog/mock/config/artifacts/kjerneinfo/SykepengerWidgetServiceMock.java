@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinf
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
-import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
@@ -44,8 +44,8 @@ public class SykepengerWidgetServiceMock {
         return mock;
     }
 
-    public static PleiepengerServiceBi getPleiepengerServiceBiMock() {
-        PleiepengerServiceBi mock = mock(PleiepengerServiceBi.class);
+    public static PleiepengerService getPleiepengerServiceBiMock() {
+        PleiepengerService mock = mock(PleiepengerService.class);
         when(mock.hentPleiepengerListe(any(PleiepengerListeRequest.class))).thenReturn(getPleiepengerResponse());
         return mock;
     }

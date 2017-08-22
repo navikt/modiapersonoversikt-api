@@ -11,8 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
-import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
-import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerService;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
@@ -23,7 +22,6 @@ import org.springframework.context.annotation.Configuration;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @Configuration
 public class LamellServicesAndLoaders {
@@ -69,7 +67,7 @@ public class LamellServicesAndLoaders {
     }
 
     @Bean
-    public PleiepengerServiceBi pleiepengerServiceBi() {
+    public PleiepengerService pleiepengerServiceBi() {
         return SykepengerWidgetServiceMock.getPleiepengerServiceBiMock();
     }
 

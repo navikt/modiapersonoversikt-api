@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
-import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
@@ -45,12 +45,12 @@ public class SykmeldingsperioderPanelConfigResolver {
     private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock;
 
     @Inject
-    @Qualifier("pleiepengerServiceDefault")
-    private Wrapper<PleiepengerServiceBi> pleiepengerServiceDefault;
+    @Qualifier("pleiepengerServiceImpl")
+    private Wrapper<PleiepengerService> pleiepengerServiceImpl;
 
     @Inject
     @Qualifier("pleiepengerServiceMock")
-    private Wrapper<PleiepengerServiceBi> pleiepengerServiceMock;
+    private Wrapper<PleiepengerService> pleiepengerServiceMock;
 
 
 
@@ -76,7 +76,7 @@ public class SykmeldingsperioderPanelConfigResolver {
     @Bean
     public PleiepengerLoader pleiepengerLoader() {
         PleiepengerLoader pleiepengerLoader = new SykmeldingsperioderPanelConfigImpl().pleiepengerLoader();
-        pleiepengerLoader.setPleiepengerServiceBi(getPleiepengerService());
+        pleiepengerLoader.setPleiepengerService(getPleiepengerService());
         return pleiepengerLoader;
     }
 
@@ -106,14 +106,14 @@ public class SykmeldingsperioderPanelConfigResolver {
         };
     }
 
-    private PleiepengerServiceBi getPleiepengerService() {
-        return new PleiepengerServiceBi() {
+    private PleiepengerService getPleiepengerService() {
+        return new PleiepengerService() {
             @Override
             public PleiepengerListeResponse hentPleiepengerListe(PleiepengerListeRequest request) {
                 if(mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return pleiepengerServiceMock.wrappedObject.hentPleiepengerListe(request);
                 }
-                return pleiepengerServiceDefault.wrappedObject.hentPleiepengerListe(request);
+                return pleiepengerServiceImpl.wrappedObject.hentPleiepengerListe(request);
             }
         };
     }
