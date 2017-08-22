@@ -16,11 +16,9 @@ import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerService;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
-import no.nav.sykmeldingsperioder.pleiepenger.loader.PleiepengerLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 
 @Configuration
@@ -70,9 +68,6 @@ public class LamellServicesAndLoaders {
     public PleiepengerService pleiepengerServiceBi() {
         return SykepengerWidgetServiceMock.getPleiepengerServiceBiMock();
     }
-
-    @Bean
-    public PleiepengerLoader pleiepengerLoader() { return new PleiepengerLoader(); }
 
     @Bean
     public UtbetalingerService utbetalingerService() {
