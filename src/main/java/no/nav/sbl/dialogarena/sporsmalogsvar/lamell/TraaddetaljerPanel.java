@@ -11,9 +11,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.*;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -30,10 +28,11 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
         setOutputMarkupId(true);
 
         MeldingActionPanel meldingActionPanel = new MeldingActionPanel("haandterMeldingPanel", innboksVM);
-
+        IModel<TraadVM> traadVM = Model.of(innboksVM.getValgtTraad());
         add(meldingActionPanel);
         add(new HaandterMeldingValgPanel("haandterMelding", innboksVM, meldingActionPanel));
         add(new KontorsperreInfoPanel("kontorsperretInfo", innboksVM));
+        add(new FerdigstiltUtenSvarPanel("ferdigstiltUtenSvar", traadVM));
         add(new WebMarkupContainer("journalfortTemaContainer")
                 .add(new Label("valgtTraad.eldsteMelding.melding.journalfortTemanavn"))
                 .add(visibleIf(new AbstractReadOnlyModel<Boolean>() {

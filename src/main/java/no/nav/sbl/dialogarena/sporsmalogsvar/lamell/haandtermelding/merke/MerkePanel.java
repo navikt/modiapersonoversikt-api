@@ -65,17 +65,19 @@ public class MerkePanel extends AnimertPanel {
         PropertyModel<Boolean> valgtTraadErKontorsperret = new PropertyModel<>(innboksVM, "valgtTraad.erKontorsperret()");
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(innboksVM, "valgtTraad.erTemagruppeSosialeTjenester()");
         IModel<Boolean> erMeldingstypeSporsmal = new PropertyModel<>(innboksVM, "valgtTraad.erMeldingstypeSporsmal()");
+        IModel<Boolean> erBehandlet = new PropertyModel<>(innboksVM, "valgtTraad.erBehandlet()");
 
         merkRadioGroup.setRequired(true);
-        merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
+        merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)))
+                .add(visibleIf(not(erBehandlet)));
         merkRadioGroup.add(new WebMarkupContainer("bidragRadioValg")
                 .add(new Radio<>("bidragRadio", Model.of(BIDRAG)))
-                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erTemagruppeSosialeTjenester)))));
+                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erTemagruppeSosialeTjenester)).and(not(erBehandlet)))));
         merkRadioGroup.add(new WebMarkupContainer("kontorsperretRadioValg")
                 .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
-                .add(visibleIf(not(valgtTraadErKontorsperret))));
+                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erBehandlet)))));
         merkRadioGroup.add(new Radio<>("avsluttRadio", Model.of(AVSLUTT)))
-                .add(visibleIf(erMeldingstypeSporsmal));
+                .add(visibleIf(both(erMeldingstypeSporsmal).and(erBehandlet)));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));

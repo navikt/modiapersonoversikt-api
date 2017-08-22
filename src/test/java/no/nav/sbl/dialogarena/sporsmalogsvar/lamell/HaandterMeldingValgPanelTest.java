@@ -150,14 +150,14 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalIkkeKunneMerkeMeldingHvisTraadIkkeErBehandlet() {
+    public void skalKunneMerkeMeldingHvisTraadIkkeErBehandlet() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1")));
 
         InnboksVM innboksVM = innboksVM();
         MeldingActionPanel meldingActionPanel = new MeldingActionPanel("actionpanel", innboksVM);
         wicket.goToPageWith(new HaandterMeldingValgPanel(HAANDTERMELDINGER_ID, innboksVM, meldingActionPanel))
-                .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
+                .should().containComponent(thatIsEnabled().and(withId(MERKE_VALG_ID)));
     }
 
     @Test

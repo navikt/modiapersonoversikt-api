@@ -119,6 +119,10 @@ public class TraadVM implements Serializable {
         return getEldsteMelding().melding.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG;
     }
 
+    public boolean erFerdigstiltUtenSvar() {
+        return getEldsteMelding().erFerdigstiltUtenSvar();
+    }
+
     private boolean erEnkeltstaaendeSpsmFraBruker() {
         return meldinger.size() == 1 && erMeldingstypeSporsmal();
     }
