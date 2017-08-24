@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -52,6 +53,10 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
+            public void ferdigstillUtenSvar(String s) {
+            }
+
+            @Override
             public void oppdaterTilKassering(List<String> behandlingsIdListe) {
                 for (String id : behandlingsIdListe) {
                     XMLHenvendelse xmlHenvendelse = hentHenvendelse(id);
@@ -62,6 +67,10 @@ public class BehandleHenvendelsePortTypeMock {
             @Override
             public void knyttBehandlingskjedeTilTema(String s, String s1) {
 
+            }
+
+            @Override
+            public void settOversendtDokmot(String s, XMLGregorianCalendar xmlGregorianCalendar) {
             }
 
             @Override
