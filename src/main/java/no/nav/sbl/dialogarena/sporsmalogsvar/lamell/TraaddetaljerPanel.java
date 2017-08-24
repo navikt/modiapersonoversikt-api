@@ -28,11 +28,10 @@ public class TraaddetaljerPanel extends GenericPanel<InnboksVM> {
         setOutputMarkupId(true);
 
         MeldingActionPanel meldingActionPanel = new MeldingActionPanel("haandterMeldingPanel", innboksVM);
-        IModel<TraadVM> traadVM = Model.of(innboksVM.getValgtTraad());
         add(meldingActionPanel);
         add(new HaandterMeldingValgPanel("haandterMelding", innboksVM, meldingActionPanel));
         add(new KontorsperreInfoPanel("kontorsperretInfo", innboksVM));
-        add(new FerdigstiltUtenSvarPanel("ferdigstiltUtenSvar", traadVM));
+        add(new FerdigstiltUtenSvarPanel("ferdigstiltUtenSvar", innboksVM));
         add(new WebMarkupContainer("journalfortTemaContainer")
                 .add(new Label("valgtTraad.eldsteMelding.melding.journalfortTemanavn"))
                 .add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
