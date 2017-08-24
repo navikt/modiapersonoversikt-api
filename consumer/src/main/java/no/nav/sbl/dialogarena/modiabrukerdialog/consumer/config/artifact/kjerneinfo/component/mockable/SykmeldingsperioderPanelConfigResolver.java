@@ -52,10 +52,9 @@ public class SykmeldingsperioderPanelConfigResolver {
     }
 
     @Bean
+    @Qualifier("sykmeldingsperiodeLoader")
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        SykmeldingsperiodeLoader periodeLoader = new SykmeldingsperiodeLoader();
-        periodeLoader.setSykepengerService(getSykepengerService());
-        return periodeLoader;
+        return new SykmeldingsperiodeLoader(getSykepengerService());
     }
 
     @Bean

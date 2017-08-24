@@ -62,7 +62,7 @@ public class LamellServicesAndLoaders {
 
     @Bean
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        return new SykmeldingsperiodeLoader();
+        return mock(SykmeldingsperiodeLoader.class);
     }
 
     @Bean
