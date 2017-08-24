@@ -74,6 +74,7 @@ public class MeldingUtils {
             melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
             melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null && !"".equals(xmlHenvendelse.getGjeldendeTemagruppe())
                     ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
+            melding.erFerdigstiltUtenSvar = unboxBoolean(xmlHenvendelse.isFerdigstiltUtenSvar());
 
             oppdaterMeldingMedJournalfortInformasjon(propertyResolver, ldapService, xmlHenvendelse, melding);
 
@@ -83,7 +84,7 @@ public class MeldingUtils {
             }
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
-            if(DOKUMENT_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
+            if (DOKUMENT_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
                 oppdaterMeldingMedDokumentVarselData(xmlHenvendelse, melding, xmlMetadata);
                 return melding;
             }
@@ -111,6 +112,11 @@ public class MeldingUtils {
 
             return melding;
         };
+    }
+
+    private static boolean unboxBoolean(Boolean bool) {
+        if (bool != null) return bool;
+        return false;
     }
 
     private static void oppdaterMeldingMedJournalfortInformasjon(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
