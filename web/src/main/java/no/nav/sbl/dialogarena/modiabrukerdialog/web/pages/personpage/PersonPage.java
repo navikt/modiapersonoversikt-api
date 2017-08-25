@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
-import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.eksternelenker.EksterneLenkerPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
@@ -11,7 +10,6 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
@@ -21,21 +19,16 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.HodeCallbackWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
@@ -64,7 +57,6 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
@@ -111,24 +103,16 @@ public class PersonPage extends BasePage {
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
-
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-
     @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private LDAPService ldapService;
-    @Inject
-    private OrganisasjonEnhetService organisasjonEnhetService;
+    private GrunninfoService grunninfoService;
 
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
         fnr = pageParameters.get("fnr").toString();
         sjekkTilgang(fnr, pageParameters);
-        grunnInfo = new GrunnInfo(
-                hentBrukerInfo(fnr),
-                hentSaksbehandlerInfo());
+        grunnInfo = grunninfoService.hentGrunninfo(fnr);
 
         if (pageParameters.getNamedKeys().size() > 1) {//FNR er alltid i url
             clearSession();
@@ -163,7 +147,8 @@ public class PersonPage extends BasePage {
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
                 new DialogPanel("dialogPanel", fnr, grunnInfo),
-                new ReactTimeoutBoksModal("timeoutBoks", fnr)
+                new ReactTimeoutBoksModal("timeoutBoks", fnr),
+                oppgiBegrunnelseModal
         );
 
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
@@ -181,42 +166,6 @@ public class PersonPage extends BasePage {
             }
         });
         session.removeAttribute(BESVARMODUS);
-    }
-
-    private GrunnInfo.Bruker hentBrukerInfo(String fnr) {
-        try {
-            HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
-            request.setBegrunnet(true);
-            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(request).getPerson().getPersonfakta();
-
-            return new GrunnInfo.Bruker(fnr)
-                    .withPersonnavn(personfakta.getPersonnavn())
-                    .withEnhet(hentEnhet(personfakta));
-        } catch (Exception e) {
-            return new GrunnInfo.Bruker(fnr, "", "", "");
-        }
-    }
-
-    private GrunnInfo.Saksbehandler hentSaksbehandlerInfo() {
-        Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
-        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-
-        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetService.hentEnhetGittEnhetId(valgtEnhet);
-        return new GrunnInfo.Saksbehandler(
-                ansattEnhet.isSome() ? ansattEnhet.get().enhetNavn : "",
-                saksbehandler.fornavn,
-                saksbehandler.etternavn
-        );
-    }
-
-    private String hentEnhet(Personfakta personfakta) {
-        if (personfakta != null && personfakta.getHarAnsvarligEnhet() != null
-                && personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet() != null
-                && StringUtils.isNotEmpty(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn())) {
-            return personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn();
-        } else {
-            return "";
-        }
     }
 
     @Override
@@ -275,7 +224,7 @@ public class PersonPage extends BasePage {
         redirectPopup.addCallback(ReactSjekkForlatModal.CONFIRM, Void.class, new ReactComponentCallback<Void>() {
             @Override
             public void onCallback(AjaxRequestTarget target, Void data) {
-                redirectPopup.hide(target);
+                redirectPopup.hide();
                 target.appendJavaScript(getJavascriptSaveButtonFocus());
             }
         });
@@ -386,7 +335,7 @@ public class PersonPage extends BasePage {
     private void handleRedirect(AjaxRequestTarget target, PageParameters pageParameters, Class<? extends Page> redirectTo) {
         redirectPopup.setTarget(redirectTo, pageParameters);
         if (lamellContainer.hasUnsavedChanges()) {
-            redirectPopup.show(target);
+            redirectPopup.show();
         } else {
             redirectPopup.redirect();
         }

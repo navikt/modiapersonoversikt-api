@@ -5,9 +5,12 @@ import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -73,5 +76,11 @@ public class PersonPageMockContext {
         when(mock.getDefaultLocale()).thenReturn("nb");
         when(mock.hentTekst(anyString())).thenReturn("Tekst fra mock-cms");
         return mock;
+    }
+
+    @Bean
+    public GrunninfoService grunninfoService() {
+        return new GrunninfoServiceImpl();
+//        return mock(GrunninfoService.class);
     }
 }

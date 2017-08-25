@@ -12,7 +12,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.HodeCallbackWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.lenkepanel.LenkePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;

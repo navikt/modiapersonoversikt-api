@@ -137,24 +137,29 @@
 }
 
 #modia-app {
+  flex: auto;
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
   .navbar {
     z-index: 1000;
     position: relative;
   }
   .app-content {
-
+    display: flex;
+    flex: auto;
     .main-content, .sidebar-venstre, .sidebar-hoyre {
       position: relative;
-      float: left;
-      height: 100%;
     }
     .sidebar-venstre, .sidebar-hoyre {
       z-index: 500;
       width: 25%;
+      flex: 25% 0 0;
       overflow: auto;
     }
     .main-content {
       width: 50%;
+      flex-basis: 50% 0 0;
       overflow: hidden;
     }
   }

@@ -1,16 +1,28 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 @Path("/hode")
 @Produces(APPLICATION_JSON)
 public class HodeController {
+
+    @Inject
+    private GrunninfoService grunninfoService;
+
+    @Inject
+    private AnsattService ansattService;
 
     class Me {
         public final String ident, navn, fornavn, etternavn;
@@ -44,13 +56,21 @@ public class HodeController {
 
     @GET
     @Path("/me")
-    public Me hentSammensatteSaker() {
-        return new Me("Z990322", "F_Z990322", "F_Z990322");
+    public Me hentSaksbehandler() {
+        String ident = getSubjectHandler().getUid();
+        GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();
+        return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn);
     }
 
     @GET
     @Path("/enheter")
-    public Enheter hentPensjonSaker() {
-        return new Enheter("Z990322", asList(new Enhet("0219", "NAV Bærum"), new Enhet("0709", "NAV Larvik")));
+    public Enheter hentEnheter() {
+        String ident = getSubjectHandler().getUid();
+        List<Enhet> enheter = ansattService.hentEnhetsliste()
+                .stream()
+                .map((ansattEnhet) -> new Enhet(ansattEnhet.enhetId, ansattEnhet.enhetNavn))
+                .collect(Collectors.toList());
+
+        return new Enheter(ident, enheter);
     }
 }

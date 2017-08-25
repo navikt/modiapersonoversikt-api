@@ -85,8 +85,11 @@ public class ServiceConfig {
 
     @Bean
     public ScheduledAnsattListePrefetch scheduledAnsattListePrefetch() {
-
         return new ScheduledAnsattListePrefetch();
     }
 
+    @Bean
+    public GrunninfoService grunninfoService() {
+        return new GrunninfoServiceImpl();
+    }
 }

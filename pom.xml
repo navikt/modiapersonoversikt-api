@@ -105,15 +105,15 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
-        <saksoversikt.version>8.0.0</saksoversikt.version>
+        <saksoversikt.version>8.0.1-SNAPSHOT</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>7.0.2</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>7.0.3-SNAPSHOT</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>6.3.0-SMIDIG</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
-        <modia-felleskomponenter.version>3.3</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>3.4-SNAPSHOT</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>10.0.5</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>

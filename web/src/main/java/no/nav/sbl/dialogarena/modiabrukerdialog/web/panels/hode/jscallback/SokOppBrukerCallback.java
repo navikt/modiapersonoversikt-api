@@ -35,7 +35,7 @@ public class SokOppBrukerCallback implements HodeCallback<String> {
             String message = null;
 
             if (ex instanceof AuthorizationWithSikkerhetstiltakException) {
-                message = ((AuthorizationWithSikkerhetstiltakException) ex).getSikkerhetstiltak().getSikkerhetstiltaksbeskrivelse();
+                message = ex.getMessage();
             } else {
                 HentSikkerhetstiltakRequest sikkerhetstiltakRequest = new HentSikkerhetstiltakRequest(fnr);
                 Sikkerhetstiltak sikkerhetstiltak = personKjerneinfoServiceBi.hentSikkerhetstiltak(sikkerhetstiltakRequest);
