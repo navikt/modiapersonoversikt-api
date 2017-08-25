@@ -60,8 +60,7 @@ public class SykmeldingsperioderPanelConfigResolver {
     @Bean
     @Qualifier("foreldrepengerLoader")
     public TwoArgumentsModelLoader<IModel<String>, String, Foreldrepengerettighet> foreldrepengerLoader() {
-        ForeldrepengerLoader foreldrepengerLoader = new ForeldrepengerLoader(getForeldrepengerService());
-        return foreldrepengerLoader;
+        return new ForeldrepengerLoader(getForeldrepengerService());
     }
 
     private ForeldrepengerServiceBi getForeldrepengerService() {
