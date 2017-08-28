@@ -17,8 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.*;
-import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
-import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -54,6 +53,12 @@ public class LamellContainerTest extends WicketPageTest {
     public void handleFeedItemEventsShouldGotoSykePengerLamellWhenSykePengerEventHappens() {
         lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SYKEPENGER));
         assertThat(getSelectedLamell(), equalTo(LAMELL_SYKEPENGER + "itemId"));
+    }
+
+    @Test
+    public void handleFeedItemEventsShouldGotoPleiePengerLamellWhenPleiePengerEventHappens() {
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", PLEIEPENGER));
+        assertThat(getSelectedLamell(), equalTo(LAMELL_PLEIEPENGER + "itemId"));
     }
 
     @Test

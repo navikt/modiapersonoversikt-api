@@ -1,16 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.wrapper;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
+import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerMockService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.ForeldrepengerMapper;
+import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerMockService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.SykepengerMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getForeldrepengerServiceBiMock;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykepengerServiceBiMock;
 
 @Configuration
 public class SykmeldingsperioderWrapper {
@@ -30,7 +32,7 @@ public class SykmeldingsperioderWrapper {
     @Bean
     @Qualifier("sykepengerServiceMock")
     public Wrapper<SykepengerServiceBi> sykepengerServiceMock() {
-        return new Wrapper<>(getSykepengerServiceBiMock());
+        return new Wrapper<>(new SykepengerMockService(new SykepengerMapper()));
     }
 
     @Bean
@@ -42,7 +44,7 @@ public class SykmeldingsperioderWrapper {
     @Bean
     @Qualifier("foreldrepengerServiceMock")
     public Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock() {
-        return new Wrapper<>(getForeldrepengerServiceBiMock());
+        return new Wrapper<>(new ForeldrepengerMockService(new ForeldrepengerMapper()));
     }
 
 }
