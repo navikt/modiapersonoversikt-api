@@ -45,26 +45,26 @@ public class LamellContainerTest extends WicketPageTest {
 
     @Test
     public void handleFeedItemEventsShouldGotoForeldrePengerLamellWhenForeeldrePengerEventHappens() {
-        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", FORELDREPENGER));
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", FORELDREPENGER_TYPE));
         assertThat(getSelectedLamell(), equalTo(LAMELL_FORELDREPENGER + "itemId"));
     }
 
     @Test
     public void handleFeedItemEventsShouldGotoSykePengerLamellWhenSykePengerEventHappens() {
-        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SYKEPENGER));
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SYKEPENGER_TYPE));
         assertThat(getSelectedLamell(), equalTo(LAMELL_SYKEPENGER + "itemId"));
     }
 
     @Test
     public void handleFeedItemEventsShouldGotoPleiePengerLamellWhenPleiePengerEventHappens() {
-        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", PLEIEPENGER));
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", PLEIEPENGER_TYPE));
         assertThat(getSelectedLamell(), equalTo(LAMELL_PLEIEPENGER + "itemId"));
     }
 
     @Test
     public void handleFeedItemEventsShouldReuseFactory() {
         IEvent<String> event = createEvent();
-        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER);
+        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER_TYPE);
         lamellContainer.handleFeedItemEvent(event, payload);
         String selectedLamell = getSelectedLamell();
 
@@ -77,12 +77,12 @@ public class LamellContainerTest extends WicketPageTest {
     @Test
     public void handleFeedItemEventsShouldGotoDifferentLammelWhenDifferentItemIsClicked() {
         IEvent<String> event = createEvent();
-        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER);
+        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER_TYPE);
         lamellContainer.handleFeedItemEvent(event, payload);
         String selectedLamell = getSelectedLamell();
 
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId"));
-        payload = new FeedItemPayload("widgetid", "itemId2", SYKEPENGER);
+        payload = new FeedItemPayload("widgetid", "itemId2", SYKEPENGER_TYPE);
         lamellContainer.handleFeedItemEvent(event, payload);
         selectedLamell = getSelectedLamell();
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId2"));

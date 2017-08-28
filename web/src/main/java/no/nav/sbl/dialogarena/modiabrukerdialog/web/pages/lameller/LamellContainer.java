@@ -145,11 +145,11 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
-        if (SYKEPENGER.equalsIgnoreCase(type)) {
+        if (SYKEPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-        } else if (FORELDREPENGER.equalsIgnoreCase(type)) {
+        } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-        } else if (PLEIEPENGER.equalsIgnoreCase(type)) {
+        } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else {
             ApplicationException exc = new ApplicationException("Ukjent type lerret: " + type);
@@ -176,7 +176,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static boolean canHaveMoreThanOneLamell(String type) {
-        return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type) || PLEIEPENGER.equalsIgnoreCase(type);
+        return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
     private static List<LamellFactory> createLamellFactories(final String fnrFromRequest, final GrunnInfo grunnInfo) {
