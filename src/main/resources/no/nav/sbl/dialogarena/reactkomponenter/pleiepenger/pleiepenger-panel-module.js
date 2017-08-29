@@ -11,6 +11,16 @@ class PleiepengerettighetPanel extends React.Component {
         return (
             <div>
                 <h1>{ tekst['title'] }</h1>
+                <div>
+                    <div>
+                        <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>
+                        <span className="pleiepenger-verdi">{ props.pleiepengedager }</span>
+                    </div>
+                    <div>
+                        <span>{ props.forbrukteDagerTOMIDag }</span>
+                        <span>{ tekst['forbrukteDagerPerIDag'] }</span>
+                    </div>
+                </div>
                 <dl>
                     <dt>{ tekst['fraOgMedDato'] }</dt>
                     <dd>{ props.FOMDato }</dd>
@@ -23,6 +33,10 @@ class PleiepengerettighetPanel extends React.Component {
                     <dd>{ props.kompensasjonsgrad }</dd>
                     <dt>{ tekst['pleiepengegrad'] }</dt>
                     <dd>{ props.graderingsgrad }</dd>
+                    <dt>{ tekst['barnet'] }</dt>
+                    <dd>{ props.barnet }</dd>
+                    <dt>{ tekst['annenForelder'] }</dt>
+                    <dd>{ props.andreOmsorgsperson }</dd>
                 </dl>
             </div>
         );
@@ -30,6 +44,10 @@ class PleiepengerettighetPanel extends React.Component {
 }
 
 PleiepengerettighetPanel.propTypes = {
+    tekst: React.PropTypes.object.isRequired,
+    FOMDato: React.PropTypes.string.isRequired,
+    TOMDato: React.PropTypes.string.isRequired,
+
 };
 
 export default PleiepengerettighetPanel;

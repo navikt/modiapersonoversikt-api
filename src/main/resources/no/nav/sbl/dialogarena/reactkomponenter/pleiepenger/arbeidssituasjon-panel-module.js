@@ -8,7 +8,7 @@ class ArbeidssituasjonPanel extends React.Component {
     render() {
         const { tekst, arbeidsgiver } = this.props;
         return (
-            <div>
+            <div className="arbeidssituasjon">
                 <h1>{ tekst['title'] }</h1>
                 <dl>
                     <dt>{ tekst['arbeidsgiver'] }</dt>
@@ -20,6 +20,8 @@ class ArbeidssituasjonPanel extends React.Component {
 }
 
 ArbeidssituasjonPanel.propTypes = {
+    arbeidsgiver: React.PropTypes.string.isRequired,
+    tekst: React.PropTypes.object.isRequired,
 };
 
 export default ArbeidssituasjonPanel;
