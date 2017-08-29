@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingServi
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -26,6 +27,7 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static no.nav.metrics.MetricsFactory.createTimer;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
@@ -57,6 +59,7 @@ public class MerkePanel extends AnimertPanel {
         Form<MerkVM> merkForm = new Form<>("merkForm", merkVM);
 
         final RadioGroup<MerkType> merkRadioGroup = new RadioGroup<>("merkType");
+        merkRadioGroup.setRequired(true);
 
         feedbackPanel = new FeedbackPanel("feedbackMerkPanel", new ComponentFeedbackMessageFilter(merkRadioGroup));
         feedbackPanel.setOutputMarkupId(true);
@@ -64,29 +67,35 @@ public class MerkePanel extends AnimertPanel {
 
         PropertyModel<Boolean> valgtTraadErKontorsperret = new PropertyModel<>(innboksVM, "valgtTraad.erKontorsperret()");
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(innboksVM, "valgtTraad.erTemagruppeSosialeTjenester()");
-//        IModel<Boolean> erMeldingstypeSporsmal = new PropertyModel<>(innboksVM, "valgtTraad.erMeldingstypeSporsmal()");
+        IModel<Boolean> erMeldingstypeSporsmal = new PropertyModel<>(innboksVM, "valgtTraad.erMeldingstypeSporsmal()");
         IModel<Boolean> erBehandlet = new PropertyModel<>(innboksVM, "valgtTraad.erBehandlet()");
+        IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(innboksVM, "valgtTraad.erJournalfort()");
+        IModel<Boolean> erFeilsendt = new PropertyModel<>(innboksVM, "valgtTraad.erFeilsendt()");
 
-        merkRadioGroup.setRequired(true);
-        merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
-//                .add(visibleIf(not(erBehandlet)));
-        merkRadioGroup.add(new WebMarkupContainer("bidragRadioValg")
+        IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(not(erMeldingstypeSporsmal)).and(not(valgtTraadErKontorsperret));
+        IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet));
+
+        Radio<MerkType> feilsendtRadio = new Radio<>("feilsendtRadio", Model.of(FEILSENDT));
+        feilsendtRadio.add(enabledIf(skalViseStandardMerkValg));
+
+        Component bidragRadioValg = new WebMarkupContainer("bidragRadioValg")
                 .add(new Radio<>("bidragRadio", Model.of(BIDRAG)))
-                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erTemagruppeSosialeTjenester)))));
-//                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erTemagruppeSosialeTjenester)).and(not(erBehandlet)))));
-        merkRadioGroup.add(new WebMarkupContainer("kontorsperretRadioValg")
+                .add(enabledIf(both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg)));
+
+        Component kontorsperretRadioValg = new WebMarkupContainer("kontorsperretRadioValg")
                 .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
-                .add(visibleIf(not(valgtTraadErKontorsperret))));
-//                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erBehandlet)))));
-//        merkRadioGroup.add(new Radio<>("avsluttRadio", Model.of(AVSLUTT)))
-//                .add(visibleIf(both(erMeldingstypeSporsmal).and(erBehandlet)));
+                .add(enabledIf(skalViseStandardMerkValg));
+
+        Component avsluttRadio = new WebMarkupContainer("avsluttRadioValg")
+                .add(new Radio<>("avsluttRadio", Model.of(AVSLUTT)))
+                .add(enabledIf(skalViseFerdigstillUtenSvarValg));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));
 
         merkKnapp = new MerkKnapp("merk");
 
-        merkRadioGroup.add(kontorsperrePanel);
+        merkRadioGroup.add(feilsendtRadio, bidragRadioValg, kontorsperretRadioValg, avsluttRadio, kontorsperrePanel);
         merkRadioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -155,8 +164,8 @@ public class MerkePanel extends AnimertPanel {
                     case KONTORSPERRET:
                         haandterKontorsperring(target, form);
                         break;
-//                    case AVSLUTT:
-//                        haandterAvsluttet(target);
+                    case AVSLUTT:
+                        haandterAvsluttet(target);
                 }
             } finally {
                 timer.stop();

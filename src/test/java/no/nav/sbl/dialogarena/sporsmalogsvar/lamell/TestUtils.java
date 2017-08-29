@@ -101,17 +101,12 @@ public class TestUtils {
         return melding;
     }
 
-    public static Melding createMeldingSomErMarkertSomFeilsendt(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId, String markertSomFeilsendtAv) {
-        Melding melding = new Melding(id, type, opprettetDato);
-        melding.temagruppe = temagruppe;
-        melding.traadId = traadId;
-        melding.markertSomFeilsendtAv = markertSomFeilsendtAv;
-        return melding;
-    }
-
-
     public static Melding opprettMeldingEksempel() {
         return createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMAGRUPPE_1, ID_1);
+    }
+
+    public static Melding opprettSamtalereferatEksempel() {
+        return createMelding(ID_1, Meldingstype.SVAR_SBL_INNGAAENDE, DateTime.now(), TEMAGRUPPE_1, ID_1);
     }
 
     public static List<MeldingVM> createMeldingVMer() {

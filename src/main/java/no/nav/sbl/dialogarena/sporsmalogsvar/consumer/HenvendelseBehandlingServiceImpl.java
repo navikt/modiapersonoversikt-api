@@ -125,7 +125,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     @Override
     public void merkSomAvsluttet(TraadVM valgtTraad) {
-        behandleHenvendelsePortType.ferdigstillUtenSvar(valgtTraad.getEldsteMelding().melding.id);
+        behandleHenvendelsePortType.ferdigstillUtenSvar(valgtTraad.getEldsteMelding().melding.traadId);
     }
 
     @Override
