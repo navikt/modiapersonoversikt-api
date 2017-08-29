@@ -53,7 +53,8 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
-            public void ferdigstillUtenSvar(String s) {
+            public void ferdigstillUtenSvar(String behandlingsId) {
+                hentHenvendelse(behandlingsId).setFerdigstiltUtenSvar(true);
             }
 
             @Override
