@@ -1,25 +1,48 @@
+@purpleDarker: #5c4378;
+
 .pleiepenger-panel {
+
+  display: flex;
+  margin: 0 -1rem;
+
+  .om-pleiepenger, .arbeidssituasjon {
+    flex-basis: 50%;
+    flex-grow: 0;
+    width: 50%;
+
+    padding: 0 1rem;
+  }
+
   .pleiepenger-etikett {
     text-transform: uppercase;
     font-size: 0.857rem;
-    padding-top: .2rem;
   }
 
   .pleiepenger-verdi {
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .pleiepenger-antall {
     font-weight: bold;
     font-size: 1.2rem;
     float: right;
   }
 
+  .pleiepenger-detaljer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .progress-bar-bg {
-    background: #E9E7E7;
+    background: @grayLighter;
     height: 2.75rem;
     width: 100%;
     margin-top: .5rem;
   }
 
   .progress-bar {
-    background: #5c4378;
+    background: @purpleDarker;
     height: 100%;
     float: left;
   }
@@ -27,7 +50,7 @@
   .forbrukte-dager-verdi {
     font-weight: 800;
     font-size: 1.4rem;
-    color: #5c4378;
+    color: @purpleDarker;
   }
 
   .forbrukte-dager-etikett {
@@ -49,7 +72,16 @@
     font-size: 1.2rem;
   }
 
-  section.arbeidssituasjon {
-    float: right;
+  .halvbredde {
+    width: 50%;
   }
+
+  .fullbredde {
+    width: 100%;
+  }
+
+  .personnummer-margin {
+    margin-right: 0.3rem;
+  }
+
 }

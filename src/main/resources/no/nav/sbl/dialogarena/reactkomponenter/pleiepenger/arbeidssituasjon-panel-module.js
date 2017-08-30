@@ -1,33 +1,38 @@
 import React from 'react';
 import moment from 'moment';
+import { DLElement } from './pleiepenger-panel-module';
 
-class ArbeidssituasjonPanel extends React.Component {
-    render() {
-        const { tekst, arbeidsgiver, kontonummer, inntektsperiode, refusjonstype } = this.props;
-        const inntektForPerioden = this.props.inntektForPerioden
-            .toLocaleString('nb-NO', {style: 'currency', currency: 'NOK', currencyDisplay: 'code'});
-        const refusjonTilDato = moment(this.props.refusjonTilDato).format('DD.MM.YYYY');
-        return (
-            <div className="arbeidssituasjon">
-                <h1>{ tekst['title'] }</h1>
-                <dl>
-                    <dt>{ tekst['arbeidsgiver'] }</dt>
-                    <dd>{ arbeidsgiver }</dd>
-                    <dt>{ tekst['kontonummer'] }</dt>
-                    <dd>{ kontonummer }</dd>
-                    <dt>{ tekst['inntektsperiode'] }</dt>
-                    <dd>{ inntektsperiode }</dd>
-                    <dt>{ tekst['inntektForPerioden'] }</dt>
-                    <dd>{ inntektForPerioden }</dd>
-                    <dt>{ tekst['refusjonstype'] }</dt>
-                    <dd>{ refusjonstype }</dd>
-                    <dt>{ tekst['refusjonTilDato'] }</dt>
-                    <dd>{ refusjonTilDato }</dd>
-                </dl>
-            </div>
-        );
-    }
-}
+const ArbeidssituasjonPanel = props => {
+    const { tekst, arbeidsgiver, kontonummer, inntektsperiode, inntektForPerioden, refusjonstype } = props;
+    const formatertInntektForPerioden = inntektForPerioden
+        .toLocaleString('nb-NO', {style: 'currency', currency: 'NOK', currencyDisplay: 'code'});
+    const refusjonTilDato = moment(props.refusjonTilDato).format('DD.MM.YYYY');
+    return (
+        <div>
+            <h1>{ tekst['title'] }</h1>
+            <dl className="pleiepenger-detaljer">
+                <DLElement etikett={ tekst['arbeidsgiver'] } className="halvbredde">
+                    { arbeidsgiver }
+                </DLElement>
+                <DLElement etikett={ tekst['kontonummer'] } className="halvbredde">
+                    { kontonummer }
+                </DLElement>
+                <DLElement etikett={ tekst['inntektsperiode'] } className="halvbredde">
+                    { inntektsperiode }
+                </DLElement>
+                <DLElement etikett={ tekst['inntektForPerioden'] } className="halvbredde">
+                    { formatertInntektForPerioden }
+                </DLElement>
+                <DLElement etikett={ tekst['refusjonstype'] } className="halvbredde">
+                    { refusjonstype }
+                </DLElement>
+                <DLElement etikett={ tekst['refusjonTilDato'] } className="halvbredde">
+                    { refusjonTilDato }
+                </DLElement>
+            </dl>
+        </div>
+    );
+};
 
 ArbeidssituasjonPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,

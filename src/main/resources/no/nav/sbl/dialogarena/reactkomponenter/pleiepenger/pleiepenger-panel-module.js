@@ -3,7 +3,7 @@ import moment from 'moment';
 
 const Personnummer = ({ ident }) => (
     <span>
-        <span style={{marginRight: '0.3rem'}}>{ ident.slice(0, 6) }</span>
+        <span className="personnummer-margin">{ ident.slice(0, 6) }</span>
         <span>{ ident.slice(6) }</span>
     </span>
 );
@@ -14,50 +14,56 @@ const ProgressBar = ({ percent }) => (
     </div>
 );
 
-class PleiepengerettighetPanel extends React.Component {
-    render() {
-        const props = this.props;
-        const tekst = props.tekst;
-        return (
+const DLElement = ({ etikett, className = '', children }) => (
+    <div className={ ['blokk-s', className].join(' ') }>
+        <dt className="pleiepenger-etikett">{ etikett }</dt>
+        <dd className="pleiepenger-verdi">{ children }</dd>
+    </div>
+);
+
+const PleiepengerettighetPanel = props => {
+    const tekst = props.tekst;
+    const forbrukteDagerProsent = 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager;
+    return (
+        <div>
+            <h1>{ tekst['title'] }</h1>
             <div>
-                <h1>{ tekst['title'] }</h1>
                 <div>
-                    <div>
-                        <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>
-                        <span className="pleiepenger-verdi">{ props.pleiepengedager }&nbsp;{ tekst['dagerEnhet'] }</span>
-                    </div>
-                    <ProgressBar percent={ 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager } />
-                    <div className="forbrukte-dager">
-                        <span className="forbrukte-dager-verdi">{ props.forbrukteDagerTOMIDag }</span>
-                        <span className="forbrukte-dager-etikett">{ tekst['forbrukteDagerPerIDag'] }</span>
-                    </div>
+                    <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>
+                    <span className="pleiepenger-antall">{ props.pleiepengedager }&nbsp;{ tekst['dagerEnhet'] }</span>
                 </div>
-                <dl>
-                    <dt>{ tekst['fraOgMedDato'] }</dt>
-                    <dd>{ moment(props.FOMDato).format('DD.MM.YYYY') }</dd>
-                    <dt>{ tekst['tilOgMedDato'] }</dt>
-                    <dd>{ moment(props.TOMDato).format('DD.MM.YYYY') }</dd>
-                    <dt style={{ width: '100%' }}>{ tekst['forbruktEtterDennePerioden'] }</dt>
-                    <dd>{ props.forbrukteDagerEtterDennePerioden }</dd>
-                    <dt style={{ height: '1.2rem' }} />
-                    <dd />
-                    <dt>{ tekst['kompensasjonsgrad'] }</dt>
-                    <dd>{ props.kompensasjonsgrad  || '' }&nbsp;%</dd>
-                    <dt>{ tekst['pleiepengegrad'] }</dt>
-                    <dd>{ props.graderingsgrad || '' }&nbsp;%</dd>
-                    <dt className="barnet-etikett">{ tekst['barnet'] }</dt>
-                    <dd className="barnet-verdi">
-                        <Personnummer ident={ props.barnet } />
-                    </dd>
-                    <dt>{ tekst['annenForelder'] }</dt>
-                    <dd>
-                        <Personnummer ident={ props.andreOmsorgsperson } />
-                    </dd>
-                </dl>
+                <ProgressBar percent={ forbrukteDagerProsent }/>
+                <div className="forbrukte-dager">
+                    <span className="forbrukte-dager-verdi">{ props.forbrukteDagerTOMIDag }</span>
+                    <span className="forbrukte-dager-etikett">{ tekst['forbrukteDagerPerIDag'] }</span>
+                </div>
             </div>
-        );
-    }
-}
+            <dl className="pleiepenger-detaljer">
+                <DLElement etikett={ tekst['fraOgMedDato'] } className="halvbredde">
+                    { moment(props.FOMDato).format('DD.MM.YYYY') }
+                </DLElement>
+                <DLElement etikett={ tekst['tilOgMedDato'] } className="halvbredde">
+                    { moment(props.TOMDato).format('DD.MM.YYYY') }
+                </DLElement>
+                <DLElement etikett={ tekst['forbruktEtterDennePerioden'] } className="fullbredde">
+                    { props.forbrukteDagerEtterDennePerioden }&nbsp;{ tekst['dagerEnhet'] }
+                </DLElement>
+                <DLElement etikett={ tekst['kompensasjonsgrad'] } className="halvbredde">
+                    { props.kompensasjonsgrad || '' }&nbsp;%
+                </DLElement>
+                <DLElement etikett={ tekst['pleiepengegrad'] } className="halvbredde">
+                    { props.graderingsgrad || '' }&nbsp;%
+                </DLElement>
+                <DLElement etikett={ tekst['barnet'] } className="halvbredde">
+                    <Personnummer ident={ props.barnet } />
+                </DLElement>
+                <DLElement etikett={ tekst['annenForelder'] } className="halvbredde">
+                    <Personnummer ident={ props.andreOmsorgsperson } />
+                </DLElement>
+            </dl>
+        </div>
+    );
+};
 
 PleiepengerettighetPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
@@ -72,4 +78,5 @@ PleiepengerettighetPanel.propTypes = {
     andreOmsorgsperson: React.PropTypes.string,
 };
 
+export { DLElement };
 export default PleiepengerettighetPanel;
