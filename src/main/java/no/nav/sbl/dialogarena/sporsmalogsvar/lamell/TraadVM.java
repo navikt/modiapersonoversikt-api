@@ -72,7 +72,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erBehandlet() {
-        return meldinger.size() > 1 || FRA_NAV.contains(getEldsteMelding().melding.meldingstype);
+        return meldinger.size() > 1 || FRA_NAV.contains(getEldsteMelding().melding.meldingstype) || erFerdigstiltUtenSvar();
     }
 
     public boolean erKontorsperret() {
