@@ -6,7 +6,8 @@ import VelgSakPanel from './velg-sak-panel/velg-sak-panel-module';
 import VarselLerret from './varsel-lerret/varsel-lerret-module';
 import FeilmeldingsModaler from './feilmeldingsmodaler/feilmeldingsmodaler-module';
 import SaksoversiktLerret from './saksoversikt/lerret/saksoversikt-lerret-module';
-import PleiepengerPanel from './pleiepenger/pleiepenger-panel-module';
+import PleiepengerettighetPanel from './pleiepenger/pleiepenger-panel-module';
+import ArbeidssituasjonPanel from './pleiepenger/arbeidssituasjon-panel-module';
 import PleiepengerUtbetalingerPanel from './pleiepenger/pleiepenger-utbetalinger-panel-module';
 
 import React from './nav-react';
@@ -21,7 +22,8 @@ window.ModiaJS = {
         VarselLerret,
         FeilmeldingsModaler,
         SaksoversiktLerret,
-        PleiepengerPanel,
+        PleiepengerettighetPanel,
+        ArbeidssituasjonPanel,
         PleiepengerUtbetalingerPanel
     },
     InitializedComponents: {},
