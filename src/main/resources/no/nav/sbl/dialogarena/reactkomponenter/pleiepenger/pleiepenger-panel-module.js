@@ -1,10 +1,20 @@
 import React from 'react';
+import moment from 'moment';
+
+const Personnummer = ({ ident }) => (
+    <span>
+        <span style={{marginRight: '0.3rem'}}>{ ident.slice(0, 6) }</span>
+        <span>{ ident.slice(6) }</span>
+    </span>
+);
+
+const ProgressBar = ({ percent }) => (
+    <div className="progress-bar-bg">
+        <div style={{ width: percent + '%' }} className="progress-bar" />
+    </div>
+);
 
 class PleiepengerettighetPanel extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const props = this.props;
         const tekst = props.tekst;
@@ -14,29 +24,35 @@ class PleiepengerettighetPanel extends React.Component {
                 <div>
                     <div>
                         <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>
-                        <span className="pleiepenger-verdi">{ props.pleiepengedager }</span>
+                        <span className="pleiepenger-verdi">{ props.pleiepengedager }&nbsp;{ tekst['dagerEnhet'] }</span>
                     </div>
-                    <div>
-                        <span>{ props.forbrukteDagerTOMIDag }</span>
-                        <span>{ tekst['forbrukteDagerPerIDag'] }</span>
+                    <ProgressBar percent={ 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager } />
+                    <div className="forbrukte-dager">
+                        <span className="forbrukte-dager-verdi">{ props.forbrukteDagerTOMIDag }</span>
+                        <span className="forbrukte-dager-etikett">{ tekst['forbrukteDagerPerIDag'] }</span>
                     </div>
                 </div>
                 <dl>
                     <dt>{ tekst['fraOgMedDato'] }</dt>
-                    <dd>{ props.FOMDato }</dd>
+                    <dd>{ moment(props.FOMDato).format('DD.MM.YYYY') }</dd>
                     <dt>{ tekst['tilOgMedDato'] }</dt>
-                    <dd>{ props.TOMDato }</dd>
-                    <dt style={{width: '100%'}}>{ tekst['forbruktEtterDennePerioden'] }</dt>
-                    <dd>1234</dd>
-                    <dt></dt><dd></dd>
+                    <dd>{ moment(props.TOMDato).format('DD.MM.YYYY') }</dd>
+                    <dt style={{ width: '100%' }}>{ tekst['forbruktEtterDennePerioden'] }</dt>
+                    <dd>{ props.forbrukteDagerEtterDennePerioden }</dd>
+                    <dt style={{ height: '1.2rem' }} />
+                    <dd />
                     <dt>{ tekst['kompensasjonsgrad'] }</dt>
-                    <dd>{ props.kompensasjonsgrad }</dd>
+                    <dd>{ props.kompensasjonsgrad  || '' }&nbsp;%</dd>
                     <dt>{ tekst['pleiepengegrad'] }</dt>
-                    <dd>{ props.graderingsgrad }</dd>
-                    <dt>{ tekst['barnet'] }</dt>
-                    <dd>{ props.barnet }</dd>
+                    <dd>{ props.graderingsgrad || '' }&nbsp;%</dd>
+                    <dt className="barnet-etikett">{ tekst['barnet'] }</dt>
+                    <dd className="barnet-verdi">
+                        <Personnummer ident={ props.barnet } />
+                    </dd>
                     <dt>{ tekst['annenForelder'] }</dt>
-                    <dd>{ props.andreOmsorgsperson }</dd>
+                    <dd>
+                        <Personnummer ident={ props.andreOmsorgsperson } />
+                    </dd>
                 </dl>
             </div>
         );
@@ -45,9 +61,15 @@ class PleiepengerettighetPanel extends React.Component {
 
 PleiepengerettighetPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    FOMDato: React.PropTypes.string.isRequired,
-    TOMDato: React.PropTypes.string.isRequired,
-
+    FOMDato: React.PropTypes.string,
+    TOMDato: React.PropTypes.string,
+    pleiepengedager: React.PropTypes.number.isRequired,
+    forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
+    forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
+    kompensasjonsgrad: React.PropTypes.number,
+    graderingsgrad: React.PropTypes.number,
+    barnet: React.PropTypes.string.isRequired,
+    andreOmsorgsperson: React.PropTypes.string,
 };
 
 export default PleiepengerettighetPanel;
