@@ -23,7 +23,7 @@ public class StatusIkon extends Panel {
 
         int traadlengde = meldingVM.traadlengde;
 
-        String besvartStatusKey = format("innboks.melding.%s", (meldingVM.erBesvart().getObject()) ? "besvart" : "ubesvart");
+        String besvartStatusKey = format("innboks.melding.%s", meldingVM.erBesvart().getObject() ? "besvart" : "ubesvart");
 
         String besvartStatus = new StringResourceModel(besvartStatusKey, this, null).getString();
         String antallMeldinger = format("%d %s",
