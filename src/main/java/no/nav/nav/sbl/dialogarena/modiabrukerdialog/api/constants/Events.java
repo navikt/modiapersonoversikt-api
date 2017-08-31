@@ -7,6 +7,7 @@ public class Events {
         private static final String PREFIX = "sporsmalogsvar.";
 
         public static final String SVAR_AVBRUTT = PREFIX + "svar.avbrutt";
+        public static final String FERDIGSTILT_UTEN_SVAR = PREFIX + "ferdigstilt.uten.svar";
         public static final String LEGG_TILBAKE_UTFORT = PREFIX + "leggtilbake.utfort";
         public static final String MELDING_VALGT = PREFIX + "melding.valgt";
         public static final String SVAR_PAA_MELDING = PREFIX + "svar.paa.melding";
