@@ -1,53 +1,77 @@
 import React from 'react';
+import moment from 'moment';
+import DLElement from './dlelement';
+import formaterJavaDate from './dato-utils';
 
-class PleiepengerettighetPanel extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const Personnummer = ({ ident }) => (
+    <span>
+        <span className="personnummer-margin">{ ident.slice(0, 6) }</span>
+        <span>{ ident.slice(6) }</span>
+    </span>
+);
 
-    render() {
-        const props = this.props;
-        const tekst = props.tekst;
-        return (
+const ProgressBar = ({ percent }) => (
+    <div className="progress-bar-bg">
+        <div style={{ width: percent + '%' }} className="progress-bar" />
+    </div>
+);
+
+const PleiepengerettighetPanel = props => {
+    const tekst = props.tekst;
+    const forbrukteDagerProsent = 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager;
+    return (
+        <div>
+            <h1 id="pleiepengerettenTitle">{ tekst['title'] }</h1>
             <div>
-                <h1>{ tekst['title'] }</h1>
                 <div>
-                    <div>
-                        <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>
-                        <span className="pleiepenger-verdi">{ props.pleiepengedager }</span>
-                    </div>
-                    <div>
-                        <span>{ props.forbrukteDagerTOMIDag }</span>
-                        <span>{ tekst['forbrukteDagerPerIDag'] }</span>
-                    </div>
+                    <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>
+                    <span className="pleiepenger-antall">{ props.pleiepengedager }&nbsp;{ tekst['dagerEnhet'] }</span>
                 </div>
-                <dl>
-                    <dt>{ tekst['fraOgMedDato'] }</dt>
-                    <dd>{ props.FOMDato }</dd>
-                    <dt>{ tekst['tilOgMedDato'] }</dt>
-                    <dd>{ props.TOMDato }</dd>
-                    <dt style={{width: '100%'}}>{ tekst['forbruktEtterDennePerioden'] }</dt>
-                    <dd>1234</dd>
-                    <dt></dt><dd></dd>
-                    <dt>{ tekst['kompensasjonsgrad'] }</dt>
-                    <dd>{ props.kompensasjonsgrad }</dd>
-                    <dt>{ tekst['pleiepengegrad'] }</dt>
-                    <dd>{ props.graderingsgrad }</dd>
-                    <dt>{ tekst['barnet'] }</dt>
-                    <dd>{ props.barnet }</dd>
-                    <dt>{ tekst['annenForelder'] }</dt>
-                    <dd>{ props.andreOmsorgsperson }</dd>
-                </dl>
+                <ProgressBar percent={ forbrukteDagerProsent }/>
+                <div className="forbrukte-dager">
+                    <span className="forbrukte-dager-verdi">{ props.forbrukteDagerTOMIDag }</span>
+                    <span className="forbrukte-dager-etikett">{ tekst['forbrukteDagerPerIDag'] }</span>
+                </div>
             </div>
-        );
-    }
-}
+            <dl className="pleiepenger-detaljer">
+                <DLElement etikett={ tekst['fraOgMedDato'] } className="halvbredde">
+                    { formaterJavaDate(props.FOMDato) }
+                </DLElement>
+                <DLElement etikett={ tekst['tilOgMedDato'] } className="halvbredde">
+                    { formaterJavaDate(props.TOMDato) }
+                </DLElement>
+                <DLElement etikett={ tekst['forbruktEtterDennePerioden'] } className="fullbredde">
+                    { props.forbrukteDagerEtterDennePerioden }&nbsp;{ tekst['dagerEnhet'] }
+                </DLElement>
+                <DLElement etikett={ tekst['kompensasjonsgrad'] } className="halvbredde">
+                    { props.kompensasjonsgrad || '' }&nbsp;%
+                </DLElement>
+                <DLElement etikett={ tekst['pleiepengegrad'] } className="halvbredde">
+                    { props.graderingsgrad || '' }&nbsp;%
+                </DLElement>
+                <DLElement etikett={ tekst['barnet'] } className="halvbredde">
+                    <Personnummer ident={ props.barnet } />
+                </DLElement>
+                <DLElement etikett={ tekst['annenForelder'] } className="halvbredde">
+                    <Personnummer ident={ props.andreOmsorgsperson } />
+                </DLElement>
+            </dl>
+        </div>
+    );
+};
 
 PleiepengerettighetPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    FOMDato: React.PropTypes.string.isRequired,
-    TOMDato: React.PropTypes.string.isRequired,
-
+    FOMDato: React.PropTypes.string,
+    TOMDato: React.PropTypes.string,
+    pleiepengedager: React.PropTypes.number.isRequired,
+    forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
+    forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
+    kompensasjonsgrad: React.PropTypes.number,
+    graderingsgrad: React.PropTypes.number,
+    barnet: React.PropTypes.string.isRequired,
+    andreOmsorgsperson: React.PropTypes.string,
 };
 
+export { DLElement };
 export default PleiepengerettighetPanel;

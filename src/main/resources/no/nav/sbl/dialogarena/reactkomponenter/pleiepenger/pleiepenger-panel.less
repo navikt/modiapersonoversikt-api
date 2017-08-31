@@ -1,19 +1,97 @@
+@purpleDarker: #5c4378;
+
 .pleiepenger-panel {
+
+  display: flex;
+  margin: 0 -1rem;
+  flex-flow: wrap;
+
+  .om-pleiepenger, .arbeidssituasjon {
+    flex-basis: 50%;
+    flex-grow: 0;
+    width: 50%;
+
+    padding: 0 1rem;
+  }
+
+  .pleiepenger-utbetalinger {
+    flex-basis: 100%;
+    flex-grow: 0;
+    width: 100%;
+
+    padding: 0 1rem;
+  }
+
   .pleiepenger-etikett {
     text-transform: uppercase;
     font-size: 0.857rem;
-    padding-top: .2rem;
   }
 
   .pleiepenger-verdi {
     font-weight: bold;
+    margin: 0;
+  }
+
+  .pleiepenger-antall {
+    font-weight: bold;
+    font-size: 1.2rem;
     float: right;
   }
 
-  .arbeidssituasjon section {
-    float: right;
+  .pleiepenger-detaljer {
+    display: flex;
+    flex-wrap: wrap;
   }
 
+  .progress-bar-bg {
+    background: @grayLighter;
+    height: 2.75rem;
+    width: 100%;
+    margin-top: .5rem;
+  }
+
+  .progress-bar {
+    background: @purpleDarker;
+    height: 100%;
+    float: left;
+  }
+
+  .forbrukte-dager-verdi {
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: @purpleDarker;
+  }
+
+  .forbrukte-dager-etikett {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: .5em;
+  }
+
+  .forbrukte-dager {
+    margin-bottom: 2em;
+  }
+
+  .barnet-etikett {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .barnet-verdi {
+    font-size: 1.2rem;
+  }
+
+  .halvbredde {
+    width: 50%;
+  }
+
+  .fullbredde {
+    width: 100%;
+  }
+
+  .personnummer-margin {
+    margin-right: 0.3rem;
+  }
 }
 
 section.periode  {

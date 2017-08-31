@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import DLElement from './dlelement';
 
 const formaterJavaDate = (dato) =>
     moment(new Date(dato.year, dato.monthValue - 1, dato.dayOfMonth)).format('DD.MM.YYYY');
@@ -12,11 +13,13 @@ const Periode = ({periode, periodeNummer}) => {
         <section className="periode">
             <h2>Periode {periodeNummer} {fraOgMed} </h2>
             <div className="periodeinfo">
-                <dl>
-                    <dt>Pleiepengergrad</dt>
-                    <dd>{periode.graderingsgrad} %</dd>
-                    <dt>Pleiepengerdager</dt>
-                    <dd>{periode.antallPleiepengedager}</dd>
+                <dl className="pleiepenger-detaljer">
+                    <DLElement etikett={"Pleiepengergrad"} className="halvbredde">
+                        {periode.graderingsgrad} %
+                    </DLElement>
+                    <DLElement etikett={"Pleiepengerdager"} className="halvbredde">
+                        {periode.antallPleiepengedager} %
+                    </DLElement>
                 </dl>
             </div>
             <article className="utbetalinger">
@@ -35,15 +38,19 @@ const Vedtak = ({vedtak}) => {
     const anvistUtbetaling = formaterJavaDate(vedtak.anvistUtbetaling);
     return (
         <li>
-            <dl>
-                <dt>Fra og med</dt>
-                <dd>{fraOgMed}</dd>
-                <dt>Til og Med</dt>
-                <dd>{tilOgMed}</dd>
-                <dt>Brutto beløp</dt>
-                <dd>{vedtak.bruttoBelop}</dd>
-                <dt>Anvist utbetaling</dt>
-                <dd>{anvistUtbetaling}</dd>
+            <dl className="pleiepenger-detaljer">
+                <DLElement etikett={"Fra og med"} className="halvbredde">
+                    {fraOgMed}
+                </DLElement>
+                <DLElement etikett={"Til og Med"} className="halvbredde">
+                    {tilOgMed}
+                </DLElement>
+                <DLElement etikett={"Brutto beløp"} className="halvbredde">
+                    {vedtak.bruttoBelop}
+                </DLElement>
+                <DLElement etikett={"Anvist utbetaling"} className="halvbredde">
+                    {anvistUtbetaling}
+                </DLElement>
             </dl>
         </li>
     );
@@ -63,7 +70,7 @@ const PleiepengerUtbetalingerPanel = ({perioder}) => {
 PleiepengerUtbetalingerPanel.propTypes = {
     perioder: React.PropTypes.arrayOf(React.PropTypes.shape({
         antallPleiepengedager: React.PropTypes.number.isRequired,
-        graderingsgrad: React.PropTypes.string,
+        graderingsgrad: React.PropTypes.number,
         vedtakListe: React.PropTypes.arrayOf(React.PropTypes.shape({
             periode: React.PropTypes.shape({
                 fraOgMed: React.PropTypes.object.isRequired,
