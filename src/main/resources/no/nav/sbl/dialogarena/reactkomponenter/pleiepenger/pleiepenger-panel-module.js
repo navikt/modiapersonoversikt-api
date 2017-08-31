@@ -21,7 +21,7 @@ const PleiepengerettighetPanel = props => {
     const forbrukteDagerProsent = 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager;
     return (
         <div>
-            <h1 id="pleiepengerettenTitle">{ tekst['title'] }</h1>
+            <h1 id="pleiepengerettenTitle">{ tekst['omPleiepengeretten'] }</h1>
             <div>
                 <div>
                     <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>

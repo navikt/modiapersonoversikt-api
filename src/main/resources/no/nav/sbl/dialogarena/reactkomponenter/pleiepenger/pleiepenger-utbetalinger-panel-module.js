@@ -5,25 +5,25 @@ import DLElement from './dlelement';
 const formaterJavaDate = (dato) =>
     moment(new Date(dato.year, dato.monthValue - 1, dato.dayOfMonth)).format('DD.MM.YYYY');
 
-const Periode = ({periode, periodeNummer}) => {
+const Periode = ({periode, periodeNummer, tekst}) => {
     const fraOgMed = formaterJavaDate(periode.fraOgMed);
-    const vedtak = periode.vedtakListe.map((vedtak, index) => (<Vedtak key={index} vedtak={vedtak}/>));
+    const vedtak = periode.vedtakListe.map((vedtak, index) => (<Vedtak key={index} tekst={tekst} vedtak={vedtak}/>));
 
     return (
         <section className="periode">
-            <h2>Periode {periodeNummer} {fraOgMed} </h2>
+            <h2>{tekst['periode']} {periodeNummer} {fraOgMed} </h2>
             <div className="periodeinfo">
                 <dl className="pleiepenger-detaljer">
-                    <DLElement etikett={"Pleiepengergrad"} className="halvbredde">
+                    <DLElement etikett={tekst['pleiepengegrad']} className="halvbredde">
                         {periode.graderingsgrad} %
                     </DLElement>
-                    <DLElement etikett={"Pleiepengerdager"} className="halvbredde">
+                    <DLElement etikett={tekst['pleiepengedager']} className="halvbredde">
                         {periode.antallPleiepengedager}
                     </DLElement>
                 </dl>
             </div>
             <article className="utbetalinger">
-                <h3 className="utbetalinger-header" aria-label="Ekspanderingsliste">Kommende utbetalinger</h3>
+                <h3 className="utbetalinger-header" aria-label="Ekspanderingsliste">{tekst['kommendeUtbetalinger']}</h3>
                 <ul className="vedtaksliste">
                     {vedtak}
                 </ul>
@@ -32,23 +32,23 @@ const Periode = ({periode, periodeNummer}) => {
     )
 };
 
-const Vedtak = ({vedtak}) => {
+const Vedtak = ({vedtak, tekst}) => {
     const fraOgMed = formaterJavaDate(vedtak.periode.fraOgMed);
     const tilOgMed = formaterJavaDate(vedtak.periode.tilOgMed);
     const anvistUtbetaling = formaterJavaDate(vedtak.anvistUtbetaling);
     return (
         <li>
             <dl className="pleiepenger-detaljer">
-                <DLElement etikett={"Fra og med"} className="halvbredde">
+                <DLElement etikett={tekst['fraOgMedDato']} className="halvbredde">
                     {fraOgMed}
                 </DLElement>
-                <DLElement etikett={"Til og Med"} className="halvbredde">
+                <DLElement etikett={tekst['tilOgMedDato']} className="halvbredde">
                     {tilOgMed}
                 </DLElement>
-                <DLElement etikett={"Brutto beløp"} className="halvbredde">
+                <DLElement etikett={tekst['bruttoBelop']} className="halvbredde">
                     {vedtak.bruttoBelop}
                 </DLElement>
-                <DLElement etikett={"Anvist utbetaling"} className="halvbredde">
+                <DLElement etikett={tekst['anvistUtbetaling']} className="halvbredde">
                     {anvistUtbetaling}
                 </DLElement>
             </dl>
@@ -56,9 +56,9 @@ const Vedtak = ({vedtak}) => {
     );
 };
 
-const PleiepengerUtbetalingerPanel = ({perioder}) => {
+const PleiepengerUtbetalingerPanel = ({perioder, tekst}) => {
     const perioderKomponenter = perioder.map((periode, index) =>
-        (<Periode key={index} periode={periode} periodeNummer={index+1}/>));
+        (<Periode key={index} tekst={tekst} periode={periode} periodeNummer={index+1}/>));
 
     return (
         <div>

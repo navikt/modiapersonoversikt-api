@@ -9,7 +9,7 @@ const ArbeidssituasjonPanel = ({ tekst, arbeidsgiver, kontonummer, inntektsperio
         .toLocaleString('nb-NO', {style: 'currency', currency: 'NOK', currencyDisplay: 'code'});
     return (
         <div>
-            <h1 id="arbeidssituasjonTitle">{ tekst['title'] }</h1>
+            <h1 id="arbeidssituasjonTitle">{ tekst['arbeidssituasjon'] }</h1>
             <dl className="pleiepenger-detaljer">
                 <DLElement etikett={ tekst['arbeidsgiver'] } className="halvbredde">
                     { arbeidsgiver }
