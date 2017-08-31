@@ -12,19 +12,19 @@ const Periode = ({periode, periodeNummer, tekst}) => {
 
     return (
         <section className="periode">
-            <h2>{tekst['periode']} {periodeNummer} {fraOgMed} </h2>
+            <h2>{tekst.periode} {periodeNummer} {fraOgMed} </h2>
             <div className="periodeinfo">
                 <dl className="pleiepenger-detaljer">
-                    <DLElement etikett={tekst['pleiepengegrad']} className="halvbredde">
+                    <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
                         {periode.graderingsgrad} %
                     </DLElement>
-                    <DLElement etikett={tekst['pleiepengedager']} className="halvbredde">
+                    <DLElement etikett={tekst.pleiepengedager} className="halvbredde">
                         {periode.antallPleiepengedager}
                     </DLElement>
                 </dl>
             </div>
             <article className="utbetalinger">
-                <h3 className="utbetalinger-header" aria-label="Ekspanderingsliste">{tekst['kommendeUtbetalinger']}</h3>
+                <h3 className="utbetalinger-header" aria-label="Ekspanderingsliste">{tekst.kommendeUtbetalinger}</h3>
                 <ul className="vedtaksliste">
                     {vedtak}
                 </ul>
@@ -40,19 +40,19 @@ const Vedtak = ({vedtak, tekst}) => {
     return (
         <li>
             <dl className="pleiepenger-detaljer">
-                <DLElement etikett={tekst['fraOgMedDato']} className="halvbredde">
+                <DLElement etikett={tekst.fraOgMedDato} className="halvbredde">
                     {fraOgMed}
                 </DLElement>
-                <DLElement etikett={tekst['tilOgMedDato']} className="halvbredde">
+                <DLElement etikett={tekst.tilOgMedDato} className="halvbredde">
                     {tilOgMed}
                 </DLElement>
-                <DLElement etikett={tekst['bruttoBelop']} className="halvbredde">
+                <DLElement etikett={tekst.bruttoBelop} className="halvbredde">
                     {formaterBelop(vedtak.bruttoBelop)}
                 </DLElement>
-                <DLElement etikett={tekst['anvistUtbetaling']} className="halvbredde">
+                <DLElement etikett={tekst.anvistUtbetaling} className="halvbredde">
                     {anvistUtbetaling}
                 </DLElement>
-                <DLElement etikett={tekst['dagsats']} className="halvbredde">
+                <DLElement etikett={tekst.dagsats} className="halvbredde">
                     {formaterBelop(vedtak.dagsats)}
                 </DLElement>
             </dl>

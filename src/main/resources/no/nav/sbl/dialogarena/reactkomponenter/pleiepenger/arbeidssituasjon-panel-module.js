@@ -6,24 +6,24 @@ import { formaterJavaDate, formaterBelop } from './formatering-utils';
 const ArbeidssituasjonPanel = ({ tekst, arbeidsgiver, kontonummer, inntektsperiode,
                                    inntektForPerioden, refusjonstype, refusjonTilDato }) => (
         <div>
-            <h1 id="arbeidssituasjonTitle">{ tekst['arbeidssituasjon'] }</h1>
+            <h1 id="arbeidssituasjonTitle">{ tekst.arbeidssituasjon }</h1>
             <dl className="pleiepenger-detaljer">
-                <DLElement etikett={ tekst['arbeidsgiver'] } className="halvbredde">
+                <DLElement etikett={ tekst.arbeidsgiver } className="halvbredde">
                     { arbeidsgiver }
                 </DLElement>
-                <DLElement etikett={ tekst['kontonummer'] } className="halvbredde">
+                <DLElement etikett={ tekst.kontonummer } className="halvbredde">
                     { kontonummer }
                 </DLElement>
-                <DLElement etikett={ tekst['inntektsperiode'] } className="halvbredde">
+                <DLElement etikett={ tekst.inntektsperiode } className="halvbredde">
                     { inntektsperiode }
                 </DLElement>
-                <DLElement etikett={ tekst['inntektForPerioden'] } className="halvbredde">
+                <DLElement etikett={ tekst.inntektForPerioden } className="halvbredde">
                     { formaterBelop(inntektForPerioden) }
                 </DLElement>
-                <DLElement etikett={ tekst['refusjonstype'] } className="halvbredde">
+                <DLElement etikett={ tekst.refusjonstype } className="halvbredde">
                     { refusjonstype }
                 </DLElement>
-                <DLElement etikett={ tekst['refusjonTilDato'] } className="halvbredde">
+                <DLElement etikett={ tekst.refusjonTilDato } className="halvbredde">
                     { formaterJavaDate(refusjonTilDato) }
                 </DLElement>
             </dl>
