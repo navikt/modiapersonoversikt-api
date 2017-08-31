@@ -37,7 +37,7 @@ ArbeidssituasjonPanel.propTypes = {
     inntektsperiode: React.PropTypes.string,
     inntektForPerioden: React.PropTypes.number,
     refusjonstype: React.PropTypes.string,
-    refusjonTilDato: React.PropTypes.string,
+    refusjonTilDato: React.PropTypes.object,
 };
 
 export default ArbeidssituasjonPanel;

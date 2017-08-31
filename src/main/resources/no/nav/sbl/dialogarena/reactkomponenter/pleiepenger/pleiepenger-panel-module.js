@@ -62,8 +62,8 @@ const PleiepengerettighetPanel = props => {
 
 PleiepengerettighetPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    FOMDato: React.PropTypes.string,
-    TOMDato: React.PropTypes.string,
+    FOMDato: React.PropTypes.object,
+    TOMDato: React.PropTypes.object,
     pleiepengedager: React.PropTypes.number.isRequired,
     forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
     forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
