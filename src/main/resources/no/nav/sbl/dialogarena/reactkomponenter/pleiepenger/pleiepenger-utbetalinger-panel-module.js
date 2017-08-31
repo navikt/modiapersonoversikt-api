@@ -14,7 +14,7 @@ const Periode = ({periode, periodeNummer}) => {
             <div className="periodeinfo">
                 <dl>
                     <dt>Pleiepengergrad</dt>
-                    <dd>{periode.graderingsgrad}</dd>
+                    <dd>{periode.graderingsgrad} %</dd>
                     <dt>Pleiepengerdager</dt>
                     <dd>{periode.antallPleiepengedager}</dd>
                 </dl>
