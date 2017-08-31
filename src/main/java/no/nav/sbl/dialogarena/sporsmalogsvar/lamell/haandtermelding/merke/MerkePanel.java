@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 import no.nav.metrics.Timer;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
@@ -27,9 +28,11 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static no.nav.metrics.MetricsFactory.createTimer;
+import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.FERDIGSTILT_UTEN_SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPGAVE_OPPRETTET;
@@ -41,6 +44,8 @@ public class MerkePanel extends AnimertPanel {
 
     @Inject
     private HenvendelseBehandlingService henvendelseService;
+    @Inject
+    private OppgaveBehandlingService oppgaveBehandlingService;
 
     private final InnboksVM innboksVM;
     private final KontorsperrePanel kontorsperrePanel;
@@ -197,7 +202,10 @@ public class MerkePanel extends AnimertPanel {
 
         private void haandterAvsluttet(AjaxRequestTarget target) {
             henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad());
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, none());
+
             send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            send(getPage(), Broadcast.DEPTH, FERDIGSTILT_UTEN_SVAR);
             lukkPanel(target);
         }
 
