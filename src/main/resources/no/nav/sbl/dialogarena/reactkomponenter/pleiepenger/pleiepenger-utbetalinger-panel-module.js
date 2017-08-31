@@ -14,9 +14,9 @@ const Periode = ({periode, periodeNummer}) => {
             <div className="periodeinfo">
                 <dl>
                     <dt>Pleiepengergrad</dt>
-                    <dd>50 %</dd>
+                    <dd>{periode.graderingsgrad}</dd>
                     <dt>Pleiepengerdager</dt>
-                    <dd>17</dd>
+                    <dd>{periode.antallPleiepengedager}</dd>
                 </dl>
             </div>
             <article className="utbetalinger">
@@ -33,7 +33,6 @@ const Vedtak = ({vedtak}) => {
     const fraOgMed = formaterJavaDate(vedtak.periode.fraOgMed);
     const tilOgMed = formaterJavaDate(vedtak.periode.tilOgMed);
     const anvistUtbetaling = formaterJavaDate(vedtak.anvistUtbetaling);
-
     return (
         <li>
             <dl>
@@ -62,6 +61,18 @@ const PleiepengerUtbetalingerPanel = ({perioder}) => {
 };
 
 PleiepengerUtbetalingerPanel.propTypes = {
+    perioder: React.PropTypes.arrayOf(React.PropTypes.shape({
+        antallPleiepengedager: React.PropTypes.number.isRequired,
+        graderingsgrad: React.PropTypes.string,
+        vedtakListe: React.PropTypes.arrayOf(React.PropTypes.shape({
+            periode: React.PropTypes.shape({
+                fraOgMed: React.PropTypes.object.isRequired,
+                tilOgMed: React.PropTypes.object.isRequired
+            }).isRequired,
+            anvistUtbetaling: React.PropTypes.object.isRequired,
+            bruttoBelop: React.PropTypes.number.isRequired
+        })).isRequired
+    })).isRequired
 };
 
 export default PleiepengerUtbetalingerPanel;
