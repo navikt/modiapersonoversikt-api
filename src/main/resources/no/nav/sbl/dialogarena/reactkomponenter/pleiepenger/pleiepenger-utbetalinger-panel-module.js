@@ -18,7 +18,7 @@ const Periode = ({periode, periodeNummer}) => {
                         {periode.graderingsgrad} %
                     </DLElement>
                     <DLElement etikett={"Pleiepengerdager"} className="halvbredde">
-                        {periode.antallPleiepengedager} %
+                        {periode.antallPleiepengedager}
                     </DLElement>
                 </dl>
             </div>
