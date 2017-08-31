@@ -1,5 +1,7 @@
 import React from 'react';
 import moment from 'moment';
+import DLElement from './dlelement';
+import formaterJavaDate from './dato-utils';
 
 const Personnummer = ({ ident }) => (
     <span>
@@ -14,19 +16,12 @@ const ProgressBar = ({ percent }) => (
     </div>
 );
 
-const DLElement = ({ etikett, className = '', children }) => (
-    <div className={ ['blokk-s', className].join(' ') }>
-        <dt className="pleiepenger-etikett">{ etikett }</dt>
-        <dd className="pleiepenger-verdi">{ children }</dd>
-    </div>
-);
-
 const PleiepengerettighetPanel = props => {
     const tekst = props.tekst;
     const forbrukteDagerProsent = 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager;
     return (
         <div>
-            <h1>{ tekst['title'] }</h1>
+            <h1 id="pleiepengerettenTitle">{ tekst['title'] }</h1>
             <div>
                 <div>
                     <span className="pleiepenger-etikett">{ tekst['barnetsDagkonto'] }</span>
@@ -40,10 +35,10 @@ const PleiepengerettighetPanel = props => {
             </div>
             <dl className="pleiepenger-detaljer">
                 <DLElement etikett={ tekst['fraOgMedDato'] } className="halvbredde">
-                    { moment(props.FOMDato).format('DD.MM.YYYY') }
+                    { formaterJavaDate(props.FOMDato) }
                 </DLElement>
                 <DLElement etikett={ tekst['tilOgMedDato'] } className="halvbredde">
-                    { moment(props.TOMDato).format('DD.MM.YYYY') }
+                    { formaterJavaDate(props.TOMDato) }
                 </DLElement>
                 <DLElement etikett={ tekst['forbruktEtterDennePerioden'] } className="fullbredde">
                     { props.forbrukteDagerEtterDennePerioden }&nbsp;{ tekst['dagerEnhet'] }

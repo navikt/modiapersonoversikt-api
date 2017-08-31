@@ -1,15 +1,15 @@
 import React from 'react';
 import moment from 'moment';
-import { DLElement } from './pleiepenger-panel-module';
+import DLElement from './dlelement';
+import formaterJavaDate from './dato-utils';
 
-const ArbeidssituasjonPanel = props => {
-    const { tekst, arbeidsgiver, kontonummer, inntektsperiode, inntektForPerioden, refusjonstype } = props;
+const ArbeidssituasjonPanel = ({ tekst, arbeidsgiver, kontonummer, inntektsperiode,
+                                   inntektForPerioden, refusjonstype, refusjonTilDato }) => {
     const formatertInntektForPerioden = inntektForPerioden
         .toLocaleString('nb-NO', {style: 'currency', currency: 'NOK', currencyDisplay: 'code'});
-    const refusjonTilDato = moment(props.refusjonTilDato).format('DD.MM.YYYY');
     return (
         <div>
-            <h1>{ tekst['title'] }</h1>
+            <h1 id="arbeidssituasjonTitle">{ tekst['title'] }</h1>
             <dl className="pleiepenger-detaljer">
                 <DLElement etikett={ tekst['arbeidsgiver'] } className="halvbredde">
                     { arbeidsgiver }
@@ -27,7 +27,7 @@ const ArbeidssituasjonPanel = props => {
                     { refusjonstype }
                 </DLElement>
                 <DLElement etikett={ tekst['refusjonTilDato'] } className="halvbredde">
-                    { refusjonTilDato }
+                    { formaterJavaDate(refusjonTilDato) }
                 </DLElement>
             </dl>
         </div>
