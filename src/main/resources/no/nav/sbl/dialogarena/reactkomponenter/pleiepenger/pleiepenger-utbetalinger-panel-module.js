@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import DLElement from './dlelement';
+import { formaterBelop } from './formatering-utils';
 
 const formaterJavaDate = (dato) =>
     moment(new Date(dato.year, dato.monthValue - 1, dato.dayOfMonth)).format('DD.MM.YYYY');
@@ -46,10 +47,13 @@ const Vedtak = ({vedtak, tekst}) => {
                     {tilOgMed}
                 </DLElement>
                 <DLElement etikett={tekst['bruttoBelop']} className="halvbredde">
-                    {vedtak.bruttoBelop}
+                    {formaterBelop(vedtak.bruttoBelop)}
                 </DLElement>
                 <DLElement etikett={tekst['anvistUtbetaling']} className="halvbredde">
                     {anvistUtbetaling}
+                </DLElement>
+                <DLElement etikett={tekst['dagsats']} className="halvbredde">
+                    {formaterBelop(vedtak.dagsats)}
                 </DLElement>
             </dl>
         </li>

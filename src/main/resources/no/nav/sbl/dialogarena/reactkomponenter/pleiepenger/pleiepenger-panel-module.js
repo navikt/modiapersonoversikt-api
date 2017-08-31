@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import DLElement from './dlelement';
-import formaterJavaDate from './dato-utils';
+import { formaterJavaDate } from './formatering-utils';
 
 const Personnummer = ({ ident }) => (
     <span>

@@ -1,13 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import DLElement from './dlelement';
-import formaterJavaDate from './dato-utils';
+import { formaterJavaDate, formaterBelop } from './formatering-utils';
 
 const ArbeidssituasjonPanel = ({ tekst, arbeidsgiver, kontonummer, inntektsperiode,
-                                   inntektForPerioden, refusjonstype, refusjonTilDato }) => {
-    const formatertInntektForPerioden = inntektForPerioden
-        .toLocaleString('nb-NO', {style: 'currency', currency: 'NOK', currencyDisplay: 'code'});
-    return (
+                                   inntektForPerioden, refusjonstype, refusjonTilDato }) => (
         <div>
             <h1 id="arbeidssituasjonTitle">{ tekst['arbeidssituasjon'] }</h1>
             <dl className="pleiepenger-detaljer">
@@ -21,7 +18,7 @@ const ArbeidssituasjonPanel = ({ tekst, arbeidsgiver, kontonummer, inntektsperio
                     { inntektsperiode }
                 </DLElement>
                 <DLElement etikett={ tekst['inntektForPerioden'] } className="halvbredde">
-                    { formatertInntektForPerioden }
+                    { formaterBelop(inntektForPerioden) }
                 </DLElement>
                 <DLElement etikett={ tekst['refusjonstype'] } className="halvbredde">
                     { refusjonstype }
@@ -31,8 +28,7 @@ const ArbeidssituasjonPanel = ({ tekst, arbeidsgiver, kontonummer, inntektsperio
                 </DLElement>
             </dl>
         </div>
-    );
-};
+);
 
 ArbeidssituasjonPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
