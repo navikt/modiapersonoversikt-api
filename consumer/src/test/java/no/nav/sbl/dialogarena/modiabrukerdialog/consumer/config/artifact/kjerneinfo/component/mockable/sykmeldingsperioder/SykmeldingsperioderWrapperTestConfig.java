@@ -3,13 +3,17 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class SykmeldingsperioderWrapperTestConfig {
@@ -30,7 +34,10 @@ public class SykmeldingsperioderWrapperTestConfig {
 
     @Bean
     public PleiepengerService pleiepengerService() {
-        return mock(PleiepengerService.class);
+        PleiepengerService mock = mock(PleiepengerService.class);
+        when(mock.hentPleiepengerListe(any(PleiepengerListeRequest.class)))
+                .thenReturn(new PleiepengerListeResponse());
+        return mock;
     }
 
     @Bean
