@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>12.2.0</version>
+    <version>12.3.1</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -104,10 +104,9 @@
         <send.ut.henvendelse.version>0.5</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>1.0.0</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>8.0.0</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>7.0.2</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>6.3.0-SMIDIG</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
@@ -1114,7 +1113,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-12.2.0</tag>
+        <tag>modiabrukerdialog-12.3.1</tag>
     </scm>
 
 </project>

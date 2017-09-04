@@ -142,7 +142,7 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        lamellContainer = new LamellContainer("lameller", fnr, getSession(), grunnInfo);
+        lamellContainer = new LamellContainer("lameller", grunnInfo.bruker.fnr, getSession(), grunnInfo);
 
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
@@ -183,9 +183,10 @@ public class PersonPage extends BasePage {
         try {
             HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
             request.setBegrunnet(true);
-            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(request).getPerson().getPersonfakta();
+            no.nav.kjerneinfo.domain.person.Person person = personKjerneinfoServiceBi.hentKjerneinformasjon(request).getPerson();
+            Personfakta personfakta = person.getPersonfakta();
 
-            return new GrunnInfo.Bruker(fnr)
+            return new GrunnInfo.Bruker(person.getFodselsnummer().getNummer())
                     .withPersonnavn(personfakta.getPersonnavn())
                     .withEnhet(hentEnhet(personfakta));
         } catch (Exception e) {
