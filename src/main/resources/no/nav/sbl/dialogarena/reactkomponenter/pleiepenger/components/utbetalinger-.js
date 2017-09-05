@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import DLElement from './dlelement';
-import { formaterBelop } from './formatering-utils';
+import DLElement from '../dlelement';
+import { formaterBelop } from '../formatering-utils';
 
 const formaterJavaDate = (dato) =>
     moment(new Date(dato.year, dato.monthValue - 1, dato.dayOfMonth)).format('DD.MM.YYYY');
@@ -65,7 +65,7 @@ const PleiepengerUtbetalingerPanel = ({perioder, tekst}) => {
         (<Periode key={index} tekst={tekst} periode={periode} periodeNummer={index+1}/>));
 
     return (
-        <div>
+        <div className="pleiepenger-utbetalinger">
             {perioderKomponenter}
         </div>
     );
@@ -83,7 +83,8 @@ PleiepengerUtbetalingerPanel.propTypes = {
             anvistUtbetaling: React.PropTypes.object.isRequired,
             bruttoBelop: React.PropTypes.number.isRequired
         })).isRequired
-    })).isRequired
+    })).isRequired,
+    tekst: React.PropTypes.object.isRequired
 };
 
 export default PleiepengerUtbetalingerPanel;
