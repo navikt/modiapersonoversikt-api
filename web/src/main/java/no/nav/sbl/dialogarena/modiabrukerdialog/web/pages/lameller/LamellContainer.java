@@ -150,7 +150,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
-            panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId);
         } else {
             ApplicationException exc = new ApplicationException("Ukjent type lerret: " + type);
             logger.warn("ukjent lerret: {}", type, exc);
