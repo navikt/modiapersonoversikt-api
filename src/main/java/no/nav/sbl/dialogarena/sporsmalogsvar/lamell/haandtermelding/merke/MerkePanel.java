@@ -77,7 +77,7 @@ public class MerkePanel extends AnimertPanel {
         IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(innboksVM, "valgtTraad.erJournalfort()");
         IModel<Boolean> erFeilsendt = new PropertyModel<>(innboksVM, "valgtTraad.erFeilsendt()");
 
-        IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(not(erMeldingstypeSporsmal)).and(not(valgtTraadErKontorsperret));
+        IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(valgtTraadErKontorsperret));
         IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet));
 
         Radio<MerkType> feilsendtRadio = new Radio<>("feilsendtRadio", Model.of(FEILSENDT));

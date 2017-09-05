@@ -155,7 +155,7 @@ public class MerkePanelTest extends WicketPageTest {
 
     @Test
     public void enablerAlleBortsettFraAvsluttRadio() {
-        MerkePanel merkePanel = getMerkePanel(asList(opprettSamtalereferatEksempel()));
+        MerkePanel merkePanel = getMerkePanel(asList(opprettSamtalereferatEksempel(), opprettSamtalereferatEksempel()));
         merkePanel.setVisibilityAllowed(true);
 
         wicket.goToPageWith(merkePanel)
@@ -169,7 +169,7 @@ public class MerkePanelTest extends WicketPageTest {
 
     @Test
     public void disablerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
-        wicket.goToPageWith(getMerkePanel(asList(opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadioValg"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadio"))
@@ -177,7 +177,7 @@ public class MerkePanelTest extends WicketPageTest {
                 .should().containComponent(thatIsEnabled().withId("kontorsperretRadio"))
                 .should().containComponent(thatIsDisabled().withId("avsluttRadio"));
 
-        wicket.goToPageWith(getMerkePanel(asList(opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS))).setVisibilityAllowed(true))
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadioValg"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadio"))
