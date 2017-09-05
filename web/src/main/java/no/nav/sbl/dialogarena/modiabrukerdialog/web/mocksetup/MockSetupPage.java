@@ -46,6 +46,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
 import static no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerConsumerConfig.PLEIEPENGER_V1_MOCK_KEY;
+import static no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonV4ConsumerConfig.ORGANISASJON_V4_MOCK_KEY;
 
 public class MockSetupPage extends BasePage {
 
@@ -135,6 +136,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("CMS Skrivestøtte", CMS_SKRIVESTOTTE_KEY),
                 new MockSetupModel("PensjonSak", PENSJONSAK_KEY),
                 new MockSetupModel("Pleiepenger V1", PLEIEPENGER_V1_MOCK_KEY),
+                new MockSetupModel("Organisasjon V4", ORGANISASJON_V4_MOCK_KEY),
                 new MockSetupModel("Varsler", VARSLING_KEY),
                 new MockSetupModel("CMS", CMS_KEY)
         );
