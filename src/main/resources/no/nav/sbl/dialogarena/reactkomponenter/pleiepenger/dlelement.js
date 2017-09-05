@@ -7,4 +7,10 @@ const DLElement = ({ etikett, className = '', children }) => (
     </div>
 );
 
+DLElement.propTypes = {
+    etikett: React.PropTypes.string.isRequired,
+    className: React.PropTypes.string,
+    children: React.PropTypes.node,
+};
+
 export default DLElement;
