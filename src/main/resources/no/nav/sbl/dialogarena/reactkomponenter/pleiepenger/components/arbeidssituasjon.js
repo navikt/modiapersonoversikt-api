@@ -3,42 +3,53 @@ import React from 'react';
 import DLElement from '../dlelement';
 import { formaterJavaDate, formaterBelop } from '../formatering-utils';
 
-const ArbeidssituasjonPanel = ({ tekst, arbeidsgiver }) => (
-    <div className="arbeidssituasjon">
-        <h1 id="arbeidssituasjonTitle">{ tekst.arbeidssituasjon }</h1>
+const ArbeidsforholdKomponent = ({arbeidsforhold, tekst}) => (
+    <div className="arbeidsforhold">
         <dl className="pleiepenger-detaljer">
             <DLElement etikett={tekst.arbeidsgiver} className="halvbredde">
-                {arbeidsgiver.arbeidsgiverNavn}
+                {arbeidsforhold.arbeidsgiverNavn}
             </DLElement>
             <DLElement etikett={tekst.kontonummer} className="halvbredde">
-                {arbeidsgiver.arbeidsgiverKontonr}
+                {arbeidsforhold.arbeidsgiverKontonr}
             </DLElement>
             <DLElement etikett={tekst.inntektsperiode} className="halvbredde">
-                {arbeidsgiver.inntektsperiode}
+                {arbeidsforhold.inntektsperiode}
             </DLElement>
             <DLElement etikett={tekst.inntektForPerioden} className="halvbredde">
-                {formaterBelop(arbeidsgiver.inntektForPerioden)}
+                {formaterBelop(arbeidsforhold.inntektForPerioden)}
             </DLElement>
             <DLElement etikett={tekst.refusjonstype} className="halvbredde">
-                {arbeidsgiver.refusjonstype}
+                {arbeidsforhold.refusjonstype}
             </DLElement>
             <DLElement etikett={tekst.refusjonTilDato} className="halvbredde">
-                {formaterJavaDate(arbeidsgiver.refusjonTom)}
+                {formaterJavaDate(arbeidsforhold.refusjonTom)}
             </DLElement>
         </dl>
     </div>
 );
 
+const ArbeidssituasjonPanel = ({tekst, arbeidsforhold}) => {
+    const arbeidsforholdKomponenter = arbeidsforhold.map((forhold, index) =>
+        (<ArbeidsforholdKomponent key={index} arbeidsforhold={forhold} tekst={tekst}/>));
+
+    return (
+        <div className="arbeidssituasjon">
+            <h1 id="arbeidssituasjonTitle">{tekst.arbeidssituasjon}</h1>
+            {arbeidsforholdKomponenter}
+        </div>
+    );
+};
+
 ArbeidssituasjonPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    arbeidsgiver: React.PropTypes.shape({
+    arbeidsforhold: React.PropTypes.arrayOf(React.PropTypes.shape({
         arbeidsgiverNavn: React.PropTypes.string.isRequired,
         arbeidsgiverKontonr: React.PropTypes.string.isRequired,
         inntektsperiode: React.PropTypes.string.isRequired,
         refusjonstype: React.PropTypes.string.isRequired,
         refusjonTom: React.PropTypes.object.isRequired,
         inntektForPerioden: React.PropTypes.number.isRequired
-    })
+    })).isRequired
 };
 
 export default ArbeidssituasjonPanel;

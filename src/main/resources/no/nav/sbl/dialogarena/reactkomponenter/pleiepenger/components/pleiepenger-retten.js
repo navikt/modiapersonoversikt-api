@@ -24,7 +24,6 @@ const ProgressBar = ({ percent }) => (
 const PleiepengerettighetPanel = props => {
     const tekst = props.tekst;
     const forbrukteDagerProsent = 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager;
-    console.log(props);
     return (
         <div className="om-pleiepenger">
             <h1 id="pleiepengerettenTitle">{ tekst.omPleiepengeretten }</h1>

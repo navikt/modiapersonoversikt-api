@@ -13,22 +13,24 @@ const Periode = ({periode, periodeNummer, tekst}) => {
     return (
         <section className="periode">
             <h2>{tekst.periode} {periodeNummer} {fraOgMed} </h2>
-            <div className="periodeinfo">
-                <dl className="pleiepenger-detaljer">
-                    <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
-                        {periode.graderingsgrad} %
-                    </DLElement>
-                    <DLElement etikett={tekst.pleiepengedager} className="halvbredde">
-                        {periode.antallPleiepengedager}
-                    </DLElement>
-                </dl>
+            <div className="periode-innhold">
+                <div className="periodeinfo">
+                    <dl className="pleiepenger-detaljer">
+                        <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
+                            {periode.graderingsgrad} %
+                        </DLElement>
+                        <DLElement etikett={tekst.pleiepengedager} className="halvbredde">
+                            {periode.antallPleiepengedager}
+                        </DLElement>
+                    </dl>
+                </div>
+                <article className="utbetalinger">
+                    <h3 className="utbetalinger-header" aria-label="Ekspanderingsliste">{tekst.kommendeUtbetalinger}</h3>
+                    <ul className="vedtaksliste">
+                        {vedtak}
+                    </ul>
+                </article>
             </div>
-            <article className="utbetalinger">
-                <h3 className="utbetalinger-header" aria-label="Ekspanderingsliste">{tekst.kommendeUtbetalinger}</h3>
-                <ul className="vedtaksliste">
-                    {vedtak}
-                </ul>
-            </article>
         </section>
     )
 };
