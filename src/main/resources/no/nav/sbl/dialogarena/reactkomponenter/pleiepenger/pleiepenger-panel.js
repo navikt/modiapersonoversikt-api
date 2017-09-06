@@ -1,8 +1,8 @@
 import React from 'react';
 
-import PleiepengerRettenPanel from './components/pleiepenger-retten';
+import PleiepengerRettenPanel from './components/pleiepengeretten';
 import ArbeidsituasjonPanel from './components/arbeidssituasjon';
-import UtbetalingerPanel from './components/utbetalinger-';
+import UtbetalingerPanel from './components/utbetalinger';
 
 const PleiepengerPanel = props => {
     return (
