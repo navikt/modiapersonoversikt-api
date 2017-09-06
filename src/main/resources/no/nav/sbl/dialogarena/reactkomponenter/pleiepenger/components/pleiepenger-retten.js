@@ -1,17 +1,17 @@
 import React from 'react';
 import DLElement from '../dlelement';
-import { formaterJavaDate } from '../formatering-utils';
+import { formaterJavaDate, formaterOptionalProsentVerdi, emdash } from '../formatering-utils';
 
-const Personnummer = ({ ident }) =>{
+const Personnummer = ({ ident }) => {
     if (!ident || ident.length <= 6) {
-        return <span/>;
+        return <span>{emdash}</span>;
     }
 
     return (
         <span>
-        <span className="personnummer-margin">{ ident.slice(0, 6) }</span>
-        <span>{ ident.slice(6) }</span>
-    </span>
+            <span className="personnummer-margin">{ident.slice(0, 6)}</span>
+            <span>{ident.slice(6)}</span>
+        </span>
     );
 };
 
@@ -49,7 +49,7 @@ const PleiepengerettighetPanel = props => {
                     {props.forbrukteDagerEtterDennePerioden }&nbsp;{ tekst.dagerEnhet }
                 </DLElement>
                 <DLElement etikett={ tekst.kompensasjonsgrad } className="halvbredde">
-                    { props.kompensasjonsgrad || '' }&nbsp;%
+                    {formaterOptionalProsentVerdi(props.kompensasjonsgrad)}
                 </DLElement>
                 <DLElement etikett={ tekst.pleiepengegrad } className="halvbredde">
                     { props.graderingsgrad || '' }&nbsp;%
