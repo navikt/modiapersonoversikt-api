@@ -14,3 +14,7 @@ export const emdash = '\u2014';
 export const formaterOptionalProsentVerdi = verdi => (
     verdi ? verdi + ' %' : emdash
 );
+
+export const formaterOptionalVerdi = verdi => (
+  verdi || emdash
+);

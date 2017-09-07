@@ -1,13 +1,13 @@
 import React from 'react';
 
 import DLElement from '../dlelement';
-import { formaterJavaDate, formaterBelop } from '../formatering-utils';
+import { formaterJavaDate, formaterBelop, formaterOptionalVerdi } from '../formatering-utils';
 
 const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
     <div className="arbeidsforhold">
         <dl className="pleiepenger-detaljer">
             <DLElement etikett={tekst.arbeidsgiver} className="halvbredde">
-                {arbeidsforhold.arbeidsgiverNavn}
+                {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverNavn)}
             </DLElement>
             <DLElement etikett={tekst.kontonummer} className="halvbredde">
                 {arbeidsforhold.arbeidsgiverKontonr}
@@ -31,7 +31,7 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
 ArbeidsforholdKomponent.propTypes = {
     tekst: React.PropTypes.object.isRequired,
     arbeidsforhold: React.PropTypes.shape({
-        arbeidsgiverNavn: React.PropTypes.string.isRequired,
+        arbeidsgiverNavn: React.PropTypes.string,
         arbeidsgiverKontonr: React.PropTypes.string.isRequired,
         inntektsperiode: React.PropTypes.string.isRequired,
         refusjonstype: React.PropTypes.string.isRequired,
