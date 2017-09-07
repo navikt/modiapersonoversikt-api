@@ -9,3 +9,12 @@ export const formaterBelop = (belop) =>
         currency: 'NOK',
         currencyDisplay: 'code'
     });
+
+export const emdash = '\u2014';
+export const formaterOptionalProsentVerdi = verdi => (
+    verdi ? verdi + ' %' : emdash
+);
+
+export const formaterOptionalVerdi = verdi => (
+  verdi || emdash
+);
