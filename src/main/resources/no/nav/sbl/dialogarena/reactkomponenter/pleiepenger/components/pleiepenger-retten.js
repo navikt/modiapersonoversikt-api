@@ -15,49 +15,57 @@ const Personnummer = ({ ident }) => {
     );
 };
 
+Personnummer.propTypes = {
+    ident: React.propTypes.string.isRequired
+};
+
 const ProgressBar = ({ percent }) => (
     <div className="progress-bar-bg">
         <div style={{ width: percent + '%' }} className="progress-bar" />
     </div>
 );
 
+ProgressBar.propTypes = {
+    percent: React.PropTypes.number
+};
+
 const PleiepengerettighetPanel = props => {
     const tekst = props.tekst;
-    const forbrukteDagerProsent = 100 * props.forbrukteDagerTOMIDag / props.pleiepengedager;
+    const forbrukteDagerProsent = (100 * props.forbrukteDagerTOMIDag) / props.pleiepengedager;
     return (
         <div className="om-pleiepenger">
-            <h1 id="pleiepengerettenTitle">{ tekst.omPleiepengeretten }</h1>
+            <h1 id="pleiepengerettenTitle">{tekst.omPleiepengeretten}</h1>
             <div>
                 <div>
-                    <span className="pleiepenger-etikett">{ tekst.barnetsDagkonto }</span>
-                    <span className="pleiepenger-antall">{ props.pleiepengedager }&nbsp;{ tekst.dagerEnhet }</span>
+                    <span className="pleiepenger-etikett">{tekst.barnetsDagkonto}</span>
+                    <span className="pleiepenger-antall">{props.pleiepengedager}&nbsp;{tekst.dagerEnhet}</span>
                 </div>
-                <ProgressBar percent={ forbrukteDagerProsent } />
+                <ProgressBar percent={forbrukteDagerProsent} />
                 <div className="forbrukte-dager">
-                    <span className="forbrukte-dager-verdi">{ props.forbrukteDagerTOMIDag }</span>
-                    <span className="forbrukte-dager-etikett">{ tekst.forbrukteDagerPerIDag }</span>
+                    <span className="forbrukte-dager-verdi">{props.forbrukteDagerTOMIDag}</span>
+                    <span className="forbrukte-dager-etikett">{tekst.forbrukteDagerPerIDag}</span>
                 </div>
             </div>
             <dl className="pleiepenger-detaljer">
-                <DLElement etikett={ tekst.fraOgMedDato } className="halvbredde">
+                <DLElement etikett={tekst.fraOgMedDato} className="halvbredde">
                     {formaterJavaDate(props.fomDato)}
                 </DLElement>
-                <DLElement etikett={ tekst.tilOgMedDato } className="halvbredde">
+                <DLElement etikett={tekst.tilOgMedDato} className="halvbredde">
                     {formaterJavaDate(props.tomDato)}
                 </DLElement>
-                <DLElement etikett={ tekst.forbruktEtterDennePerioden } className="fullbredde">
-                    {props.forbrukteDagerEtterDennePerioden }&nbsp;{ tekst.dagerEnhet }
+                <DLElement etikett={tekst.forbruktEtterDennePerioden} className="fullbredde">
+                    {props.forbrukteDagerEtterDennePerioden }&nbsp;{tekst.dagerEnhet}
                 </DLElement>
-                <DLElement etikett={ tekst.kompensasjonsgrad } className="halvbredde">
+                <DLElement etikett={tekst.kompensasjonsgrad} className="halvbredde">
                     {formaterOptionalProsentVerdi(props.kompensasjonsgrad)}
                 </DLElement>
-                <DLElement etikett={ tekst.pleiepengegrad } className="halvbredde">
-                    { props.graderingsgrad || '' }&nbsp;%
+                <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
+                    {props.graderingsgrad || ''}&nbsp;%
                 </DLElement>
-                <DLElement etikett={ tekst.barnet } className="halvbredde">
-                    <Personnummer ident={ props.barnet } />
+                <DLElement etikett={tekst.barnet} className="halvbredde">
+                    <Personnummer ident={props.barnet} />
                 </DLElement>
-                <DLElement etikett={ tekst.annenForelder } className="halvbredde">
+                <DLElement etikett={tekst.annenForelder} className="halvbredde">
                     <Personnummer ident={props.andreOmsorgsperson} />
                 </DLElement>
             </dl>
@@ -75,7 +83,7 @@ PleiepengerettighetPanel.propTypes = {
     kompensasjonsgrad: React.PropTypes.number,
     graderingsgrad: React.PropTypes.number.isRequired,
     barnet: React.PropTypes.string.isRequired,
-    andreOmsorgsperson: React.PropTypes.string,
+    andreOmsorgsperson: React.PropTypes.string
 };
 
 export default PleiepengerettighetPanel;

@@ -4,7 +4,8 @@ import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '.
 
 const Periode = ({ periode, periodeNummer, tekst }) => {
     const fraOgMed = formaterJavaDate(periode.fraOgMed);
-    const vedtak = periode.vedtakListe.map((vedtak, index) => (<Vedtak key={index} tekst={tekst} vedtak={vedtak}/>));
+    const vedtakKomponent = periode.vedtakListe.map((vedtak, index) =>
+        (<Vedtak key={index} tekst={tekst} vedtak={vedtak} />));
 
     return (
         <section className="periode">
@@ -28,12 +29,22 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
                         {tekst.kommendeUtbetalinger}
                     </h3>
                     <ul className="vedtaksliste">
-                        {vedtak}
+                        {vedtakKomponent}
                     </ul>
                 </article>
             </div>
         </section>
     );
+};
+
+Periode.propTypes = {
+    periode: React.PropTypes.shape({
+        antallPleiepengedager: React.PropTypes.number.isRequired,
+        graderingsgrad: React.PropTypes.number,
+        vedtakListe: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+    }).isRequired,
+    periodeNummer: React.PropTypes.number.isRequired,
+    tekst: React.PropTypes.object.isRequired
 };
 
 const Vedtak = ({ vedtak, tekst }) => {
@@ -67,7 +78,7 @@ const Vedtak = ({ vedtak, tekst }) => {
 };
 
 Vedtak.propTypes = {
-    vedtak: {
+    vedtak: React.PropTypes.shape({
         periode: React.PropTypes.shape({
             fraOgMed: React.PropTypes.object.isRequired,
             tilOgMed: React.PropTypes.object.isRequired
@@ -75,7 +86,7 @@ Vedtak.propTypes = {
         anvistUtbetaling: React.PropTypes.object.isRequired,
         bruttoBelop: React.PropTypes.number.isRequired,
         kompensasjonsgrad: React.PropTypes.number
-    },
+    }),
     tekst: React.PropTypes.object.isRequired
 };
 
@@ -91,11 +102,7 @@ const PleiepengerUtbetalingerPanel = ({ perioder, tekst }) => {
 };
 
 PleiepengerUtbetalingerPanel.propTypes = {
-    perioder: React.PropTypes.arrayOf(React.PropTypes.shape({
-        antallPleiepengedager: React.PropTypes.number.isRequired,
-        graderingsgrad: React.PropTypes.number,
-        vedtakListe: React.PropTypes.arrayOf(Vedtak).isRequired
-    })).isRequired,
+    perioder: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     tekst: React.PropTypes.shape({
         periode: React.PropTypes.string.isRequired,
         pleiepengegrad: React.PropTypes.string.isRequired,
@@ -107,7 +114,6 @@ PleiepengerUtbetalingerPanel.propTypes = {
         dagsats: React.PropTypes.string.isRequired,
         tilOgMedDato: React.PropTypes.string.isRequired,
         kompensasjonsgrad: React.PropTypes.string.isRequired
-
     }).isRequired
 };
 

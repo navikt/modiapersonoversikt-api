@@ -11,12 +11,21 @@ class PleiepengerPanel extends Component {
 
         return (
             <div className="pleiepenger-panel">
-                <PleiepengerRettenPanel tekst={props.tekst.pleiepengerRetten} graderingsgrad={props.graderingsgrad} pleiepengedager={props.pleiepengedager} forbrukteDagerTOMIDag={props.forbrukteDagerTOMIDag} forbrukteDagerEtterDennePerioden={props.forbrukteDagerEtterDennePerioden} barnet={props.barnet} fomDato={props.FOMDato} tomDato={props.TOMDato}/>
-                <ArbeidsituasjonPanel tekst={props.tekst.arbeidsforhold} arbeidsforhold={props.arbeidsforhold}/>
-                <UtbetalingerPanel tekst={props.tekst.utbetalinger} perioder={props.perioder}/>
+                <PleiepengerRettenPanel
+                    tekst={props.tekst.pleiepengerRetten}
+                    graderingsgrad={props.graderingsgrad}
+                    pleiepengedager={props.pleiepengedager}
+                    forbrukteDagerTOMIDag={props.forbrukteDagerTOMIDag}
+                    forbrukteDagerEtterDennePerioden={props.forbrukteDagerEtterDennePerioden}
+                    barnet={props.barnet}
+                    fomDato={props.FOMDato}
+                    tomDato={props.TOMDato}
+                />
+                <ArbeidsituasjonPanel tekst={props.tekst.arbeidsforhold} arbeidsforhold={props.arbeidsforhold} />
+                <UtbetalingerPanel tekst={props.tekst.utbetalinger} perioder={props.perioder} />
             </div>
         );
-    };
+    }
 }
 
 PleiepengerPanel.propTypes = {
