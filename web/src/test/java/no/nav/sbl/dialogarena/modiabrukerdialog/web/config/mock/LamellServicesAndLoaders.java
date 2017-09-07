@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService;
 import no.nav.kjerneinfo.kontrakter.oppfolging.loader.OppfolgingsLoader;
 import no.nav.kjerneinfo.kontrakter.ytelser.YtelseskontrakterLoader;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
@@ -19,11 +20,13 @@ import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.*;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.meldinger.WSHentPleiepengerettighetRequest;
-import no.nav.tjeneste.virksomhet.pleiepenger.v1.meldinger.WSHentPleiepengerettighetResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Optional;
+
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -76,6 +79,13 @@ public class LamellServicesAndLoaders {
         when(pleiepengerV1.hentPleiepengerettighet(any(WSHentPleiepengerettighetRequest.class)))
                 .thenReturn(PleiepengerMockFactory.createWsHentPleiepengerListeResponse());
         return new PleiepengerServiceImpl(pleiepengerV1);
+    }
+
+    @Bean
+    public OrganisasjonService organisasjonService() {
+        OrganisasjonService mock = mock(OrganisasjonService.class);
+        when(mock.hentNoekkelinfo(anyString())).thenReturn(Optional.empty());
+        return mock;
     }
 
     @Bean

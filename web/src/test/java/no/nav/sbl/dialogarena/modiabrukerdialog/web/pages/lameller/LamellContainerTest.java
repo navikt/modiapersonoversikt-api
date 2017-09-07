@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.JacksonMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFactory;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,8 +58,9 @@ public class LamellContainerTest extends WicketPageTest {
 
     @Test
     public void handleFeedItemEventsShouldGotoPleiePengerLamellWhenPleiePengerEventHappens() {
-        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", PLEIEPENGER_TYPE));
-        assertThat(getSelectedLamell(), equalTo(LAMELL_PLEIEPENGER + "itemId"));
+        String itemId = PleiepengerMockFactory.BARN_FNR;
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", itemId , PLEIEPENGER_TYPE));
+        assertThat(getSelectedLamell(), equalTo(LAMELL_PLEIEPENGER + itemId));
     }
 
     @Test
