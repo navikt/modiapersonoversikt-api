@@ -13,21 +13,13 @@ describe('HTTP request', () => {
         Ajax.toPromise.restore();
     });
 
-
-    it('should use contentType in RequestModifier if set', () => {
-        Ajax.post('http://localhost:9876/echo', {}, (req) => req.type('text/html'));
-
-        expect(Ajax.toPromise.calledOnce).to.equal(true);
-
-        expect(Ajax.toPromise.calledWith(sinon.match({ header: { 'Content-Type': 'text/html' } }))).to.equal(true);
-    });
-
     it('should use contentType \'application/json\' if no contentType in RequestModifier', () => {
         Ajax.post('http://localhost:9876/echo', {});
 
-        expect(Ajax.toPromise.calledOnce).to.equal(true);
+        let request = Ajax.toPromise.getCall(0).args[0].req;
+        let headers = request._headers;
 
-        expect(Ajax.toPromise.calledWith(sinon.match({ header: { 'Content-Type': 'application/json' } })))
-            .to.equal(true);
+        expect(Ajax.toPromise.calledOnce).to.equal(true);
+        expect(headers['content-type']).to.equal('application/json');
     });
 });
