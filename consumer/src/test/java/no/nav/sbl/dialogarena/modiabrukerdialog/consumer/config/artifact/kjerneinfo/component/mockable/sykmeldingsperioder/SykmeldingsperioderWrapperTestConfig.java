@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,7 +38,7 @@ public class SykmeldingsperioderWrapperTestConfig {
     public PleiepengerService pleiepengerService() {
         PleiepengerService mock = mock(PleiepengerService.class);
         when(mock.hentPleiepengerListe(any(PleiepengerListeRequest.class)))
-                .thenReturn(new PleiepengerListeResponse());
+                .thenReturn(new PleiepengerListeResponse(new ArrayList<>()));
         return mock;
     }
 
