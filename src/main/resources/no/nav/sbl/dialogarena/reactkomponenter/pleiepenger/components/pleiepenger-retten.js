@@ -16,7 +16,7 @@ const Personnummer = ({ ident }) => {
 };
 
 Personnummer.propTypes = {
-    ident: React.propTypes.string.isRequired
+    ident: React.PropTypes.string
 };
 
 const ProgressBar = ({ percent }) => (
