@@ -1,13 +1,13 @@
 import React from 'react';
 
 import DLElement from '../dlelement';
-import { formaterJavaDate, formaterBelop } from '../formatering-utils';
+import { formaterJavaDate, formaterBelop, formaterOptionalVerdi } from '../formatering-utils';
 
-const ArbeidsforholdKomponent = ({arbeidsforhold, tekst}) => (
+const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
     <div className="arbeidsforhold">
         <dl className="pleiepenger-detaljer">
             <DLElement etikett={tekst.arbeidsgiver} className="halvbredde">
-                {arbeidsforhold.arbeidsgiverNavn}
+                {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverNavn)}
             </DLElement>
             <DLElement etikett={tekst.kontonummer} className="halvbredde">
                 {arbeidsforhold.arbeidsgiverKontonr}
@@ -28,9 +28,21 @@ const ArbeidsforholdKomponent = ({arbeidsforhold, tekst}) => (
     </div>
 );
 
-const ArbeidssituasjonPanel = ({tekst, arbeidsforhold}) => {
+ArbeidsforholdKomponent.propTypes = {
+    tekst: React.PropTypes.object.isRequired,
+    arbeidsforhold: React.PropTypes.shape({
+        arbeidsgiverNavn: React.PropTypes.string,
+        arbeidsgiverKontonr: React.PropTypes.string.isRequired,
+        inntektsperiode: React.PropTypes.string.isRequired,
+        refusjonstype: React.PropTypes.string.isRequired,
+        refusjonTom: React.PropTypes.object.isRequired,
+        inntektForPerioden: React.PropTypes.number.isRequired
+    }).isRequired
+};
+
+const ArbeidssituasjonPanel = ({ tekst, arbeidsforhold }) => {
     const arbeidsforholdKomponenter = arbeidsforhold.map((forhold, index) =>
-        (<ArbeidsforholdKomponent key={index} arbeidsforhold={forhold} tekst={tekst}/>));
+        (<ArbeidsforholdKomponent key={index} arbeidsforhold={forhold} tekst={tekst} />));
 
     return (
         <div className="arbeidssituasjon">
@@ -42,14 +54,7 @@ const ArbeidssituasjonPanel = ({tekst, arbeidsforhold}) => {
 
 ArbeidssituasjonPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    arbeidsforhold: React.PropTypes.arrayOf(React.PropTypes.shape({
-        arbeidsgiverNavn: React.PropTypes.string.isRequired,
-        arbeidsgiverKontonr: React.PropTypes.string.isRequired,
-        inntektsperiode: React.PropTypes.string.isRequired,
-        refusjonstype: React.PropTypes.string.isRequired,
-        refusjonTom: React.PropTypes.object.isRequired,
-        inntektForPerioden: React.PropTypes.number.isRequired
-    })).isRequired
+    arbeidsforhold: React.PropTypes.array.isRequired
 };
 
 export default ArbeidssituasjonPanel;
