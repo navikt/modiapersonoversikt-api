@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import java.util.HashMap;
@@ -18,7 +19,8 @@ public class FeilsendtInfoPanel extends Panel {
 
         String feilsendtPostString = new StringResourceModel("feilsendtInfo.feilsendtTekst", this, null, "Feilsendt post").getString();
         String markertAv = new StringResourceModel("feilsendtInfo.markertAv", this, null, "Markert som feilsendt av:").getString();
-        String veilederIdent = meldingVM.getObject().getMarkertSomFeilsendtAv().getOrElse("");
+        PropertyModel<Object> objectPropertyModel = new PropertyModel<>(getDefaultModel(), "markertSomFeilsendtAv.get()");
+        String veilederIdent = objectPropertyModel.toString();
 
         String tekst = feilsendtPostString + " | " + markertAv + " " + veilederIdent;
         add(new ReactComponentPanel("markertAv", "AlertStripeSuksessSolid", new HashMap<String, Object>(){{

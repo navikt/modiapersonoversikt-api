@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 import no.nav.metrics.Timer;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.modig.wicket.model.ConjunctionModel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -13,6 +14,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -80,20 +82,27 @@ public class MerkePanel extends AnimertPanel {
         IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(valgtTraadErKontorsperret));
         IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet));
 
+        ConjunctionModel bidragErEnablet = both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg);
+
         Radio<MerkType> feilsendtRadio = new Radio<>("feilsendtRadio", Model.of(FEILSENDT));
-        feilsendtRadio.add(enabledIf(skalViseStandardMerkValg));
+        feilsendtRadio
+                .add(enabledIf(skalViseStandardMerkValg))
+                .add(AttributeAppender.append("aria-disabled", not(skalViseStandardMerkValg)));
 
         Component bidragRadioValg = new WebMarkupContainer("bidragRadioValg")
                 .add(new Radio<>("bidragRadio", Model.of(BIDRAG)))
-                .add(enabledIf(both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg)));
+                .add(enabledIf(bidragErEnablet))
+                .add(AttributeAppender.append("aria-disabled", not(bidragErEnablet)));
 
         Component kontorsperretRadioValg = new WebMarkupContainer("kontorsperretRadioValg")
                 .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
-                .add(enabledIf(skalViseStandardMerkValg));
+                .add(enabledIf(skalViseStandardMerkValg))
+                .add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
 
         Component avsluttRadio = new WebMarkupContainer("avsluttRadioValg")
                 .add(new Radio<>("avsluttRadio", Model.of(AVSLUTT)))
-                .add(enabledIf(skalViseFerdigstillUtenSvarValg));
+                .add(enabledIf(skalViseFerdigstillUtenSvarValg))
+                .add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));
