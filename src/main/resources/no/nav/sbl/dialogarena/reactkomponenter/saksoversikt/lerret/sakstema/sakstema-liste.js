@@ -4,11 +4,14 @@ import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering/siste
 
 const SakstemaListe = ({ sakstema, valgtTema, velgSak }, { miljovariabler }) => {
     const temaListe = sakstema.map((tema) => (
-        <Sakstema key={tema.temakode} tema={tema} velgSak={velgSak}
-          nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder,
-          tema.dokumentMetadata,
-          miljovariabler['behandlingsstatus.synlig.antallDager'])}
-          valgtTema={valgtTema}
+        <Sakstema
+            key={tema.temakode}
+            tema={tema}
+            velgSak={velgSak}
+            nokkelinfo={finnNokkelinfoForSakstema(tema.behandlingskjeder,
+            tema.dokumentMetadata,
+            miljovariabler['behandlingsstatus.synlig.antallDager'])}
+            valgtTema={valgtTema}
         />
     ));
 

@@ -1,31 +1,35 @@
 import Utils from './../../utils/utils-module';
 
 function settFokusPaRadioButton(element) {
-    element.querySelector("input[type=radio]").focus();
+    element.querySelector('input[type=radio]').focus();
 }
 
 export const pilnavigeringScroll = (event, props) => {
-    const elements = document.querySelectorAll(".saksoversikt-liste-element");
-    const parent = document.querySelector(".saksoversikt-liste");
+    const elements = document.querySelectorAll('.saksoversikt-liste-element');
+    const parent = document.querySelector('.saksoversikt-liste');
     const valgtTema = props.valgtTema;
 
-    let index = 0;
+    let index;
     switch (event.keyCode) {
-        //Pil opp
+        // Pil opp
         case 38:
             event.preventDefault();
 
-            index = props.sakstema.indexOf(valgtTema) - 1 < 0 ? props.sakstema.length - 1 : props.sakstema.indexOf(valgtTema) -1;
+            index = props.sakstema.indexOf(valgtTema) - 1 < 0
+                ? props.sakstema.length - 1
+                : props.sakstema.indexOf(valgtTema) - 1;
             props.velgSak(props.sakstema[index]);
 
             settFokusPaRadioButton(elements[index]);
             Utils.adjustScroll(parent, elements[index]);
             break;
-        //Pil ned
+        // Pil ned
         case 40:
             event.preventDefault();
 
-            index = props.sakstema.indexOf(valgtTema) + 1 >= props.sakstema.length? 0 : props.sakstema.indexOf(valgtTema) + 1;
+            index = props.sakstema.indexOf(valgtTema) + 1 >= props.sakstema.length
+                ? 0
+                : props.sakstema.indexOf(valgtTema) + 1;
             props.velgSak(props.sakstema[index]);
 
             settFokusPaRadioButton(elements[index]);

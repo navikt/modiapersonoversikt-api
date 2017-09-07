@@ -1,10 +1,6 @@
 import React from 'react';
 
 class AdvarselBoks extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="advarsel-boks warn">
@@ -15,7 +11,7 @@ class AdvarselBoks extends React.Component {
 }
 
 AdvarselBoks.propTypes = {
-    'tekst': React.PropTypes.string.isRequired
+    tekst: React.PropTypes.string.isRequired
 };
 
 export default AdvarselBoks;

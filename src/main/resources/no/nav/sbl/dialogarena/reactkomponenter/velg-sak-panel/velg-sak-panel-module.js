@@ -37,11 +37,11 @@ class VelgSakPanel extends React.Component {
 
     render() {
         const okonomiskSosialhjelpValg = this.props.skalViseOkonomiskSosialhjelp ?
-            <OkonomiskSosialhjelpKnapp velgSak={this.velgSak}/> : null;
+            <OkonomiskSosialhjelpKnapp velgSak={this.velgSak} /> : null;
 
         return (
             <AsyncLoader promises={this.promise} toProp="saker">
-                <VelgSak velgSak={this.velgSak}/>
+                <VelgSak velgSak={this.velgSak} />
                 {okonomiskSosialhjelpValg}
             </AsyncLoader>
         );
@@ -49,10 +49,10 @@ class VelgSakPanel extends React.Component {
 }
 
 VelgSakPanel.propTypes = {
-    'wicketurl': React.PropTypes.string.isRequired,
-    'wicketcomponent': React.PropTypes.string.isRequired,
-    'fnr': React.PropTypes.string.isRequired,
-    'skalViseOkonomiskSosialhjelp': React.PropTypes.bool.isRequired
+    wicketurl: React.PropTypes.string.isRequired,
+    wicketcomponent: React.PropTypes.string.isRequired,
+    fnr: React.PropTypes.string.isRequired,
+    skalViseOkonomiskSosialhjelp: React.PropTypes.bool.isRequired
 };
 
 export default VelgSakPanel;

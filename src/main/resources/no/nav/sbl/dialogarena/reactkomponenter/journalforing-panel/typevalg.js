@@ -1,5 +1,6 @@
 import React from 'react';
-import {generateId} from '../utils/utils-module';
+import ReactDOM from 'react-dom';
+import { generateId } from '../utils/utils-module';
 
 class TypeValg extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class TypeValg extends React.Component {
 
     componentDidMount() {
         const elementReference = 'typevalg.' + (this.props.valgtKategori || 'FAG');
-        React.findDOMNode(this.refs[elementReference]).focus();
+        ReactDOM.findDOMNode(this.refs[elementReference]).focus();
     }
 
     endre(event) {
@@ -24,23 +25,27 @@ class TypeValg extends React.Component {
         const preventDefault = (event) => event.preventDefault();
         return (
             <div className="type-valg">
-                <input name="typeVelger"
-                       id={this.id1}
-                       type="radio"
-                       checked={this.props.valgtKategori === 'FAG'}
-                       value="FAG"
-                       ref="typevalg.FAG"
-                       onKeyPress={preventDefault}
-                       onChange={this.endre}/>
+                <input
+                    name="typeVelger"
+                    id={this.id1}
+                    type="radio"
+                    checked={this.props.valgtKategori === 'FAG'}
+                    value="FAG"
+                    ref="typevalg.FAG"
+                    onKeyPress={preventDefault}
+                    onChange={this.endre}
+                />
                 <label className="label" htmlFor={this.id1}>Fagsaker</label>
-                <input name="typeVelger"
-                       id={this.id2}
-                       type="radio"
-                       checked={this.props.valgtKategori === 'GEN'}
-                       value="GEN"
-                       ref="typevalg.GEN"
-                       onKeyPress={preventDefault}
-                       onChange={this.endre}/>
+                <input
+                    name="typeVelger"
+                    id={this.id2}
+                    type="radio"
+                    checked={this.props.valgtKategori === 'GEN'}
+                    value="GEN"
+                    ref="typevalg.GEN"
+                    onKeyPress={preventDefault}
+                    onChange={this.endre}
+                />
                 <label className="label" htmlFor={this.id2}>Generelle saker</label>
             </div>
         );

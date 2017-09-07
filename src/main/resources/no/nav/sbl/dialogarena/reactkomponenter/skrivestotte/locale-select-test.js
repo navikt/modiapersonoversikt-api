@@ -7,7 +7,7 @@ import TestUtils from 'react-addons-test-utils';
 
 describe('LocaleSelect', () => {
     it('rendrer ingenting hvis kun ett locale', () => {
-        const props = {tekst: {innhold: [{nb_NO: 'tekst'}]}};
+        const props = { tekst: { innhold: [{ nb_NO: 'tekst' }] } };
 
         const element = TestUtils.renderIntoDocument(
             <LocaleSelect {...props} />
@@ -19,7 +19,7 @@ describe('LocaleSelect', () => {
     });
 
     it('rendrer selectboks med locales hvis mer enn ett locale', () => {
-        const props = {tekst: {innhold: [{nb_NO: 'tekst'}, {en_US: 'text'}]}};
+        const props = { tekst: { innhold: [{ nb_NO: 'tekst' }, { en_US: 'text' }] } };
 
         const element = TestUtils.renderIntoDocument(
             <LocaleSelect {...props} />

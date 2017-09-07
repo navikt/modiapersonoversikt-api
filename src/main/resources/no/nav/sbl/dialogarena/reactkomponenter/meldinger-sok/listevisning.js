@@ -1,54 +1,70 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
+import ReactDOM from 'react-dom';
 import sanitize from 'sanitize-html';
 import format from 'string-format';
+import AntallMeldinger from './AntallMeldinger';
 
-function tekstChangedProxy() {
-    this.props.store.traadChanged(this.props.traad, React.findDOMNode(this).parentNode);
-}
+const erValgtTekst = (traad, valgtTraad) => traad === valgtTraad;
 
-function erValgtTekst(traad, valgtTraad) {
-    return traad === valgtTraad;
-}
+class Listevisning extends React.Component {
+    constructor(props) {
+        super(props);
+        this.tekstChangedProxy = this.tekstChangedProxy.bind(this);
+    }
 
-const ListevisningKomponent = React.createClass({
-    propTypes: {
-        traad: React.PropTypes.object.isRequired,
-        valgtTraad: React.PropTypes.object.isRequired
-    },
-    statics: {
-        lagAriaLabel: function lagAriaLabel(traad) {
-            return traad.temagruppe;
-        }
-    },
-    render: function render() {
-        const erValgt = erValgtTekst(this.props.traad, this.props.valgtTraad);
+    tekstChangedProxy() {
+        this.props.store.traadChanged(this.props.traad, ReactDOM.findDOMNode(this).parentNode);
+    }
+
+    render() {
+        const { traad, valgtTraad } = this.props;
+        const { antallMeldingerIOpprinneligTraad, statusKlasse } = traad;
+        const erValgt = erValgtTekst(traad, valgtTraad);
         const cls = erValgt ? 'meldingsforhandsvisning valgt' : 'meldingsforhandsvisning';
-        const traad = this.props.traad;
-        const dato = sanitize(traad.opprettetDato, {allowedTags: ['em']});
+        const visningsDato = traad.visningsDato;
+        const dato = sanitize(visningsDato, { allowedTags: ['em'] });
 
-        let meldingsStatus = this.props.traad.statusTekst + ', ' + this.props.traad.temagruppe;
-        meldingsStatus = sanitize(meldingsStatus, {allowedTags: ['em']});
-        const innhold = sanitize(this.props.traad.innhold, {allowedTags: ['em']});
+        const temagruppe = !traad.temagruppe ? '' : `, ${traad.temagruppe}`;
+        let meldingsStatus = `${traad.statusTekst}${temagruppe}`;
+        meldingsStatus = sanitize(meldingsStatus, { allowedTags: ['em'] });
+        const innhold = sanitize(traad.innhold, { allowedTags: ['em'] });
 
         const statusIkonTekst = format('{0}, {1} {2}',
-                this.props.traad.statusKlasse.match(/ubesvart$/) ? 'Ubesvart' : 'Besvart',
-                this.props.traad.antallMeldingerIOpprinneligTraad,
-                this.props.traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
-            );
+            traad.statusKlasse.match(/ubesvart$/) ? 'Ubesvart' : 'Besvart',
+            antallMeldingerIOpprinneligTraad,
+            antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
+        );
 
         return (
-            <div className="sok-element" onClick={tekstChangedProxy.bind(this)}>
-                <input id={'melding' + this.props.traad.key} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
-                <label htmlFor={'melding' + this.props.traad.key} className={cls}>
-                    <div className={this.props.traad.statusKlasse} aria-hidden="true"></div>
-                    <p className="vekk">{statusIkonTekst}</p>
-                    <p dangerouslySetInnerHTML={{__html: dato}}></p>
-                    <p className={'meldingstatus'} dangerouslySetInnerHTML={{__html: meldingsStatus}}></p>
-                    <p className="fritekst" dangerouslySetInnerHTML={{__html: innhold}}></p>
+            <div className="sok-element" onClick={this.tekstChangedProxy}>
+                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
+                <label htmlFor={`melding ${traad.key}`} className={cls}>
+                    <div className={`melding-detaljer ${statusKlasse}`}>
+                        <div className={`statusIkon ${statusKlasse}`} aria-hidden="true"></div>
+                        <AntallMeldinger antall={antallMeldingerIOpprinneligTraad} />
+                        <p className="vekk">{statusIkonTekst}</p>
+                        <div className="melding-data">
+                            <p className="opprettet" dangerouslySetInnerHTML={{ __html: dato }}></p>
+                            <p className={'meldingstatus'} dangerouslySetInnerHTML={{ __html: meldingsStatus }}></p>
+                            <p className="fritekst" dangerouslySetInnerHTML={{ __html: innhold }}></p>
+                        </div>
+                    </div>
                 </label>
             </div>
         );
     }
-});
+}
 
-module.exports = ListevisningKomponent;
+Listevisning.propTypes = {
+    traad: pt.shape({
+        statusKlasse: pt.string,
+        antallMeldingerIOpprinneligTraad: pt.number,
+        statusTekst: pt.string.isRequired,
+        temagruppe: pt.string,
+        innhold: pt.string
+    }),
+    valgtTraad: pt.object.isRequired,
+    store: pt.object.isRequired
+};
+
+export default Listevisning;

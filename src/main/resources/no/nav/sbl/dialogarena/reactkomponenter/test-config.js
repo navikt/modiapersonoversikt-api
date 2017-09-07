@@ -1,5 +1,6 @@
 window.ModiaJS = {};
 window.ModiaJS.Components = {};
+/* eslint-disable */
 ((function bindPolyfill() {
     const Ap = Array.prototype;
     const slice = Ap.slice;
@@ -21,6 +22,7 @@ window.ModiaJS.Components = {};
         return bound;
     };
 })());
+/* eslint-enable */
 
 // jQuery
 window.$ = require('jquery');

@@ -30,7 +30,7 @@ describe('Dokumentvisning', () => {
 
         const element = renderIntoDocument(
             <IntlProvider locale="en" messages={messages}>
-                <DokumentVisning {...props}/>
+                <DokumentVisning {...props} />
             </IntlProvider>
         );
 

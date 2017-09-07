@@ -5,7 +5,7 @@ import { FormattedDate, injectIntl } from 'react-intl';
 import { datoformat, javaLocalDateTimeToJSDate } from './../../../../utils/dato-utils';
 import dokumentinfoShape from './dokumentinfo-shape';
 
-const kanViseVedlegg = vedleggListe => vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false;
+const kanViseVedlegg = vedleggListe => (vedleggListe ? vedleggListe.some(vedlegg => vedlegg.kanVises) : false);
 const kanViseDokumenter = (hoveddokument, vedlegg) => hoveddokument.kanVises || kanViseVedlegg(vedlegg);
 
 class DokumentInfoElm extends React.Component {
@@ -25,7 +25,7 @@ class DokumentInfoElm extends React.Component {
         const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
         const { retning, avsender, mottaker, navn, hoveddokument, vedlegg,
             temakodeVisning, feilWrapper, kategoriNotat } = dokumentinfo;
-        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript/>;
+        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument">{temakodeVisning}</p> : <noscript />;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ?
             'dokument-kan-vises' : 'dokument-kan-ikke-vises';
@@ -39,8 +39,13 @@ class DokumentInfoElm extends React.Component {
                     <div className="datodokumentliste">
                         <FormattedDate value={dokumentdato} {...datoformat.NUMERISK_KORT} />
                         <span> / </span>
-                        <DokumentAvsender retning={retning} avsender={avsender} mottaker={mottaker}
-                          brukerNavn={brukerNavn} navn={navn} kategoriNotat={kategoriNotat}
+                        <DokumentAvsender
+                            retning={retning}
+                            avsender={avsender}
+                            mottaker={mottaker}
+                            brukerNavn={brukerNavn}
+                            navn={navn}
+                            kategoriNotat={kategoriNotat}
                         />
                     </div>
                     <div className="hoveddokument-tittel-wrapper">
@@ -49,8 +54,10 @@ class DokumentInfoElm extends React.Component {
                         </a>
                     </div>
                     <div className="typo-info">
-                        <DokumentinfoVedlegg visSide={visSide} velgJournalpost={velgJournalpost}
-                          dokumentinfo={dokumentinfo}
+                        <DokumentinfoVedlegg
+                            visSide={visSide}
+                            velgJournalpost={velgJournalpost}
+                            dokumentinfo={dokumentinfo}
                         />
                     </div>
                     {temaHvisAlleTemaer}

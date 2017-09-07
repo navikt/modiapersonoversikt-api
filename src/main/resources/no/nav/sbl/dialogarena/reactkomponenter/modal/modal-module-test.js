@@ -3,6 +3,7 @@
 import './../test-config';
 import { expect } from 'chai';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Modal from './modal-module';
 import TestUtils from 'react-addons-test-utils';
 
@@ -11,7 +12,7 @@ const SPAN_CONTENT = 'span-content';
 function createModal(props, children) {
     return TestUtils.renderIntoDocument(React.createElement(
             Modal, props || {},
-            children || React.createElement('span', {className: 'forReference'}, SPAN_CONTENT))
+            children || React.createElement('span', { className: 'forReference' }, SPAN_CONTENT))
     );
 }
 
@@ -21,7 +22,7 @@ function getContent(modal) {
 
 describe('Modal', () => {
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.body);
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -36,7 +37,7 @@ describe('Modal', () => {
 
     it('default is closed and have the correct attributes', () => {
         const modal = createModal();
-        const portal = React.findDOMNode(modal.modal);
+        const portal = ReactDOM.findDOMNode(modal.modal);
 
         expect(portal.hasAttribute('tabindex')).to.be.true;
         expect(portal.hasAttribute('class')).to.be.true;
@@ -61,9 +62,9 @@ describe('Modal', () => {
     });
 
     it('repects the isOpen prop', () => {
-        const modal = createModal({isOpen: true});
+        const modal = createModal({ isOpen: true });
 
-        const portal = React.findDOMNode(modal.modal);
+        const portal = ReactDOM.findDOMNode(modal.modal);
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
