@@ -1,8 +1,9 @@
 import React from 'react';
 import DLElement from '../dlelement';
-import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '../formatering-utils';
+import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi,
+    formaterJavaDateTilMoment } from '../formatering-utils';
 
-const Periode = ({ periode, periodeNummer, tekst }) => {
+export const Periode = ({ periode, periodeNummer, tekst }) => {
     const fraOgMed = formaterJavaDate(periode.fraOgMed);
     const vedtakKomponent = periode.vedtakListe.map((vedtak, index) =>
         (<Vedtak key={index} tekst={tekst} vedtak={vedtak} />));
@@ -90,8 +91,14 @@ Vedtak.propTypes = {
     tekst: React.PropTypes.object.isRequired
 };
 
+export const sorterEtterIdDato = perioder => (
+    perioder.sort((a, b) => (
+        formaterJavaDateTilMoment(b.fraOgMed).diff(formaterJavaDateTilMoment(a.fraOgMed))
+    ))
+);
+
 const PleiepengerUtbetalingerPanel = ({ perioder, tekst }) => {
-    const perioderKomponenter = perioder.map((periode, index) =>
+    const perioderKomponenter = sorterEtterIdDato(perioder).map((periode, index) =>
         (<Periode key={index} tekst={tekst} periode={periode} periodeNummer={index + 1} />));
 
     return (
