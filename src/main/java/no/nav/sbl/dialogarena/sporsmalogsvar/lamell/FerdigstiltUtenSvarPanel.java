@@ -2,7 +2,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 
 import java.util.HashMap;
 
@@ -14,7 +16,7 @@ public class FerdigstiltUtenSvarPanel extends Panel {
         super(id, new PropertyModel<>(innboksVM, "valgtTraad"));
         setOutputMarkupId(true);
 
-        String tekst = new StringResourceModel("ferdigstiltUtenSvar.ferdigstiltTekst", this, null, "Samtalen er avsluttet uten å svare bruker").getString();
+        String tekst = new StringResourceModel("ferdigstiltUtenSvar.ferdigstiltTekst", this, null, "Henvendelsen er avsluttet uten å svare bruker").getString();
 
         add(new ReactComponentPanel("ferdigstiltUtenSvar", "AlertStripeSuksessSolid", new HashMap<String, Object>(){{
             put("tekst", tekst);
