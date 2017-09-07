@@ -4,6 +4,7 @@ import PleiepengerRettenPanel from './components/pleiepenger-retten';
 import ArbeidsituasjonPanel from './components/arbeidssituasjon';
 import UtbetalingerPanel from './components/utbetalinger-';
 
+// eslint-disable-next-line react/prefer-stateless-function
 class PleiepengerPanel extends Component {
 
     render() {
