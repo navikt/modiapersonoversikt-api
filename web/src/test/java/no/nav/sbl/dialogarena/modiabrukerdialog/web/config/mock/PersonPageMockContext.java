@@ -10,7 +10,6 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
@@ -37,11 +36,6 @@ public class PersonPageMockContext {
     @Bean(name = "pep")
     public EnforcementPoint pep() {
         return mock(EnforcementPoint.class);
-    }
-
-    @Bean
-    public OrganisasjonEnhetService organisasjonEnhetService() {
-        return mock(OrganisasjonEnhetService.class);
     }
 
     @Bean
