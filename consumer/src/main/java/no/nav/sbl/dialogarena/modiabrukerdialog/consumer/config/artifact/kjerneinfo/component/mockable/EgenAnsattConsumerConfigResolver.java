@@ -1,12 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable;
 
 
-import no.nav.dkif.consumer.DkifServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.support.EgenAnsattService;
-import no.nav.kjerneinfo.consumer.fim.person.support.EgenAnsattServiceBi;
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattServiceImpl;
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import no.nav.tjeneste.pip.egen.ansatt.v1.WSHentErEgenAnsattEllerIFamilieMedEgenAnsattRequest;
-import no.nav.tjeneste.pip.egen.ansatt.v1.WSHentErEgenAnsattEllerIFamilieMedEgenAnsattResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,14 +18,14 @@ public class EgenAnsattConsumerConfigResolver {
 
     @Inject
     @Qualifier("egenAnsattService")
-    private Wrapper<EgenAnsattService> egenAnsattService;
+    private Wrapper<EgenAnsattServiceImpl> egenAnsattService;
 
     @Inject
     @Qualifier("egenAnsattMockService")
-    private Wrapper<EgenAnsattServiceBi> egenAnsattMockService;
+    private Wrapper<EgenAnsattService> egenAnsattMockService;
 
     @Bean
-    public EgenAnsattServiceBi egenAnsattServiceBi() {
+    public EgenAnsattService egenAnsattServiceBi() {
         if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
             return egenAnsattMockService.wrappedObject;
         } else {
