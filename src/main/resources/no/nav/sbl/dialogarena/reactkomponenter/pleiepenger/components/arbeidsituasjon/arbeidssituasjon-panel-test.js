@@ -43,6 +43,11 @@ describe('Arbeidssituasjon', () => {
         toggleArbeidsforholdVisningElement(element);
         expect(element.find('ArbeidsforholdKomponent').length).to.equal(1);
     });
+    it('viser ingen arbeidsforhold ved tom liste', () => {
+        const element = shallow(
+            <Arbeidssituasjon tekst={{}} arbeidsforhold={[]} />);
+        expect(element.find('ArbeidsforholdKomponent').length).to.equal(0);
+    });
     describe('sorterArbeidsforhold', () => {
         it('sorterer arbeidsforhold med siste refusjonsdato først når nyest er sist i listen', () => {
             const arbeidsforhold = sorterArbeidsforhold([mockArbeidsforhold(2016), mockArbeidsforhold(2017)]);
