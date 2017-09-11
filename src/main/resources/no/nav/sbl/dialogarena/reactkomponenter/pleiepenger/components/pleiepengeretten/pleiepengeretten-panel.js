@@ -1,6 +1,7 @@
 import React from 'react';
 import DLElement from '../dlelement';
-import { formaterJavaDate, formaterOptionalProsentVerdi, emdash } from '../formatering-utils';
+import { BarnetIkon } from "./barnet-ikon";
+import { formaterJavaDate, formaterOptionalProsentVerdi, emdash, kjonnFraIdent } from '../../utils';
 
 const Personnummer = ({ ident }) => {
     if (!ident || ident.length <= 6) {
@@ -62,9 +63,13 @@ const PleiepengerettighetPanel = props => {
                 <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
                     {props.graderingsgrad || ''}&nbsp;%
                 </DLElement>
-                <DLElement etikett={tekst.barnet} className="halvbredde">
-                    <Personnummer ident={props.barnet} />
-                </DLElement>
+                <div className="blokk-s halvbredde">
+                    <BarnetIkon kjonn={kjonnFraIdent(props.barnet)} />
+                    <dt className="pleiepenger-barnet-etikett">{ tekst.barnet }</dt>
+                    <dd className="pleiepenger-verdi pleiepenger-barnet-ident">
+                        <Personnummer ident={props.barnet} />
+                    </dd>
+                </div>
                 <DLElement etikett={tekst.annenForelder} className="halvbredde">
                     <Personnummer ident={props.andreOmsorgsperson} />
                 </DLElement>

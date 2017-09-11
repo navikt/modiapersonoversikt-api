@@ -1,7 +1,7 @@
 import React from 'react';
 
-import DLElement from '../dlelement';
-import { formaterJavaDate, formaterBelop, formaterOptionalVerdi } from '../formatering-utils';
+import DLElement from './dlelement';
+import { formaterJavaDate, formaterBelop, formaterOptionalVerdi } from '../utils';
 
 const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
     <div className="arbeidsforhold">

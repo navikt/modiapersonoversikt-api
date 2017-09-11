@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import PleiepengerRettenPanel from './components/pleiepengeretten';
+import PleiepengerRettenPanel from './components/pleiepengeretten/pleiepengeretten-panel';
 import ArbeidsituasjonPanel from './components/arbeidssituasjon';
 import UtbetalingerPanel from './components/utbetalinger';
 

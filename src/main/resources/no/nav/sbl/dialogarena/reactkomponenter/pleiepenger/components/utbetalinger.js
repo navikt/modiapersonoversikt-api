@@ -1,6 +1,6 @@
 import React from 'react';
-import DLElement from '../dlelement';
-import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '../formatering-utils';
+import DLElement from './dlelement';
+import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '../utils';
 
 const Periode = ({ periode, periodeNummer, tekst }) => {
     const fraOgMed = formaterJavaDate(periode.fraOgMed);
