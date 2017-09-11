@@ -2,8 +2,8 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
-import './../../test-config';
-import PleiepengerUtbetalingerPanel, { sorterEtterIdDato } from './utbetalinger';
+import '../../../test-config';
+import PleiepengerUtbetalingerPanel, { sorterEtterIdDato } from './utbetalinger-panel';
 
 const mockPeriode = (fraOgMedAr) => ({
     vedtakListe: [
@@ -56,6 +56,9 @@ describe('Utbetalinger', () => {
                 const perioder = sorterEtterIdDato([mockPeriode(2017), mockPeriode(2016)]);
                 expect(perioder[0].fraOgMed.year).to.equal(2017);
             });
+        });
+        describe('sortering av vedtak', () => {
+
         });
     });
 });
