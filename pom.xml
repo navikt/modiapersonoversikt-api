@@ -205,20 +205,19 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <!--<execution>-->
-                        <!--<id>test</id>-->
-                        <!--<goals>-->
-                            <!--<goal>exec</goal>-->
-                        <!--</goals>-->
-                        <!--<phase>test</phase>-->
-                        <!--<configuration>-->
-                            <!--<executable>node</executable>-->
-                            <!--<arguments>-->
-                                <!--<argument>./node_modules/gulp/bin/gulp</argument>-->
-                                <!--<argument>test</argument>-->
-                            <!--</arguments>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>test</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -278,6 +277,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/reactkomponenter.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/sbl/repos/reactkomponenter/</url>
-        <tag>reactkomponenter-2.7.38-HL4</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
