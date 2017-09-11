@@ -4,7 +4,7 @@ import { BarnetIkon } from "./barnet-ikon";
 import { formaterJavaDate, formaterOptionalProsentVerdi, emdash, kjonnFraIdent } from '../../utils';
 
 const Personnummer = ({ ident }) => {
-    if (!ident || ident.length <= 6) {
+    if (!ident || ident.length < 6) {
         return <span>{emdash}</span>;
     }
 
