@@ -1,13 +1,22 @@
 import React from 'react';
 import DLElement from '../../dlelement';
 import Vedtak from './vedtak.js';
-import { formaterJavaDate, formaterOptionalProsentVerdi } from '../../formatering-utils';
+import { formaterJavaDate, formaterJavaDateTilMoment, formaterOptionalProsentVerdi } from '../../formatering-utils';
+
+export const sorterVedtak = vedtakListe => (
+    vedtakListe.sort((a, b) => (
+        formaterJavaDateTilMoment(b.periode.tilOgMed).diff(formaterJavaDateTilMoment(a.periode.tilOgMed))
+    ))
+);
+
+const getSorterteVedtak = (vedtaksListe, tekst) => {
+    return sorterVedtak(vedtaksListe).map((vedtak, index) =>
+        (<Vedtak key={index} tekst={tekst} vedtak={vedtak} />));
+};
 
 const Periode = ({ periode, periodeNummer, tekst }) => {
+    const vedtakKomponent = getSorterteVedtak(periode.vedtakListe, tekst);
     const fraOgMed = formaterJavaDate(periode.fraOgMed);
-    const vedtakKomponent = periode.vedtakListe.map((vedtak, index) =>
-        (<Vedtak key={index} tekst={tekst} vedtak={vedtak} />));
-
     return (
         <section className="periode">
             <h2>{tekst.periode} { periodeNummer } {fraOgMed} </h2>

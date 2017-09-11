@@ -57,8 +57,5 @@ describe('Utbetalinger', () => {
                 expect(perioder[0].fraOgMed.year).to.equal(2017);
             });
         });
-        describe('sortering av vedtak', () => {
-
-        });
     });
 });
