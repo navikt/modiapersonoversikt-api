@@ -20,6 +20,7 @@
     width: 100%;
 
     padding: 0 1rem;
+    margin-top: 2rem;
   }
 
   .pleiepenger-etikett {
@@ -142,6 +143,12 @@
   .arbeidssituasjon {
     .arbeidsforhold {
       border-bottom: 1px solid @gray;
+      &:last-of-type {
+        border-bottom: 0;
+      }
+    }
+    .toggle-arbeidsforhold {
+      cursor: pointer;
     }
   }
 
