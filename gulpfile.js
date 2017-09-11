@@ -5,7 +5,6 @@ var source = require('vinyl-source-stream'); // Used to stream bundle for furthe
 var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
-var karma = require('karma').server;
 var notify = require('gulp-notify');
 var eslint = require('gulp-eslint');
 var chalk = require('chalk');
@@ -68,13 +67,6 @@ function lessTask(options) {
     }
 }
 
-function test(options) {
-    karma.start({
-        configFile: __dirname + options.file,
-        singleRun: options.singleRun
-    });
-}
-
 gulp.task('dev', function runDev() {
     bundleJS(true);
     lessTask({
@@ -91,14 +83,6 @@ gulp.task('default', function runDefault() {
         src: config.srcPath + '**/*.less',
         dest: config.targetPath
     });
-});
-
-gulp.task('test', function runTest() {
-    test({ singleRun: true, file: '/karma.conf.js' });
-});
-
-gulp.task('tdd', function runTdd() {
-    test({ singleRun: false, file: '/karma.conf.local.js' });
 });
 
 gulp.task('eslint', function () {
