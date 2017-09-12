@@ -2,6 +2,7 @@ import React from 'react';
 
 import DLElement from '../../dlelement';
 import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '../../formatering-utils';
+import { javaDatoType } from '../../typer';
 
 const Vedtak = ({ vedtak, tekst }) => {
     const fraOgMed = formaterJavaDate(vedtak.periode.fraOgMed);
@@ -36,10 +37,10 @@ const Vedtak = ({ vedtak, tekst }) => {
 Vedtak.propTypes = {
     vedtak: React.PropTypes.shape({
         periode: React.PropTypes.shape({
-            fraOgMed: React.PropTypes.object.isRequired,
-            tilOgMed: React.PropTypes.object.isRequired
+            fraOgMed: javaDatoType.isRequired,
+            tilOgMed: javaDatoType.isRequired
         }).isRequired,
-        anvistUtbetaling: React.PropTypes.object.isRequired,
+        anvistUtbetaling: javaDatoType.isRequired,
         bruttoBelop: React.PropTypes.number.isRequired,
         kompensasjonsgrad: React.PropTypes.number
     }),

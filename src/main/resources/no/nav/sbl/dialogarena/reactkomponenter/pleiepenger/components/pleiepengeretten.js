@@ -1,6 +1,7 @@
 import React from 'react';
 import DLElement from '../dlelement';
 import { formaterJavaDate, formaterOptionalProsentVerdi, emdash } from '../formatering-utils';
+import { javaDatoType } from '../typer';
 
 const Personnummer = ({ ident }) => {
     if (!ident || ident.length <= 6) {
@@ -75,8 +76,8 @@ const PleiepengerettighetPanel = props => {
 
 PleiepengerettighetPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    fomDato: React.PropTypes.object.isRequired,
-    tomDato: React.PropTypes.object.isRequired,
+    fomDato: javaDatoType.isRequired,
+    tomDato: javaDatoType.isRequired,
     pleiepengedager: React.PropTypes.number.isRequired,
     forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
     forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import PleiepengerRettenPanel from './components/pleiepengeretten';
-import ArbeidsituasjonPanel from './components/arbeidssituasjon';
+import ArbeidsituasjonPanel from './components/arbeidsituasjon/arbeidssituasjon-panel';
 import UtbetalingerPanel from './components/utbetalinger/utbetalinger-panel';
 
 // eslint-disable-next-line react/prefer-stateless-function

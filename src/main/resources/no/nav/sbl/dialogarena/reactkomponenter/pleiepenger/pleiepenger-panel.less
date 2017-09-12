@@ -71,6 +71,7 @@
 
   .forbrukte-dager {
     margin-bottom: 2em;
+    margin-top: 0.5em;
   }
 
   .barnet-etikett {
@@ -97,6 +98,7 @@
   section.periode {
     border-top: 1px solid @gray;
     padding-top: 1.5rem;
+    margin-top: 3rem;
 
     .periode-innhold {
       display: flex;
@@ -142,6 +144,12 @@
   .arbeidssituasjon {
     .arbeidsforhold {
       border-bottom: 1px solid @gray;
+      &:last-of-type {
+        border-bottom: 0;
+      }
+    }
+    .toggle-arbeidsforhold {
+      cursor: pointer;
     }
   }
 
