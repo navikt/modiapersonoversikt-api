@@ -1,10 +1,10 @@
 import moment from 'moment';
 
-export const formaterJavaDateTilMoment = dato =>
+export const konverterTilMomentDato = dato =>
     moment(new Date(dato.year, dato.monthValue - 1, dato.dayOfMonth));
 
 export const formaterJavaDate = dato =>
-    formaterJavaDateTilMoment(dato).format('DD.MM.YYYY');
+    konverterTilMomentDato(dato).format('DD.MM.YYYY');
 
 export const formaterBelop = (belop) =>
     belop.toLocaleString('nb-NO', {

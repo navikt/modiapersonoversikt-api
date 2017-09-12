@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { formaterJavaDateTilMoment } from '../../formatering-utils';
+import { konverterTilMomentDato } from '../../formatering-utils';
 import Periode from './periode';
 
 export const sorterEtterIdDato = perioder => (
     perioder.sort((a, b) => (
-        formaterJavaDateTilMoment(b.fraOgMed).diff(formaterJavaDateTilMoment(a.fraOgMed))
+        konverterTilMomentDato(b.fraOgMed).diff(konverterTilMomentDato(a.fraOgMed))
     ))
 );
 

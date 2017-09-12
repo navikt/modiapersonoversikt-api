@@ -1,11 +1,11 @@
 import React from 'react';
 import DLElement from '../../dlelement';
 import Vedtak from './vedtak.js';
-import { formaterJavaDate, formaterJavaDateTilMoment, formaterOptionalProsentVerdi } from '../../formatering-utils';
+import { formaterJavaDate, konverterTilMomentDato, formaterOptionalProsentVerdi } from '../../formatering-utils';
 
 export const sorterVedtak = vedtakListe => (
     vedtakListe.sort((a, b) => (
-        formaterJavaDateTilMoment(b.periode.tilOgMed).diff(formaterJavaDateTilMoment(a.periode.tilOgMed))
+        konverterTilMomentDato(b.periode.tilOgMed).diff(konverterTilMomentDato(a.periode.tilOgMed))
     ))
 );
 
