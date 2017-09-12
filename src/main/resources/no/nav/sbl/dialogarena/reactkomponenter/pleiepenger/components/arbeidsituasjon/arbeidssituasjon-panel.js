@@ -1,7 +1,10 @@
 import React from 'react';
 
-import DLElement from './dlelement';
-import { formaterJavaDate, formaterBelop, formaterOptionalVerdi } from '../utils';
+import { javaDatoType } from '../../typer';
+import DLElement from '../dlelement';
+import {
+    formaterJavaDate, formaterBelop, formaterOptionalVerdi, konverterTilMomentDato
+} from '../../utils';
 
 const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
     <div className="arbeidsforhold">
@@ -35,22 +38,50 @@ ArbeidsforholdKomponent.propTypes = {
         arbeidsgiverKontonr: React.PropTypes.string.isRequired,
         inntektsperiode: React.PropTypes.string.isRequired,
         refusjonstype: React.PropTypes.string.isRequired,
-        refusjonTom: React.PropTypes.object.isRequired,
+        refusjonTom: javaDatoType.isRequired,
         inntektForPerioden: React.PropTypes.number.isRequired
     }).isRequired
 };
 
-const ArbeidssituasjonPanel = ({ tekst, arbeidsforhold }) => {
-    const arbeidsforholdKomponenter = arbeidsforhold.map((forhold, index) =>
-        (<ArbeidsforholdKomponent key={index} arbeidsforhold={forhold} tekst={tekst} />));
+export const sorterArbeidsforhold = arbeidsforhold => (
+    arbeidsforhold.sort((a, b) => (
+        konverterTilMomentDato(b.refusjonTom).diff(konverterTilMomentDato(a.refusjonTom))
+    ))
+);
 
-    return (
-        <div className="arbeidssituasjon">
-            <h1 id="arbeidssituasjonTitle">{tekst.arbeidssituasjon}</h1>
-            {arbeidsforholdKomponenter}
-        </div>
-    );
-};
+class ArbeidssituasjonPanel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { visFullListe: false };
+        this.handleToggleListeClick = this.handleToggleListeClick.bind(this);
+    }
+
+    handleToggleListeClick() {
+        this.setState(prevState => ({
+            visFullListe: !prevState.visFullListe
+        }));
+    }
+    render() {
+        const props = this.props;
+
+        let arbeidsforholdKomponenter = sorterArbeidsforhold(props.arbeidsforhold).map((forhold, index) =>
+            (<ArbeidsforholdKomponent key={index} arbeidsforhold={forhold} tekst={props.tekst} />));
+
+        if (!this.state.visFullListe) {
+            arbeidsforholdKomponenter = arbeidsforholdKomponenter.slice(0, 1);
+        }
+
+        return (
+            <div className="arbeidssituasjon">
+                <h1 id="arbeidssituasjonTitle">{props.tekst.arbeidssituasjon}</h1>
+                {arbeidsforholdKomponenter}
+                <a className="toggle-arbeidsforhold" onClick={this.handleToggleListeClick}>
+                    {this.state.visFullListe ? 'Skjul alle arbeidsforhold' : 'Vis alle arbeidsforhold'}
+                </a>
+            </div>
+        );
+    }
+}
 
 ArbeidssituasjonPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,

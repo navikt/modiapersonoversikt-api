@@ -1,7 +1,8 @@
 import React from 'react';
 import DLElement from '../dlelement';
-import { BarnetIkon } from "./barnet-ikon";
+import { BarnetIkon } from './barnet-ikon';
 import { formaterJavaDate, formaterOptionalProsentVerdi, emdash, kjonnFraIdent } from '../../utils';
+import { javaDatoType } from '../../typer';
 
 const Personnummer = ({ ident }) => {
     if (!ident || ident.length < 6) {
@@ -80,8 +81,8 @@ const PleiepengerettighetPanel = props => {
 
 PleiepengerettighetPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    fomDato: React.PropTypes.object.isRequired,
-    tomDato: React.PropTypes.object.isRequired,
+    fomDato: javaDatoType.isRequired,
+    tomDato: javaDatoType.isRequired,
     pleiepengedager: React.PropTypes.number.isRequired,
     forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
     forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,

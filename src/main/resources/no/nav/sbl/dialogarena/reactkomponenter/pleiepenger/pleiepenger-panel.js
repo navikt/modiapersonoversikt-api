@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import PleiepengerRettenPanel from './components/pleiepengeretten/pleiepengeretten-panel';
-import ArbeidsituasjonPanel from './components/arbeidssituasjon';
-import UtbetalingerPanel from './components/utbetalinger';
+import ArbeidsituasjonPanel from './components/arbeidsituasjon/arbeidssituasjon-panel';
+import UtbetalingerPanel from './components/utbetalinger/utbetalinger-panel';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class PleiepengerPanel extends Component {
