@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { konverterTilMomentDato } from '../../formatering-utils';
+import { konverterTilMomentDato } from '../../utils';
 import Periode from './periode';
 
 export const sorterEtterIdDato = perioder => (

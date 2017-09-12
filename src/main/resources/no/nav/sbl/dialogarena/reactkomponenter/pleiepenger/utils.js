@@ -21,3 +21,10 @@ export const formaterOptionalProsentVerdi = verdi => (
 export const formaterOptionalVerdi = verdi => (
   verdi || emdash
 );
+
+export const kjonnFraIdent = ident => {
+    if (!ident || ident.length < 11) {
+        return 'U';
+    }
+    return ident.charAt(8) % 2 ? 'M' : 'K';
+};

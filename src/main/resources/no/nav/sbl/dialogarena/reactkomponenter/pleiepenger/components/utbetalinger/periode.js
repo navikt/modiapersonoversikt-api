@@ -1,7 +1,7 @@
 import React from 'react';
-import DLElement from '../../dlelement';
+import DLElement from '../dlelement';
 import Vedtak from './vedtak.js';
-import { formaterJavaDate, konverterTilMomentDato, formaterOptionalProsentVerdi } from '../../formatering-utils';
+import { formaterJavaDate, konverterTilMomentDato, formaterOptionalProsentVerdi } from '../../utils';
 
 export const sorterVedtak = vedtakListe => (
     vedtakListe.sort((a, b) => (

@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { javaDatoType } from '../../typer';
-import DLElement from '../../dlelement';
+import DLElement from '../dlelement';
 import {
-    formaterJavaDate, formaterBelop, formaterOptionalVerdi, formaterJavaDateTilMoment
-} from '../../formatering-utils';
+    formaterJavaDate, formaterBelop, formaterOptionalVerdi, konverterTilMomentDato
+} from '../../utils';
 
 const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
     <div className="arbeidsforhold">
@@ -45,7 +45,7 @@ ArbeidsforholdKomponent.propTypes = {
 
 export const sorterArbeidsforhold = arbeidsforhold => (
     arbeidsforhold.sort((a, b) => (
-        formaterJavaDateTilMoment(b.refusjonTom).diff(formaterJavaDateTilMoment(a.refusjonTom))
+        konverterTilMomentDato(b.refusjonTom).diff(konverterTilMomentDato(a.refusjonTom))
     ))
 );
 

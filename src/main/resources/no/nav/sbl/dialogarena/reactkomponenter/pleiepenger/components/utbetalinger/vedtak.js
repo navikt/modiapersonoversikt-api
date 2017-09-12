@@ -1,7 +1,7 @@
 import React from 'react';
 
-import DLElement from '../../dlelement';
-import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '../../formatering-utils';
+import DLElement from '../dlelement';
+import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '../../utils';
 import { javaDatoType } from '../../typer';
 
 const Vedtak = ({ vedtak, tekst }) => {
