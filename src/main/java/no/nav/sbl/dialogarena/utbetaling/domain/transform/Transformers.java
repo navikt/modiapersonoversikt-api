@@ -40,7 +40,7 @@ public class Transformers {
 
     public static final Function<WSUtbetaling, List<Hovedytelse>> TO_HOVEDYTELSE = wsUtbetaling -> wsUtbetaling.getYtelseListe()
             .stream()
-            .map((wsYtelse -> new Hovedytelse()
+            .map(wsYtelse -> new Hovedytelse()
                     .withMottakertype(mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
                     .withHovedytelsedato(determineHovedytelseDato(wsUtbetaling))
                     .withForfallsdato(wsUtbetaling.getForfallsdato())
@@ -66,7 +66,7 @@ public class Transformers {
                     .withBruttoUtbetalt(wsYtelse.getYtelseskomponentersum())
                     .withSammenlagtTrekkBeloep()
                     .withErHovedutbetaling(wsUtbetaling.getYtelseListe().size() == 1)
-            )).collect(toList());
+            ).collect(toList());
 
     public static final Function<WSUtbetaling, Hovedutbetaling> SAMMENLAGT_UTBETALING_TRANSFORMER = wsUtbetaling -> new Hovedutbetaling()
             .withId(String.valueOf(createHovedutbetalingId(wsUtbetaling)))

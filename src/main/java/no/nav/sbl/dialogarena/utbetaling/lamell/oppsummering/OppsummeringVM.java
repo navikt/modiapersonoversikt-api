@@ -167,7 +167,7 @@ public class OppsummeringVM implements Serializable {
 
         return sammenlagteUnderytelser
                 .stream()
-                .sorted(((o1, o2) -> o2.getYtelseBeloep().compareTo(o1.getYtelseBeloep())))
+                .sorted((o1, o2) -> o2.getYtelseBeloep().compareTo(o1.getYtelseBeloep()))
                 .collect(toList());
     }
 

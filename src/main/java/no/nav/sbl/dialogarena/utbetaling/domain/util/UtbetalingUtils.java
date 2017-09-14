@@ -27,6 +27,6 @@ public class UtbetalingUtils {
     }
 
     static boolean erDatoISokeperioden(LocalDate dato, LocalDate startDato, LocalDate sluttDato) {
-        return (dato.compareTo(startDato) >= 0 && dato.compareTo(sluttDato) <= 0);
+        return dato.compareTo(startDato) >= 0 && dato.compareTo(sluttDato) <= 0;
     }
 }
