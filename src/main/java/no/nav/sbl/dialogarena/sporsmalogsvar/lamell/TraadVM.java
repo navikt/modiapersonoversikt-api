@@ -93,7 +93,8 @@ public class TraadVM implements Serializable {
                 && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
                 && !getEldsteMelding().erFeilsendt()
                 && !(getEldsteMelding().melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !traadOKSOSKanSes())
-                && !getEldsteMelding().melding.ingenTilgangJournalfort;
+                && !getEldsteMelding().melding.ingenTilgangJournalfort
+                && !erFerdigstiltUtenSvar();
     }
 
     private boolean traadOKSOSKanSes() {
