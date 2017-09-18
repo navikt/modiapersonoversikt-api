@@ -101,9 +101,9 @@ const MeldingerSok = React.createClass({
         );
         let tomInnhold;
         if (this.state.feilet) {
-            tomInnhold = <h1 className="tom">Noe feilet</h1>;
+            tomInnhold = <h1 className="tom" role="alert" aria-atomic="true">Noe feilet</h1>;
         } else if (this.state.initialisert) {
-            tomInnhold = <h1 className="tom">Ingen treff</h1>;
+            tomInnhold = <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>;
         } else {
             tomInnhold = (
                 <div className="tom">
