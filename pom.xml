@@ -466,11 +466,6 @@
                 <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
                 <version>${egenansatt-tjenestespesifikasjon.version}</version>
             </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
-                <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
-            </dependency>
 
             <!--Dialogarena-->
             <dependency>
