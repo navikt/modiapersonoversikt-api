@@ -261,7 +261,7 @@
         box-shadow: -1px 1px 5px 0px @gray-icon;
     }
 
-    .close-document{
+    .close-document {
         display: block;
         position: absolute;
         right: 30px;
@@ -355,179 +355,177 @@
         }
     }
 
-}
-
-.sakstema-container {
-    position: relative;
-    height: 100%;
-}
-
-.sakstemaliste {
-    padding: 0;
-    height: 100%;
-}
-
-.tema-ikke-tilgang {
-    background-repeat: no-repeat;
-    background-image: url("@{imgDir}/stop-graa.svg");
-    background-position: 93% 50%;
-    background-size: 2.5rem 2.5rem;
-
-    &.valgt {
-        background-image: url("@{imgDir}/stop-hvit.svg");
-    }
-}
-
-.saksoversikt-liste-element {
-    border-bottom: 1px solid @gray-icon;
-    display: block;
-
-    label:before {
-        display: none !important;
+    .sakstema-container {
+        position: relative;
+        height: 100%;
     }
 
-    input[type=radio] + label {
-        padding-top: 18px;
-        padding-bottom: 18px;
-        margin-top: 0;
-        width: 100%;
-        border: 1px solid transparent;
+    .sakstemaliste {
+        padding: 0;
+        height: 100%;
     }
 
-    input[type=radio]:focus + label {
-        outline: none;
-        box-shadow: inset 0 0 0 2px #ffbd66;
-        border: 1px solid #ffbd66;
-    }
-}
+    .tema-ikke-tilgang {
+        background-repeat: no-repeat;
+        background-image: url("@{imgDir}/stop-graa.svg");
+        background-position: 93% 50%;
+        background-size: 2.5rem 2.5rem;
 
-.saksoversikt-liste-element.valgt {
-    background-color: #226aa4;
+        &.valgt {
+            background-image: url("@{imgDir}/stop-hvit.svg");
+        }
+    }
+
+    .saksoversikt-liste-element {
+        border-bottom: 1px solid @gray-icon;
+        display: block;
+
+        label:before {
+            display: none !important;
+        }
+
+        input[type=radio] + label {
+            padding-top: 18px;
+            padding-bottom: 18px;
+            margin-top: 0;
+            width: 100%;
+            border: 1px solid transparent;
+        }
+
+        input[type=radio]:focus + label {
+            outline: none;
+            box-shadow: inset 0 0 0 2px #ffbd66;
+            border: 1px solid #ffbd66;
+        }
+    }
+
+    .saksoversikt-liste-element.valgt {
+        background-color: #226aa4;
+        .temaliste-label {
+            color: #f5f5f5;
+        }
+        .datotekst {
+            color: #f5f5f5;
+        }
+
+        &:focus {
+            background-color: #226aa4 !important;
+        }
+    }
+
     .temaliste-label {
-        color: #f5f5f5;
+        color: #3e3832;
+        text-transform: none;
     }
+
+    .behandlingsstatus-tekst {
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    }
+
+    .stortekst {
+        font-family: Arial, sans-serif;
+        font-size: 1.21rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-bottom: 4px;
+        padding-right: 4rem;
+    }
+
     .datotekst {
-        color: #f5f5f5;
-    }
-
-    &:focus {
-        background-color: #226aa4 !important;
-    }
-}
-
-.temaliste-label {
-    color: #3e3832;
-    text-transform: none;
-}
-
-.behandlingsstatus-tekst {
-    p {
-        margin: 0;
+        font-family: Arial, sans-serif;
         font-size: 0.9rem;
+        font-weight: normal;
+        margin-bottom: 0;
+        margin-top: 0;
+        color: @gray-icon_inactive;
     }
-}
 
-.stortekst {
-    font-family: Arial, sans-serif;
-    font-size: 1.21rem;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-bottom: 4px;
-    padding-right: 4rem;
-}
+    .decorated {
+        text-align: center;
+        margin-bottom: 32px;
+        display: block;
+    }
 
-.datotekst {
-    font-family: Arial, sans-serif;
-    font-size: 0.9rem;
-    font-weight: normal;
-    margin-bottom: 0;
-    margin-top: 0;
-    color: @gray-icon_inactive;
-}
+    .typo-innholdstittel {
+        font-size: 2.15rem;
+        font-family: Modus, Arial, sans-serif;
+        font-weight: 600;
+    }
 
-.decorated {
-    text-align: center;
-    margin-bottom: 32px;
-    display: block;
-}
+    .panel {
+        padding: 2rem 2rem 2.25rem 2rem;
+        background: #fff;
+        display: block;
+        box-shadow: 0 0px 13px -2px #d1d1d1;
+    }
 
-.typo-innholdstittel {
-    font-size: 2.15rem;
-    font-family: Modus, Arial, sans-serif;
-    font-weight: 600;
-}
+    .scrollpanel {
+        overflow-x: hidden;
+        overflow-y: visible;
+    }
 
-.panel {
-    padding: 2rem 2rem 2.25rem 2rem;
-    background: #fff;
-    display: block;
-    box-shadow: 0 0px 13px -2px #d1d1d1;
-}
+    .gratt {
+        background: #e1e1e1;
+    }
 
-.scrollpanel {
-    overflow-x: hidden;
-    overflow-y: visible;
-}
+    .side-innhold a {
+        border-bottom: 1px solid @gray-icon;
+        &:hover {
+            text-decoration: none !important;
+            border-bottom-color: #0067c5;
+        }
+    }
 
-.gratt {
-  background: #e1e1e1;
-}
+    .feilmelding-container {
+        position: relative;
+    }
 
+    .feilmelding {
+        position: absolute;
+        top: 135px;
+        left: 10%;
+        z-index: 50;
+        width: 80%;
+    }
 
-.side-innhold a {
-    border-bottom: 1px solid @gray-icon;
-    &:hover {
-        text-decoration: none !important;
-        border-bottom-color: #0067c5;
+    .feilmelding-bakgrunn {
+        border: 1px solid black;
+        width: 100%;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .lamell-feilmelding {
+        background-image: url("@{imgDir}/file-warning.svg");
+        background-repeat: no-repeat;
+        background-size: 3rem 3rem;
+        background-position: 2rem;
+        border: 1px solid #ccc;
+        color: #BA3A26;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-left: 6rem;
+        font-weight: 600;
+        font-size: 1.21rem;
+    }
+
+    .teknisk-feil-ikon {
+        background-image: url(../img/under-dark.png), url("@{imgDir}/file-warning.svg");
+        background-size: 2.5rem 1px, 2.5rem 2.5rem;
+    }
+
+    .listeelement-kant {
+        border-bottom: 1px solid #d1d1d1;
     }
 }
 
 .lerret.saksoversikt-lerret {
     overflow-y: hidden !important;
     padding: 0 !important
-}
-
-.feilmelding-container {
-    position: relative;
-}
-
-.feilmelding {
-    position: absolute;
-    top: 135px;
-    left: 10%;
-    z-index: 50;
-    width: 80%;
-}
-
-.feilmelding-bakgrunn {
-    border: 1px solid black;
-    width: 100%;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.lamell-feilmelding {
-    background-image: url("@{imgDir}/file-warning.svg");
-    background-repeat: no-repeat;
-    background-size: 3rem 3rem;
-    background-position: 2rem;
-    border: 1px solid #ccc;
-    color: #BA3A26;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    padding-left: 6rem;
-    font-weight: 600;
-    font-size: 1.21rem;
-}
-
-.teknisk-feil-ikon {
-    background-image: url(../img/under-dark.png), url("@{imgDir}/file-warning.svg");
-    background-size: 2.5rem 1px, 2.5rem 2.5rem;
-}
-
-.listeelement-kant {
-    border-bottom: 1px solid #d1d1d1;
 }
