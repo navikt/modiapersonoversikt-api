@@ -34,12 +34,7 @@ public class GsakKodeverkTemaTest {
     @Test
     public void underkategorierHvorErGyldigErLikFalseForGosysSkalIgnoreres() throws Exception {
         final List<GsakKodeTema.Tema> alleTema = GsakKodeverkTema.Parser.parse();
-        final List<GsakKodeTema.Tema> etTema = on(alleTema).filter(new Predicate<GsakKodeTema.Tema>() {
-            @Override
-            public boolean evaluate(final GsakKodeTema.Tema tema) {
-                return tema.kode.equals("STO");
-            }
-        }).collect();
+        final List<GsakKodeTema.Tema> etTema = on(alleTema).filter(tema -> tema.kode.equals("STO")).collect();
 
         assertThat(etTema.get(0).underkategorier.size(), is(1));
         assertThat(etTema.get(0).underkategorier.get(0).kode, is("AAP_STO"));
@@ -48,12 +43,7 @@ public class GsakKodeverkTemaTest {
     @Test
     public void underkategorierHvorErGyldigErTrueMenTOMErForbiForGosysSkalIgnoreres() throws Exception {
         final List<GsakKodeTema.Tema> alleTema = GsakKodeverkTema.Parser.parse();
-        final List<GsakKodeTema.Tema> etTema = on(alleTema).filter(new Predicate<GsakKodeTema.Tema>() {
-            @Override
-            public boolean evaluate(final GsakKodeTema.Tema tema) {
-                return tema.kode.equals("MED");
-            }
-        }).collect();
+        final List<GsakKodeTema.Tema> etTema = on(alleTema).filter(tema -> tema.kode.equals("MED")).collect();
 
         assertThat(etTema.get(0).underkategorier.size(), is(0));
     }
