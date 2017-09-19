@@ -9,9 +9,11 @@ import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.ofNullable;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
@@ -20,6 +22,8 @@ public class GsakKodeverkTema implements Serializable {
     public static class Parser extends GsakKodeParser {
         private static final String KODE = "kode";
         private static final String DEKODE = "dekode";
+        private static final String ER_GYLDIG = "erGyldig";
+        private static final String DATO_TOM = "datoTom";
         private static final List<String> GODKJENTE_OPPGAVETYPER = asList("KONT_BRUK", "VURD_HENV", "VUR_KONS_YTE");
 
         private static final Transformer<Node, GsakKodeTema.OppgaveType> NODE_OPPGAVE_TYPE_TRANSFORMER = new Transformer<Node, GsakKodeTema.OppgaveType>() {
@@ -40,7 +44,13 @@ public class GsakKodeverkTema implements Serializable {
         private static final Transformer<Node, GsakKodeTema.Underkategori> NODE_TIL_UNDERKATEGORI = new Transformer<Node, GsakKodeTema.Underkategori>() {
             @Override
             public GsakKodeTema.Underkategori transform(Node node) {
-                return new GsakKodeTema.Underkategori(getParentNodeValue(node, KODE), getParentNodeValue(node, DEKODE));
+                return new GsakKodeTema.Underkategori(getParentNodeValue(node, KODE), getParentNodeValue(node, DEKODE))
+                        .withErGyldig(ofNullable(node.getAttributes().getNamedItem(ER_GYLDIG))
+                                .map(underkategoriNode -> underkategoriNode.getNodeValue().equals("true"))
+                                .orElse(true))
+                        .withDatoTom(ofNullable(node.getAttributes().getNamedItem(DATO_TOM))
+                                .map(underkategoriNode -> LocalDate.parse(underkategoriNode.getNodeValue()))
+                                .orElse(null));
             }
         };
 
@@ -82,9 +92,12 @@ public class GsakKodeverkTema implements Serializable {
                 String dekode = getNodeValue(node, DEKODE);
                 List<Node> oppgaveNoder = compileAndEvaluate(oppgaveDokument, "//oppgaveTListe/oppgaveT[@fagomrade='" + temaKode + "']/gosys[@person='true' and not(erGyldig='false')]");
                 List<Node> prioritetNoder = compileAndEvaluate(prioritetDokument, "//prioritetTListe/prioritetT[@fagomrade='" + temaKode + "']/gosys");
-                List<Node> underkategoriNoder = compileAndEvaluate(underkategoriDokument, "//underkategoriListe/underkategori[@fagomrade='" + temaKode + "' and not(@erGyldig = 'false')]/gosys[not(@erGyldig='false')]");
+                List<Node> underkategoriNoder = compileAndEvaluate(underkategoriDokument, "//underkategoriListe/underkategori[@fagomrade='" + temaKode + "' and not(@erGyldig = 'false')]/gosys");
 
-                List<GsakKodeTema.Underkategori> underkategoriList = on(underkategoriNoder).map(NODE_TIL_UNDERKATEGORI).collect(compareWith(new Transformer<GsakKodeTema.Underkategori, String>() {
+                List<GsakKodeTema.Underkategori> underkategoriList = on(underkategoriNoder)
+                        .map(NODE_TIL_UNDERKATEGORI)
+                        .filter(GsakKodeTema.Underkategori::erGyldig)
+                        .collect(compareWith(new Transformer<GsakKodeTema.Underkategori, String>() {
                     @Override
                     public String transform(GsakKodeTema.Underkategori underkategori) {
                         return underkategori.tekst;
