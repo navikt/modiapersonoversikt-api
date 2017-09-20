@@ -61,6 +61,7 @@ public class ReactComponentPanel extends MarkupContainer {
 
             @Override
             public void renderHead(Component component, IHeaderResponse response) {
+                System.out.println("getCallbackUrl: "+ getCallbackUrl());
                 Map<String, Object> augmentedprops = augmentedProps(props, getCallbackUrl());
                 response.render(forScript(initializeScript(componentName, augmentedprops)));
                 super.renderHead(component, response);
@@ -119,6 +120,8 @@ public class ReactComponentPanel extends MarkupContainer {
 
     String createScript(String componentName, Map<String, Object> props) {
         String json = serialize(props);
+        System.out.println("-------------------------------------------------------------------------------------------------");
+        System.out.println("json: "+ json);
         return format("%s.%s = %s.createElement(%s.%s, %s);", JS_REF_INITIALIZED_COMPONENTS, this.getMarkupId(), JS_REF_REACT, JS_REF_COMPONENTS, componentName, json);
     }
 

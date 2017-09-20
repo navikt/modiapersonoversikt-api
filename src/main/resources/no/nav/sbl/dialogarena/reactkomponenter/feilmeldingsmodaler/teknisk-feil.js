@@ -13,7 +13,7 @@ class TekniskFeil extends React.Component {
         const { isOpen, title, closeButton, tekst } = this.props;
         const modalProps = { isOpen, title, closeButton };
         return (
-            <Modal {...modalProps} width={600} height={180} onClosing={() => (false)} ref="modal">
+            <Modal {...modalProps} width={600} height={180} onClosing={() => (true)} ref="modal">
                 <section className="default-error">
                     <h1 className="robust-ikon-feil-strek" style={styling.text}>{tekst}</h1>
                 </section>
@@ -26,7 +26,7 @@ TekniskFeil.defaultProps = {
     isOpen: false,
     title: defaultHelper('Det skjedde en teknisk feil', false, 'h1.vekk'),
     description: defaultHelper('', false, 'div.vekk'),
-    closeButton: defaultHelper('', false, 'span')
+    closeButton: defaultHelper('', true, 'span')
 };
 
 TekniskFeil.propTypes = {
