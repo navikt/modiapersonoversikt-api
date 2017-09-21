@@ -19,6 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -71,6 +72,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private final List<Melding> svar;
     private final WebMarkupContainer traadContainer, svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
+    private final LeggTilbakeDelvisSvarPanel leggTilbakeDelvisSvarPanel;
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
@@ -91,6 +93,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
+        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel();
         kvittering = new KvitteringsPanel("kvittering");
 
         visTraadContainer.setOutputMarkupPlaceholderTag(true);
@@ -119,7 +122,17 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 }
         );
 
-        leggTilbakeKnapp = new AjaxLink<Void>("leggtilbake") {
+        leggTilbakeKnapp = lagLeggTilbakeKnapp();
+        AjaxLink<Void> leggTilbakeMedDelvisSvarKnap = lagLeggTilbakeMedDelvisSvarKnapp();
+
+        svarContainer.setOutputMarkupId(true);
+        svarContainer.add(new FortsettDialogForm("fortsettdialogform", grunnInfo, getModel()), leggTilbakeKnapp, leggTilbakeMedDelvisSvarKnap);
+
+        add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, leggTilbakeDelvisSvarPanel, kvittering);
+    }
+
+    private AjaxLink<Void> lagLeggTilbakeKnapp() {
+        AjaxLink<Void> leggTilbakeKnapp = new AjaxLink<Void>("leggtilbake") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (traadenErEtEnkeltSporsmalFraBruker()) {
@@ -135,6 +148,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 }
             }
         };
+
         if (traadenErEtEnkeltSporsmalFraBruker()) {
             leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("fortsettdialogpanel.avbryt.leggtilbake")));
             leggTilbakeKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakePanel.getMarkupId()));
@@ -142,12 +156,33 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("fortsettdialogpanel.avbryt.avbryt")));
         }
 
-        svarContainer.setOutputMarkupId(true);
-        svarContainer.add(new FortsettDialogForm("fortsettdialogform", grunnInfo, getModel()), leggTilbakeKnapp);
-
         leggTilbakePanel.setVisibilityAllowed(false);
 
-        add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
+        return leggTilbakeKnapp;
+    }
+
+    private AjaxLink<Void> lagLeggTilbakeMedDelvisSvarKnapp() {
+        AjaxLink<Void> leggTilbakeKnapp = new AjaxLink<Void>("leggtilbakemeddelvissvar") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                if (traadenErEtEnkeltSporsmalFraBruker()) {
+                    traadContainer.setVisibilityAllowed(false);
+                    animertVisningToggle(target, svarContainer);
+                    animertVisningToggle(target, leggTilbakeDelvisSvarPanel);
+                    leggTilbakeDelvisSvarPanel.add(AttributeModifier.replace("aria-expanded", "true"));
+                    target.add(FortsettDialogPanel.this);
+                }
+            }
+        };
+
+        if (traadenErEtEnkeltSporsmalFraBruker()) {
+            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("fortsettdialogpanel.leggtilbakedelvis")));
+            leggTilbakeKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakeDelvisSvarPanel.getMarkupId()));
+        }
+
+        leggTilbakeDelvisSvarPanel.setVisibilityAllowed(false);
+
+        return leggTilbakeKnapp;
     }
 
     static HenvendelseVM.OppgaveTilknytning erTilknyttetAnsatt(List<Melding> traad) {
