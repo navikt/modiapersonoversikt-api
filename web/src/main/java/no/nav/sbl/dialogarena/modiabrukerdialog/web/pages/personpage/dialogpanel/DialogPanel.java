@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
@@ -25,6 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.none;
@@ -62,8 +62,8 @@ public class DialogPanel extends Panel {
     private Component aktivtPanel;
     private OppgavetilordningFeilet oppgavetilordningFeiletModal;
     private GrunnInfo grunnInfo;
-    private Optional<String> oppgaveIdFraParametere = none();
-    private Optional<String> henvendelsesIdFraParametere = none();
+    private Optional<String> oppgaveIdFraParametere = Optional.empty();
+    private Optional<String> henvendelsesIdFraParametere = Optional.empty();
     private Boolean besvaresFraParametere = false;
 
     public DialogPanel(String id, String fnr, GrunnInfo grunnInfo) {
@@ -79,15 +79,18 @@ public class DialogPanel extends Panel {
     }
 
     private void settOppVerdierFraParameterePaaSession() {
-        henvendelsesIdFraParametere = optional(ER_SATT, (String) getSession().getAttribute(HENVENDELSEID));
-        oppgaveIdFraParametere = optional(ER_SATT, (String) getSession().getAttribute(OPPGAVEID));
+        String henvendelsesId = (String) getSession().getAttribute(HENVENDELSEID);
+        henvendelsesIdFraParametere = isBlank(henvendelsesId) ? Optional.empty() : Optional.of(henvendelsesId);
+
+        String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
+        oppgaveIdFraParametere = isBlank(oppgaveId) ? Optional.empty() : Optional.of(oppgaveId);
 
         String besvares = (String) getSession().getAttribute(BESVARES);
         besvaresFraParametere = !isBlank(besvares) && Boolean.valueOf(besvares);
     }
 
     private void settOppRiktigMeldingPanel() {
-        if (henvendelsesIdFraParametere.isSome() && oppgaveIdFraParametere.isSome()) {
+        if (henvendelsesIdFraParametere.isPresent() && oppgaveIdFraParametere.isPresent()) {
             if (besvaresFraParametere) {
                 List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere.get());
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
@@ -108,8 +111,8 @@ public class DialogPanel extends Panel {
     @RunOnEvents(Events.SporsmalOgSvar.SVAR_PAA_MELDING)
     public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId);
-        Optional<String> oppgaveId = none();
-        if (henvendelsesIdFraParametere.isSome() && oppgaveIdFraParametere.isSome()
+        Optional<String> oppgaveId = Optional.empty();
+        if (henvendelsesIdFraParametere.isPresent() && oppgaveIdFraParametere.isPresent()
                 && traadId.equals(henvendelsesIdFraParametere.get())
                 && !traad.isEmpty()
                 && !erEnkeltstaaendeSamtalereferat(traad)) {
@@ -121,7 +124,7 @@ public class DialogPanel extends Panel {
                     Melding sporsmal = traad.get(0);
                     String sporsmalOppgaveId = sporsmal.oppgaveId;
                     oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId, Temagruppe.valueOf(sporsmal.temagruppe));
-                    oppgaveId = optional(sporsmalOppgaveId);
+                    oppgaveId = Optional.ofNullable(sporsmalOppgaveId);
                 } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                     oppgavetilordningFeiletModal.vis(target);
                 }
@@ -146,8 +149,8 @@ public class DialogPanel extends Panel {
     }
 
     private void clearLokaleParameterVerdier() {
-        oppgaveIdFraParametere = none();
-        henvendelsesIdFraParametere = none();
+        oppgaveIdFraParametere = Optional.empty();
+        henvendelsesIdFraParametere = Optional.empty();
         besvaresFraParametere = false;
     }
 

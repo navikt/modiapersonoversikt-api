@@ -11,7 +11,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.lang.collections.PredicateUtils;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.modig.security.tilgangskontroll.policy.request.attributes.ActionId;
@@ -36,14 +35,10 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -148,7 +143,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalSendeSvar() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SVAR_SKRIFTLIG.name()));
@@ -157,7 +152,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalSendeReferat() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.REFERAT_OPPMOTE.name()));
@@ -166,7 +161,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalSendeSporsmal() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name()));
@@ -182,7 +177,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalFerdigstilleHenvendelse() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none(), BEHANDLINGS_ID);
+        henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.empty(), Optional.empty(), BEHANDLINGS_ID);
 
         verify(sendUtHenvendelsePortType).ferdigstillHenvendelse(wsFerdigstillHenvendelseRequestCaptor.capture());
         assertThat(wsFerdigstillHenvendelseRequestCaptor.getValue().getBehandlingsId(), is(BEHANDLINGS_ID));
@@ -193,7 +188,7 @@ public class HenvendelseUtsendingServiceImplTest {
         Sak sak = new Sak();
         sak.saksId = optional("sakid");
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), optional(sak));
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.of(sak));
 
         verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture());
 
@@ -205,7 +200,7 @@ public class HenvendelseUtsendingServiceImplTest {
     public void skalFerdigstilleOppgaveDersomDenneErSatt() throws Exception {
         String oppgaveId = "oppgaveId";
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(Temagruppe.ARBD.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, optional(oppgaveId), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.of(oppgaveId), Optional.empty());
         ArgumentCaptor<Temagruppe> temagruppeCaptor = ArgumentCaptor.forClass(Temagruppe.class);
 
         verify(oppgaveBehandlingService).ferdigstillOppgaveIGsak(stringArgumentCaptor.capture(), temagruppeCaptor.capture());
@@ -290,7 +285,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void kontorsperrerHenvendelsePaaAndreSosialeTjenester() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(behandleHenvendelsePortType).oppdaterKontorsperre(ENHET, singletonList(BEHANDLINGS_ID));
     }
@@ -298,7 +293,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(behandleHenvendelsePortType, never()).oppdaterKontorsperre(anyString(), anyList());
     }
@@ -306,7 +301,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void knyttetHenvendelsenTilBrukersEnhetFraTPS() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         verify(kjerneinfo, times(1)).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
@@ -324,7 +319,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
                 .withBrukersEnhet(brukersEnhet);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         verify(kjerneinfo, never()).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
@@ -350,7 +345,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
                 .withBrukersEnhet(brukersEnhet);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();

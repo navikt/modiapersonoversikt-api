@@ -7,7 +7,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -27,6 +26,7 @@ import org.apache.commons.collections15.Transformer;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -72,7 +72,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
     @Override
     public void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception {
-        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
+        if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
 
@@ -93,7 +93,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
     @Override
     public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId) throws Exception {
-        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
+        if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
 
@@ -127,10 +127,10 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         if (melding.traadId == null) {
             melding.traadId = melding.id;
         }
-        if (sak.isSome()) {
+        if (sak.isPresent()) {
             sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get());
         }
-        if (oppgaveId.isSome()) {
+        if (oppgaveId.isPresent()) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId.get(), temagruppe);
         }
         if (temagruppe == ANSOS) {

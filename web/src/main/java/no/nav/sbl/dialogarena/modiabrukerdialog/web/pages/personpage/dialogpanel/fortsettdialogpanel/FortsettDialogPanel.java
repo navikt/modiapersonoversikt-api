@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 import no.nav.metrics.Timer;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -36,8 +35,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 import static no.nav.metrics.MetricsFactory.createTimer;
@@ -45,8 +43,6 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
@@ -306,7 +302,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             Meldingstype meldingstype = meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare);
             Melding melding = new MeldingBuilder()
                     .withHenvendelseVM(henvendelseVM)
-                    .withEldsteMeldingITraad(optional(sporsmal))
+                    .withEldsteMeldingITraad(Optional.ofNullable(sporsmal))
                     .withMeldingstype(meldingstype)
                     .withFnr(grunnInfo.bruker.fnr)
                     .withNavident(getSubjectHandler().getUid())
@@ -314,9 +310,9 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     .build()
                     .withBrukersEnhet(sporsmal.brukersEnhet);
 
-            Optional<Sak> sak = none();
+            Optional<Sak> sak = Optional.empty();
             if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
-                sak = optional(henvendelseVM.valgtSak);
+                sak = Optional.ofNullable(henvendelseVM.valgtSak);
             }
 
             henvendelseUtsendingService.ferdigstillHenvendelse(melding, oppgaveId, sak, behandlingsId);

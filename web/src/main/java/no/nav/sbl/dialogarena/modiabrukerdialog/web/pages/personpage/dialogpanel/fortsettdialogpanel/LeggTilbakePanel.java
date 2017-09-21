@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 import no.nav.metrics.Timer;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -23,8 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static no.nav.metrics.MetricsFactory.createTimer;
@@ -153,7 +151,7 @@ public class LeggTilbakePanel extends Panel {
                 timer.start();
                 try {
                     oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                            oppgaveId,
+                            optional(oppgaveId.orElse(null)),
                             leggTilbakeVM.lagBeskrivelse(
                                     new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
                             optional(leggTilbakeVM.nyTemagruppe)
