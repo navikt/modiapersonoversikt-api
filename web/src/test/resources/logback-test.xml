@@ -13,6 +13,23 @@
     <logger name="org.springframework" level="WARN"/>
     <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
 
+    <!--kaster veldig mange exceptions, ligger under no.nav.sbl.dialogarena.common.cxf-->
+    <logger name="no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher" level="WARN" />
+
+    <!--fjerner sope kall-->
+    <logger name="org.apache.cxf" level="WARN" />
+    <!--fjerner sope kall med innhold-->
+    <logger name="no.nav.sbl.dialogarena.common.cxf" level="WARN" />
+
+    <!--fjern denne hvsi du feilsøker problemer med tilgang-->
+    <logger name="org.jboss.security.xacml.sunxacml.finder.AttributeFinder" level="WARN" />
+
+    <!--denne fjener warnings om mulig feil lokalisering av tekst-->
+    <logger name="org.apache.wicket.Localizer" level="ERROR" />
+
+    <!--viser alle netverkskall fra klent-->
+    <logger name="org.apache.wicket.protocol.http.RequestLogger" level="INFO" />
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
