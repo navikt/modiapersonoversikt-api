@@ -72,7 +72,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
-    private String behandlingsId;
+    private final String behandlingsId;
 
     public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
@@ -83,7 +83,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
-        opprettHenvendelse();
+        behandlingsId = opprettHenvendelse();
 
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");
         traadContainer = new WebMarkupContainer("traadcontainer");
@@ -218,12 +218,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         target.focusComponent(leggTilbakeKnapp);
     }
 
-    private void opprettHenvendelse() {
+    private String opprettHenvendelse() {
         String type = SVAR_SKRIFTLIG.toString();
         String fnr = grunnInfo.bruker.fnr;
         String behandlingskjedeId = sporsmal.traadId;
 
-        behandlingsId = henvendelseUtsendingService.opprettHenvendelse(type, fnr, behandlingskjedeId);
+        return henvendelseUtsendingService.opprettHenvendelse(type, fnr, behandlingskjedeId);
     }
 
     private class FortsettDialogForm extends Form<HenvendelseVM> {
