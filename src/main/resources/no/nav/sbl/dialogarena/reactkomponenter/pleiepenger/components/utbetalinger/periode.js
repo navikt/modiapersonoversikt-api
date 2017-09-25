@@ -23,9 +23,6 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
             <div className="periode-innhold">
                 <div className="periodeinfo">
                     <dl className="pleiepenger-detaljer">
-                        <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
-                            {formaterOptionalProsentVerdi(periode.graderingsgrad)}
-                        </DLElement>
                         <DLElement etikett={tekst.pleiepengedager} className="halvbredde">
                             {periode.antallPleiepengedager}
                         </DLElement>

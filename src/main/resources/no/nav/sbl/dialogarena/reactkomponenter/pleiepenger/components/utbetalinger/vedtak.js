@@ -29,6 +29,9 @@ const Vedtak = ({ vedtak, tekst }) => {
                 <DLElement etikett={tekst.kompensasjonsgrad} className="halvbredde">
                     {formaterOptionalProsentVerdi(vedtak.kompensasjonsgrad)}
                 </DLElement>
+                <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
+                    {formaterOptionalProsentVerdi(vedtak.pleiepengegrad)}
+                </DLElement>
             </dl>
         </li>
     );
@@ -42,6 +45,7 @@ Vedtak.propTypes = {
         }).isRequired,
         anvistUtbetaling: javaDatoType.isRequired,
         bruttoBelop: React.PropTypes.number.isRequired,
+        pleiepengegrad: React.PropTypes.number.isRequired,
         kompensasjonsgrad: React.PropTypes.number
     }),
     tekst: React.PropTypes.object.isRequired
