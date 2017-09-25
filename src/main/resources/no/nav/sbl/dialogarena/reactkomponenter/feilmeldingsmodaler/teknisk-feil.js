@@ -1,7 +1,5 @@
 import React, { PropTypes as pt } from 'react';
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
-import { autobind } from './../utils/utils-module';
-import sendToWicket from './../react-wicket-mixin/wicket-sender';
 
 const styling = {
     text: {
