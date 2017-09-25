@@ -23,7 +23,7 @@ class TekniskFeil extends React.Component {
 
     render() {
         const { isOpen, title, closeButton, tekst, fnr} = this.props;
-        const modalProps = { isOpen, title, closeButton, fnr };
+        const modalProps = { isOpen, title, closeButton };
         return (
             <Modal {...modalProps} width={600} height={180} onClosing={() => (false)} ref="modal">
                 <section className="default-error">
