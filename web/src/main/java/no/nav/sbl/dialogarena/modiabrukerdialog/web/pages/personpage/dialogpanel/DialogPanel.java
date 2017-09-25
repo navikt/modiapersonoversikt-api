@@ -30,7 +30,6 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
@@ -150,12 +149,6 @@ public class DialogPanel extends Panel {
         oppgaveIdFraParametere = none();
         henvendelsesIdFraParametere = none();
         besvaresFraParametere = false;
-    }
-
-    @RunOnEvents({MELDING_VALGT})
-    public void visFeil(AjaxRequestTarget target) {
-        aktivtPanel = aktivtPanel.replaceWith(new KvitteringsPanel("kvittering"));
-        target.add(aktivtPanel);
     }
 
     @RunOnEvents({NY_DIALOG_LENKE_VALGT})
