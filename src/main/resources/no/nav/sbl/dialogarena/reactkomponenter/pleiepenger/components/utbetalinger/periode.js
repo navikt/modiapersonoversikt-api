@@ -47,7 +47,6 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
 Periode.propTypes = {
     periode: React.PropTypes.shape({
         antallPleiepengedager: React.PropTypes.number.isRequired,
-        graderingsgrad: React.PropTypes.number,
         vedtakListe: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
     }).isRequired,
     periodeNummer: React.PropTypes.number.isRequired,
