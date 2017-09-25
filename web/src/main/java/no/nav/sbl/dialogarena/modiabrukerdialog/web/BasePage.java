@@ -31,11 +31,14 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
-
 import static java.lang.String.format;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BasePage extends WebPage {
+
+    private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
 
     public static final String SIDE_LASTET = "basepage.lastet";
 
@@ -97,6 +100,7 @@ public class BasePage extends WebPage {
         add(new ExceptionHandlingBehavior() {
                 @Override
                 public IRequestHandler handleException(Component source, Exception ex) {
+                    logger.error("Teknisk feil:", ex.getCause());
                     tekniskFeilModal.getModal().call("vis");
                     return RequestCycle.get().find(AjaxRequestTarget.class);
                 }
