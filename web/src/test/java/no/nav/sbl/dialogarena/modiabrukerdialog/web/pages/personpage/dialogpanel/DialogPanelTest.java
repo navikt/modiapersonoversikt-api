@@ -4,7 +4,6 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.Person;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
@@ -28,6 +27,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
@@ -122,7 +123,7 @@ public class DialogPanelTest extends WicketPageTest {
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
         Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId, is(Optional.<String>none()));
+        assertThat(oppgaveId.isPresent(), is(false));
     }
 
     @Test
@@ -163,7 +164,7 @@ public class DialogPanelTest extends WicketPageTest {
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
         Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId, is(Optional.<String>none()));
+        assertThat(oppgaveId.isPresent(), is(false));
     }
 
     @Test

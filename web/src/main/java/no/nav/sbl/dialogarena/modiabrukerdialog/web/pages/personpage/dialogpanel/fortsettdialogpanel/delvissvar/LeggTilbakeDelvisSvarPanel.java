@@ -10,13 +10,14 @@ import java.util.Map;
 
 public class LeggTilbakeDelvisSvarPanel extends Panel {
 
-    public static final String WICKET_ID = "reactleggtilbakedelvissvarpanel";
+    public static final String WICKET_REACT_PANEL_ID = "reactleggtilbakedelvissvarpanel";
+    public static final String WICKET_REACT_WRAPPER_ID = "leggtilbakedelvissvarpanel";
     public static final String REACT_ID = "LeggTilbakeDelvisSvarPanel";
 
     private final String behandlingsId;
 
     public LeggTilbakeDelvisSvarPanel(String behandlingsId) {
-        super("leggtilbakedelvissvarpanel");
+        super(WICKET_REACT_WRAPPER_ID);
         setOutputMarkupPlaceholderTag(true);
 
         this.behandlingsId = behandlingsId;
@@ -25,7 +26,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     }
 
     private Component lagReactPanel() {
-        ReactComponentPanel reactComponentPanel = new ReactComponentPanel(WICKET_ID, REACT_ID, lagProps());
+        ReactComponentPanel reactComponentPanel = new ReactComponentPanel(WICKET_REACT_PANEL_ID, REACT_ID, lagProps());
         reactComponentPanel
                 .setOutputMarkupId(true)
                 .setVisibilityAllowed(true);

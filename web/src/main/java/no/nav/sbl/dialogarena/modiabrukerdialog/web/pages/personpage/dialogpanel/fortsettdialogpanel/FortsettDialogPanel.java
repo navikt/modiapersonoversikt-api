@@ -172,8 +172,10 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         };
 
         if (traadenErEtEnkeltSporsmalFraBruker()) {
-            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("fortsettdialogpanel.leggtilbakedelvis")));
+            leggTilbakeKnapp.add(new Label("leggtilbakedelvistekst", new ResourceModel("fortsettdialogpanel.leggtilbakedelvis")));
             leggTilbakeKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakeDelvisSvarPanel.getMarkupId()));
+        } else {
+            leggTilbakeKnapp.setVisibilityAllowed(false);
         }
 
         leggTilbakeDelvisSvarPanel.setVisibilityAllowed(false);
