@@ -48,27 +48,40 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingService {
 
+    private final HenvendelsePortType henvendelsePortType;
+    private final SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    private final BehandleHenvendelsePortType behandleHenvendelsePortType;
+    private final OppgaveBehandlingService oppgaveBehandlingService;
+    private final SakerService sakerService;
+    private final EnforcementPoint pep;
+    private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private final PropertyResolver propertyResolver;
+    private final PersonKjerneinfoServiceBi kjerneinfo;
+    private final LDAPService ldapService;
+
     @Inject
-    private HenvendelsePortType henvendelsePortType;
-    @Inject
-    private SendUtHenvendelsePortType sendUtHenvendelsePortType;
-    @Inject
-    private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
-    @Inject
-    private SakerService sakerService;
-    @Inject
-    @Named("pep")
-    private EnforcementPoint pep;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private PropertyResolver propertyResolver;
-    @Inject
-    private PersonKjerneinfoServiceBi kjerneinfo;
-    @Inject
-    private LDAPService ldapService;
+    public HenvendelseUtsendingServiceImpl(HenvendelsePortType henvendelsePortType,
+                                           SendUtHenvendelsePortType sendUtHenvendelsePortType,
+                                           BehandleHenvendelsePortType behandleHenvendelsePortType,
+                                           OppgaveBehandlingService oppgaveBehandlingService,
+                                           SakerService sakerService,
+                                           @Named("pep") EnforcementPoint pep,
+                                           SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
+                                           PropertyResolver propertyResolver,
+                                           PersonKjerneinfoServiceBi kjerneinfo,
+                                           LDAPService ldapService) {
+
+        this.henvendelsePortType = henvendelsePortType;
+        this.sendUtHenvendelsePortType = sendUtHenvendelsePortType;
+        this.behandleHenvendelsePortType = behandleHenvendelsePortType;
+        this.oppgaveBehandlingService = oppgaveBehandlingService;
+        this.sakerService = sakerService;
+        this.pep = pep;
+        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
+        this.propertyResolver = propertyResolver;
+        this.kjerneinfo = kjerneinfo;
+        this.ldapService = ldapService;
+    }
 
     @Override
     public void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception {
