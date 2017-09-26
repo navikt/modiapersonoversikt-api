@@ -15,7 +15,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.velgdialogpanel.VelgDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
-import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -27,8 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
@@ -41,12 +38,6 @@ public class DialogPanel extends Panel {
     public static final String NY_DIALOG_LENKE_VALGT = "dialogpanel.ny.dialog.lenke.valgt";
     public static final String NY_DIALOG_AVBRUTT = "dialogpanel.ny.dialog.avbrutt";
     private static final String AKTIVT_PANEL_ID = "aktivtPanel";
-    private static final Predicate<String> ER_SATT = new Predicate<String>() {
-        @Override
-        public boolean evaluate(String s) {
-            return !isBlank(s);
-        }
-    };
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -59,17 +50,21 @@ public class DialogPanel extends Panel {
     @Inject
     private LDAPService ldapService;
 
+    private final OppgavetilordningFeilet oppgavetilordningFeiletModal;
+    private final GrunnInfo grunnInfo;
+    private String oppgaveIdFraParametere;
+    private String henvendelsesIdFraParametere;
+    private Boolean besvaresFraParametere;
     private Component aktivtPanel;
-    private OppgavetilordningFeilet oppgavetilordningFeiletModal;
-    private GrunnInfo grunnInfo;
-    private Optional<String> oppgaveIdFraParametere = Optional.empty();
-    private Optional<String> henvendelsesIdFraParametere = Optional.empty();
-    private Boolean besvaresFraParametere = false;
 
     public DialogPanel(String id, String fnr, GrunnInfo grunnInfo) {
         super(id);
         this.grunnInfo = grunnInfo;
-        settOppVerdierFraParameterePaaSession();
+
+        henvendelsesIdFraParametere = getHenvendelsesIdFraParametere();
+        oppgaveIdFraParametere = getOppgaveIdFraParametere();
+        besvaresFraParametere = getBesvaresFraParametere();
+
         aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
 
@@ -78,25 +73,27 @@ public class DialogPanel extends Panel {
         settOppRiktigMeldingPanel();
     }
 
-    private void settOppVerdierFraParameterePaaSession() {
-        String henvendelsesId = (String) getSession().getAttribute(HENVENDELSEID);
-        henvendelsesIdFraParametere = isBlank(henvendelsesId) ? Optional.empty() : Optional.of(henvendelsesId);
+    private String getHenvendelsesIdFraParametere() {
+        return (String) getSession().getAttribute(HENVENDELSEID);
+    }
 
-        String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
-        oppgaveIdFraParametere = isBlank(oppgaveId) ? Optional.empty() : Optional.of(oppgaveId);
+    private String getOppgaveIdFraParametere() {
+        return (String) getSession().getAttribute(OPPGAVEID);
+    }
 
+    private Boolean getBesvaresFraParametere() {
         String besvares = (String) getSession().getAttribute(BESVARES);
-        besvaresFraParametere = !isBlank(besvares) && Boolean.valueOf(besvares);
+        return !isBlank(besvares) && Boolean.valueOf(besvares);
     }
 
     private void settOppRiktigMeldingPanel() {
-        if (henvendelsesIdFraParametere.isPresent() && oppgaveIdFraParametere.isPresent()) {
+        if (!isBlank(henvendelsesIdFraParametere) && !isBlank(oppgaveIdFraParametere)) {
             if (besvaresFraParametere) {
-                List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere.get());
+                List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere);
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
                     try {
-                        oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere.get(), Temagruppe.valueOf(traad.get(0).temagruppe));
-                        erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveIdFraParametere);
+                        oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere, Temagruppe.valueOf(traad.get(0).temagruppe));
+                        erstattDialogPanelMedFortsettDialogPanel(traad, Optional.of(oppgaveIdFraParametere));
                     } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                         throw new RuntimeException(fikkIkkeTilordnet);
                     }
@@ -112,11 +109,11 @@ public class DialogPanel extends Panel {
     public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId);
         Optional<String> oppgaveId = Optional.empty();
-        if (henvendelsesIdFraParametere.isPresent() && oppgaveIdFraParametere.isPresent()
-                && traadId.equals(henvendelsesIdFraParametere.get())
+        if (!isBlank(henvendelsesIdFraParametere) && !isBlank(oppgaveIdFraParametere)
+                && traadId.equals(henvendelsesIdFraParametere)
                 && !traad.isEmpty()
                 && !erEnkeltstaaendeSamtalereferat(traad)) {
-            oppgaveId = oppgaveIdFraParametere;
+            oppgaveId = Optional.of(oppgaveIdFraParametere);
             clearLokaleParameterVerdier();
         } else {
             if (erEnkeltstaaendeSporsmalFraBruker(traad)) {
@@ -149,8 +146,8 @@ public class DialogPanel extends Panel {
     }
 
     private void clearLokaleParameterVerdier() {
-        oppgaveIdFraParametere = Optional.empty();
-        henvendelsesIdFraParametere = Optional.empty();
+        oppgaveIdFraParametere = null;
+        henvendelsesIdFraParametere = null;
         besvaresFraParametere = false;
     }
 
