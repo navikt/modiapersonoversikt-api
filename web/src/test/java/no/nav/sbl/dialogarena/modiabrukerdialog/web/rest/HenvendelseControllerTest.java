@@ -33,17 +33,17 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-class HenveldelseControllerTest {
+class HenvendelseControllerTest {
 
     public static final String BRUKERS_FNR = "10108000398";
     public static final String TRAAD_ID = "trådID";
     public static final String HENVENDELSES_ID = "henvendelsesID";
-    private HenveldelseController henveldelseController;
+    private HenvendelseController henvendelseController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
 
     @BeforeEach
     void before() {
-        henveldelseController = new HenveldelseController(new HenvendelseServiceImpl(setupHenvendelseUtsendingService()));
+        henvendelseController = new HenvendelseController(new HenvendelseServiceImpl(setupHenvendelseUtsendingService()));
         setupSubjectHandler();
     }
 
@@ -117,7 +117,7 @@ class HenveldelseControllerTest {
     void ferdigstillerHenvendelse() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        henveldelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest());
+        henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         assertEquals(argumentCaptor.getValue().getBehandlingsId(), HENVENDELSES_ID);
@@ -126,7 +126,7 @@ class HenveldelseControllerTest {
     @Test
     @DisplayName("Ferdigstill henvendelse returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        Response response = henveldelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest());
+        Response response = henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest());
 
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
     }

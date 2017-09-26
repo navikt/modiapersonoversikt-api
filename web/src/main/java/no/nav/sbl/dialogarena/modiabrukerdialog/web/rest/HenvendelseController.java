@@ -19,12 +19,12 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/personer/{fnr}/traader/{traadId}/henvendelser/{id}")
 @Produces(APPLICATION_JSON)
-public class HenveldelseController {
+public class HenvendelseController {
 
     private final HenvendelseService henvendelseServiceImpl;
 
     @Inject
-    public HenveldelseController(HenvendelseService henvendelseServiceImpl) {
+    public HenvendelseController(HenvendelseService henvendelseServiceImpl) {
         this.henvendelseServiceImpl = henvendelseServiceImpl;
     }
 
