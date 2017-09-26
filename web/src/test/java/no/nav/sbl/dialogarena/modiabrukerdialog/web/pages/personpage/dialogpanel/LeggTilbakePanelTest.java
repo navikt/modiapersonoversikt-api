@@ -58,7 +58,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         sporsmal.gjeldendeTemagruppe = Temagruppe.ARBD;
         sporsmal.tilknyttetEnhet = enhet;
         sporsmal.brukersEnhet = enhet;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, BEHANDLINGS_ID));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, java.util.Optional.empty(), sporsmal, BEHANDLINGS_ID));
     }
 
     @Test
@@ -192,7 +192,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ANSOS;
-        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, Optional.<String>none(), sporsmal, BEHANDLINGS_ID));
+        wicket.goToPageWith(new LeggTilbakePanel("id", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, java.util.Optional.empty(), sporsmal, BEHANDLINGS_ID));
 
         wicket.should().containComponent(both(withId("temagruppeWrapper")).and(thatIsInvisible()));
     }
