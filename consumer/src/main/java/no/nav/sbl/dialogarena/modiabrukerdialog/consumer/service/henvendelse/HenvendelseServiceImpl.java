@@ -17,10 +17,10 @@ public class HenvendelseServiceImpl implements HenvendelseService {
         this.henvendelseUtsendingService = henvendelseUtsendingService;
     }
 
-    public void ferdigstill(String fnr, String traadID, String henvendelseId, String innhold) {
-        Melding sporsmal = hentBrukersSporsmal(fnr, traadID);
+    public void ferdigstill(FerdigstillHenvendelseRequest request) {
+        Melding sporsmal = hentBrukersSporsmal(request.fodselsnummer, request.traadId);
         try {
-            henvendelseUtsendingService.ferdigstillHenvendelse(sporsmal, Optional.empty(), Optional.empty(), henvendelseId);
+            henvendelseUtsendingService.ferdigstillHenvendelse(sporsmal, Optional.empty(), Optional.empty(), request.henvendelseId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

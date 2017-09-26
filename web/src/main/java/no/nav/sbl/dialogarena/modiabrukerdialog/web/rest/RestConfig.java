@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.HenvendelseController;
 import no.nav.sbl.dialogarena.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.sak.rest.SaksoversiktController;
