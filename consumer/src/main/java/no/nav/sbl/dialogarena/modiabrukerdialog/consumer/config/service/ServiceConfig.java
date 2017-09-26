@@ -65,8 +65,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public AnsattService ansattService(GOSYSNAVansatt gosysnaVansatt) {
-        return new AnsattServiceImpl(gosysnaVansatt);
+    public AnsattService ansattService(GOSYSNAVansatt gosysNavAnsatt) {
+        return new AnsattServiceImpl(gosysNavAnsatt);
     }
 
     @Bean
