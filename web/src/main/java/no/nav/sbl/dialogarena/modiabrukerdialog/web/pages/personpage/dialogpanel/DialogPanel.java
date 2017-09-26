@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
@@ -8,8 +7,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
@@ -43,12 +40,6 @@ public class DialogPanel extends Panel {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
-    @Inject
-    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private LDAPService ldapService;
 
     private final OppgavetilordningFeilet oppgavetilordningFeiletModal;
     private final GrunnInfo grunnInfo;
@@ -57,7 +48,7 @@ public class DialogPanel extends Panel {
     private Boolean besvaresFraParametere;
     private Component aktivtPanel;
 
-    public DialogPanel(String id, String fnr, GrunnInfo grunnInfo) {
+    public DialogPanel(String id, GrunnInfo grunnInfo) {
         super(id);
         this.grunnInfo = grunnInfo;
 
