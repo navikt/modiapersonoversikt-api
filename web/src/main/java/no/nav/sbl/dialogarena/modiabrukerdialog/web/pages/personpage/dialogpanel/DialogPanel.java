@@ -20,7 +20,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
@@ -84,7 +83,7 @@ public class DialogPanel extends Panel {
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
                     try {
                         oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere, Temagruppe.valueOf(traad.get(0).temagruppe));
-                        erstattDialogPanelMedFortsettDialogPanel(traad, Optional.of(oppgaveIdFraParametere));
+                        erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveIdFraParametere);
                     } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                         throw new RuntimeException(fikkIkkeTilordnet);
                     }
@@ -99,12 +98,12 @@ public class DialogPanel extends Panel {
     @RunOnEvents(Events.SporsmalOgSvar.SVAR_PAA_MELDING)
     public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId);
-        Optional<String> oppgaveId = Optional.empty();
+        String oppgaveId = null;
         if (!isBlank(henvendelsesIdFraParametere) && !isBlank(oppgaveIdFraParametere)
                 && traadId.equals(henvendelsesIdFraParametere)
                 && !traad.isEmpty()
                 && !erEnkeltstaaendeSamtalereferat(traad)) {
-            oppgaveId = Optional.of(oppgaveIdFraParametere);
+            oppgaveId = oppgaveIdFraParametere;
             clearLokaleParameterVerdier();
         } else {
             if (erEnkeltstaaendeSporsmalFraBruker(traad)) {
@@ -112,7 +111,7 @@ public class DialogPanel extends Panel {
                     Melding sporsmal = traad.get(0);
                     String sporsmalOppgaveId = sporsmal.oppgaveId;
                     oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId, Temagruppe.valueOf(sporsmal.temagruppe));
-                    oppgaveId = Optional.ofNullable(sporsmalOppgaveId);
+                    oppgaveId = sporsmalOppgaveId;
                 } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                     oppgavetilordningFeiletModal.vis(target);
                 }
@@ -132,7 +131,7 @@ public class DialogPanel extends Panel {
         return traad.size() == 1 && traad.get(0).meldingstype == SPORSMAL_SKRIFTLIG;
     }
 
-    private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, Optional<String> oppgaveId) {
+    private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, String oppgaveId) {
         aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId));
     }
 

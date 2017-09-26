@@ -63,7 +63,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private final GrunnInfo grunnInfo;
-    private final Optional<String> oppgaveId;
+    private final String oppgaveId;
     private final Melding sporsmal;
     private final List<Melding> svar;
     private final WebMarkupContainer traadContainer, svarContainer;
@@ -74,7 +74,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private final AjaxLink<Void> leggTilbakeKnapp;
     private final String behandlingsId;
 
-    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
+    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, String oppgaveId) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
         this.oppgaveId = oppgaveId;
@@ -89,7 +89,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
-        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(behandlingsId);
+        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(sporsmal, behandlingsId);
         kvittering = new KvitteringsPanel("kvittering");
 
         visTraadContainer.setOutputMarkupPlaceholderTag(true);
@@ -317,7 +317,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 sak = Optional.ofNullable(henvendelseVM.valgtSak);
             }
 
-            henvendelseUtsendingService.ferdigstillHenvendelse(melding, oppgaveId, sak, behandlingsId);
+            henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.ofNullable(oppgaveId), sak, behandlingsId);
         }
 
         private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {

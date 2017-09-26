@@ -91,7 +91,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", ""), new Saksbehandler("", "", ""));
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
 
-        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), Optional.empty());
+        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), null);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -204,7 +204,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         reset(henvendelseUtsendingService);
 
         String oppgaveId = "oppgaveid";
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), Optional.of(oppgaveId)))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), oppgaveId))
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
                 .select("fortsettdialogformelementer:kanal", 1)
@@ -299,7 +299,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), Optional.empty()))
+        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
                 .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
     }
 
@@ -311,7 +311,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void togglerVisningAvTraad() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), Optional.empty()))
+        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
                 .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
                 .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
@@ -327,7 +327,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserIkkeLeggTilbakeDersomSporsmalIkkeErEtSporsmalFraBruker() {
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), Optional.empty()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), null))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")));
@@ -336,7 +336,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     public void senderAvbrytTilHenvendelseDersomBrukerAvbryterMelding() {
         when(henvendelseUtsendingService.opprettHenvendelse(anyString(), anyString(), anyString())).thenReturn(BEHANDLINGS_ID);
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), Optional.empty()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), null))
                 .click().link(withId("leggtilbake"));
 
         verify(henvendelseUtsendingService, times(1)).avbrytHenvendelse(BEHANDLINGS_ID);
@@ -346,7 +346,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     public void skalViseFornavnISubmitKnapp() {
         when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), Optional.empty()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), null))
                 .should().containPatterns(FORNAVN);
     }
 

@@ -23,7 +23,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
@@ -34,6 +33,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dial
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -110,8 +110,8 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId.isPresent(), is(false));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(nullValue()));
     }
 
     @Test
@@ -125,8 +125,8 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId.get(), is(spsm.oppgaveId));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(spsm.oppgaveId));
     }
 
     @Test
@@ -138,8 +138,8 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId.get(), is(OPPGAVEID_VERDI));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(OPPGAVEID_VERDI));
     }
 
     @Test
@@ -151,8 +151,8 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId.isPresent(), is(false));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(nullValue()));
     }
 
     @Test
