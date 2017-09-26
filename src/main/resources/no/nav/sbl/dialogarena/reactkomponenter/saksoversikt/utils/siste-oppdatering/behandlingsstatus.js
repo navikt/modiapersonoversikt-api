@@ -4,9 +4,9 @@ import { javaLocalDateTimeToJSDate } from './../dato-utils';
 
 const finnTekst = (antallUnderBehandling, antallFerdigBehandlet) => {
     const tallSomTekstUnderBehandling =
-        <FormattedMessage id="behandlingsstatus.telling" values={{ antall: antallUnderBehandling }}/>;
+        <FormattedMessage id="behandlingsstatus.telling" values={{ antall: antallUnderBehandling }} />;
     const tallSomTekstFerdigBehandlet =
-        <FormattedMessage id="behandlingsstatus.telling" values={{ antall: antallFerdigBehandlet }}/>;
+        <FormattedMessage id="behandlingsstatus.telling" values={{ antall: antallFerdigBehandlet }} />;
     const values = {
         antallSoknaderUnderBehandling: tallSomTekstUnderBehandling,
         antallSoknaderFerdigBehandlet: tallSomTekstFerdigBehandlet
@@ -16,10 +16,10 @@ const finnTekst = (antallUnderBehandling, antallFerdigBehandlet) => {
         return (
             <div className="behandlingsstatus-tekst">
                 <p className="temaliste-label">
-                    <FormattedMessage id={'behandlingsstatus.underbehandling'} values={values}/>
+                    <FormattedMessage id={'behandlingsstatus.underbehandling'} values={values} />
                 </p>
                 <p className="temaliste-label">
-                    <FormattedMessage id={'behandlingsstatus.ferdigbehandlet'} values={values}/>
+                    <FormattedMessage id={'behandlingsstatus.ferdigbehandlet'} values={values} />
                 </p>
             </div>);
     } else if (antallUnderBehandling > 0) {
@@ -31,7 +31,7 @@ const finnTekst = (antallUnderBehandling, antallFerdigBehandlet) => {
     return key ?
         <div className="behandlingsstatus-tekst">
             <p className="temaliste-label">
-                <FormattedMessage id={key} values={values}/>
+                <FormattedMessage id={key} values={values} />
             </p>
         </div> : null;
 };

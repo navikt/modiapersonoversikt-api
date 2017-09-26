@@ -34,7 +34,7 @@ class MeldingerSokStore extends Store {
         });
         this.state.indeksert = true;
 
-        this.onChange({target: {value: this.state.fritekst}});
+        this.onChange({ target: { value: this.state.fritekst } });
 
         this.fireUpdate(this.listeners);
     }
@@ -60,7 +60,11 @@ class MeldingerSokStore extends Store {
         switch (event.keyCode) {
             case 38:
                 event.preventDefault();
-                this.state.valgtTraad = MeldingerSokStore.hentMelding(MeldingerSokStore.forrigeMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTraad = MeldingerSokStore.hentMelding(
+                    MeldingerSokStore.forrigeMelding,
+                    this.state.traader,
+                    this.state.valgtTraad
+                );
 
                 MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
@@ -68,7 +72,11 @@ class MeldingerSokStore extends Store {
                 break;
             case 40:
                 event.preventDefault();
-                this.state.valgtTraad = MeldingerSokStore.hentMelding(MeldingerSokStore.nesteMelding, this.state.traader, this.state.valgtTraad);
+                this.state.valgtTraad = MeldingerSokStore.hentMelding(
+                    MeldingerSokStore.nesteMelding,
+                    this.state.traader,
+                    this.state.valgtTraad
+                );
 
                 MeldingerSokStore._updateScroll(tabliste, this.state.traader.indexOf(this.state.valgtTraad));
 
@@ -105,6 +113,7 @@ class MeldingerSokStore extends Store {
                 return hentElement(elementer, i);
             }
         }
+        return undefined;
     }
 
     static nesteMelding(elementer, index) {
@@ -121,7 +130,7 @@ function onFulfilled(traader) {
         traad.key = traad.traadId;
         traad.datoInMillis = traad.dato.millis;
         traad.innhold = traad.meldinger[0].fritekst;
-        traad.opprettetDato = traad.meldinger[0].opprettetDatoTekst;
+        traad.visningsDato = traad.meldinger[0].visningsDatoTekst;
 
         traad.meldinger.forEach((melding) => {
             melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;

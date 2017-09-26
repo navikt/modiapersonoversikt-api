@@ -15,7 +15,7 @@ class VelgSak extends React.Component {
     }
 
     endreKategori(kategori) {
-        this.setState({valgtKategori: kategori});
+        this.setState({ valgtKategori: kategori });
     }
 
     render() {
@@ -23,12 +23,12 @@ class VelgSak extends React.Component {
 
         const advarsler = kvpair(saker)
             .filter(([_, value]) => isUndefined(value))
-            .map(([feiletKall, _]) => <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()}/>);
+            .map(([feiletKall, _]) => (
+                <AdvarselBoks tekst={'Feil ved uthenting av saker fra ' + feiletKall.toUpperCase()} />
+            ));
 
         const mergedSaker = kvpair(saker)
-            .reduce((acc, [_, value]) => {
-                return acc.concat(value || []);
-            }, []);
+            .reduce((acc, [_, value]) => acc.concat(value || []), []);
 
         const kategorier = partition(mergedSaker, sak => sak.sakstype === 'GEN');
         const generelle = kategorier[0];
@@ -37,24 +37,25 @@ class VelgSak extends React.Component {
 
         return (
             <div>
-                <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori}/>
+                <TypeValg valgtKategori={this.state.valgtKategori} endreKategori={this.endreKategori} />
                 {advarsler}
                 <SakerListe
                     saker={sakerSomVises}
                     temagruppe={this.props.temagruppe}
                     velgSak={this.props.velgSak}
-                    temagruppeTemaMapping={this.props.temagruppeTemaMapping}/>
+                    temagruppeTemaMapping={this.props.temagruppeTemaMapping}
+                />
             </div>
         );
     }
 }
 
 VelgSak.propTypes = {
-    'temagruppe': React.PropTypes.string.isRequired,
-    'temagruppeTemaMapping': React.PropTypes.object.isRequired,
-    'valgtKategori': React.PropTypes.string.isRequired,
-    'saker': React.PropTypes.array.isRequired,
-    'velgSak': React.PropTypes.func.isRequired
+    temagruppe: React.PropTypes.string.isRequired,
+    temagruppeTemaMapping: React.PropTypes.object.isRequired,
+    valgtKategori: React.PropTypes.string.isRequired,
+    saker: React.PropTypes.array.isRequired,
+    velgSak: React.PropTypes.func.isRequired
 };
 
 export default VelgSak;

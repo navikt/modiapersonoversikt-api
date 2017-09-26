@@ -28,8 +28,14 @@ class Sakstema extends React.Component {
 
         return (
             <div className={`saksoversikt-liste-element ${erValgt} ${harTilgang}`}>
-                <input type="radio" id={id} ref="radio" readOnly checked={erValgt} name="sakstemaRadioListe"
-                  onClick={velgSak}
+                <input
+                    type="radio"
+                    id={id}
+                    ref="radio"
+                    readOnly
+                    checked={erValgt}
+                    name="sakstemaRadioListe"
+                    onClick={velgSak}
                 />
                 <label htmlFor={id}>
                     {skjultIngenTilgangTekst}

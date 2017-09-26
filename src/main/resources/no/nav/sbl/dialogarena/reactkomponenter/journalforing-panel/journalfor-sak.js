@@ -26,11 +26,14 @@ class JournalforSak extends React.Component {
 
     lagFeedbackPanel() {
         const feilmeldinger = this.state.feilmeldinger;
-        if (feilmeldinger.length === 0) return null;
+        if (feilmeldinger.length === 0) {
+            return null;
+        }
 
 
-        const feilmeldingerElement = feilmeldinger.map((feilmelding) => <li
-            className="feedbackPanelERROR">{feilmelding}</li>);
+        const feilmeldingerElement = feilmeldinger.map((feilmelding) =>
+            <li className="feedbackPanelERROR">{feilmelding}</li>
+        );
         return (<div className="feedback" role="alert" aria-live="assertive" aria-atomic="true">
             <ul className="feedbackPanel">
                 {feilmeldingerElement}
@@ -68,8 +71,13 @@ class JournalforSak extends React.Component {
                     </div>
                 </div>
 
-                <JournalforKnapp fnr={this.props.fnr} traadId={this.props.traadId} sak={sak}
-                                 traadJournalfort={this.traadJournalfort} feiletCallback={this.journalforingFeilet}/>
+                <JournalforKnapp
+                    fnr={this.props.fnr}
+                    traadId={this.props.traadId}
+                    sak={sak}
+                    traadJournalfort={this.traadJournalfort}
+                    feiletCallback={this.journalforingFeilet}
+                />
             </div>
         );
     }

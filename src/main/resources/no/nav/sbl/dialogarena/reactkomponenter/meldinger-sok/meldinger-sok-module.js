@@ -1,3 +1,4 @@
+/* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import Modal from './../modal/modal-module';
 import ListevisningKomponent from './listevisning';
@@ -24,6 +25,7 @@ const modalConfig = {
     }
 };
 
+/* eslint "react/prefer-es6-class": 1 */
 const MeldingerSok = React.createClass({
     getInitialState: function getInitialState() {
         this.store = new MeldingerSokStore($.extend({}, {
@@ -74,26 +76,34 @@ const MeldingerSok = React.createClass({
         const erTom = this.state.traader.length === 0;
         const sokVisning = (
             <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
-                <ScrollPortal id={this.state.listePanelId}
-                              className="sok-liste"
-                              role="tablist"
-                              tabIndex="-1"
-                              aria-live="assertive"
-                              aria-atomic="true"
-                              aria-controls={this.state.forhandsvisningsPanelId}>
+                <ScrollPortal
+                    id={this.state.listePanelId}
+                    className="sok-liste"
+                    role="tablist"
+                    tabIndex="-1"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                    aria-controls={this.state.forhandsvisningsPanelId}
+                >
                     {tekstlistekomponenter}
                 </ScrollPortal>
-                <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel"
-                     id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
-                    <ForhandsvisningKomponent traad={this.state.valgtTraad}/>
+                <div
+                    tabIndex="-1"
+                    className="sok-forhandsvisning"
+                    role="tabpanel"
+                    id={this.state.forhandsvisningsPanelId}
+                    aria-atomic="true"
+                    aria-live="polite"
+                >
+                    <ForhandsvisningKomponent traad={this.state.valgtTraad} />
                 </div>
             </div>
         );
         let tomInnhold;
         if (this.state.feilet) {
-            tomInnhold = <h1 className="tom">Noe feilet</h1>;
+            tomInnhold = <h1 className="tom" role="alert" aria-atomic="true">Noe feilet</h1>;
         } else if (this.state.initialisert) {
-            tomInnhold = <h1 className="tom">Ingen treff</h1>;
+            tomInnhold = <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>;
         } else {
             tomInnhold = (
                 <div className="tom">
@@ -109,10 +119,17 @@ const MeldingerSok = React.createClass({
         );
 
         return (
-            <Modal ref="modal" title={modalConfig.title} description={modalConfig.description}
-                   closeButton={modalConfig.closeButton}>
-                <form className={"sok-layout meldinger-sok"} onSubmit={this.store.submit.bind(this.store, this.skjul)}
-                      onKeyDown={this.keyDownHandler}>
+            <Modal
+                ref="modal"
+                title={modalConfig.title}
+                description={modalConfig.description}
+                closeButton={modalConfig.closeButton}
+            >
+                <form
+                    className="sok-layout meldinger-sok"
+                    onSubmit={this.store.submit.bind(this.store, this.skjul)}
+                    onKeyDown={this.keyDownHandler}
+                >
                     <div tabIndex="-1" className="sok-container">
                         <div>
                             <input
@@ -121,15 +138,19 @@ const MeldingerSok = React.createClass({
                                 value={this.state.fritekst}
                                 title="Søk"
                                 onChange={this.onChangeProxy}
-                                onKeyDown={this.store.onKeyDown.bind(this.store, document.getElementById(this.state.listePanelId))}
+                                onKeyDown={
+                                    this.store.onKeyDown.bind(
+                                        this.store,
+                                        document.getElementById(this.state.listePanelId))
+                                }
                                 aria-controls={this.state.listePanelId}
                             />
-                            <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true"/>
+                            <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true" />
                         </div>
                     </div>
                     {sokVisning}
                     {tomVisning}
-                    <input type="submit" value="submit" className="hidden"/>
+                    <input type="submit" value="submit" className="hidden" />
                 </form>
             </Modal>
         );

@@ -28,7 +28,7 @@ class ForkasteEndringer extends React.Component {
     }
 
     render() {
-        const {isOpen, title, description, closeButton} = this.props;
+        const { isOpen, title, description, closeButton } = this.props;
         const modalProps = { isOpen, title, description, closeButton };
 
         return (

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { PropTypes as pt } from 'react';
 import VedleggFeilmelding from './vedlegg-feilmelding';
 
 const VedleggFeilmeldingListe = ({ feilmeldinger }) => {
     const feilliste = feilmeldinger.map((feilmelding, index) => (
-        <VedleggFeilmelding name={feilmelding.feilmeldingEnonicKey + index}
-          key={feilmelding.tittel + index} feilmelding={feilmelding}
+        <VedleggFeilmelding
+            name={feilmelding.feilmeldingEnonicKey + index}
+            key={feilmelding.tittel + index}
+            feilmelding={feilmelding}
         />
     ));
 
@@ -13,6 +15,10 @@ const VedleggFeilmeldingListe = ({ feilmeldinger }) => {
             {feilliste}
         </div>
     );
+};
+
+VedleggFeilmeldingListe.propTypes = {
+    feilmeldinger: pt.object.isRequired
 };
 
 export default VedleggFeilmeldingListe;

@@ -29,7 +29,8 @@ class AsyncLoader extends React.Component {
     }
 
     componentDidMount() {
-        Q.all(ensureArray(this.props.promises)).then(function allResolved() { // fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
+        // fat-arrow kan ikke brukes hvis man vi ta ibruk `arguments`
+        Q.all(ensureArray(this.props.promises)).then(function allResolved() {
             let dataargs;
             const args = toArray(arguments);
             let newdataargs;
@@ -37,7 +38,7 @@ class AsyncLoader extends React.Component {
             if (ensureArray(this.props.promises).length === 1) {
                 dataargs = args[0][0];
 
-                newdataargs = Object.keys(dataargs).reduce((acc, key)=> {
+                newdataargs = Object.keys(dataargs).reduce((acc, key) => {
                     acc[key] = dataargs[key].value;
                     return acc;
                 }, {});
@@ -49,28 +50,28 @@ class AsyncLoader extends React.Component {
                 data: newdataargs,
                 status: 'ok'
             });
-        }.bind(this), function rejectHandler() {
+        }.bind(this), () => {
             this.setState({
                 status: 'rejected'
             });
-        }.bind(this));// Binding må til siden vi ikke bruker fat-arrow
+        });
     }
 
     render() {
         let children;
         if (this.state.status === 'rejected') {
-            children = <AdvarselBoks tekst="Henting av data mislyktes"/>;
+            children = <AdvarselBoks tekst="Henting av data mislyktes" />;
         } else if (this.state.status === 'pending') {
-            children = <Snurrepipp {...this.props.snurrepipp}/>;
+            children = <Snurrepipp {...this.props.snurrepipp} />;
         } else {
             const passingProps = {};
             passingProps[this.props.toProp] = this.state.data;
 
-            const reactChildren = isArray(this.props.children) ? this.props.children.filter((child) => child !== null) : this.props.children;
+            const reactChildren = isArray(this.props.children)
+                ? this.props.children.filter((child) => child !== null)
+                : this.props.children;
 
-            children = React.Children.map(reactChildren, function passPropsToChildren(elem) {
-                return React.cloneElement(elem, passingProps);
-            });
+            children = React.Children.map(reactChildren, (elem) => React.cloneElement(elem, passingProps));
         }
         return (
             <div className="async-loader">

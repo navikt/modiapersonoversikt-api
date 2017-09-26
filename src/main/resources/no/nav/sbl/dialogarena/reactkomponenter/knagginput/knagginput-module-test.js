@@ -9,12 +9,12 @@ import TestUtils from 'react-addons-test-utils';
 
 describe('KnaggInput', () => {
     const defaultProps = {
-        'fritekst': '',
-        'knagger': [],
-        'placeholder': 'Søk',
-        'onChange': function onChange() {
+        fritekst: '',
+        knagger: [],
+        placeholder: 'Søk',
+        onChange: function onChange() {
         },
-        'onKeyDown': function onKeyDown() {
+        onKeyDown: function onKeyDown() {
         },
         'aria-label': 'Søk etter skrivestøttetekster',
         'aria-controls': 'tekstListePanel',

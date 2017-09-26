@@ -1,21 +1,21 @@
 /* eslint-env mocha */
 /* eslint no-unused-expressions:0 new-cap:0*/
 import './../test-config';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import assign from 'object-assign';
 import MeldingerSokStore from './meldinger-sok-store';
 import Ajax from '../utils/ajax';
-import chai from 'chai';
 import sinonChai from 'sinon-chai';
+
 chai.use(sinonChai);
 
 describe('MeldingerSokStore', () => {
-    before(()=> {
+    before(() => {
         sinon.stub(MeldingerSokStore, '_updateScroll');
     });
 
-    after(()=> {
+    after(() => {
         MeldingerSokStore._updateScroll.restore();
     });
 
@@ -27,16 +27,16 @@ describe('MeldingerSokStore', () => {
     };
 
     it('setter valgt tråd hvis tråder finnes', () => {
-        const traader = [{id: 1}, {id: 2}];
-        const store = new MeldingerSokStore(assign({}, initialState, {traader: traader}));
+        const traader = [{ id: 1 }, { id: 2 }];
+        const store = new MeldingerSokStore(assign({}, initialState, { traader }));
 
         expect(store.state.valgtTraad).to.equal(traader[0]);
     });
 
-    it('indekserer ved update', () =>{
+    it('indekserer ved update', () => {
         sinon.spy(Ajax, 'get');
         const fnr = '12345678910';
-        const store = new MeldingerSokStore(assign({}, initialState, {fnr: fnr}));
+        const store = new MeldingerSokStore(assign({}, initialState, { fnr }));
 
         store.update();
 
@@ -51,17 +51,17 @@ describe('MeldingerSokStore', () => {
         Ajax.get.restore();
     });
 
-    const e1 = {key: 'key1'};
-    const e2 = {key: 'key2'};
-    const e3 = {key: 'key3'};
+    const e1 = { key: 'key1' };
+    const e2 = { key: 'key2' };
+    const e3 = { key: 'key3' };
     const elementer = [e1, e2, e3];
 
     const event = $.Event('keypress');
 
-    it('pil opp ger førre melding men er ikke cyklisk', () =>{
+    it('pil opp ger førre melding men er ikke cyklisk', () => {
         event.which = 38;
         event.keyCode = 38;
-        const store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
+        const store = new MeldingerSokStore(assign({}, initialState, { traader: elementer }));
 
         store.onKeyDown([], event);
 
@@ -72,10 +72,10 @@ describe('MeldingerSokStore', () => {
         expect(store.state.valgtTraad).to.equal(e2);
     });
 
-    it('pil ned ger neste melding men er ikke cyklisk', () =>{
+    it('pil ned ger neste melding men er ikke cyklisk', () => {
         event.which = 40;
         event.keyCode = 40;
-        const store = new MeldingerSokStore(assign({}, initialState, {traader: elementer}));
+        const store = new MeldingerSokStore(assign({}, initialState, { traader: elementer }));
         store.state.valgtTraad = e3;
 
         store.onKeyDown([], event);

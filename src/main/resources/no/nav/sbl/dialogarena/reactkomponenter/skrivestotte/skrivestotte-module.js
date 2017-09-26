@@ -1,3 +1,4 @@
+/* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import Modal from './../modal/modal-module';
 import Utils from './../utils/utils-module';
@@ -25,6 +26,7 @@ const modalConfig = {
     }
 };
 
+/* eslint "react/prefer-es6-class": 1 */
 const Skrivestotte = React.createClass({
     getInitialState: function getInitialState() {
         this.store = new SkrivestotteStore($.extend({}, {
@@ -41,7 +43,7 @@ const Skrivestotte = React.createClass({
     componentDidMount: function componentDidMount() {
         this.store.setContainerElement(this.refs.modal.portalElement);
         this.store.addListener(this.storeChanged);
-        this.store.onChange({fritekst: this.state.fritekst, knagger: this.state.knagger});
+        this.store.onChange({ fritekst: this.state.fritekst, knagger: this.state.knagger });
     },
     componentWillUnmount: function componentDidUnmount() {
         this.store.removeListener(this.storeChanged);
@@ -61,41 +63,77 @@ const Skrivestotte = React.createClass({
         this.setState(this.store.getState());
     },
     render: function render() {
-        const tekstlistekomponenter = this.state.tekster.map(function tekstListeVM(tekst) {
-            return <TekstListeKomponent key={tekst.key} tekst={tekst} valgtTekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>;
-        }.bind(this));
+        const tekstlistekomponenter = this.state.tekster.map((tekst) => (
+            <TekstListeKomponent
+                key={tekst.key}
+                tekst={tekst}
+                valgtTekst={this.state.valgtTekst}
+                locale={this.state.valgtLocale}
+                store={this.store}
+            />
+        ));
 
         const erTom = this.state.tekster.length === 0;
         const sokVisning = (
             <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
-                <ScrollPortal id={this.state.listePanelId}
-                              className="sok-liste"
-                              role="tablist"
-                              tabIndex="-1"
-                              aria-live="assertive"
-                              aria-atomic="true"
-                              aria-controls={this.state.forhandsvisningsPanelId}>
+                <ScrollPortal
+                    id={this.state.listePanelId}
+                    className="sok-liste"
+                    role="tablist"
+                    tabIndex="-1"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                    aria-controls={this.state.forhandsvisningsPanelId}
+                >
                     {tekstlistekomponenter}
                 </ScrollPortal>
 
-                <div tabIndex="-1" className="sok-forhandsvisning" role="tabpanel" id={this.state.forhandsvisningsPanelId} aria-atomic="true" aria-live="polite">
-                    <TekstForhandsvisning tekst={this.state.valgtTekst} locale={this.state.valgtLocale} store={this.store}/>
+                <div
+                    tabIndex="-1"
+                    className="sok-forhandsvisning"
+                    role="tabpanel"
+                    id={this.state.forhandsvisningsPanelId}
+                    aria-atomic="true"
+                    aria-live="polite"
+                >
+                    <TekstForhandsvisning
+                        tekst={this.state.valgtTekst}
+                        locale={this.state.valgtLocale}
+                        store={this.store}
+                    />
                 </div>
             </div>
         );
 
         const tomVisning = (
             <div className={'sok-visning ' + (erTom ? '' : 'hidden')}>
-                <h1 className="tom">Ingen treff</h1>
+                <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>
             </div>
         );
 
         return (
-            <Modal ref="modal" skipFocus={['.knagg > button']} title={modalConfig.title} description={modalConfig.description} closeButton={modalConfig.closeButton}
-                width={904} height={600}>
-                <form className={"sok-layout tekstforslag"} onSubmit={this.store.submit.bind(this.store, this.skjul)} onKeyDown={this.keyDownHandler} >
+            <Modal
+                ref="modal"
+                skipFocus={['.knagg > button']}
+                title={modalConfig.title}
+                description={modalConfig.description}
+                closeButton={modalConfig.closeButton}
+                width={904}
+                height={600}
+            >
+                <form
+                    className="sok-layout tekstforslag"
+                    onSubmit={this.store.submit.bind(this.store, this.skjul)}
+                    onKeyDown={this.keyDownHandler}
+                >
                     <div tabIndex="-1" className="sok-container">
-                        <KnaggInput knagger={this.state.knagger} fritekst={this.state.fritekst} store={this.store} tablisteId={this.state.listePanelId} placeholder={'Søk'}/>
+                        <KnaggInput
+                            knagger={this.state.knagger}
+                            fritekst={this.state.fritekst}
+                            store={this.store}
+                            tablisteId={this.state.listePanelId}
+                            placeholder={'Søk'}
+                        />
                     </div>
                     <fieldset className="wcag">
                         <legend>Tekst liste</legend>

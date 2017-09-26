@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.reactkomponenter.ResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
+@SuppressWarnings("WeakerAccess")
 public class ReactResources {
     public static final FrontendModule REACT_KOMPONENTER = new FrontendModule.With()
             .scripts(new JavaScriptResourceReference(ResourceReference.class, "build/reactkomponenter.js"))

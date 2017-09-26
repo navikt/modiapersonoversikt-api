@@ -69,6 +69,7 @@ class DokumentVisning extends Component {
             };
             return false;
         }
+        return undefined;
     }
 
     render() {
@@ -76,16 +77,18 @@ class DokumentVisning extends Component {
         const pdfData = `${dokument.pdfUrl}#view=FitH&scrollbar=0&toolbar=0&statusbar=0&messages=0&navpanes=0`;
         const style = { ...this.state };
         const aapneSomPDFLink = (
-            <a target="_blank" href={dokument.pdfUrl}>
+            <a target="_blank" href={dokument.pdfUrl} rel="noopener noreferrer">
                 { formatMessage({ id: 'dokumentvisning.pdf.aapne.pdf' }) }
             </a>
         );
 
         return (
             <Element name={dokument.dokumentreferanse} key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}>
-                <article aria-labelledby={"dokumenttittel" + dokument.dokumentreferanse}>
+                <article aria-labelledby={'dokumenttittel' + dokument.dokumentreferanse}>
                     <div className="dokumentheader blokk-xxxs">
-                        <h1 className="typo-element" id={"dokumenttittel" + dokument.dokumentreferanse}>{dokument.tittel}</h1>
+                        <h1 className="typo-element" id={'dokumenttittel' + dokument.dokumentreferanse}>
+                            {dokument.tittel}
+                        </h1>
                         <div className="lokal-linker">
                             {aapneSomPDFLink}
                             <a href="javscript:void(0)" onClick={this._print}>
@@ -93,11 +96,16 @@ class DokumentVisning extends Component {
                             </a>
                         </div>
                     </div>
-                    <object ref="pdf" data={pdfData} type="application/pdf" scrolling="no" style={style}
-                      key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}
+                    <object
+                        ref="pdf"
+                        data={pdfData}
+                        type="application/pdf"
+                        scrolling="no"
+                        style={style}
+                        key={`${dokument.journalpostId}--${dokument.dokumentreferanse}`}
                     >
-                        <param name="view" value="FitV"/>
-                        <GenerellFeilMeldingDokumentvisning aapneSomPDFLink={aapneSomPDFLink}/>
+                        <param name="view" value="FitV" />
+                        <GenerellFeilMeldingDokumentvisning aapneSomPDFLink={aapneSomPDFLink} />
                     </object>
                 </article>
             </Element>

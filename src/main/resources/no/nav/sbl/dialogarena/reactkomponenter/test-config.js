@@ -1,29 +1,29 @@
+const { JSDOM } = require('jsdom');
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const { window } = jsdom;
+require('jquery')(window);
+
 window.ModiaJS = {};
 window.ModiaJS.Components = {};
-((function bindPolyfill() {
-    const Ap = Array.prototype;
-    const slice = Ap.slice;
-    const Fp = Function.prototype;
+global.$ = window.$;
+global.Intl = require('intl');
 
-    Fp.bind = function binder(context) {
-        const func = this;
-        const args = slice.call(arguments, 1);
+function copyProps(src, target) {
+    const props = Object.getOwnPropertyNames(src)
+        .filter(prop => typeof target[prop] === undefined)
+        .map(prop => Object.getOwnPropertyDescriptor(src, prop));
 
-        function bound() {
-            const invokedAsContructor = func.prototype && (this instanceof func);
-            return func.apply(
-                !invokedAsContructor && context || this, args.concat(slice.call(arguments))
-            );
-        }
+    Object.defineProperties(target, props);
+}
 
-        bound.prototype = func.prototype;
+global.window = window;
+global.document = window.document;
+global.navigator = {
+    userAgent: 'node.js'
+};
 
-        return bound;
-    };
-})());
+copyProps(window, global);
 
-// jQuery
-window.$ = require('jquery');
 
 // shim for $(':focusable') since it is part of jQuery UI and we dont need that.
 // SONAR:OFF

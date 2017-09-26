@@ -1,21 +1,15 @@
-import React from 'react';
+import React, { PropTypes as PT } from 'react';
 
-class FilterHeader extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        const {style} = this.props;
-        return (
-            <div className="filter-header" style={style}>
+function FilterHeader({ style }) {
+    return (
+        <div className="filter-header" style={style}>
 
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 FilterHeader.propTypes = {
-    'style': React.PropTypes.string
+    style: PT.object
 };
 
 export default FilterHeader;

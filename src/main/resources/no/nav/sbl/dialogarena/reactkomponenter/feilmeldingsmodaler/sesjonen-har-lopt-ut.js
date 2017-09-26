@@ -40,7 +40,10 @@ class SesjonenHarLoptUt extends React.Component {
 SesjonenHarLoptUt.defaultProps = {
     isOpen: false,
     title: defaultHelper('Sesjonen har løpt ut', true, 'h1.vekk'),
-    description: defaultHelper('Du har vært inaktiv i Modia og sesjonen din har løpt ut. Du kan velge å gå til den brukeren du sist var inne på, eller søke opp en ny bruker.', true, 'div.vekk'),
+    description: defaultHelper('Du har vært inaktiv i Modia og sesjonen din har løpt ut. ' +
+        'Du kan velge å gå til den brukeren du sist var inne på, eller søke opp en ny bruker.',
+        true,
+        'div.vekk'),
     closeButton: defaultHelper('', false, 'span.vekk')
 };
 

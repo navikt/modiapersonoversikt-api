@@ -20,7 +20,7 @@ class Store {
     }
 
     fireUpdate() {
-        this.listeners.forEach((listener) =>listener());
+        this.listeners.forEach((listener) => listener());
     }
 
     setContainerElement(container) {
