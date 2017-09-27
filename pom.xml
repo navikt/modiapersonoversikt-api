@@ -93,8 +93,8 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>2.1.0-OPP-36-Sanere-kodeverk-SNAPSHOT</personsok.version>
-        <kjerneinfo.versjon>5.1.0-OPP-36-kodeverk-SNAPSHOT</kjerneinfo.versjon>
+        <personsok.version>2.1.0</personsok.version>
+        <kjerneinfo.versjon>5.1.0</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
