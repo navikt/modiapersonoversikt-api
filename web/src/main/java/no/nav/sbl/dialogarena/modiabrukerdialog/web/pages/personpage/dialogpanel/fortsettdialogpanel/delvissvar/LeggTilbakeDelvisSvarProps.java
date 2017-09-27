@@ -22,6 +22,7 @@ class LeggTilbakeDelvisSvarProps implements Serializable {
         props.put("sporsmal", sporsmal.fritekst);
         props.put("traadId", sporsmal.traadId);
         props.put("fodselsnummer", sporsmal.fnrBruker);
+        props.put("svarDelvisCallbackId", LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID);
         return props;
     }
 

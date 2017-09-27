@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,6 +28,7 @@ class LeggTilbakeDelvisSvarPropsTest {
                 () -> assertEquals(BEHANDLINGS_ID, props.get("henvendelseId")),
                 () -> assertEquals(FODSELSNUMMER, props.get("fodselsnummer")),
                 () -> assertEquals(TRAAD_ID, props.get("traadId")),
+                () -> assertEquals(SVAR_DELVIS_CALLBACK_ID, props.get("svarDelvisCallbackId")),
                 () -> assertEquals(FRITEKST, props.get("sporsmal")));
     }
 
