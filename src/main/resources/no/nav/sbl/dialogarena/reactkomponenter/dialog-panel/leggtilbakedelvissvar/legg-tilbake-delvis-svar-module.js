@@ -1,21 +1,62 @@
 import React, { Component } from 'react';
+import Ajax from '../../utils/ajax';
+
 
 class LeggTilbakeDelvisSvarPanel extends Component {
+    constructor(props) {
+        super(props);
+        this.svarDelvis = this.svarDelvis.bind(this);
+        this.handleSvarEndring = this.handleSvarEndring.bind(this);
+        console.log(props);
+        this.state = {
+            svarValue: ''
+        };
+    }
+
+    svarDelvis() {
+        console.log(this.state.svarValue);
+        const url = `/modiabrukerdialog/rest/personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/ferdigstill`;
+        const data = JSON.stringify({ svar: this.state.svarValue });
+        const svarDelvisPromise = Ajax.put(url, data);
+        svarDelvisPromise.done(() => {
+            console.log('Well done!');
+        });
+
+        svarDelvisPromise.fail(err => {
+            console.err(err);
+        });
+    }
+
+    handleSvarEndring(event) {
+        this.setState({ svarValue: event.target.value });
+    }
+
     render() {
+        const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
+            <p key={`paragraf-${index}`}>{paragraf}</p>);
+
+
+        if
+
         return (
             <div>
                 <h3>Legg tilbake med delvis svar</h3>
                 <h2>Spørsmål</h2>
                 <h3>FAMILIE</h3>
                 <p>22.03.2017 kl 10:22</p>
-                <p className="sporsmaal">
-                    Hei. Jeg har blitt kontakta av en saksbehandler som lurte på om jeg heller ville ha engangsstønad enn foreldrepenger. Dette fordi hun mente jeg ville få mer utbetalt om jeg valgte denne løsningen. Vi ønsker at far skal ta ut fedrekvoten, og eventuelt noe mer, noe som utgjør en sum høyere enn engangstønaden. Vi ønsker derfor foreldrepenger om dette er mulig.
-                </p>
+                <div className="sporsmaal">
+                    {sporsmal}
+                </div>
                 <div className="svar">
                     <div className="svar-overskrift-boks">
                         <h1 className="overskrift medium"><span>Delvis svar</span></h1>
                     </div>
-                    <textarea className="svar-tekst" placeholder="Svaret blir ikke synlig for brukeren"></textarea>
+                    <textarea
+                        value={this.state.svarValue}
+                        onChange={this.handleSvarEndring}
+                        className="svar-tekst"
+                        placeholder="Svaret blir ikke synlig for brukeren">
+                    </textarea>
                 </div>
 
                 <div className="temagruppe-velger">
@@ -26,11 +67,22 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                         <option>Hjelpemidler</option>
                     </select>
                 </div>
-                <a className="knapp-hoved-stor submit" role="button">Svar delvis og legg tilbake</a>
+                <a
+                    className="knapp-hoved-stor submit"
+                    role="button"
+                    onClick={this.svarDelvis}
+                >
+                    Svar delvis og legg tilbake
+                </a>
                 <a>Avbryt</a>
             </div>
         );
     }
 }
+
+LeggTilbakeDelvisSvarPanel.propTypes = {
+    henvendelseId: React.PropTypes.string.isRequired,
+    sporsmal: React.PropTypes.string.isRequired
+};
 
 export default LeggTilbakeDelvisSvarPanel;
