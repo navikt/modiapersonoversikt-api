@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService.OppgaveErFerdigstilt;
@@ -18,6 +17,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -31,11 +31,11 @@ public class AvsluttOppgavePanel extends Panel {
     private final TextArea<String> beskrivelseFelt;
     private final Model<Boolean> oppgaveAvsluttet = Model.of(false);
 
-    public AvsluttOppgavePanel(String id, final Optional<String> oppgaveId) {
+    public AvsluttOppgavePanel(String id, final String oppgaveId) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final Optional<WSOppgave> oppgave = oppgaveId.map((id1) -> gsakService.hentOppgave(id1));
+        final WSOppgave oppgave = gsakService.hentOppgave(oppgaveId);
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackAvsluttOppgave");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
@@ -52,7 +52,7 @@ public class AvsluttOppgavePanel extends Panel {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                         try {
-                            gsakService.ferdigstillGsakOppgave(oppgave.get(), beskrivelseFelt.getModelObject());
+                            gsakService.ferdigstillGsakOppgave(oppgave, beskrivelseFelt.getModelObject());
                             oppgaveAvsluttet.setObject(true);
                             etterSubmit(target);
                             target.add(form, feedbackPanelSuccess);

@@ -2,16 +2,15 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.function.Function;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
@@ -72,6 +71,10 @@ public class MeldingVM implements Serializable {
         };
     }
 
+    public Meldingstype getMeldingstype() {
+        return melding.meldingstype;
+    }
+
     public IModel<Boolean> erDokumentMelding() {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
@@ -81,46 +84,36 @@ public class MeldingVM implements Serializable {
         };
     }
 
-    public IModel<Boolean> erOppgaveMelding() {
-        return new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return melding.erOppgaveMelding;
-            }
-        };
-    }
-
-
     public Optional<String> getMarkertSomFeilsendtAv() {
         return optional(melding.markertSomFeilsendtAv);
     }
 
     public String getAvsenderBildeUrl() {
         String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
-        if (FRA_NAV.contains(melding.meldingstype)) {
+        if (erFraSaksbehandler()) {
             return imgUrl + NAV_LOGO_SVG;
         }
         return imgUrl + BRUKER_LOGO_SVG;
     }
 
     public String getAvsenderBildeAltKey() {
-        if (FRA_NAV.contains(melding.meldingstype)) {
+        if (erFraSaksbehandler()) {
             return NAV_AVSENDER_BILDE_ALT_KEY;
         }
         return BRUKER_AVSENDER_BILDE_ALT_KEY;
     }
 
+    public String getId() {
+        return melding.id;
+    }
+
+    public String getTraadId() {
+        return melding.traadId;
+    }
+
     public boolean erFraSaksbehandler() {
         return FRA_NAV.contains(melding.meldingstype);
     }
-
-    public static final Comparator<MeldingVM> NYESTE_FORST = (o1, o2) -> o2.melding.getVisningsDato().compareTo(o1.melding.getVisningsDato());
-
-    public static final Transformer<MeldingVM, String> ID = (meldingVM) -> meldingVM.melding.id;
-
-    public static final Transformer<MeldingVM, String> TRAAD_ID = (meldingVM) -> meldingVM.melding.traadId;
-
-    public static final Transformer<MeldingVM, Boolean> FEILSENDT = (meldingVM) -> meldingVM.erFeilsendt();
 
     @Override
     public boolean equals(Object obj) {

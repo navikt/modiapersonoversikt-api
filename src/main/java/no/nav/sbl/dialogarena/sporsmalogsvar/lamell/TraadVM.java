@@ -10,20 +10,14 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 
@@ -84,7 +78,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erFeilsendt() {
-        return !on(meldinger).filter(where(FEILSENDT, equalTo(true))).isEmpty();
+        return meldinger.stream().anyMatch(MeldingVM::erFeilsendt);
     }
 
     public boolean traadKanBesvares() {
@@ -117,6 +111,14 @@ public class TraadVM implements Serializable {
 
     private boolean erEnkeltstaaendeSpsmFraBruker() {
         return meldinger.size() == 1 && getEldsteMelding().melding.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG;
+    }
+
+    public boolean erMonolog() {
+        return meldinger.stream()
+                .map(meldingVM -> FRA_NAV.contains(meldingVM.melding.meldingstype))
+                .distinct()
+                .count()
+                < 2;
     }
 
 }

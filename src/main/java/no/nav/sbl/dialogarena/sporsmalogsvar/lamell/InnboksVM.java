@@ -1,29 +1,21 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -37,15 +29,16 @@ public class InnboksVM implements Serializable {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private Map<String, TraadVM> traader = new HashMap<>();
-    private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
-    private Optional<MeldingVM> valgtMelding = none();
+    private List<MeldingVM> nyesteMeldingerITraader = new ArrayList<>();
+    private MeldingVM valgtMelding = null;
     private String fnr, feilmeldingKey;
-    private Optional<String> sessionOppgaveId = none(), sessionHenvendelseId = none();
+    private String sessionOppgaveId = null, sessionHenvendelseId = null;
     public String traadBesvares;
     public boolean focusValgtTraadOnOpen = false;
     EnforcementPoint pep;
 
-    public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService, EnforcementPoint pep, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
+    public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService, EnforcementPoint pep,
+                     SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
         this.fnr = fnr;
         this.henvendelseBehandlingService = henvendelseBehandlingService;
         this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
@@ -58,7 +51,7 @@ public class InnboksVM implements Serializable {
 
     public final void oppdaterMeldinger() {
         traader.clear();
-        nyesteMeldingerITraad.clear();
+        nyesteMeldingerITraader.clear();
         feilmeldingKey = "";
         try {
             List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
@@ -70,9 +63,13 @@ public class InnboksVM implements Serializable {
 
             Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
             for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
-                traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue()), pep, saksbehandlerInnstillingerService));
+                traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.apply(meldingTraad.getValue()), pep,
+                        saksbehandlerInnstillingerService));
             }
-            nyesteMeldingerITraad = on(traader.values()).map(traadVM -> traadVM.getNyesteMelding()).collect(MeldingVM.NYESTE_FORST);
+            nyesteMeldingerITraader = traader.values().stream()
+                    .map(TraadVM::getNyesteMelding)
+                    .sorted(comparing(MeldingVM::getVisningsDato).reversed())
+                    .collect(toList());
 
         } catch (Exception e) {
             log.warn("Feilet ved henting av henvendelser for fnr {}", fnr, e);
@@ -85,40 +82,43 @@ public class InnboksVM implements Serializable {
     }
 
     public void setValgtMelding(String id) {
-        setValgtMelding(on(nyesteMeldingerITraad).filter(where(ID, equalTo(id))).head().get());
+        setValgtMelding(nyesteMeldingerITraader.stream().filter(melding -> melding.getId().equals(id)).findFirst().get());
     }
 
     public Optional<MeldingVM> getNyesteMeldingITraad(String traadId) {
-        Optional<MeldingVM> meldingVM = on(nyesteMeldingerITraad).filter(where(TRAAD_ID, equalTo(traadId))).head();
-        if (!meldingVM.isSome() && isBlank(feilmeldingKey)) {
+        Optional<MeldingVM> meldingVM = nyesteMeldingerITraader.stream()
+                .filter(m -> m.getTraadId().equals(traadId))
+                .findFirst();
+        if (!meldingVM.isPresent() && isBlank(feilmeldingKey)) {
             feilmeldingKey = "innboks.feilmelding.ingentilgang";
         }
         return meldingVM;
     }
 
     public void setValgtMelding(MeldingVM meldingVM) {
-        valgtMelding = optional(meldingVM);
+        valgtMelding = meldingVM;
     }
 
     public final IModel<Boolean> erValgtMelding(final MeldingVM meldingVM) {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return valgtMelding.isSome() && valgtMelding.get().equals(meldingVM);
+                return valgtMelding != null && valgtMelding.equals(meldingVM);
             }
         };
     }
 
     public TraadVM getValgtTraad() {
-        return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new TraadVM(new ArrayList<>(), pep, saksbehandlerInnstillingerService);
+        return valgtMelding != null ? traader.get(valgtMelding.melding.traadId)
+                : new TraadVM(new ArrayList<>(), pep, saksbehandlerInnstillingerService);
     }
 
     public MeldingVM getNyesteMeldingINyesteTraad() {
-        return nyesteMeldingerITraad.get(0);
+        return nyesteMeldingerITraader.get(0);
     }
 
-    public List<MeldingVM> getNyesteMeldingerITraad() {
-        return nyesteMeldingerITraad;
+    public List<MeldingVM> getNyesteMeldingerITraader() {
+        return nyesteMeldingerITraader;
     }
 
     public Map<String, TraadVM> getTraader() {
@@ -138,34 +138,32 @@ public class InnboksVM implements Serializable {
         };
     }
 
-    private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = (meldinger) -> {
-        List<Melding> meldingerITraad = on(meldinger).collect(Melding.NYESTE_FORST);
-        List<MeldingVM> meldingVMTraad = new ArrayList<>();
-        for (Melding melding : meldingerITraad) {
-            meldingVMTraad.add(new MeldingVM(melding, meldingerITraad.size()));
-        }
-        return meldingVMTraad;
+    private static final Function<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = (meldinger) -> {
+        List<Melding> meldingerITraad = meldinger.stream().sorted(Melding.NYESTE_FORST).collect(toList());
+        return meldingerITraad.stream()
+                .map(melding -> new MeldingVM(melding, meldingerITraad.size()))
+                .collect(toList());
     };
 
     public Optional<String> getSessionOppgaveId() {
-        return sessionOppgaveId;
+        return ofNullable(sessionOppgaveId);
     }
 
     public void setSessionOppgaveId(String sessionOppgaveId) {
-        this.sessionOppgaveId = optional(sessionOppgaveId);
+        this.sessionOppgaveId = sessionOppgaveId;
     }
 
     public Optional<String> getSessionHenvendelseId() {
-        return sessionHenvendelseId;
+        return ofNullable(sessionHenvendelseId);
     }
 
     public void setSessionHenvendelseId(String sessionHenvendelseId) {
-        this.sessionHenvendelseId = optional(sessionHenvendelseId);
+        this.sessionHenvendelseId = sessionHenvendelseId;
     }
 
     public void settForsteSomValgtHvisIkkeSatt() {
-        if (!valgtMelding.isSome()) {
-            valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
+        if (valgtMelding == null) {
+            valgtMelding = nyesteMeldingerITraader.isEmpty() ? null : nyesteMeldingerITraader.get(0);
         }
     }
 }
