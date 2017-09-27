@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -19,6 +20,7 @@ class HenvendelseServiceImplTest {
 
     public static final String BRUKERS_FNR = "10108000398";
     public static final String TRAAD_ID = "TRAAD_ID";
+    public static final String SVAR = "SVAR";
 
     private HenvendelseUtsendingService henvendelseMock;
     private HenvendelseService henvendelseService;
@@ -42,7 +44,17 @@ class HenvendelseServiceImplTest {
         ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
         verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString());
 
-        assertEquals(Meldingstype.SVAR_SKRIFTLIG.name(), argumentCaptor.getValue().kanal);
+        assertEquals(Kanal.TEKST.name(), argumentCaptor.getValue().kanal);
+    }
+
+    @Test
+    @DisplayName("Legger til svar på melding før henvendelsen ferdigstilles")
+    void setterSvarPaMelding() throws Exception {
+        henvendelseService.ferdigstill(lagRequest());
+        ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
+        verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString());
+
+        assertEquals(SVAR, argumentCaptor.getValue().fritekst);
     }
 
     @Test
@@ -60,6 +72,7 @@ class HenvendelseServiceImplTest {
         return new FerdigstillHenvendelseRequestBuilder()
                 .withFodselsnummer(BRUKERS_FNR)
                 .withTraadId(TRAAD_ID)
+                .withSvar(SVAR)
                 .build();
     }
 

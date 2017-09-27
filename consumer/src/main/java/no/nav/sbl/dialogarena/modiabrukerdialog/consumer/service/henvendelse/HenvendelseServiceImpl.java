@@ -1,13 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 public class HenvendelseServiceImpl implements HenvendelseService {
 
@@ -18,7 +17,7 @@ public class HenvendelseServiceImpl implements HenvendelseService {
     }
 
     public void ferdigstill(FerdigstillHenvendelseRequest request) {
-        Melding sporsmal = hentBrukersSporsmal(request.fodselsnummer, request.traadId);
+        Melding sporsmal = hentBrukersSporsmal(request);
         try {
             henvendelseUtsendingService.ferdigstillHenvendelse(sporsmal, Optional.empty(), Optional.empty(), request.henvendelseId);
         } catch (Exception e) {
@@ -26,11 +25,13 @@ public class HenvendelseServiceImpl implements HenvendelseService {
         }
     }
 
-    private Melding hentBrukersSporsmal(String fnr, String traadID) {
-        return henvendelseUtsendingService.hentTraad(fnr, traadID).stream()
+    private Melding hentBrukersSporsmal(FerdigstillHenvendelseRequest request) {
+        return henvendelseUtsendingService.hentTraad(request.fodselsnummer, request.traadId).stream()
                 .findFirst()
-                .map(melding -> melding.withKanal(Meldingstype.SVAR_SKRIFTLIG.name()))
-                .map(melding -> melding.withNavIdent(getSubjectHandler().getUid()))
+                .map(melding -> melding.withKanal(Kanal.TEKST.name()))
+                .map(melding -> melding.withNavIdent(request.navIdent))
+                .map(melding -> melding.withFritekst(request.svar))
+                .map(melding -> melding.withType(Meldingstype.SVAR_SKRIFTLIG))
                 .orElseThrow(NoSuchElementException::new);
     }
 

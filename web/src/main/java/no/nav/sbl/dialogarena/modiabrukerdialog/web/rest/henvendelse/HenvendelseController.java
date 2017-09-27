@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 @Path("/personer/{fnr}/traader/{traadId}/henvendelser/{id}")
 @Produces(APPLICATION_JSON)
@@ -46,6 +47,7 @@ public class HenvendelseController {
                 .withTraadId(traadId)
                 .withHenvendelseId(henvendelseId)
                 .withSvar(ferdigstillHenvendelseRestRequest.svar)
+                .withNavIdent(getSubjectHandler().getUid())
                 .build();
 
         henvendelseService.ferdigstill(ferdigstillHenvendelseRequest);
