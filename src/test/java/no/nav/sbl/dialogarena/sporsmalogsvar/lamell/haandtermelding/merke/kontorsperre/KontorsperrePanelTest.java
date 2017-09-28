@@ -36,6 +36,12 @@ public class KontorsperrePanelTest extends WicketPageTest {
         assertThat(oppgavePanel.kanMerkeSomKontorsperret(), is(true));
     }
 
+    @Test
+    public void skalIkkeKunneMerkeSomKontorsperretNaarEnhetMangler() {
+        KontorsperrePanel oppgavePanel = new KontorsperrePanel("id", mock(InnboksVM.class), null);
+        assertThat(oppgavePanel.kanMerkeSomKontorsperret(), is(false));
+    }
+
     private KontorsperrePanel lagOpprettOppgavePanel() {
         return new KontorsperrePanel("id", mock(InnboksVM.class), "1234");
     }
