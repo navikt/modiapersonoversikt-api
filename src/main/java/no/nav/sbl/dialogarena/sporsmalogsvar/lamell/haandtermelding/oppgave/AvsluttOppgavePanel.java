@@ -17,7 +17,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;

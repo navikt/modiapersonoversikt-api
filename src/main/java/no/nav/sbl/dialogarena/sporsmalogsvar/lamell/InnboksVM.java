@@ -109,8 +109,9 @@ public class InnboksVM implements Serializable {
     }
 
     public TraadVM getValgtTraad() {
-        return valgtMelding != null ? traader.get(valgtMelding.melding.traadId)
-                : new TraadVM(new ArrayList<>(), pep, saksbehandlerInnstillingerService);
+        return ofNullable(valgtMelding)
+                .map(meldingVM -> traader.get(meldingVM.melding.traadId))
+                .orElse(new TraadVM(new ArrayList<>(), pep, saksbehandlerInnstillingerService));
     }
 
     public MeldingVM getNyesteMeldingINyesteTraad() {
