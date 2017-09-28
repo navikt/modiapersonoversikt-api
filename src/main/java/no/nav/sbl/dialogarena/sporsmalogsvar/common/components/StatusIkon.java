@@ -39,7 +39,7 @@ public class StatusIkon extends Panel {
     }
 
     private String lagStatustekst(MeldingVM meldingVM, boolean underBehandling, int traadlengde) {
-        String besvartStatusKey = format("innboks.melding.%s", (meldingVM.erBesvart().getObject()) ? "besvart" : "ubesvart");
+        String besvartStatusKey = format("innboks.melding.%s", meldingVM.erBesvart().getObject() ? "besvart" : "ubesvart");
         String besvartStatus = new StringResourceModel(besvartStatusKey, this, null).getString();
         String antallMeldinger = format("%d %s", traadlengde, traadlengde == 1 ? "melding" : "meldinger");
         return format("%s%s, %s, ", underBehandling ? "Under behandling, " : "", besvartStatus, antallMeldinger);

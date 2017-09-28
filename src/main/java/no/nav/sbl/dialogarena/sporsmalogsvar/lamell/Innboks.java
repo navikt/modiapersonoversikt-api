@@ -146,7 +146,7 @@ public class Innboks extends Lerret {
     public void onClosing(AjaxRequestTarget target, boolean isMinimizing) {
         innboksVM.setSessionHenvendelseId(null);
         if (!isMinimizing) {
-            innboksVM.setValgtMelding(((MeldingVM) null));
+            innboksVM.setValgtMelding((MeldingVM) null);
             innboksVM.focusValgtTraadOnOpen = false;
         }
     }
