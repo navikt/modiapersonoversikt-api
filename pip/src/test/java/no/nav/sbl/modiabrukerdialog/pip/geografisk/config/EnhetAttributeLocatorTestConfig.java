@@ -21,13 +21,4 @@ public class EnhetAttributeLocatorTestConfig {
         return mock(GOSYSNAVOrgEnhet.class);
     }
 
-    @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return mock(SaksbehandlerInnstillingerService.class);
-    }
-
-    @Bean
-    public OrganisasjonEnhetService orgEnhetService() {
-        return mock(OrganisasjonEnhetService.class);
-    }
 }

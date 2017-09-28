@@ -3,8 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
-import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
@@ -15,10 +13,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
-import java.util.function.Function;
-
 import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
@@ -65,13 +60,8 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
 
             Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(kjerneinfoRequest).getPerson().getPersonfakta();
 
-            String brukersDiskresjonskode = defaultString(personfakta.getDiskresjonskode());
-
-            String brukersEnhet = optional(personfakta)
-                    .map(Personfakta::getHarAnsvarligEnhet)
-                    .map(AnsvarligEnhet::getOrganisasjonsenhet)
-                    .map(Organisasjonsenhet::getOrganisasjonselementId)
-                    .getOrElse("");
+            String brukersDiskresjonskode = personfakta.getDiskresjonskode() == null ? "" : personfakta.getDiskresjonskode().getValue();
+            String brukersEnhet = defaultString(personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
 
             return pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)))
                     && pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));

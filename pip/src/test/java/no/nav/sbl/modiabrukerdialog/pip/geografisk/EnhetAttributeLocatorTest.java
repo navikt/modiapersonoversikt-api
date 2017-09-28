@@ -1,7 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pip.geografisk;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProviderConfig;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.EnhetAttributeLocatorTestConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.GeografiskPipConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.support.EnhetAttributeLocatorDelegate;
@@ -9,10 +8,7 @@ import org.jboss.security.xacml.sunxacml.EvaluationCtx;
 import org.jboss.security.xacml.sunxacml.attr.BagAttribute;
 import org.jboss.security.xacml.sunxacml.cond.EvaluationResult;
 import org.jboss.security.xacml.util.JBossXACMLUtil;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,7 +32,6 @@ public class EnhetAttributeLocatorTest {
 
     private static final String ANSATT_ID = "Z900001";
     private static final String LOKAL_ENHET_ID = "1222";
-    private static final Arbeidsfordeling arbeidsfordeling = new Arbeidsfordeling("1227", "BIL");
     private EnhetAttributeLocator locator;
     @Mock
     private EvaluationCtx context;
@@ -49,14 +44,12 @@ public class EnhetAttributeLocatorTest {
         locator = new EnhetAttributeLocator();
         locator.getSupportedIds().add(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET);
         locator.getSupportedIds().add(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET);
-        locator.getSupportedIds().add(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT);
 
         //Normally, initialized within the class.
         Whitebox.setInternalState(locator, "delegate", mockDelegate);
 
         when(mockDelegate.getLokalEnheterForAnsatt(anyString())).thenReturn(new HashSet<>(Arrays.asList(LOKAL_ENHET_ID)));
         when(mockDelegate.getFylkesenheterForAnsatt(anyString())).thenReturn(new HashSet<>(Arrays.asList(LOKAL_ENHET_ID)));
-        when(mockDelegate.getArbeidsfordelingForEnhet(anyString())).thenReturn(new HashSet<>(Arrays.asList(arbeidsfordeling)));
         when(context.getSubjectAttribute(any(URI.class), any(URI.class), any(URI.class))).thenReturn(new EvaluationResult(JBossXACMLUtil.getAttributeValue(ANSATT_ID)));
     }
 
@@ -83,22 +76,6 @@ public class EnhetAttributeLocatorTest {
     @Test
     public void testFindFylkesenhetAttribute() {
         EvaluationResult result = findAttribute(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET);
-        assertEquals(1, ((BagAttribute) result.getAttributeValue()).size());
-    }
-
-    @Test
-    public void testFindGeografiskNedslagsfeltAttribute() {
-        EvaluationResult result = findAttribute(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT);
-        assertEquals(1, ((BagAttribute) result.getAttributeValue()).size());
-    }
-
-    @Test
-    public void testFindGeografiskNedslagsfeltAttributeFiltererUtArbeidsfordelingerUtenGeografiskNedslagsfelt() {
-        Arbeidsfordeling utenGeografiskNedslagsfeltArbeidsfordeling = new Arbeidsfordeling(null, "BIL");
-        when(mockDelegate.getArbeidsfordelingForEnhet(anyString())).thenReturn(new HashSet<>(Arrays.asList(arbeidsfordeling, utenGeografiskNedslagsfeltArbeidsfordeling)));
-
-        EvaluationResult result = findAttribute(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT);
-
         assertEquals(1, ((BagAttribute) result.getAttributeValue()).size());
     }
 

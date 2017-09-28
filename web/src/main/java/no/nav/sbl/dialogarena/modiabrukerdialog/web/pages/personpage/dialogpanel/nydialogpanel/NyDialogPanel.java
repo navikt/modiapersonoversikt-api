@@ -40,6 +40,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.*;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeT
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_AVBRUTT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 import static org.apache.wicket.event.Broadcast.BREADTH;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
@@ -74,6 +76,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final List<Component> modusKomponenter = new ArrayList<>();
     private final FeedbackPanel feedbackPanel;
     private final SkrivestottePanel skrivestottePanel;
+
+    private static final Logger logger = getLogger(NyDialogPanel.class);
 
     public NyDialogPanel(String id, GrunnInfo grunnInfo) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
@@ -334,6 +338,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
             kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form);
         } catch (Exception e) {
+            logger.error("Sending av henvendelse feilet", e);
             error(getString("dialogpanel.feilmelding.send.henvendelse"));
             target.add(feedbackPanel);
         }
