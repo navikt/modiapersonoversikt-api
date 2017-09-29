@@ -16,6 +16,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PsakServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
@@ -57,6 +59,11 @@ public class ServiceConfig {
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
                 behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, pep, saksbehandlerInnstillingerService,
                 propertyResolver, personKjerneinfoServiceBi, ldapService);
+    }
+
+    @Bean
+    public HenvendelseService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService) {
+        return new HenvendelseServiceImpl(henvendelseUtsendingService);
     }
 
     @Bean

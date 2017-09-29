@@ -16,6 +16,8 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.HenvendelseController;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -38,6 +40,7 @@ class HenvendelseControllerTest {
     public static final String BRUKERS_FNR = "10108000398";
     public static final String TRAAD_ID = "trådID";
     public static final String HENVENDELSES_ID = "henvendelsesID";
+
     private HenvendelseController henvendelseController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
 
@@ -117,7 +120,7 @@ class HenvendelseControllerTest {
     void ferdigstillerHenvendelse() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest());
+        henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest(), new FerdigstillHenvendelseRestRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         assertEquals(argumentCaptor.getValue().getBehandlingsId(), HENVENDELSES_ID);
@@ -126,7 +129,7 @@ class HenvendelseControllerTest {
     @Test
     @DisplayName("Ferdigstill henvendelse returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        Response response = henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest());
+        Response response = henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest(), new FerdigstillHenvendelseRestRequest());
 
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
     }

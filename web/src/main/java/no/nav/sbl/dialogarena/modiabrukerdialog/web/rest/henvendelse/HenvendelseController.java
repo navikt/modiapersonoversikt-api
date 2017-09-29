@@ -1,5 +1,7 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ThreadContext;
@@ -16,29 +18,39 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 @Path("/personer/{fnr}/traader/{traadId}/henvendelser/{id}")
 @Produces(APPLICATION_JSON)
 public class HenvendelseController {
 
-    private final HenvendelseService henvendelseServiceImpl;
+    private final HenvendelseService henvendelseService;
 
     @Inject
-    public HenvendelseController(HenvendelseService henvendelseServiceImpl) {
-        this.henvendelseServiceImpl = henvendelseServiceImpl;
+    public HenvendelseController(HenvendelseService henvendelseService) {
+        this.henvendelseService = henvendelseService;
     }
 
     @PUT
     @Path("/ferdigstill")
+    @Consumes(APPLICATION_JSON)
     public Response ferdigstill(
             @PathParam("fnr") String fnr,
             @PathParam("traadId") String traadId,
             @PathParam("id") String henvendelseId,
-            @Context HttpServletRequest request) {
+            @Context HttpServletRequest httpRequest, FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest) {
 
-        setWicketRequestCycleForOperasjonerPaaCookies(request);
+        setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
 
-        henvendelseServiceImpl.ferdigstill(fnr, traadId, henvendelseId, "Innhold");
+        FerdigstillHenvendelseRequest ferdigstillHenvendelseRequest = new FerdigstillHenvendelseRequestBuilder()
+                .withFodselsnummer(fnr)
+                .withTraadId(traadId)
+                .withHenvendelseId(henvendelseId)
+                .withSvar(ferdigstillHenvendelseRestRequest.svar)
+                .withNavIdent(getSubjectHandler().getUid())
+                .build();
+
+        henvendelseService.ferdigstill(ferdigstillHenvendelseRequest);
 
         return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
     }

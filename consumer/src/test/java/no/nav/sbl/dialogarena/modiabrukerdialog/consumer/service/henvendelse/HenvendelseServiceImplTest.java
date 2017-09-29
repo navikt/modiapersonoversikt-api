@@ -2,9 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 
@@ -18,7 +20,7 @@ class HenvendelseServiceImplTest {
 
     public static final String BRUKERS_FNR = "10108000398";
     public static final String TRAAD_ID = "TRAAD_ID";
-    public static final String HENVENDELSE_ID = "HENVENDELSE_ID";
+    public static final String SVAR = "SVAR";
 
     private HenvendelseUtsendingService henvendelseMock;
     private HenvendelseService henvendelseService;
@@ -38,11 +40,21 @@ class HenvendelseServiceImplTest {
     @Test
     @DisplayName("Setter kanal på melding før den ferdigstilles")
     void setterKanalPaMelding() throws Exception {
-        henvendelseService.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSE_ID, "INNHOLD");
+        henvendelseService.ferdigstill(lagRequest());
         ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
         verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString());
 
-        assertEquals(Meldingstype.SVAR_SKRIFTLIG.name(), argumentCaptor.getValue().kanal);
+        assertEquals(Kanal.TEKST.name(), argumentCaptor.getValue().kanal);
+    }
+
+    @Test
+    @DisplayName("Legger til svar på melding før henvendelsen ferdigstilles")
+    void setterSvarPaMelding() throws Exception {
+        henvendelseService.ferdigstill(lagRequest());
+        ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
+        verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString());
+
+        assertEquals(SVAR, argumentCaptor.getValue().fritekst);
     }
 
     @Test
@@ -51,9 +63,17 @@ class HenvendelseServiceImplTest {
         String opprinneligFeil = "Opprinnelig feil";
         doThrow(new IllegalArgumentException(opprinneligFeil)).when(henvendelseMock).ferdigstillHenvendelse(any(), any(), any(), any());
 
-        Throwable exception = assertThrows(RuntimeException.class, () -> henvendelseService.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSE_ID, "INNHOLD"));
+        Throwable exception = assertThrows(RuntimeException.class, () -> henvendelseService.ferdigstill(lagRequest()));
 
         assertEquals("Opprinnelig feil", exception.getCause().getMessage());
+    }
+
+    private FerdigstillHenvendelseRequest lagRequest() {
+        return new FerdigstillHenvendelseRequestBuilder()
+                .withFodselsnummer(BRUKERS_FNR)
+                .withTraadId(TRAAD_ID)
+                .withSvar(SVAR)
+                .build();
     }
 
 }
