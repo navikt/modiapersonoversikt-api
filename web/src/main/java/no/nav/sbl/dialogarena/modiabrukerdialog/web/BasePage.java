@@ -28,7 +28,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -93,14 +92,13 @@ public class BasePage extends WebPage {
             }
         });
 
-        ReactTekniskFeilModal tekniskFeilModal = new ReactTekniskFeilModal("tekniskFeil", pageParameters);
-        add(tekniskFeilModal);
+        add(new ReactTekniskFeilModal("tekniskFeil", pageParameters));
 
         add(new ExceptionHandlingBehavior() {
                 @Override
                 public IRequestHandler handleException(Component source, Exception ex) {
-                    tekniskFeilModal.getModal().call("vis");
-                    return RequestCycle.get().find(AjaxRequestTarget.class);
+                    PageProvider pageProvider = new PageProvider(getPage().getClass(), new PageParameters().set("tekniskfeil", true));
+                    return new RenderPageRequestHandler(pageProvider);
                 }
             }
         );
@@ -109,6 +107,7 @@ public class BasePage extends WebPage {
     public WebMarkupContainer getBody() {
         return body;
     }
+
 
     @Override
     public void onEvent(IEvent<?> event) {
