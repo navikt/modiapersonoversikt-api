@@ -82,13 +82,5 @@
             <ns:Option Name="attributeCacheName">pip.temagruppe</ns:Option>
         </ns:Locator>
 
-        <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
-            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator</ns:Option>
-            <ns:Option Name="attributeSupportedId">urn:nav:ikt:tilgangskontroll:xacml:subject:geografisk-nedslagsfelt</ns:Option>
-            <ns:Option Name="attributeDesignatorInt">0</ns:Option>
-            <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:valgt-enhet</ns:Option>
-            <ns:Option Name="attributeCacheName">pip.geografisk-nedslagsfelt</ns:Option>
-        </ns:Locator>
-
     </ns:Locators>
 </ns:jbosspdp>

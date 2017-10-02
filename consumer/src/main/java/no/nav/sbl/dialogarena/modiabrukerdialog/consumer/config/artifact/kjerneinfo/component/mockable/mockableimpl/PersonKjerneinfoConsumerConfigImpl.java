@@ -4,34 +4,28 @@ import no.nav.kjerneinfo.consumer.fim.mapping.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.tjeneste.virksomhet.person.v2.PersonV2;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
 
 public class PersonKjerneinfoConsumerConfigImpl {
 
-    private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    private PersonV2 personPortType;
-    private PersonV2 selfTestPersonPortType;
+    private PersonV3 personPortType;
     private KjerneinfoMapper kjerneinfoMapperBean;
     private EnforcementPoint kjerneinfoPep;
-    private OrganisasjonEnhetService organisasjonEnhetService;
+    private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
 
-    public PersonKjerneinfoConsumerConfigImpl(PersonV2 personPortType, PersonV2 selfTestPersonPortType,
+    public PersonKjerneinfoConsumerConfigImpl(PersonV3 personPortType,
                                               KjerneinfoMapper kjerneinfoMapperBean, EnforcementPoint kjerneinfoPep,
-                                              final OrganisasjonEnhetService organisasjonEnhetService,
-                                              SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
+                                              final OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
         this.personPortType = personPortType;
-        this.selfTestPersonPortType = selfTestPersonPortType;
         this.kjerneinfoMapperBean = kjerneinfoMapperBean;
         this.kjerneinfoPep = kjerneinfoPep;
-        this.organisasjonEnhetService = organisasjonEnhetService;
-        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
+        this.organisasjonEnhetV2Service = organisasjonEnhetV2Service;
     }
 
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return new DefaultPersonKjerneinfoService(personPortType, selfTestPersonPortType, kjerneinfoMapperBean,
-                kjerneinfoPep, organisasjonEnhetService, saksbehandlerInnstillingerService);
+        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapperBean, kjerneinfoPep,
+                organisasjonEnhetV2Service);
     }
 
 }

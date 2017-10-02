@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 
+import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -47,12 +48,12 @@ public class PlukkOppgaveServiceImplTest {
     private static HentKjerneinformasjonResponse personResponse = new HentKjerneinformasjonResponse();
 
     static {
+        Personfakta personfakta = new Personfakta();
+        personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
+                .organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId("1").done()).done());
+        personfakta.setDiskresjonskode(new Kodeverdi(null, "SPFO"));
         personResponse.setPerson(new Person.With()
-                .personfakta(new Personfakta.With()
-                        .harAnsvarligEnhet(new AnsvarligEnhet.With()
-                                .organisasjonsenhet(new Organisasjonsenhet.With()
-                                        .organisasjonselementId("1").done()).done()).done()).done());
-        personResponse.getPerson().getPersonfakta().setDiskresjonskode("7");
+                .personfakta(personfakta).done());
     }
 
     @Before

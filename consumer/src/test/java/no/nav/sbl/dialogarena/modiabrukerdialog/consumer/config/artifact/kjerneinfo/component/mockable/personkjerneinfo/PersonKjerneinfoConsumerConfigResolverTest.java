@@ -5,8 +5,6 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.PersonKjerneinfoConsumerConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.brukerprofil.v3.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,7 +36,7 @@ public class PersonKjerneinfoConsumerConfigResolverTest {
     private PersonKjerneinfoConsumerConfigResolver resolver;
 
     @Test
-    public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
+    public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.personKjerneinfoServiceBi().hentKjerneinformasjon(new HentKjerneinformasjonRequest(""));
@@ -47,7 +45,7 @@ public class PersonKjerneinfoConsumerConfigResolverTest {
     }
 
     @Test
-    public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
+    public void perDefaultSkalProdkodeEksekveres() {
         setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.personKjerneinfoServiceBi().hentKjerneinformasjon(new HentKjerneinformasjonRequest(""));
 		resolver.personKjerneinfoServiceBi().hentSikkerhetstiltak(new HentSikkerhetstiltakRequest(new String("12121212123")));

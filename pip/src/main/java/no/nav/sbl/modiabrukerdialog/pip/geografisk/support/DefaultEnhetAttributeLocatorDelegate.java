@@ -5,8 +5,6 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetL
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Arbeidsfordeling;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,21 +21,10 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
     private GOSYSNAVansatt ansattService;
     @Inject
     private GOSYSNAVOrgEnhet enhetService;
-    @Inject
-    private OrganisasjonEnhetService orgEnhetService;
-
 
     public DefaultEnhetAttributeLocatorDelegate() {
     }
 
-    @Override
-    public Set<Arbeidsfordeling> getArbeidsfordelingForEnhet(String enhet) {
-        return new HashSet<>(orgEnhetService.hentArbeidsfordeling(enhet));
-    }
-
-    /**
-     * {@inheritDoc }
-     */
     @Override
     public Set<String> getFylkesenheterForAnsatt(String ansattId) {
         Set<String> values = new HashSet<>();

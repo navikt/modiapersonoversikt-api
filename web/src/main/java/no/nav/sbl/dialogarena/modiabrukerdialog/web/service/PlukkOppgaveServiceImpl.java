@@ -65,10 +65,9 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
 
             Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(kjerneinfoRequest).getPerson().getPersonfakta();
 
-            String brukersDiskresjonskode = defaultString(personfakta.getDiskresjonskode());
-
+            String brukersDiskresjonskode = personfakta.getDiskresjonskode() == null ? "" : personfakta.getDiskresjonskode().getValue();
             String brukersEnhet = optional(personfakta)
-                    .map(Personfakta::getHarAnsvarligEnhet)
+                    .map(Personfakta::getAnsvarligEnhet)
                     .map(AnsvarligEnhet::getOrganisasjonsenhet)
                     .map(Organisasjonsenhet::getOrganisasjonselementId)
                     .getOrElse("");

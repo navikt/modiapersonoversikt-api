@@ -24,7 +24,6 @@ public class MockAttributeLocator extends AttributeLocator {
 		this.attributeSelectorSupported = true;
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET);
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET);
-		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT);
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_ROLLE);
 
 		this.designatorTypes.add(0);
@@ -48,8 +47,6 @@ public class MockAttributeLocator extends AttributeLocator {
 			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET)) {
 				addEnhetValue(subjectId, values);
 			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET)) {
-				addEnhetValue(subjectId, values);
-			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_GEOGRAFISK_NEDSLAGSFELT)) {
 				addEnhetValue(subjectId, values);
 			}
 		}
