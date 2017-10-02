@@ -14,7 +14,7 @@ class PleiepengerPanel extends Component {
             <div className="pleiepenger-panel">
                 <PleiepengerRettenPanel
                     tekst={props.tekst.pleiepengerRetten}
-                    graderingsgrad={props.graderingsgrad}
+                    pleiepengegrad={props.pleiepengegrad}
                     pleiepengedager={props.pleiepengedager}
                     forbrukteDagerTOMIDag={props.forbrukteDagerTOMIDag}
                     forbrukteDagerEtterDennePerioden={props.forbrukteDagerEtterDennePerioden}
@@ -35,7 +35,7 @@ PleiepengerPanel.propTypes = {
     forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
     forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
     kompensasjonsgrad: React.PropTypes.number,
-    graderingsgrad: React.PropTypes.number.isRequired,
+    pleiepengegrad: React.PropTypes.number.isRequired,
     barnet: React.PropTypes.string.isRequired,
     andreOmsorgsperson: React.PropTypes.string,
     arbeidsforhold: React.PropTypes.array.isRequired,

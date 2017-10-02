@@ -23,9 +23,6 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
             <div className="periode-innhold">
                 <div className="periodeinfo">
                     <dl className="pleiepenger-detaljer">
-                        <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
-                            {formaterOptionalProsentVerdi(periode.graderingsgrad)}
-                        </DLElement>
                         <DLElement etikett={tekst.pleiepengedager} className="halvbredde">
                             {periode.antallPleiepengedager}
                         </DLElement>
@@ -50,7 +47,6 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
 Periode.propTypes = {
     periode: React.PropTypes.shape({
         antallPleiepengedager: React.PropTypes.number.isRequired,
-        graderingsgrad: React.PropTypes.number,
         vedtakListe: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
     }).isRequired,
     periodeNummer: React.PropTypes.number.isRequired,

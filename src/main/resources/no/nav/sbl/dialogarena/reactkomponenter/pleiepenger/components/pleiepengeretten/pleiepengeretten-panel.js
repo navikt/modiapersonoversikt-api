@@ -62,7 +62,7 @@ const PleiepengerettighetPanel = props => {
                     {formaterOptionalProsentVerdi(props.kompensasjonsgrad)}
                 </DLElement>
                 <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
-                    {props.graderingsgrad || ''}&nbsp;%
+                    {props.pleiepengegrad || ''}&nbsp;%
                 </DLElement>
                 <div className="blokk-s halvbredde">
                     <BarnetIkon kjonn={kjonnFraIdent(props.barnet)} />
