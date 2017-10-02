@@ -15,7 +15,6 @@ import java.util.function.Function;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 
 public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
@@ -46,7 +45,7 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
     private static final Function<List<Melding>, WidgetMeldingVM> TIL_MELDINGVM = (traad) ->
             new WidgetMeldingVM(traad, traad.stream()
-                    .map(melding -> FRA_NAV.contains(melding.meldingstype))
+                    .map(Melding::erFraSaksbehandler)
                     .distinct()
                     .count()
                     < 2);

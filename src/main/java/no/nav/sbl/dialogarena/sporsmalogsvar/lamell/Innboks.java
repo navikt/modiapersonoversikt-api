@@ -20,6 +20,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 import java.util.*;
 
+import static java.util.stream.Collectors.toMap;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
@@ -48,9 +49,7 @@ public class Innboks extends Lerret {
 
         if (innboksVM.getSessionHenvendelseId().isPresent()) {
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(innboksVM.getSessionHenvendelseId().get());
-            if (meldingITraad.isPresent()) {
-                innboksVM.setValgtMelding(meldingITraad.get());
-            }
+            meldingITraad.ifPresent(innboksVM::setValgtMelding);
         }
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
@@ -116,13 +115,11 @@ public class Innboks extends Lerret {
     }
 
     private Map<String, String> traadRefs(InnboksVM innboksVM) {
-        HashMap<String, String> traadRefs = new HashMap<>();
-
-        for (MeldingVM meldingVM : innboksVM.getNyesteMeldingerITraader()) {
-            traadRefs.put(meldingVM.melding.traadId, AlleMeldingerPanel.TRAAD_ID_PREFIX + meldingVM.melding.traadId);
-        }
-
-        return traadRefs;
+        return innboksVM.getNyesteMeldingerITraader().stream()
+                .collect(toMap(
+                        MeldingVM::getTraadId,
+                        meldingVM -> AlleMeldingerPanel.TRAAD_ID_PREFIX + meldingVM.getTraadId()
+                ));
     }
 
     @Override
@@ -155,7 +152,7 @@ public class Innboks extends Lerret {
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         String itemId = feedItemPayload.getItemId();
-        if (!itemId.equals(innboksVM.getValgtTraad().getNyesteMelding().melding.id)) {
+        if (!itemId.equals(innboksVM.getValgtTraad().getNyesteMelding().getId())) {
             innboksVM.setValgtMelding(itemId);
             send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
             target.add(this);
