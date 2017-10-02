@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -15,14 +14,11 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -50,9 +46,9 @@ public class Innboks extends Lerret {
         innboksVM.oppdaterMeldinger();
         innboksVM.settForsteSomValgtHvisIkkeSatt();
 
-        if (innboksVM.getSessionHenvendelseId().isSome()) {
+        if (innboksVM.getSessionHenvendelseId().isPresent()) {
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(innboksVM.getSessionHenvendelseId().get());
-            if (meldingITraad.isSome()) {
+            if (meldingITraad.isPresent()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
             }
         }
@@ -101,7 +97,11 @@ public class Innboks extends Lerret {
 
         if (innboksVM.harFeilmelding().getObject().equals(true)) {
             String beskrivelse = "Teknisk feil modiabrukerdialog, oppgave lagt tilbake.";
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId(), beskrivelse, Optional.none());
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
+                    no.nav.modig.lang.option.Optional.optional(innboksVM.getSessionOppgaveId().orElse(null)),
+                    beskrivelse,
+                    no.nav.modig.lang.option.Optional.none()
+            );
             innboksVM.setSessionHenvendelseId(null);
             innboksVM.setSessionOppgaveId(null);
         }
@@ -118,7 +118,7 @@ public class Innboks extends Lerret {
     private Map<String, String> traadRefs(InnboksVM innboksVM) {
         HashMap<String, String> traadRefs = new HashMap<>();
 
-        for (MeldingVM meldingVM : innboksVM.getNyesteMeldingerITraad()) {
+        for (MeldingVM meldingVM : innboksVM.getNyesteMeldingerITraader()) {
             traadRefs.put(meldingVM.melding.traadId, AlleMeldingerPanel.TRAAD_ID_PREFIX + meldingVM.melding.traadId);
         }
 
@@ -146,7 +146,7 @@ public class Innboks extends Lerret {
     public void onClosing(AjaxRequestTarget target, boolean isMinimizing) {
         innboksVM.setSessionHenvendelseId(null);
         if (!isMinimizing) {
-            innboksVM.setValgtMelding(((MeldingVM) null));
+            innboksVM.setValgtMelding((MeldingVM) null);
             innboksVM.focusValgtTraadOnOpen = false;
         }
     }

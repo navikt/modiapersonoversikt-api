@@ -5,9 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.*;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -20,7 +18,7 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
 
         WebMarkupContainer meldingDetaljer = new WebMarkupContainer("meldingDetaljer");
 
-        Label meldingStatus = new Label("meldingsstatus", new StringFormatModel("%s - %s",
+        Label meldingStatus = new Label("meldingsstatus", new StringFormatModel("%s – %s",
                 new PropertyModel<>(model.getObject(), "melding.statusTekst"),
                 new PropertyModel<>(model.getObject(), "melding.temagruppeNavn")
         ));

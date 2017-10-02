@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -13,8 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.of;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.anyString;
@@ -31,12 +31,12 @@ public class AvsluttOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void avslutterOppgave() throws LagreOppgaveOptimistiskLasing, GsakService.OppgaveErFerdigstilt {
-        Optional<String> oppgaveId = optional("1");
+        Optional<String> oppgaveId = of("1");
         String tekst = "tekst";
 
         when(gsakService.hentOppgave(oppgaveId.get())).thenReturn(new WSOppgave());
 
-        wicket.goToPageWith(new AvsluttOppgavePanel("id", oppgaveId))
+        wicket.goToPageWith(new AvsluttOppgavePanel("id", oppgaveId.orElse("")))
                 .inForm(withId("form"))
                 .write("beskrivelse", tekst)
                 .submitWithAjaxButton(withId("avsluttoppgave"))
@@ -49,7 +49,7 @@ public class AvsluttOppgavePanelTest extends WicketPageTest {
     public void viserFeilmeldingHvisFerdigstillingFeiler() throws LagreOppgaveOptimistiskLasing, GsakService.OppgaveErFerdigstilt {
         doThrow(new RuntimeException()).when(gsakService).ferdigstillGsakOppgave(any(WSOppgave.class), anyString());
 
-        wicket.goToPageWith(new AvsluttOppgavePanel("id", optional("1")))
+        wicket.goToPageWith(new AvsluttOppgavePanel("id", "1"))
                 .inForm(withId("form"))
                 .submitWithAjaxButton(withId("avsluttoppgave"))
                 .should().containComponent(thatIsVisible().and(withId("feedbackError")));
