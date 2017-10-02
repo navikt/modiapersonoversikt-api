@@ -144,15 +144,12 @@ public class HenvendelseBehandlingServiceImplTest {
     @Test
     public void skalMerkeSomKontorsperret() {
         HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
+        Personfakta personfakta = new Personfakta();
+        personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
+                .organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId(NAVBRUKERS_ENHET).done())
+                .done());
         hentKjerneinformasjonResponse.setPerson(
-                new Person.With().personfakta(
-                        new Personfakta.With().harAnsvarligEnhet(
-                                new AnsvarligEnhet.With().organisasjonsenhet(
-                                        new Organisasjonsenhet.With().organisasjonselementId(NAVBRUKERS_ENHET)
-                                                .done()
-                                ).done()
-                        ).done()
-                ).done()
+                new Person.With().personfakta(personfakta).done()
         );
 
         when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(hentKjerneinformasjonResponse);
