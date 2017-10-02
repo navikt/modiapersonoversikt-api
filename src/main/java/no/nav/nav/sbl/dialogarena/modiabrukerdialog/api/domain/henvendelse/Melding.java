@@ -1,16 +1,15 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.Comparator.comparing;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class Melding implements Serializable {
 
@@ -140,10 +139,30 @@ public class Melding implements Serializable {
     }
 
     public DateTime getVisningsDato() {
-        if (erDokumentMelding){
+        if (erDokumentMelding) {
             return ferdigstiltDato;
         }
         return opprettetDato;
+    }
+
+    public String getTraadId() {
+        return traadId;
+    }
+
+    public boolean erFraSaksbehandler() {
+        return FRA_NAV.contains(meldingstype);
+    }
+
+    public boolean erVarsel() {
+        return VARSEL.contains(meldingstype);
+    }
+
+    public boolean erSporsmal() {
+        return SPORSMAL.contains(meldingstype);
+    }
+
+    public boolean erBesvart() {
+        return status != Status.IKKE_BESVART;
     }
 
     public static final Comparator<Melding> ELDSTE_FORST = (o1, o2) -> o1.getVisningsDato().compareTo(o2.getVisningsDato());
@@ -157,8 +176,9 @@ public class Melding implements Serializable {
     public static final Transformer<Melding, Meldingstype> TYPE = melding -> melding.meldingstype;
 
     public static Optional<Melding> siste(List<Melding> traad) {
-        List<Melding> sortert = on(traad).collect(NYESTE_FORST);
-        return sortert.isEmpty() ? Optional.none() : Optional.optional(sortert.get(0));
+        return traad.stream()
+                .sorted(comparing(Melding::getVisningsDato).reversed())
+                .findFirst();
     }
 
 }
