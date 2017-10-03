@@ -2,14 +2,13 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 
 import java.io.Serializable;
 import java.util.List;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagStatusKlasse;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.dateTime;
 
 public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializable {
 
@@ -24,12 +23,8 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
         return lagMeldingStatusTekstKey(melding);
     }
 
-    public String getStatusIkonKlasse() {
-        return lagStatusKlasse(melding);
-    }
-
     public String getVisningsDato() {
-        return dateTime(melding.getVisningsDato());
+        return DateUtils.toString(melding.getVisningsDato());
     }
 
     public String getFritekst() {

@@ -39,7 +39,7 @@ public class MeldingVMTest extends WicketPageTest {
     public void henterAvsenderDatoBasertPaaDato() {
         String avsenderTekst = meldingVM.getVisningsDato();
 
-        assertThat(avsenderTekst, is(DateUtils.dateTime(OPPRETTET_DATO)));
+        assertThat(avsenderTekst, is(DateUtils.toString(OPPRETTET_DATO)));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class MeldingVMTest extends WicketPageTest {
         meldingVM.erDokumentMelding = true;
         String avsenderTekst = meldingVM.getVisningsDato();
 
-        assertThat(avsenderTekst, is(DateUtils.dateTime(FERDIGSTILT_DATO)));
+        assertThat(avsenderTekst, is(DateUtils.toString(FERDIGSTILT_DATO)));
     }
 
     @Test

@@ -36,7 +36,6 @@ public class MeldingerWidgetPanel extends GenericPanel<WidgetMeldingVM> {
         fritekst.add(hasCssClassIf("vekk", not(model.getObject().erDokumentMelding())));
 
         meldingDetaljer.add(new StatusIkon("statusIkon", model.getObject()),
-                new Label("traadlengde").setVisibilityAllowed(model.getObject().traadlengde > 2),
                 new Label("visningsDato"),
                 meldingStatus.setVisibilityAllowed(!model.getObject().erDokumentMelding && !model.getObject().erOppgaveMelding),
                 dokumentStatus.setVisibilityAllowed(model.getObject().erDokumentMelding || model.getObject().erOppgaveMelding),

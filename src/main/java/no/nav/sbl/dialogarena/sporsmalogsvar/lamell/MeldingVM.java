@@ -2,18 +2,17 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.function.Function;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
 public class MeldingVM implements Serializable {
@@ -37,9 +36,9 @@ public class MeldingVM implements Serializable {
 
     public String getVisningsDato() {
         if (erDokumentMelding){
-            return DateUtils.dateTime(melding.ferdigstiltDato);
+            return DateUtils.toString(melding.ferdigstiltDato);
         }
-        return DateUtils.dateTime(melding.opprettetDato);
+        return DateUtils.toString(melding.opprettetDato);
     }
 
     public String getMeldingStatusTekstKey() {
@@ -66,7 +65,7 @@ public class MeldingVM implements Serializable {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return melding.status != Status.IKKE_BESVART;
+                return melding.erBesvart();
             }
         };
     }
@@ -111,8 +110,16 @@ public class MeldingVM implements Serializable {
         return melding.traadId;
     }
 
+    public DateTime getDato() {
+        return melding.getVisningsDato();
+    }
+
     public boolean erFraSaksbehandler() {
-        return FRA_NAV.contains(melding.meldingstype);
+        return melding.erFraSaksbehandler();
+    }
+
+    public boolean erSporsmal() {
+        return melding.erSporsmal();
     }
 
     @Override

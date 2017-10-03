@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
@@ -13,11 +12,9 @@ import java.io.Serializable;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.ofNullable;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.SPORSMAL;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 
@@ -66,15 +63,15 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erBehandlet() {
-        return meldinger.size() > 1 || FRA_NAV.contains(getEldsteMelding().melding.meldingstype);
+        return meldinger.size() > 1 || getEldsteMelding().erFraSaksbehandler();
     }
 
     public boolean erKontorsperret() {
-        return getKontorsperretEnhet().isSome();
+        return getKontorsperretEnhet().isPresent();
     }
 
     public Optional<String> getKontorsperretEnhet() {
-        return optional(getEldsteMelding().melding.kontorsperretEnhet);
+        return ofNullable(getEldsteMelding().melding.kontorsperretEnhet);
     }
 
     public boolean erFeilsendt() {
@@ -82,7 +79,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean traadKanBesvares() {
-        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype)
+        return getEldsteMelding().erSporsmal()
                 && !getEldsteMelding().melding.kassert
                 && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
                 && !getEldsteMelding().erFeilsendt()
@@ -110,12 +107,12 @@ public class TraadVM implements Serializable {
     }
 
     private boolean erEnkeltstaaendeSpsmFraBruker() {
-        return meldinger.size() == 1 && getEldsteMelding().melding.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG;
+        return meldinger.size() == 1 && getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG;
     }
 
     public boolean erMonolog() {
         return meldinger.stream()
-                .map(meldingVM -> FRA_NAV.contains(meldingVM.melding.meldingstype))
+                .map(MeldingVM::erFraSaksbehandler)
                 .distinct()
                 .count()
                 < 2;

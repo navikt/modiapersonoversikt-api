@@ -19,15 +19,15 @@ public class DateUtils {
         return LocalDate.fromDateFields(addWorkingDaysToDate(startDato.toDate(), ukedager));
     }
 
-    public static String date(DateTime dateTime) {
+    public static String toDateString(DateTime dateTime) {
         return DateTimeFormat.forPattern("d. MMMM yyyy").withLocale(locale.create()).print(dateTime);
     }
 
-    public static String time(DateTime dateTime) {
+    public static String toTimeString(DateTime dateTime) {
         return DateTimeFormat.forPattern("HH.mm").withLocale(locale.create()).print(dateTime);
     }
 
-    public static String dateTime(DateTime dateTime) {
-        return format("%s, klokken %s", date(dateTime), time(dateTime));
+    public static String toString(DateTime dateTime) {
+        return format("%s, klokken %s", toDateString(dateTime), toTimeString(dateTime));
     }
 }

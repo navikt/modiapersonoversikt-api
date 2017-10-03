@@ -68,7 +68,7 @@ public class InnboksVM implements Serializable {
             }
             nyesteMeldingerITraader = traader.values().stream()
                     .map(TraadVM::getNyesteMelding)
-                    .sorted(comparing(MeldingVM::getVisningsDato).reversed())
+                    .sorted(comparing(MeldingVM::getDato).reversed())
                     .collect(toList());
 
         } catch (Exception e) {
