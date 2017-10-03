@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>13.0.16-OPP-11-SNAPSHOT</version>
+    <version>13.1.1-OPP-11-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
