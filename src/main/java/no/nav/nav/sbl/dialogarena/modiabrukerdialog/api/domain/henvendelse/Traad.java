@@ -33,21 +33,33 @@ public class Traad {
     }
 
     private String lagStatusKlasse(Melding sisteMelding) {
-        String statusklasse = sisteMelding.statusKlasse;
-        if (sisteMelding.erVarsel()) {
-            return statusklasse;
-        }
+        String statusklasse = "";
 
-        if (erMonolog) {
-            statusklasse += " monolog";
-            if (!sisteMelding.erFraSaksbehandler()) {
-                statusklasse += " ubesvart";
-            }
-        } else {
-            statusklasse += " dialog";
-            if (sisteMelding.erBesvart()) {
-                statusklasse += " besvart";
-            }
+        switch (sisteMelding.meldingstype) {
+            case SAMTALEREFERAT_OPPMOTE:
+                statusklasse = "oppmote";
+                break;
+            case SAMTALEREFERAT_TELEFON:
+                statusklasse = "telefon";
+                break;
+            case OPPGAVE_VARSEL:
+                statusklasse = "oppgave";
+                break;
+            case DOKUMENT_VARSEL:
+                statusklasse = "dokument";
+                break;
+            default:
+                if (erMonolog) {
+                    statusklasse = "monolog";
+                    if (!sisteMelding.erFraSaksbehandler()) {
+                        statusklasse += " ubesvart";
+                    }
+                } else {
+                    statusklasse = "dialog";
+                    if (sisteMelding.erBesvart()) {
+                        statusklasse += " besvart";
+                    }
+                }
         }
 
         return statusklasse;
