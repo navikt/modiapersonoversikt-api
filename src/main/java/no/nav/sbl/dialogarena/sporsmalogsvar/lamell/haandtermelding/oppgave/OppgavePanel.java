@@ -69,7 +69,7 @@ public class OppgavePanel extends AnimertPanel {
         };
         nyOppgaveFormWrapper.add(visibleIf(either(isEqualTo(oppgaveValgModel, OPPRETT)).or(not(oppgaveKanAvsluttes))));
 
-        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm", innboksVM.getSessionOppgaveId().orElse("")) {
+        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm", innboksVM.getSessionOppgaveId().orElse(null)) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 innboksVM.setSessionOppgaveId(null);

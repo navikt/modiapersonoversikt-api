@@ -18,7 +18,10 @@ import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
@@ -34,7 +37,7 @@ public class AvsluttOppgavePanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final WSOppgave oppgave = gsakService.hentOppgave(oppgaveId);
+        final Optional<WSOppgave> oppgave = ofNullable(oppgaveId).map(gsakService::hentOppgave);
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackAvsluttOppgave");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
@@ -51,7 +54,7 @@ public class AvsluttOppgavePanel extends Panel {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                         try {
-                            gsakService.ferdigstillGsakOppgave(oppgave, beskrivelseFelt.getModelObject());
+                            gsakService.ferdigstillGsakOppgave(oppgave.get(), beskrivelseFelt.getModelObject());
                             oppgaveAvsluttet.setObject(true);
                             etterSubmit(target);
                             target.add(form, feedbackPanelSuccess);
