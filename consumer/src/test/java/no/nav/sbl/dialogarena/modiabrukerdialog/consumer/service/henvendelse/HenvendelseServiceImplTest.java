@@ -4,7 +4,6 @@ import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
 import org.junit.jupiter.api.*;
@@ -70,7 +69,6 @@ class HenvendelseServiceImplTest {
 
     private FerdigstillHenvendelseRequest lagRequest() {
         return new FerdigstillHenvendelseRequestBuilder()
-                .withFodselsnummer(BRUKERS_FNR)
                 .withTraadId(TRAAD_ID)
                 .withSvar(SVAR)
                 .build();

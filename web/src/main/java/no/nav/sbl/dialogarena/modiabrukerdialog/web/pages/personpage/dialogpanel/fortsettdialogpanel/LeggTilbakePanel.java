@@ -151,10 +151,10 @@ public class LeggTilbakePanel extends Panel {
                 timer.start();
                 try {
                     oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                            optional(oppgaveId),
+                            oppgaveId,
                             leggTilbakeVM.lagBeskrivelse(
                                     new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
-                            optional(leggTilbakeVM.nyTemagruppe)
+                            leggTilbakeVM.nyTemagruppe
                     );
                     oppgaveLagtTilbake.setObject(true);
 
