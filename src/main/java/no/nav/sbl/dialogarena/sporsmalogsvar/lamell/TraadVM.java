@@ -87,6 +87,19 @@ public class TraadVM implements Serializable {
                 && !getEldsteMelding().melding.ingenTilgangJournalfort;
     }
 
+    public boolean erMonolog() {
+        return meldinger.stream()
+                .map(MeldingVM::erFraSaksbehandler)
+                .distinct()
+                .count()
+                < 2;
+    }
+
+    public boolean erTemagruppeSosialeTjenester() {
+        Temagruppe gjeldendeTemagruppe = getEldsteMelding().melding.gjeldendeTemagruppe;
+        return asList(Temagruppe.OKSOS, Temagruppe.ANSOS).contains(gjeldendeTemagruppe);
+    }
+
     private boolean traadOKSOSKanSes() {
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
@@ -101,21 +114,8 @@ public class TraadVM implements Serializable {
         return pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
     }
 
-    public boolean erTemagruppeSosialeTjenester() {
-        Temagruppe gjeldendeTemagruppe = getEldsteMelding().melding.gjeldendeTemagruppe;
-        return asList(Temagruppe.OKSOS, Temagruppe.ANSOS).contains(gjeldendeTemagruppe);
-    }
-
     private boolean erEnkeltstaaendeSpsmFraBruker() {
         return meldinger.size() == 1 && getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG;
-    }
-
-    public boolean erMonolog() {
-        return meldinger.stream()
-                .map(MeldingVM::erFraSaksbehandler)
-                .distinct()
-                .count()
-                < 2;
     }
 
 }
