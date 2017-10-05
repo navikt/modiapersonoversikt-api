@@ -37,17 +37,13 @@ public class Traad {
 
         switch (sisteMelding.meldingstype) {
             case SAMTALEREFERAT_OPPMOTE:
-                statusklasse = "oppmote";
-                break;
+                return "oppmote";
             case SAMTALEREFERAT_TELEFON:
-                statusklasse = "telefon";
-                break;
+                return "telefon";
             case OPPGAVE_VARSEL:
-                statusklasse = "oppgave";
-                break;
+                return "oppgave";
             case DOKUMENT_VARSEL:
-                statusklasse = "dokument";
-                break;
+                return "dokument";
             default:
                 if (erMonolog) {
                     statusklasse = "monolog";
