@@ -103,12 +103,13 @@
         <appender-ref ref="personaccessappender"/>
     </logger>
 
-    <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
-
-    <logger name="org.apache.cxf" level="${modiabrukerdialog.apache.cxf.log.level:-WARN}">
+    <logger name="no.nav.sbl.dialogarena.common.cxf" level="${modiabrukerdialog.cxf.log.level:-INFO}" additivity="false">
         <appender-ref ref="ServiceCallsFile"/>
     </logger>
-    <logger name="no.nav.sbl.dialogarena.common.cxf" level="${modiabrukerdialog.cxf.log.level:-INFO}">
+
+    <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
+
+    <logger name="org.apache.cxf" level="${modiabrukerdialog.apache.cxf.log.level:-OFF}" additivity="false">
         <appender-ref ref="ServiceCallsFile"/>
     </logger>
 
