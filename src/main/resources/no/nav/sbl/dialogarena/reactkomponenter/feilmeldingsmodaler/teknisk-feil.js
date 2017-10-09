@@ -52,7 +52,7 @@ TekniskFeil.propTypes = {
     title: AriaPropType,
     description: AriaPropType,
     closeButton: AriaPropType,
-    isOpen: pt.bool,
+    isOpen: pt.bool
 };
 
 export default TekniskFeil;
