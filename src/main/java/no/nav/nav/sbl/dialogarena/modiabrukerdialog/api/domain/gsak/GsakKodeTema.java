@@ -4,6 +4,7 @@ import org.apache.commons.collections15.Transformer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
@@ -73,9 +74,28 @@ public abstract class GsakKodeTema implements Serializable {
 
     public static class Underkategori extends GsakKodeTema implements Serializable {
 
+        private boolean erGyldig = true;
+        private LocalDate datoTom;
+
         public Underkategori(String kode, String tekst) {
             super(kode, tekst);
         }
+
+        public boolean erGyldig() {
+            LocalDate today = LocalDate.now();
+            return erGyldig && (datoTom == null || datoTom.isAfter(today) || datoTom.isEqual(today));
+        }
+
+        public Underkategori withErGyldig(boolean erGyldig) {
+            this.erGyldig = erGyldig;
+            return this;
+        }
+
+        public Underkategori withDatoTom(LocalDate datoTom) {
+            this.datoTom = datoTom;
+            return this;
+        }
+
     }
 
 }
