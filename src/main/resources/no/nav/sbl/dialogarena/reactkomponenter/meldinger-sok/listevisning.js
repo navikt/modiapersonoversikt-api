@@ -61,6 +61,7 @@ Listevisning.propTypes = {
         antallMeldingerIOpprinneligTraad: pt.number,
         statusTekst: pt.string.isRequired,
         temagruppe: pt.string,
+        erMonolog: pt.bool,
         innhold: pt.string
     }),
     valgtTraad: pt.object.isRequired,
