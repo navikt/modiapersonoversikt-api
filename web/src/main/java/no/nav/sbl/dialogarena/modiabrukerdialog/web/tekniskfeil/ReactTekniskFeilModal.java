@@ -29,7 +29,6 @@ public class ReactTekniskFeilModal extends Panel {
         return new HashMap<String, Object>() {{
             put("tekst", getCmsString("feilmelding.tekniskfeil.tekst"));
             put("isOpen", !isBlank(pageParameters.get("tekniskfeil").toString()));
-            put("fnr", pageParameters.get("fnr").toString());
         }};
     }
 
