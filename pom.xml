@@ -72,7 +72,7 @@
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>2.8.1-OPP-44-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.9.0</reactkomponenter.version>
         <nav-metrics.version>3.1.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
@@ -94,7 +94,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>2.1.0</personsok.version>
-        <kjerneinfo.versjon>5.1.1</kjerneinfo.versjon>
+        <kjerneinfo.versjon>5.1.3</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
@@ -109,7 +109,7 @@
         <varsling.modia.version>1.8</varsling.modia.version>
         <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>8.2.0</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>7.1.0</sporsmalogsvar.version>
+        <sporsmalogsvar.version>7.1.1</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
