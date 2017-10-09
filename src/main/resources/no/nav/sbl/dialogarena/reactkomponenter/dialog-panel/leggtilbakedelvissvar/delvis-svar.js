@@ -12,18 +12,26 @@ class DelvisSvar extends Component {
         };
     }
 
-    svarDelvis() {
-        console.log(this.state.svarValue);
+    ferdigstillHenvendelse() {
         const url = `/modiabrukerdialog/rest/personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/ferdigstill`;
         const data = JSON.stringify({ svar: this.state.svarValue });
-        const svarDelvisPromise = Ajax.put(url, data);
-        svarDelvisPromise.done(() => {
+        return Ajax.put(url, data);
+    }
+
+    leggTilbakeOppgave() {
+        const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}`;
+        const data = JSON.stringify({});
+        return Ajax.put(url, data);
+    }
+
+    svarDelvis() {
+        const ferdigstillHenvendelsePromise = this.ferdigstillHenvendelse();
+        const leggTilbakeOppgavePromise = this.leggTilbakeOppgave();
+        Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
             console.log('Well done!');
             this.props.svarCallback();
-        });
-
-        svarDelvisPromise.fail(err => {
-            console.err(err);
+        }, (err) => {
+            console.error(err);
         });
     }
 
@@ -81,7 +89,9 @@ DelvisSvar.propTypes = {
     sporsmal: React.PropTypes.string.isRequired,
     fodselsnummer: React.PropTypes.string.isRequired,
     traadId: React.PropTypes.string.isRequired,
-    svarCallback: React.PropTypes.func.isRequired
+    temagruppe: React.PropTypes.string.isRequired,
+    svarCallback: React.PropTypes.func.isRequired,
+    oppgaveId: React.PropTypes.string.isRequired
 };
 
 export default DelvisSvar;

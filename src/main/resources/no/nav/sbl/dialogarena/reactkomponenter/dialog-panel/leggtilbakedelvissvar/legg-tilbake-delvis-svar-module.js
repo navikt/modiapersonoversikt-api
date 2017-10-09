@@ -25,6 +25,8 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 fodselsnummer={this.props.fodselsnummer}
                 traadId={this.props.traadId}
                 svarCallback={this.svarCallback}
+                oppgaveId={this.props.oppgaveId}
+                temagruppe={this.props.temagruppe}
             />);
         }
         return <h1>Delvis svar er registrert</h1>;
@@ -39,6 +41,8 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     sporsmal: React.PropTypes.string.isRequired,
     fodselsnummer: React.PropTypes.string.isRequired,
     traadId: React.PropTypes.string.isRequired,
+    temagruppe: React.PropTypes.string.isRequired,
+    oppgaveId: React.PropTypes.string.isRequired
 };
 
 export default LeggTilbakeDelvisSvarPanel;
