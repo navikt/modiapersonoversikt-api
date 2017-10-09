@@ -7,29 +7,34 @@ const styling = {
         textTransform: 'none !important'
     },
     okKnapp: {
-       marginLeft: 18 + 'rem',
+       marginLeft: 0 + ' auto',
     }
 };
 
 class TekniskFeil extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.skjul = this.skjul.bind(this)
+    }
+
     vis() {
-        this.refs.modal.open();
+        this.modaldialog.open();
     }
 
     skjul() {
-        this.refs.modal.close();
+        this.modaldialog.close();
     }
 
     render() {
-        const { isOpen, title, closeButton, tekst, fnr} = this.props;
+        const { isOpen, title, closeButton, tekst} = this.props;
         const modalProps = { isOpen, title, closeButton };
         return (
-            <Modal {...modalProps} width={600} height={180} onClosing={() => (false)} ref="modal">
+            <Modal {...modalProps} width={600} height={180} onClosing={() => (false)} ref={(modal) => this.modaldialog = modal}>
                 <section className="default-error">
                     <h1 className="robust-ikon-feil-strek" style={styling.text}>{tekst}</h1>
                 </section>
-                <a className="knapp-stor" style={styling.okKnapp} href={'/modiabrukerdialog/person/'+fnr}> Ok </a>
+                <a className="knapp-stor" style={styling.okKnapp} onClick={() => this.skjul()}> Ok </a>
             </Modal>
         );
     }
@@ -48,7 +53,6 @@ TekniskFeil.propTypes = {
     description: AriaPropType,
     closeButton: AriaPropType,
     isOpen: pt.bool,
-    fnr: pt.string.isRequired
 };
 
 export default TekniskFeil;
