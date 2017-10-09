@@ -37,7 +37,7 @@ public class AvsluttOppgavePanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final WSOppgave oppgave = gsakService.hentOppgave(ofNullable(oppgaveId).orElse(""));
+        final WSOppgave oppgave = ofNullable(oppgaveId).map(gsakService::hentOppgave).orElse(new WSOppgave());
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackAvsluttOppgave");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
