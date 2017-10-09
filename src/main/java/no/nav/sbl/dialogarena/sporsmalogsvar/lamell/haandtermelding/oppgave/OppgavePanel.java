@@ -15,13 +15,9 @@ import org.apache.wicket.model.*;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel.OppgaveValg.AVSLUTT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel.OppgaveValg.OPPRETT;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -53,12 +49,12 @@ public class OppgavePanel extends AnimertPanel {
         IModel<Boolean> oppgaveKanAvsluttes = new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                List<MeldingVM> traad =
-                        on(innboksVM.getValgtTraad().getMeldinger())
-                                .filter(where(TRAAD_ID, equalTo(innboksVM.getSessionHenvendelseId().getOrElse(""))))
-                                .collect();
+                String traadId = innboksVM.getSessionHenvendelseId().orElse("");
+                boolean valgtTraadHarSessionHenvendelseId = innboksVM.getValgtTraad().getMeldinger().stream()
+                        .map(MeldingVM::getTraadId)
+                        .anyMatch(traadId::equals);
 
-                return !traad.isEmpty() && innboksVM.getSessionOppgaveId().isSome();
+                return valgtTraadHarSessionHenvendelseId && innboksVM.getSessionOppgaveId().isPresent();
             }
         };
 
@@ -73,7 +69,7 @@ public class OppgavePanel extends AnimertPanel {
         };
         nyOppgaveFormWrapper.add(visibleIf(either(isEqualTo(oppgaveValgModel, OPPRETT)).or(not(oppgaveKanAvsluttes))));
 
-        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm", innboksVM.getSessionOppgaveId()) {
+        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm", innboksVM.getSessionOppgaveId().orElse(null)) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 innboksVM.setSessionOppgaveId(null);

@@ -1,26 +1,15 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
-import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.*;
+import org.apache.lucene.queryparser.classic.*;
+import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
@@ -30,23 +19,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import static java.lang.System.getProperty;
-import static java.util.Arrays.asList;
+import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.*;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.containedIn;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
-import static no.nav.modig.lang.collections.ReduceUtils.join;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.TRAAD_ID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad.NYESTE_FORST;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.lucene.document.Field.Store.YES;
 import static org.joda.time.DateTime.now;
@@ -91,7 +73,6 @@ public class MeldingerSokImpl implements MeldingerSok {
             JOURNALFORT_DATO,
             JOURNALFORT_SAKSID};
     private static final StandardAnalyzer ANALYZER = new StandardAnalyzer();
-    private static final Transformer<DateTime, String> DATO_TIL_STRING = (dateTime) -> DateUtils.dateTime(dateTime);
 
     private final Integer timeToLiveMinutes;
 
@@ -106,11 +87,11 @@ public class MeldingerSokImpl implements MeldingerSok {
         String navIdent = getSubjectHandler().getUid();
         String key = key(fnr, navIdent);
 
-        List<Melding> transformerteMeldinger = on(meldinger).map((melding) -> {
-            melding.visningsDatoTekst = optional(melding.getVisningsDato()).map(DATO_TIL_STRING).getOrElse("");
-            melding.journalfortDatoTekst = optional(melding.journalfortDato).map(DATO_TIL_STRING).getOrElse("");
+        List<Melding> transformerteMeldinger = meldinger.stream().map((melding) -> {
+            melding.visningsDatoTekst = ofNullable(melding.getVisningsDato()).map(DateUtils::toString).orElse("");
+            melding.journalfortDatoTekst = ofNullable(melding.journalfortDato).map(DateUtils::toString).orElse("");
             return melding;
-        }).collect();
+        }).collect(toList());
 
         MeldingerCacheEntry cacheEntry = new MeldingerCacheEntry(
                 transformerteMeldinger,
@@ -160,19 +141,19 @@ public class MeldingerSokImpl implements MeldingerSok {
 
     private List<Traad> lagTraader(String key, Map<String, MeldingerSokResultat> resultat) {
         MeldingerCacheEntry cacheEntry = cache.get(key);
-        final List<String> behandlingsIder = on(resultat).map(TransformerUtils.key()).collect();
+        final Set<String> behandlingsIder = resultat.keySet();
         final List<Melding> opprinneligeMeldinger = cacheEntry.meldinger;
         final Map<String, List<Melding>> opprinneligeTraader = cacheEntry.traader;
 
-        Map<String, List<Melding>> traader = on(opprinneligeMeldinger)
-                .filter(where(Melding.ID, containedIn(behandlingsIder)))
+        Map<String, List<Melding>> traader = opprinneligeMeldinger.stream()
+                .filter(melding -> behandlingsIder.contains(melding.id))
                 .map(highlighting(resultat))
-                .reduce(indexBy(TRAAD_ID));
+                .collect(groupingBy(Melding::getTraadId));
 
-        return on(traader.entrySet()).map((entry) -> {
-            int antallMeldingerIOpprinneligTraad = opprinneligeTraader.get(entry.getKey()).size();
-            return new Traad(entry.getKey(), antallMeldingerIOpprinneligTraad, entry.getValue());
-        }).collect(NYESTE_FORST);
+        return traader.entrySet().stream()
+                .map(entry -> new Traad(entry.getKey(), opprinneligeTraader.get(entry.getKey()).size(), entry.getValue()))
+                .sorted(comparing(Traad::getDato).reversed())
+                .collect(toList());
     }
 
     @Override
@@ -218,26 +199,28 @@ public class MeldingerSokImpl implements MeldingerSok {
         Document document = new Document();
         document.add(new StoredField(ID, id));
         document.add(new StoredField(BEHANDLINGS_ID, melding.id));
-        document.add(new TextField(FRITEKST, optional(melding.fritekst).getOrElse(""), YES));
-        document.add(new TextField(TEMAGRUPPE, optional(melding.temagruppeNavn).getOrElse(""), YES));
-        document.add(new TextField(ARKIVTEMA, optional(melding.journalfortTemanavn).getOrElse(""), YES));
-        document.add(new TextField(DATO, optional(melding.visningsDatoTekst).getOrElse(""), YES));
-        document.add(new TextField(NAVIDENT, optional(melding.navIdent).getOrElse(""), YES));
-        document.add(new TextField(STATUSTEKST, optional(melding.statusTekst).getOrElse(""), YES));
-        document.add(new TextField(LEST_STATUS, optional(melding.lestStatus).getOrElse(""), YES));
-        document.add(new TextField(KANAL, optional(melding.kanal).getOrElse(""), YES));
-        document.add(new TextField(SKREVET_AV_NAVN, optional(melding.skrevetAv.navn).getOrElse(""), YES));
-        document.add(new TextField(JOURNALFORT_AV_NAVN, optional(melding.journalfortAv.navn).getOrElse(""), YES));
-        document.add(new TextField(JOURNALFORT_AV_IDENT, optional(melding.journalfortAvNavIdent).getOrElse(""), YES));
-        document.add(new TextField(JOURNALFORT_DATO, optional(melding.journalfortDatoTekst).getOrElse(""), YES));
-        document.add(new TextField(JOURNALFORT_SAKSID, optional(melding.journalfortSaksId).getOrElse(""), YES));
+        document.add(new TextField(FRITEKST, ofNullable(melding.fritekst).orElse(""), YES));
+        document.add(new TextField(TEMAGRUPPE, ofNullable(melding.temagruppeNavn).orElse(""), YES));
+        document.add(new TextField(ARKIVTEMA, ofNullable(melding.journalfortTemanavn).orElse(""), YES));
+        document.add(new TextField(DATO, ofNullable(melding.visningsDatoTekst).orElse(""), YES));
+        document.add(new TextField(NAVIDENT, ofNullable(melding.navIdent).orElse(""), YES));
+        document.add(new TextField(STATUSTEKST, ofNullable(melding.statusTekst).orElse(""), YES));
+        document.add(new TextField(LEST_STATUS, ofNullable(melding.lestStatus).orElse(""), YES));
+        document.add(new TextField(KANAL, ofNullable(melding.kanal).orElse(""), YES));
+        document.add(new TextField(SKREVET_AV_NAVN, ofNullable(melding.skrevetAv.navn).orElse(""), YES));
+        document.add(new TextField(JOURNALFORT_AV_NAVN, ofNullable(melding.journalfortAv.navn).orElse(""), YES));
+        document.add(new TextField(JOURNALFORT_AV_IDENT, ofNullable(melding.journalfortAvNavIdent).orElse(""), YES));
+        document.add(new TextField(JOURNALFORT_DATO, ofNullable(melding.journalfortDatoTekst).orElse(""), YES));
+        document.add(new TextField(JOURNALFORT_SAKSID, ofNullable(melding.journalfortSaksId).orElse(""), YES));
 
         return document;
     }
 
     private static String query(String soketekst) {
         String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING).trim();
-        return isBlank(vasketSoketekst) ? "*:*" : on(asList(vasketSoketekst.split(" "))).map((s) -> isBlank(s) ? "" : "*" + s + "*").reduce(join(" "));
+        return isBlank(vasketSoketekst) ? "*:*" : Arrays.stream(vasketSoketekst.split(" "))
+                .map((s) -> isBlank(s) ? "" : "*" + s + "*")
+                .collect(joining(" "));
     }
 
     private static Map<String, MeldingerSokResultat> hentResultat(
@@ -305,7 +288,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         return tekst;
     }
 
-    private static Transformer<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
+    private static Function<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
         return (melding) -> {
             MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
             melding.fritekst = meldingerSokResultat.fritekst;
@@ -336,7 +319,7 @@ public class MeldingerSokImpl implements MeldingerSok {
             this.meldinger = meldinger;
             this.directory = directory;
             this.lastIndexed = lastIndexed;
-            this.traader = on(meldinger).reduce(indexBy(TRAAD_ID));
+            this.traader = meldinger.stream().collect(groupingBy(Melding::getTraadId));
         }
     }
 

@@ -5,16 +5,16 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.function.Function;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.widget.WidgetMeldingVM.NYESTE_OVERST;
 
 public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
@@ -36,12 +36,19 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
     @Override
     public List<WidgetMeldingVM> getFeedItems() {
-
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
-        return on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
+        return skillUtTraader(henvendelseBehandlingService.hentMeldinger(fnr))
+                .values().stream()
+                .map(TIL_MELDINGVM)
+                .sorted(comparing(WidgetMeldingVM::getVisningsDato).reversed())
+                .collect(toList());
     }
 
-    private static final Transformer<List<Melding>, WidgetMeldingVM> TIL_MELDINGVM = (traad) -> new WidgetMeldingVM(traad);
+    private static final Function<List<Melding>, WidgetMeldingVM> TIL_MELDINGVM = (traad) ->
+            new WidgetMeldingVM(traad, traad.stream()
+                    .map(Melding::erFraSaksbehandler)
+                    .distinct()
+                    .count()
+                    < 2);
 
     @RunOnEvents(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER)
     public void meldingSendtTilBruker(AjaxRequestTarget target) {
