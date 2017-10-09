@@ -15,10 +15,10 @@ public class DiskresjonAttributeLocator extends AttributeLocator {
 
     @Override
     public EvaluationResult findAttribute(URI attributeType, URI attributeId, URI issuer, URI subjectCategory, EvaluationCtx context, int designatorType) {
-        return new EvaluationResult(createDeafultEmtyAtribute(attributeType));
+        return new EvaluationResult(createDeafultEmptyAtribute(attributeType));
     }
 
-    private BagAttribute createDeafultEmtyAtribute(URI attributeType) {
+    private BagAttribute createDeafultEmptyAtribute(URI attributeType) {
         Set<AttributeValue> values = new HashSet<>();
         values.add(new StringAttribute(""));
         return new BagAttribute(attributeType, values);
