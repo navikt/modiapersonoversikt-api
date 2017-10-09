@@ -27,7 +27,7 @@
     <!--denne fjerner warnings om mulig feil lokalisering av tekst-->
     <logger name="org.apache.wicket.Localizer" level="ERROR" />
 
-    <!--viser alle netverkskall fra klient/nettleser, denne produserer mye logg-->
+    <!--viser alle nettverkskall fra klient/nettleser, denne produserer mye logg-->
     <!--<logger name="org.apache.wicket.protocol.http.RequestLogger" level="INFO" />-->
 
     <root level="INFO">
