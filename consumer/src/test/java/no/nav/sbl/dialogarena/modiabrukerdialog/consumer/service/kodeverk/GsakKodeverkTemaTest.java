@@ -7,11 +7,11 @@ import org.junit.Test;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static org.apache.commons.collections15.ComparatorUtils.NATURAL_COMPARATOR;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.apache.commons.collections15.ComparatorUtils.NATURAL_COMPARATOR;
-import static org.hamcrest.Matchers.contains;
 
 
 public class GsakKodeverkTemaTest {
@@ -34,14 +34,18 @@ public class GsakKodeverkTemaTest {
     @Test
     public void underkategorierHvorErGyldigErLikFalseForGosysSkalIgnoreres() throws Exception {
         final List<GsakKodeTema.Tema> alleTema = GsakKodeverkTema.Parser.parse();
-        final List<GsakKodeTema.Tema> etTema = on(alleTema).filter(new Predicate<GsakKodeTema.Tema>() {
-            @Override
-            public boolean evaluate(final GsakKodeTema.Tema tema) {
-                return tema.kode.equals("STO");
-            }
-        }).collect();
+        final List<GsakKodeTema.Tema> etTema = on(alleTema).filter(tema -> tema.kode.equals("STO")).collect();
 
         assertThat(etTema.get(0).underkategorier.size(), is(1));
         assertThat(etTema.get(0).underkategorier.get(0).kode, is("AAP_STO"));
     }
+
+    @Test
+    public void underkategorierHvorErGyldigErTrueMenTOMErForbiForGosysSkalIgnoreres() throws Exception {
+        final List<GsakKodeTema.Tema> alleTema = GsakKodeverkTema.Parser.parse();
+        final List<GsakKodeTema.Tema> etTema = on(alleTema).filter(tema -> tema.kode.equals("MED")).collect();
+
+        assertThat(etTema.get(0).underkategorier.size(), is(0));
+    }
+
 }

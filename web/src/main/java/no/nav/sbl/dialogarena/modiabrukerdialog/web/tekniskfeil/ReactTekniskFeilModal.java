@@ -13,11 +13,16 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class ReactTekniskFeilModal extends Panel {
 
     public static final String COMPONENT = "FeilmeldingsModaler.TekniskFeil";
+    private final ReactComponentPanel modal;
 
     public ReactTekniskFeilModal(String id, PageParameters pageParameters) {
         super(id);
-        ReactComponentPanel modal = new ReactComponentPanel("modal", COMPONENT, modalProps(pageParameters));
+        modal = new ReactComponentPanel("modal", COMPONENT, modalProps(pageParameters));
         add(modal);
+    }
+
+    public ReactComponentPanel getModal() {
+        return modal;
     }
 
     private Map<String, Object> modalProps(final PageParameters pageParameters) {

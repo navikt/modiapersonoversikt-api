@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>13.0.16-2017-HL3-SNAPSHOT</version>
+    <version>13.2.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -56,7 +56,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.9.1</modig.wicket.version>
+        <modig.wicket.version>3.9.2</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.5</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -74,7 +74,7 @@
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
         <reactkomponenter.version>2.8.0-SMIDIG-2-SNAPSHOT</reactkomponenter.version>
-        <nav-metrics.version>3.1.1</nav-metrics.version>
+        <nav-metrics.version>3.2.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -94,8 +94,8 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>2.0.1</personsok.version>
-        <kjerneinfo.versjon>5.0.6</kjerneinfo.versjon>
+        <personsok.version>2.1.0</personsok.version>
+        <kjerneinfo.versjon>5.1.4</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
@@ -106,10 +106,10 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>1.0.0</dialogarena.behandlingsinformasjon.version>
-        <saksoversikt.version>8.0.0</saksoversikt.version>
+        <saksoversikt.version>8.0.4</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <modiabrukerdialog-api.version>8.0.3-2017-HL3-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>7.0.4-2017-HL3-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>7.1.4</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
@@ -465,11 +465,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
                 <version>${egenansatt-tjenestespesifikasjon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
-                <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
             </dependency>
 
             <!--Dialogarena-->
