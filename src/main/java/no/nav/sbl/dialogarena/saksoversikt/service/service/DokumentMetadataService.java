@@ -47,12 +47,18 @@ public class DokumentMetadataService {
 
     private Predicate<DokumentMetadata> finnesIJoark(List<DokumentMetadata> joarkMetadata) {
         return henvendelseMetadata -> joarkMetadata.stream()
-                .anyMatch(jp -> jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId()));
+                .anyMatch(jp -> henvendelseLikJournalpost(henvendelseMetadata, jp));
     }
 
     private Predicate<DokumentMetadata> finnesIkkeIJoark(List<DokumentMetadata> joarkMetadata) {
         return finnesIJoark(joarkMetadata).negate();
     }
+
+    private boolean henvendelseLikJournalpost(DokumentMetadata henvendelseMetadata, DokumentMetadata jp) {
+        return jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId())
+                || "BIL".equals(henvendelseMetadata.getTemakode()) && henvendelseMetadata.getDato().equals(jp.getDato());
+    }
+
 
     public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
         Set<Baksystem> feilendeBaksystem = new HashSet<>();
@@ -76,18 +82,12 @@ public class DokumentMetadataService {
             feilendeBaksystem.add(e.getBaksystem());
         }
 
-        List<String> duplikateJournalposter = innsendteSoknaderIHenvendelse
-                .stream()
-                .filter(finnesIJoark(joarkMetadataListe))
-                .map(dokumentMetadata1 -> dokumentMetadata1.getJournalpostId())
-                .collect(toList());
+        joarkMetadataListe.forEach(jp -> {
+            if (innsendteSoknaderIHenvendelse.stream().anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, jp))) {
+                jp.withBaksystem(Baksystem.HENVENDELSE);
+            }
+        });
 
-        joarkMetadataListe
-                .forEach(dokumentMetadata -> {
-                    if(duplikateJournalposter.contains(dokumentMetadata.getJournalpostId())) {
-                        dokumentMetadata.withBaksystem(Baksystem.HENVENDELSE);
-                    }
-                });
 
         Stream<DokumentMetadata> soknaderSomHarEndretTema = innsendteSoknaderIHenvendelse
                 .stream()
@@ -109,7 +109,7 @@ public class DokumentMetadataService {
     private boolean harJournalforingEndretTema(DokumentMetadata henvendelseDokumentMetadata, List<DokumentMetadata> joarkDokumentMetadataListe) {
         return joarkDokumentMetadataListe
                 .stream()
-                .filter(dokumentMetadata -> dokumentMetadata.getJournalpostId().equals(henvendelseDokumentMetadata.getJournalpostId()))
+                .filter(dokumentMetadata -> henvendelseLikJournalpost(henvendelseDokumentMetadata, dokumentMetadata))
                 .filter(dokumentMetadata -> !dokumentMetadata.getTemakode().equals(henvendelseDokumentMetadata.getTemakode()))
                 .findAny()
                 .isPresent();
