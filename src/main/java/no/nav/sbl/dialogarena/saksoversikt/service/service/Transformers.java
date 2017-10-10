@@ -1,7 +1,11 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.service;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsStatus;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
@@ -20,11 +24,11 @@ import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandl
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.BehandlingsType.KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.ER_KVITTERING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentFraHenvendelse.Innsendingsvalg;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils.erKvitteringstype;
+import static no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils.behandlingsDato;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.valueOf;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Soknad.HenvendelseStatus;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils.behandlingsDato;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.filter.FilterUtils.erKvitteringstype;
-import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils.optional;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
 
 public class Transformers {
@@ -99,7 +103,6 @@ public class Transformers {
                 .withSistEndretDato(wsSoknad.getSistEndretDato())
                 .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                 .withEttersending(wsSoknad.isEttersending())
-                .withOversendtDokmot(wsSoknad.isOversendtDokmot())
                 .withHenvendelseType(valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
                 .withDokumenter(optional(wsSoknad.getDokumentforventninger())
                         .orElse(new Dokumentforventninger())

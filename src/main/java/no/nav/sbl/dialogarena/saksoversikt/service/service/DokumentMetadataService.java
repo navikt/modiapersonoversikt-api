@@ -47,16 +47,11 @@ public class DokumentMetadataService {
 
     private Predicate<DokumentMetadata> finnesIJoark(List<DokumentMetadata> joarkMetadata) {
         return henvendelseMetadata -> joarkMetadata.stream()
-                .anyMatch(jp -> henvendelseLikJournalpost(henvendelseMetadata, jp));
+                .anyMatch(jp -> jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId()));
     }
 
     private Predicate<DokumentMetadata> finnesIkkeIJoark(List<DokumentMetadata> joarkMetadata) {
         return finnesIJoark(joarkMetadata).negate();
-    }
-
-    private boolean henvendelseLikJournalpost(DokumentMetadata henvendelseMetadata, DokumentMetadata jp) {
-        return jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId())
-                || henvendelseMetadata.isOversendtDokmot() && henvendelseMetadata.getDato().equals(jp.getDato());
     }
 
     public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
@@ -81,12 +76,18 @@ public class DokumentMetadataService {
             feilendeBaksystem.add(e.getBaksystem());
         }
 
-        joarkMetadataListe.forEach(jp -> {
-            if (innsendteSoknaderIHenvendelse.stream().anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, jp))) {
-                jp.withBaksystem(Baksystem.HENVENDELSE);
-            }
-        });
+        List<String> duplikateJournalposter = innsendteSoknaderIHenvendelse
+                .stream()
+                .filter(finnesIJoark(joarkMetadataListe))
+                .map(dokumentMetadata1 -> dokumentMetadata1.getJournalpostId())
+                .collect(toList());
 
+        joarkMetadataListe
+                .forEach(dokumentMetadata -> {
+                    if(duplikateJournalposter.contains(dokumentMetadata.getJournalpostId())) {
+                        dokumentMetadata.withBaksystem(Baksystem.HENVENDELSE);
+                    }
+                });
 
         Stream<DokumentMetadata> soknaderSomHarEndretTema = innsendteSoknaderIHenvendelse
                 .stream()
@@ -108,7 +109,7 @@ public class DokumentMetadataService {
     private boolean harJournalforingEndretTema(DokumentMetadata henvendelseDokumentMetadata, List<DokumentMetadata> joarkDokumentMetadataListe) {
         return joarkDokumentMetadataListe
                 .stream()
-                .filter(dokumentMetadata -> henvendelseLikJournalpost(henvendelseDokumentMetadata, dokumentMetadata))
+                .filter(dokumentMetadata -> dokumentMetadata.getJournalpostId().equals(henvendelseDokumentMetadata.getJournalpostId()))
                 .filter(dokumentMetadata -> !dokumentMetadata.getTemakode().equals(henvendelseDokumentMetadata.getTemakode()))
                 .findAny()
                 .isPresent();
@@ -116,7 +117,7 @@ public class DokumentMetadataService {
 
     private Stream<DokumentMetadata> populerEttersendelserFraHenvendelse(List<DokumentMetadata> joarkMetadata, List<DokumentMetadata> ferdigeHenvendelser) {
         return joarkMetadata.stream().map(joarkDokumentMetadata -> {
-            boolean erEttersending = ferdigeHenvendelser.stream().anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, joarkDokumentMetadata)
+            boolean erEttersending = ferdigeHenvendelser.stream().anyMatch(henvendelse -> joarkDokumentMetadata.getJournalpostId().equals(henvendelse.getJournalpostId())
                     && henvendelse.isEttersending());
             return joarkDokumentMetadata.withEttersending(erEttersending);
         });
@@ -158,7 +159,6 @@ public class DokumentMetadataService {
                 .withJournalpostId(soknad.getJournalpostId())
                 .withHoveddokument(hovedDokument)
                 .withEttersending(soknad.getEttersending())
-                .withOversendtDokmot(soknad.getOversendtDokmot())
                 .withVedlegg(vedlegg)
                 .withDato(soknad.getInnsendtDato().toGregorianCalendar().toZonedDateTime().toLocalDateTime())
                 .withAvsender(Entitet.SLUTTBRUKER)
