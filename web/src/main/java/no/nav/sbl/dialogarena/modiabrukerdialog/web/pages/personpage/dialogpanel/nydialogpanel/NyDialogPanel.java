@@ -184,7 +184,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder")
+                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder", grunnInfo.bruker.fornavn)
         );
         tekstfelt.setOutputMarkupId(true);
         return tekstfelt;
