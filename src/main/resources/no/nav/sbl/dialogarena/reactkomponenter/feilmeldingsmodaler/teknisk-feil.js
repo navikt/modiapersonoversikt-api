@@ -7,7 +7,8 @@ const styling = {
         textTransform: 'none !important'
     },
     okKnapp: {
-       marginLeft: 0 + ' auto',
+        display: 'flex',
+        justifyContent: 'center'
     }
 };
 
@@ -15,7 +16,7 @@ class TekniskFeil extends React.Component {
 
     constructor(props) {
         super(props);
-        this.skjul = this.skjul.bind(this)
+        this.skjul = this.skjul.bind(this);
     }
 
     vis() {
@@ -27,14 +28,22 @@ class TekniskFeil extends React.Component {
     }
 
     render() {
-        const { isOpen, title, closeButton, tekst} = this.props;
+        const { isOpen, title, closeButton, tekst } = this.props;
         const modalProps = { isOpen, title, closeButton };
         return (
-            <Modal {...modalProps} width={600} height={180} onClosing={() => (false)} ref={(modal) => this.modaldialog = modal}>
+            <Modal
+                {...modalProps}
+                width={600}
+                height={210}
+                onClosing={() => (false)}
+                ref={(modal) => this.modaldialog = modal}
+            >
                 <section className="default-error">
                     <h1 className="robust-ikon-feil-strek" style={styling.text}>{tekst}</h1>
                 </section>
-                <a className="knapp-stor" style={styling.okKnapp} onClick={() => this.skjul()}> Ok </a>
+                <div style={styling.okKnapp}>
+                    <a className="knapp-stor" onClick={() => this.skjul()}> Ok </a>
+                </div>
             </Modal>
         );
     }
