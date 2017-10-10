@@ -24,6 +24,7 @@ public class DokumentMetadataService {
     public static final String JOURNALPOST_INTERN = "N";
     public static final String DOKTYPE_HOVEDDOKUMENT = "HOVEDDOKUMENT";
     public static final String DOKTYPE_VEDLEGG = "VEDLEGG";
+    public static final String DOKMOT_TEMA = "BIL";
 
     public static final String DOKUMENT_LASTET_OPP = "LASTET_OPP";
     public static final Predicate<DokumentFraHenvendelse> erVedlegg
@@ -56,7 +57,7 @@ public class DokumentMetadataService {
 
     private boolean henvendelseLikJournalpost(DokumentMetadata henvendelseMetadata, DokumentMetadata jp) {
         return jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId())
-                || "BIL".equals(henvendelseMetadata.getTemakode()) && henvendelseMetadata.getDato().equals(jp.getDato());
+                || DOKMOT_TEMA.equals(henvendelseMetadata.getTemakode()) && henvendelseMetadata.getDato().equals(jp.getDato());
     }
 
     public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
