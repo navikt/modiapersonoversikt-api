@@ -59,7 +59,6 @@ public class DokumentMetadataService {
                 || "BIL".equals(henvendelseMetadata.getTemakode()) && henvendelseMetadata.getDato().equals(jp.getDato());
     }
 
-
     public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
         Set<Baksystem> feilendeBaksystem = new HashSet<>();
 
