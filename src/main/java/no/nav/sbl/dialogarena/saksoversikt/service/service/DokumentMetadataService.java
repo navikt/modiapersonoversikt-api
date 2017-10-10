@@ -117,7 +117,7 @@ public class DokumentMetadataService {
 
     private Stream<DokumentMetadata> populerEttersendelserFraHenvendelse(List<DokumentMetadata> joarkMetadata, List<DokumentMetadata> ferdigeHenvendelser) {
         return joarkMetadata.stream().map(joarkDokumentMetadata -> {
-            boolean erEttersending = ferdigeHenvendelser.stream().anyMatch(henvendelse -> joarkDokumentMetadata.getJournalpostId().equals(henvendelse.getJournalpostId())
+            boolean erEttersending = ferdigeHenvendelser.stream().anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, joarkDokumentMetadata)
                     && henvendelse.isEttersending());
             return joarkDokumentMetadata.withEttersending(erEttersending);
         });
