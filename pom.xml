@@ -37,7 +37,7 @@
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <pesys-pensjon-sak-version>1.0.3</pesys-pensjon-sak-version>
         <sanntidpdfkonverter.version>1.0</sanntidpdfkonverter.version>
-        <henvendelse-soknader-tjenestespesifikasjon.version>1.0.0</henvendelse-soknader-tjenestespesifikasjon.version>
+        <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
 
         <!-- Java -->
         <servlet.api.version>3.1.0</servlet.api.version>
