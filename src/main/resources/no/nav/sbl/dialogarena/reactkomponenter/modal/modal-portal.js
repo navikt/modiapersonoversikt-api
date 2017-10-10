@@ -31,7 +31,7 @@ const ModalPortal = React.createClass({
         isOpen: pt.bool,
         modal: pt.object.isRequired,
         skipFocus: pt.array,
-        children: pt.object.isRequired,
+        children: pt.node.isRequired,
         width: pt.number,
         height: pt.number
     },
