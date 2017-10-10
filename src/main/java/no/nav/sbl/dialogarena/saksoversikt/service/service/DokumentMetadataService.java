@@ -24,7 +24,7 @@ public class DokumentMetadataService {
     public static final String JOURNALPOST_INTERN = "N";
     public static final String DOKTYPE_HOVEDDOKUMENT = "HOVEDDOKUMENT";
     public static final String DOKTYPE_VEDLEGG = "VEDLEGG";
-    public static final String DOKMOT_TEMA = "BIL";
+    private static final String DOKMOT_TEMA = "BIL";
 
     public static final String DOKUMENT_LASTET_OPP = "LASTET_OPP";
     public static final Predicate<DokumentFraHenvendelse> erVedlegg
