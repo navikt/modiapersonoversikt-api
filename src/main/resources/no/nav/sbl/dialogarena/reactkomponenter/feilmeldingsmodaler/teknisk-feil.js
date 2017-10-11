@@ -36,7 +36,7 @@ class TekniskFeil extends React.Component {
                 width={600}
                 height={210}
                 onClosing={() => (false)}
-                ref={(modal) => this.modaldialog = modal}
+                ref={(modal) => { this.modaldialog = modal; return true; }}
             >
                 <section className="default-error">
                     <h1 className="robust-ikon-feil-strek" style={styling.text}>{tekst}</h1>

@@ -16,8 +16,8 @@ describe('HTTP request', () => {
     it('should use contentType \'application/json\' if no contentType in RequestModifier', () => {
         Ajax.post('http://localhost:9876/echo', {});
 
-        let request = Ajax.toPromise.getCall(0).args[0].req;
-        let headers = request._headers;
+        const request = Ajax.toPromise.getCall(0).args[0].req;
+        const headers = request._headers;
 
         expect(Ajax.toPromise.calledOnce).to.equal(true);
         expect(headers['content-type']).to.equal('application/json');
