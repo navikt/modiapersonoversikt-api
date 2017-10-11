@@ -8,7 +8,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 public class Traad {
-    public final String traadId, temagruppe, journalfortTema, statusKlasse, statusTekst;
+    public final String traadId, temagruppe, journalfortTema, statusKlasse, statusTekst, ikontekst;
     public final List<Melding> meldinger;
     public final DateTime dato;
     public final int antallMeldingerIOpprinneligTraad;
@@ -29,6 +29,7 @@ public class Traad {
                 .count()
                 < 2;
         this.statusKlasse = lagStatusKlasse(sisteMelding);
+        this.ikontekst = lagIkonTekst(sisteMelding);
         this.statusTekst = sisteMelding.statusTekst;
     }
 
@@ -59,6 +60,25 @@ public class Traad {
         }
 
         return statusklasse;
+    }
+
+    private String lagIkonTekst(Melding melding) {
+        switch (melding.meldingstype) {
+            case SAMTALEREFERAT_OPPMOTE:
+                return "Oppmøte";
+            case SAMTALEREFERAT_TELEFON:
+                return "Telefon";
+            case OPPGAVE_VARSEL:
+                return "Oppgave";
+            case DOKUMENT_VARSEL:
+                return "Dokument";
+            case SVAR_OPPMOTE:
+            case SVAR_TELEFON:
+            case SPORSMAL_MODIA_UTGAAENDE:
+                return "Spørsmål";
+            default:
+                return melding.erBesvart() ? "Besvart" : "Ubesvart";
+        }
     }
 
     public DateTime getDato() {
