@@ -51,6 +51,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static final String DATO = "dato";
     private static final String NAVIDENT = "navident";
     private static final String STATUSTEKST = "statustekst";
+    private static final String IKONTEKST = "ikontekst";
     private static final String LEST_STATUS = "leststatus";
     private static final String KANAL = "kanal";
     private static final String SKREVET_AV_NAVN = "skrevetavnavn";
@@ -205,6 +206,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         document.add(new TextField(DATO, ofNullable(melding.visningsDatoTekst).orElse(""), YES));
         document.add(new TextField(NAVIDENT, ofNullable(melding.navIdent).orElse(""), YES));
         document.add(new TextField(STATUSTEKST, ofNullable(melding.statusTekst).orElse(""), YES));
+        document.add(new TextField(IKONTEKST, ofNullable(melding.statusTekst).orElse(""), YES));
         document.add(new TextField(LEST_STATUS, ofNullable(melding.lestStatus).orElse(""), YES));
         document.add(new TextField(KANAL, ofNullable(melding.kanal).orElse(""), YES));
         document.add(new TextField(SKREVET_AV_NAVN, ofNullable(melding.skrevetAv.navn).orElse(""), YES));
@@ -238,6 +240,7 @@ public class MeldingerSokImpl implements MeldingerSok {
                 String dato = hentTekstResultat(DATO, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String navIdent = hentTekstResultat(NAVIDENT, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String statusTekst = hentTekstResultat(STATUSTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
+                String ikontekst = hentTekstResultat(IKONTEKST, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String lestStatus = hentTekstResultat(LEST_STATUS, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String kanal = hentTekstResultat(KANAL, doc, searcher, analyzer, highlighter, gjorHighlighting);
                 String skrevetAvNavn = hentTekstResultat(SKREVET_AV_NAVN, doc, searcher, analyzer, highlighter, gjorHighlighting);
@@ -253,6 +256,7 @@ public class MeldingerSokImpl implements MeldingerSok {
                                 .withDato(dato)
                                 .withNavident(navIdent)
                                 .withStatustekst(statusTekst)
+                                .withIkontekst(ikontekst)
                                 .withLestStatus(lestStatus)
                                 .withKanal(kanal)
                                 .withSkrevetAvNavn(skrevetAvNavn)
@@ -298,6 +302,7 @@ public class MeldingerSokImpl implements MeldingerSok {
             melding.navIdent = meldingerSokResultat.navIdent;
             melding.kanal = meldingerSokResultat.kanal;
             melding.statusTekst = meldingerSokResultat.statustekst;
+            melding.ikontekst = meldingerSokResultat.ikontekst;
             melding.lestStatus = meldingerSokResultat.lestStatus;
             melding.skrevetAv = new Person(meldingerSokResultat.skrevetAvNavn, "");
             melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "");
