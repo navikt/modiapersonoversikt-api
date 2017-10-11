@@ -39,12 +39,38 @@ public class StatusIkon extends Panel {
         add(ikon, antallMeldingerTekst, statusIkonTekst);
     }
 
+    private String lagIkonTekst(MeldingVM meldingVM) {
+        String key;
+
+        switch (meldingVM.getMeldingstype()) {
+            case SAMTALEREFERAT_OPPMOTE:
+                key = "oppmote";
+                break;
+            case SAMTALEREFERAT_TELEFON:
+                key = "telefon";
+                break;
+            case OPPGAVE_VARSEL:
+                key = "oppgave";
+                break;
+            case DOKUMENT_VARSEL:
+                key = "dokument";
+                break;
+            case SVAR_OPPMOTE:
+            case SVAR_TELEFON:
+            case SPORSMAL_MODIA_UTGAAENDE:
+                key = "sporsmal";
+                break;
+            default:
+                key = meldingVM.erBesvart().getObject() ? "besvart" : "ubesvart";
+        }
+
+        return new StringResourceModel("innboks.melding." + key, this, null).getString();
+    }
+
     private String lagStatustekst(MeldingVM meldingVM, boolean underBehandling, int traadlengde, boolean erMonolog) {
-        boolean erBesvart = meldingVM.erBesvart().getObject() && !(meldingVM.erFraSaksbehandler() && erMonolog);
-        String besvartStatusKey = format("innboks.melding.%s", erBesvart ? "besvart" : "ubesvart");
-        String besvartStatus = new StringResourceModel(besvartStatusKey, this, null).getString();
+        String ikontekst = lagIkonTekst(meldingVM);
         String antallMeldinger = format("%d %s", traadlengde, traadlengde == 1 ? "melding" : "meldinger");
-        return format("%s%s, %s, ", underBehandling ? "Under behandling, " : "", besvartStatus, antallMeldinger);
+        return format("%s%s, %s, ", underBehandling ? "Under behandling, " : "", ikontekst, antallMeldinger);
     }
 
     private String lagAntallMeldingerTekst(int traadlengde) {
