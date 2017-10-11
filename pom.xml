@@ -33,8 +33,8 @@
         <send.ut.henvendelse.version>0.4</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
-        <modiabrukerdialog-api.version>8.2.1-SNAPSHOT</modiabrukerdialog-api.version>
-        <reactkomponenter.version>2.9.1</reactkomponenter.version>
+        <modiabrukerdialog-api.version>8.2.1</modiabrukerdialog-api.version>
+        <reactkomponenter.version>2.9.2</reactkomponenter.version>
         <modia-felleskomponenter.version>3.3</modia-felleskomponenter.version>
         <nav-metrics.version>3.2.1</nav-metrics.version>
     </properties>
