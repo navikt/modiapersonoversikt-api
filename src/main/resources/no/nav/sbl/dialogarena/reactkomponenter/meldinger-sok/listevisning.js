@@ -30,7 +30,7 @@ class Listevisning extends React.Component {
         const innhold = sanitize(traad.innhold, { allowedTags: ['em'] });
 
         const statusIkonTekst = format('{0}, {1} {2}',
-            traad.statusKlasse.match(/ubesvart$/) ? 'Ubesvart' : 'Besvart',
+            traad.ikontekst,
             antallMeldingerIOpprinneligTraad,
             antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
         );
@@ -60,6 +60,7 @@ Listevisning.propTypes = {
         statusKlasse: pt.string,
         antallMeldingerIOpprinneligTraad: pt.number,
         statusTekst: pt.string.isRequired,
+        ikontekst: pt.string.isRequired,
         temagruppe: pt.string,
         erMonolog: pt.bool,
         innhold: pt.string
