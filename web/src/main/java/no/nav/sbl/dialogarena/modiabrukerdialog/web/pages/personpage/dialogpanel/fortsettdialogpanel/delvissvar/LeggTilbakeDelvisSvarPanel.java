@@ -7,7 +7,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.panel.Panel;
-
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import static java.lang.String.format;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public class LeggTilbakeDelvisSvarPanel extends Panel {
@@ -16,7 +17,8 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     public static final String WICKET_REACT_WRAPPER_ID = "leggtilbakedelvissvarpanel";
     public static final String REACT_ID = "LeggTilbakeDelvisSvarPanel";
     public static final String SVAR_DELVIS_CALLBACK_ID = "delvisSvarSendt";
-
+    public static final String DELVIS_SVAR_AVBRYT = "delvisSvarAvbryt";
+    public static final String DEFAULT_SLIDE_DURATION = "400";
     private LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps;
 
     public LeggTilbakeDelvisSvarPanel(Melding sporsmal, String behandlingsId) {
@@ -30,6 +32,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     private Component lagReactPanel() {
         ReactComponentPanel reactComponentPanel = new ReactComponentPanel(WICKET_REACT_PANEL_ID, REACT_ID, leggTilbakeDelvisSvarProps.lagProps());
         reactComponentPanel.addCallback(SVAR_DELVIS_CALLBACK_ID, Void.class, (target, data) -> oppdaterMeldingerUI());
+        reactComponentPanel.addCallback(DELVIS_SVAR_AVBRYT, Void.class, (target, data) -> lukkDelvisSvarPanel(target));
         reactComponentPanel
                 .setOutputMarkupId(true)
                 .setVisibilityAllowed(true);
@@ -41,4 +44,12 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
     }
 
+    public void lukkDelvisSvarPanel(AjaxRequestTarget target) {
+        if (isVisibilityAllowed()) {
+            this.setVisibilityAllowed(false);
+            send(getPage(), BREADTH, DELVIS_SVAR_AVBRYT);
+            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
+            target.add(this);
+        }
+    }
 }

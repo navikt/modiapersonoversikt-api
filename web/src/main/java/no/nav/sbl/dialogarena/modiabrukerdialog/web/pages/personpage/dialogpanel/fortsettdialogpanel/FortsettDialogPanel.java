@@ -220,6 +220,13 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         target.focusComponent(leggTilbakeKnapp);
     }
 
+    @RunOnEvents(LeggTilbakeDelvisSvarPanel.DELVIS_SVAR_AVBRYT)
+    public void skjulDelvisSvarPanel(AjaxRequestTarget target) {
+        traadContainer.setVisibilityAllowed(true);
+        animertVisningToggle(target, svarContainer);
+        target.add(this);
+    }
+
     private String opprettHenvendelse() {
         String type = SVAR_SKRIFTLIG.toString();
         String fnr = grunnInfo.bruker.fnr;
