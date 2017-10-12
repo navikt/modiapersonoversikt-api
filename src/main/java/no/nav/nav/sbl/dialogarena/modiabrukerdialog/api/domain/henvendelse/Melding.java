@@ -165,6 +165,14 @@ public class Melding implements Serializable {
         return status != Status.IKKE_BESVART;
     }
 
+    public boolean erSvarSkriftlig() {
+        return meldingstype.equals(Meldingstype.SVAR_SKRIFTLIG);
+    }
+
+    public boolean erSporsmalSkriftlig() {
+        return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG);
+    }
+
     public static final Comparator<Melding> ELDSTE_FORST = (o1, o2) -> o1.getVisningsDato().compareTo(o2.getVisningsDato());
 
     public static final Comparator<Melding> NYESTE_FORST = (o1, o2) -> o2.getVisningsDato().compareTo(o1.getVisningsDato());
