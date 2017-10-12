@@ -43,7 +43,7 @@ class DelvisSvar extends Component {
         const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
             <p key={`paragraf-${index}`}>{paragraf}</p>);
         return (
-            <div>
+            <div aria-live="polite">
                 <h3>Legg tilbake med delvis svar</h3>
                 <h2>Spørsmål</h2>
                 <h3>FAMILIE</h3>
@@ -78,7 +78,13 @@ class DelvisSvar extends Component {
                 >
                     Svar delvis og legg tilbake
                 </a>
-                <a>Avbryt</a>
+                <a
+                    role="button"
+                    onClick={this.props.svarDelvisAvbryt}
+                    style={{cursor:'pointer'}}
+                >
+                    Avbryt
+                </a>
             </div>
         );
     }
@@ -91,6 +97,7 @@ DelvisSvar.propTypes = {
     traadId: React.PropTypes.string.isRequired,
     temagruppe: React.PropTypes.string.isRequired,
     svarCallback: React.PropTypes.func.isRequired,
+    svarDelvisAvbryt: React.PropTypes.func.isRequired,
     oppgaveId: React.PropTypes.string.isRequired
 };
 
