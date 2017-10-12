@@ -43,7 +43,7 @@ class DelvisSvar extends Component {
         const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
             <p key={`paragraf-${index}`}>{paragraf}</p>);
         return (
-            <div aria-live="polite">
+            <div>
                 <h3>Legg tilbake med delvis svar</h3>
                 <h2>Spørsmål</h2>
                 <h3>FAMILIE</h3>
