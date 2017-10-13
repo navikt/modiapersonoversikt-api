@@ -102,14 +102,6 @@
 		   timeToLiveSeconds="86400"
 		   memoryStoreEvictionPolicy="FIFO"/>
 
-	<cache name="pip.geografisk-nedslagsfelt" maxElementsInMemory="25000"
-		   overflowToDisk="false"
-		   diskPersistent="false"
-		   eternal="false"
-		   timeToIdleSeconds="3600"
-		   timeToLiveSeconds="86400"
-		   memoryStoreEvictionPolicy="FIFO"/>
-
     <cache name="pdp.decision" maxElementsInMemory="25000"
 		   overflowToDisk="false"
 		   diskPersistent="false"
@@ -171,7 +163,7 @@
 		   diskPersistent="false"
 		   memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="organisasjonEnhet" maxElementsInMemory="10000"
+	<cache name="organisasjonEnhetV2" maxElementsInMemory="10000"
 		   eternal="false"
 		   timeToIdleSeconds="86400"
 		   timeToLiveSeconds="86400"
@@ -179,7 +171,8 @@
 		   diskPersistent="false"
 		   memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="ldap" maxElementsInMemory="20000"
+
+	<cache name="ldap" maxElementsInMemory="20000"
            eternal="false"
            timeToIdleSeconds="3600"
            timeToLiveSeconds="3600"

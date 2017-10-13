@@ -55,7 +55,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.9.1</modig.wicket.version>
+        <modig.wicket.version>3.9.2</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.5</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -73,7 +73,7 @@
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
         <reactkomponenter.version>2.8.0-SMIDIG-2-SNAPSHOT</reactkomponenter.version>
-        <nav-metrics.version>3.1.1</nav-metrics.version>
+        <nav-metrics.version>3.2.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -104,7 +104,7 @@
         <send.ut.henvendelse.version>0.5</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.43</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>1.0.0</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>8.0.1-SNAPSHOT</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
@@ -115,13 +115,15 @@
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <modia-felleskomponenter.version>3.4-SNAPSHOT</modia-felleskomponenter.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
-        <nav-fellessystemer-environment.version>10.0.5</nav-fellessystemer-environment.version>
+        <nav-fellessystemer-environment.version>11.0.17</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
-        <organisasjonenhet.tjenestespesifikasjon.versjon>1.0.6</organisasjonenhet.tjenestespesifikasjon.versjon>
+        <organisasjonenhet-v2.tjenestespesifikasjon.versjon>1.0.5</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
+        <egenansatt-tjenestespesifikasjon.version>1.0.5</egenansatt-tjenestespesifikasjon.version>
+        <pensjon-sak.version>1.0.3</pensjon-sak.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
     </properties>
@@ -308,17 +310,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
-                <artifactId>brukerprofil-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
                 <artifactId>behandlebrukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -458,7 +449,7 @@
             <dependency>
                 <groupId>no.nav.sbl</groupId>
                 <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
-                <version>1.0.3</version>
+                <version>${pensjon-sak.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl</groupId>
@@ -467,8 +458,13 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>organisasjonenhet-v1-tjenestespesifikasjon</artifactId>
-                <version>${organisasjonenhet.tjenestespesifikasjon.versjon}</version>
+                <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
+                <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
+                <version>${egenansatt-tjenestespesifikasjon.version}</version>
             </dependency>
 
             <!--Dialogarena-->
@@ -697,7 +693,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-testcertificates</artifactId>
-                <version>1.1.0</version>
+                <version>1.2.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1114,7 +1110,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-12.2.0</tag>
+        <tag>modiabrukerdialog-13.2.4</tag>
     </scm>
 
 </project>

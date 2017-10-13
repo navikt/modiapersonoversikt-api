@@ -125,9 +125,9 @@ public class HenvendelseUtsendingServiceImplTest {
         Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
         organisasjonsenhet.setOrganisasjonselementId(ENHET);
         ansvarligEnhet.setOrganisasjonsenhet(organisasjonsenhet);
-        personfakta.setHarAnsvarligEnhet(ansvarligEnhet);
+        personfakta.setAnsvarligEnhet(ansvarligEnhet);
         person.setPersonfakta(personfakta);
-        person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
         kjerneinformasjonResponse.setPerson(person);
         when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
     }
@@ -328,6 +328,31 @@ public class HenvendelseUtsendingServiceImplTest {
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         verify(kjerneinfo, never()).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
+        XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(brukersEnhet));
+    }
+
+    @Test
+    public void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() throws Exception {
+        String brukersEnhet = null;
+
+        HentKjerneinformasjonResponse kjerneinformasjonResponse = new HentKjerneinformasjonResponse();
+        Person person = new Person();
+        Personfakta personfakta = new Personfakta();
+        personfakta.setAnsvarligEnhet(null);
+        person.setPersonfakta(personfakta);
+        kjerneinformasjonResponse.setPerson(person);
+        when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
+
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(FRITEKST)
+                .withType(SAMTALEREFERAT_OPPMOTE)
+                .withTemagruppe(Temagruppe.ARBD.toString())
+                .withBrukersEnhet(brukersEnhet);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+
+        verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
         assertThat(xmlHenvendelse.getBrukersEnhet(), is(brukersEnhet));
     }

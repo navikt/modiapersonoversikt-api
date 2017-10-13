@@ -93,10 +93,6 @@
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-panel</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-consumer</artifactId>
-        </dependency>
 
         <!--Dialogarena-->
         <dependency>

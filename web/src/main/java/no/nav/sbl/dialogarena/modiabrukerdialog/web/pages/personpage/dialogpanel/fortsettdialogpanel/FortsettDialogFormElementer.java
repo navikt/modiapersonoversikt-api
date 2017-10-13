@@ -53,7 +53,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(150)
-                        .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder")
+                        .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder", grunnInfo.bruker.fornavn)
         );
         add(tekstfelt);
 

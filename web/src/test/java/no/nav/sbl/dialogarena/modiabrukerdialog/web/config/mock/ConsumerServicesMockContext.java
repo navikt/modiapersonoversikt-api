@@ -8,7 +8,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerServic
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +37,10 @@ public class ConsumerServicesMockContext {
     }
 
     @Bean
-    public OrganisasjonEnhetService organisasjonEnhetService() {
-        return mock(OrganisasjonEnhetService.class);
+    public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
+        return mock(OrganisasjonEnhetV2Service.class);
     }
+
 
     @Bean
     public LDAPService ldapService() {

@@ -1,13 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.support.EgenAnsattServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg2.OrganisasjonEnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoServiceImpl;
@@ -16,7 +19,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import java.util.Optional;
+
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -38,10 +43,9 @@ public class PersonPageMockContext {
     }
 
     @Bean
-    public OrganisasjonEnhetService organisasjonEnhetService() {
-        OrganisasjonEnhetService organisasjonEnhetService = mock(OrganisasjonEnhetService.class);
-        when(organisasjonEnhetService.hentEnhetGittGeografiskNedslagsfelt(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
-        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString())).thenReturn(optional(new AnsattEnhet("", "")));
+    public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
+        OrganisasjonEnhetV2Service organisasjonEnhetService = mock(OrganisasjonEnhetV2Service.class);
+        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString())).thenReturn(Optional.of(new AnsattEnhet("", "")));
         return organisasjonEnhetService;
     }
 
@@ -52,17 +56,22 @@ public class PersonPageMockContext {
 
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return mock(PersonKjerneinfoServiceBi.class);
+        PersonKjerneinfoServiceBi personKjerneinfoServiceBi = mock(PersonKjerneinfoServiceBi.class);
+        when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(lagMockKjerneinfoResponse());
+        return personKjerneinfoServiceBi;
     }
+
+    @Bean
+    public EgenAnsattServiceBi egenAnsattServiceBi(){
+        EgenAnsattServiceBi egenAnsattServiceBi  = mock(EgenAnsattServiceBi.class);
+        when(egenAnsattServiceBi.erEgenAnsatt(any(String.class))).thenReturn(true);
+        return egenAnsattServiceBi;
+    }
+
 
     @Bean
     public PersonsokServiceBi personsokServiceBi() {
         return mock(PersonsokServiceBi.class);
-    }
-
-    @Bean
-    public BrukerprofilServiceBi brukerprofilServiceBi() {
-        return mock(BrukerprofilServiceBi.class);
     }
 
     @Bean
@@ -82,5 +91,14 @@ public class PersonPageMockContext {
     public GrunninfoService grunninfoService() {
         return new GrunninfoServiceImpl();
 //        return mock(GrunninfoService.class);
+    }
+
+    private HentKjerneinformasjonResponse lagMockKjerneinfoResponse() {
+        Personfakta personFakta = new Personfakta();
+        Person person = new Person();
+        person.setPersonfakta(personFakta);
+        HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
+        hentKjerneinformasjonResponse.setPerson(person);
+        return hentKjerneinformasjonResponse;
     }
 }

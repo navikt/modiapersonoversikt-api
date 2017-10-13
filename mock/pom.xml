@@ -65,10 +65,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-consumer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
         </dependency>
         <dependency>
@@ -147,7 +143,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>organisasjonenhet-v1-tjenestespesifikasjon</artifactId>
+            <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <!--Dialogarena-->

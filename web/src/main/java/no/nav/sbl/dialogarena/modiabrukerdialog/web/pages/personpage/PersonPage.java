@@ -20,6 +20,9 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -106,6 +109,12 @@ public class PersonPage extends BasePage {
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private LDAPService ldapService;
+
+    @Inject
+    private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
     private GrunninfoService grunninfoService;
 
     public PersonPage(PageParameters pageParameters) {
@@ -127,7 +136,7 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        lamellContainer = new LamellContainer("lameller", fnr, getSession(), grunnInfo);
+        lamellContainer = new LamellContainer("lameller", grunnInfo.bruker.fnr, getSession(), grunnInfo);
 
         final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
 
