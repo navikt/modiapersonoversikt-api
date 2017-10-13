@@ -4,6 +4,7 @@ import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.List;
@@ -25,6 +26,10 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
 
     public String getVisningsDato() {
         return DateUtils.toString(melding.getVisningsDato());
+    }
+
+    public DateTime getDato() {
+        return melding.getVisningsDato();
     }
 
     public String getFritekst() {
