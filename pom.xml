@@ -55,7 +55,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.security.version>1.0.24</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.9.1</modig.wicket.version>
+        <modig.wicket.version>3.9.2</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.5</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -73,7 +73,7 @@
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
         <reactkomponenter.version>2.8.0-PLEIEPENGER-SNAPSHOT</reactkomponenter.version>
-        <nav-metrics.version>3.1.1</nav-metrics.version>
+        <nav-metrics.version>3.2.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -93,7 +93,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>2.0.1</personsok.version>
+        <personsok.version>2.1.0</personsok.version>
         <kjerneinfo.versjon>5.1.0-pleiepenger-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
@@ -105,11 +105,11 @@
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>1.0.0</dialogarena.behandlingsinformasjon.version>
-        <saksoversikt.version>8.0.0</saksoversikt.version>
+        <saksoversikt.version>8.0.4</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
         <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
-        <modiabrukerdialog-api.version>8.0.2</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>7.0.3</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>8.2.1</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>7.1.5</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
@@ -465,11 +465,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
                 <version>${egenansatt-tjenestespesifikasjon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
-                <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
             </dependency>
 
             <!--Dialogarena-->
@@ -1115,7 +1110,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>HEAD</tag>
+        <tag>modiabrukerdialog-13.2.4</tag>
     </scm>
 
 </project>

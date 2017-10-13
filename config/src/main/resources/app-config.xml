@@ -20,6 +20,7 @@
     </security>
 
     <loadBalancer isAlive="/modiabrukerdialog/internal/isAlive" />
+    <logging serviceCalls="true" />
 
     <resources>
         <!-- Felles -->

@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.security.loginmodule.DummyRole;
-import no.nav.sbl.dialogarena.common.jetty.Jetty;
 import org.eclipse.jetty.jaas.JAASLoginService;
 
 import java.io.File;
@@ -27,13 +26,13 @@ public class StartJetty {
     }
 
     private static void runJetty() {
-        Jetty jetty = usingWar(WEBAPP_SOURCE)
+        usingWar(WEBAPP_SOURCE)
                 .at("modiabrukerdialog")
                 .port(8083)
                 .overrideWebXml(new File(TEST_RESOURCES, "override-web.xml"))
                 .withLoginService(createLoginService())
-                .buildJetty();
-        jetty.start();
+                .buildJetty()
+                .start();
     }
 
     public static JAASLoginService createLoginService() {
