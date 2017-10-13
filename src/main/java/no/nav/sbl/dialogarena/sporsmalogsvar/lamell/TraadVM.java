@@ -15,6 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.VARSEL;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 
@@ -101,6 +102,10 @@ public class TraadVM implements Serializable {
                 .distinct()
                 .count()
                 < 2;
+    }
+
+    public boolean erVarsel() {
+        return VARSEL.contains(getEldsteMelding().getMeldingstype());
     }
 
     public boolean erTemagruppeSosialeTjenester() {
