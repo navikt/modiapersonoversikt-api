@@ -78,7 +78,7 @@
         <file>${SERVICE_CALLS_HOME}/tjenestekall.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${SERVICE_CALLS_HOME}/tjenestekall.log.%d{yyyy-MM-dd-HH}.gz</fileNamePattern>
+            <fileNamePattern>${SERVICE_CALLS_HOME}/tjenestekall.log.%d{yyyy-MM-dd_HH}.gz</fileNamePattern>
             <maxHistory>72</maxHistory>
         </rollingPolicy>
         <encoder>
