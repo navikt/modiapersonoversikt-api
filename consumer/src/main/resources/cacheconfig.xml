@@ -71,7 +71,7 @@
             <cache:cacheable method="hent*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="kodeverkAdvice" key-generator="userkeygenerator">
+    <cache:advice id="kodeverkAdvice" key-generator="defaultkeygenerator">
         <cache:caching cache="kodeverkCache">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
