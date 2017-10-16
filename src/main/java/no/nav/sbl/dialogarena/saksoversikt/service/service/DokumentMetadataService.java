@@ -24,6 +24,7 @@ public class DokumentMetadataService {
     public static final String JOURNALPOST_INTERN = "N";
     public static final String DOKTYPE_HOVEDDOKUMENT = "HOVEDDOKUMENT";
     public static final String DOKTYPE_VEDLEGG = "VEDLEGG";
+    private static final String DOKMOT_TEMA = "BIL";
 
     public static final String DOKUMENT_LASTET_OPP = "LASTET_OPP";
     public static final Predicate<DokumentFraHenvendelse> erVedlegg
@@ -47,11 +48,16 @@ public class DokumentMetadataService {
 
     private Predicate<DokumentMetadata> finnesIJoark(List<DokumentMetadata> joarkMetadata) {
         return henvendelseMetadata -> joarkMetadata.stream()
-                .anyMatch(jp -> jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId()));
+                .anyMatch(jp -> henvendelseLikJournalpost(henvendelseMetadata, jp));
     }
 
     private Predicate<DokumentMetadata> finnesIkkeIJoark(List<DokumentMetadata> joarkMetadata) {
         return finnesIJoark(joarkMetadata).negate();
+    }
+
+    private boolean henvendelseLikJournalpost(DokumentMetadata henvendelseMetadata, DokumentMetadata jp) {
+        return jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId())
+                || DOKMOT_TEMA.equals(henvendelseMetadata.getTemakode()) && henvendelseMetadata.getDato().equals(jp.getDato());
     }
 
     public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
@@ -76,18 +82,12 @@ public class DokumentMetadataService {
             feilendeBaksystem.add(e.getBaksystem());
         }
 
-        List<String> duplikateJournalposter = innsendteSoknaderIHenvendelse
-                .stream()
-                .filter(finnesIJoark(joarkMetadataListe))
-                .map(dokumentMetadata1 -> dokumentMetadata1.getJournalpostId())
-                .collect(toList());
+        joarkMetadataListe.forEach(jp -> {
+            if (innsendteSoknaderIHenvendelse.stream().anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, jp))) {
+                jp.withBaksystem(Baksystem.HENVENDELSE);
+            }
+        });
 
-        joarkMetadataListe
-                .forEach(dokumentMetadata -> {
-                    if(duplikateJournalposter.contains(dokumentMetadata.getJournalpostId())) {
-                        dokumentMetadata.withBaksystem(Baksystem.HENVENDELSE);
-                    }
-                });
 
         Stream<DokumentMetadata> soknaderSomHarEndretTema = innsendteSoknaderIHenvendelse
                 .stream()
@@ -109,7 +109,7 @@ public class DokumentMetadataService {
     private boolean harJournalforingEndretTema(DokumentMetadata henvendelseDokumentMetadata, List<DokumentMetadata> joarkDokumentMetadataListe) {
         return joarkDokumentMetadataListe
                 .stream()
-                .filter(dokumentMetadata -> dokumentMetadata.getJournalpostId().equals(henvendelseDokumentMetadata.getJournalpostId()))
+                .filter(dokumentMetadata -> henvendelseLikJournalpost(henvendelseDokumentMetadata, dokumentMetadata))
                 .filter(dokumentMetadata -> !dokumentMetadata.getTemakode().equals(henvendelseDokumentMetadata.getTemakode()))
                 .findAny()
                 .isPresent();
@@ -117,7 +117,7 @@ public class DokumentMetadataService {
 
     private Stream<DokumentMetadata> populerEttersendelserFraHenvendelse(List<DokumentMetadata> joarkMetadata, List<DokumentMetadata> ferdigeHenvendelser) {
         return joarkMetadata.stream().map(joarkDokumentMetadata -> {
-            boolean erEttersending = ferdigeHenvendelser.stream().anyMatch(henvendelse -> joarkDokumentMetadata.getJournalpostId().equals(henvendelse.getJournalpostId())
+            boolean erEttersending = ferdigeHenvendelser.stream().anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, joarkDokumentMetadata)
                     && henvendelse.isEttersending());
             return joarkDokumentMetadata.withEttersending(erEttersending);
         });
