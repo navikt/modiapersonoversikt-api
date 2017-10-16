@@ -80,8 +80,8 @@ class DelvisSvar extends Component {
                 </a>
                 <a
                     role="button"
-                    onClick={this.props.svarDelvisAvbryt}
-                    style={{cursor:'pointer'}}
+                    onClick={this.props.avbrytCallback}
+                    className="avbryt"
                 >
                     Avbryt
                 </a>
@@ -97,7 +97,7 @@ DelvisSvar.propTypes = {
     traadId: React.PropTypes.string.isRequired,
     temagruppe: React.PropTypes.string.isRequired,
     svarCallback: React.PropTypes.func.isRequired,
-    svarDelvisAvbryt: React.PropTypes.func.isRequired,
+    avbrytCallback: React.PropTypes.func.isRequired,
     oppgaveId: React.PropTypes.string.isRequired
 };
 

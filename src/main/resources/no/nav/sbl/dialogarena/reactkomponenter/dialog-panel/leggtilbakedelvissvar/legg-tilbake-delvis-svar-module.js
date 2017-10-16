@@ -7,7 +7,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         super(props);
         console.log(props);
         this.svarCallback = this.svarCallback.bind(this);
-        this.svarDelvisAvbryt = this.svarDelvisAvbryt.bind(this);
+        this.avbrytCallback = this.avbrytCallback.bind(this);
         this.state = {
             erUnderArbeid: true
         };
@@ -18,10 +18,8 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.svarDelvisCallbackId);
     }
 
-    svarDelvisAvbryt() {
-        console.log("Svar Delvis Avbryt!");
-        this.setState({ erUnderArbeid: false });
-        wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.svarDelvisAvbrytId);
+    avbrytCallback() {
+        wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.avbrytCallbackId);
     }
 
     render() {
@@ -32,7 +30,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 fodselsnummer={this.props.fodselsnummer}
                 traadId={this.props.traadId}
                 svarCallback={this.svarCallback}
-                svarDelvisAvbryt={this.svarDelvisAvbryt}
+                avbrytCallback={this.avbrytCallback}
                 oppgaveId={this.props.oppgaveId}
                 temagruppe={this.props.temagruppe}
             />);
@@ -45,7 +43,7 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     wicketurl: React.PropTypes.string.isRequired,
     wicketcomponent: React.PropTypes.string.isRequired,
     svarDelvisCallbackId: React.PropTypes.string.isRequired,
-    svarDelvisAvbrytId: React.PropTypes.string.isRequired,
+    avbrytCallbackId: React.PropTypes.string.isRequired,
     henvendelseId: React.PropTypes.string.isRequired,
     sporsmal: React.PropTypes.string.isRequired,
     fodselsnummer: React.PropTypes.string.isRequired,
