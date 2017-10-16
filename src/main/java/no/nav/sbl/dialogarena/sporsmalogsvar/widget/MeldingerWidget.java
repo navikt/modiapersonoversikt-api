@@ -39,7 +39,7 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
         return skillUtTraader(henvendelseBehandlingService.hentMeldinger(fnr))
                 .values().stream()
                 .map(TIL_MELDINGVM)
-                .sorted(comparing(WidgetMeldingVM::getVisningsDato).reversed())
+                .sorted(comparing(WidgetMeldingVM::getDato).reversed())
                 .collect(toList());
     }
 
