@@ -6,7 +6,6 @@ class DelvisSvar extends Component {
         super(props);
         this.svarDelvis = this.svarDelvis.bind(this);
         this.handleSvarEndring = this.handleSvarEndring.bind(this);
-        console.log(props);
         this.state = {
             svarValue: ''
         };

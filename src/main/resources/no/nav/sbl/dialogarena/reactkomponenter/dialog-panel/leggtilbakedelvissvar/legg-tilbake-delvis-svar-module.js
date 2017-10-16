@@ -5,7 +5,6 @@ import DelvisSvar from './delvis-svar';
 class LeggTilbakeDelvisSvarPanel extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.svarCallback = this.svarCallback.bind(this);
 
         this.state = {
@@ -13,7 +12,6 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         };
     }
     svarCallback() {
-        console.log("Svar Callback!");
         this.setState({ erUnderArbeid: false });
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.svarDelvisCallbackId);
     }
