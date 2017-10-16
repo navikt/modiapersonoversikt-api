@@ -31,7 +31,7 @@ public class HenvendelseServiceImpl implements HenvendelseService {
                 .map(melding -> melding.withKanal(Kanal.TEKST.name()))
                 .map(melding -> melding.withNavIdent(request.navIdent))
                 .map(melding -> melding.withFritekst(request.svar))
-                .map(melding -> melding.withType(Meldingstype.SVAR_SKRIFTLIG))
+                .map(melding -> melding.withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG))
                 .orElseThrow(NoSuchElementException::new);
     }
 

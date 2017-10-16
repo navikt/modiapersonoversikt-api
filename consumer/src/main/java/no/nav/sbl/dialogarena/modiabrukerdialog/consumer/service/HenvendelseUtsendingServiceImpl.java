@@ -161,6 +161,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                                 SVAR_SKRIFTLIG.name(),
                                 SVAR_OPPMOTE.name(),
                                 SVAR_TELEFON.name(),
+                                DELVIS_SVAR_SKRIFTLIG.name(),
                                 REFERAT_OPPMOTE.name(),
                                 REFERAT_TELEFON.name(),
                                 SPORSMAL_MODIA_UTGAAENDE.name(),

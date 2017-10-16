@@ -244,6 +244,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.SVAR_SKRIFTLIG.name(),
                 XMLHenvendelseType.SVAR_OPPMOTE.name(),
                 XMLHenvendelseType.SVAR_TELEFON.name(),
+                XMLHenvendelseType.DELVIS_SVAR_SKRIFTLIG.name(),
                 XMLHenvendelseType.REFERAT_OPPMOTE.name(),
                 XMLHenvendelseType.REFERAT_TELEFON.name(),
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),

@@ -14,10 +14,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -158,10 +155,10 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private AjaxLink<Void> lagLeggTilbakeMedDelvisSvarKnapp() {
-        AjaxLink<Void> leggTilbakeKnapp = new AjaxLink<Void>("leggtilbakemeddelvissvar") {
+        AjaxLink<Void> leggTilbakeDelvisKnapp = new AjaxLink<Void>("leggtilbakemeddelvissvar") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                if (traadenErEtEnkeltSporsmalFraBruker()) {
+                if (kanBesvaresDelvis()) {
                     traadContainer.setVisibilityAllowed(false);
                     animertVisningToggle(target, svarContainer);
                     animertVisningToggle(target, leggTilbakeDelvisSvarPanel);
@@ -171,16 +168,24 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             }
         };
 
-        if (traadenErEtEnkeltSporsmalFraBruker()) {
-            leggTilbakeKnapp.add(new Label("leggtilbakedelvistekst", new ResourceModel("fortsettdialogpanel.leggtilbakedelvis")));
-            leggTilbakeKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakeDelvisSvarPanel.getMarkupId()));
+        if (kanBesvaresDelvis()) {
+            leggTilbakeDelvisKnapp.add(new Label("leggtilbakedelvistekst", new ResourceModel("fortsettdialogpanel.leggtilbakedelvis")));
+            leggTilbakeDelvisKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakeDelvisSvarPanel.getMarkupId()));
         } else {
-            leggTilbakeKnapp.setVisibilityAllowed(false);
+            leggTilbakeDelvisKnapp.setVisibilityAllowed(false);
         }
 
         leggTilbakeDelvisSvarPanel.setVisibilityAllowed(false);
 
-        return leggTilbakeKnapp;
+        return leggTilbakeDelvisKnapp;
+    }
+
+    private boolean kanBesvaresDelvis() {
+        return sporsmal.erSporsmalSkriftlig() && erSporsmalUbesvart();
+    }
+
+    private boolean erSporsmalUbesvart() {
+        return svar.stream().noneMatch(Melding::erSvarSkriftlig);
     }
 
     static HenvendelseVM.OppgaveTilknytning erTilknyttetAnsatt(List<Melding> traad) {
@@ -197,12 +202,8 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         return on(traad).exists(where(Melding.TYPE, equalTo(SPORSMAL_MODIA_UTGAAENDE)));
     }
 
-    private static boolean ingenAvType(List<Melding> svar, Meldingstype type) {
-        return !on(svar).exists(where(Melding.TYPE, equalTo(type)));
-    }
-
     private boolean traadenErEtEnkeltSporsmalFraBruker() {
-        return svar.isEmpty() && sporsmal.meldingstype.equals(SPORSMAL_SKRIFTLIG);
+        return svar.isEmpty() && sporsmal.erSporsmalSkriftlig();
     }
 
     private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {
