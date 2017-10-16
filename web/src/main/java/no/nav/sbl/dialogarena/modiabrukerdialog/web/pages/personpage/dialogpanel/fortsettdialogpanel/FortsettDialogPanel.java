@@ -14,6 +14,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel;
 import org.apache.wicket.AttributeModifier;
@@ -168,7 +169,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             }
         };
 
-        if (kanBesvaresDelvis()) {
+        if (FeatureToggle.visDelviseSvarFunksjonalitet() && kanBesvaresDelvis()) {
             leggTilbakeDelvisKnapp.add(new Label("leggtilbakedelvistekst", new ResourceModel("fortsettdialogpanel.leggtilbakedelvis")));
             leggTilbakeDelvisKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakeDelvisSvarPanel.getMarkupId()));
         } else {

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.FeatureToggle;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
@@ -39,6 +40,10 @@ public class HenvendelseController {
             @PathParam("traadId") String traadId,
             @PathParam("id") String henvendelseId,
             @Context HttpServletRequest httpRequest, FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest) {
+
+        if (!FeatureToggle.visDelviseSvarFunksjonalitet()) {
+            return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
+        }
 
         setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
 
