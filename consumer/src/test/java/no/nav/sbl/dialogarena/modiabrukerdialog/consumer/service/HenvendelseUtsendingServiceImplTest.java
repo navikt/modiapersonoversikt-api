@@ -42,8 +42,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -182,10 +181,11 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalFerdigstilleHenvendelse() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
+
         henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none(), BEHANDLINGS_ID);
 
         verify(sendUtHenvendelsePortType).ferdigstillHenvendelse(wsFerdigstillHenvendelseRequestCaptor.capture());
-        assertThat(wsFerdigstillHenvendelseRequestCaptor.getValue().getBehandlingsId(), is(BEHANDLINGS_ID));
+        assertThat(wsFerdigstillHenvendelseRequestCaptor.getValue().getBehandlingsId(), is(singletonList(BEHANDLINGS_ID)));
     }
 
     @Test
