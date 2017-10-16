@@ -87,29 +87,31 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     @Override
-    public void leggTilbakeOppgaveIGsak(Optional<String> oppgaveId, String beskrivelse, Optional<Temagruppe> temagruppe) {
-        if (oppgaveId.isSome()) {
-            try {
-                WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
-                wsOppgave.withAnsvarligId("");
-                wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
-                if (temagruppe.isSome()) {
-                    List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
-                            new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
-                                    .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
-                                    .withFagomradeKode(wsOppgave.getFagomrade().getKode())
-                                    .withGjelderKode(underkategoriKode(temagruppe.get())))
-                            .getEnhetListe();
+    public void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, Temagruppe temagruppe) {
+        if (oppgaveId == null) {
+            return;
+        }
 
-                    wsOppgave.withAnsvarligEnhetId(enhetListe.isEmpty() ? wsOppgave.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId());
-                    wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe.get())));
-                }
+        try {
+            WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
+            wsOppgave.withAnsvarligId("");
+            wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
+            if (temagruppe != null) {
+                List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
+                        new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                                .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
+                                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                                .withGjelderKode(underkategoriKode(temagruppe)))
+                        .getEnhetListe();
 
-                lagreOppgaveIGsak(wsOppgave, temagruppe);
-            } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
-                throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
+                wsOppgave.withAnsvarligEnhetId(enhetListe.isEmpty() ? wsOppgave.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId());
+                wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
             }
+
+            lagreOppgaveIGsak(wsOppgave, temagruppe);
+        } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
+            throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
     }
 
