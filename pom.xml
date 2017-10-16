@@ -30,7 +30,7 @@
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.23</modig.security.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
-        <send.ut.henvendelse.version>0.4</send.ut.henvendelse.version>
+        <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
         <modiabrukerdialog-api.version>8.2.1</modiabrukerdialog-api.version>
