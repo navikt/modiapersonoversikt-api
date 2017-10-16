@@ -17,7 +17,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     public static final String WICKET_REACT_WRAPPER_ID = "leggtilbakedelvissvarpanel";
     public static final String REACT_ID = "LeggTilbakeDelvisSvarPanel";
     public static final String SVAR_DELVIS_CALLBACK_ID = "delvisSvarSendt";
-    public static final String DELVIS_SVAR_AVBRYT = "delvisSvarAvbryt";
+    public static final String AVBRYT_CALLBACK_ID = "avbrytDelvisSvar";
     public static final String DEFAULT_SLIDE_DURATION = "400";
     private LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps;
 
@@ -32,7 +32,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     private Component lagReactPanel() {
         ReactComponentPanel reactComponentPanel = new ReactComponentPanel(WICKET_REACT_PANEL_ID, REACT_ID, leggTilbakeDelvisSvarProps.lagProps());
         reactComponentPanel.addCallback(SVAR_DELVIS_CALLBACK_ID, Void.class, (target, data) -> oppdaterMeldingerUI());
-        reactComponentPanel.addCallback(DELVIS_SVAR_AVBRYT, Void.class, (target, data) -> lukkDelvisSvarPanel(target));
+        reactComponentPanel.addCallback(AVBRYT_CALLBACK_ID, Void.class, (target, data) -> lukkDelvisSvarPanel(target));
         reactComponentPanel
                 .setOutputMarkupId(true)
                 .setVisibilityAllowed(true);
@@ -47,7 +47,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     public void lukkDelvisSvarPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
-            send(getPage(), BREADTH, DELVIS_SVAR_AVBRYT);
+            send(getPage(), BREADTH, AVBRYT_CALLBACK_ID);
             target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
             target.add(this);
         }

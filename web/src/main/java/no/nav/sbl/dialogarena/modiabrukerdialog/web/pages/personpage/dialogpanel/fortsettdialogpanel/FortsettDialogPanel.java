@@ -220,7 +220,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         target.focusComponent(leggTilbakeKnapp);
     }
 
-    @RunOnEvents(LeggTilbakeDelvisSvarPanel.DELVIS_SVAR_AVBRYT)
+    @RunOnEvents(LeggTilbakeDelvisSvarPanel.AVBRYT_CALLBACK_ID)
     public void skjulDelvisSvarPanel(AjaxRequestTarget target) {
         traadContainer.setVisibilityAllowed(true);
         animertVisningToggle(target, svarContainer);
