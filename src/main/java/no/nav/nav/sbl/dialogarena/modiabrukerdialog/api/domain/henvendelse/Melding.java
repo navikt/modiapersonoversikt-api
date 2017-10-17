@@ -20,7 +20,7 @@ public class Melding implements Serializable {
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
-    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding;
+    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding, erFerdigstiltUtenSvar;
     public Boolean erTilknyttetAnsatt;
     public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
 
@@ -135,6 +135,11 @@ public class Melding implements Serializable {
 
     public Melding withGjeldendeTemagruppe(Temagruppe gjeldendeTemagruppe) {
         this.gjeldendeTemagruppe = gjeldendeTemagruppe;
+        return this;
+    }
+
+    public Melding withErFerdigstiltUtenSvar(boolean erFerdigstiltUtenSvar) {
+        this.erFerdigstiltUtenSvar = erFerdigstiltUtenSvar;
         return this;
     }
 

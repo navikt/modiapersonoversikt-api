@@ -356,7 +356,8 @@ public class MeldingUtilsTest {
                                 .withOppgaveType("min_oppgavetype")
                                 .withOppgaveURL("")
                                 .withStoppRepeterendeVarsel(false)
-                                .withTemagruppe("DAG")));
+                                .withTemagruppe("DAG")))
+                .withFerdigstiltUtenSvar(false);
     }
 
     private XMLHenvendelse createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType type) {
@@ -372,7 +373,8 @@ public class MeldingUtilsTest {
                                 .withKanal("kanal")
                                 .withFritekst("fritekst")
                                 .withNavident("navident")
-                ));
+                ))
+                .withFerdigstiltUtenSvar(false);
     }
 
     private XMLHenvendelse createXMLHenvendelseMedXmlMeldingFraBruker() {
@@ -386,7 +388,8 @@ public class MeldingUtilsTest {
                         new XMLMeldingFraBruker()
                                 .withTemagruppe("temagruppe")
                                 .withFritekst("fritekst")
-                ));
+                ))
+                .withFerdigstiltUtenSvar(false);
     }
 
     private XMLHenvendelse createXMLHenvendelseMedDokumentVarsel() {
@@ -403,7 +406,8 @@ public class MeldingUtilsTest {
                                 .withDokumenttittel("tittel")
                                 .withJournalpostId("1")
                                 .withDokumentIdListe("2")
-                                .withTemanavn("Dagpenger")));
+                                .withTemanavn("Dagpenger")))
+                .withFerdigstiltUtenSvar(false);
     }
 
     private XMLHenvendelse createXMLHenvendelseMedUkjentType() {
@@ -436,6 +440,7 @@ public class MeldingUtilsTest {
                 .withHenvendelseType(henvendelseType)
                 .withGjeldendeTemagruppe(ARBD.toString())
                 .withEksternAktor(eksternAktor)
+                .withFerdigstiltUtenSvar(false)
                 .withJournalfortInformasjon(
                         new XMLJournalfortInformasjon()
                                 .withJournalfortDato(JOURNALFORT_DATO)

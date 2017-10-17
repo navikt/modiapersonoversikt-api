@@ -10,6 +10,8 @@ public interface OppgaveBehandlingService {
 
     Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe);
 
+    void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe);
+
     void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe);
 
     void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, Temagruppe temagruppe);
