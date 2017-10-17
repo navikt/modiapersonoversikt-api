@@ -58,7 +58,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) throws FikkIkkeTilordnet {
-        tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId), temagruppe);
+        tilordneOppgaveIGsak(oppgaveId, optional(temagruppe));
     }
 
     @Override
@@ -75,6 +75,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) {
+        ferdigstillOppgaveIGsak(oppgaveId, optional(temagruppe));
+    }
+
+    @Override
+    public void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe) {
         try {
             WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
@@ -150,7 +155,16 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
+    private void tilordneOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe) throws FikkIkkeTilordnet {
+        tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId), temagruppe);
+    }
+
+
     private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Temagruppe temagruppe) throws FikkIkkeTilordnet {
+        return tilordneOppgaveIGsak(oppgave, optional(temagruppe));
+    }
+
+    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Optional<Temagruppe> temagruppe) throws FikkIkkeTilordnet {
         try {
             WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
             lagreOppgaveIGsak(wsOppgave, temagruppe);
