@@ -3,9 +3,7 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
@@ -13,18 +11,11 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.groupingBy;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.TRAAD_ID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
@@ -35,7 +26,7 @@ public class MeldingUtils {
 
     public static Map<String, List<Melding>> skillUtTraader(List<Melding> meldinger) {
 
-        Map<String, List<Melding>> ufiltrertTraaderMap = on(meldinger).reduce(indexBy(TRAAD_ID), new HashMap<>());
+        Map<String, List<Melding>> ufiltrertTraaderMap = meldinger.stream().collect(groupingBy(Melding::getTraadId));
 
         List<Map.Entry<String, List<Melding>>> filtrertEntryList = on(ufiltrertTraaderMap).filter(DET_FINNES_EN_ROTMELDING).collect();
 
@@ -50,7 +41,10 @@ public class MeldingUtils {
         return map;
     }
 
-    private static final Predicate<Map.Entry<String, List<Melding>>> DET_FINNES_EN_ROTMELDING = traad -> on(traad.getValue()).exists(where(ID, equalTo(traad.getKey())));
+    private static final Predicate<Map.Entry<String, List<Melding>>> DET_FINNES_EN_ROTMELDING = traad ->
+            traad.getValue()
+                    .stream()
+                    .anyMatch(melding -> melding.id.equals(traad.getKey()));
 
     public static Transformer<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver, final LDAPService ldapService) {
         return xmlHenvendelse -> {
@@ -64,7 +58,7 @@ public class MeldingUtils {
             melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
             melding.status = STATUS.transform(xmlHenvendelse);
             melding.lestStatus = lagLestStatus(melding);
-            melding.statusKlasse = VisningUtils.lagStatusKlasse(melding);
+            melding.statusKlasse = "";
             melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
             melding.oppgaveId = xmlHenvendelse.getOppgaveIdGsak();
             melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
@@ -235,6 +229,7 @@ public class MeldingUtils {
             put(XMLHenvendelseType.SVAR_SKRIFTLIG, SVAR_SKRIFTLIG);
             put(XMLHenvendelseType.SVAR_OPPMOTE, SVAR_OPPMOTE);
             put(XMLHenvendelseType.SVAR_TELEFON, SVAR_TELEFON);
+            put(XMLHenvendelseType.DELVIS_SVAR_SKRIFTLIG, DELVIS_SVAR_SKRIFTLIG);
             put(XMLHenvendelseType.REFERAT_OPPMOTE, SAMTALEREFERAT_OPPMOTE);
             put(XMLHenvendelseType.REFERAT_TELEFON, SAMTALEREFERAT_TELEFON);
             put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, SPORSMAL_MODIA_UTGAAENDE);
