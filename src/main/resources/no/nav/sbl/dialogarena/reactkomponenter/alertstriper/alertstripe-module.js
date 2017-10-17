@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Icon from 'nav-frontend-ikoner-assets';
 
 class AlertstripeSuksessSolid extends Component {
