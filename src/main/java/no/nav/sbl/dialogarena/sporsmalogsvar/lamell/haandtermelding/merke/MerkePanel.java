@@ -96,7 +96,7 @@ public class MerkePanel extends AnimertPanel {
                 .add(enabledIf(bidragErEnablet));
 
         Radio<MerkType> kontorsperretRadio = new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET));
-        kontorsperretRadio.add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
+        kontorsperretRadio.add(AttributeAppender.append("aria-disabled", skalViseFerdigstillUtenSvarValg));
         Component kontorsperretRadioValg = new WebMarkupContainer("kontorsperretRadioValg")
                 .add(kontorsperretRadio)
                 .add(enabledIf(skalViseStandardMerkValg));
