@@ -29,13 +29,22 @@ public class StatusIkon extends Panel {
         super(id);
         ikon = new WebMarkupContainer("statusIkon");
 
-        int traadlengde = meldingVM.traadlengde;
-        Label antallMeldingerTekst = new Label("antallMeldingerIkonTekst", lagAntallMeldingerTekst(traadlengde));
+        int traadLengde = kalkulerTraadlengde(meldingVM);
+        String antallMeldinger = lagAntallMeldingerTekst(traadLengde);
+        Label antallMeldingerTekst = new Label("antallMeldingerIkonTekst", antallMeldinger);
         Label statusIkonTekst = new Label("statusIkonTekst", lagStatustekst(meldingVM, underBehandling,
-                traadlengde, erMonolog));
+                traadLengde, erMonolog));
 
         addStyles(meldingVM, erMonolog);
         add(ikon, antallMeldingerTekst, statusIkonTekst);
+    }
+
+    private int kalkulerTraadlengde(MeldingVM meldingVM) {
+        int traadLengde = meldingVM.traadlengde;
+        if (meldingVM.erFerdigstiltUtenSvar()) {
+            traadLengde++;
+        }
+        return traadLengde;
     }
 
     private String lagIkonTekst(MeldingVM meldingVM) {
@@ -60,10 +69,17 @@ public class StatusIkon extends Panel {
                 key = "sporsmal";
                 break;
             default:
-                key = meldingVM.erBesvart().getObject() ? "besvart" : "ubesvart";
+                key = lagDefaultIkonTekst(meldingVM);
         }
 
         return new StringResourceModel("innboks.melding." + key, this, null).getString();
+    }
+
+    private String lagDefaultIkonTekst(MeldingVM meldingVM) {
+        if (meldingVM.erFerdigstiltUtenSvar() || meldingVM.erBesvart().getObject()) {
+            return "besvart";
+        }
+        return "ubesvart";
     }
 
     private String lagStatustekst(MeldingVM meldingVM, boolean underBehandling, int traadlengde, boolean erMonolog) {
@@ -93,9 +109,12 @@ public class StatusIkon extends Panel {
                 addCSSClass("dokument");
                 break;
             default:
-                if (erMonolog) {
+                if(meldingVM.erFerdigstiltUtenSvar()) {
+                    addCSSClass("dialog");
+                    addCSSClass("besvart");
+                } else if (erMonolog) {
                     addCSSClass("monolog");
-                    ikon.add(hasCssClassIf("ubesvart", Model.of(!meldingVM.erFraSaksbehandler())));
+                    ikon.add(hasCssClassIf("ubesvart", Model.of(meldingVM.erFraSaksbehandler())));
                 } else {
                     addCSSClass("dialog");
                     ikon.add(hasCssClassIf("besvart", meldingVM.erBesvart()));
