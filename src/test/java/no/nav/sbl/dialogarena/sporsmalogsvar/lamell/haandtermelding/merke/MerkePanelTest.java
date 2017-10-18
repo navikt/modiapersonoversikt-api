@@ -27,6 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -217,7 +218,7 @@ public class MerkePanelTest extends WicketPageTest {
                 .inForm(PANEL_MERK_FORM_ID)
                 .submitWithAjaxButton(withId("merk"));
 
-        verify(henvendelseBehandlingService).merkSomAvsluttet(innboksVM.getValgtTraad());
+        verify(henvendelseBehandlingService).merkSomAvsluttet(eq(innboksVM.getValgtTraad()), anyString());
     }
 
     private MerkePanel getStandardMerkePanel() {

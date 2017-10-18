@@ -5,6 +5,7 @@ import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWi
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.modig.wicket.model.ConjunctionModel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
@@ -48,6 +49,8 @@ public class MerkePanel extends AnimertPanel {
     private HenvendelseBehandlingService henvendelseService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private final InnboksVM innboksVM;
     private final KontorsperrePanel kontorsperrePanel;
@@ -213,7 +216,7 @@ public class MerkePanel extends AnimertPanel {
         }
 
         private void haandterAvsluttet(AjaxRequestTarget target) {
-            henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad());
+            henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, none());
 
             send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
