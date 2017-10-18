@@ -21,6 +21,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettSamtalereferatEksempel;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettMeldingEksempel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -50,12 +51,14 @@ public class MerkePanelTest extends WicketPageTest {
 
     @Test
     public void paneletViserAlleRadioknappene() {
-        wicket.goToPageWith(getStandardMerkePanel())
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel())))
                 .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
                 .should().containComponent(thatIsVisible().withId("bidragRadioValg"))
                 .should().containComponent(thatIsVisible().withId("bidragRadio"))
                 .should().containComponent(thatIsVisible().withId("kontorsperretRadioValg"))
-                .should().containComponent(thatIsVisible().withId("kontorsperretRadio"));
+                .should().containComponent(thatIsVisible().withId("avsluttRadio"))
+                .should().containComponent(thatIsVisible().withId("kontorsperretRadio"))
+                .should().containComponent(thatIsVisible().withId("avsluttRadio"));
     }
 
     @Test
@@ -137,33 +140,50 @@ public class MerkePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skjulerBidragOgKontorsperretvalgDersomValgtTraadErKontorsperret() {
-        MerkePanel merkePanelForKontorsperretTraad = getMerkPanelMedKontorsperretValgtMelding();
-        merkePanelForKontorsperretTraad.setVisibilityAllowed(true);
+    public void disablerAlleBortsettFraAvsluttRadio() {
+        MerkePanel merkePanel = getMerkePanel(asList(opprettMeldingEksempel()));
+        merkePanel.setVisibilityAllowed(true);
 
-        wicket.goToPageWith(merkePanelForKontorsperretTraad)
-                .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
-                .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
-                .should().containComponent(thatIsInvisible().withId("bidragRadio"))
-                .should().containComponent(thatIsInvisible().withId("kontorsperretRadioValg"))
-                .should().containComponent(thatIsInvisible().withId("kontorsperretRadio"));
+        wicket.goToPageWith(merkePanel)
+                .should().containComponent(thatIsDisabled().withId("feilsendtRadio"))
+                .should().containComponent(thatIsDisabled().withId("bidragRadioValg"))
+                .should().containComponent(thatIsDisabled().withId("bidragRadio"))
+                .should().containComponent(thatIsDisabled().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsDisabled().withId("kontorsperretRadio"))
+                .should().containComponent(thatIsEnabled().withId("avsluttRadio"));
     }
 
     @Test
-    public void skjulerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
-        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
-                .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
-                .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
-                .should().containComponent(thatIsInvisible().withId("bidragRadio"))
-                .should().containComponent(thatIsVisible().withId("kontorsperretRadioValg"))
-                .should().containComponent(thatIsVisible().withId("kontorsperretRadio"));
+    public void enablerAlleBortsettFraAvsluttRadio() {
+        MerkePanel merkePanel = getMerkePanel(asList(opprettSamtalereferatEksempel(), opprettSamtalereferatEksempel()));
+        merkePanel.setVisibilityAllowed(true);
 
-        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS))).setVisibilityAllowed(true))
-                .should().containComponent(thatIsVisible().withId("feilsendtRadio"))
-                .should().containComponent(thatIsInvisible().withId("bidragRadioValg"))
-                .should().containComponent(thatIsInvisible().withId("bidragRadio"))
-                .should().containComponent(thatIsVisible().withId("kontorsperretRadioValg"))
-                .should().containComponent(thatIsVisible().withId("kontorsperretRadio"));
+        wicket.goToPageWith(merkePanel)
+                .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
+                .should().containComponent(thatIsEnabled().withId("bidragRadioValg"))
+                .should().containComponent(thatIsEnabled().withId("bidragRadio"))
+                .should().containComponent(thatIsEnabled().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsEnabled().withId("kontorsperretRadio"))
+                .should().containComponent(thatIsDisabled().withId("avsluttRadio"));
+    }
+
+    @Test
+    public void disablerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
+                .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
+                .should().containComponent(thatIsDisabled().withId("bidragRadioValg"))
+                .should().containComponent(thatIsDisabled().withId("bidragRadio"))
+                .should().containComponent(thatIsEnabled().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsEnabled().withId("kontorsperretRadio"))
+                .should().containComponent(thatIsDisabled().withId("avsluttRadio"));
+
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS))).setVisibilityAllowed(true))
+                .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
+                .should().containComponent(thatIsDisabled().withId("bidragRadioValg"))
+                .should().containComponent(thatIsDisabled().withId("bidragRadio"))
+                .should().containComponent(thatIsEnabled().withId("kontorsperretRadioValg"))
+                .should().containComponent(thatIsEnabled().withId("kontorsperretRadio"))
+                .should().containComponent(thatIsDisabled().withId("avsluttRadio"));
     }
 
     @Test
@@ -184,13 +204,29 @@ public class MerkePanelTest extends WicketPageTest {
         verify(henvendelseBehandlingService).merkSomFeilsendt(innboksVM.getValgtTraad());
     }
 
+    @Test
+    public void erMuligAaMerkeSporsmalSomFerdigstiltUtenSvar() {
+        MerkePanel merkepanel = getStandardMerkePanel();
+        merkepanel.setVisibilityAllowed(true);
+
+        wicket.goToPageWith(merkepanel)
+                .inForm(PANEL_MERK_FORM_ID)
+                .select(MERK_TYPE_RADIOGROUP_ID, 3)
+                .andReturn()
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
+                .inForm(PANEL_MERK_FORM_ID)
+                .submitWithAjaxButton(withId("merk"));
+
+        verify(henvendelseBehandlingService).merkSomAvsluttet(innboksVM.getValgtTraad());
+    }
+
     private MerkePanel getStandardMerkePanel() {
-        return getMerkePanel(asList(opprettMeldingEksempel()));
+        return getMerkePanel(asList(opprettMeldingEksempel(), opprettMeldingEksempel()));
     }
 
     private MerkePanel getMerkPanelMedKontorsperretValgtMelding() {
         Melding melding = TestUtils.opprettMeldingEksempel().withKontorsperretEnhet("kontorsperretEnhet");
-        return getMerkePanel(asList(melding));
+        return getMerkePanel(asList(opprettMeldingEksempel(), melding));
     }
 
     private MerkePanel getMerkePanel(List<Melding> meldinger) {
@@ -202,5 +238,4 @@ public class MerkePanelTest extends WicketPageTest {
         merkePanel.setVisibilityAllowed(true);
         return merkePanel;
     }
-
 }

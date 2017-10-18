@@ -63,7 +63,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erBehandlet() {
-        return meldinger.size() > 1 || getEldsteMelding().erFraSaksbehandler();
+        return meldinger.size() > 1 || getEldsteMelding().erFraSaksbehandler() || erFerdigstiltUtenSvar();
     }
 
     public boolean erKontorsperret() {
@@ -84,7 +84,8 @@ public class TraadVM implements Serializable {
                 && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
                 && !getEldsteMelding().erFeilsendt()
                 && !(getEldsteMelding().melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !traadOKSOSKanSes())
-                && !getEldsteMelding().melding.ingenTilgangJournalfort;
+                && !getEldsteMelding().melding.ingenTilgangJournalfort
+                && !erFerdigstiltUtenSvar();
     }
 
     public boolean erMonolog() {
@@ -114,8 +115,20 @@ public class TraadVM implements Serializable {
         return pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
     }
 
+    public boolean erJournalfort() {
+        return getEldsteMelding().isJournalfort();
+    }
+
+    public boolean erFerdigstiltUtenSvar() {
+        return getEldsteMelding().erFerdigstiltUtenSvar();
+    }
+
     private boolean erEnkeltstaaendeSpsmFraBruker() {
-        return meldinger.size() == 1 && getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG;
+        return meldinger.size() == 1 && erMeldingstypeSporsmal();
+    }
+
+    public boolean erMeldingstypeSporsmal() {
+        return getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG;
     }
 
 }

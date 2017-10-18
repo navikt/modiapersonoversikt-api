@@ -35,7 +35,6 @@ public class StatusIkon extends Panel {
                 traadlengde, erMonolog));
 
         addStyles(meldingVM, erMonolog);
-
         add(ikon, antallMeldingerTekst, statusIkonTekst);
     }
 

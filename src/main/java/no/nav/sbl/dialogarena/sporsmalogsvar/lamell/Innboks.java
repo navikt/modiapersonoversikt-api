@@ -96,11 +96,8 @@ public class Innboks extends Lerret {
 
         if (innboksVM.harFeilmelding().getObject().equals(true)) {
             String beskrivelse = "Teknisk feil modiabrukerdialog, oppgave lagt tilbake.";
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                    no.nav.modig.lang.option.Optional.optional(innboksVM.getSessionOppgaveId().orElse(null)),
-                    beskrivelse,
-                    no.nav.modig.lang.option.Optional.none()
-            );
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId().orElse(null),
+                    beskrivelse, null);
             innboksVM.setSessionHenvendelseId(null);
             innboksVM.setSessionOppgaveId(null);
         }

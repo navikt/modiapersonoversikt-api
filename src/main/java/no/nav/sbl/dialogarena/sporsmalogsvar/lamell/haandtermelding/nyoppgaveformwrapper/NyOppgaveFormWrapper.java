@@ -42,7 +42,7 @@ public class NyOppgaveFormWrapper extends Panel {
     @Inject
     private GsakKodeverk gsakKodeverk;
     @Inject
-    private OrganisasjonEnhetV2Service organisasjonEnhetService;
+    private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
     @Inject
     private AnsattService ansattService;
 
@@ -59,7 +59,7 @@ public class NyOppgaveFormWrapper extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         this.innboksVM = innboksVM;
-        this.enheter = on(organisasjonEnhetService.hentAlleEnheter())
+        this.enheter = on(organisasjonEnhetV2Service.hentAlleEnheter())
                 .filter(enhet -> erGyldigEnhet(enhet))
                 .collect();
         this.foreslatteEnheter = new ArrayList<>();

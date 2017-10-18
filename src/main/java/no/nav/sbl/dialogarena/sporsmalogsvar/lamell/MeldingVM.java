@@ -61,6 +61,10 @@ public class MeldingVM implements Serializable {
         return melding.kontorsperretEnhet != null;
     }
 
+    public boolean erFerdigstiltUtenSvar() {
+        return melding.erFerdigstiltUtenSvar;
+    }
+
     public IModel<Boolean> erBesvart() {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override

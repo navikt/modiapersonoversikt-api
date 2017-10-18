@@ -16,5 +16,7 @@ public interface HenvendelseBehandlingService {
 
     void merkSomBidrag(TraadVM valgtTraad);
 
+    void merkSomAvsluttet(TraadVM valgtTraad);
+
     String getEnhet(String fnr);
 }
