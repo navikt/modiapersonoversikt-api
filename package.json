@@ -54,6 +54,7 @@
     "nav-frontend-core": "4.0.5",
     "nav-frontend-ikoner-assets": "0.2.16",
     "nav-frontend-paneler-style": "0.3.6",
+    "prop-types": "^15.6.0",
     "q": "1.4.1",
     "react": "0.14.7",
     "react-dom": "0.14.7",
