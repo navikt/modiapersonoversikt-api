@@ -89,20 +89,23 @@ public class MerkePanel extends AnimertPanel {
                 .add(enabledIf(skalViseStandardMerkValg))
                 .add(AttributeAppender.append("aria-disabled", not(skalViseStandardMerkValg)));
 
+        Radio<MerkType> bidragRadio = new Radio<>("bidragRadio", Model.of(BIDRAG));
+        bidragRadio.add(AttributeAppender.append("aria-disabled", not(bidragErEnablet)));
         Component bidragRadioValg = new WebMarkupContainer("bidragRadioValg")
-                .add(new Radio<>("bidragRadio", Model.of(BIDRAG)))
-                .add(enabledIf(bidragErEnablet))
-                .add(AttributeAppender.append("aria-disabled", not(bidragErEnablet)));
+                .add(bidragRadio)
+                .add(enabledIf(bidragErEnablet));
 
+        Radio<MerkType> kontorsperretRadio = new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET));
+        kontorsperretRadio.add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
         Component kontorsperretRadioValg = new WebMarkupContainer("kontorsperretRadioValg")
-                .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
-                .add(enabledIf(skalViseStandardMerkValg))
-                .add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
+                .add(kontorsperretRadio)
+                .add(enabledIf(skalViseStandardMerkValg));
 
+        Radio<MerkType> avsluttRadio1 = new Radio<>("avsluttRadio", Model.of(AVSLUTT));
+        avsluttRadio1.add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
         Component avsluttRadio = new WebMarkupContainer("avsluttRadioValg")
-                .add(new Radio<>("avsluttRadio", Model.of(AVSLUTT)))
-                .add(enabledIf(skalViseFerdigstillUtenSvarValg))
-                .add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
+                .add(avsluttRadio1)
+                .add(enabledIf(skalViseFerdigstillUtenSvarValg));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));
