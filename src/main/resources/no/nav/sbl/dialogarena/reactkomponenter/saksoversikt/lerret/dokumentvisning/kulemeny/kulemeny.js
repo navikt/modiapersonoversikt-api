@@ -11,10 +11,12 @@ const Kulemeny = ({ dokref, tittel, initialState }) => (
         <Button
             activeClass="active"
             to={dokref}
-            spy smooth
+            spy={true}
+            smooth={true}
             duration={500}
             offset={-80}
             title={tittel}
+            isDynamic={true}
             isInside={isInside}
             initialState={initialState}
             type="button"
