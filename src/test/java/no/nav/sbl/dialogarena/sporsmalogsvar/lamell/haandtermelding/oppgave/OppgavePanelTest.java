@@ -1,13 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -20,7 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
@@ -47,9 +45,9 @@ public class OppgavePanelTest extends WicketPageTest {
         melding = createMelding(eldsteMeldingId, SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, eldsteMeldingId);
         MeldingVM meldingVM = new MeldingVM(melding, 1);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
-        when(innboksVM.getSessionHenvendelseId()).thenReturn(Optional.<String>none());
+        when(innboksVM.getSessionHenvendelseId()).thenReturn(empty());
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
-        when(innboksVM.getSessionOppgaveId()).thenReturn(optional("1"));
+        when(innboksVM.getSessionOppgaveId()).thenReturn(of("1"));
     }
 
     @Test
@@ -74,7 +72,7 @@ public class OppgavePanelTest extends WicketPageTest {
 
     @Test
     public void viserAvsluttValgHvisValgtTraadErISession() {
-        when(innboksVM.getSessionHenvendelseId()).thenReturn(optional("id"));
+        when(innboksVM.getSessionHenvendelseId()).thenReturn(of("id"));
 
         TraadVM traadVM = mock(TraadVM.class);
         MeldingVM meldingVM = new MeldingVM(melding, 1);

@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
@@ -23,7 +23,9 @@ public class MeldingerWidgetPanelTest extends WicketPageTest {
 
     @Test
     public void skalInneholdeRiktigeKomponenter() {
-        wicket.goToPageWith(new MeldingerWidgetPanel("melding", new Model<>(new WidgetMeldingVM(asList(createMelding("id", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "1"))))))
+        wicket.goToPageWith(new MeldingerWidgetPanel("melding", new Model<>(new WidgetMeldingVM(
+                singletonList(createMelding("id", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "1")),
+                false))))
                 .should().containComponent(withId("meldingsstatus").and(ofType(Label.class)))
                 .should().containComponent(withId("visningsDato").and(ofType(Label.class)));
     }

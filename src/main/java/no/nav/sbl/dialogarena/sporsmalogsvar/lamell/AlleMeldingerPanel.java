@@ -60,7 +60,7 @@ public class AlleMeldingerPanel extends Panel {
     }
 
     private MarkupContainer initAlleTraader(final InnboksVM innboksVM, RadioGroup<MeldingVM> alletraader) {
-        return alletraader.add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
+        return alletraader.add(new PropertyListView<MeldingVM>("nyesteMeldingerITraader") {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
@@ -78,7 +78,7 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(radio);
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
-                if (innboksVM.getSessionHenvendelseId().isSome() && innboksVM.erValgtMelding(meldingVM).getObject()) {
+                if (innboksVM.getSessionHenvendelseId().isPresent() && innboksVM.erValgtMelding(meldingVM).getObject()) {
                     item.add(FORCE_FOCUS_BEHAVIOUR);
                 }
 

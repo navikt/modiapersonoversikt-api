@@ -3,18 +3,16 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
 public class MeldingVM implements Serializable {
@@ -38,9 +36,9 @@ public class MeldingVM implements Serializable {
 
     public String getVisningsDato() {
         if (erDokumentMelding){
-            return DateUtils.dateTime(melding.ferdigstiltDato);
+            return DateUtils.toString(melding.ferdigstiltDato);
         }
-        return DateUtils.dateTime(melding.opprettetDato);
+        return DateUtils.toString(melding.opprettetDato);
     }
 
     public String getMeldingStatusTekstKey() {
@@ -71,9 +69,13 @@ public class MeldingVM implements Serializable {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return melding.status != Status.IKKE_BESVART;
+                return melding.erBesvart();
             }
         };
+    }
+
+    public Meldingstype getMeldingstype() {
+        return melding.meldingstype;
     }
 
     public IModel<Boolean> erDokumentMelding() {
@@ -85,46 +87,44 @@ public class MeldingVM implements Serializable {
         };
     }
 
-    public IModel<Boolean> erOppgaveMelding() {
-        return new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return melding.erOppgaveMelding;
-            }
-        };
-    }
-
-
     public Optional<String> getMarkertSomFeilsendtAv() {
         return optional(melding.markertSomFeilsendtAv);
     }
 
     public String getAvsenderBildeUrl() {
         String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
-        if (FRA_NAV.contains(melding.meldingstype)) {
+        if (erFraSaksbehandler()) {
             return imgUrl + NAV_LOGO_SVG;
         }
         return imgUrl + BRUKER_LOGO_SVG;
     }
 
     public String getAvsenderBildeAltKey() {
-        if (FRA_NAV.contains(melding.meldingstype)) {
+        if (erFraSaksbehandler()) {
             return NAV_AVSENDER_BILDE_ALT_KEY;
         }
         return BRUKER_AVSENDER_BILDE_ALT_KEY;
     }
 
-    public boolean erFraSaksbehandler() {
-        return FRA_NAV.contains(melding.meldingstype);
+    public String getId() {
+        return melding.id;
     }
 
-    public static final Comparator<MeldingVM> NYESTE_FORST = (o1, o2) -> o2.melding.getVisningsDato().compareTo(o1.melding.getVisningsDato());
+    public String getTraadId() {
+        return melding.traadId;
+    }
 
-    public static final Transformer<MeldingVM, String> ID = (meldingVM) -> meldingVM.melding.id;
+    public DateTime getDato() {
+        return melding.getVisningsDato();
+    }
 
-    public static final Transformer<MeldingVM, String> TRAAD_ID = (meldingVM) -> meldingVM.melding.traadId;
+    public boolean erFraSaksbehandler() {
+        return melding.erFraSaksbehandler();
+    }
 
-    public static final Transformer<MeldingVM, Boolean> FEILSENDT = (meldingVM) -> meldingVM.erFeilsendt();
+    public boolean erSporsmal() {
+        return melding.erSporsmal();
+    }
 
     @Override
     public boolean equals(Object obj) {

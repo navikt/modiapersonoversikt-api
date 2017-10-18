@@ -1,5 +1,6 @@
 @modiasvart: #333;
 @graabakgrunn: #f1f1f1;
+@aktivBakgrunn: #226aa4;
 @rammefarge: #d1d1d1;
 @modiagraaskrift: #b7b1a9;
 @sidemargin: 30px;
@@ -363,7 +364,7 @@
     .focus-sammensatt-inset-mixin();
   }
   &.valgt {
-    background-color: #226aa4;
+    background-color: @aktivBakgrunn;
 
     .melding-detaljer-tekst {
       .opprettet {
@@ -371,15 +372,22 @@
       }
     }
 
+    .antall-meldinger-samtale {
+      background-color: @aktivBakgrunn;
+    }
+
     p {
       color: #f5f5f5;
     }
     .statusIkon {
-      &.flere-meldinger {
-        background: url(../img/meldinger/flere_meldinger_valgt.svg) no-repeat;
+      &.dialog {
+        background: url(../img/meldinger/double_bubble_valgt.svg) no-repeat;
       }
-      &.en-melding {
-        background: url(../img/meldinger/melding_normal_valgt.svg) no-repeat;
+      &.monolog {
+        background: url(../img/meldinger/bubble_valgt.svg) no-repeat;
+        &.ubesvart {
+          background: url(../img/meldinger/brev_valgt.svg) no-repeat;
+        }
       }
       &.dokument {
         background: url(../img/meldinger/dokument_normal_valgt.svg) no-repeat;
@@ -387,8 +395,19 @@
       &.oppgave {
         background: url(../img/meldinger/checklist_valgt.svg) no-repeat;
       }
-
+      &.oppmote {
+        background: url(../img/meldinger/oppmote_valgt.svg) no-repeat;
+      }
+      &.telefon {
+        background: url(../img/meldinger/telefon_valgt.svg) no-repeat;
+      }
+      &.besvart {
+        &:after {
+          background: url(../img/meldinger/besvart_valgt.svg) no-repeat;
+        }
+      }
     }
+
     .besvarIndikator {
       background: url(../img/loading_dots_liten_hvit.gif) no-repeat;
     }
@@ -398,9 +417,11 @@
   }
   .antall-meldinger-samtale {
     position: absolute;
-    left: 7px;
+    left: 6px;
+    padding-left: 1px;
     top: -2px;
     font-weight: 600;
+    background: @graabakgrunn;
   }
 
   .meldingstatus {
@@ -430,17 +451,36 @@
     height: 26px;
     width: 25px;
     left: -12px;
-    &.flere-meldinger {
-      background: url(../img/meldinger/flere_meldinger.svg) no-repeat;
+    &.dialog {
+      background: url(../img/meldinger/double_bubble.svg) no-repeat;
     }
-    &.en-melding {
-      background: url(../img/meldinger/melding_normal.svg) no-repeat;
+    &.monolog {
+      background: url(../img/meldinger/bubble.svg) no-repeat;
+      &.ubesvart {
+        background: url(../img/meldinger/brev.svg) no-repeat;
+      }
     }
     &.dokument {
       background: url(../img/meldinger/dokument_normal.svg) no-repeat;
     }
     &.oppgave {
       background: url(../img/meldinger/checklist.svg) no-repeat;
+    }
+    &.oppmote {
+      background: url(../img/meldinger/oppmote.svg) no-repeat;
+    }
+    &.telefon {
+      background: url(../img/meldinger/telefon.svg) no-repeat;
+    }
+    &.besvart {
+      &:after {
+        content: "";
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: 30px;
+        background: url(../img/meldinger/besvart.svg) no-repeat;
+      }
     }
   }
   .besvarIndikator {
