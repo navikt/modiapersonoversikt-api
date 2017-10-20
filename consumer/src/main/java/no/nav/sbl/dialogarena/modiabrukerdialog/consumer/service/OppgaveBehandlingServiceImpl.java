@@ -93,21 +93,21 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, Temagruppe temagruppe) {
-        if (oppgaveId== null ) {
+        if (oppgaveId == null) {
             return;
         }
-            try {
-                WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
-                wsOppgave.withAnsvarligId("");
-                wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
-                if (temagruppe!= null) {
-                    List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
-                            new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
-                                    .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
-                                    .withFagomradeKode(wsOppgave.getFagomrade().getKode())
-                                    .withGjelderKode(underkategoriKode(temagruppe)))
-                            .getEnhetListe();
+        try {
+            WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
+            wsOppgave.withAnsvarligId("");
+            wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
+            if (temagruppe != null) {
+                List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
+                        new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                                .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
+                                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                                .withGjelderKode(underkategoriKode(temagruppe)))
+                        .getEnhetListe();
 
                 wsOppgave.withAnsvarligEnhetId(enhetListe.isEmpty() ? wsOppgave.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId());
                 wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
