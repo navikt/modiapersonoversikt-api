@@ -114,7 +114,7 @@ public class StatusIkon extends Panel {
                     addCSSClass("besvart");
                 } else if (erMonolog) {
                     addCSSClass("monolog");
-                    ikon.add(hasCssClassIf("ubesvart", Model.of(meldingVM.erFraSaksbehandler())));
+                    ikon.add(hasCssClassIf("ubesvart", Model.of(!meldingVM.erFraSaksbehandler())));
                 } else {
                     addCSSClass("dialog");
                     ikon.add(hasCssClassIf("besvart", meldingVM.erBesvart()));
