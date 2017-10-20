@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.kjerneinfo.domain.person.Personnavn;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.Serializable;
 
@@ -48,6 +49,10 @@ public class GrunnInfo implements Serializable {
         public Bruker withEnhet(String enhet) {
             this.navkontor = enhet;
             return this;
+        }
+
+        public String getFornavnAsEcmaScriptString(){
+            return StringEscapeUtils.escapeEcmaScript(this.fornavn);
         }
     }
 
