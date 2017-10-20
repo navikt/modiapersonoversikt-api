@@ -249,9 +249,9 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-    private static final Predicate<Lamell> IS_LAMELL_MODIFIED = lamell -> lamell.isModified();
+    private static final Predicate<Lamell> IS_LAMELL_MODIFIED = Lamell::isModified;
 
-    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
+    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER, Events.SporsmalOgSvar.FERDIGSTILT_UTEN_SVAR})
     public void unsetBesvartModus(AjaxRequestTarget target) {
         innboksVM.traadBesvares = null;
         innboksVM.setSessionHenvendelseId(null);

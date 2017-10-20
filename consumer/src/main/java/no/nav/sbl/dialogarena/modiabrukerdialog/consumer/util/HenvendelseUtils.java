@@ -34,7 +34,8 @@ public class HenvendelseUtils {
                                 .withKanal(henvendelse.kanal)
                                 .withFritekst(henvendelse.fritekst)
                                 .withNavident(henvendelse.navIdent)
-                ));
+                ))
+                .withFerdigstiltUtenSvar(henvendelse.erFerdigstiltUtenSvar);
     }
 
 

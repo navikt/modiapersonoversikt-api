@@ -136,7 +136,7 @@ public class OppgaveBehandlingServiceImplTest {
 
         String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = hentOppgaveResponse.getOppgave().getBeskrivelse();
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, Optional.<Temagruppe>none());
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak("1", nyBeskrivelse, null);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
@@ -159,7 +159,7 @@ public class OppgaveBehandlingServiceImplTest {
 
         String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, optional(Temagruppe.FMLI));
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak("1", nyBeskrivelse, Temagruppe.FMLI);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
