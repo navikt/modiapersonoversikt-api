@@ -50,10 +50,6 @@ public class GrunnInfo implements Serializable {
             this.navkontor = enhet;
             return this;
         }
-
-        public String getFornavnAsEcmaScriptString(){
-            return StringEscapeUtils.escapeEcmaScript(this.fornavn);
-        }
     }
 
     public static class Saksbehandler implements Serializable {

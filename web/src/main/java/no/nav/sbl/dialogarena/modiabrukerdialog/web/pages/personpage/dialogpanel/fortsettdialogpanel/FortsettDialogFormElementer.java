@@ -10,6 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.OppgaveTilknytningPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.SkrivestottePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.ReactJournalforingsPanel;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -53,7 +54,8 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(150)
-                        .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder", grunnInfo.bruker.getFornavnAsEcmaScriptString())
+                        .withPlaceholderTextKey("fortsettdialogform.tekstfelt.placeholder",
+                                StringEscapeUtils.escapeEcmaScript(grunnInfo.bruker.fornavn))
         );
         add(tekstfelt);
 
