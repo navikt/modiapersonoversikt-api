@@ -77,7 +77,13 @@ class DelvisSvar extends Component {
                 >
                     Svar delvis og legg tilbake
                 </a>
-                <a>Avbryt</a>
+                <a
+                    role="button"
+                    onClick={this.props.avbrytCallback}
+                    className="avbryt"
+                >
+                    Avbryt
+                </a>
             </div>
         );
     }
@@ -90,6 +96,7 @@ DelvisSvar.propTypes = {
     traadId: React.PropTypes.string.isRequired,
     temagruppe: React.PropTypes.string.isRequired,
     svarCallback: React.PropTypes.func.isRequired,
+    avbrytCallback: React.PropTypes.func.isRequired,
     oppgaveId: React.PropTypes.string.isRequired
 };
 
