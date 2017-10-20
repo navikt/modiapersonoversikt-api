@@ -80,6 +80,8 @@ public class KvitteringsPanel extends Panel {
         this.setVisibilityAllowed(true);
         target.add(this);
         target.add(komponenter);
-        target.focusComponent(startNyDialogLenke);
+        if (startNyDialogLenke.hasBeenRendered()) {
+            target.focusComponent(startNyDialogLenke);
+        }
     }
 }

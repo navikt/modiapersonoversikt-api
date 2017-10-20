@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -21,8 +20,10 @@ import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -31,7 +32,8 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
@@ -106,7 +108,7 @@ public class DialogPanel extends Panel {
         }
     }
 
-    @RunOnEvents(Events.SporsmalOgSvar.SVAR_PAA_MELDING)
+    @RunOnEvents(SVAR_PAA_MELDING)
     public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId);
         Optional<String> oppgaveId = none();
@@ -146,6 +148,17 @@ public class DialogPanel extends Panel {
         aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId));
     }
 
+    private void erstattDialogPanelMedKvitteringspanel(AjaxRequestTarget target) {
+        KvitteringsPanel kvitteringsPanel = new KvitteringsPanel(AKTIVT_PANEL_ID);
+        kvitteringsPanel.visKvittering(target, getString("dialogpanel.ferdigstiltUtenSvar.kvittering.bekreftelse"), aktivtPanel);
+        aktivtPanel = aktivtPanel.replaceWith(kvitteringsPanel);
+        aktivtPanel.add(hasCssClassIf("kvittering", Model.of(true)));
+
+        AjaxLink link = (AjaxLink) in((MarkupContainer) aktivtPanel).findComponent(AjaxLink.class).setOutputMarkupId(true);
+        target.add(kvitteringsPanel);
+        target.focusComponent(link);
+    }
+
     private void clearLokaleParameterVerdier() {
         oppgaveIdFraParametere = none();
         henvendelsesIdFraParametere = none();
@@ -160,13 +173,18 @@ public class DialogPanel extends Panel {
         target.focusComponent(textarea);
     }
 
+    @RunOnEvents({FERDIGSTILT_UTEN_SVAR})
+    public void visKvitteringVedFerdigstiltUtenSvar(AjaxRequestTarget target) {
+        erstattDialogPanelMedKvitteringspanel(target);
+    }
+
     @RunOnEvents({LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT, NY_DIALOG_AVBRUTT})
     public void visVelgDialogPanel(AjaxRequestTarget target) {
         aktivtPanel = aktivtPanel.replaceWith(new VelgDialogPanel(AKTIVT_PANEL_ID));
         target.add(aktivtPanel);
     }
 
-    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER})
+    @RunOnEvents({SVAR_AVBRUTT, LEGG_TILBAKE_UTFORT, MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus() {
         getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, null);
     }
