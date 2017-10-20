@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.kjerneinfo.domain.person.Personnavn;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.Serializable;
 
