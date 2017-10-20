@@ -175,10 +175,11 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalFerdigstilleHenvendelse() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
+
         henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.empty(), Optional.empty(), BEHANDLINGS_ID);
 
         verify(sendUtHenvendelsePortType).ferdigstillHenvendelse(wsFerdigstillHenvendelseRequestCaptor.capture());
-        assertThat(wsFerdigstillHenvendelseRequestCaptor.getValue().getBehandlingsId(), is(BEHANDLINGS_ID));
+        assertThat(wsFerdigstillHenvendelseRequestCaptor.getValue().getBehandlingsId(), is(singletonList(BEHANDLINGS_ID)));
     }
 
     @Test

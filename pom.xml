@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>13.2.4</version>
+    <version>13.3.7</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -102,14 +102,14 @@
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
-        <send.ut.henvendelse.version>0.5</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
+        <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
+        <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <dialogarena.behandlingsinformasjon.version>1.0.3</dialogarena.behandlingsinformasjon.version>
-        <saksoversikt.version>8.0.4</saksoversikt.version>
+        <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
+        <saksoversikt.version>8.0.5</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
-        <modiabrukerdialog-api.version>8.3.0</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>7.1.5</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>8.3.2</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>7.1.13</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
@@ -1115,7 +1115,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>HEAD</tag>
+        <tag>modiabrukerdialog-13.3.7</tag>
     </scm>
 
 </project>

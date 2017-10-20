@@ -58,7 +58,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) throws FikkIkkeTilordnet {
-        tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId), temagruppe);
+        tilordneOppgaveIGsak(oppgaveId, optional(temagruppe));
     }
 
     @Override
@@ -75,6 +75,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) {
+        ferdigstillOppgaveIGsak(oppgaveId, optional(temagruppe));
+    }
+
+    @Override
+    public void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe) {
         try {
             WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
@@ -88,22 +93,21 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, Temagruppe temagruppe) {
-        if (oppgaveId == null ) {
+        if (oppgaveId== null ) {
             return;
         }
-
-        try {
-            WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
-            wsOppgave.withAnsvarligId("");
-            wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
-            if (temagruppe != null) {
-                List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
-                        new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
-                                .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
-                                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
-                                .withGjelderKode(underkategoriKode(temagruppe)))
-                        .getEnhetListe();
+            try {
+                WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
+                wsOppgave.withAnsvarligId("");
+                wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
+                if (temagruppe!= null) {
+                    List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
+                            new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                                    .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
+                                    .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                                    .withGjelderKode(underkategoriKode(temagruppe)))
+                            .getEnhetListe();
 
                 wsOppgave.withAnsvarligEnhetId(enhetListe.isEmpty() ? wsOppgave.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId());
                 wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
@@ -150,7 +154,16 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
+    private void tilordneOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe) throws FikkIkkeTilordnet {
+        tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId), temagruppe);
+    }
+
+
     private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Temagruppe temagruppe) throws FikkIkkeTilordnet {
+        return tilordneOppgaveIGsak(oppgave, optional(temagruppe));
+    }
+
+    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Optional<Temagruppe> temagruppe) throws FikkIkkeTilordnet {
         try {
             WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
             lagreOppgaveIGsak(wsOppgave, temagruppe);
