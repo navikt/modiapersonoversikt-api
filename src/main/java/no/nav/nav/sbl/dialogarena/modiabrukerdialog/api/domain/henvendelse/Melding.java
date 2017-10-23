@@ -20,7 +20,7 @@ public class Melding implements Serializable {
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
-    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding;
+    public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding, erFerdigstiltUtenSvar;
     public Boolean erTilknyttetAnsatt;
     public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
 
@@ -138,6 +138,11 @@ public class Melding implements Serializable {
         return this;
     }
 
+    public Melding withErFerdigstiltUtenSvar(boolean erFerdigstiltUtenSvar) {
+        this.erFerdigstiltUtenSvar = erFerdigstiltUtenSvar;
+        return this;
+    }
+
     public DateTime getVisningsDato() {
         if (erDokumentMelding) {
             return ferdigstiltDato;
@@ -163,6 +168,14 @@ public class Melding implements Serializable {
 
     public boolean erBesvart() {
         return status != Status.IKKE_BESVART;
+    }
+
+    public boolean erSvarSkriftlig() {
+        return meldingstype.equals(Meldingstype.SVAR_SKRIFTLIG);
+    }
+
+    public boolean erSporsmalSkriftlig() {
+        return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG);
     }
 
     public static final Comparator<Melding> ELDSTE_FORST = (o1, o2) -> o1.getVisningsDato().compareTo(o2.getVisningsDato());

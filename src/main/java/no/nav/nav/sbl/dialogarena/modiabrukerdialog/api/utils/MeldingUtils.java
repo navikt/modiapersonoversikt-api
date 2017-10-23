@@ -68,6 +68,7 @@ public class MeldingUtils {
             melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
             melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null && !"".equals(xmlHenvendelse.getGjeldendeTemagruppe())
                     ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
+            melding.erFerdigstiltUtenSvar = unboxBoolean(xmlHenvendelse.isFerdigstiltUtenSvar());
 
             oppdaterMeldingMedJournalfortInformasjon(propertyResolver, ldapService, xmlHenvendelse, melding);
 
@@ -77,7 +78,7 @@ public class MeldingUtils {
             }
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
-            if(DOKUMENT_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
+            if (DOKUMENT_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
                 oppdaterMeldingMedDokumentVarselData(xmlHenvendelse, melding, xmlMetadata);
                 return melding;
             }
@@ -105,6 +106,11 @@ public class MeldingUtils {
 
             return melding;
         };
+    }
+
+    private static boolean unboxBoolean(Boolean bool) {
+        if (bool != null) return bool;
+        return false;
     }
 
     private static void oppdaterMeldingMedJournalfortInformasjon(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
@@ -223,6 +229,7 @@ public class MeldingUtils {
             put(XMLHenvendelseType.SVAR_SKRIFTLIG, SVAR_SKRIFTLIG);
             put(XMLHenvendelseType.SVAR_OPPMOTE, SVAR_OPPMOTE);
             put(XMLHenvendelseType.SVAR_TELEFON, SVAR_TELEFON);
+            put(XMLHenvendelseType.DELVIS_SVAR_SKRIFTLIG, DELVIS_SVAR_SKRIFTLIG);
             put(XMLHenvendelseType.REFERAT_OPPMOTE, SAMTALEREFERAT_OPPMOTE);
             put(XMLHenvendelseType.REFERAT_TELEFON, SAMTALEREFERAT_TELEFON);
             put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, SPORSMAL_MODIA_UTGAAENDE);
