@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

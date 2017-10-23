@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config;
 
 import static java.lang.Boolean.valueOf;
 import static java.lang.System.getProperty;
