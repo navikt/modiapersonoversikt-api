@@ -72,6 +72,7 @@ class HenvendelseServiceImplTest {
         return new FerdigstillHenvendelseRequestBuilder()
                 .withTraadId(TRAAD_ID)
                 .withSvar(SVAR)
+                .withFodselsnummer(BRUKERS_FNR)
                 .build();
     }
 
