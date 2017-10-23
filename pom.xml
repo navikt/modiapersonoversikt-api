@@ -29,8 +29,8 @@
         <saksoversikt-service.version>1.53</saksoversikt-service.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
-        <modia-felleskomponenter.version>3.4-SNAPSHOT</modia-felleskomponenter.version>
-        <modiabrukerdialog-api.version>8.0.3-2017-HL3-SNAPSHOT</modiabrukerdialog-api.version>
+        <modia-felleskomponenter.version>3.4-oidc-SNAPSHOT</modia-felleskomponenter.version>
+        <modiabrukerdialog-api.version>8.0.3-oidc-SNAPSHOT</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.5</modig-lang.version>
         <modig-content.version>2.0.13</modig-content.version>
