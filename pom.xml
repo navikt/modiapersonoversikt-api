@@ -11,11 +11,11 @@
     <name>Dialogarena - modiabrukerdialog-api</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog-api</artifactId>
-    <version>8.0.3-2017-HL3-SNAPSHOT</version>
+    <version>8.0.3-oidc-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.2.9.RELEASE</spring.version>
-        <jackson.version>2.3.2</jackson.version>
+        <jackson.version>2.5.4</jackson.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <modig.security.version>1.0.24</modig.security.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -38,6 +38,11 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
             <version>2.0.5</version>
             <scope>provided</scope>
@@ -47,11 +52,6 @@
             <artifactId>modig-content</artifactId>
             <version>2.0.13</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>${modig.security.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
