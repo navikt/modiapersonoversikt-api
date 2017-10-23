@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>13.0.16-2017-HL3-SNAPSHOT</version>
+        <version>13.2.0-oidc-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -17,7 +17,7 @@
         in the parent pom and in each module pom. Then JaCoCo will add up information in the
         same report, so that, it will give the cross-module code coverage. -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
-        <jackson.version>2.4.2</jackson.version>
+        <jackson.version>2.5.4</jackson.version>
     </properties>
 
     <dependencies>
@@ -217,19 +217,7 @@
         <!--Modig-->
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-authorization</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -237,7 +225,17 @@
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-sts</artifactId>
+            <artifactId>modig-security-core</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-wicket</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -255,12 +253,6 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-testcertificates</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -298,15 +290,15 @@
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-simple</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -345,7 +337,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.4.0</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -384,8 +376,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.ws.security</groupId>
-            <artifactId>wss4j</artifactId>
+            <groupId>org.apache.wss4j</groupId>
+            <artifactId>wss4j-ws-security-dom</artifactId>
         </dependency>
 
         <dependency>
@@ -417,14 +409,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-servlets</artifactId>
-        </dependency>
 
         <!--Testing-->
         <dependency>
@@ -451,7 +435,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>

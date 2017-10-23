@@ -15,7 +15,9 @@
 
     <security serviceUserResourceAlias="srvModiabrukerdialog">
         <logins>
-            <spnego/>
+            <openIdConnect moduleClass="no.nav.aura.loginModule.JWTLoginModule">
+                <contextRoot>/modiabrukerdialog/rest/login</contextRoot>
+            </openIdConnect>
         </logins>
     </security>
 
@@ -68,6 +70,12 @@
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
+
+        <baseUrl alias="isso-host"/>
+        <baseUrl alias="isso-jwks"/>
+        <baseUrl alias="isso-issuer"/>
+        <baseUrl alias="isso.isalive"/>
+        <credential alias="isso-rp-user"/>
     </resources>
 
 </application>

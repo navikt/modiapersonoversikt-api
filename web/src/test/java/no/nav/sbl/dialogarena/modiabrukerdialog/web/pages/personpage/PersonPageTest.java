@@ -104,7 +104,7 @@ public class PersonPageTest extends WicketPageTest {
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
         personPage.refreshKjerneinfo(target, new PageParameters());
 
-        verify(redirectPopup, times(1)).show(target);
+        verify(redirectPopup, times(1)).show();
         verify(redirectPopup, times(0)).redirect();
     }
 
@@ -121,7 +121,7 @@ public class PersonPageTest extends WicketPageTest {
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
         personPage.refreshKjerneinfo(target, new PageParameters());
 
-        verify(redirectPopup, times(0)).show(target);
+        verify(redirectPopup, times(0)).show();
         verify(redirectPopup, times(1)).redirect();
     }
 

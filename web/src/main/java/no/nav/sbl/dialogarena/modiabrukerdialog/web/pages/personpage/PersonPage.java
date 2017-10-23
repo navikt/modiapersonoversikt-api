@@ -265,7 +265,7 @@ public class PersonPage extends BasePage {
         redirectPopup.addCallback(ReactSjekkForlatModal.CONFIRM, Void.class, new ReactComponentCallback<Void>() {
             @Override
             public void onCallback(AjaxRequestTarget target, Void data) {
-                redirectPopup.hide(target);
+                redirectPopup.hide();
                 target.appendJavaScript(getJavascriptSaveButtonFocus());
             }
         });
@@ -376,7 +376,7 @@ public class PersonPage extends BasePage {
     private void handleRedirect(AjaxRequestTarget target, PageParameters pageParameters, Class<? extends Page> redirectTo) {
         redirectPopup.setTarget(redirectTo, pageParameters);
         if (lamellContainer.hasUnsavedChanges()) {
-            redirectPopup.show(target);
+            redirectPopup.show();
         } else {
             redirectPopup.redirect();
         }
