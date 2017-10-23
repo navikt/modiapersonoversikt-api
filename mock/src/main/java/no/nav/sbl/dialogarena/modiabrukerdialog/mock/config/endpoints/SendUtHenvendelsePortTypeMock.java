@@ -10,6 +10,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meld
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.UUID;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
@@ -54,8 +55,8 @@ public class SendUtHenvendelsePortTypeMock {
             @Override
             public WSFerdigstillHenvendelseResponse ferdigstillHenvendelse(WSFerdigstillHenvendelseRequest parameters) {
                 XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) parameters.getAny();
-                String behandlingsId = parameters.getBehandlingsId();
-                xmlHenvendelse.setBehandlingsId(behandlingsId);
+                List<String> behandlingsId = parameters.getBehandlingsId();
+                xmlHenvendelse.setBehandlingsId(behandlingsId.get(0));
                 XMLMelding xmlMelding = (XMLMelding) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
                 xmlHenvendelse.setGjeldendeTemagruppe(xmlMelding.getTemagruppe());
                 HENVENDELSER.add(xmlHenvendelse);
