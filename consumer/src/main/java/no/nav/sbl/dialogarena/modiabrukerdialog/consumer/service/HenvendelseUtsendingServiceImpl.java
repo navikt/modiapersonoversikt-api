@@ -203,7 +203,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             typer.add(DELVIS_SVAR_SKRIFTLIG.name());
         }
 
-        return (String[]) typer.toArray();
+        return typer.toArray(new String[typer.size()]);
     }
 
     private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
