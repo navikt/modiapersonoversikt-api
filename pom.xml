@@ -283,6 +283,12 @@
             <scope>test</scope>
         </dependency>
 		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-core</artifactId>
+			<version>${cxf.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-testcertificates</artifactId>
             <version>1.1.0</version>
