@@ -31,6 +31,8 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 avbrytCallback={this.avbrytCallback}
                 oppgaveId={this.props.oppgaveId}
                 temagruppe={this.props.temagruppe}
+                opprettetDato={this.props.opprettetDato}
+                valgTemagrupper={this.props.valgTemagrupper}
             />);
         }
         return <h1>Delvis svar er registrert</h1>;
@@ -47,7 +49,9 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     fodselsnummer: React.PropTypes.string.isRequired,
     traadId: React.PropTypes.string.isRequired,
     temagruppe: React.PropTypes.string.isRequired,
-    oppgaveId: React.PropTypes.string.isRequired
+    oppgaveId: React.PropTypes.string.isRequired,
+    opprettetDato: React.PropTypes.string.isRequired,
+    valgTemagrupper: React.PropTypes.object.isRequired
 };
 
 export default LeggTilbakeDelvisSvarPanel;

@@ -6,8 +6,11 @@ class DelvisSvar extends Component {
         super(props);
         this.svarDelvis = this.svarDelvis.bind(this);
         this.handleSvarEndring = this.handleSvarEndring.bind(this);
+        this.velgTemagruppe = this.velgTemagruppe.bind(this);
+        console.log(props);
         this.state = {
-            svarValue: ''
+            svarValue: '',
+            valgTemagruppe: null
         };
     }
 
@@ -19,7 +22,7 @@ class DelvisSvar extends Component {
 
     leggTilbakeOppgave() {
         const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}`;
-        const data = JSON.stringify({});
+        const data = JSON.stringify({ valgTemagruppe: this.state.valgTemagruppe });
         return Ajax.put(url, data);
     }
 
@@ -38,15 +41,23 @@ class DelvisSvar extends Component {
         this.setState({ svarValue: event.target.value });
     }
 
+    velgTemagruppe(event){
+        this.setState({ valgTemagruppe: event.target.value });
+    }
+
     render() {
         const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
             <p key={`paragraf-${index}`}>{paragraf}</p>);
+
+        const valgTemagruppe = Object.keys(this.props.valgTemagrupper).map((key, index) =>
+            <option key={index} value={key} >{this.props.valgTemagrupper[key]}</option>);
+
         return (
             <div>
                 <h3>Legg tilbake med delvis svar</h3>
                 <h2>Spørsmål</h2>
-                <h3>FAMILIE</h3>
-                <p>22.03.2017 kl 10:22</p>
+                <h3>{this.props.temagruppe}</h3>
+                <p>{this.props.opprettetDato}</p>
                 <div className="sporsmaal">
                     {sporsmal}
                 </div>
@@ -64,10 +75,9 @@ class DelvisSvar extends Component {
 
                 <div className="temagruppe-velger">
                     <h3>Velg temagruppe</h3>
-                    <select>
-                        <option>Arbeid</option>
-                        <option>Familie</option>
-                        <option>Hjelpemidler</option>
+                    <select onChange={this.velgTemagruppe}>
+                        <option></option>
+                        {valgTemagruppe}
                     </select>
                 </div>
                 <a
@@ -96,8 +106,10 @@ DelvisSvar.propTypes = {
     traadId: React.PropTypes.string.isRequired,
     temagruppe: React.PropTypes.string.isRequired,
     svarCallback: React.PropTypes.func.isRequired,
+    oppgaveId: React.PropTypes.string.isRequired,
     avbrytCallback: React.PropTypes.func.isRequired,
-    oppgaveId: React.PropTypes.string.isRequired
+    opprettetDato: React.PropTypes.string.isRequired,
+    valgTemagrupper: React.PropTypes.object.isRequired,
 };
 
 export default DelvisSvar;
