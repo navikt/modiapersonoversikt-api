@@ -1115,7 +1115,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-13.3.7</tag>
+        <tag>modiabrukerdialog-13.2.4</tag>
     </scm>
 
 </project>
