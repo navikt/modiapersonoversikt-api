@@ -57,7 +57,7 @@
         <!-- egenlagde biblioteker -->
         <!--<oidc.security.version>2.1.20</oidc.security.version>-->
         <picketbox.version>4.9.6.Final</picketbox.version>
-        <oidc.security.version>1-SNAPSHOT</oidc.security.version>
+        <oidc.security.version>2017.10.24.10.37</oidc.security.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig-security.version>3.0.4</modig-security.version>
         <modig.log.version>1.1.2</modig.log.version>
