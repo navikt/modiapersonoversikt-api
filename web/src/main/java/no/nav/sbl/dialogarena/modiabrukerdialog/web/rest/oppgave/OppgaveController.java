@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
@@ -39,7 +40,7 @@ public class OppgaveController {
         }
 
         setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", null);
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", Temagruppe.valueOf(ferdigstillHenvendelseRestRequest.valgTemagruppe));
         return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
     }
 
