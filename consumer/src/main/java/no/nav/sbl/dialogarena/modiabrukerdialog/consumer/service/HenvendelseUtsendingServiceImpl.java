@@ -16,6 +16,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlin
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.*;
@@ -25,8 +26,7 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -156,16 +156,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         final String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         List<Melding> meldinger =
                 on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
-                        .withTyper(
-                                SPORSMAL_SKRIFTLIG.name(),
-                                SVAR_SKRIFTLIG.name(),
-                                SVAR_OPPMOTE.name(),
-                                SVAR_TELEFON.name(),
-                                DELVIS_SVAR_SKRIFTLIG.name(),
-                                REFERAT_OPPMOTE.name(),
-                                REFERAT_TELEFON.name(),
-                                SPORSMAL_MODIA_UTGAAENDE.name(),
-                                SVAR_SBL_INNGAAENDE.name())
+                        .withTyper(getHenvendelseTyper())
                         .withFodselsnummer(fnr))
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
@@ -195,6 +186,24 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         }
 
         return meldinger;
+    }
+
+    private String[] getHenvendelseTyper() {
+        List<String> typer = new ArrayList<>();
+        typer.add(SPORSMAL_SKRIFTLIG.name());
+        typer.add(SVAR_SKRIFTLIG.name());
+        typer.add(SVAR_OPPMOTE.name());
+        typer.add(SVAR_TELEFON.name());
+        typer.add(REFERAT_OPPMOTE.name());
+        typer.add(REFERAT_TELEFON.name());
+        typer.add(SPORSMAL_MODIA_UTGAAENDE.name());
+        typer.add(SVAR_SBL_INNGAAENDE.name());
+
+        if (FeatureToggle.visDelviseSvarFunksjonalitet()) {
+            typer.add(DELVIS_SVAR_SKRIFTLIG.name());
+        }
+
+        return typer.toArray(new String[typer.size()]);
     }
 
     private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {

@@ -1,10 +1,10 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.System.setProperty;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 class FeatureToggleTest {
 
@@ -17,7 +17,7 @@ class FeatureToggleTest {
     @Test
     @DisplayName("Delvise svar skal kun vises hvis det er angitt i properties")
     void visDelviseSvarLeserProperty() {
-        setProperty(FeatureToggle.VIS_DELVISE_SVAR, "true");
+        setProperty(FeatureToggle.VIS_DELVISE_SVAR_PROPERTY_KEY, "true");
         assertEquals(true, FeatureToggle.visDelviseSvarFunksjonalitet());
     }
 }
