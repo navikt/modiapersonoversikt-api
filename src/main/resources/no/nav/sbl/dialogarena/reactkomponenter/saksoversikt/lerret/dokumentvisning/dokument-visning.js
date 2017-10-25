@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 import { debounce, autobind } from './../../../utils/utils-module';
 import { Element } from 'react-scroll';
 import { injectIntl, intlShape } from 'react-intl';
@@ -114,11 +115,11 @@ class DokumentVisning extends Component {
 }
 
 DokumentVisning.propTypes = {
-    dokument: React.PropTypes.shape({
-        antallSider: React.PropTypes.number,
-        dokumentreferanse: React.PropTypes.string,
-        journalpostId: React.PropTypes.string,
-        pdfUrl: React.PropTypes.string
+    dokument: PT.shape({
+        antallSider: PT.number,
+        dokumentreferanse: PT.string,
+        journalpostId: PT.string,
+        pdfUrl: PT.string
     }).isRequired,
     intl: intlShape
 };

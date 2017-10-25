@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 const GenerellFeilMeldingDokumentvisning = ({ aapneSomPDFLink }) => {
@@ -25,7 +26,7 @@ const GenerellFeilMeldingDokumentvisning = ({ aapneSomPDFLink }) => {
     );
 };
 GenerellFeilMeldingDokumentvisning.propTypes = {
-    aapneSomPDFLink: React.PropTypes.object
+    aapneSomPDFLink: PT.object
 };
 
 export default GenerellFeilMeldingDokumentvisning;

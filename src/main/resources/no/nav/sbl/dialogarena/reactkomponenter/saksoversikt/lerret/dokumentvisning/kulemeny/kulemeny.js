@@ -1,11 +1,6 @@
 import React, { PropTypes as pt } from 'react';
 import { Button } from 'react-scroll';
 
-const isInside = (y, elemTopBound, elemBottomBound) => {
-    const midtpunktish = y + 650;
-    return (midtpunktish >= elemTopBound && midtpunktish <= elemBottomBound);
-};
-
 const Kulemeny = ({ dokref, tittel, initialState }) => (
     <li>
         <Button
@@ -17,8 +12,6 @@ const Kulemeny = ({ dokref, tittel, initialState }) => (
             offset={-80}
             title={tittel}
             isDynamic={true}
-            isInside={isInside}
-            initialState={initialState}
             type="button"
             containerId="js-kulemeny-scroll"
         />

@@ -18,7 +18,7 @@ const VedleggFeilmeldingListe = ({ feilmeldinger }) => {
 };
 
 VedleggFeilmeldingListe.propTypes = {
-    feilmeldinger: pt.object.isRequired
+    feilmeldinger: pt.array.isRequired
 };
 
 export default VedleggFeilmeldingListe;
