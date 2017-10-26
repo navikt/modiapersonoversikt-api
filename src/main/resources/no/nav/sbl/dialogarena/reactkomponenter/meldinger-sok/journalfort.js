@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 
 class Journalfort extends React.Component {
     render() {
@@ -33,13 +34,13 @@ class Journalfort extends React.Component {
 }
 
 Journalfort.propTypes = {
-    melding: React.PropTypes.shape({
-        journalfortTemanavn: pt.string,
-        journalfortDatoTekst: pt.string,
-        journalfortSaksId: pt.string,
-        journalfortAvNavIdent: pt.string,
-        journalfortAv: pt.shape({
-            navn: pt.string
+    melding: PT.shape({
+        journalfortTemanavn: PT.string,
+        journalfortDatoTekst: PT.string,
+        journalfortSaksId: PT.string,
+        journalfortAvNavIdent: PT.string,
+        journalfortAv: PT.shape({
+            navn: PT.string
         })
     }).isRequired
 };

@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import ReactDOM from 'react-dom';
 import sanitize from 'sanitize-html';
 import format from 'string-format';
@@ -56,17 +57,17 @@ class Listevisning extends React.Component {
 }
 
 Listevisning.propTypes = {
-    traad: pt.shape({
-        statusKlasse: pt.string,
-        antallMeldingerIOpprinneligTraad: pt.number,
-        statusTekst: pt.string.isRequired,
-        ikontekst: pt.string.isRequired,
-        temagruppe: pt.string,
-        erMonolog: pt.bool,
-        innhold: pt.string
+    traad: PT.shape({
+        statusKlasse: PT.string,
+        antallMeldingerIOpprinneligTraad: PT.number,
+        statusTekst: PT.string.isRequired,
+        ikontekst: PT.string.isRequired,
+        temagruppe: PT.string,
+        erMonolog: PT.bool,
+        innhold: PT.string
     }),
-    valgtTraad: pt.object.isRequired,
-    store: pt.object.isRequired
+    valgtTraad: PT.object.isRequired,
+    store: PT.object.isRequired
 };
 
 export default Listevisning;

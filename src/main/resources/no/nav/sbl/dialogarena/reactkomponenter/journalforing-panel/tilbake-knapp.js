@@ -1,6 +1,7 @@
 /* eslint no-script-url:0 */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PT from 'prop-types';
 
 class TilbakeKnapp extends React.Component {
     componentDidMount() {
@@ -23,7 +24,7 @@ class TilbakeKnapp extends React.Component {
 }
 
 TilbakeKnapp.propTypes = {
-    tilbake: React.PropTypes.func.isRequired
+    tilbake: PT.func.isRequired
 };
 
 export default TilbakeKnapp;

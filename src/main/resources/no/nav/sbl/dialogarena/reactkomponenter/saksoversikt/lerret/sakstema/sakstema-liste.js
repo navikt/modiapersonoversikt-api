@@ -1,4 +1,5 @@
-import React, { PropTypes as PT } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import Sakstema from './sakstema';
 import { finnNokkelinfoForSakstema } from './../../utils/siste-oppdatering/siste-oppdatering';
 

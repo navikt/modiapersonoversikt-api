@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 const Inngaaende = ({ brukerNavn, navn, avsender }) => {
@@ -11,9 +12,9 @@ const Inngaaende = ({ brukerNavn, navn, avsender }) => {
 };
 
 Inngaaende.propTypes = {
-    brukerNavn: pt.string,
-    navn: pt.string,
-    avsender: pt.string
+    brukerNavn: PT.string,
+    navn: PT.string,
+    avsender: PT.string
 };
 
 export default Inngaaende;

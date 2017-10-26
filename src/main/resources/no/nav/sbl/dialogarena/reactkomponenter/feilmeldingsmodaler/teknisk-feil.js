@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 
 const styling = {
@@ -57,11 +58,11 @@ TekniskFeil.defaultProps = {
 };
 
 TekniskFeil.propTypes = {
-    tekst: pt.string.isRequired,
+    tekst: PT.string.isRequired,
     title: AriaPropType,
     description: AriaPropType,
     closeButton: AriaPropType,
-    isOpen: pt.bool
+    isOpen: PT.bool
 };
 
 export default TekniskFeil;

@@ -1,6 +1,7 @@
 /* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PT from 'prop-types';
 
 function ariaLabel(props) {
     const knagger = props.knagger;
@@ -54,13 +55,13 @@ function IEHack() {
 /* eslint "react/prefer-es6-class": 1 */
 const KnaggInput = React.createClass({
     propTypes: {
-        'auto-focus': React.PropTypes.bool,
-        'aria-controls': React.PropTypes.string,
-        store: React.PropTypes.object.isRequired,
-        tablisteId: React.PropTypes.string.isRequired,
-        knagger: React.PropTypes.array,
-        placeholder: React.PropTypes.string,
-        fritekst: React.PropTypes.string
+        'auto-focus': PT.bool,
+        'aria-controls': PT.string,
+        store: PT.object.isRequired,
+        tablisteId: PT.string.isRequired,
+        knagger: PT.array,
+        placeholder: PT.string,
+        fritekst: PT.string
     },
     getDefaultProps: function getDefaultProps() {
         return {

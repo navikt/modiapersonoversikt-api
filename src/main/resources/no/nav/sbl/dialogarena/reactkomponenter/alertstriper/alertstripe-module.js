@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PT from 'prop-types';
 import Icon from 'nav-frontend-ikoner-assets';
 
 class AlertstripeSuksessSolid extends Component {
@@ -27,7 +27,7 @@ class AlertstripeSuksessSolid extends Component {
 }
 
 AlertstripeSuksessSolid.propTypes = {
-    tekst: PropTypes.string.isRequired
+    tekst: PT.string.isRequired
 };
 
 export default AlertstripeSuksessSolid;

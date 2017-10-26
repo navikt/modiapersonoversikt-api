@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import VedleggFeilmelding from './vedlegg-feilmelding';
 
 const VedleggFeilmeldingListe = ({ feilmeldinger }) => {
@@ -18,7 +19,7 @@ const VedleggFeilmeldingListe = ({ feilmeldinger }) => {
 };
 
 VedleggFeilmeldingListe.propTypes = {
-    feilmeldinger: pt.array.isRequired
+    feilmeldinger: PT.array.isRequired
 };
 
 export default VedleggFeilmeldingListe;

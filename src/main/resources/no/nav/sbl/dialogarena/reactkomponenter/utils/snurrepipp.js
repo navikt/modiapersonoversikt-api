@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import format from 'string-format';
 
 class Snurrepipp extends React.Component {
@@ -18,8 +19,8 @@ class Snurrepipp extends React.Component {
 }
 
 Snurrepipp.propTypes = {
-    storrelse: React.PropTypes.number,
-    farge: React.PropTypes.string
+    storrelse: PT.number,
+    farge: PT.string
 };
 
 Snurrepipp.defaultProps = {

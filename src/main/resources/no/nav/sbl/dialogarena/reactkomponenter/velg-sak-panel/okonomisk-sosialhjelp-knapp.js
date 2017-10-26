@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 class OkonomiskSosialhjelpKnapp extends React.Component {
     constructor(props) {
@@ -66,7 +67,7 @@ class OkonomiskSosialhjelpKnapp extends React.Component {
 }
 
 OkonomiskSosialhjelpKnapp.propTypes = {
-    velgSak: React.PropTypes.func.isRequired
+    velgSak: PT.func.isRequired
 };
 
 export default OkonomiskSosialhjelpKnapp;

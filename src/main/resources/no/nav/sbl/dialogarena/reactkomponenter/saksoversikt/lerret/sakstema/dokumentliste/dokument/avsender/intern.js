@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 const Intern = ({ kategoriNotat }) => {
@@ -14,7 +15,7 @@ const Intern = ({ kategoriNotat }) => {
 };
 
 Intern.propTypes = {
-    kategoriNotat: pt.string.isRequired
+    kategoriNotat: PT.string.isRequired
 };
 
 export default Intern;

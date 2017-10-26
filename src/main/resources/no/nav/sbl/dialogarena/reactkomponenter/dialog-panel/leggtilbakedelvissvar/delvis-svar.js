@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
 
 class DelvisSvar extends Component {
@@ -90,14 +91,14 @@ class DelvisSvar extends Component {
 }
 
 DelvisSvar.propTypes = {
-    henvendelseId: React.PropTypes.string.isRequired,
-    sporsmal: React.PropTypes.string.isRequired,
-    fodselsnummer: React.PropTypes.string.isRequired,
-    traadId: React.PropTypes.string.isRequired,
-    temagruppe: React.PropTypes.string.isRequired,
-    svarCallback: React.PropTypes.func.isRequired,
-    avbrytCallback: React.PropTypes.func.isRequired,
-    oppgaveId: React.PropTypes.string.isRequired
+    henvendelseId: PT.string.isRequired,
+    sporsmal: PT.string.isRequired,
+    fodselsnummer: PT.string.isRequired,
+    traadId: PT.string.isRequired,
+    temagruppe: PT.string.isRequired,
+    svarCallback: PT.func.isRequired,
+    avbrytCallback: PT.func.isRequired,
+    oppgaveId: PT.string.isRequired
 };
 
 export default DelvisSvar;
