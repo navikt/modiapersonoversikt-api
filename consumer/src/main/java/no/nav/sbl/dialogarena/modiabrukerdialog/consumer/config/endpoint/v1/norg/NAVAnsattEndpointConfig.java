@@ -4,11 +4,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.common.cxf.TimeoutFeature;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
-import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +21,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gos
 @Configuration
 public class NAVAnsattEndpointConfig {
 
-    private static String address = System.getProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVAnsattWSEXP";;
+    private static String address = System.getProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVAnsattWSEXP";
 
     @Bean
     public GOSYSNAVansatt gosysNavAnsatt() {
@@ -37,6 +34,7 @@ public class NAVAnsattEndpointConfig {
     private static GOSYSNAVansatt createGosysNavAnsattPortType() {
         GOSYSNAVansatt gosysnaVansatt = new CXFClient<>(GOSYSNAVansatt.class)
                 .address(address)
+                .wsdl("classpath:nav-cons-sak-gosys-3.0.0_GOSYSNAVAnsattWSEXP.wsdl")
                 .serviceName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVansatt/Binding", "GOSYSNAVAnsattWSEXP_GOSYSNAVansattHttpService"))
                 .endpointName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVansatt/Binding", "GOSYSNAVAnsattWSEXP_GOSYSNAVansattHttpPort"))
                 .timeout(10000, 30000)
@@ -52,7 +50,7 @@ public class NAVAnsattEndpointConfig {
     }
 
     @Bean
-    public Pingable gosysNavAnsattPingable(){
+    public Pingable gosysNavAnsattPingable() {
         return new UnpingableWebService("Norg - navansatt", address);
     }
 
