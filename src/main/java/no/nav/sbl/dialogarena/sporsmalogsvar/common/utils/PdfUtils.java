@@ -31,8 +31,10 @@ public class PdfUtils {
         HashMap<Temagruppe, String> map = new HashMap<>();
         map.put(ARBD, "Arbeid");
         map.put(FMLI, "Familie");
+        map.put(PLEIEPENGERSY, "Pleiepenger sykt barn");
         map.put(HJLPM, "Hjelpemidler");
         map.put(BIL, "Hjelpemidler Bil");
+        map.put(UTLAND, "Utland");
         map.put(ORT_HJE, "Helsetjenester og ortopediske hjelpemidler");
         map.put(OVRG, "Øvrig");
         map.put(PENS, "Pensjon");
