@@ -16,6 +16,8 @@ class PleiepengerPanel extends Component {
                     tekst={props.tekst.pleiepengerRetten}
                     pleiepengegrad={props.pleiepengegrad}
                     pleiepengedager={props.pleiepengedager}
+                    kompensasjonsgrad={props.kompensasjonsgrad}
+                    andreOmsorgsperson={props.andreOmsorgsperson}
                     forbrukteDagerTOMIDag={props.forbrukteDagerTOMIDag}
                     forbrukteDagerEtterDennePerioden={props.forbrukteDagerEtterDennePerioden}
                     barnet={props.barnet}
