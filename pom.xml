@@ -639,7 +639,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>test-config</artifactId>
-                <version>RELEASE</version>
+                <version>2017.10.30.09.52</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
