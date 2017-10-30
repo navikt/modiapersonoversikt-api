@@ -46,7 +46,8 @@ public class TraadTest {
                 .withKanal("kanal")
                 .withKontorsperretEnhet("2820")
                 .withJournalfortSaksId("journalfortSaksId")
-                .withTilknyttetEnhet("0216");
+                .withTilknyttetEnhet("0216")
+                .withErFerdigstiltUtenSvar(false);
     }
 
 }
