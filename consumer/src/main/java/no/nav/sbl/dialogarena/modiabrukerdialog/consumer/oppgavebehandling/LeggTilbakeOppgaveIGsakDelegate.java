@@ -37,12 +37,21 @@ class LeggTilbakeOppgaveIGsakDelegate {
          lagreOppgaveIGsak(temagruppe);
      }
 
-    private void lagreOppgaveIGsak(Temagruppe temagruppe) {
-        try {
-            oppgaveBehandlingService.lagreOppgaveIGsak(wsOppgave, temagruppe);
-        } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
-            throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
-        }
+    private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
+        return oppgaveBehandlingService.hentOppgaveFraGsak(oppgaveId);
+    }
+
+    private void markerOppgaveSomLagtTilbake(String beskrivelse) {
+        wsOppgave.withAnsvarligId("");
+        wsOppgave.withBeskrivelse(lagNyBeskrivelse(beskrivelse));
+    }
+
+    private String lagNyBeskrivelse(String beskrivelse) {
+        return oppgaveBehandlingService.leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse);
+    }
+
+    private boolean temagrupeErSatt(Temagruppe temagruppe) {
+        return temagruppe != null;
     }
 
     private void oppdaterForNyTemagruppe(Temagruppe temagruppe) {
@@ -69,21 +78,12 @@ class LeggTilbakeOppgaveIGsakDelegate {
                 .getEnhetListe();
     }
 
-    private boolean temagrupeErSatt(Temagruppe temagruppe) {
-        return temagruppe != null;
-    }
-
-    private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
-        return oppgaveBehandlingService.hentOppgaveFraGsak(oppgaveId);
-    }
-
-    private void markerOppgaveSomLagtTilbake(String beskrivelse) {
-        wsOppgave.withAnsvarligId("");
-        wsOppgave.withBeskrivelse(lagNyBeskrivelse(beskrivelse));
-    }
-
-    private String lagNyBeskrivelse(String beskrivelse) {
-        return oppgaveBehandlingService.leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse);
+    private void lagreOppgaveIGsak(Temagruppe temagruppe) {
+        try {
+            oppgaveBehandlingService.lagreOppgaveIGsak(wsOppgave, temagruppe);
+        } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
+            throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
+        }
     }
 
     private static String underkategoriKode(Temagruppe temagruppe) {
