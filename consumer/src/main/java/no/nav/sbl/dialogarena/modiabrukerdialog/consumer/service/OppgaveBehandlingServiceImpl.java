@@ -3,23 +3,19 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,16 +41,20 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
     public static final String KONTAKT_NAV = "KNA";
 
+    private final OppgavebehandlingV3 oppgavebehandlingWS;
+    private final OppgaveV3 oppgaveWS;
+    private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private final AnsattService ansattWS;
+    private final Ruting ruting;
+
     @Inject
-    private OppgavebehandlingV3 oppgavebehandlingWS;
-    @Inject
-    private OppgaveV3 oppgaveWS;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private AnsattService ansattWS;
-    @Inject
-    private Ruting ruting;
+    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService, AnsattService ansattWS, Ruting ruting) {
+        this.oppgavebehandlingWS = oppgavebehandlingWS;
+        this.oppgaveWS = oppgaveWS;
+        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
+        this.ansattWS = ansattWS;
+        this.ruting = ruting;
+    }
 
     @Override
     public void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) throws FikkIkkeTilordnet {
@@ -96,7 +96,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         if (oppgaveId == null) {
             return;
         }
-
         try {
             WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
             wsOppgave.withAnsvarligId("");

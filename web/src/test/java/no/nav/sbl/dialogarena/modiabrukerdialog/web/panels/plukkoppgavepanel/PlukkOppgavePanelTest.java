@@ -10,7 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockCo
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

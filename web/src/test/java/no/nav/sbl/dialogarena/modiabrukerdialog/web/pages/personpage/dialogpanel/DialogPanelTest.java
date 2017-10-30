@@ -1,10 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.domain.person.Person;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
@@ -38,6 +33,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dial
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -47,25 +43,18 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration(classes = {DialogPanelMockContext.class})
 public class DialogPanelTest extends WicketPageTest {
 
-    private static final String FNR = "fnr";
     private static final String ID = "id";
     private static final String OPPGAVEID_VERDI = "123";
     private static final String HENVENDELSEID_VERDI = "321";
     private static final String OPPGAVEID_FOR_SPORSMAL = "oppgaveid";
 
     @Inject
-    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-    @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
 
-
     @Before
     public void setUp() {
-        HentKjerneinformasjonResponse response = new HentKjerneinformasjonResponse();
-        response.setPerson(new Person());
-        when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(response);
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding()));
     }
 
@@ -77,12 +66,12 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void starterPanelUtenFeil() {
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()));
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()));
     }
 
     @Test
     public void initialisererMedNyDialogPanelDersomIngenParametereErSatt() {
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .should().containComponent(ofType(NyDialogPanel.class));
     }
 
@@ -90,7 +79,7 @@ public class DialogPanelTest extends WicketPageTest {
     public void initialisererMedVelgDialogPanelDersomOppgaveIdOgHenvendelseIdParametereErSatt() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, false);
 
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .should().containComponent(ofType(VelgDialogPanel.class));
     }
 
@@ -98,7 +87,7 @@ public class DialogPanelTest extends WicketPageTest {
     public void initialisererMedFortsettDialogPanelDersomOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, true);
 
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .should().containComponent(ofType(FortsettDialogPanel.class));
     }
 
@@ -107,7 +96,7 @@ public class DialogPanelTest extends WicketPageTest {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, true);
         reset(oppgaveBehandlingService);
 
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .should().containComponent(ofType(FortsettDialogPanel.class));
 
         verify(oppgaveBehandlingService, times(1)).tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class));
@@ -116,13 +105,13 @@ public class DialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventUtenParametereSatt() {
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId, is(Optional.<String>none()));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(nullValue()));
     }
 
     @Test
@@ -131,46 +120,46 @@ public class DialogPanelTest extends WicketPageTest {
         Melding spsm = lagBrukerSporsmalMedOppgaveId();
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
 
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId.get(), is(spsm.oppgaveId));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(spsm.oppgaveId));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventDersomOppgaveIdOgHenvendelseIdParametereErSatt() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, false);
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING, HENVENDELSEID_VERDI))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId.get(), is(OPPGAVEID_VERDI));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(OPPGAVEID_VERDI));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventDersomOppgaveIdOgHenvendelseIdParametereErSattMenTraadIdIkkeErLik() {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, false);
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING, "ikkeSammeTraadIdSomMeldingen"))
                 .should().inAjaxResponse().haveComponents(ofType(FortsettDialogPanel.class));
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
-        Optional<String> oppgaveId = (Optional<String>) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId, is(Optional.<String>none()));
+        String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
+        assertThat(oppgaveId, is(nullValue()));
     }
 
     @Test
     public void tilordnerIkkeOppgaveIGsakDersomerTraadenIkkeErEtEnkeltstaaendeSporsmalFraBrukerVedEventetSVAR_PAA_MELDING() throws OppgaveBehandlingService.FikkIkkeTilordnet {
         reset(oppgaveBehandlingService);
 
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
         verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class));
@@ -183,7 +172,7 @@ public class DialogPanelTest extends WicketPageTest {
         Melding spsm = lagBrukerSporsmalMedOppgaveId();
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
 
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
         verify(oppgaveBehandlingService).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD);
@@ -198,7 +187,7 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     private void assertErstatterDialogPanelMedNyDialogPanelVedEvent(String event, Class panelSomSKalVises) {
-        wicket.goToPageWith(new DialogPanel(ID, FNR, getMockGrunnInfo()))
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(event))
                 .should().inAjaxResponse().haveComponents(ofType(panelSomSKalVises));
     }
