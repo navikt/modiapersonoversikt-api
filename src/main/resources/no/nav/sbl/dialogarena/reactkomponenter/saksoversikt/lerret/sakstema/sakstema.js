@@ -1,4 +1,5 @@
-import React, { PropTypes as PT } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { FormattedDate } from 'react-intl';
 import { datoformat } from './../../utils/dato-utils';
 

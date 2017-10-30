@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { NAV, BRUKER, ANDRE } from './filtrering-avsender-valg';
 import DokumentListe from './../dokumentliste';
 
@@ -26,14 +27,14 @@ const FiltrerteDokumenter = props => {
 
 
 FiltrerteDokumenter.propTypes = {
-    dokumentlisteParam: pt.shape({
-        visTema: pt.bool.isRequired,
-        brukerNavn: pt.string.isRequired,
-        visSide: pt.func.isRequired,
-        velgJournalpost: pt.func.isRequired
+    dokumentlisteParam: PT.shape({
+        visTema: PT.bool.isRequired,
+        brukerNavn: PT.string.isRequired,
+        visSide: PT.func.isRequired,
+        velgJournalpost: PT.func.isRequired
     }).isRequired,
-    dokumentMetadata: pt.array.isRequired,
-    filtreringsvalg: pt.object.isRequired
+    dokumentMetadata: PT.array.isRequired,
+    filtreringsvalg: PT.object.isRequired
 };
 
 export default FiltrerteDokumenter;

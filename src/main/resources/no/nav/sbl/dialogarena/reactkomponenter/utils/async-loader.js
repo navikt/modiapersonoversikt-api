@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import { isArray, includes, toArray } from 'lodash';
 import Snurrepipp from './snurrepipp';
 import AdvarselBoks from './../utils/advarsel-boks';
@@ -82,13 +83,13 @@ class AsyncLoader extends React.Component {
 }
 
 AsyncLoader.propTypes = {
-    snurrepipp: React.PropTypes.object,
-    children: React.PropTypes.element,
-    promises: React.PropTypes.oneOfType([
-        React.PropTypes.object,
-        React.PropTypes.arrayOf(React.PropTypes.object)
+    snurrepipp: PT.object,
+    children: PT.element,
+    promises: PT.oneOfType([
+        PT.object,
+        PT.arrayOf(PT.object)
     ]).isRequired,
-    toProp: React.PropTypes.string
+    toProp: PT.string
 };
 AsyncLoader.defaultProps = {
     toProp: 'data'

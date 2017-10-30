@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 
 const AntallMeldinger = ({ antall }) => {
     const antallCls = antall === 1 ? 'antall-ikon antall-en' : 'antall-ikon antall-flere';
@@ -24,7 +25,7 @@ const AntallMeldinger = ({ antall }) => {
 };
 
 AntallMeldinger.propTypes = {
-    antall: pt.number
+    antall: PT.number
 };
 
 export default AntallMeldinger;

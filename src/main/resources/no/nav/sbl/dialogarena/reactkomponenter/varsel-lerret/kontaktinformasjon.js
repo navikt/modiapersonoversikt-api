@@ -1,4 +1,5 @@
-import React, { PropTypes as PT } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 
 function Kontaktinformasjon({ kanal, mottakerInformasjon, resources }) {
     const kanalKontaktet = resources.get(`varsel.tilbakemelding.${kanal}`);

@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { velgFiltreringAvsender } from './../../../../actions';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -45,9 +46,9 @@ const FiltrerAvsender = ({ alleredeValgt, dispatch, intl: { formatMessage } }) =
 };
 
 FiltrerAvsender.propTypes = {
-    alleredeValgt: pt.object.isRequired,
-    dispatch: pt.func.isRequired,
-    intl: pt.object.isRequired
+    alleredeValgt: PT.object.isRequired,
+    dispatch: PT.func.isRequired,
+    intl: PT.object.isRequired
 };
 
 export default injectIntl(connect(({ filtreringsvalg }) => ({ filtreringsvalg }))(FiltrerAvsender));

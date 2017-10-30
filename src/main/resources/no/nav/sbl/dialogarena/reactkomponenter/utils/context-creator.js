@@ -1,10 +1,11 @@
-import { PropTypes, Children, Component } from 'react';
+import { Children, Component } from 'react';
+import { omit } from './utils-module';
+import PT from 'prop-types';
 
 function createProviderComponent(contextTypes) {
     class Provider extends Component {
         getChildContext() {
-            const { children: _, ...props } = this.props;
-            return props;
+            return omit(this.props, 'children');
         }
 
         render() {
@@ -18,7 +19,7 @@ function createProviderComponent(contextTypes) {
     if (contextTypes.hasOwnProperty('children')) {
         Provider.propTypes = contextTypes;
     } else {
-        Provider.propTypes = { ...contextTypes, children: PropTypes.element.isRequired };
+        Provider.propTypes = { ...contextTypes, children: PT.element.isRequired };
     }
 
     return Provider;

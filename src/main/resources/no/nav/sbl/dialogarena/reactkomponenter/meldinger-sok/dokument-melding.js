@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 
 class DokumentMelding extends React.Component {
@@ -32,12 +33,12 @@ class DokumentMelding extends React.Component {
 }
 
 DokumentMelding.propTypes = {
-    melding: React.PropTypes.shape({
-        statusTekst: pt.string,
-        erInngaaende: pt.bool,
-        lestStatus: pt.string,
-        visningsDatoTekst: pt.string,
-        fritekst: pt.string
+    melding: PT.shape({
+        statusTekst: PT.string,
+        erInngaaende: PT.bool,
+        lestStatus: PT.string,
+        visningsDatoTekst: PT.string,
+        fritekst: PT.string
     }).isRequired
 };
 

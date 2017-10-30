@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
+import PT from 'prop-types';
 import Portal from './modal-portal';
 
 class Modal extends React.Component {
@@ -93,15 +94,15 @@ Modal.defaultProps = {
     closeButton: defaultHelper('', true, 'span')
 };
 
-export const AriaPropType = React.PropTypes.shape({
-    text: React.PropTypes.string,
-    show: React.PropTypes.bool,
-    tag: React.PropTypes.string
+export const AriaPropType = PT.shape({
+    text: PT.string,
+    show: PT.bool,
+    tag: PT.string
 });
 
 Modal.propTypes = {
-    isOpen: React.PropTypes.bool,
-    onClosing: React.PropTypes.func,
+    isOpen: PT.bool,
+    onClosing: PT.func,
     title: AriaPropType,
     description: AriaPropType,
     closeButton: AriaPropType

@@ -1,6 +1,7 @@
 /* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PT from 'prop-types';
 import Utils from './../utils/utils-module';
 
 class TekstListeKomponent extends React.Component {
@@ -29,10 +30,10 @@ class TekstListeKomponent extends React.Component {
 }
 
 TekstListeKomponent.propTypes = {
-    store: React.PropTypes.object.isRequired,
-    tekst: React.PropTypes.object.isRequired,
-    valgtTekst: React.PropTypes.object.isRequired,
-    locale: React.PropTypes.string.isRequired
+    store: PT.object.isRequired,
+    tekst: PT.object.isRequired,
+    valgtTekst: PT.object.isRequired,
+    locale: PT.string.isRequired
 };
 
 export default TekstListeKomponent;
