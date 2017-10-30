@@ -152,7 +152,7 @@ public class PersonPage extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
-                new DialogPanel("dialogPanel", fnr, grunnInfo),
+                new DialogPanel("dialogPanel", grunnInfo),
                 new ReactTimeoutBoksModal("timeoutBoks", fnr)
         );
 

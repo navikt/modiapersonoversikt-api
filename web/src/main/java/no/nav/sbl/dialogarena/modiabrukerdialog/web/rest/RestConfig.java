@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.brukerdialog.isso.RelyingPartyCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.HenvendelseController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.sak.rest.SaksoversiktController;
@@ -21,6 +23,8 @@ public class RestConfig extends ResourceConfig {
                 DokumentController.class,
                 SaksoversiktController.class,
                 RelyingPartyCallback.class
+                HenvendelseController.class,
+                OppgaveController.class
         );
     }
 }

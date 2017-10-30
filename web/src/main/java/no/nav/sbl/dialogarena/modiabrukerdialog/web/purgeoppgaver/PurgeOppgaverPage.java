@@ -7,7 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
