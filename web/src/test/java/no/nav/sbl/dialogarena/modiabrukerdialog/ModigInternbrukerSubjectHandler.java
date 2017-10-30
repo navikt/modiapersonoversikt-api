@@ -2,13 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog;
 
 import no.nav.brukerdialog.security.domain.OidcCredential;
 import no.nav.modig.core.context.TestSubjectHandler;
-import no.nav.modig.core.domain.ConsumerId;
-import no.nav.modig.core.domain.IdentType;
-import no.nav.modig.core.domain.SluttBruker;
+import no.nav.modig.core.domain.*;
 
 import javax.security.auth.Subject;
 
-public class InternbrukerSubjectHandler extends TestSubjectHandler {
+public class ModigInternbrukerSubjectHandler extends TestSubjectHandler {
     private Subject subject;
     private static OidcCredential oidcCredential;
     private static String veilederIdent = "Z999999";

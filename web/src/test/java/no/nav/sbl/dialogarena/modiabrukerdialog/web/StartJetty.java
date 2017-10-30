@@ -1,12 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.brukerdialog.security.context.InternbrukerSubjectHandler;
+import no.nav.brukerdialog.security.domain.OidcCredential;
+import no.nav.dialogarena.config.fasit.FasitUtils;
+import no.nav.dialogarena.config.fasit.TestUser;
+import no.nav.dialogarena.config.security.ISSOProvider;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
-import no.nav.sbl.dialogarena.modiabrukerdialog.InternbrukerSubjectHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.ModigInternbrukerSubjectHandler;
 import org.apache.geronimo.components.jaspi.AuthConfigFactoryImpl;
 
 import javax.security.auth.message.config.AuthConfigFactory;
 import java.io.File;
-import java.security.Security;
 
 import static java.lang.System.setProperty;
 import static no.nav.modig.core.test.FilesAndDirs.TEST_RESOURCES;
@@ -17,6 +21,10 @@ import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
 public class StartJetty {
 
+    public static final String SERVICEBRUKER = "srvmodiabrukerdialog";
+    public static final String INNLOGGET_VEILEDER = FasitUtils.getVariable("veilederident");
+    public static final String INNLOGGET_VEILEDER_PASSORD = FasitUtils.getVariable("veilederpassord");
+
     public static void main(String[] args) {
         setupProperties();
         runJetty();
@@ -24,13 +32,37 @@ public class StartJetty {
 
     private static void setupProperties() {
         setFrom("jetty-environment.properties");
-        System.setProperty("org.apache.geronimo.jaspic.configurationFile", "web/src/test/resources/jaspiconf.xml");
-        Security.setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFactoryImpl.class.getCanonicalName());
+        setProperty("org.apache.geronimo.jaspic.configurationFile", "web/src/test/resources/jaspiconf.xml");
+        setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFactoryImpl.class.getCanonicalName());
         setProperty("wicket.configuration", "development");
-        InternbrukerSubjectHandler.setVeilederIdent("Z990610");
-        InternbrukerSubjectHandler.setServicebruker("srvmodiabrukerdialog");
-        setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", InternbrukerSubjectHandler.class.getName());
+
+        sjekkAtNodvendigeSystemPropertiesErSatt();
+
         setupKeyAndTrustStore();
+
+        setUpOidcSubjectHandler();
+        setupModigSecurityHandler();
+    }
+
+    private static void sjekkAtNodvendigeSystemPropertiesErSatt() {
+        FasitUtils.getVariable("domenebrukernavn");
+        FasitUtils.getVariable("domenepassord");
+    }
+
+    private static OidcCredential setUpOidcSubjectHandler() {
+        TestUser testUser = new TestUser().setUsername(INNLOGGET_VEILEDER).setPassword(INNLOGGET_VEILEDER_PASSORD);
+        OidcCredential credential = new OidcCredential(ISSOProvider.getISSOToken(testUser));
+        InternbrukerSubjectHandler.setVeilederIdent(INNLOGGET_VEILEDER);
+        InternbrukerSubjectHandler.setServicebruker(SERVICEBRUKER);
+        InternbrukerSubjectHandler.setOidcCredential(credential);
+        setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", InternbrukerSubjectHandler.class.getName());
+        return credential;
+    }
+
+    private static void setupModigSecurityHandler() {
+        ModigInternbrukerSubjectHandler.setVeilederIdent(INNLOGGET_VEILEDER);
+        ModigInternbrukerSubjectHandler.setServicebruker(SERVICEBRUKER);
+        setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ModigInternbrukerSubjectHandler.class.getName());
     }
 
     private static void runJetty() {
