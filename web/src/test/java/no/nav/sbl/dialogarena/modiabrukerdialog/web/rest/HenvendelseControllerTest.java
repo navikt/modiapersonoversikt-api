@@ -14,6 +14,7 @@ import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
@@ -43,6 +44,16 @@ class HenvendelseControllerTest {
 
     private HenvendelseController henvendelseController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
+
+    @BeforeAll
+    static void beforeAll() {
+        FeatureToggle.enableDelviseSvarFunksjonalitet();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        FeatureToggle.disableDelviseSvarFunksjonalitet();
+    }
 
     @BeforeEach
     void before() {
@@ -123,7 +134,7 @@ class HenvendelseControllerTest {
         henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest(), new FerdigstillHenvendelseRestRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
-        assertEquals(argumentCaptor.getValue().getBehandlingsId(), HENVENDELSES_ID);
+        assertEquals(argumentCaptor.getValue().getBehandlingsId().get(0), HENVENDELSES_ID);
     }
 
     @Test

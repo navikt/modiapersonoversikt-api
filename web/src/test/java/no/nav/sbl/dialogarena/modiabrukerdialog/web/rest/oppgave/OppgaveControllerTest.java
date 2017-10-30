@@ -7,6 +7,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
@@ -35,6 +36,16 @@ class OppgaveControllerTest {
     private OppgaveController oppgaveController;
     private OppgavebehandlingV3 oppgaveBehandlingMock;
     private OppgaveV3 oppgaveWS;
+
+    @BeforeAll
+    static void beforeAll() {
+        FeatureToggle.enableDelviseSvarFunksjonalitet();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        FeatureToggle.disableDelviseSvarFunksjonalitet();
+    }
 
     @BeforeEach
     void before() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {

@@ -252,6 +252,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),
                 XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name()));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(Matchers.contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
+        FeatureToggle.disableDelviseSvarFunksjonalitet();
     }
 
     @Test
