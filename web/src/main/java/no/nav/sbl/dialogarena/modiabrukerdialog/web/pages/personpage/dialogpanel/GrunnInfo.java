@@ -6,17 +6,23 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
-import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.commons.lang3.text.WordUtils.capitalize;
+import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 
 public class GrunnInfo implements Serializable {
-
     public Bruker bruker;
     public Saksbehandler saksbehandler;
 
     public GrunnInfo(Bruker bruker, Saksbehandler saksbehandler) {
         this.bruker = bruker;
         this.saksbehandler = saksbehandler;
+    }
+
+    private static String kombinerTilFulltNavn(String fornavn, String etternavn) {
+        return String.format("%s %s", fornavn, etternavn);
+    }
+
+    private static String namifyString(String navn) {
+        return capitalizeFully(navn, ' ', '-', '\'');
     }
 
     public static class Bruker implements Serializable {
@@ -26,7 +32,7 @@ public class GrunnInfo implements Serializable {
             this.fnr = fnr;
             this.fornavn = namifyString(fornavn);
             this.etternavn = namifyString(etternavn);
-            this.navn = String.format("%s %s", this.fornavn, this.etternavn);
+            this.navn = kombinerTilFulltNavn(this.fornavn, this.etternavn);
             this.navkontor = navkontor;
         }
 
@@ -37,7 +43,7 @@ public class GrunnInfo implements Serializable {
         public Bruker withPersonnavn(Personnavn personnavn) {
             this.fornavn = namifyString(personnavn.getFornavn());
             this.etternavn = namifyString(personnavn.getEtternavn());
-            this.navn = String.format("%s %s", this.fornavn, this.etternavn);
+            this.navn = kombinerTilFulltNavn(this.fornavn, this.etternavn);
             return this;
         }
 
@@ -54,12 +60,7 @@ public class GrunnInfo implements Serializable {
             this.enhet = enhet;
             this.fornavn = namifyString(fornavn);
             this.etternavn = namifyString(etternavn);
-            this.navn = String.format("%s %s", this.fornavn, this.etternavn);
+            this.navn = kombinerTilFulltNavn(this.fornavn, this.etternavn);
         }
     }
-
-    private static String namifyString(String navn) {
-        return capitalize(lowerCase(navn));
-    }
-
 }

@@ -61,7 +61,7 @@
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig-security.version>3.0.4</modig-security.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.9.1</modig.wicket.version>
+        <modig.wicket.version>3.9.2</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.5</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -113,11 +113,10 @@
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
-        <send.ut.henvendelse.version>0.5</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
+        <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
+        <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <dialogarena.behandlingsinformasjon.version>1.0.0</dialogarena.behandlingsinformasjon.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
@@ -1098,7 +1097,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>HEAD</tag>
+        <tag>modiabrukerdialog-13.3.8</tag>
     </scm>
 
 </project>

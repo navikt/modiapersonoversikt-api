@@ -1,19 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 import no.nav.modig.core.exception.ApplicationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import static java.util.Optional.ofNullable;
 import static javax.xml.xpath.XPathConstants.NODESET;
 
 public abstract class GsakKodeParser implements Serializable {
@@ -28,6 +24,12 @@ public abstract class GsakKodeParser implements Serializable {
 
     protected static String getParentNodeValue(Node item, String id) {
         return getNodeValue(item.getParentNode(), id);
+    }
+
+    protected static Optional<Node> attribute(Node node, String attribute) {
+        return ofNullable(node)
+                .map(Node::getAttributes)
+                .map(attrs -> attrs.getNamedItem(attribute));
     }
 
     protected static String getNodeValue(Node item, String id) {

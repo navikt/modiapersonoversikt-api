@@ -73,6 +73,19 @@
         </encoder>
     </appender>
 
+    <!--tjeneste kall Appender-->
+    <appender name="ServiceCallsFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${SERVICE_CALLS_HOME}/tjenestekall.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${SERVICE_CALLS_HOME}/tjenestekall.log.%d{yyyy-MM-dd_HH}.gz</fileNamePattern>
+            <maxHistory>72</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} ${applicationName} %level %mdc %m%n%rEx</pattern>
+        </encoder>
+    </appender>
+
     <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>${syslog.filter.level:-INFO}</level>
@@ -91,10 +104,14 @@
         <appender-ref ref="personaccessappender"/>
     </logger>
 
+    <logger name="no.nav.sbl.dialogarena.common.cxf" level="${modiabrukerdialog.cxf.log.level:-INFO}" additivity="false">
+        <appender-ref ref="ServiceCallsFile"/>
+    </logger>
+
     <logger name="no.nav.modig.content.ValuesFromContentWithResourceBundleFallback" level="ERROR"/>
 
-    <logger name="org.apache.cxf" level="${modiabrukerdialog.cxf.log.level:-OFF}">
-        <appender-ref ref="infolog"/>
+    <logger name="org.apache.cxf" level="${modiabrukerdialog.apache.cxf.log.level:-OFF}" additivity="false">
+        <appender-ref ref="ServiceCallsFile"/>
     </logger>
 
     <root level="${ROOT_LOG_LEVEL:-ERROR}">
