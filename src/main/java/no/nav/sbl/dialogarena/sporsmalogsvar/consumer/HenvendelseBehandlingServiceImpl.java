@@ -15,6 +15,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -28,16 +29,13 @@ import javax.inject.Named;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -105,14 +103,17 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Override
     public void merkSomKontorsperret(String fnr, TraadVM valgtTraad) {
         String enhet = getEnhet(fnr);
-        List<String> ider = on(valgtTraad.getMeldinger()).map(ID).collect();
+        List<String> ider = on(valgtTraad.getMeldinger()).map(MeldingVM::getId).collect();
 
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }
 
     @Override
     public void merkSomFeilsendt(TraadVM valgtTraad) {
-        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).filter(where(FEILSENDT, equalTo(false))).map(ID).collect();
+        List<String> behandlingsIdListe = valgtTraad.getMeldinger().stream()
+                .filter(melding -> !melding.erFeilsendt())
+                .map(MeldingVM::getId)
+                .collect(toList());
         if (!behandlingsIdListe.isEmpty()) {
             behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
         }
@@ -121,6 +122,11 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Override
     public void merkSomBidrag(TraadVM valgtTraad) {
         behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(valgtTraad.getEldsteMelding().melding.traadId, "BID");
+    }
+
+    @Override
+    public void merkSomAvsluttet(TraadVM valgtTraad, String enhetId) {
+        behandleHenvendelsePortType.ferdigstillUtenSvar(valgtTraad.getEldsteMelding().melding.traadId, enhetId);
     }
 
     @Override

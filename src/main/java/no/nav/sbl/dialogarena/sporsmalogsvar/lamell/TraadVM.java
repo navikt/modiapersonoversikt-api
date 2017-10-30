@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
@@ -10,20 +9,12 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.ofNullable;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 
@@ -72,28 +63,42 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erBehandlet() {
-        return meldinger.size() > 1 || FRA_NAV.contains(getEldsteMelding().melding.meldingstype);
+        return meldinger.size() > 1 || getEldsteMelding().erFraSaksbehandler() || erFerdigstiltUtenSvar();
     }
 
     public boolean erKontorsperret() {
-        return getKontorsperretEnhet().isSome();
+        return getKontorsperretEnhet().isPresent();
     }
 
     public Optional<String> getKontorsperretEnhet() {
-        return optional(getEldsteMelding().melding.kontorsperretEnhet);
+        return ofNullable(getEldsteMelding().melding.kontorsperretEnhet);
     }
 
     public boolean erFeilsendt() {
-        return !on(meldinger).filter(where(FEILSENDT, equalTo(true))).isEmpty();
+        return meldinger.stream().anyMatch(MeldingVM::erFeilsendt);
     }
 
     public boolean traadKanBesvares() {
-        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype)
+        return getEldsteMelding().erSporsmal()
                 && !getEldsteMelding().melding.kassert
                 && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
                 && !getEldsteMelding().erFeilsendt()
                 && !(getEldsteMelding().melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !traadOKSOSKanSes())
-                && !getEldsteMelding().melding.ingenTilgangJournalfort;
+                && !getEldsteMelding().melding.ingenTilgangJournalfort
+                && !erFerdigstiltUtenSvar();
+    }
+
+    public boolean erMonolog() {
+        return meldinger.stream()
+                .map(MeldingVM::erFraSaksbehandler)
+                .distinct()
+                .count()
+                < 2;
+    }
+
+    public boolean erTemagruppeSosialeTjenester() {
+        Temagruppe gjeldendeTemagruppe = getEldsteMelding().melding.gjeldendeTemagruppe;
+        return asList(Temagruppe.OKSOS, Temagruppe.ANSOS).contains(gjeldendeTemagruppe);
     }
 
     private boolean traadOKSOSKanSes() {
@@ -110,13 +115,20 @@ public class TraadVM implements Serializable {
         return pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
     }
 
-    public boolean erTemagruppeSosialeTjenester() {
-        Temagruppe gjeldendeTemagruppe = getEldsteMelding().melding.gjeldendeTemagruppe;
-        return asList(Temagruppe.OKSOS, Temagruppe.ANSOS).contains(gjeldendeTemagruppe);
+    public boolean erJournalfort() {
+        return getEldsteMelding().isJournalfort();
+    }
+
+    public boolean erFerdigstiltUtenSvar() {
+        return getEldsteMelding().erFerdigstiltUtenSvar();
     }
 
     private boolean erEnkeltstaaendeSpsmFraBruker() {
-        return meldinger.size() == 1 && getEldsteMelding().melding.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG;
+        return meldinger.size() == 1 && erMeldingstypeSporsmal();
+    }
+
+    public boolean erMeldingstypeSporsmal() {
+        return getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG;
     }
 
 }

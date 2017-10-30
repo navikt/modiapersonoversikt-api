@@ -26,15 +26,15 @@
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <kjerneinfo.versjon>5.0.1</kjerneinfo.versjon>
-        <dialogarena.behandlingsinformasjon.version>0.0.54</dialogarena.behandlingsinformasjon.version>
+        <kjerneinfo.versjon>5.1.4</kjerneinfo.versjon>
+        <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.24</modig.security.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
-        <send.ut.henvendelse.version>0.4</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.15</behandle.henvendelse.version>
+        <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
+        <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
-        <modiabrukerdialog-api.version>8.0.3-oidc-SNAPSHOT</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>9.0.0-oidc-SNAPSHOT</modiabrukerdialog-api.version>
         <reactkomponenter.version>2.8.0-SMIDIG-2-SNAPSHOT</reactkomponenter.version>
         <modia-felleskomponenter.version>3.4-oidc-SNAPSHOT</modia-felleskomponenter.version>
         <nav-metrics.version>2017.08.30.10.22</nav-metrics.version>
@@ -552,7 +552,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/sporsmalogsvar.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/sporsmalogsvar/</url>
-        <tag>sporsmal-og-svar-6.3.0-SMIDIG</tag>
+        <tag>sporsmal-og-svar-6.3.1-SMIDIG-SNAPSHOT</tag>
     </scm>
 
     <reporting>

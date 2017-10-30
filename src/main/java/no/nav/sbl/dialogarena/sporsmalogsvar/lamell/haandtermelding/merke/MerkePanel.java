@@ -3,14 +3,19 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 import no.nav.metrics.Timer;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.modig.wicket.model.ConjunctionModel;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -26,8 +31,11 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static no.nav.metrics.MetricsFactory.createTimer;
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.FERDIGSTILT_UTEN_SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPGAVE_OPPRETTET;
@@ -39,6 +47,10 @@ public class MerkePanel extends AnimertPanel {
 
     @Inject
     private HenvendelseBehandlingService henvendelseService;
+    @Inject
+    private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private final InnboksVM innboksVM;
     private final KontorsperrePanel kontorsperrePanel;
@@ -57,6 +69,7 @@ public class MerkePanel extends AnimertPanel {
         Form<MerkVM> merkForm = new Form<>("merkForm", merkVM);
 
         final RadioGroup<MerkType> merkRadioGroup = new RadioGroup<>("merkType");
+        merkRadioGroup.setRequired(true);
 
         feedbackPanel = new FeedbackPanel("feedbackMerkPanel", new ComponentFeedbackMessageFilter(merkRadioGroup));
         feedbackPanel.setOutputMarkupId(true);
@@ -64,23 +77,45 @@ public class MerkePanel extends AnimertPanel {
 
         PropertyModel<Boolean> valgtTraadErKontorsperret = new PropertyModel<>(innboksVM, "valgtTraad.erKontorsperret()");
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(innboksVM, "valgtTraad.erTemagruppeSosialeTjenester()");
+        IModel<Boolean> erMeldingstypeSporsmal = new PropertyModel<>(innboksVM, "valgtTraad.erMeldingstypeSporsmal()");
+        IModel<Boolean> erBehandlet = new PropertyModel<>(innboksVM, "valgtTraad.erBehandlet()");
+        IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(innboksVM, "valgtTraad.erJournalfort()");
+        IModel<Boolean> erFeilsendt = new PropertyModel<>(innboksVM, "valgtTraad.erFeilsendt()");
 
+        IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(valgtTraadErKontorsperret));
+        IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet));
 
-        merkRadioGroup.setRequired(true);
-        merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
-        merkRadioGroup.add(new WebMarkupContainer("bidragRadioValg")
-                .add(new Radio<>("bidragRadio", Model.of(BIDRAG)))
-                .add(visibleIf(both(not(valgtTraadErKontorsperret)).and(not(erTemagruppeSosialeTjenester)))));
-        merkRadioGroup.add(new WebMarkupContainer("kontorsperretRadioValg")
-                .add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)))
-                .add(visibleIf(not(valgtTraadErKontorsperret))));
+        ConjunctionModel bidragErEnablet = both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg);
+
+        Radio<MerkType> feilsendtRadio = new Radio<>("feilsendtRadio", Model.of(FEILSENDT));
+        feilsendtRadio
+                .add(enabledIf(skalViseStandardMerkValg))
+                .add(AttributeAppender.append("aria-disabled", not(skalViseStandardMerkValg)));
+
+        Radio<MerkType> bidragRadio = new Radio<>("bidragRadio", Model.of(BIDRAG));
+        bidragRadio.add(AttributeAppender.append("aria-disabled", not(bidragErEnablet)));
+        Component bidragRadioValg = new WebMarkupContainer("bidragRadioValg")
+                .add(bidragRadio)
+                .add(enabledIf(bidragErEnablet));
+
+        Radio<MerkType> kontorsperretRadio = new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET));
+        kontorsperretRadio.add(AttributeAppender.append("aria-disabled", skalViseFerdigstillUtenSvarValg));
+        Component kontorsperretRadioValg = new WebMarkupContainer("kontorsperretRadioValg")
+                .add(kontorsperretRadio)
+                .add(enabledIf(skalViseStandardMerkValg));
+
+        Radio<MerkType> avsluttRadio1 = new Radio<>("avsluttRadio", Model.of(AVSLUTT));
+        avsluttRadio1.add(AttributeAppender.append("aria-disabled", not(skalViseFerdigstillUtenSvarValg)));
+        Component avsluttRadio = new WebMarkupContainer("avsluttRadioValg")
+                .add(avsluttRadio1)
+                .add(enabledIf(skalViseFerdigstillUtenSvarValg));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));
 
         merkKnapp = new MerkKnapp("merk");
 
-        merkRadioGroup.add(kontorsperrePanel);
+        merkRadioGroup.add(feilsendtRadio, bidragRadioValg, kontorsperretRadioValg, avsluttRadio, kontorsperrePanel);
         merkRadioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -129,7 +164,8 @@ public class MerkePanel extends AnimertPanel {
             add(visibleIf(
                     either(new PropertyModel<>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
                             .or(new PropertyModel<>(merkVM, "erFeilsendt()"))
-                            .or(new PropertyModel<>(merkVM, "erMerketBidrag()"))));
+                            .or(new PropertyModel<>(merkVM, "erMerketBidrag()"))
+                            .or(new PropertyModel<>(merkVM, "erAvsluttet()"))));
             setOutputMarkupPlaceholderTag(true);
         }
 
@@ -148,6 +184,8 @@ public class MerkePanel extends AnimertPanel {
                     case KONTORSPERRET:
                         haandterKontorsperring(target, form);
                         break;
+                    case AVSLUTT:
+                        haandterAvsluttet(target);
                 }
             } finally {
                 timer.stop();
@@ -175,6 +213,15 @@ public class MerkePanel extends AnimertPanel {
             } else {
                 onError(target, form);
             }
+        }
+
+        private void haandterAvsluttet(AjaxRequestTarget target) {
+            henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, none());
+
+            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            send(getPage(), Broadcast.DEPTH, FERDIGSTILT_UTEN_SVAR);
+            lukkPanel(target);
         }
 
         @Override

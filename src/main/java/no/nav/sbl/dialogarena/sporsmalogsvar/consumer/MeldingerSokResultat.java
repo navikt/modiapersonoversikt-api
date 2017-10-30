@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 public class MeldingerSokResultat {
     public String fritekst, temagruppe, arkivtema, dato, navIdent, statustekst, lestStatus, kanal, skrevetAvNavn,
-            journalfortAvNavn, journalfortAvIdent, journalfortDato, journalfortSaksId;
+            journalfortAvNavn, journalfortAvIdent, journalfortDato, journalfortSaksId, ikontekst;
 
     public MeldingerSokResultat withFritekst(String fritekst) {
         this.fritekst = fritekst;
@@ -68,4 +68,10 @@ public class MeldingerSokResultat {
         this.journalfortSaksId = journalfortSaksId;
         return this;
     }
+
+    public MeldingerSokResultat withIkontekst(String ikontekst) {
+        this.ikontekst = ikontekst;
+        return this;
+    }
+
 }
