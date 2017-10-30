@@ -16,8 +16,12 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class AnsattServiceImpl implements AnsattService {
 
+    private final GOSYSNAVansatt ansattWS;
+
     @Inject
-    private GOSYSNAVansatt ansattWS;
+    public AnsattServiceImpl(GOSYSNAVansatt ansattWS) {
+        this.ansattWS = ansattWS;
+    }
 
     public List<AnsattEnhet> hentEnhetsliste() {
         ASBOGOSYSNAVAnsatt hentNAVAnsattEnhetListeRequest = new ASBOGOSYSNAVAnsatt();

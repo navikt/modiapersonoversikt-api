@@ -7,15 +7,14 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.*;
 import org.joda.time.DateTime;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class TidligereMeldingPanel extends Panel {
+
     public TidligereMeldingPanel(String id, String type, String temagruppe, DateTime opprettetDato, final String fritekst, boolean minimert) {
         this(id, type, temagruppe, opprettetDato, fritekst, "", minimert);
     }
