@@ -22,7 +22,7 @@ public class RestConfig extends ResourceConfig {
                 VarslerController.class,
                 DokumentController.class,
                 SaksoversiktController.class,
-                RelyingPartyCallback.class
+                RelyingPartyCallback.class,
                 HenvendelseController.class,
                 OppgaveController.class
         );
