@@ -8,7 +8,10 @@ import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 
+import javax.ws.rs.NotAuthorizedException;
 import java.util.List;
+
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 class LeggTilbakeOppgaveIGsakDelegate {
 
@@ -28,6 +31,8 @@ class LeggTilbakeOppgaveIGsakDelegate {
         }
 
         this.wsOppgave = hentOppgaveFraGsak(oppgaveId);
+        validerTilgang();
+
         markerOppgaveSomLagtTilbake(beskrivelse);
 
         if (temagrupeErSatt(temagruppe)) {
@@ -39,6 +44,15 @@ class LeggTilbakeOppgaveIGsakDelegate {
 
     private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
         return oppgaveBehandlingService.hentOppgaveFraGsak(oppgaveId);
+    }
+
+    private void validerTilgang() {
+        String innloggetSaksbehandler = getSubjectHandler().getUid();
+        if (!innloggetSaksbehandler.equals(wsOppgave.getAnsvarligId())) {
+            throw new NotAuthorizedException("Innlogget saksbehandler " + innloggetSaksbehandler
+                    + " har ikke tilgang til oppgave " + wsOppgave.getOppgaveId()
+                    + ". Oppgavens ansvarlige id er satt til : " + wsOppgave.getAnsvarligId() + ".");
+        }
     }
 
     private void markerOppgaveSomLagtTilbake(String beskrivelse) {

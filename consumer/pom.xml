@@ -34,6 +34,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!--Personsok-->
         <dependency>
             <groupId>no.nav</groupId>
