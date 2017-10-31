@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>13.3.9-pleiepenger-SNAPSHOT</version>
+        <version>13.4.0-pleiepenger-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-mock</artifactId>

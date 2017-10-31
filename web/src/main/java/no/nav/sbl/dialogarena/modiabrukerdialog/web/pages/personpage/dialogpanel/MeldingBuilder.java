@@ -1,16 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 
-import static no.nav.modig.lang.option.Optional.none;
+import java.util.Optional;
+
 
 public class MeldingBuilder {
 
     private HenvendelseVM henvendelseVM;
-    private Optional<Melding> eldsteMeldingITraad = none();
+    private Optional<Melding> eldsteMeldingITraad = Optional.empty();
     private Meldingstype type;
     private String fnr;
     private String navident;
@@ -26,7 +26,7 @@ public class MeldingBuilder {
                 .withEksternAktor(navident)
                 .withTilknyttetEnhet(valgtEnhet)
                 .withErTilknyttetAnsatt(henvendelseVM.oppgaveTilknytning == OppgaveTilknytning.SAKSBEHANDLER);
-        if (eldsteMeldingITraad.isSome()) {
+        if (eldsteMeldingITraad.isPresent()) {
             melding
                     .withTraadId(eldsteMeldingITraad.get().id)
                     .withKontorsperretEnhet(eldsteMeldingITraad.get().kontorsperretEnhet)
