@@ -9,7 +9,7 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;
