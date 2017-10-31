@@ -3,11 +3,17 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import javax.inject.Inject;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
@@ -21,16 +27,29 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     public static final String DEFAULT_SLIDE_DURATION = "400";
     private LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps;
 
+    @Inject
+    WicketInjectablePropertyResolver wicketInjectablePropertyResolver;
+
     public LeggTilbakeDelvisSvarPanel(Melding sporsmal, String behandlingsId) {
         super(WICKET_REACT_WRAPPER_ID);
         setOutputMarkupPlaceholderTag(true);
-        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(sporsmal, behandlingsId);
 
+        Map<Temagruppe, String> temagruppeMapping = Temagruppe.PLUKKBARE.stream()
+                                                    .collect(Collectors.toMap(
+                                                                                (temagruppeKode) -> temagruppeKode,
+                                                                                (temagruppeKode) -> wicketInjectablePropertyResolver.getProperty(temagruppeKode.name()),
+                                                                                (temagruppeKode, temagruppeNavn) -> temagruppeKode,
+                                                                                 LinkedHashMap :: new
+                                                                             )
+                                                            );
+
+
+        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(sporsmal, behandlingsId, temagruppeMapping);
         add(lagReactPanel());
     }
 
     private Component lagReactPanel() {
-        ReactComponentPanel reactComponentPanel = new ReactComponentPanel(WICKET_REACT_PANEL_ID, REACT_ID, leggTilbakeDelvisSvarProps.lagProps());
+        ReactComponentPanel reactComponentPanel = new ReactComponentPanel(WICKET_REACT_PANEL_ID, REACT_ID, leggTilbakeDelvisSvarProps);
         reactComponentPanel.addCallback(SVAR_DELVIS_CALLBACK_ID, Void.class, (target, data) -> oppdaterMeldingerUI());
         reactComponentPanel.addCallback(AVBRYT_CALLBACK_ID, Void.class, (target, data) -> lukkDelvisSvarPanel(target));
         reactComponentPanel

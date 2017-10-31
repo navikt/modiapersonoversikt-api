@@ -4,5 +4,5 @@ public class FerdigstillHenvendelseRestRequest {
 
     public String svar;
 
-    public String valgTemagruppe;
+    public String temagruppe;
 }
