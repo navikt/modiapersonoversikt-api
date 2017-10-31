@@ -44,7 +44,7 @@ ArbeidsforholdKomponent.propTypes = {
 };
 
 export const sorterArbeidsforhold = arbeidsforhold => {
-    const gamleDager = konverterTilMomentDato('1900-01-01');
+    const gamleDager = konverterTilMomentDato({ year: 1900, month: 1, day: 1 });
     return arbeidsforhold.sort((a, b) => (
         konverterTilMomentDato(b.refusjonTom || gamleDager).diff(konverterTilMomentDato(a.refusjonTom || gamleDager))
     ));
