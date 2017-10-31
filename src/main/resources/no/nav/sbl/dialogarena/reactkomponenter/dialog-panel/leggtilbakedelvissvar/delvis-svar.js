@@ -7,10 +7,9 @@ class DelvisSvar extends Component {
         this.svarDelvis = this.svarDelvis.bind(this);
         this.handleSvarEndring = this.handleSvarEndring.bind(this);
         this.velgTemagruppe = this.velgTemagruppe.bind(this);
-        console.log(props);
         this.state = {
             svarValue: '',
-            valgTemagruppe: null
+            valgtTemagruppe: ''
         };
     }
 
@@ -22,7 +21,7 @@ class DelvisSvar extends Component {
 
     leggTilbakeOppgave() {
         const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}`;
-        const data = JSON.stringify({ valgTemagruppe: this.state.valgTemagruppe });
+        const data = JSON.stringify({ temagruppe: this.state.valgtTemagruppe });
         return Ajax.put(url, data);
     }
 
@@ -30,7 +29,6 @@ class DelvisSvar extends Component {
         const ferdigstillHenvendelsePromise = this.ferdigstillHenvendelse();
         const leggTilbakeOppgavePromise = this.leggTilbakeOppgave();
         Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
-            console.log('Well done!');
             this.props.svarCallback();
         }, (err) => {
             console.error(err);
@@ -42,15 +40,15 @@ class DelvisSvar extends Component {
     }
 
     velgTemagruppe(event){
-        this.setState({ valgTemagruppe: event.target.value });
+        this.setState({ valgtTemagruppe: event.target.value });
     }
 
     render() {
         const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
             <p key={`paragraf-${index}`}>{paragraf}</p>);
 
-        const valgTemagruppe = Object.keys(this.props.valgTemagrupper).map((key, index) =>
-            <option key={index} value={key} >{this.props.valgTemagrupper[key]}</option>);
+        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key, index) =>
+            <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
 
         return (
             <div>
@@ -76,7 +74,6 @@ class DelvisSvar extends Component {
                 <div className="temagruppe-velger">
                     <h3>Velg temagruppe</h3>
                     <select onChange={this.velgTemagruppe}>
-                        <option></option>
                         {valgTemagruppe}
                     </select>
                 </div>
@@ -109,7 +106,10 @@ DelvisSvar.propTypes = {
     oppgaveId: React.PropTypes.string.isRequired,
     avbrytCallback: React.PropTypes.func.isRequired,
     opprettetDato: React.PropTypes.string.isRequired,
-    valgTemagrupper: React.PropTypes.object.isRequired,
+    temagruppeMapping:React.PropTypes.shape({
+        temagruppeKode: React.PropTypes.string,
+        temagruppeNavn: React.PropTypes.string,
+    }).isRequired,
 };
 
 export default DelvisSvar;
