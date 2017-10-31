@@ -3,7 +3,7 @@ import React from 'react';
 import { javaDatoType } from '../../typer';
 import DLElement from '../dlelement';
 import {
-    formaterJavaDate, formaterBelop, formaterOptionalVerdi, konverterTilMomentDato
+    formaterJavaDate, formaterBelop, emdash, formaterOptionalVerdi, konverterTilMomentDato
 } from '../../utils';
 
 const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
@@ -38,16 +38,17 @@ ArbeidsforholdKomponent.propTypes = {
         arbeidsgiverKontonr: React.PropTypes.string.isRequired,
         inntektsperiode: React.PropTypes.string.isRequired,
         refusjonstype: React.PropTypes.string.isRequired,
-        refusjonTom: javaDatoType.isRequired,
+        refusjonTom: javaDatoType,
         inntektForPerioden: React.PropTypes.number.isRequired
     }).isRequired
 };
 
-export const sorterArbeidsforhold = arbeidsforhold => (
-    arbeidsforhold.sort((a, b) => (
-        konverterTilMomentDato(b.refusjonTom).diff(konverterTilMomentDato(a.refusjonTom))
-    ))
-);
+export const sorterArbeidsforhold = arbeidsforhold => {
+    const gamleDager = konverterTilMomentDato({ year: 1900, month: 1, day: 1 });
+    return arbeidsforhold.sort((a, b) => (
+        konverterTilMomentDato(b.refusjonTom || gamleDager).diff(konverterTilMomentDato(a.refusjonTom || gamleDager))
+    ));
+};
 
 class ArbeidssituasjonPanel extends React.Component {
     constructor(props) {

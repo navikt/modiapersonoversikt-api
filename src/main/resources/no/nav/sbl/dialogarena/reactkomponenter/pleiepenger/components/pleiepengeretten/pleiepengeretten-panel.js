@@ -62,7 +62,7 @@ const PleiepengerettighetPanel = props => {
                     {formaterOptionalProsentVerdi(props.kompensasjonsgrad)}
                 </DLElement>
                 <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
-                    {props.pleiepengegrad || ''}&nbsp;%
+                    {formaterOptionalProsentVerdi(props.pleiepengegrad)}
                 </DLElement>
                 <div className="blokk-s halvbredde">
                     <BarnetIkon kjonn={kjonnFraIdent(props.barnet)} />
@@ -81,13 +81,13 @@ const PleiepengerettighetPanel = props => {
 
 PleiepengerettighetPanel.propTypes = {
     tekst: React.PropTypes.object.isRequired,
-    fomDato: javaDatoType.isRequired,
-    tomDato: javaDatoType.isRequired,
+    fomDato: javaDatoType,
+    tomDato: javaDatoType,
     pleiepengedager: React.PropTypes.number.isRequired,
     forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
     forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
     kompensasjonsgrad: React.PropTypes.number,
-    graderingsgrad: React.PropTypes.number.isRequired,
+    pleiepengegrad: React.PropTypes.number,
     barnet: React.PropTypes.string.isRequired,
     andreOmsorgsperson: React.PropTypes.string
 };
