@@ -7,8 +7,10 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;
@@ -17,10 +19,22 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
-import org.junit.jupiter.api.*;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
+import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
+import org.hamcrest.core.IsInstanceOf;
+import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Matchers.any;
@@ -31,13 +45,15 @@ class OppgaveControllerTest {
     public static final String OPPGAVE_ID = "OPPGAVE_ID";
     public static final String BRUKERS_FODSELSNUMMER = "10108000398";
     public static final String SAKSBEHANDLERS_ID = "SAKSBEHANDLER";
-
+    FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest;
     private OppgaveController oppgaveController;
     private OppgavebehandlingV3 oppgaveBehandlingMock;
     private OppgaveV3 oppgaveWS;
+    private Ruting ruting;
 
     @BeforeEach
-    void before() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    void before() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg,
+            HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         setupSubjectHandler();
         oppgaveBehandlingMock = mock(OppgavebehandlingV3.class);
         oppgaveWS = mockOppgaveWs();
@@ -45,7 +61,15 @@ class OppgaveControllerTest {
         AnsattServiceImpl ansattWS = new AnsattServiceImpl(mockGosysNavAnsatt());
         SaksbehandlerInnstillingerService saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
 
-        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWS, saksbehandlerInnstillingerService, ansattWS, null);
+        ruting = mock(Ruting.class);
+        when(ruting.finnAnsvarligEnhetForOppgavetype(any())).thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(new ArrayList<>()));
+
+        ferdigstillHenvendelseRestRequest = new FerdigstillHenvendelseRestRequest();
+        ferdigstillHenvendelseRestRequest.temagruppe = "ARBD";
+
+        FeatureToggle.enableDelviseSvarFunksjonalitet();
+
+        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWS, saksbehandlerInnstillingerService, ansattWS, ruting);
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
     }
 
@@ -53,7 +77,8 @@ class OppgaveControllerTest {
         System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
     }
 
-    private GOSYSNAVansatt mockGosysNavAnsatt() throws HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    private GOSYSNAVansatt mockGosysNavAnsatt() throws HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg,
+            HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         GOSYSNAVansatt gosysnaVansatt = mock(GOSYSNAVansatt.class);
         when(gosysnaVansatt.hentNAVAnsatt(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(new ASBOGOSYSNAVAnsatt());
         ASBOGOSYSNAVEnhetListe navEnhetListe = new ASBOGOSYSNAVEnhetListe();
@@ -86,7 +111,7 @@ class OppgaveControllerTest {
     void leggerTilbakeOppgave() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         ArgumentCaptor<WSLagreOppgaveRequest> argumentCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
 
-        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), null);
+        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
 
         verify(oppgaveBehandlingMock).lagreOppgave(argumentCaptor.capture());
         WSEndreOppgave oppgave = argumentCaptor.getValue().getEndreOppgave();
@@ -99,11 +124,32 @@ class OppgaveControllerTest {
         ArgumentCaptor<WSLagreOppgaveRequest> argumentCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
         assumeTrue(oppgaveWS.hentOppgave(new WSHentOppgaveRequest()).getOppgave().getAnsvarligId().equals(SAKSBEHANDLERS_ID));
 
-        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), null);
+        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
 
         verify(oppgaveBehandlingMock).lagreOppgave(argumentCaptor.capture());
         WSEndreOppgave oppgave = argumentCaptor.getValue().getEndreOppgave();
         assertEquals("", oppgave.getAnsvarligId());
+    }
+
+    @Test
+    @DisplayName("Legger tilbake oppgave, Test med gyldig temagruppe")
+    void sjekkGyldigTemagruppe(){
+        Response gyldigResponse = oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
+        assertEquals(gyldigResponse.getStatus(), Response.Status.OK.getStatusCode());
+    }
+
+
+    @Test
+    @DisplayName("Legger tilbake oppgave, Test med ugyldig temagruppe")
+    void sjekkUgyldigTemagruppe() throws Exception{
+        ferdigstillHenvendelseRestRequest.temagruppe = "ARBDD";
+        try {
+            oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
+            fail("Ugyldig temagruppe");
+        } catch (Exception e) {
+            assertThat(e, IsInstanceOf.instanceOf(IllegalArgumentException.class));
+            assertEquals(e.getMessage(), "Ugyldig temagruppe");
+        }
     }
 
 }

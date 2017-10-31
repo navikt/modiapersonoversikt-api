@@ -2,11 +2,17 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import org.joda.time.DateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static java.util.Collections.unmodifiableMap;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,22 +24,42 @@ class LeggTilbakeDelvisSvarPropsTest {
     private static final String FODSELSNUMMER = "10108000398";
     private static final String TRAAD_ID = "1337";
     private static final String OPPGAVE_ID = "OPPGAVE_ID";
+    private static final String FORVENTET_TEMAGRUPPE = "Arbeid";
+    private static final DateTime OPPRETTETDATO = new DateTime("2017-09-28T11:53:32.470+02:00");
+    private static final String FORVENTET_OPPRETTETDATO = "28.09.2017 kl 11:53";
+    private Map<Temagruppe, String> TEMAGRUPPE_MAP = new HashMap<>(lagTemagruppeMapping());
+    private Map<Temagruppe, String> FORVENTET_TEMAGRUPPE_MAP = new HashMap<>(TEMAGRUPPE_MAP);
+
+    public Map<Temagruppe, String> lagTemagruppeMapping(){
+        HashMap<Temagruppe, String> map = new HashMap<>();
+        map.put(ARBD, "Arbeid");
+        map.put(FMLI, "Familie");
+        map.put(HJLPM,  "Hjelpemidler");
+        map.put(BIL, "Hjelpemidler Bil");
+        map.put(ORT_HJE, "Helsetjenester og ortopediske hjelpemidler");
+        map.put(OVRG, "Øvrig");
+        map.put(PENS, "Pensjon");
+        map.put(UFRT, "Uføretrygd");
+        return map;
+    }
 
     @Test
     @DisplayName("Lager korrekte props til reactkomponenten")
     void lagerPropsSomForventet() {
-        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID);
-
-        Map<String, Object> props = leggTilbakeDelvisSvarProps.lagProps();
+        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP);
+        FORVENTET_TEMAGRUPPE_MAP.remove(ARBD);
 
         assertAll("props",
-                () -> assertEquals(BEHANDLINGS_ID, props.get("henvendelseId")),
-                () -> assertEquals(FODSELSNUMMER, props.get("fodselsnummer")),
-                () -> assertEquals(TRAAD_ID, props.get("traadId")),
-                () -> assertEquals(SVAR_DELVIS_CALLBACK_ID, props.get("svarDelvisCallbackId")),
-                () -> assertEquals(OPPGAVE_ID, props.get("oppgaveId")),
-                () -> assertEquals(Temagruppe.ARBD.name(), props.get("temagruppe")),
-                () -> assertEquals(FRITEKST, props.get("sporsmal")));
+                () -> assertEquals(BEHANDLINGS_ID, leggTilbakeDelvisSvarProps.get("henvendelseId")),
+                () -> assertEquals(FODSELSNUMMER, leggTilbakeDelvisSvarProps.get("fodselsnummer")),
+                () -> assertEquals(TRAAD_ID, leggTilbakeDelvisSvarProps.get("traadId")),
+                () -> assertEquals(SVAR_DELVIS_CALLBACK_ID, leggTilbakeDelvisSvarProps.get("svarDelvisCallbackId")),
+                () -> assertEquals(OPPGAVE_ID, leggTilbakeDelvisSvarProps.get("oppgaveId")),
+                () -> assertEquals(FORVENTET_TEMAGRUPPE, leggTilbakeDelvisSvarProps.get("temagruppe")),
+                () -> assertEquals(FRITEKST, leggTilbakeDelvisSvarProps.get("sporsmal")),
+                () -> assertEquals(FORVENTET_OPPRETTETDATO, leggTilbakeDelvisSvarProps.get("opprettetDato")),
+                () -> assertEquals(FORVENTET_TEMAGRUPPE_MAP, leggTilbakeDelvisSvarProps.get("temagruppeMapping"))
+                );
     }
 
     private Melding lagMelding() {
@@ -42,6 +68,7 @@ class LeggTilbakeDelvisSvarPropsTest {
                 .withFnr(FODSELSNUMMER)
                 .withTraadId(TRAAD_ID)
                 .withFritekst(FRITEKST)
-                .withTemagruppe(Temagruppe.ARBD.name());
+                .withTemagruppe(ARBD.name())
+                .withOpprettetDato(OPPRETTETDATO);
     }
 }
