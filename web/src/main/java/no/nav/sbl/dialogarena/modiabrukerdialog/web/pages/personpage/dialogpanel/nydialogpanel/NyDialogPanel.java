@@ -20,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.ReactJournalforingsPanel;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -184,7 +185,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder", grunnInfo.bruker.fornavn)
+                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder",
+                                StringEscapeUtils.escapeEcmaScript(grunnInfo.bruker.fornavn))
         );
         tekstfelt.setOutputMarkupId(true);
         return tekstfelt;

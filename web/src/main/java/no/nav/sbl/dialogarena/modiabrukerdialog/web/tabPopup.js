@@ -79,7 +79,7 @@ function createTabHandler(application, options) {
                 fortsettCallback: activateTab
             }
         );
-        ModiaJS.React.render(modalComponent, document.getElementById("feilmeldingsmodaler"));
+        ModiaJS.ReactDOM.render(modalComponent, document.getElementById("feilmeldingsmodaler"));
         isModalOpen = true;
     };
     window.test = createModalDialog;
