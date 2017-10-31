@@ -1,7 +1,8 @@
 import React from 'react';
+import PT from 'prop-types';
 import DLElement from '../dlelement';
 import Vedtak from './vedtak.js';
-import { formaterJavaDate, konverterTilMomentDato, formaterOptionalProsentVerdi } from '../../utils';
+import { formaterJavaDate, konverterTilMomentDato } from '../../utils';
 
 export const sorterVedtak = vedtakListe => (
     vedtakListe.sort((a, b) => (
@@ -9,10 +10,10 @@ export const sorterVedtak = vedtakListe => (
     ))
 );
 
-const getSorterteVedtak = (vedtaksListe, tekst) => {
-    return sorterVedtak(vedtaksListe).map((vedtak, index) =>
+const getSorterteVedtak = (vedtaksListe, tekst) =>
+    sorterVedtak(vedtaksListe).map((vedtak, index) =>
         (<Vedtak key={index} tekst={tekst} vedtak={vedtak} />));
-};
+
 
 const Periode = ({ periode, periodeNummer, tekst }) => {
     const vedtakKomponent = getSorterteVedtak(periode.vedtakListe, tekst);
@@ -45,12 +46,12 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
 };
 
 Periode.propTypes = {
-    periode: React.PropTypes.shape({
-        antallPleiepengedager: React.PropTypes.number.isRequired,
-        vedtakListe: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+    periode: PT.shape({
+        antallPleiepengedager: PT.number.isRequired,
+        vedtakListe: PT.arrayOf(PT.object).isRequired
     }).isRequired,
-    periodeNummer: React.PropTypes.number.isRequired,
-    tekst: React.PropTypes.object.isRequired
+    periodeNummer: PT.number.isRequired,
+    tekst: PT.object.isRequired
 };
 
 export default Periode;

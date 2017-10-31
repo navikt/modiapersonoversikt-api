@@ -1,7 +1,7 @@
-import React from 'react';
+import PT from 'prop-types';
 
-export const javaDatoType = React.PropTypes.shape({
-    year: React.PropTypes.number.isRequired,
-    monthValue: React.PropTypes.number.isRequired,
-    dayOfMonth: React.PropTypes.number.isRequired
+export const javaDatoType = PT.shape({
+    year: PT.number.isRequired,
+    monthValue: PT.number.isRequired,
+    dayOfMonth: PT.number.isRequired
 });

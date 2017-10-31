@@ -1,9 +1,10 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import { javaDatoType } from '../../typer';
 import DLElement from '../dlelement';
 import {
-    formaterJavaDate, formaterBelop, emdash, formaterOptionalVerdi, konverterTilMomentDato
+    formaterJavaDate, formaterBelop, formaterOptionalVerdi, konverterTilMomentDato
 } from '../../utils';
 
 const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
@@ -32,14 +33,14 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
 );
 
 ArbeidsforholdKomponent.propTypes = {
-    tekst: React.PropTypes.object.isRequired,
-    arbeidsforhold: React.PropTypes.shape({
-        arbeidsgiverNavn: React.PropTypes.string,
-        arbeidsgiverKontonr: React.PropTypes.string.isRequired,
-        inntektsperiode: React.PropTypes.string.isRequired,
-        refusjonstype: React.PropTypes.string.isRequired,
+    tekst: PT.object.isRequired,
+    arbeidsforhold: PT.shape({
+        arbeidsgiverNavn: PT.string,
+        arbeidsgiverKontonr: PT.string.isRequired,
+        inntektsperiode: PT.string.isRequired,
+        refusjonstype: PT.string.isRequired,
         refusjonTom: javaDatoType,
-        inntektForPerioden: React.PropTypes.number.isRequired
+        inntektForPerioden: PT.number.isRequired
     }).isRequired
 };
 
@@ -85,8 +86,8 @@ class ArbeidssituasjonPanel extends React.Component {
 }
 
 ArbeidssituasjonPanel.propTypes = {
-    tekst: React.PropTypes.object.isRequired,
-    arbeidsforhold: React.PropTypes.array.isRequired
+    tekst: PT.object.isRequired,
+    arbeidsforhold: PT.array.isRequired
 };
 
 export default ArbeidssituasjonPanel;

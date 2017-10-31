@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import DLElement from '../dlelement';
 import { BarnetIkon } from './barnet-ikon';
 import { formaterJavaDate, formaterOptionalProsentVerdi, emdash, kjonnFraIdent } from '../../utils';
@@ -18,7 +19,7 @@ const Personnummer = ({ ident }) => {
 };
 
 Personnummer.propTypes = {
-    ident: React.PropTypes.string
+    ident: PT.string
 };
 
 const ProgressBar = ({ percent }) => (
@@ -28,7 +29,7 @@ const ProgressBar = ({ percent }) => (
 );
 
 ProgressBar.propTypes = {
-    percent: React.PropTypes.number
+    percent: PT.number
 };
 
 const PleiepengerettighetPanel = props => {
@@ -80,16 +81,16 @@ const PleiepengerettighetPanel = props => {
 };
 
 PleiepengerettighetPanel.propTypes = {
-    tekst: React.PropTypes.object.isRequired,
+    tekst: PT.object.isRequired,
     fomDato: javaDatoType,
     tomDato: javaDatoType,
-    pleiepengedager: React.PropTypes.number.isRequired,
-    forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
-    forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
-    kompensasjonsgrad: React.PropTypes.number,
-    pleiepengegrad: React.PropTypes.number,
-    barnet: React.PropTypes.string.isRequired,
-    andreOmsorgsperson: React.PropTypes.string
+    pleiepengedager: PT.number.isRequired,
+    forbrukteDagerTOMIDag: PT.number.isRequired,
+    forbrukteDagerEtterDennePerioden: PT.number.isRequired,
+    kompensasjonsgrad: PT.number,
+    pleiepengegrad: PT.number,
+    barnet: PT.string.isRequired,
+    andreOmsorgsperson: PT.string
 };
 
 export default PleiepengerettighetPanel;

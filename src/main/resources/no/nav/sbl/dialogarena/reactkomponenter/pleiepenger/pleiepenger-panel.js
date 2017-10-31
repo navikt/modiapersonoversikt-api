@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 
 import PleiepengerRettenPanel from './components/pleiepengeretten/pleiepengeretten-panel';
 import ArbeidsituasjonPanel from './components/arbeidsituasjon/arbeidssituasjon-panel';
@@ -32,16 +33,16 @@ class PleiepengerPanel extends Component {
 }
 
 PleiepengerPanel.propTypes = {
-    tekst: React.PropTypes.object.isRequired,
-    pleiepengedager: React.PropTypes.number.isRequired,
-    forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
-    forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
-    kompensasjonsgrad: React.PropTypes.number,
-    pleiepengegrad: React.PropTypes.number,
-    barnet: React.PropTypes.string.isRequired,
-    andreOmsorgsperson: React.PropTypes.string,
-    arbeidsforhold: React.PropTypes.array.isRequired,
-    perioder: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+    tekst: PT.object.isRequired,
+    pleiepengedager: PT.number.isRequired,
+    forbrukteDagerTOMIDag: PT.number.isRequired,
+    forbrukteDagerEtterDennePerioden: PT.number.isRequired,
+    kompensasjonsgrad: PT.number,
+    pleiepengegrad: PT.number,
+    barnet: PT.string.isRequired,
+    andreOmsorgsperson: PT.string,
+    arbeidsforhold: PT.array.isRequired,
+    perioder: PT.arrayOf(PT.object).isRequired
 };
 
 export default PleiepengerPanel;

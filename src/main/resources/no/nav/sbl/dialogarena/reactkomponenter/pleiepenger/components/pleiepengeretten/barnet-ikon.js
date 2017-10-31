@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 export const BarnetIkon = ({ kjonn }) => (
     <div className="pleiepenger-barnet-ikon">
@@ -28,5 +29,5 @@ export const BarnetIkon = ({ kjonn }) => (
 );
 
 BarnetIkon.propTypes = {
-    kjonn: React.PropTypes.string.isRequired
+    kjonn: PT.string.isRequired
 };

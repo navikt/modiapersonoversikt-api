@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import { konverterTilMomentDato } from '../../utils';
 import Periode from './periode';
@@ -21,18 +22,18 @@ const PleiepengerUtbetalingerPanel = ({ perioder, tekst }) => {
 };
 
 PleiepengerUtbetalingerPanel.propTypes = {
-    perioder: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-    tekst: React.PropTypes.shape({
-        periode: React.PropTypes.string.isRequired,
-        pleiepengegrad: React.PropTypes.string.isRequired,
-        pleiepengedager: React.PropTypes.string.isRequired,
-        kommendeUtbetalinger: React.PropTypes.string.isRequired,
-        anvistUtbetaling: React.PropTypes.string.isRequired,
-        fraOgMedDato: React.PropTypes.string.isRequired,
-        bruttoBelop: React.PropTypes.string.isRequired,
-        dagsats: React.PropTypes.string.isRequired,
-        tilOgMedDato: React.PropTypes.string.isRequired,
-        kompensasjonsgrad: React.PropTypes.string.isRequired
+    perioder: PT.arrayOf(PT.object).isRequired,
+    tekst: PT.shape({
+        periode: PT.string.isRequired,
+        pleiepengegrad: PT.string.isRequired,
+        pleiepengedager: PT.string.isRequired,
+        kommendeUtbetalinger: PT.string.isRequired,
+        anvistUtbetaling: PT.string.isRequired,
+        fraOgMedDato: PT.string.isRequired,
+        bruttoBelop: PT.string.isRequired,
+        dagsats: PT.string.isRequired,
+        tilOgMedDato: PT.string.isRequired,
+        kompensasjonsgrad: PT.string.isRequired
     }).isRequired
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 const DLElement = ({ etikett, className = '', children }) => (
     <div className={['blokk-s', className].join(' ')}>
@@ -8,9 +9,9 @@ const DLElement = ({ etikett, className = '', children }) => (
 );
 
 DLElement.propTypes = {
-    etikett: React.PropTypes.string.isRequired,
-    className: React.PropTypes.string,
-    children: React.PropTypes.node
+    etikett: PT.string.isRequired,
+    className: PT.string,
+    children: PT.node
 };
 
 export default DLElement;

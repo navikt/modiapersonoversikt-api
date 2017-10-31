@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import DLElement from '../dlelement';
 import { formaterJavaDate, formaterBelop, formaterOptionalProsentVerdi } from '../../utils';
@@ -38,17 +39,17 @@ const Vedtak = ({ vedtak, tekst }) => {
 };
 
 Vedtak.propTypes = {
-    vedtak: React.PropTypes.shape({
-        periode: React.PropTypes.shape({
+    vedtak: PT.shape({
+        periode: PT.shape({
             fraOgMed: javaDatoType.isRequired,
             tilOgMed: javaDatoType.isRequired
         }).isRequired,
         anvistUtbetaling: javaDatoType.isRequired,
-        bruttoBelop: React.PropTypes.number.isRequired,
-        pleiepengegrad: React.PropTypes.number.isRequired,
-        kompensasjonsgrad: React.PropTypes.number
+        bruttoBelop: PT.number.isRequired,
+        pleiepengegrad: PT.number.isRequired,
+        kompensasjonsgrad: PT.number
     }),
-    tekst: React.PropTypes.object.isRequired
+    tekst: PT.object.isRequired
 };
 
 export default Vedtak;
