@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import Melding from './melding';
 import DokumentMelding from './dokument-melding';
 import OppgaveMelding from './oppgave-melding';
@@ -41,9 +42,9 @@ function Forhandsvisning(props) {
 }
 
 Forhandsvisning.propTypes = {
-    traad: React.PropTypes.shape({
-        meldinger: React.PropTypes.array,
-        antallMeldingerIOpprinneligTraad: React.PropTypes.number
+    traad: PT.shape({
+        meldinger: PT.array,
+        antallMeldingerIOpprinneligTraad: PT.number
     }).isRequired
 };
 

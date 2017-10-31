@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import ReactDOM from 'react-dom';
 
 function createId(prefix) {
@@ -25,15 +26,15 @@ function createAriaOptional(name, data) {
 /* eslint "react/prefer-es6-class": 1 */
 const ModalPortal = React.createClass({
     propTypes: {
-        description: pt.object,
-        closeButton: pt.object,
-        title: pt.object,
-        isOpen: pt.bool,
-        modal: pt.object.isRequired,
-        skipFocus: pt.array,
-        children: pt.node.isRequired,
-        width: pt.number,
-        height: pt.number
+        description: PT.object,
+        closeButton: PT.object,
+        title: PT.object,
+        isOpen: PT.bool,
+        modal: PT.object.isRequired,
+        skipFocus: PT.array,
+        children: PT.node.isRequired,
+        width: PT.number,
+        height: PT.number
     },
     getDefaultProps: function getDefaultProps() {
         return {

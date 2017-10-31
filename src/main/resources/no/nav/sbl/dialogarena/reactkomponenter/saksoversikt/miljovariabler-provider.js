@@ -1,4 +1,4 @@
-import { PropTypes as PT } from 'react';
+import PT from 'prop-types';
 import createProviderComponent from './../utils/context-creator';
 
 export default createProviderComponent({

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 import wicketSender from '../../react-wicket-mixin/wicket-sender';
 import DelvisSvar from './delvis-svar';
 
@@ -38,16 +39,16 @@ class LeggTilbakeDelvisSvarPanel extends Component {
 }
 
 LeggTilbakeDelvisSvarPanel.propTypes = {
-    wicketurl: React.PropTypes.string.isRequired,
-    wicketcomponent: React.PropTypes.string.isRequired,
-    svarDelvisCallbackId: React.PropTypes.string.isRequired,
-    avbrytCallbackId: React.PropTypes.string.isRequired,
-    henvendelseId: React.PropTypes.string.isRequired,
-    sporsmal: React.PropTypes.string.isRequired,
-    fodselsnummer: React.PropTypes.string.isRequired,
-    traadId: React.PropTypes.string.isRequired,
-    temagruppe: React.PropTypes.string.isRequired,
-    oppgaveId: React.PropTypes.string.isRequired
+    wicketurl: PT.string.isRequired,
+    wicketcomponent: PT.string.isRequired,
+    svarDelvisCallbackId: PT.string.isRequired,
+    avbrytCallbackId: PT.string.isRequired,
+    henvendelseId: PT.string.isRequired,
+    sporsmal: PT.string.isRequired,
+    fodselsnummer: PT.string.isRequired,
+    traadId: PT.string.isRequired,
+    temagruppe: PT.string.isRequired,
+    oppgaveId: PT.string.isRequired
 };
 
 export default LeggTilbakeDelvisSvarPanel;

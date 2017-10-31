@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import AsyncLoader from './../utils/async-loader';
 import VelgSak from '../journalforing-panel/velg-sak';
 import wicketSender from './../react-wicket-mixin/wicket-sender';
@@ -49,10 +50,10 @@ class VelgSakPanel extends React.Component {
 }
 
 VelgSakPanel.propTypes = {
-    wicketurl: React.PropTypes.string.isRequired,
-    wicketcomponent: React.PropTypes.string.isRequired,
-    fnr: React.PropTypes.string.isRequired,
-    skalViseOkonomiskSosialhjelp: React.PropTypes.bool.isRequired
+    wicketurl: PT.string.isRequired,
+    wicketcomponent: PT.string.isRequired,
+    fnr: PT.string.isRequired,
+    skalViseOkonomiskSosialhjelp: PT.bool.isRequired
 };
 
 export default VelgSakPanel;

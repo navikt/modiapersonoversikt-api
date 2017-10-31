@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { Element } from 'react-scroll';
 
@@ -32,13 +33,13 @@ class VedleggFeilmelding extends React.Component {
 }
 
 VedleggFeilmelding.propTypes = {
-    feilmelding: React.PropTypes.shape({
-        feilmeldingEnonicKey: React.PropTypes.string.isRequired,
-        kanVises: React.PropTypes.bool.isRequired,
-        ekstrafeilinfo: React.PropTypes.object,
-        bildeUrl: React.PropTypes.string.isRequired
+    feilmelding: PT.shape({
+        feilmeldingEnonicKey: PT.string.isRequired,
+        kanVises: PT.bool.isRequired,
+        ekstrafeilinfo: PT.object,
+        bildeUrl: PT.string.isRequired
     }).isRequired,
-    name: React.PropTypes.string,
+    name: PT.string,
     intl: intlShape
 };
 

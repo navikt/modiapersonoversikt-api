@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import DokumentVisning from './dokument-visning';
 
 export function hoveddokumentForst(dokumenter) {
@@ -21,8 +22,16 @@ function DokumentVisningListe({ dokumenter }) {
     );
 }
 
+let dokumentShape = PT.shape({
+    erHoveddokument: PT.bool,
+    dokumentreferanse: PT.string.isRequired,
+    antallSider: PT.number,
+    journalpostId: PT.string,
+    pdfUrl: PT.string
+});
+
 DokumentVisningListe.propTypes = {
-    dokumenter: pt.object.isRequired
+    dokumenter: PT.arrayOf(dokumentShape).isRequired
 };
 
 export default DokumentVisningListe;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import Kulemeny from './kulemeny';
 
 const renderKulemeny = (kulemenypunkt, index) => (
@@ -31,11 +32,11 @@ class KulemenyListe extends React.Component {
 
 
 KulemenyListe.propTypes = {
-    dokumentmetadata: React.PropTypes.arrayOf(React.PropTypes.shape({
-        dokumentreferanse: React.PropTypes.string.isRequired,
-        tittel: React.PropTypes.string.isRequired
+    dokumentmetadata: PT.arrayOf(PT.shape({
+        dokumentreferanse: PT.string.isRequired,
+        tittel: PT.string.isRequired
     })).isRequired,
-    indexValgtDokument: React.PropTypes.number
+    indexValgtDokument: PT.number
 };
 
 export default KulemenyListe;

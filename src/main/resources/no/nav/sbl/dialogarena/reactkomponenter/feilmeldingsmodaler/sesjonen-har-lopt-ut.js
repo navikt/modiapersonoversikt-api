@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 
 class SesjonenHarLoptUt extends React.Component {
@@ -48,15 +49,15 @@ SesjonenHarLoptUt.defaultProps = {
 };
 
 SesjonenHarLoptUt.propTypes = {
-    hovedtekst: pt.string.isRequired,
-    avbryttekst: pt.string.isRequired,
-    fortsetttekst: pt.string.isRequired,
-    beskrivendeTekst: pt.string.isRequired,
+    hovedtekst: PT.string.isRequired,
+    avbryttekst: PT.string.isRequired,
+    fortsetttekst: PT.string.isRequired,
+    beskrivendeTekst: PT.string.isRequired,
     title: AriaPropType,
     description: AriaPropType,
     closeButton: AriaPropType,
-    isOpen: pt.bool,
-    fnr: pt.string.isRequired
+    isOpen: PT.bool,
+    fnr: PT.string.isRequired
 };
 
 export default SesjonenHarLoptUt;

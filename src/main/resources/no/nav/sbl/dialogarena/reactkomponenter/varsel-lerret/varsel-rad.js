@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import VarselRadElement from './varsel-rad-element';
 import { prettyDate, nyesteDatoForst } from './dato-formatering';
 import { uniq } from 'lodash';
@@ -68,8 +69,8 @@ class VarselRad extends React.Component {
 }
 
 VarselRad.propTypes = {
-    store: React.PropTypes.object.isRequired,
-    varsel: React.PropTypes.object.isRequired
+    store: PT.object.isRequired,
+    varsel: PT.object.isRequired
 };
 
 export default VarselRad;
