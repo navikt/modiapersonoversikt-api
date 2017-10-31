@@ -25,9 +25,7 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
                 {arbeidsforhold.refusjonstype}
             </DLElement>
             <DLElement etikett={tekst.refusjonTilDato} className="halvbredde">
-                {arbeidsforhold.refusjonTom
-                    ? formaterJavaDate(arbeidsforhold.refusjonTom)
-                    : emdash}
+                {formaterJavaDate(arbeidsforhold.refusjonTom)}
             </DLElement>
         </dl>
     </div>

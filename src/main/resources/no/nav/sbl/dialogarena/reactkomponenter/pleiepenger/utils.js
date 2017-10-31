@@ -3,8 +3,10 @@ import moment from 'moment';
 export const konverterTilMomentDato = dato =>
     moment(new Date(dato.year, dato.monthValue - 1, dato.dayOfMonth));
 
+export const emdash = '\u2014';
+
 export const formaterJavaDate = dato =>
-    konverterTilMomentDato(dato).format('DD.MM.YYYY');
+    (dato ? konverterTilMomentDato(dato).format('DD.MM.YYYY') : emdash);
 
 export const formaterBelop = (belop) =>
     belop.toLocaleString('nb-NO', {
@@ -13,7 +15,6 @@ export const formaterBelop = (belop) =>
         currencyDisplay: 'code'
     });
 
-export const emdash = '\u2014';
 export const formaterOptionalProsentVerdi = verdi => (
     verdi ? verdi + ' %' : emdash
 );

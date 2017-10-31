@@ -37,7 +37,7 @@ PleiepengerPanel.propTypes = {
     forbrukteDagerTOMIDag: React.PropTypes.number.isRequired,
     forbrukteDagerEtterDennePerioden: React.PropTypes.number.isRequired,
     kompensasjonsgrad: React.PropTypes.number,
-    pleiepengegrad: React.PropTypes.number.isRequired,
+    pleiepengegrad: React.PropTypes.number,
     barnet: React.PropTypes.string.isRequired,
     andreOmsorgsperson: React.PropTypes.string,
     arbeidsforhold: React.PropTypes.array.isRequired,
