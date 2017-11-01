@@ -25,6 +25,7 @@ import java.util.List;
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
+import static no.nav.kjerneinfo.consumer.fim.behandleperson.config.BehandlePersonConsumerConfig.TPS_BEHANDLEPERSON_V1_MOCK_KEY;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.VarslingEndpointConfig.VARSLING_KEY;
@@ -134,7 +135,8 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("CMS Skrivestøtte", CMS_SKRIVESTOTTE_KEY),
                 new MockSetupModel("PensjonSak", PENSJONSAK_KEY),
                 new MockSetupModel("Varsler", VARSLING_KEY),
-                new MockSetupModel("CMS", CMS_KEY)
+                new MockSetupModel("CMS", CMS_KEY),
+                new MockSetupModel("BehandlePersonV1", TPS_BEHANDLEPERSON_V1_MOCK_KEY)
         );
     }
 
