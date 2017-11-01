@@ -41,6 +41,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private final AnsattService ansattWS;
     private final Ruting ruting;
+    private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
 
     @Inject
     public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService, AnsattService ansattWS, Ruting ruting) {
@@ -49,6 +50,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
         this.ansattWS = ansattWS;
         this.ruting = ruting;
+        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
 
         WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(oppgaveId);
-        new LeggTilbakeOppgaveIGsakDelegate(this, ruting, oppgaveFraGsak).leggTilbake(beskrivelse, temagruppe);
+        leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, beskrivelse, temagruppe);
     }
 
     @Override

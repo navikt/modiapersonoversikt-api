@@ -18,27 +18,24 @@ class LeggTilbakeOppgaveIGsakDelegate {
     private final OppgaveBehandlingServiceImpl oppgaveBehandlingService;
     private final Ruting ruting;
 
-    private final WSOppgave oppgaveFraGsak;
-
-    LeggTilbakeOppgaveIGsakDelegate(OppgaveBehandlingServiceImpl oppgaveBehandlingService, Ruting ruting, WSOppgave oppgaveFraGsak) {
+    LeggTilbakeOppgaveIGsakDelegate(OppgaveBehandlingServiceImpl oppgaveBehandlingService, Ruting ruting) {
         this.oppgaveBehandlingService = oppgaveBehandlingService;
         this.ruting = ruting;
-        this.oppgaveFraGsak = oppgaveFraGsak;
     }
 
-     void leggTilbake(String beskrivelse, Temagruppe temagruppe) {
-        validerTilgang();
+     void leggTilbake(WSOppgave oppgaveFraGsak, String beskrivelse, Temagruppe temagruppe) {
+        validerTilgang(oppgaveFraGsak);
 
-        markerOppgaveSomLagtTilbake(beskrivelse);
+        markerOppgaveSomLagtTilbake(oppgaveFraGsak, beskrivelse);
 
         if (temagrupeErSatt(temagruppe)) {
-            oppdaterForNyTemagruppe(temagruppe);
+            oppdaterForNyTemagruppe(oppgaveFraGsak, temagruppe);
         }
 
-         lagreOppgaveIGsak(temagruppe);
+         lagreOppgaveIGsak(oppgaveFraGsak, temagruppe);
      }
 
-    private void validerTilgang() {
+    private void validerTilgang(WSOppgave oppgaveFraGsak) {
         String innloggetSaksbehandler = getSubjectHandler().getUid();
         if (!innloggetSaksbehandler.equals(oppgaveFraGsak.getAnsvarligId())) {
             throw new NotAuthorizedException("Innlogget saksbehandler " + innloggetSaksbehandler
@@ -47,12 +44,12 @@ class LeggTilbakeOppgaveIGsakDelegate {
         }
     }
 
-    private void markerOppgaveSomLagtTilbake(String beskrivelse) {
+    private void markerOppgaveSomLagtTilbake(WSOppgave oppgaveFraGsak, String beskrivelse) {
         oppgaveFraGsak.withAnsvarligId("");
-        oppgaveFraGsak.withBeskrivelse(lagNyBeskrivelse(beskrivelse));
+        oppgaveFraGsak.withBeskrivelse(lagNyBeskrivelse(oppgaveFraGsak, beskrivelse));
     }
 
-    private String lagNyBeskrivelse(String beskrivelse) {
+    private String lagNyBeskrivelse(WSOppgave oppgaveFraGsak, String beskrivelse) {
         return oppgaveBehandlingService.leggTilBeskrivelse(oppgaveFraGsak.getBeskrivelse(), beskrivelse);
     }
 
@@ -60,8 +57,8 @@ class LeggTilbakeOppgaveIGsakDelegate {
         return temagruppe != null;
     }
 
-    private void oppdaterForNyTemagruppe(Temagruppe temagruppe) {
-        oppgaveFraGsak.withAnsvarligEnhetId(getAnsvarligEnhet(temagruppe));
+    private void oppdaterForNyTemagruppe(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
+        oppgaveFraGsak.withAnsvarligEnhetId(getAnsvarligEnhet(oppgaveFraGsak, temagruppe));
         oppgaveFraGsak.withUnderkategori(getNyUnderkategori(temagruppe));
     }
 
@@ -69,12 +66,12 @@ class LeggTilbakeOppgaveIGsakDelegate {
         return new WSUnderkategori().withKode(underkategoriKode(temagruppe));
     }
 
-    private String getAnsvarligEnhet(Temagruppe temagruppe) {
-        List<WSEnhet> enhetListe = finnAnsvarligEnhetForOppgavetype(temagruppe);
+    private String getAnsvarligEnhet(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
+        List<WSEnhet> enhetListe = finnAnsvarligEnhetForOppgavetype(oppgaveFraGsak, temagruppe);
         return enhetListe.isEmpty() ? oppgaveFraGsak.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId();
     }
 
-    private List<WSEnhet> finnAnsvarligEnhetForOppgavetype(Temagruppe temagruppe) {
+    private List<WSEnhet> finnAnsvarligEnhetForOppgavetype(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
         return ruting.finnAnsvarligEnhetForOppgavetype(
                 new WSFinnAnsvarligEnhetForOppgavetypeRequest()
                         .withBrukerId(oppgaveFraGsak.getGjelder().getBrukerId())
@@ -84,7 +81,7 @@ class LeggTilbakeOppgaveIGsakDelegate {
                 .getEnhetListe();
     }
 
-    private void lagreOppgaveIGsak(Temagruppe temagruppe) {
+    private void lagreOppgaveIGsak(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
         try {
             oppgaveBehandlingService.lagreOppgaveIGsak(oppgaveFraGsak, temagruppe);
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
