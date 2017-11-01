@@ -7,14 +7,17 @@ import static org.joda.time.DateTime.now;
 
 class OppgaveMockFactory {
 
+    public static final String ANSVARLIG_SAKSBEHANDLER = "z554455";
+    public static final String OPPGAVE_ID = "oppgaveid";
+
     static WSHentOppgaveResponse mockHentOppgaveResponseMedTilordning() {
-        return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("id").withBeskrivelse("opprinnelig beskrivelse"));
+        return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withBeskrivelse("opprinnelig beskrivelse"));
     }
 
     static WSOppgave lagWSOppgave() {
         return new WSOppgave()
-                .withOppgaveId("oppgaveid")
-                .withAnsvarligId("ansvarligid")
+                .withOppgaveId(OPPGAVE_ID)
+                .withAnsvarligId(ANSVARLIG_SAKSBEHANDLER)
                 .withGjelder(new WSBruker().withBrukerId("***REMOVED***").withBrukertypeKode("brukertypekode"))
                 .withDokumentId("dokumentid")
                 .withKravId("kravid")
