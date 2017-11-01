@@ -40,7 +40,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private final OppgaveV3 oppgaveWS;
     private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private final AnsattService ansattWS;
-    private final LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
+    private final Ruting ruting;
 
     @Inject
     public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService, AnsattService ansattWS, Ruting ruting) {
@@ -48,7 +48,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         this.oppgaveWS = oppgaveWS;
         this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
         this.ansattWS = ansattWS;
-        leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting);
+        this.ruting = ruting;
     }
 
     @Override
@@ -88,7 +88,12 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, Temagruppe temagruppe) {
-        leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveId, beskrivelse, temagruppe);
+        if (oppgaveId == null) {
+            return;
+        }
+
+        WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(oppgaveId);
+        new LeggTilbakeOppgaveIGsakDelegate(this, ruting, oppgaveFraGsak).leggTilbake(beskrivelse, temagruppe);
     }
 
     @Override
