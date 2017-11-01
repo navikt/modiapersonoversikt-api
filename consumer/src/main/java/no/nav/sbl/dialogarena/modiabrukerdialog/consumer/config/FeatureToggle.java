@@ -15,4 +15,8 @@ public class FeatureToggle {
     public static void enableDelviseSvarFunksjonalitet() {
         setProperty(VIS_DELVISE_SVAR_PROPERTY_KEY, "true");
     }
+
+    public static void disableDelviseSvarFunksjonalitet() {
+        setProperty(VIS_DELVISE_SVAR_PROPERTY_KEY, "false");
+    }
 }
