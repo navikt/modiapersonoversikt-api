@@ -4,8 +4,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.modig.core.context.*;
+import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
@@ -22,7 +22,11 @@ import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.security.auth.Subject;
+import javax.ws.rs.NotAuthorizedException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -62,6 +66,12 @@ class OppgaveControllerTest {
 
     private void setupSubjectHandler() {
         System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        setInnloggetSaksbehandler(new SubjectHandlerUtils.SubjectBuilder(SAKSBEHANDLERS_ID, IdentType.InternBruker).getSubject());
+    }
+
+    private void setInnloggetSaksbehandler(Subject ident) {
+        SubjectHandlerUtils.setSubject(ident);
     }
 
     private GOSYSNAVansatt mockGosysNavAnsatt() throws HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
@@ -115,6 +125,14 @@ class OppgaveControllerTest {
         verify(oppgaveBehandlingMock).lagreOppgave(argumentCaptor.capture());
         WSEndreOppgave oppgave = argumentCaptor.getValue().getEndreOppgave();
         assertEquals("", oppgave.getAnsvarligId());
+    }
+
+    @Test
+    @DisplayName("Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake")
+    void validererTilgang() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet {
+        setInnloggetSaksbehandler(new SubjectHandlerUtils.SubjectBuilder("Annen saksbehandler", IdentType.InternBruker).getSubject());
+
+        assertThrows(NotAuthorizedException.class, () -> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), null));
     }
 
 }
