@@ -51,6 +51,7 @@
         <webservice alias="virksomhet:Ytelseskontrakt_v3" mapToProperty="ytelseskontraktendpoint"/>
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>
         <webservice alias="virksomhet:foreldrepenger_v2" mapToProperty="foreldrepengerendpoint"/>
+        <webservice alias="virksomhet:pleiepenger_v1" mapToProperty="pleiepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v2" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:DigitalKontakinformasjon_v1" mapToProperty="dkifendpoint"/>
         <webservice alias="virksomhet:OrganisasjonEnhet_v2" mapToProperty="norg2.organisasjonenhet.v2"/>
