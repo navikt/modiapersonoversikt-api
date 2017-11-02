@@ -7,8 +7,10 @@ class DelvisSvar extends Component {
         super(props);
         this.svarDelvis = this.svarDelvis.bind(this);
         this.handleSvarEndring = this.handleSvarEndring.bind(this);
+        this.velgTemagruppe = this.velgTemagruppe.bind(this);
         this.state = {
-            svarValue: ''
+            svarValue: '',
+            valgtTemagruppe: ''
         };
     }
 
@@ -20,7 +22,7 @@ class DelvisSvar extends Component {
 
     leggTilbakeOppgave() {
         const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}`;
-        const data = JSON.stringify({});
+        const data = JSON.stringify({ temagruppe: this.state.valgtTemagruppe });
         return Ajax.put(url, data);
     }
 
@@ -28,7 +30,6 @@ class DelvisSvar extends Component {
         const ferdigstillHenvendelsePromise = this.ferdigstillHenvendelse();
         const leggTilbakeOppgavePromise = this.leggTilbakeOppgave();
         Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
-            console.log('Well done!');
             this.props.svarCallback();
         }, (err) => {
             console.error(err);
@@ -39,15 +40,23 @@ class DelvisSvar extends Component {
         this.setState({ svarValue: event.target.value });
     }
 
+    velgTemagruppe(event){
+        this.setState({ valgtTemagruppe: event.target.value });
+    }
+
     render() {
         const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
             <p key={`paragraf-${index}`}>{paragraf}</p>);
+
+        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key, index) =>
+            <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
+
         return (
             <div>
                 <h3>Legg tilbake med delvis svar</h3>
                 <h2>Spørsmål</h2>
-                <h3>FAMILIE</h3>
-                <p>22.03.2017 kl 10:22</p>
+                <h3>{this.props.temagruppe}</h3>
+                <p>{this.props.opprettetDato}</p>
                 <div className="sporsmaal">
                     {sporsmal}
                 </div>
@@ -65,10 +74,8 @@ class DelvisSvar extends Component {
 
                 <div className="temagruppe-velger">
                     <h3>Velg temagruppe</h3>
-                    <select>
-                        <option>Arbeid</option>
-                        <option>Familie</option>
-                        <option>Hjelpemidler</option>
+                    <select onChange={this.velgTemagruppe}>
+                        {valgTemagruppe}
                     </select>
                 </div>
                 <a
@@ -97,8 +104,13 @@ DelvisSvar.propTypes = {
     traadId: PT.string.isRequired,
     temagruppe: PT.string.isRequired,
     svarCallback: PT.func.isRequired,
+    oppgaveId: PT.string.isRequired,
     avbrytCallback: PT.func.isRequired,
-    oppgaveId: PT.string.isRequired
+    opprettetDato: PT.string.isRequired,
+    temagruppeMapping:PT.shape({
+        temagruppeKode: PT.string,
+        temagruppeNavn: PT.string,
+    }).isRequired,
 };
 
 export default DelvisSvar;

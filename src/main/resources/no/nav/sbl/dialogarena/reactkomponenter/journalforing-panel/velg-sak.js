@@ -53,7 +53,10 @@ class VelgSak extends React.Component {
 
 VelgSak.propTypes = {
     temagruppe: PT.string.isRequired,
-    temagruppeTemaMapping: PT.object.isRequired,
+    temagruppeTemaMapping: PT.shape({
+        temagruppeKodeKode: PT.string.isRequired,
+        temagruppeNavn: PT.array.isRequired
+    }).isRequired,
     valgtKategori: PT.string.isRequired,
     saker: PT.array.isRequired,
     velgSak: PT.func.isRequired
