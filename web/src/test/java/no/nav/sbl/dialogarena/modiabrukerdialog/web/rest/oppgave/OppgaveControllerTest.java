@@ -4,8 +4,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
@@ -158,14 +157,16 @@ class OppgaveControllerTest {
     @DisplayName("Legger tilbake oppgave, Test med ugyldig temagruppe")
     void sjekkUgyldigTemagruppe() throws Exception{
         ferdigstillHenvendelseRestRequest.temagruppe = "ARBDD";
-        assertThrows(IllegalArgumentException.class, ()-> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
+
+        IllegalArgumentException assertion = assertThrows(IllegalArgumentException.class, ()-> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
+        assertEquals("Ugyldig temagruppe", assertion.getMessage());
+
     }
     @Test
     @DisplayName("Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake")
     void validererTilgang() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet {
         setInnloggetSaksbehandler(new SubjectHandlerUtils.SubjectBuilder("Annen saksbehandler", IdentType.InternBruker).getSubject());
 
-        assertThrows(NotAuthorizedException.class, () -> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), null));
+        assertThrows(NotAuthorizedException.class, () -> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
     }
-
 }
