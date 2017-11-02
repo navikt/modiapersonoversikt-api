@@ -41,12 +41,17 @@ public class OppgaveController {
 
         setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
 
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", getTemagruppefromRequest(ferdigstillHenvendelseRestRequest.temagruppe));
+
+        return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
+    }
+
+    private Temagruppe getTemagruppefromRequest(String temagruppe){
         try {
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", Temagruppe.valueOf(ferdigstillHenvendelseRestRequest.temagruppe));
-        }catch(Exception e){
+            return Temagruppe.valueOf(temagruppe);
+        }catch(IllegalArgumentException e){
             throw new IllegalArgumentException("Ugyldig temagruppe");
         }
-        return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
     }
 
     private void setWicketRequestCycleForOperasjonerPaaCookies(@Context HttpServletRequest request) {

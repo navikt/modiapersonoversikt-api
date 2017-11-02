@@ -6,12 +6,9 @@ import org.joda.time.DateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static java.util.Collections.unmodifiableMap;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -27,20 +24,22 @@ class LeggTilbakeDelvisSvarPropsTest {
     private static final String FORVENTET_TEMAGRUPPE = "Arbeid";
     private static final DateTime OPPRETTETDATO = new DateTime("2017-09-28T11:53:32.470+02:00");
     private static final String FORVENTET_OPPRETTETDATO = "28.09.2017 kl 11:53";
-    private Map<Temagruppe, String> TEMAGRUPPE_MAP = new HashMap<>(lagTemagruppeMapping());
-    private Map<Temagruppe, String> FORVENTET_TEMAGRUPPE_MAP = new HashMap<>(TEMAGRUPPE_MAP);
+    private static Map<Temagruppe, String> TEMAGRUPPE_MAP = new HashMap<>();
+    private final Map<Temagruppe, String> FORVENTET_TEMAGRUPPE_MAP = new HashMap<>(TEMAGRUPPE_MAP);
 
-    public Map<Temagruppe, String> lagTemagruppeMapping(){
+   static{
         HashMap<Temagruppe, String> map = new HashMap<>();
         map.put(ARBD, "Arbeid");
         map.put(FMLI, "Familie");
+        map.put(PLEIEPENGERSY, "Pleiepenger sykt barn");
         map.put(HJLPM,  "Hjelpemidler");
         map.put(BIL, "Hjelpemidler Bil");
         map.put(ORT_HJE, "Helsetjenester og ortopediske hjelpemidler");
+        map.put(UTLAND, "Utland");
         map.put(OVRG, "Øvrig");
         map.put(PENS, "Pensjon");
         map.put(UFRT, "Uføretrygd");
-        return map;
+        TEMAGRUPPE_MAP =  map;
     }
 
     @Test
