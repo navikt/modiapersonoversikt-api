@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import TypeValg from './typevalg';
 import SakerListe from './saker-liste';
 import AdvarselBoks from './../utils/advarsel-boks';
@@ -51,14 +52,14 @@ class VelgSak extends React.Component {
 }
 
 VelgSak.propTypes = {
-    temagruppe: React.PropTypes.string.isRequired,
-    temagruppeTemaMapping: React.PropTypes.shape({
-        temagruppeKodeKode: React.PropTypes.string.isRequired,
-        temagruppeNavn: React.PropTypes.array.isRequired
+    temagruppe: PT.string.isRequired,
+    temagruppeTemaMapping: PT.shape({
+        temagruppeKodeKode: PT.string.isRequired,
+        temagruppeNavn: PT.array.isRequired
     }).isRequired,
-    valgtKategori: React.PropTypes.string.isRequired,
-    saker: React.PropTypes.array.isRequired,
-    velgSak: React.PropTypes.func.isRequired
+    valgtKategori: PT.string.isRequired,
+    saker: PT.array.isRequired,
+    velgSak: PT.func.isRequired
 };
 
 export default VelgSak;
