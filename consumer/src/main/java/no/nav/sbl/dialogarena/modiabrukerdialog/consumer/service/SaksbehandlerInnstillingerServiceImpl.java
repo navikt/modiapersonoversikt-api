@@ -14,8 +14,12 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansat
 
 public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnstillingerService {
 
+    private final AnsattService ansattService;
+
     @Inject
-    private AnsattService ansattService;
+    public SaksbehandlerInnstillingerServiceImpl(AnsattService ansattService) {
+        this.ansattService = ansattService;
+    }
 
     public static String saksbehandlerInnstillingerCookieId() {
         return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();

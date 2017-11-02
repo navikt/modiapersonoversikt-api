@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
