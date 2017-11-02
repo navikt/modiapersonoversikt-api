@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
@@ -42,9 +43,9 @@ const DokumentinfoVedlegg = ({ visSide, velgJournalpost, dokumentinfo }) => {
 };
 
 DokumentinfoVedlegg.propTypes = {
-    dokumentinfo: React.PropTypes.object.isRequired,
-    visSide: React.PropTypes.func.isRequired,
-    velgJournalpost: React.PropTypes.func.isRequired
+    dokumentinfo: PT.object.isRequired,
+    visSide: PT.func.isRequired,
+    velgJournalpost: PT.func.isRequired
 };
 
 export default DokumentinfoVedlegg;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import TilbakeKnapp from './tilbake-knapp';
 import JournalforKnapp from './journalfor-knapp';
 import wicketSender from './../react-wicket-mixin/wicket-sender';
@@ -84,12 +85,12 @@ class JournalforSak extends React.Component {
 }
 
 JournalforSak.propTypes = {
-    tilbake: React.PropTypes.func.isRequired,
-    traadId: React.PropTypes.string.isRequired,
-    fnr: React.PropTypes.string.isRequired,
-    sak: React.PropTypes.object.isRequired,
-    wicketurl: React.PropTypes.string.isRequired,
-    wicketcomponent: React.PropTypes.string.isRequired
+    tilbake: PT.func.isRequired,
+    traadId: PT.string.isRequired,
+    fnr: PT.string.isRequired,
+    sak: PT.object.isRequired,
+    wicketurl: PT.string.isRequired,
+    wicketcomponent: PT.string.isRequired
 };
 
 export default JournalforSak;

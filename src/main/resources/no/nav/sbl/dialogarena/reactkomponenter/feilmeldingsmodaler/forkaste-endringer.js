@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 import { autobind } from './../utils/utils-module';
 import sendToWicket from './../react-wicket-mixin/wicket-sender';
@@ -66,18 +67,18 @@ ForkasteEndringer.defaultProps = {
 };
 
 ForkasteEndringer.propTypes = {
-    hovedtekst: pt.string.isRequired,
-    avbryttekst: pt.string.isRequired,
-    fortsetttekst: pt.string.isRequired,
-    beskrivendeTekst: pt.string,
+    hovedtekst: PT.string.isRequired,
+    avbryttekst: PT.string.isRequired,
+    fortsetttekst: PT.string.isRequired,
+    beskrivendeTekst: PT.string,
     title: AriaPropType,
     description: AriaPropType,
     closeButton: AriaPropType,
-    isOpen: pt.bool,
-    wicketurl: pt.string.isRequired,
-    wicketcomponent: pt.string.isRequired,
-    discardCallback: pt.string.isRequired,
-    confirmCallback: pt.string.isRequired
+    isOpen: PT.bool,
+    wicketurl: PT.string.isRequired,
+    wicketcomponent: PT.string.isRequired,
+    discardCallback: PT.string.isRequired,
+    confirmCallback: PT.string.isRequired
 };
 
 export default ForkasteEndringer;

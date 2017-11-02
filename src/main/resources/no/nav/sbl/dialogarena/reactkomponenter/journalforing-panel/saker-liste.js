@@ -1,5 +1,6 @@
 /* eslint no-script-url:0 */
 import React from 'react';
+import PT from 'prop-types';
 import { chain, mapValues, partition, flatten } from 'lodash';
 import SakerForTema from './saker-for-tema';
 
@@ -88,9 +89,9 @@ class SakerListe extends React.Component {
 }
 
 SakerListe.propTypes = {
-    temagruppe: React.PropTypes.string.isRequired,
-    temagruppeTemaMapping: React.PropTypes.object.isRequired,
-    velgSak: React.PropTypes.func.isRequired
+    temagruppe: PT.string.isRequired,
+    temagruppeTemaMapping: PT.object.isRequired,
+    velgSak: PT.func.isRequired
 };
 
 export default SakerListe;

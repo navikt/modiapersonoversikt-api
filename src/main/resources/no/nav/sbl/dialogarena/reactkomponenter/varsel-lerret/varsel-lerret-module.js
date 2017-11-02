@@ -1,4 +1,5 @@
-import React, { PropTypes as PT } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import AsyncLoader from './../utils/async-loader';
 import VarselStore from './varsel-store';
 import FilterHeader from './filter-header';

@@ -3,6 +3,7 @@
 import React from 'react';
 import Q from 'q';
 import TestUtils from 'react-addons-test-utils';
+import ReactDOM from 'react-dom';
 
 export function createTestPromise() {
     const deferred = Q.defer();
@@ -31,7 +32,7 @@ export function render(component) {
     const renderedComponent = TestUtils.renderIntoDocument(component);
     return {
         component: renderedComponent,
-        dom: React.findDOMNode(renderedComponent) // eslint-disable-line react/no-deprecated
+        dom: ReactDOM.findDOMNode(renderedComponent) // eslint-disable-line react/no-deprecated
     };
 }
 

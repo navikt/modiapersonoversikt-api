@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 class SakerForTema extends React.Component {
     constructor(props) {
@@ -62,10 +63,10 @@ class SakerForTema extends React.Component {
 }
 
 SakerForTema.propTypes = {
-    erPesysSak: React.PropTypes.bool.isRequired,
-    erEkspandert: React.PropTypes.bool.isRequired,
-    tema: React.PropTypes.string.isRequired,
-    saker: React.PropTypes.array.isRequired
+    erPesysSak: PT.bool.isRequired,
+    erEkspandert: PT.bool.isRequired,
+    tema: PT.string.isRequired,
+    saker: PT.array.isRequired
 };
 
 export default SakerForTema;

@@ -1,12 +1,12 @@
-import { PropTypes as pt } from 'react';
+import PT from 'prop-types';
 
-export default pt.shape({
-    retning: pt.string.isRequired,
-    avsender: pt.string.isRequired,
-    mottaker: pt.string.isRequired,
-    navn: pt.string,
-    hoveddokument: pt.object.isRequired,
-    vedlegg: pt.array,
-    temakodeVisning: pt.string,
-    feilWrapper: pt.object.isRequired
+export default PT.shape({
+    retning: PT.string.isRequired,
+    avsender: PT.string.isRequired,
+    mottaker: PT.string.isRequired,
+    navn: PT.string,
+    hoveddokument: PT.object.isRequired,
+    vedlegg: PT.array,
+    temakodeVisning: PT.string,
+    feilWrapper: PT.object.isRequired
 });

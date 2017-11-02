@@ -1,5 +1,6 @@
 /* eslint "react/jsx-no-bind": 1 */
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import ReactDOM from 'react-dom';
 import Modal from './../modal/modal-module';
 import { autobind } from './../utils/utils-module';
@@ -142,14 +143,14 @@ OppgiBegrunnelse.defaultProps = {
 };
 
 OppgiBegrunnelse.propTypes = {
-    title: pt.string.isRequired,
-    wicketurl: pt.string.isRequired,
-    wicketcomponent: pt.string.isRequired,
-    lagretekst: pt.string.isRequired,
-    avbryttekst: pt.string.isRequired,
-    discardCallback: pt.string.isRequired,
-    confirmCallback: pt.string.isRequired,
-    isOpen: pt.bool
+    title: PT.string.isRequired,
+    wicketurl: PT.string.isRequired,
+    wicketcomponent: PT.string.isRequired,
+    lagretekst: PT.string.isRequired,
+    avbryttekst: PT.string.isRequired,
+    discardCallback: PT.string.isRequired,
+    confirmCallback: PT.string.isRequired,
+    isOpen: PT.bool
 };
 
 export default OppgiBegrunnelse;

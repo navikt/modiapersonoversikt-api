@@ -1,5 +1,6 @@
 /* eslint "react/jsx-no-bind": 1 */
-import React, { PropTypes as PT } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import SakstemaListe from './sakstema-liste';
 import { connect } from 'react-redux';
 import VisningDokumentliste from './dokumentliste/visning-dokumentliste';

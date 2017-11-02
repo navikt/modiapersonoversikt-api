@@ -1,5 +1,6 @@
 /* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
+import PT from 'prop-types';
 import Utils from './../utils/utils-module';
 import ScrollPortal from './../utils/scroll-portal';
 import LocaleSelect from './locale-select';
@@ -42,9 +43,9 @@ class TekstForhandsvisning extends React.Component {
 }
 
 TekstForhandsvisning.propTypes = {
-    tekst: React.PropTypes.object.isRequired,
-    locale: React.PropTypes.string.isRequired,
-    store: React.PropTypes.object.isRequired
+    tekst: PT.object.isRequired,
+    locale: PT.string.isRequired,
+    store: PT.object.isRequired
 };
 
 export default TekstForhandsvisning;

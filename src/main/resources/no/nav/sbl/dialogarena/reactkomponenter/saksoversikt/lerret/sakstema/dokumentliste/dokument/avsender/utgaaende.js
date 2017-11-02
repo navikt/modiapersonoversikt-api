@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 const Utgaaende = ({ mottaker, mottakerNavn }) => {
@@ -19,8 +20,8 @@ const Utgaaende = ({ mottaker, mottakerNavn }) => {
 };
 
 Utgaaende.propTypes = {
-    mottaker: pt.string.isRequired,
-    mottakerNavn: pt.string
+    mottaker: PT.string.isRequired,
+    mottakerNavn: PT.string
 };
 
 export default Utgaaende;

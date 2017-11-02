@@ -1,4 +1,6 @@
 import React from 'react';
+import PT from 'prop-types';
+
 
 class AdvarselBoks extends React.Component {
     render() {
@@ -11,7 +13,7 @@ class AdvarselBoks extends React.Component {
 }
 
 AdvarselBoks.propTypes = {
-    tekst: React.PropTypes.string.isRequired
+    tekst: PT.string.isRequired
 };
 
 export default AdvarselBoks;

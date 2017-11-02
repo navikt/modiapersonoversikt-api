@@ -1,4 +1,6 @@
 const React = require('react');
+import PT from 'prop-types';
+
 
 const spraak = {
     nb_NO: 'Norsk (Bokmål)',
@@ -16,9 +18,9 @@ const spraak = {
 /* eslint "react/prefer-es6-class": 1 */
 const LocaleSelect = React.createClass({
     propTypes: {
-        tekst: React.PropTypes.object.isRequired,
-        store: React.PropTypes.object.isRequired,
-        locale: React.PropTypes.string
+        tekst: PT.object.isRequired,
+        store: PT.object.isRequired,
+        locale: PT.string
     },
     onChange: function onChange(event) {
         this.props.store.setLocale(event.target.value);

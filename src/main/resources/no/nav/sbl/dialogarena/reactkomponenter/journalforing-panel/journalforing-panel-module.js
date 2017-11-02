@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import VelgSak from './velg-sak';
 import JournalforSak from './journalfor-sak';
 import LukkKnapp from './lukk-knapp';
@@ -87,10 +88,10 @@ class JournalforingsPanel extends React.Component {
 }
 
 JournalforingsPanel.propTypes = {
-    temagruppeTemaMapping: React.PropTypes.object.isRequired,
-    fnr: React.PropTypes.string.isRequired,
-    wicketurl: React.PropTypes.string.isRequired,
-    wicketcomponent: React.PropTypes.string.isRequired
+    temagruppeTemaMapping: PT.object.isRequired,
+    fnr: PT.string.isRequired,
+    wicketurl: PT.string.isRequired,
+    wicketcomponent: PT.string.isRequired
 };
 
 export default JournalforingsPanel;
