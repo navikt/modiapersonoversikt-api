@@ -17,6 +17,13 @@ class Listevisning extends React.Component {
         this.props.store.traadChanged(this.props.traad, ReactDOM.findDOMNode(this).parentNode);
     }
 
+    shouldComponentUpdate({ valgtTraad }) {
+        const dagensState = erValgtTekst(this.props.traad, this.props.valgtTraad);
+        const nesteState = erValgtTekst(this.props.traad, valgtTraad);
+
+        return dagensState !== nesteState;
+    }
+
     render() {
         const { traad, valgtTraad } = this.props;
         const { antallMeldingerIOpprinneligTraad, statusKlasse } = traad;
@@ -37,8 +44,8 @@ class Listevisning extends React.Component {
         );
 
         return (
-            <div className="sok-element" onClick={this.tekstChangedProxy}>
-                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
+            <div className="sok-element">
+                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} onClick={this.tekstChangedProxy} />
                 <label htmlFor={`melding ${traad.key}`} className={cls}>
                     <div className={`melding-detaljer ${statusKlasse}`}>
                         <div className={`statusIkon ${statusKlasse}`} aria-hidden="true"></div>
