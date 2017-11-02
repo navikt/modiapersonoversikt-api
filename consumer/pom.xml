@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>13.4.0-SNAPSHOT</version>
+        <version>13.4.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -32,6 +32,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-pip</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!--Personsok-->
