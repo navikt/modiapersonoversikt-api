@@ -23,17 +23,14 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -43,11 +40,14 @@ class OppgaveControllerTest {
     public static final String OPPGAVE_ID = "OPPGAVE_ID";
     public static final String BRUKERS_FODSELSNUMMER = "10108000398";
     public static final String SAKSBEHANDLERS_ID = "SAKSBEHANDLER";
-    FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest;
+    public static final String UNDERKATEGORI_KODE_FOR_TEMAGRUPPE_ARBEID = "ARBD_KNA";
+    public static final String TEMAGRUPPE_ARBEID = "ARBD";
+
     private OppgaveController oppgaveController;
     private OppgavebehandlingV3 oppgaveBehandlingMock;
     private OppgaveV3 oppgaveWS;
     private Ruting ruting;
+    private FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest;
 
     @BeforeAll
     static void beforeAll() {
@@ -73,9 +73,7 @@ class OppgaveControllerTest {
         when(ruting.finnAnsvarligEnhetForOppgavetype(any())).thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(new ArrayList<>()));
 
         ferdigstillHenvendelseRestRequest = new FerdigstillHenvendelseRestRequest();
-        ferdigstillHenvendelseRestRequest.temagruppe = "ARBD";
-
-        FeatureToggle.enableDelviseSvarFunksjonalitet();
+        ferdigstillHenvendelseRestRequest.temagruppe = TEMAGRUPPE_ARBEID;
 
         OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWS, saksbehandlerInnstillingerService, ansattWS, ruting);
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
@@ -140,24 +138,21 @@ class OppgaveControllerTest {
     }
 
     @Test
-    @DisplayName("Legger tilbake oppgave, Test med gyldig temagruppe")
-    void sjekkGyldigTemagruppe(){
-        Response gyldigResponse = oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
-        assertEquals(gyldigResponse.getStatus(), Response.Status.OK.getStatusCode());
-    }
+    @DisplayName("Lagrer oppgave  til GSAK med ny temagruppe")
+    void lagrerMedNyTemagruppe() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
+        ArgumentCaptor<WSLagreOppgaveRequest> argumentCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
 
+        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
+        verify(oppgaveBehandlingMock).lagreOppgave(argumentCaptor.capture());
+
+        WSEndreOppgave oppgave = argumentCaptor.getValue().getEndreOppgave();
+        assertEquals(UNDERKATEGORI_KODE_FOR_TEMAGRUPPE_ARBEID, oppgave.getUnderkategoriKode());
+    }
 
     @Test
     @DisplayName("Legger tilbake oppgave, Test med ugyldig temagruppe")
     void sjekkUgyldigTemagruppe() throws Exception{
         ferdigstillHenvendelseRestRequest.temagruppe = "ARBDD";
-        try {
-            oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
-            fail("Ugyldig temagruppe");
-        } catch (Exception e) {
-            assertThat(e, IsInstanceOf.instanceOf(IllegalArgumentException.class));
-            assertEquals(e.getMessage(), "Ugyldig temagruppe");
-        }
+        assertThrows(IllegalArgumentException.class, ()-> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
     }
-
 }
