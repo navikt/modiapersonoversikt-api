@@ -5,7 +5,7 @@ import PT from 'prop-types';
 import Utils from './../utils/utils-module';
 
 class TekstListeKomponent extends React.Component {
-    _onClick(e) {
+    _onClick() {
         const DOMNode = ReactDOM.findDOMNode(this);
         this.props.store.tekstChanged(this.props.tekst, DOMNode.parentNode);
         DOMNode.querySelector('input').focus();
