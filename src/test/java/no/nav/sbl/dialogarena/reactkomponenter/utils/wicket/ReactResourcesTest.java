@@ -22,7 +22,9 @@ public class ReactResourcesTest {
             "build/saksoversikt-module.less",
             "build/saksoversikt-module.less",
             "build/delvis-svar.less",
-            "build/alertstripe.less"
+            "build/alertstripe.less",
+            "build/meldingsdetaljer.less",
+            "build/nav-core-variabler.less"
     );
 
     @Test

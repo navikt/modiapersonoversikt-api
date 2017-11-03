@@ -8,6 +8,7 @@ var babelify = require('babelify');
 var notify = require('gulp-notify');
 var eslint = require('gulp-eslint');
 var chalk = require('chalk');
+var fileFilter = require('browserify-file-filter');
 
 var config = require('./buildConfig.json');
 
@@ -24,6 +25,7 @@ function bundleJS(isDev) {
     props.fullPaths = isDev;
 
     bundler = isDev ? watchify(browserify(props)) : browserify(props);
+    bundler.plugin(fileFilter, { p: '\\.(?:css|less|scss|sass)$' });
     bundler.transform(babelify);
 
     function rebundle() {

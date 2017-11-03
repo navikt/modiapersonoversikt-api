@@ -1,6 +1,5 @@
 /* eslint-env mocha */
 /* eslint no-undef:0 */
-import React from 'react';
 import Q from 'q';
 import TestUtils from 'react-addons-test-utils';
 import ReactDOM from 'react-dom';

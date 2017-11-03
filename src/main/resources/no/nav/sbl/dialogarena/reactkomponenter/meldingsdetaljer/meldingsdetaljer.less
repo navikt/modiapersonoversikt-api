@@ -1,0 +1,264 @@
+/*
+MODIA SPESIFIK STYLING
+*/
+
+.reactMeldingsDetaljer {
+
+  margin: 2em 0;
+
+  .ekspanderbartPanel {
+    box-shadow: 0 0 1px @navGra20;
+
+    &.kategoripanel {
+      margin-top: 1em;
+    }
+
+    &.kanaloverskrift {
+      padding: 0;
+    }
+
+    &__hode {
+      background-color: @modiasvart;
+      color: @navGra20;
+      border-top: 1px solid @navGra20;
+      border-radius: 0;
+      padding: 0.5em 1em;
+
+      .typo-undertittel {
+        width: 95%;
+      }
+
+      .tittelwrapper {
+        margin-top: 2px;
+        margin-bottom: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        h3{
+          text-transform: none;
+        }
+        .temagruppeoverskrift{
+          margin-right: 10px;
+        }
+      }
+
+      .metadata {
+        text-align: left;
+        color: @navGra60;
+        .meldingsDato {
+        }
+        .meldingsForfatter {
+        }
+      }
+
+      &:hover,
+      &--hover {
+        box-shadow: inset 0 0 1px @navGra40 !important;
+        filter: brightness(97%);
+        & .ekspanderbartPanel__heading {
+          text-decoration: none;
+        }
+      }
+
+      &:focus{
+        box-shadow: none;
+      }
+    }
+
+    &__innhold {
+      padding: 0;
+      border-radius: 0;
+
+      .ekspanderbartPanel__hode {
+        background-color: white;
+      }
+
+      &__melding{
+        padding: 0em 1.5em 0.5em;
+        text-align: left;
+        overflow-wrap: break-word;
+      }
+    }
+  }
+}
+
+/*
+IMPORT NAV-FRONTEND-CHEVRON-MIXINS
+*/
+
+
+.chevron-mixin(@size: 20) {
+  display: inline-block;
+  flex-shrink: 0;
+  height: 2px;
+  line-height: 2px;
+  width: ~'@{size}px';
+  position: relative;
+  text-align: center;
+  transition: 200ms transform;
+  vertical-align: middle;
+
+  &:before,
+  &:after {
+    transition: 200ms transform;
+    border-radius: 10px;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    background: currentColor;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50%;
+    background: currentColor;
+  }
+}
+
+.chevron-orientasjon-mixin(@orientasjon, @size: 20) when (@orientasjon = opp) {
+  @offset: floor(@size / 16) + 1;
+
+  &:before {
+    transform: translateX(~'@{offset}px') rotate(-45deg);
+  }
+
+  &:after {
+    transform: translateX(~'-@{offset}px') rotate(45deg);
+  }
+}
+
+.chevron-orientasjon-mixin(@orientasjon, @size: 20) when (@orientasjon = ned) {
+  @offset: floor(@size / 16) + 1;
+
+  &:before {
+    transform: translateX(~'@{offset}px') rotate(45deg);
+  }
+
+  &:after {
+    transform: translateX(~'-@{offset}px') rotate(-45deg);
+  }
+}
+
+.chevron-orientasjon-mixin(@orientasjon, @size: 20) when (@orientasjon = hoyre) {
+  .chevron-orientasjon-mixin(ned, @size);
+  transform: rotate(-90deg);
+}
+
+.chevron-orientasjon-mixin(@orientasjon, @size: 20) when (@orientasjon = venstre) {
+  .chevron-orientasjon-mixin(opp, @size);
+  transform: rotate(-90deg);
+}
+
+/*
+IMPORT NAV-FRONTEND-EKSPANDERBARTPANEL-STYLE
+*/
+
+.ekspanderbartPanel {
+  &__hode {
+    background: none;
+    border: 0px;
+    width: 100%;
+
+    .panel-mixin();
+    .panel-focushover-mixin();
+
+    color: @navMorkGra;
+    margin-bottom: 0px;
+    text-decoration: none;
+
+    &:hover,
+    &--hover {
+      & .ekspanderbartPanel__heading {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__flex-wrapper { // Safari ~9 bug, button/fieldset kan ikke ha flex
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__innhold {
+    .panel-mixin();
+    padding-top: 0.5rem;
+  }
+
+  &--lukket {
+    .ekspanderbartPanel__indikator {
+      .chevron-mixin();
+      .chevron-orientasjon-mixin(ned);
+    }
+  }
+
+  &--apen {
+
+    .ekspanderbartPanel__hode {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .ekspanderbartPanel__innhold {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    .ekspanderbartPanel__hode:hover:not(:focus),
+    .ekspanderbartPanel__hode--hover:not(.ekspanderbartPanel__hode--focus) {
+      box-shadow: none;
+    }
+
+    >.ekspanderbartPanel__hode .ekspanderbartPanel__indikator {
+      .chevron-mixin();
+      .chevron-orientasjon-mixin(opp);
+    }
+  }
+}
+
+/*
+IMPORT NAV-FRONTEND-PANELER-MIXINS
+*/
+
+.panel-mixin() {
+  background-color: @white;
+  display: block;
+  padding: 1rem 1rem 1rem 1rem;
+  border-radius: @border-radius-base;
+}
+
+.panel-focushover-mixin() {
+  position: relative;
+  z-index: 100;
+  cursor: pointer;
+
+  &:hover,
+  &--hover {
+    box-shadow: @grayIcon 0 2px 1px 0;
+    color: @navDypBla;
+  }
+
+  &:focus,
+  &--focus {
+    box-shadow: 0 0 0px 3px @orangeFocus;
+    outline: none;
+  }
+}
+
+.panel-focus-mixin() {
+  &:focus,
+  &--focus {
+    box-shadow: 0 0 0px 3px @orangeFocus;
+    outline: none;
+  }
+}

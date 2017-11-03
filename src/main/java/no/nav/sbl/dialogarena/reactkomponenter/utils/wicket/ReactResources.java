@@ -10,6 +10,7 @@ public class ReactResources {
     public static final FrontendModule REACT_KOMPONENTER = new FrontendModule.With()
             .scripts(new JavaScriptResourceReference(ResourceReference.class, "build/reactkomponenter.js"))
             .less(
+                    new PackageResourceReference(ResourceReference.class, "build/nav-core-variabler.less"),
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
                     new PackageResourceReference(ResourceReference.class, "build/sok-layout.less"),
                     new PackageResourceReference(ResourceReference.class, "build/meldinger-sok.less"),
@@ -20,6 +21,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less"),
                     new PackageResourceReference(ResourceReference.class, "build/alertstripe.less"),
                     new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/delvis-svar.less")
+                    new PackageResourceReference(ResourceReference.class, "build/delvis-svar.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/meldingsdetaljer.less")
             ).done();
 }
