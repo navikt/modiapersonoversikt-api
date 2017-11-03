@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.FinnNAVKontorUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.FinnNAVKontorUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
 import org.apache.commons.lang3.StringUtils;
@@ -25,26 +25,29 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
     private static final Logger logger = LoggerFactory.getLogger(OrganisasjonEnhetV2ServiceImpl.class);
 
     @Inject
-    private OrganisasjonEnhetV2 enhetWS;
+    private OrganisasjonEnhetV2 enhet;
 
     @Override
-    public List<AnsattEnhet> hentAlleEnheter() {
+    public List<AnsattEnhet> hentAlleEnheter(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
         final List<AnsattEnhet> enheter = new ArrayList<>();
 
-        final WSHentFullstendigEnhetListeRequest request = new WSHentFullstendigEnhetListeRequest();
-        final WSHentFullstendigEnhetListeResponse wsHentFullstendigEnhetListeResponse = enhetWS.hentFullstendigEnhetListe(request);
+        final HentFullstendigEnhetListeRequest request = new HentFullstendigEnhetListeRequest();
+        request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        final HentFullstendigEnhetListeResponse HentFullstendigEnhetListeResponse = enhet.hentFullstendigEnhetListe(request);
 
-        enheter.addAll(wsHentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
+        enheter.addAll(HentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
 
         return on(enheter).collect(ENHET_ID_STIGENDE);
     }
 
     @Override
-    public Optional<AnsattEnhet> hentEnhetGittEnhetId(String enhetId) {
-        final WSHentEnhetBolkRequest wsHentEnhetBolkRequest = new WSHentEnhetBolkRequest();
-        wsHentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
-        final WSHentEnhetBolkResponse response;
-        response = enhetWS.hentEnhetBolk(wsHentEnhetBolkRequest);
+    public Optional<AnsattEnhet> hentEnhetGittEnhetId(String enhetId, WSOppgavebehandlerfilter oppgavebehandlerFilter) {
+        final HentEnhetBolkRequest hentEnhetBolkRequest = new HentEnhetBolkRequest();
+        final HentEnhetBolkResponse response;
+
+        hentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
+        hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        response = enhet.hentEnhetBolk(hentEnhetBolkRequest);
         if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
             return of(TIL_ANSATTENHET.apply(response.getEnhetListe().get(0)));
         } else {
@@ -54,15 +57,19 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     @Override
     public Optional<AnsattEnhet> finnNAVKontor(final String geografiskTilknytning, final String diskresjonskode) {
-        final WSFinnNAVKontorRequest wsFinnNAVKontorRequest = new WSFinnNAVKontorRequest();
-        wsFinnNAVKontorRequest.setGeografiskTilknytning(new WSGeografiskeOmraader().withValue(geografiskTilknytning));
+        final FinnNAVKontorRequest FinnNAVKontorRequest = new FinnNAVKontorRequest();
+        Geografi geografi = new Geografi();
+        geografi.setValue(geografiskTilknytning);
+        FinnNAVKontorRequest.setGeografiskTilknytning(geografi);
         if (StringUtils.isNotBlank(diskresjonskode)) {
-            wsFinnNAVKontorRequest.setDiskresjonskode(new WSDiskresjonskoder().withValue(diskresjonskode));
+            Diskresjonskoder diskresjonskoder = new Diskresjonskoder();
+            diskresjonskoder.setValue(diskresjonskode);
+            FinnNAVKontorRequest.setDiskresjonskode(diskresjonskoder);
         }
         try {
-            final WSFinnNAVKontorResponse wsFinnNAVKontorResponse = enhetWS.finnNAVKontor(wsFinnNAVKontorRequest);
-            if (wsFinnNAVKontorResponse != null && wsFinnNAVKontorResponse.getNAVKontor() != null) {
-                return of(TIL_ANSATTENHET.apply(wsFinnNAVKontorResponse.getNAVKontor()));
+            final FinnNAVKontorResponse FinnNAVKontorResponse = enhet.finnNAVKontor(FinnNAVKontorRequest);
+            if (FinnNAVKontorResponse != null && FinnNAVKontorResponse.getNAVKontor() != null) {
+                return of(TIL_ANSATTENHET.apply(FinnNAVKontorResponse.getNAVKontor()));
             } else {
                 return empty();
             }
@@ -75,11 +82,11 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = comparing(o -> o.enhetId);
 
-    private static final Function<WSOrganisasjonsenhet, AnsattEnhet> TIL_ANSATTENHET =
-            wsOrganisasjonsenhet -> new AnsattEnhet(
-                    wsOrganisasjonsenhet.getEnhetId(),
-                    wsOrganisasjonsenhet.getEnhetNavn(),
-                    wsOrganisasjonsenhet.getStatus().value()
+    private static final Function<Organisasjonsenhet, AnsattEnhet> TIL_ANSATTENHET =
+            Organisasjonsenhet -> new AnsattEnhet(
+                    Organisasjonsenhet.getEnhetId(),
+                    Organisasjonsenhet.getEnhetNavn(),
+                    Organisasjonsenhet.getStatus().value()
             );
 
 }

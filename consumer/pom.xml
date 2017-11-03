@@ -189,10 +189,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>varsler</artifactId>
         </dependency>
 
@@ -218,6 +214,13 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-cxf</artifactId>
+        </dependency>
+
+        <!--Virksomhetstjenester-->
+        <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-organisasjonEnhet-v2-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
         </dependency>
 
         <!--Modig-->
