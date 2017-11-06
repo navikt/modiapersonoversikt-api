@@ -13,6 +13,9 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
             <DLElement etikett={tekst.arbeidsgiver} className="halvbredde">
                 {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverNavn)}
             </DLElement>
+            <DLElement etikett={tekst.arbeidskategori} className="halvbredde">
+                {arbeidsforhold.arbeidskategori}
+            </DLElement>
             <DLElement etikett={tekst.kontonummer} className="halvbredde">
                 {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverKontonr)}
             </DLElement>
@@ -35,6 +38,7 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
 ArbeidsforholdKomponent.propTypes = {
     tekst: PT.object.isRequired,
     arbeidsforhold: PT.shape({
+        arbeidskategori: PT.string.isRequired,
         arbeidsgiverNavn: PT.string,
         arbeidsgiverKontonr: PT.string.isRequired,
         inntektsperiode: PT.string.isRequired,
