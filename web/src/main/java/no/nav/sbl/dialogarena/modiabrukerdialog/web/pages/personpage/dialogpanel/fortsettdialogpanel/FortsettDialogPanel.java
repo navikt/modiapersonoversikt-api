@@ -18,7 +18,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -33,7 +32,6 @@ import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static no.nav.metrics.MetricsFactory.createTimer;
@@ -84,8 +82,8 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
-        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(sporsmal, behandlingsId);
-        visTidligereMeldingsdetaljer = new ReactComponentPanel("visTidligereMeldingsdetaljerContainer", "MeldingsDetaljer", lagVisTidligereMeldingsDetaljerProps(traad));
+        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(sporsmal, behandlingsId, traad);
+        visTidligereMeldingsdetaljer = new ReactComponentPanel("visTidligereMeldingsdetaljerContainer", "MeldingsDetaljer", CreateReactProps.lagVisTidligereMeldingsDetaljerProps(traad));
         kvittering = new KvitteringsPanel("kvittering");
 
         leggTilbakeKnapp = lagLeggTilbakeKnapp();
@@ -97,32 +95,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         add(visTidligereMeldingsdetaljer, svarContainer, leggTilbakePanel, leggTilbakeDelvisSvarPanel, kvittering);
     }
 
-    private Map<String, Object> lagVisTidligereMeldingsDetaljerProps(List<Melding> traad) {
-        return new HashMap<String, Object>(){{
-            put("traad", traad.stream().map( ( melding ->
-                    new HashMap<String,Object>() {
-                        {
-                            put("temagruppeNavn", melding.temagruppeNavn);
-                            put("visningsDatoTekst", DateUtils.toString( melding.erDokumentMelding ?
-                                    melding.ferdigstiltDato : melding.opprettetDato));
-                            put("fritekst", melding.fritekst);
-                            put("erDokumentMelding", melding.erDokumentMelding);
-                            put("id", melding.id);
-                            put("statusTekst", melding.statusTekst);
-                            put("navIdent", melding.navIdent);
-                            put("skrevetAv", melding.skrevetAv);
-                            put("fnrBruker", melding.fnrBruker);
-                            put("meldingstype", melding.meldingstype);
-                        }
-                    })).collect(Collectors.toList()));
-        }};
-    }
-
     private AjaxLink<Void> lagLeggTilbakeKnapp() {
         AjaxLink<Void> leggTilbakeKnapp = new AjaxLink<Void>("leggtilbake") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (traadenErEtEnkeltSporsmalFraBruker()) {
+                    visTidligereMeldingsdetaljer.setVisibilityAllowed(true);
                     animertVisningToggle(target, svarContainer);
                     animertVisningToggle(target, leggTilbakePanel);
                     leggTilbakePanel.add(AttributeModifier.replace("aria-expanded", "true"));
@@ -152,9 +130,9 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (kanBesvaresDelvis()) {
-//                    traadContainer.setVisibilityAllowed(false);
+                    visTidligereMeldingsdetaljer.setVisibilityAllowed(false);
                     animertVisningToggle(target, svarContainer);
-                    animertVisningToggle(target, leggTilbakeDelvisSvarPanel);
+                    leggTilbakeDelvisSvarPanel.setVisibilityAllowed(true);
                     leggTilbakeDelvisSvarPanel.add(AttributeModifier.replace("aria-expanded", "true"));
                     target.add(FortsettDialogPanel.this);
                 }
@@ -216,7 +194,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
     @RunOnEvents(LeggTilbakeDelvisSvarPanel.AVBRYT_CALLBACK_ID)
     public void skjulDelvisSvarPanel(AjaxRequestTarget target) {
-//        traadContainer.setVisibilityAllowed(true);
+        visTidligereMeldingsdetaljer.setVisibilityAllowed(true);
         animertVisningToggle(target, svarContainer);
         target.add(this);
     }
@@ -282,9 +260,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 sendHenvendelse(henvendelseVM);
                 send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
                 kvittering.visKvittering(target, getString(henvendelseVM.getKvitteringsTekstKeyBasertPaaBrukerKanSvare("fortsettdialogpanel")),
-//                        visTraadContainer, traadContainer,
-                        svarContainer, leggTilbakePanel);
-
+                        visTidligereMeldingsdetaljer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error(getString("fortsettdialogform.feilmelding.oppgaveferdigstilt"));
                 sendKnapp.setVisibilityAllowed(false);
@@ -293,8 +269,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             } catch (JournalforingFeilet e) {
                 send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
                 kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"),
-//                        visTraadContainer, traadContainer,
-                        svarContainer, leggTilbakePanel);
+                        visTidligereMeldingsdetaljer, svarContainer, leggTilbakePanel);
             } catch (Exception e) {
                 error(getString("dialogpanel.feilmelding.send.henvendelse"));
                 target.add(feedbackPanel);

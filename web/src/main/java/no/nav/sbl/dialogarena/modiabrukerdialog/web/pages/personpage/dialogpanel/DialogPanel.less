@@ -13,7 +13,7 @@
 
 .dialogpanel {
   text-align: center;
-  padding-bottom: 2em;
+  padding: 0 @sideMargin;
   .start-ny-dialog-lenke-container, .start-ny-dialog-lenke-container a {
     margin-top: 150px;
   }
@@ -62,7 +62,6 @@
     }
   }
   .oppgavetilknytning {
-    margin: 0 @sideMargin;
     max-width: 420px;
     section {
       margin: 8px 0;
@@ -148,7 +147,6 @@
     font-weight: bold;
   }
   .fritekst {
-    margin: 0 @sideMargin;
     text-align: left;
     line-height: 1.4em;
     word-wrap: break-word;
@@ -207,7 +205,6 @@
     position: relative;
     background-color: @modiasvart;
     padding: 7px 0;
-    margin: 0 @sideMargin;
 
     .dialogpanel-header {
       margin: 0;
@@ -233,7 +230,6 @@
     }
   }
   .tekstfelt {
-    margin: 0 @sideMargin;
     textarea:focus {
       .ontop-mixin(1);
     }
@@ -243,7 +239,6 @@
     margin-bottom: 10rem;
   }
   .temagruppevelger-wrapper, .nyTemagruppeSkjuler {
-    margin: 0 @sideMargin;
     position: relative;
     .temagruppevelger {
       width: 100%;
@@ -330,10 +325,6 @@
     cursor: auto;
   }
 
-  form > .feedback {
-    margin: 0 @sideMargin;
-  }
-
   .feedbacklabel {
     &.kanal-feedback {
       float: left;
@@ -365,10 +356,11 @@
 .leggtilbake {
   position: relative;
   width: 100%;
-  padding: @sideMargin;
   border-top: 1px solid black;
   text-align: center;
   background-color: @modiasvart;
+  padding: @sideMargin;
+  margin: @sideMargin 0;
   > div.robust-strek {
     padding-bottom: 1px;
     margin-bottom: 22px !important;
@@ -465,7 +457,7 @@
   }
   .aarsak {
     margin: 0 auto;
-    width: 50%;
+    width: 85%;
     text-align: left;
     input[type=radio] + label {
       margin-top: 7px;
@@ -522,7 +514,7 @@
 }
 
 .journalforingSporsmal {
-  margin: 0 30px 20px 30px;
+  margin: 0 0 20px 0;
   .sak-info-link:focus {
     outline: none;
     box-shadow: none; // rendringfeil i firefox og IE uten denne
