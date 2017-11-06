@@ -140,9 +140,19 @@ public class InnboksVM implements Serializable {
     }
 
     private static final Function<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = (meldinger) -> {
-        List<Melding> meldingerITraad = meldinger.stream().sorted(Melding.NYESTE_FORST).collect(toList());
-        return meldingerITraad.stream()
-                .map(melding -> new MeldingVM(melding, meldingerITraad.size()))
+        List<Melding> delviseSvar = meldinger.stream().filter(Melding::erDelvisSvar).collect(toList());
+        if (delviseSvar.size() > 0) {
+            meldinger.stream()
+                    .filter(Melding::erSvarSkriftlig)
+                    .sorted(Melding.NYESTE_FORST)
+                    .findFirst()
+                    .map(melding -> melding.withDelviseSvar(delviseSvar));
+        }
+
+        return meldinger.stream()
+                .filter(melding -> !melding.erDelvisSvar())
+                .sorted(Melding.NYESTE_FORST)
+                .map(melding -> new MeldingVM(melding, meldinger.size()))
                 .collect(toList());
     };
 

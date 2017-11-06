@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -138,7 +139,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         String fnr = "13245679810";
         Melding melding = createStandardMelding();
         melding.meldingstype = SAMTALEREFERAT_OPPMOTE;
-        melding.navIdent = "ident";
+        melding.withSkrevetAv(new Person("", "", "ident"));
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))

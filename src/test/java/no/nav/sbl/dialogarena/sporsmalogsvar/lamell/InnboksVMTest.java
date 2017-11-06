@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +19,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
@@ -156,6 +161,26 @@ public class InnboksVMTest {
         innboksVM.oppdaterMeldinger();
 
         assertThat(innboksVM.getTraader().size(), is(1));
+    }
+
+    @Test
+    public void skalKombinereSkrevetAvForDelviseSvar() {
+        Person saksbehandler1 = new Person("Sissel", "Saksbehandler", "ident1");
+        Person saksbehandler2 = new Person("Sigurd", "Saksbehandler", "ident2");
+        when(henvendelseBehandlingService.hentMeldinger(anyString()))
+                .thenReturn(asList(
+                        createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1)
+                                .withSkrevetAv(new Person("Bjarne", "Bruker", "")),
+                        createMelding(ID_2, Meldingstype.DELVIS_SVAR_SKRIFTLIG, DATE_3, TEMAGRUPPE_1, ID_1)
+                                .withSkrevetAv(saksbehandler1),
+                        createMelding(ID_3, Meldingstype.SVAR_SKRIFTLIG, DATE_2, TEMAGRUPPE_2, ID_1)
+                                .withSkrevetAv(saksbehandler2)));
+
+        innboksVM.oppdaterMeldinger();
+
+        List<Person> skrevetAv = innboksVM.getNyesteMeldingINyesteTraad().melding.getSkrevetAv();
+        assertThat(skrevetAv.stream().map(person -> person.navn)
+                .collect(Collectors.toList()), Matchers.contains(saksbehandler2.navn, saksbehandler1.navn));
     }
 
     public static List<Melding> createMeldingerIToTraader() {

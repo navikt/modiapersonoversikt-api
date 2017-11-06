@@ -15,6 +15,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -68,19 +69,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     @Override
     public List<Melding> hentMeldinger(String fnr, String valgtEnhet) {
-        List<String> typer = asList(
-                SPORSMAL_SKRIFTLIG.name(),
-                SVAR_SKRIFTLIG.name(),
-                SVAR_OPPMOTE.name(),
-                SVAR_TELEFON.name(),
-                REFERAT_OPPMOTE.name(),
-                REFERAT_TELEFON.name(),
-                SPORSMAL_MODIA_UTGAAENDE.name(),
-                SVAR_SBL_INNGAAENDE.name(),
-                DOKUMENT_VARSEL.name(),
-                OPPGAVE_VARSEL.name()
-                );
-
+        List<String> typer = getAkutelleHenvendelseTyper();
 
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
 
@@ -98,6 +87,27 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect();
+    }
+
+    private List<String> getAkutelleHenvendelseTyper() {
+        List<String> typer = new ArrayList<>(asList(
+                SPORSMAL_SKRIFTLIG.name(),
+                SVAR_SKRIFTLIG.name(),
+                SVAR_OPPMOTE.name(),
+                SVAR_TELEFON.name(),
+                REFERAT_OPPMOTE.name(),
+                REFERAT_TELEFON.name(),
+                SPORSMAL_MODIA_UTGAAENDE.name(),
+                SVAR_SBL_INNGAAENDE.name(),
+                DOKUMENT_VARSEL.name(),
+                OPPGAVE_VARSEL.name()
+        ));
+
+        if (FeatureToggle.visDelviseSvarFunksjonalitet()) {
+            typer.add(DELVIS_SVAR_SKRIFTLIG.name());
+        }
+
+        return typer;
     }
 
     @Override
