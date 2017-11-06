@@ -17,6 +17,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <oidc.security.version>2017.11.01.15.15</oidc.security.version>
         <modig.security.version>3.0.4</modig.security.version>
         <wicket.version>6.20.0</wicket.version>
         <spring.version>4.1.6.RELEASE</spring.version>
@@ -26,7 +27,7 @@
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <kjerneinfo.versjon>5.1.4</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.0-oidc-SNAPSHOT</kjerneinfo.versjon>
         <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.24</modig.security.version>
@@ -35,7 +36,7 @@
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
         <modiabrukerdialog-api.version>9.0.0-oidc-SNAPSHOT</modiabrukerdialog-api.version>
-        <reactkomponenter.version>2.10.1-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.10.2-SNAPSHOT</reactkomponenter.version>
         <modia-felleskomponenter.version>4.0-oidc-SNAPSHOT</modia-felleskomponenter.version>
         <nav-metrics.version>2017.08.30.10.22</nav-metrics.version>
         <jackson.version>2.5.4</jackson.version>
@@ -176,15 +177,21 @@
 
         <!--Modig-->
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>${modig.security.version}</version>
-            <scope>provided</scope>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-authorization</artifactId>
-            <version>${modig.security.version}</version>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security-authorization</artifactId>
+            <version>${oidc.security.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -397,6 +404,12 @@
             <version>1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>2.4.0-b34</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -487,13 +500,7 @@
             <version>1.3.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>${modig.security.version}</version>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
@@ -13,8 +13,8 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 
