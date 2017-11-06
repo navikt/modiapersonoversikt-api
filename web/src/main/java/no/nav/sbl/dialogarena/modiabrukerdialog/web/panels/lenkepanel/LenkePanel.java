@@ -14,9 +14,9 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
-import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.modia.security.WicketAutorizationUtils.accessRestriction;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 

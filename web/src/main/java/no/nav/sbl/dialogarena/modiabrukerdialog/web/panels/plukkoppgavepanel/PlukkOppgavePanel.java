@@ -31,9 +31,9 @@ import javax.inject.Inject;
 import java.io.Serializable;
 
 import static no.nav.metrics.MetricsFactory.createTimer;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
-import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.modia.security.WicketAutorizationUtils.accessRestriction;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
 import static org.apache.wicket.ajax.attributes.AjaxRequestAttributes.EventPropagation;

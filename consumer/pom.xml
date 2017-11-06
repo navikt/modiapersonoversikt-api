@@ -21,7 +21,12 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
         <!--Interne-->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -215,20 +220,6 @@
         </dependency>
 
         <!--Modig-->
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-ws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>

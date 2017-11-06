@@ -5,7 +5,7 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -14,9 +14,9 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
-import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {

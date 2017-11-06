@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
@@ -11,12 +12,11 @@ import no.nav.modig.modia.lamell.ModalErrorPanel;
 import no.nav.modig.modia.liste.EkspanderingsListe;
 import no.nav.modig.modia.liste.Liste;
 import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
+import no.nav.modig.modia.security.BehaviorPolicyAuthorizationStrategy;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
 import no.nav.modig.modia.token.JqueryTokenValueChangeBehavior;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.security.tilgangskontroll.wicket.BehaviorPolicyAuthorizationStrategy;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;

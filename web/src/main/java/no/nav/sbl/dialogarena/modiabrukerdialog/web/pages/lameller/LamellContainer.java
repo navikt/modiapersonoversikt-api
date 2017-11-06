@@ -8,7 +8,7 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.*;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;

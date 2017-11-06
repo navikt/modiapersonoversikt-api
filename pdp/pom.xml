@@ -18,12 +18,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-authorization</artifactId>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security-authorization</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.PropertyResolver;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;

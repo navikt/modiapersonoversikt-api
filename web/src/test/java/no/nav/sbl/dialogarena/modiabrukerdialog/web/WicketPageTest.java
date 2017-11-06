@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import org.junit.Before;

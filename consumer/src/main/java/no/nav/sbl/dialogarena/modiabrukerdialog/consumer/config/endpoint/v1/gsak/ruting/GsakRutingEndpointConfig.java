@@ -4,7 +4,6 @@ import no.nav.modig.modia.ping.FailedPingResult;
 import no.nav.modig.modia.ping.OkPingResult;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSBrukersok;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForSakRequest;
@@ -64,7 +63,7 @@ public class GsakRutingEndpointConfig {
         return new CXFClient<>(Ruting.class)
                 .address(System.getProperty("gsak.ruting.v1.url"))
                 .wsdl("classpath:ruting/no/nav/virksomhet/tjenester/ruting/ruting.wsdl")
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
+                .configureStsForSystemUserInFSS()
                 .build();
     }
 }

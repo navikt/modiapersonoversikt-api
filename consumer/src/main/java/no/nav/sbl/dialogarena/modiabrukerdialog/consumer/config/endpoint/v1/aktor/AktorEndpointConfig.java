@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.akt
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
@@ -27,7 +26,7 @@ public class AktorEndpointConfig {
                 .timeout(15000, 15000)
                 .address(aktoerUrl)
                 .wsdl("classpath:Aktoer.wsdl")
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
+                .configureStsForSystemUserInFSS()
                 .withHandler(new MDCOutHandler())
                 .build();
     }
