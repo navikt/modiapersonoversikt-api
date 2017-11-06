@@ -14,7 +14,8 @@
     <version>9.0.0-oidc-SNAPSHOT</version>
 
     <properties>
-        <spring.version>3.2.9.RELEASE</spring.version>
+        <oidc.security.version>2017.10.30.12.59</oidc.security.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
         <jackson.version>2.5.4</jackson.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <modig.security.version>1.0.24</modig.security.version>
@@ -22,6 +23,18 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -36,11 +49,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>3.0.4</version>
-        </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>

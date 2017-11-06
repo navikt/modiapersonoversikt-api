@@ -3,7 +3,7 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 public class RestUtils {
 
