@@ -6,7 +6,7 @@ import Periode from './periode';
 
 export const sorterEtterIdDato = perioder => (
     perioder.sort((a, b) => (
-        konverterTilMomentDato(b.fraOgMed).diff(konverterTilMomentDato(a.fraOgMed))
+        konverterTilMomentDato(a.fraOgMed).diff(konverterTilMomentDato(b.fraOgMed))
     ))
 );
 

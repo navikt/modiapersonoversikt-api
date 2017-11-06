@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 
 import PleiepengerRettenPanel from './components/pleiepengeretten/pleiepengeretten-panel';
-import ArbeidsituasjonPanel from './components/arbeidsituasjon/arbeidssituasjon-panel';
+import ArbeidssituasjonPanel from './components/arbeidsituasjon/arbeidssituasjon-panel';
 import UtbetalingerPanel from './components/utbetalinger/utbetalinger-panel';
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -25,7 +25,7 @@ class PleiepengerPanel extends Component {
                     fomDato={props.FOMDato}
                     tomDato={props.TOMDato}
                 />
-                <ArbeidsituasjonPanel tekst={props.tekst.arbeidsforhold} arbeidsforhold={props.arbeidsforhold} />
+                <ArbeidssituasjonPanel tekst={props.tekst.arbeidsforhold} arbeidsforhold={props.arbeidsforhold} />
                 <UtbetalingerPanel tekst={props.tekst.utbetalinger} perioder={props.perioder} />
             </div>
         );

@@ -20,7 +20,7 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
     const fraOgMed = formaterJavaDate(periode.fraOgMed);
     return (
         <section className="periode">
-            <h2>{tekst.periode} { periodeNummer } {fraOgMed} </h2>
+            <h2>{tekst.periode} { periodeNummer } – {fraOgMed} </h2>
             <div className="periode-innhold">
                 <div className="periodeinfo">
                     <dl className="pleiepenger-detaljer">
