@@ -6,12 +6,11 @@ import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.apache.commons.lang3.text.WordUtils.capitalize;
 
 public class Person implements Serializable {
-    public final String fornavn, etternavn, ident, navn;
+    public final String fornavn, etternavn, navn;
 
-    public Person(String fornavn, String etternavn, String ident) {
+    public Person(String fornavn, String etternavn) {
         this.fornavn = namifyString(fornavn);
         this.etternavn = namifyString(etternavn);
-        this.ident = ident;
         this.navn = String.format("%s %s", this.fornavn, this.etternavn);
     }
 

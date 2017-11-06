@@ -2,7 +2,7 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.joda.time.DateTime;
@@ -53,7 +53,7 @@ public class MeldingUtilsTest {
     public void init() {
         when(propertyResolver.getProperty(anyString(), anyString())).thenReturn(mockVerdiFraPropertyResolver);
         when(propertyResolver.getProperty(anyString())).thenReturn(mockVerdiFraPropertyResolver);
-        when(ldapService.hentSaksbehandler(NAVIDENT)).thenReturn(new Person("Jan", "Saksbehandler", NAVIDENT));
+        when(ldapService.hentSaksbehandler(NAVIDENT)).thenReturn(new Saksbehandler("Jan", "Saksbehandler", "ident"));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
-        assertThat(melding.fritekst, is(equalTo(FRITEKST)));
+        assertThat(melding.getFritekst(), is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.erDokumentMelding, is(false));
     }
@@ -139,7 +139,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
-        assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
+        assertThat(melding.getFritekst(), is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.erDokumentMelding, is(false));
     }
@@ -159,10 +159,10 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.eksternAktor, is(NAVIDENT));
-        assertThat(melding.fritekst, is(equalTo(FRITEKST)));
+        assertThat(melding.getFritekst(), is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
-        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
+        assertThat(melding.navIdent, is(NAVIDENT));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -180,10 +180,10 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.eksternAktor, is(NAVIDENT));
-        assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
+        assertThat(melding.getFritekst(), is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
-        assertThat(melding.getForsteForfatterAvMelding().ident, is(nullValue()));
+        assertThat(melding.navIdent, is(nullValue()));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -202,10 +202,10 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.eksternAktor, is(NAVIDENT));
-        assertThat(melding.fritekst, is(equalTo(FRITEKST)));
+        assertThat(melding.getFritekst(), is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
-        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
+        assertThat(melding.navIdent, is(NAVIDENT));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -222,10 +222,10 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
         assertThat(melding.eksternAktor, is(NAVIDENT));
-        assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
+        assertThat(melding.getFritekst(), is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
-        assertThat(melding.getForsteForfatterAvMelding().ident, is(nullValue()));
+        assertThat(melding.navIdent, is(nullValue()));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -240,7 +240,7 @@ public class MeldingUtilsTest {
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
         assertThat(sporsmal.temagruppe, is(xmlMeldingFraBruker.getTemagruppe()));
-        assertThat(sporsmal.fritekst, is(xmlMeldingFraBruker.getFritekst()));
+        assertThat(sporsmal.getFritekst(), is(xmlMeldingFraBruker.getFritekst()));
         assertThat(sporsmal.erDokumentMelding, is(false));
     }
 
@@ -259,8 +259,8 @@ public class MeldingUtilsTest {
         assertThat(referat.traadId, is(xmlHenvendelse.getBehandlingskjedeId()));
         assertThat(referat.temagruppe, is(xmlMeldingTilBruker.getTemagruppe()));
         assertThat(referat.kanal, is(xmlMeldingTilBruker.getKanal()));
-        assertThat(referat.fritekst, is(xmlMeldingTilBruker.getFritekst()));
-        assertThat(referat.getForsteForfatterAvMelding().ident, is(xmlMeldingTilBruker.getNavident()));
+        assertThat(referat.getFritekst(), is(xmlMeldingTilBruker.getFritekst()));
+        assertThat(referat.navIdent, is(xmlMeldingTilBruker.getNavident()));
         assertThat(referat.erDokumentMelding, is(false));
     }
 
@@ -275,7 +275,7 @@ public class MeldingUtilsTest {
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
         assertThat(sporsmal.temagruppe, is(nullValue()));
-        assertThat(sporsmal.fritekst, is(mockVerdiFraPropertyResolver));
+        assertThat(sporsmal.getFritekst(), is(mockVerdiFraPropertyResolver));
         assertThat(sporsmal.erDokumentMelding, is(false));
     }
 
@@ -295,7 +295,7 @@ public class MeldingUtilsTest {
         assertThat(dokumentVarsel.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(dokumentVarsel.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(dokumentVarsel.statusTekst, is(innsendtVarsel.getDokumenttittel()));
-        assertThat(dokumentVarsel.fritekst, is(innsendtVarsel.getTemanavn()));
+        assertThat(dokumentVarsel.getFritekst(), is(innsendtVarsel.getTemanavn()));
         assertThat(dokumentVarsel.erDokumentMelding, is(true));
         assertThat(dokumentVarsel.temagruppe, is(nullValue()));
 
@@ -335,7 +335,7 @@ public class MeldingUtilsTest {
         assertThat(oppgaveVarsel.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(oppgaveVarsel.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(oppgaveVarsel.statusTekst, is(mockVerdiFraPropertyResolver));
-        assertThat(oppgaveVarsel.fritekst, is(mockVerdiFraPropertyResolver));
+        assertThat(oppgaveVarsel.getFritekst(), is(mockVerdiFraPropertyResolver));
         assertThat(oppgaveVarsel.traadId, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(oppgaveVarsel.erOppgaveMelding, is(true));
         assertThat(oppgaveVarsel.erDokumentMelding, is(false));

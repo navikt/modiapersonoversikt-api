@@ -15,7 +15,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtil
 
 public class Melding implements Serializable {
 
-    public String id, traadId, fnrBruker, oppgaveId, temagruppe, temagruppeNavn, kanal, fritekst, kontorsperretEnhet, journalfortTema,
+    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet, journalfortTema,
             journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, brukersEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
             lestStatus, visningsDatoTekst , journalfortDatoTekst, ikontekst;
     public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, visningsDato;
@@ -24,19 +24,20 @@ public class Melding implements Serializable {
     public Status status;
     public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding, erFerdigstiltUtenSvar;
     public Boolean erTilknyttetAnsatt;
-    public Person journalfortAv = new Person("", "", "");
+    public Person journalfortAv = new Person("", "");
+    public Person skrevetAv = new Person("", "");
 
-    private final List<Person> skrevetAv;
+    private final List<Fritekst> fritekster;
 
     public Melding() {
-        skrevetAv = new ArrayList<>();
+        fritekster = new ArrayList<>();
     }
 
     public Melding(String id, Meldingstype meldingstype, DateTime opprettetDato) {
         this.id = id;
         this.meldingstype = meldingstype;
         this.opprettetDato = opprettetDato;
-        this.skrevetAv = new ArrayList<>();
+        this.fritekster = new ArrayList<>();
     }
 
     public Melding withId(String id) {
@@ -74,8 +75,12 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public Melding withFritekst(String fritekst) {
-        this.fritekst = fritekst;
+    public Melding withFritekst(Fritekst... fritekster) {
+        if (asList(fritekster).contains(null)) {
+            throw new IllegalArgumentException("Fritekst kan ikke være null");
+        }
+        this.fritekster.clear();
+        this.fritekster.addAll(asList(fritekster));
         return this;
     }
 
@@ -180,7 +185,7 @@ public class Melding implements Serializable {
     }
 
     public boolean erDelvisSvar() {
-        return meldingstype.equals(Meldingstype.DELVIS_SVAR_SKRIFTLIG);
+        return Meldingstype.DELVIS_SVAR_SKRIFTLIG.equals(meldingstype);
     }
 
     public static final Comparator<Melding> ELDSTE_FORST = (o1, o2) -> o1.getVisningsDato().compareTo(o2.getVisningsDato());
@@ -199,32 +204,32 @@ public class Melding implements Serializable {
                 .findFirst();
     }
 
-    public Person getForsteForfatterAvMelding() {
-        if (skrevetAv.isEmpty()) {
-            return new Person("", "", null);
-        }
-        return skrevetAv.get(0);
-    }
-
-    public List<Person> getSkrevetAv() {
-        return skrevetAv;
-    }
-
-    public Melding withSkrevetAv(Person... personer) {
-        if (asList(personer).contains(null)) {
-            throw new IllegalArgumentException("Person kan ikke være null");
-        }
-        skrevetAv.clear();
-        skrevetAv.addAll(asList(personer));
+    public Melding withDelviseSvar(List<Melding> delviseSvar) {
+        fritekster.addAll(delviseSvar.stream()
+                .map(delvisSvar -> new Fritekst(delvisSvar.getFritekst(), delvisSvar.skrevetAv, delvisSvar.opprettetDato))
+                .collect(Collectors.toList()));
         return this;
     }
 
-    public Melding withDelviseSvar(List<Melding> delviseSvar) {
-        skrevetAv.addAll(delviseSvar
-                .stream()
-                .flatMap(melding -> melding.getSkrevetAv()
-                        .stream())
-                .collect(Collectors.toList()));
+    public String getFritekst() {
+        if (fritekster.isEmpty()) {
+            return "";
+        } else {
+            return this.fritekster.get(0).getFritekst();
+        }
+    }
+
+    public Melding withNavIdent(String navIdent) {
+        this.navIdent = navIdent;
+        return this;
+    }
+
+    public List<Fritekst> getFriteksterMedEldsteForst() {
+        return fritekster.stream().sorted(Fritekst.ELDSTE_FORST).collect(Collectors.toList());
+    }
+
+    public Melding withSkrevetAv(Person person) {
+        this.skrevetAv = person;
         return this;
     }
 }

@@ -1,5 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class TraadTest {
                 .withEksternAktor("eksternAktor")
                 .withErTilknyttetAnsatt(false)
                 .withFnr("10108000398")
-                .withFritekst("fritekst")
+                .withFritekst(new Fritekst("fritekst", new Person("", ""), new DateTime(dato)))
                 .withGjeldendeTemagruppe(Temagruppe.ANSOS)
                 .withJournalfortAvNavIdent("Z990335")
                 .withJournalfortDato(new DateTime(dato))
