@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
@@ -18,9 +18,9 @@ import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static org.apache.commons.lang3.StringUtils.defaultString;

@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.JournalpostResultat;
@@ -65,7 +65,7 @@ public class DokumentControllerTest {
 
     @Before
     public void setup() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
         when(tilgangskontrollService.harGodkjentEnhet(any(HttpServletRequest.class))).thenReturn(false);
         when(dokumentMetadataService.hentDokumentMetadata(anyList(), anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
