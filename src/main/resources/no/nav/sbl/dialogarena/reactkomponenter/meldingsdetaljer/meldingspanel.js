@@ -9,9 +9,13 @@ const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
 
 class Meldingspanel extends Component {
 
-    tittel() {
+    fraBruker() {
         const melding = this.props.melding;
+        return melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
+    }
 
+    lagTittel() {
+        const melding = this.props.melding;
         const typeoverskrift = (() => {
             switch (melding.type) {
                 case 'sporsmal':
@@ -26,7 +30,7 @@ class Meldingspanel extends Component {
         const dato = sanitize(melding.visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
         const meldingsForfatter = melding.erDokumentMelding || melding.type === 'sporsmal'
             ? ''
-            : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;
+            : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${this.fraBruker()})`;
 
         return (
             <div>
@@ -55,7 +59,11 @@ class Meldingspanel extends Component {
             .map(Utils.leggTilLenkerTags)
             .map((avsnitt, index) => Utils.tilParagraf(avsnitt, index));
         return (
-            <Ekspanderbartpanel className="meldingspanel" tittel={this.tittel()} apen={this.props.apen}>
+            <Ekspanderbartpanel
+                className="meldingspanel"
+                tittel={this.lagTittel()}
+                apen={this.props.apen}
+            >
                 <div className="ekspanderbartPanel__innhold__melding">
                     {paragrafer}
                 </div>

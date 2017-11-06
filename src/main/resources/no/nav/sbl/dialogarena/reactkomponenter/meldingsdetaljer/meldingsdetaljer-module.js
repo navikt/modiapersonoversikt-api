@@ -5,7 +5,7 @@ import PT from 'prop-types';
 
 class MeldingsDetaljer extends Component {
 
-    makeMeldingspanel(melding, key, apen) {
+    lagMeldingspanel(melding, key, apen) {
         return (
             <Meldingspanel
                 key={key}
@@ -17,7 +17,7 @@ class MeldingsDetaljer extends Component {
         );
     }
 
-    makeNedtrekspanel(traad, tittel, apen) {
+    lagNedtrekkspanel(traad, tittel, apen) {
         apen = apen || traad.length < 2;
         return (
             <Kategoripanel
@@ -26,7 +26,7 @@ class MeldingsDetaljer extends Component {
             >
                 {
                     traad.map((melding, index) => (
-                        this.makeMeldingspanel(melding, index, apen)
+                        this.lagMeldingspanel(melding, index, apen)
                     ))
                 }
             </Kategoripanel>
@@ -34,22 +34,18 @@ class MeldingsDetaljer extends Component {
     }
 
     render() {
-        const traad = this.props.traad;
-        traad.forEach((melding) => {
-            melding.type = melding.meldingstype.split('_')[0].toLowerCase();
-            melding.erInngaaende = ['SPORSMAL_SKRIFTLIG', 'SVAR_SBL_INNGAAENDE'].indexOf(melding.meldingstype) >= 0;
-            melding.fraBruker = melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
-        });
+        const traad = this.props.traad.map((melding) => ({
+            type: melding.meldingstype.split('_')[0].toLowerCase(),
+            ...melding
+        }));
         const delviseSvar = traad.filter((melding) => melding.type === 'delvis');
-        if (delviseSvar.length > 0) {
-            const sporsmal = traad[0];
-            delviseSvar.unshift(sporsmal);
-        }
-        const apneTidligereMeldingsDetaljerPanel = delviseSvar > 0 && traad < 2;
+        const apneTidligereMeldingsDetaljerPanel = delviseSvar.length === 0 && traad.length < 2;
         return (
             <div className="reactMeldingsDetaljer">
-                {this.makeNedtrekspanel(traad, 'Vis tidligere meldingsdetaljer', apneTidligereMeldingsDetaljerPanel)}
-                {delviseSvar.length !== 0 ? this.makeNedtrekspanel(delviseSvar, 'Delvis Svar', true) : ''}
+                {traad.length === 1 ?
+                    this.lagMeldingspanel(traad[0], 0, true) :
+                    this.lagNedtrekkspanel(traad, 'Vis tidligere meldingsdetaljer', apneTidligereMeldingsDetaljerPanel)}
+                {delviseSvar.length !== 0 ? this.lagNedtrekkspanel(delviseSvar, 'Delvise Svar', true) : ''}
             </div>
         );
     }
@@ -57,8 +53,6 @@ class MeldingsDetaljer extends Component {
 
 MeldingsDetaljer.propTypes = {
     traad: PT.array.isRequired
-};
-MeldingsDetaljer.defaultProps = {
 };
 
 export default MeldingsDetaljer;

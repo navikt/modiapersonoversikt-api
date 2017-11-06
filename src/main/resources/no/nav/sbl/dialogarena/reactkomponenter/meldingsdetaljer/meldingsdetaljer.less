@@ -7,10 +7,17 @@ MODIA SPESIFIK STYLING
   margin: 2em 0;
 
   .ekspanderbartPanel {
-    box-shadow: 0 0 1px @navGra20;
+    background-color: white;
+    box-shadow: 0 0 1px @navGra40;
 
     &.kategoripanel {
       margin-top: 1em;
+    }
+
+    &.meldingspanel{
+      .ekspanderbartPanel__hode{
+        background-color: white;
+      }
     }
 
     &.kanaloverskrift {
@@ -23,6 +30,7 @@ MODIA SPESIFIK STYLING
       border-top: 1px solid @navGra20;
       border-radius: 0;
       padding: 0.5em 1em;
+      z-index: inherit;
 
       .typo-undertittel {
         width: 95%;
@@ -68,10 +76,6 @@ MODIA SPESIFIK STYLING
     &__innhold {
       padding: 0;
       border-radius: 0;
-
-      .ekspanderbartPanel__hode {
-        background-color: white;
-      }
 
       &__melding{
         padding: 0em 1.5em 0.5em;

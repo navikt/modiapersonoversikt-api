@@ -4,7 +4,7 @@ import PT from 'prop-types';
 
 class Kategoripanel extends Component {
 
-    tittel() {
+    lagTittel() {
         return (
             <h1 className="medium dialogpanel-header">
                 {this.props.tittel}
@@ -16,7 +16,7 @@ class Kategoripanel extends Component {
         return (
             <Ekspanderbartpanel
                 className="kategoripanel kanaloverskrift"
-                tittel={this.tittel()}
+                tittel={this.lagTittel()}
                 apen={this.props.apen}
             >
                 {this.props.children}

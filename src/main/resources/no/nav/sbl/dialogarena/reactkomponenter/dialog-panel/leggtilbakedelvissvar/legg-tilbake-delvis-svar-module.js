@@ -34,6 +34,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 temagruppe={this.props.temagruppe}
                 opprettetDato={this.props.opprettetDato}
                 temagruppeMapping={this.props.temagruppeMapping}
+                traad={this.props.traad}
             />);
         }
         return <h1>Delvis svar er registrert</h1>;
@@ -41,6 +42,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
 }
 
 LeggTilbakeDelvisSvarPanel.propTypes = {
+    traad: PT.array.isRequired,
     wicketurl: PT.string.isRequired,
     wicketcomponent: PT.string.isRequired,
     svarDelvisCallbackId: PT.string.isRequired,
@@ -52,10 +54,10 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     temagruppe: PT.string.isRequired,
     oppgaveId: PT.string.isRequired,
     opprettetDato: PT.string.isRequired,
-    temagruppeMapping:PT.shape({
+    temagruppeMapping: PT.shape({
         temagruppeKode: PT.string,
-        temagruppeNavn: PT.string,
-    }),
+        temagruppeNavn: PT.string
+    })
 };
 
 export default LeggTilbakeDelvisSvarPanel;
