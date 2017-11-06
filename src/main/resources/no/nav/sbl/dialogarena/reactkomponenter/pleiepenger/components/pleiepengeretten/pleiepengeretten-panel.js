@@ -56,14 +56,14 @@ const PleiepengerettighetPanel = props => {
                 <DLElement etikett={tekst.tilOgMedDato} className="halvbredde">
                     {formaterJavaDate(props.tomDato)}
                 </DLElement>
-                <DLElement etikett={tekst.forbruktEtterDennePerioden} className="fullbredde">
-                    {props.forbrukteDagerEtterDennePerioden }&nbsp;{tekst.dagerEnhet}
-                </DLElement>
                 <DLElement etikett={tekst.kompensasjonsgrad} className="halvbredde">
                     {formaterOptionalProsentVerdi(props.kompensasjonsgrad)}
                 </DLElement>
                 <DLElement etikett={tekst.pleiepengegrad} className="halvbredde">
                     {formaterOptionalProsentVerdi(props.pleiepengegrad)}
+                </DLElement>
+                <DLElement etikett={tekst.totaltInnvilget} className="fullbredde">
+                    {props.totaltInnvilget}&nbsp;{tekst.dagerEnhet}
                 </DLElement>
                 <div className="blokk-s halvbredde">
                     <BarnetIkon kjonn={kjonnFraIdent(props.barnet)} />
@@ -86,7 +86,7 @@ PleiepengerettighetPanel.propTypes = {
     tomDato: javaDatoType,
     pleiepengedager: PT.number.isRequired,
     forbrukteDagerTOMIDag: PT.number.isRequired,
-    forbrukteDagerEtterDennePerioden: PT.number.isRequired,
+    totaltInnvilget: PT.number.isRequired,
     kompensasjonsgrad: PT.number,
     pleiepengegrad: PT.number,
     barnet: PT.string.isRequired,

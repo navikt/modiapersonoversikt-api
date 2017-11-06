@@ -20,7 +20,7 @@ class PleiepengerPanel extends Component {
                     kompensasjonsgrad={props.kompensasjonsgrad}
                     andreOmsorgsperson={props.andreOmsorgsperson}
                     forbrukteDagerTOMIDag={props.forbrukteDagerTOMIDag}
-                    forbrukteDagerEtterDennePerioden={props.forbrukteDagerEtterDennePerioden}
+                    totaltInnvilget={props.totaltInnvilget}
                     barnet={props.barnet}
                     fomDato={props.FOMDato}
                     tomDato={props.TOMDato}
@@ -36,7 +36,7 @@ PleiepengerPanel.propTypes = {
     tekst: PT.object.isRequired,
     pleiepengedager: PT.number.isRequired,
     forbrukteDagerTOMIDag: PT.number.isRequired,
-    forbrukteDagerEtterDennePerioden: PT.number.isRequired,
+    totaltInnvilget: PT.number.isRequired,
     kompensasjonsgrad: PT.number,
     pleiepengegrad: PT.number,
     barnet: PT.string.isRequired,

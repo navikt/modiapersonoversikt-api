@@ -34,7 +34,7 @@ const Periode = ({ periode, periodeNummer, tekst }) => {
                         className="utbetalinger-header"
                         aria-label="Ekspanderingsliste"
                     >
-                        {tekst.kommendeUtbetalinger}
+                        {tekst.anvisteUtbetalinger}
                     </h3>
                     <ul className="vedtaksliste">
                         {vedtakKomponent}

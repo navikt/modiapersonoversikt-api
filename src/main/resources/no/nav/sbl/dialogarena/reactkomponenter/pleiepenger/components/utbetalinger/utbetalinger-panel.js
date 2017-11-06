@@ -27,7 +27,7 @@ PleiepengerUtbetalingerPanel.propTypes = {
         periode: PT.string.isRequired,
         pleiepengegrad: PT.string.isRequired,
         pleiepengedager: PT.string.isRequired,
-        kommendeUtbetalinger: PT.string.isRequired,
+        anvisteUtbetalinger: PT.string.isRequired,
         anvistUtbetaling: PT.string.isRequired,
         fraOgMedDato: PT.string.isRequired,
         bruttoBelop: PT.string.isRequired,

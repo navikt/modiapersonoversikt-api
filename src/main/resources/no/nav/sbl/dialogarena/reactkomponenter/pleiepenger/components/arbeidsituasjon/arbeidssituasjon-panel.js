@@ -14,7 +14,7 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
                 {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverNavn)}
             </DLElement>
             <DLElement etikett={tekst.kontonummer} className="halvbredde">
-                {arbeidsforhold.arbeidsgiverKontonr}
+                {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverKontonr)}
             </DLElement>
             <DLElement etikett={tekst.inntektsperiode} className="halvbredde">
                 {arbeidsforhold.inntektsperiode}
