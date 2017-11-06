@@ -1,9 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 
 import java.util.NoSuchElementException;
@@ -30,8 +28,8 @@ public class HenvendelseServiceImpl implements HenvendelseService {
         return henvendelseUtsendingService.hentTraad(request.fodselsnummer, request.traadId).stream()
                 .findFirst()
                 .map(melding -> melding.withKanal(Kanal.TEKST.name()))
-                .map(melding -> melding.withSkrevetAv(new Person("", "", request.navIdent)))
-                .map(melding -> melding.withFritekst(request.svar))
+                .map(melding -> melding.withNavIdent(request.navIdent))
+                .map(melding -> melding.withFritekst(new Fritekst(request.svar, melding.skrevetAv, melding.opprettetDato)))
                 .map(melding -> melding.withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG))
                 .orElseThrow(NoSuchElementException::new);
     }

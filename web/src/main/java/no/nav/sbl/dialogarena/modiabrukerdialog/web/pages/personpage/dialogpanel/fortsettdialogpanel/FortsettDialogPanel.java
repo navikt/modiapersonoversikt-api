@@ -105,13 +105,13 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         traadContainer.setOutputMarkupPlaceholderTag(true);
         traadContainer.setVisibilityAllowed(svar.isEmpty());
         traadContainer.add(
-                new TidligereMeldingPanel("sporsmal", "sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.fritekst, !svar.isEmpty()),
+                new TidligereMeldingPanel("sporsmal", "sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.getFritekst(), !svar.isEmpty()),
                 new ListView<Melding>("svarliste", svar) {
                     @Override
                     protected void populateItem(ListItem<Melding> item) {
                         Melding melding = item.getModelObject();
                         String type = melding.meldingstype.name().substring(0, melding.meldingstype.name().indexOf("_")).toLowerCase();
-                        item.add(new TidligereMeldingPanel("svar", type, melding.temagruppe, melding.opprettetDato, melding.fritekst, melding.getForsteForfatterAvMelding().ident, true));
+                        item.add(new TidligereMeldingPanel("svar", type, melding.temagruppe, melding.opprettetDato, melding.getFritekst(), melding.navIdent, true));
                     }
                 }
         );

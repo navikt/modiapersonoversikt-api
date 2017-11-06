@@ -34,13 +34,13 @@ public class MeldingBuilderTest {
                 .build();
 
         assertThat(melding.fnrBruker, is(FNR));
-        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
+        assertThat(melding.navIdent, is(NAVIDENT));
         assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
 
         assertThat(melding.kanal, is(henvendelseVM.kanal.name()));
-        assertThat(melding.fritekst, is(henvendelseVM.getFritekst()));
+        assertThat(melding.getFritekst(), is(henvendelseVM.getFritekst()));
         assertThat(melding.temagruppe, is(henvendelseVM.temagruppe.name()));
     }
 
@@ -66,13 +66,13 @@ public class MeldingBuilderTest {
                 .build();
 
         assertThat(melding.fnrBruker, is(FNR));
-        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
+        assertThat(melding.navIdent, is(NAVIDENT));
         assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
 
         assertThat(melding.kanal, is(henvendelseVM.kanal.name()));
-        assertThat(melding.fritekst, is(henvendelseVM.getFritekst()));
+        assertThat(melding.getFritekst(), is(henvendelseVM.getFritekst()));
         assertThat(melding.temagruppe, is(eldsteMeldingITraad.temagruppe));
         assertThat(melding.traadId, is(eldsteMeldingITraad.id));
         assertThat(melding.kontorsperretEnhet, is(eldsteMeldingITraad.kontorsperretEnhet));

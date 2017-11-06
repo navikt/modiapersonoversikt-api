@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 
 import javax.naming.Context;
@@ -30,7 +30,7 @@ public class LDAPServiceImpl implements LDAPService {
     }
 
     @Override
-    public Person hentSaksbehandler(String ident) {
+    public Saksbehandler hentSaksbehandler(String ident) {
         try {
             String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + getProperty("ldap.basedn");
             SearchControls searchCtrl = new SearchControls();
@@ -48,7 +48,7 @@ public class LDAPServiceImpl implements LDAPService {
             }
 
             BasicAttribute nullAttribute = new BasicAttribute("", "");
-            return new Person(
+            return new Saksbehandler(
                     (String) givenname.getOrElse(nullAttribute).get(),
                     (String) surname.getOrElse(nullAttribute).get(),
                     ident

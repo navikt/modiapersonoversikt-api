@@ -3,8 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,8 +33,8 @@ public class HenvendelseUtilsTest {
         assertThat(xmlHenvendelse.getBehandlingskjedeId(), is(svar.traadId));
         assertThat(metadata.getTemagruppe(), is(svar.temagruppe));
         assertThat(metadata.getKanal(), is(svar.kanal));
-        assertThat(metadata.getFritekst(), is(svar.fritekst));
-        assertThat(metadata.getNavident(), is(svar.getForsteForfatterAvMelding().ident));
+        assertThat(metadata.getFritekst(), is(svar.getFritekst()));
+        assertThat(metadata.getNavident(), is(svar.navIdent));
     }
 
 
@@ -42,8 +44,8 @@ public class HenvendelseUtilsTest {
                 .withTraadId("sporsmalid")
                 .withTemagruppe("temagruppe")
                 .withKanal("kanal")
-                .withFritekst("fritekst")
-                .withSkrevetAv(new Person("", "", "navident"))
+                .withFritekst(new Fritekst("fritekst", new Saksbehandler("", "", ""), new DateTime()))
+                .withNavIdent("navident")
                 .withErTilknyttetAnsatt(false);
     }
 }

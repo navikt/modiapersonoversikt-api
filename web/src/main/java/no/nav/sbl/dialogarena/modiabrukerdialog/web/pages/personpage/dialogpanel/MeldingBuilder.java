@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 
 import java.util.Optional;
@@ -20,10 +18,10 @@ public class MeldingBuilder {
     public Melding build() {
         Melding melding = new Melding()
                 .withFnr(fnr)
-                .withSkrevetAv(new Person("", "", "navident"))
+                .withNavIdent(navident)
                 .withKanal(henvendelseVM.kanal.name())
                 .withType(type)
-                .withFritekst(henvendelseVM.getFritekst())
+                .withFritekst(new Fritekst(henvendelseVM.getFritekst()))
                 .withEksternAktor(navident)
                 .withTilknyttetEnhet(valgtEnhet)
                 .withErTilknyttetAnsatt(henvendelseVM.oppgaveTilknytning == OppgaveTilknytning.SAKSBEHANDLER);

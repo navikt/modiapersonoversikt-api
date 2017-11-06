@@ -19,7 +19,7 @@ class LeggTilbakeDelvisSvarProps implements Serializable {
     Map<String, Object> lagProps() {
         Map<String, Object> props = new HashMap<>();
         props.put("henvendelseId", behandlingsId);
-        props.put("sporsmal", sporsmal.fritekst);
+        props.put("sporsmal", sporsmal.getFritekst());
         props.put("traadId", sporsmal.traadId);
         props.put("fodselsnummer", sporsmal.fnrBruker);
         props.put("svarDelvisCallbackId", LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID);
