@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>3.2.3.RELEASE</spring.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
         <modig.wicket.version>3.0.0</modig.wicket.version>
         <wicket.version>6.11.0</wicket.version>
         <modig.frontend.version>1.1.108</modig.frontend.version>
@@ -24,7 +24,7 @@
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <modig.security.version>1.0.24</modig.security.version>
         <collections-generic.version>4.01</collections-generic.version>
-        <reactkomponenter.version>2.8.0-SMIDIG-2-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.10.2-SNAPSHOT</reactkomponenter.version>
         <modia-felleskomponenter.version>3.4-oidc-SNAPSHOT</modia-felleskomponenter.version>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
     </properties>
