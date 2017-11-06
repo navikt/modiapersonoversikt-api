@@ -11,6 +11,7 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
@@ -179,7 +180,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
-                melding.fritekst = propertyResolver.getProperty("tilgang.OKSOS");
+                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.OKSOS"), melding.skrevetAv, melding.opprettetDato));
             }
 
             return melding;
@@ -195,7 +196,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.fritekst = propertyResolver.getProperty("tilgang.journalfort");
+                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.journalfort"), melding.skrevetAv, melding.opprettetDato));
                 melding.ingenTilgangJournalfort = true;
             }
 

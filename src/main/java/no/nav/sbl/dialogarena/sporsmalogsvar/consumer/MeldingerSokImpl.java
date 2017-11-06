@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -200,16 +199,16 @@ public class MeldingerSokImpl implements MeldingerSok {
         Document document = new Document();
         document.add(new StoredField(ID, id));
         document.add(new StoredField(BEHANDLINGS_ID, melding.id));
-        document.add(new TextField(FRITEKST, ofNullable(melding.fritekst).orElse(""), YES));
+        document.add(new TextField(FRITEKST, ofNullable(melding.getFritekst()).orElse(""), YES));
         document.add(new TextField(TEMAGRUPPE, ofNullable(melding.temagruppeNavn).orElse(""), YES));
         document.add(new TextField(ARKIVTEMA, ofNullable(melding.journalfortTemanavn).orElse(""), YES));
         document.add(new TextField(DATO, ofNullable(melding.visningsDatoTekst).orElse(""), YES));
-        document.add(new TextField(NAVIDENT, ofNullable(melding.getForsteForfatterAvMelding().ident).orElse(""), YES));
+        document.add(new TextField(NAVIDENT, ofNullable(melding.navIdent).orElse(""), YES));
         document.add(new TextField(STATUSTEKST, ofNullable(melding.statusTekst).orElse(""), YES));
         document.add(new TextField(IKONTEKST, ofNullable(melding.statusTekst).orElse(""), YES));
         document.add(new TextField(LEST_STATUS, ofNullable(melding.lestStatus).orElse(""), YES));
         document.add(new TextField(KANAL, ofNullable(melding.kanal).orElse(""), YES));
-        document.add(new TextField(SKREVET_AV_NAVN, ofNullable(melding.getForsteForfatterAvMelding().navn).orElse(""), YES));
+        document.add(new TextField(SKREVET_AV_NAVN, ofNullable(melding.skrevetAv.navn).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_AV_NAVN, ofNullable(melding.journalfortAv.navn).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_AV_IDENT, ofNullable(melding.journalfortAvNavIdent).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_DATO, ofNullable(melding.journalfortDatoTekst).orElse(""), YES));
@@ -295,7 +294,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static Function<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
         return (melding) -> {
             MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
-            melding.fritekst = meldingerSokResultat.fritekst;
+            melding.withFritekst(new Fritekst(meldingerSokResultat.fritekst, melding.skrevetAv, melding.opprettetDato));
             melding.temagruppeNavn = meldingerSokResultat.temagruppe;
             melding.journalfortTemanavn = meldingerSokResultat.arkivtema;
             melding.visningsDatoTekst = meldingerSokResultat.dato;
@@ -303,8 +302,9 @@ public class MeldingerSokImpl implements MeldingerSok {
             melding.statusTekst = meldingerSokResultat.statustekst;
             melding.ikontekst = meldingerSokResultat.ikontekst;
             melding.lestStatus = meldingerSokResultat.lestStatus;
-            melding.withSkrevetAv(new Person(meldingerSokResultat.skrevetAvNavn, "", meldingerSokResultat.navIdent));
-            melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "", meldingerSokResultat.navIdent);
+            melding.navIdent = meldingerSokResultat.navIdent;
+            melding.skrevetAv = new Person(meldingerSokResultat.skrevetAvNavn, "");
+            melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "");
             melding.journalfortAvNavIdent = meldingerSokResultat.journalfortAvIdent;
             melding.journalfortDatoTekst = meldingerSokResultat.journalfortDato;
             melding.journalfortSaksId = meldingerSokResultat.journalfortSaksId;

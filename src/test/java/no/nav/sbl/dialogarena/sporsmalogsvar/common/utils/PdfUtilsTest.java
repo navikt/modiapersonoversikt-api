@@ -28,12 +28,12 @@ public class PdfUtilsTest {
     public void avBrukerTest() {
         Melding melding1 = new Melding("ID", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now());
         melding1.fnrBruker = "11111111111";
-        melding1.withSkrevetAv(new Person("","", "navIdent"));
+        melding1.navIdent = "navIdent";
         PDFMelding pdfmelding1 = new PDFMelding(melding1);
 
         Melding melding2 = new Melding("ID", Meldingstype.SPORSMAL_MODIA_UTGAAENDE, DateTime.now());
         melding2.fnrBruker = "11111111111";
-        melding2.withSkrevetAv(new Person("","", "navIdent"));
+        melding2.navIdent = "navIdent";
         PDFMelding pdfmelding2 = new PDFMelding(melding2);
 
         assertThat(pdfmelding1.avBruker, is("11111111111"));

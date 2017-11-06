@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -24,7 +22,6 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
@@ -40,6 +37,11 @@ public class InnboksVMTest {
     public final static DateTime DATE_2 = new DateTime().minusDays(2);
     public final static DateTime DATE_3 = new DateTime().minusDays(3);
     public final static DateTime DATE_4 = new DateTime().minusDays(4);
+    public static final String DELVIS_SVAR_FRITEKST = "Jeg svarer deg delvis";
+    public static final String SVAR_FRITEKST = "Jeg fullfører svaret og deler med deg";
+    public static final Saksbehandler SAKSBEHANDLER_1 = new Saksbehandler("Sissel", "Saksbehandler", "ident1");
+    public static final Saksbehandler SAKSBEHANDLER_2 = new Saksbehandler("Sigurd", "Saksbehandler", "ident2");
+    public static final Person BRUKER = new Person("Bjarne", "Bruker");
 
     @Inject
     HenvendelseBehandlingService henvendelseBehandlingService;
@@ -165,22 +167,41 @@ public class InnboksVMTest {
 
     @Test
     public void skalKombinereSkrevetAvForDelviseSvar() {
-        Person saksbehandler1 = new Person("Sissel", "Saksbehandler", "ident1");
-        Person saksbehandler2 = new Person("Sigurd", "Saksbehandler", "ident2");
         when(henvendelseBehandlingService.hentMeldinger(anyString()))
-                .thenReturn(asList(
-                        createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1)
-                                .withSkrevetAv(new Person("Bjarne", "Bruker", "")),
-                        createMelding(ID_2, Meldingstype.DELVIS_SVAR_SKRIFTLIG, DATE_3, TEMAGRUPPE_1, ID_1)
-                                .withSkrevetAv(saksbehandler1),
-                        createMelding(ID_3, Meldingstype.SVAR_SKRIFTLIG, DATE_2, TEMAGRUPPE_2, ID_1)
-                                .withSkrevetAv(saksbehandler2)));
+                .thenReturn(mockMeldingskjedeMedDelviseSvar());
 
         innboksVM.oppdaterMeldinger();
 
-        List<Person> skrevetAv = innboksVM.getNyesteMeldingINyesteTraad().melding.getSkrevetAv();
-        assertThat(skrevetAv.stream().map(person -> person.navn)
-                .collect(Collectors.toList()), Matchers.contains(saksbehandler2.navn, saksbehandler1.navn));
+        List<Fritekst> fritekster = innboksVM.getNyesteMeldingINyesteTraad().melding.getFriteksterMedEldsteForst();
+        assertThat(fritekster.stream().map(fritekst -> fritekst.getSaksbehandler().get().navn)
+                .collect(Collectors.toList()), Matchers.contains(SAKSBEHANDLER_1.navn, SAKSBEHANDLER_2.navn));
+    }
+
+    @Test
+    public void skalKombinereFritekstForDelviseSvar() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString()))
+                .thenReturn(mockMeldingskjedeMedDelviseSvar());
+
+        innboksVM.oppdaterMeldinger();
+
+        List<String> fritekster = innboksVM.getNyesteMeldingINyesteTraad().melding.getFriteksterMedEldsteForst().stream()
+                .map(Fritekst::getFritekst).collect(Collectors.toList());
+        assertThat(fritekster.size(), is(2));
+        assertThat(fritekster.get(0), is(DELVIS_SVAR_FRITEKST));
+        assertThat(fritekster.get(1), is(SVAR_FRITEKST));
+    }
+
+    private List<Melding> mockMeldingskjedeMedDelviseSvar() {
+        return asList(
+                createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1)
+                        .withFritekst(new Fritekst("Jeg stiller et spørsmål", BRUKER, DATE_4))
+                        .withSkrevetAv(BRUKER),
+                createMelding(ID_2, Meldingstype.DELVIS_SVAR_SKRIFTLIG, DATE_3, TEMAGRUPPE_1, ID_1)
+                        .withFritekst(new Fritekst(DELVIS_SVAR_FRITEKST, SAKSBEHANDLER_1, DATE_3))
+                        .withSkrevetAv(SAKSBEHANDLER_1),
+                createMelding(ID_3, Meldingstype.SVAR_SKRIFTLIG, DATE_2, TEMAGRUPPE_2, ID_1)
+                        .withFritekst(new Fritekst(SVAR_FRITEKST, SAKSBEHANDLER_2, DATE_2))
+                        .withSkrevetAv(SAKSBEHANDLER_2));
     }
 
     public static List<Melding> createMeldingerIToTraader() {

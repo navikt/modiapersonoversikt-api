@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -49,7 +49,7 @@ public class TraadPanel extends Panel {
 
                 item.add(meldingstatusContainer);
                 item.add(new Label("visningsDato"));
-                item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
+                item.add(new URLParsingMultiLineLabel("fritekst", getFritekst(item.getModelObject().melding)));
                 item.add(new Journalpost("journalpost", item.getModel()));
                 item.add(append("aria-labelledby", meldingstatusContainer.getMarkupId()));
 
@@ -61,14 +61,22 @@ public class TraadPanel extends Panel {
                 item.add(skrevetAvContainer);
             }
 
+            private String getFritekst(Melding melding) {
+                return melding.getFriteksterMedEldsteForst().stream()
+                        .map(Fritekst::getFritekst)
+                        .collect(Collectors.joining("\n————————————————————————\n"));
+            }
+
             private String getSkrevetAv(Melding melding) {
-                return melding.getSkrevetAv().stream()
+                return melding.getFriteksterMedEldsteForst().stream()
                         .map(this::formaterSaksbehandlersNavnOgIdent)
                         .collect(Collectors.joining(" og "));
             }
 
-            private String formaterSaksbehandlersNavnOgIdent(Person person) {
-                return String.format("%s (%s)", person.navn, person.ident);
+            private String formaterSaksbehandlersNavnOgIdent(Fritekst fritekst) {
+                return fritekst.getSaksbehandler()
+                        .map(saksbehandler -> String.format("%s (%s)", saksbehandler.navn, saksbehandler.getIdent()))
+                        .orElse("Ukjent");
             }
         });
     }

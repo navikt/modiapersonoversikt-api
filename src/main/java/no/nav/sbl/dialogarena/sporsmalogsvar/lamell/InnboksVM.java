@@ -142,19 +142,27 @@ public class InnboksVM implements Serializable {
     private static final Function<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = (meldinger) -> {
         List<Melding> delviseSvar = meldinger.stream().filter(Melding::erDelvisSvar).collect(toList());
         if (delviseSvar.size() > 0) {
-            meldinger.stream()
-                    .filter(Melding::erSvarSkriftlig)
-                    .sorted(Melding.NYESTE_FORST)
-                    .findFirst()
-                    .map(melding -> melding.withDelviseSvar(delviseSvar));
+            getAvsluttendeSvar(meldinger).map(avsluttendeSvar -> avsluttendeSvar.withDelviseSvar(delviseSvar));
         }
 
+        int traadLengde = getTraadLengde(meldinger);
         return meldinger.stream()
                 .filter(melding -> !melding.erDelvisSvar())
                 .sorted(Melding.NYESTE_FORST)
-                .map(melding -> new MeldingVM(melding, meldinger.size()))
+                .map(melding -> new MeldingVM(melding, traadLengde))
                 .collect(toList());
     };
+
+    private static Optional<Melding> getAvsluttendeSvar(List<Melding> meldinger) {
+        return meldinger.stream()
+                .filter(Melding::erSvarSkriftlig)
+                .sorted(Melding.ELDSTE_FORST)
+                .findFirst();
+    }
+
+    private static int getTraadLengde(List<Melding> meldinger) {
+        return Math.toIntExact(meldinger.stream().filter(melding -> !melding.erDelvisSvar()).count());
+    }
 
     public Optional<String> getSessionOppgaveId() {
         return ofNullable(sessionOppgaveId);

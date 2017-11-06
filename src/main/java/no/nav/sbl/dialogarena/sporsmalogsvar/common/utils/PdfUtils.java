@@ -63,7 +63,7 @@ public class PdfUtils {
     private static Map<String, Helper<?>> generateHelpers() {
         HashMap<String, Helper<?>> result = new HashMap<>();
 
-        Helper hentMeldingHelper = (Helper<Melding>) (o, options) -> finnMelding(options.context).getForsteForfatterAvMelding().ident;
+        Helper hentMeldingHelper = (Helper<Melding>) (o, options) -> finnMelding(options.context).navIdent;
 
         Helper formaterDatoHelper = (dato, options) -> {
             Locale locale = new Locale("nb", "no");
@@ -94,10 +94,10 @@ public class PdfUtils {
         public PDFMelding(Melding melding) {
             this.fnrBruker = melding.fnrBruker;
             this.meldingstype = lagPDFMeldingstype(melding);
-            this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.getForsteForfatterAvMelding().ident;
+            this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.navIdent;
             this.typeBeskrivelse = lagTypeBeskrivelse(melding);
             this.temagruppeBeskrivelse = lagTemagruppeBeskrivelse(melding.temagruppe);
-            this.fritekst = escapeHtml(melding.fritekst);
+            this.fritekst = escapeHtml(melding.getFritekst());
             this.opprettetDato = melding.opprettetDato;
             this.journalFortDato = melding.journalfortDato;
             this.journalfortTema = melding.journalfortTema;

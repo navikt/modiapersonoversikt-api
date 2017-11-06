@@ -139,7 +139,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         String fnr = "13245679810";
         Melding melding = createStandardMelding();
         melding.meldingstype = SAMTALEREFERAT_OPPMOTE;
-        melding.withSkrevetAv(new Person("", "", "ident"));
+        melding.navIdent = "ident";
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))

@@ -220,8 +220,8 @@ public class HenvendelseBehandlingServiceImplTest {
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
         assertThat(meldinger).hasSize(2);
-        assertThat(meldinger.get(0).fritekst).isEqualTo("fritekst");
-        assertThat(meldinger.get(1).fritekst).isEqualTo("tilgang.journalfort");
+        assertThat(meldinger.get(0).getFritekst()).isEqualTo("fritekst");
+        assertThat(meldinger.get(1).getFritekst()).isEqualTo("tilgang.journalfort");
     }
 
     @Test
@@ -268,7 +268,7 @@ public class HenvendelseBehandlingServiceImplTest {
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger.get(0).fritekst).isNotEqualTo(fritekst);
+        assertThat(meldinger.get(0).getFritekst()).isNotEqualTo(fritekst);
     }
 
 }

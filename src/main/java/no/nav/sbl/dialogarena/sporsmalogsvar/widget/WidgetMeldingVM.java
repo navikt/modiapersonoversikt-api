@@ -33,7 +33,7 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
     }
 
     public String getFritekst() {
-        return melding.fritekst;
+        return melding.getFritekst();
     }
 
     @Override
