@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class HenvendelseUtilsTest {
         assertThat(metadata.getTemagruppe(), is(svar.temagruppe));
         assertThat(metadata.getKanal(), is(svar.kanal));
         assertThat(metadata.getFritekst(), is(svar.fritekst));
-        assertThat(metadata.getNavident(), is(svar.navIdent));
+        assertThat(metadata.getNavident(), is(svar.getForsteForfatterAvMelding().ident));
     }
 
 
@@ -42,7 +43,7 @@ public class HenvendelseUtilsTest {
                 .withTemagruppe("temagruppe")
                 .withKanal("kanal")
                 .withFritekst("fritekst")
-                .withNavIdent("navident")
+                .withSkrevetAv(new Person("", "", "navident"))
                 .withErTilknyttetAnsatt(false);
     }
 }

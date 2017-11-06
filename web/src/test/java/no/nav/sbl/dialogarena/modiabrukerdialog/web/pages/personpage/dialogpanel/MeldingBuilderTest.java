@@ -34,7 +34,7 @@ public class MeldingBuilderTest {
                 .build();
 
         assertThat(melding.fnrBruker, is(FNR));
-        assertThat(melding.navIdent, is(NAVIDENT));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
         assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
@@ -66,7 +66,7 @@ public class MeldingBuilderTest {
                 .build();
 
         assertThat(melding.fnrBruker, is(FNR));
-        assertThat(melding.navIdent, is(NAVIDENT));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
         assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));

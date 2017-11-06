@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
@@ -19,7 +20,7 @@ public class MeldingBuilder {
     public Melding build() {
         Melding melding = new Melding()
                 .withFnr(fnr)
-                .withNavIdent(navident)
+                .withSkrevetAv(new Person("", "", "navident"))
                 .withKanal(henvendelseVM.kanal.name())
                 .withType(type)
                 .withFritekst(henvendelseVM.getFritekst())

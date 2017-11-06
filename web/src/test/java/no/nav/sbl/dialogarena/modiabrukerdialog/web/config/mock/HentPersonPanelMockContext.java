@@ -53,7 +53,7 @@ public class HentPersonPanelMockContext {
     @Bean
     public LDAPService ldapService() {
         LDAPService mock = mock(LDAPService.class);
-        when(mock.hentSaksbehandler(anyString())).thenReturn(new Person("Test", "McTest"));
+        when(mock.hentSaksbehandler(anyString())).thenReturn(new Person("Test", "McTest", "ident"));
         return mock;
     }
 }

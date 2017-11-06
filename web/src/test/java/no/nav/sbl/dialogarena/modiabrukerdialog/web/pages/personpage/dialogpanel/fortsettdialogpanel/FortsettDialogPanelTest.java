@@ -123,7 +123,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString());
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.fnrBruker, is(FNR));
-        assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(getSubjectHandler().getUid()));
         assertThat(melding.traadId, is(SPORSMAL_ID));
         assertThat(melding.temagruppe, is(TEMAGRUPPE));
         assertThat(melding.kanal, is(Kanal.TEKST.name()));

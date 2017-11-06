@@ -120,7 +120,7 @@ public class NyDialogPanelTest extends WicketPageTest {
         assertThat(melding.kanal, is(TELEFON.name()));
         assertThat(melding.meldingstype, is(SAMTALEREFERAT_TELEFON));
         assertThat(melding.fnrBruker, is(FNR));
-        assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(getSubjectHandler().getUid()));
         assertThat(melding.temagruppe, is(ARBD.name()));
         assertThat(melding.fritekst, is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));

@@ -45,7 +45,7 @@ public class ConsumerServicesMockContext {
     @Bean
     public LDAPService ldapService() {
         LDAPService mock = mock(LDAPService.class);
-        when(mock.hentSaksbehandler(anyString())).thenReturn(new Person("Daniel", "Franck"));
+        when(mock.hentSaksbehandler(anyString())).thenReturn(new Person("Daniel", "Franck", "ident"));
         return mock;
     }
 

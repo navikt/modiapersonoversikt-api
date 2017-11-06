@@ -111,7 +111,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                     protected void populateItem(ListItem<Melding> item) {
                         Melding melding = item.getModelObject();
                         String type = melding.meldingstype.name().substring(0, melding.meldingstype.name().indexOf("_")).toLowerCase();
-                        item.add(new TidligereMeldingPanel("svar", type, melding.temagruppe, melding.opprettetDato, melding.fritekst, melding.navIdent, true));
+                        item.add(new TidligereMeldingPanel("svar", type, melding.temagruppe, melding.opprettetDato, melding.fritekst, melding.getForsteForfatterAvMelding().ident, true));
                     }
                 }
         );

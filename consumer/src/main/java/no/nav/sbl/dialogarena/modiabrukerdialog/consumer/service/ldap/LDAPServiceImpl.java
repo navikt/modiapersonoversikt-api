@@ -50,7 +50,8 @@ public class LDAPServiceImpl implements LDAPService {
             BasicAttribute nullAttribute = new BasicAttribute("", "");
             return new Person(
                     (String) givenname.getOrElse(nullAttribute).get(),
-                    (String) surname.getOrElse(nullAttribute).get()
+                    (String) surname.getOrElse(nullAttribute).get(),
+                    ident
             );
 
         } catch (NamingException e) {

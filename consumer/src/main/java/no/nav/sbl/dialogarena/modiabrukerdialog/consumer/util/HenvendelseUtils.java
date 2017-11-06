@@ -33,7 +33,7 @@ public class HenvendelseUtils {
                                 .withTemagruppe(henvendelse.temagruppe)
                                 .withKanal(henvendelse.kanal)
                                 .withFritekst(henvendelse.fritekst)
-                                .withNavident(henvendelse.navIdent)
+                                .withNavident(henvendelse.getForsteForfatterAvMelding().ident)
                 ))
                 .withFerdigstiltUtenSvar(henvendelse.erFerdigstiltUtenSvar);
     }
