@@ -7,13 +7,15 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class Melding implements Serializable {
 
-    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, fritekst, kontorsperretEnhet, journalfortTema,
+    public String id, traadId, fnrBruker, oppgaveId, temagruppe, temagruppeNavn, kanal, fritekst, kontorsperretEnhet, journalfortTema,
             journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, brukersEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
             lestStatus, visningsDatoTekst , journalfortDatoTekst, ikontekst;
     public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, visningsDato;
@@ -22,15 +24,19 @@ public class Melding implements Serializable {
     public Status status;
     public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding, erFerdigstiltUtenSvar;
     public Boolean erTilknyttetAnsatt;
-    public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
+    public Person journalfortAv = new Person("", "", "");
+
+    private final List<Person> skrevetAv;
 
     public Melding() {
+        skrevetAv = new ArrayList<>();
     }
 
     public Melding(String id, Meldingstype meldingstype, DateTime opprettetDato) {
         this.id = id;
         this.meldingstype = meldingstype;
         this.opprettetDato = opprettetDato;
+        this.skrevetAv = new ArrayList<>();
     }
 
     public Melding withId(String id) {
@@ -55,11 +61,6 @@ public class Melding implements Serializable {
 
     public Melding withType(Meldingstype type) {
         this.meldingstype = type;
-        return this;
-    }
-
-    public Melding withNavIdent(String navIdent) {
-        this.navIdent = navIdent;
         return this;
     }
 
@@ -178,6 +179,10 @@ public class Melding implements Serializable {
         return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG);
     }
 
+    public boolean erDelvisSvar() {
+        return meldingstype.equals(Meldingstype.DELVIS_SVAR_SKRIFTLIG);
+    }
+
     public static final Comparator<Melding> ELDSTE_FORST = (o1, o2) -> o1.getVisningsDato().compareTo(o2.getVisningsDato());
 
     public static final Comparator<Melding> NYESTE_FORST = (o1, o2) -> o2.getVisningsDato().compareTo(o1.getVisningsDato());
@@ -194,4 +199,32 @@ public class Melding implements Serializable {
                 .findFirst();
     }
 
+    public Person getForsteForfatterAvMelding() {
+        if (skrevetAv.isEmpty()) {
+            return new Person("", "", null);
+        }
+        return skrevetAv.get(0);
+    }
+
+    public List<Person> getSkrevetAv() {
+        return skrevetAv;
+    }
+
+    public Melding withSkrevetAv(Person... personer) {
+        if (asList(personer).contains(null)) {
+            throw new IllegalArgumentException("Person kan ikke være null");
+        }
+        skrevetAv.clear();
+        skrevetAv.addAll(asList(personer));
+        return this;
+    }
+
+    public Melding withDelviseSvar(List<Melding> delviseSvar) {
+        skrevetAv.addAll(delviseSvar
+                .stream()
+                .flatMap(melding -> melding.getSkrevetAv()
+                        .stream())
+                .collect(Collectors.toList()));
+        return this;
+    }
 }

@@ -41,7 +41,6 @@ public class TraadTest {
                 .withTraadId(traadId)
                 .withOppgaveId("oppgaveId")
                 .withType(Meldingstype.OPPGAVE_VARSEL)
-                .withNavIdent("Z990335")
                 .withTemagruppe("temaGruppe")
                 .withKanal("kanal")
                 .withKontorsperretEnhet("2820")

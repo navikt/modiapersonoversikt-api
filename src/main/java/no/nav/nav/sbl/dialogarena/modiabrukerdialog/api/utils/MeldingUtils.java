@@ -98,8 +98,7 @@ public class MeldingUtils {
                 settTemagruppe(melding, meldingTilBruker.getTemagruppe(), propertyResolver);
                 melding.fritekst = meldingTilBruker.getFritekst();
                 melding.kanal = meldingTilBruker.getKanal();
-                melding.navIdent = meldingTilBruker.getNavident();
-                melding.skrevetAv = ldapService.hentSaksbehandler(meldingTilBruker.getNavident());
+                melding.withSkrevetAv(ldapService.hentSaksbehandler(meldingTilBruker.getNavident()));
             } else {
                 throw new RuntimeException("XMLMetadata er av en ukjent type: " + xmlMetadata);
             }
@@ -130,7 +129,6 @@ public class MeldingUtils {
         melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
         melding.fritekst = propertyResolver.getProperty("innhold.kassert");
         melding.kanal = null;
-        melding.navIdent = null;
         melding.kassert = true;
     }
 

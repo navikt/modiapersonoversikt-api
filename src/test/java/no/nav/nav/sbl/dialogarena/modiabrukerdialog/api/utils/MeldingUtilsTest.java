@@ -2,6 +2,7 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.joda.time.DateTime;
@@ -52,6 +53,7 @@ public class MeldingUtilsTest {
     public void init() {
         when(propertyResolver.getProperty(anyString(), anyString())).thenReturn(mockVerdiFraPropertyResolver);
         when(propertyResolver.getProperty(anyString())).thenReturn(mockVerdiFraPropertyResolver);
+        when(ldapService.hentSaksbehandler(NAVIDENT)).thenReturn(new Person("Jan", "Saksbehandler", NAVIDENT));
     }
 
     @Test
@@ -160,7 +162,7 @@ public class MeldingUtilsTest {
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
-        assertThat(melding.navIdent, is(NAVIDENT));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -181,7 +183,7 @@ public class MeldingUtilsTest {
         assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
-        assertThat(melding.navIdent, is(nullValue()));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(nullValue()));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -203,7 +205,7 @@ public class MeldingUtilsTest {
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
-        assertThat(melding.navIdent, is(NAVIDENT));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(NAVIDENT));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -223,7 +225,7 @@ public class MeldingUtilsTest {
         assertThat(melding.fritekst, is(mockVerdiFraPropertyResolver));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
-        assertThat(melding.navIdent, is(nullValue()));
+        assertThat(melding.getForsteForfatterAvMelding().ident, is(nullValue()));
         assertThat(melding.erDokumentMelding, is(false));
     }
 
@@ -258,7 +260,7 @@ public class MeldingUtilsTest {
         assertThat(referat.temagruppe, is(xmlMeldingTilBruker.getTemagruppe()));
         assertThat(referat.kanal, is(xmlMeldingTilBruker.getKanal()));
         assertThat(referat.fritekst, is(xmlMeldingTilBruker.getFritekst()));
-        assertThat(referat.navIdent, is(xmlMeldingTilBruker.getNavident()));
+        assertThat(referat.getForsteForfatterAvMelding().ident, is(xmlMeldingTilBruker.getNavident()));
         assertThat(referat.erDokumentMelding, is(false));
     }
 
