@@ -15,6 +15,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.valueOf;
+import static java.lang.System.getProperty;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -23,6 +25,8 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Service {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganisasjonEnhetV2ServiceImpl.class);
+    private static final String ORGENHET_21 = "orgEnhet_2.1";
+    private static final String DEFAULT_ORGENHET21 = "false";
 
     @Inject
     private OrganisasjonEnhetV2 enhet;
@@ -32,7 +36,9 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         final List<AnsattEnhet> enheter = new ArrayList<>();
 
         final HentFullstendigEnhetListeRequest request = new HentFullstendigEnhetListeRequest();
-        request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        if(valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
+            request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        }
         final HentFullstendigEnhetListeResponse HentFullstendigEnhetListeResponse = enhet.hentFullstendigEnhetListe(request);
 
         enheter.addAll(HentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
@@ -46,7 +52,9 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         final HentEnhetBolkResponse response;
 
         hentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
-        hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        if(valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
+            hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        }
         response = enhet.hentEnhetBolk(hentEnhetBolkRequest);
         if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
             return of(TIL_ANSATTENHET.apply(response.getEnhetListe().get(0)));
