@@ -3,7 +3,7 @@ import Meldingspanel from './meldingspanel';
 import Kategoripanel from './kategoripanel';
 import PT from 'prop-types';
 
-class MeldingsDetaljer extends Component {
+class TraadVisning extends Component {
 
     lagMeldingspanel(melding, key, apen) {
         return (
@@ -39,20 +39,20 @@ class MeldingsDetaljer extends Component {
             ...melding
         }));
         const delviseSvar = traad.filter((melding) => melding.type === 'delvis');
-        const apneTidligereMeldingsDetaljerPanel = delviseSvar.length === 0 && traad.length < 2;
+        const apneTraadVisning = delviseSvar.length === 0 && traad.length < 2;
         return (
-            <div className="reactMeldingsDetaljer">
+            <div className="reactTraadVisning">
                 {traad.length === 1 ?
                     this.lagMeldingspanel(traad[0], 0, true) :
-                    this.lagNedtrekkspanel(traad, 'Vis tidligere meldingsdetaljer', apneTidligereMeldingsDetaljerPanel)}
+                    this.lagNedtrekkspanel(traad, 'Vis tidligere meldingsdetaljer', apneTraadVisning)}
                 {delviseSvar.length !== 0 ? this.lagNedtrekkspanel(delviseSvar, 'Delvise Svar', true) : ''}
             </div>
         );
     }
 }
 
-MeldingsDetaljer.propTypes = {
+TraadVisning.propTypes = {
     traad: PT.array.isRequired
 };
 
-export default MeldingsDetaljer;
+export default TraadVisning;

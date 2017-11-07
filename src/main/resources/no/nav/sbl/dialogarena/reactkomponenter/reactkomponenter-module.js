@@ -8,7 +8,7 @@ import FeilmeldingsModaler from './feilmeldingsmodaler/feilmeldingsmodaler-modul
 import SaksoversiktLerret from './saksoversikt/lerret/saksoversikt-lerret-module';
 import AlertStripeSuksessSolid from './alertstriper/alertstripe-module';
 import LeggTilbakeDelvisSvarPanel from './dialog-panel/leggtilbakedelvissvar/legg-tilbake-delvis-svar-module';
-import MeldingsDetaljer from './meldingsdetaljer/meldingsdetaljer-module';
+import TraadVisning from './traadvisning/traadvisning-module';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -24,7 +24,7 @@ window.ModiaJS = {
         SaksoversiktLerret,
         AlertStripeSuksessSolid,
         LeggTilbakeDelvisSvarPanel,
-        MeldingsDetaljer
+        TraadVisning
     },
     InitializedComponents: {},
     React,

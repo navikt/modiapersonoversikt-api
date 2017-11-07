@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
-import MeldingsDetaljer from '../../meldingsdetaljer/meldingsdetaljer-module';
+import TraadVisning from '../../traadvisning/traadvisning-module';
 
 class DelvisSvar extends Component {
     constructor(props) {
@@ -53,7 +53,7 @@ class DelvisSvar extends Component {
             <div>
                 <h3>Legg tilbake med delvis svar</h3>
 
-                <MeldingsDetaljer traad={this.props.traad} />
+                <TraadVisning traad={this.props.traad} />
 
                 <div className="svar">
                     <div className="svar-overskrift-boks">
