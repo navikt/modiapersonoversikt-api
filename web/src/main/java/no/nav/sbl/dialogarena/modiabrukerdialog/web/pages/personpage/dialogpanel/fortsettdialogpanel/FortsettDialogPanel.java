@@ -83,7 +83,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
         leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(sporsmal, behandlingsId, traad);
-        visTidligereMeldingsdetaljer = new ReactComponentPanel("visTidligereMeldingsdetaljerContainer", "MeldingsDetaljer", new TidligereMeldingsDetaljerProps(traad));
+        visTidligereMeldingsdetaljer = new ReactComponentPanel("visTidligereMeldingsdetaljerContainer", "TraadVisning", new TraadVisningProps(traad));
         kvittering = new KvitteringsPanel("kvittering");
 
         leggTilbakeKnapp = lagLeggTilbakeKnapp();

@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TidligereMeldingsDetaljerProps extends HashMap<String, Object> implements Serializable {
+public class TraadVisningProps extends HashMap<String, Object> implements Serializable {
 
-    public TidligereMeldingsDetaljerProps(final List<Melding> traad) {
+    public TraadVisningProps(final List<Melding> traad) {
         put("traad", traad.stream().map((melding ->
             new HashMap<String, Object>() {
                 {
