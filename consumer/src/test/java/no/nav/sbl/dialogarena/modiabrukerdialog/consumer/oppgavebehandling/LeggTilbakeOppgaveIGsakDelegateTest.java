@@ -1,6 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
-import no.nav.modig.core.context.*;
+import no.nav.modig.core.context.ModigSecurityConstants;
+import no.nav.modig.core.context.SubjectHandler;
+import no.nav.modig.core.context.SubjectHandlerUtils;
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -9,12 +12,19 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.*;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.*;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import javax.ws.rs.NotAuthorizedException;

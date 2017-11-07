@@ -2,7 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.CmsContentRetriever;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import static org.mockito.Mockito.mock;
 

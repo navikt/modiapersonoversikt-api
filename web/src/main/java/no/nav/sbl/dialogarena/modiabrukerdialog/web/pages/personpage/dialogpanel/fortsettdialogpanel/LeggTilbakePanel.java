@@ -22,11 +22,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static no.nav.metrics.MetricsFactory.createTimer;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.model.ModelUtils.not;

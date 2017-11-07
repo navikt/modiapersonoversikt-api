@@ -7,8 +7,8 @@ import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;

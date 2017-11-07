@@ -4,10 +4,11 @@ import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.Collections;

@@ -5,7 +5,6 @@ import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.apache.wicket.Component;
