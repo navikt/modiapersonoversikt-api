@@ -1,30 +1,22 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -40,21 +32,26 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
-    public static final int ANTALL_PLUKK_FORSOK = 20;
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
     public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
     public static final String KONTAKT_NAV = "KNA";
 
+    private final OppgavebehandlingV3 oppgavebehandlingWS;
+    private final OppgaveV3 oppgaveWS;
+    private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private final AnsattService ansattWS;
+    private final Ruting ruting;
+    private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
+
     @Inject
-    private OppgavebehandlingV3 oppgavebehandlingWS;
-    @Inject
-    private OppgaveV3 oppgaveWS;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private AnsattService ansattWS;
-    @Inject
-    private Ruting ruting;
+    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService, AnsattService ansattWS, Ruting ruting) {
+        this.oppgavebehandlingWS = oppgavebehandlingWS;
+        this.oppgaveWS = oppgaveWS;
+        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
+        this.ansattWS = ansattWS;
+        this.ruting = ruting;
+        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting);
+    }
 
     @Override
     public void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) throws FikkIkkeTilordnet {
@@ -97,27 +94,8 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return;
         }
 
-        try {
-            WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
-            wsOppgave.withAnsvarligId("");
-            wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
-            if (temagruppe != null) {
-                List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
-                        new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
-                                .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
-                                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
-                                .withGjelderKode(underkategoriKode(temagruppe)))
-                        .getEnhetListe();
-
-                wsOppgave.withAnsvarligEnhetId(enhetListe.isEmpty() ? wsOppgave.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId());
-                wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
-            }
-
-            lagreOppgaveIGsak(wsOppgave, temagruppe);
-        } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
-            throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
-        }
+        WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(oppgaveId);
+        leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, beskrivelse, temagruppe);
     }
 
     @Override
@@ -135,7 +113,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         return equalsIgnoreCase(hentOppgaveFraGsak(oppgaveid).getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
     }
 
-    private String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
+    String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
         String ident = getSubjectHandler().getUid();
         String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
@@ -147,7 +125,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         return isBlank(gammelBeskrivelse) ? nyBeskrivelse :  nyBeskrivelse + "\n\n" + gammelBeskrivelse;
     }
 
-    private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
+    WSOppgave hentOppgaveFraGsak(String oppgaveId) {
         try {
             return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
         } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
@@ -157,11 +135,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     private void tilordneOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe) throws FikkIkkeTilordnet {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId), temagruppe);
-    }
-
-
-    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Temagruppe temagruppe) throws FikkIkkeTilordnet {
-        return tilordneOppgaveIGsak(oppgave, optional(temagruppe));
     }
 
     private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Optional<Temagruppe> temagruppe) throws FikkIkkeTilordnet {
@@ -174,7 +147,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
-    private void lagreOppgaveIGsak(WSOppgave wsOppgave, Temagruppe temagruppe) throws LagreOppgaveOptimistiskLasing {
+    void lagreOppgaveIGsak(WSOppgave wsOppgave, Temagruppe temagruppe) throws LagreOppgaveOptimistiskLasing {
         lagreOppgaveIGsak(wsOppgave, optional(temagruppe));
     }
 
@@ -234,7 +207,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();
-        if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT).contains(temagruppe)) {
+        if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
             return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();

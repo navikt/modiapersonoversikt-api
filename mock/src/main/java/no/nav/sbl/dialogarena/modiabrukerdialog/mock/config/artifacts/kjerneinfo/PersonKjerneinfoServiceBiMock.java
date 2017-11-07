@@ -82,7 +82,7 @@ public class PersonKjerneinfoServiceBiMock {
         personfakta.setPersonnavn(lagPersonnavn("Barn", "Testesen"));
         personfakta.setAdresse(lagMockAdresse());
         Person barn = new Person.With()
-                .fodselsnummer("***REMOVED***")
+                .fodselsnummer("01019942099")
                 .personfakta(personfakta)
                 .done();
 
