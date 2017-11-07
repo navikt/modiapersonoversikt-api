@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 export const BarnetIkon = ({ kjonn }) => (
     <div className="pleiepenger-barnet-ikon">
-        <svg height="2.7rem" width="2rem" viewBox="0 0 18 24">
+        <svg height="2.2rem" width="1.9rem" viewBox="0 0 18 24">
             <g fill={{ K: '#C86151', M: '#3385D1', U: '#38a161' }[kjonn]}>
                 <path
                     d="M3.581,20 L18,20 L18,23.5 C18,23.776 17.776,24 17.5,24 L0.5,24 C0.225,24 0,23.776

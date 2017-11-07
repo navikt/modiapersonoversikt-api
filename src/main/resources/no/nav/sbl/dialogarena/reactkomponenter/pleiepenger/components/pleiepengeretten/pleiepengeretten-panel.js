@@ -67,8 +67,8 @@ const PleiepengerettighetPanel = props => {
                 </DLElement>
                 <div className="blokk-s halvbredde">
                     <BarnetIkon kjonn={kjonnFraIdent(props.barnet)} />
-                    <dt className="pleiepenger-barnet-etikett">{ tekst.barnet }</dt>
-                    <dd className="pleiepenger-verdi pleiepenger-barnet-ident">
+                    <dt className="pleiepenger-etikett">{ tekst.barnet }</dt>
+                    <dd className="pleiepenger-verdi">
                         <Personnummer ident={props.barnet} />
                     </dd>
                 </div>
