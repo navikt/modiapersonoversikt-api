@@ -85,7 +85,7 @@
         <dependency>
             <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security-authorization</artifactId>
-            <version>2017.11.01.15.15</version>
+            <version>2017.11.06.15.16</version>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
