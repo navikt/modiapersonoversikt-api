@@ -1,14 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar;
 
-        import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-        import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-        import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.CreateReactProps;
-        import no.nav.sbl.dialogarena.time.Datoformat;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.TidligereMeldingsDetaljerProps;
+import no.nav.sbl.dialogarena.time.Datoformat;
 
-        import java.io.Serializable;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Serializable {
 
@@ -26,6 +26,6 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         put("temagruppe", temagruppe);
         put("opprettetDato", Datoformat.kortMedTid(sporsmal.opprettetDato));
         put("temagruppeMapping", temagruppeMapping);
-        putAll(CreateReactProps.lagVisTidligereMeldingsDetaljerProps(traad));
+        putAll(new TidligereMeldingsDetaljerProps(traad));
     }
 }

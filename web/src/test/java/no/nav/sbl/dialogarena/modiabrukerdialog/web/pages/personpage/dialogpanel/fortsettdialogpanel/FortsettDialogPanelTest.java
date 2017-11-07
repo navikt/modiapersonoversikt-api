@@ -99,7 +99,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     public void inneholderSporsmaalsspefikkeKomponenter() {
         wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
-                .should().containComponent(withId("sporsmal").and(ofType(TidligereMeldingPanel.class)))
+                .should().containComponent(withId("sporsmal"))
                 .should().containComponent(withId("svarliste").and(ofType(ListView.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
