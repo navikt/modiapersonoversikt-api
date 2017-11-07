@@ -8,14 +8,14 @@ import static java.util.Arrays.asList;
 public enum Temagruppe {
     ARBD,
     FMLI,
-    PLEIEPENGERSY,
     HJLPM,
     BIL,
-    UTLAND,
     ORT_HJE,
     OVRG,
     PENS,
+    PLEIEPENGERSY,
     UFRT,
+    UTLAND,
     OKSOS,
     ANSOS;
 
