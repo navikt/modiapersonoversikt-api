@@ -204,9 +204,15 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private boolean traadenKanLeggesTilbake() {
-        boolean delviseSvar = svar.stream()
-                .anyMatch((melding) -> melding.meldingstype == Meldingstype.DELVIS_SVAR_SKRIFTLIG);
-        return (delviseSvar || svar.isEmpty()) && sporsmal.erSporsmalSkriftlig();
+        return sporsmalErUbesvart() && sporsmal.erSporsmalSkriftlig();
+    }
+
+    private boolean sporsmalErUbesvart(){
+        return svar.stream()
+            .noneMatch((melding) ->
+                melding.meldingstype == Meldingstype.SVAR_OPPMOTE ||
+                melding.meldingstype == Meldingstype.SVAR_SKRIFTLIG ||
+                melding.meldingstype == Meldingstype.SVAR_TELEFON );
     }
 
     private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {
