@@ -1,36 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../utils/utils-module';
 
-const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+function Meldingspanel(props) {
+    function toNameCase(navn) {
+        return navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+    }
 
-class Meldingspanel extends Component {
+    function lagTypeoverskrift(melding) {
+        switch (melding.type) {
+            case 'sporsmal':
+                return 'Spørsmål';
+            case 'delvis':
+                return 'Delvis Svar';
+            default:
+                return toNameCase(melding.type);
+        }
+    }
 
-    fraBruker() {
-        const melding = this.props.melding;
+    function fraBruker() {
+        const melding = props.melding;
         return melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
     }
 
-    lagTittel() {
-        const melding = this.props.melding;
-        const typeoverskrift = (() => {
-            switch (melding.type) {
-                case 'sporsmal':
-                    return 'Spørsmål';
-                case 'delvis':
-                    return 'Delvis Svar';
-                default:
-                    return toNameCase(melding.type);
-            }
-        })();
-
+    function lagTittel() {
+        const melding = props.melding;
+        const typeoverskrift = lagTypeoverskrift(melding);
         const dato = sanitize(melding.visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
         const meldingsForfatter = melding.erDokumentMelding || melding.type === 'sporsmal'
             ? ''
-            : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${this.fraBruker()})`;
+            : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${fraBruker()})`;
 
         return (
             <div>
@@ -54,22 +55,20 @@ class Meldingspanel extends Component {
         );
     }
 
-    render() {
-        const paragrafer = this.props.children.split(/[\r\n]+/)
-            .map(Utils.leggTilLenkerTags)
-            .map((avsnitt, index) => Utils.tilParagraf(avsnitt, index));
-        return (
-            <Ekspanderbartpanel
-                className="meldingspanel"
-                tittel={this.lagTittel()}
-                apen={this.props.apen}
-            >
-                <div className="ekspanderbartPanel__innhold__melding">
-                    {paragrafer}
-                </div>
-            </Ekspanderbartpanel>
-        );
-    }
+    const paragrafer = props.children.split(/[\r\n]+/)
+        .map(Utils.leggTilLenkerTags)
+        .map((avsnitt, index) => Utils.tilParagraf(avsnitt, index));
+    return (
+        <Ekspanderbartpanel
+            className="meldingspanel"
+            tittel={lagTittel()}
+            apen={props.apen}
+        >
+            <div className="ekspanderbartPanel__innhold__melding">
+                {paragrafer}
+            </div>
+        </Ekspanderbartpanel>
+    );
 }
 
 Meldingspanel.propTypes = {

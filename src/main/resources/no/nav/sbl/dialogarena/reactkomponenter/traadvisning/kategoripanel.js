@@ -1,28 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 
-class Kategoripanel extends Component {
-
-    lagTittel() {
+function Kategoripanel(props) {
+    function lagTittel() {
         return (
             <h1 className="medium dialogpanel-header">
-                {this.props.tittel}
+                {props.tittel}
             </h1>
         );
     }
 
-    render() {
-        return (
-            <Ekspanderbartpanel
-                className="kategoripanel kanaloverskrift"
-                tittel={this.lagTittel()}
-                apen={this.props.apen}
-            >
-                {this.props.children}
-            </Ekspanderbartpanel>
-        );
-    }
+    return (
+        <Ekspanderbartpanel
+            className="kategoripanel kanaloverskrift"
+            tittel={lagTittel()}
+            apen={props.apen}
+        >
+            {props.children}
+        </Ekspanderbartpanel>
+    );
 }
 
 Kategoripanel.propTypes = {
