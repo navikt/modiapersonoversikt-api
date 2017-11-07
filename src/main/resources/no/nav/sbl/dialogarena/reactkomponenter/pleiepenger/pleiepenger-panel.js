@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 
 import PleiepengerRettenPanel from './components/pleiepengeretten/pleiepengeretten-panel';
-import ArbeidsituasjonPanel from './components/arbeidsituasjon/arbeidssituasjon-panel';
+import ArbeidssituasjonPanel from './components/arbeidsituasjon/arbeidssituasjon-panel';
 import UtbetalingerPanel from './components/utbetalinger/utbetalinger-panel';
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -20,12 +20,12 @@ class PleiepengerPanel extends Component {
                     kompensasjonsgrad={props.kompensasjonsgrad}
                     andreOmsorgsperson={props.andreOmsorgsperson}
                     forbrukteDagerTOMIDag={props.forbrukteDagerTOMIDag}
-                    forbrukteDagerEtterDennePerioden={props.forbrukteDagerEtterDennePerioden}
+                    totaltInnvilget={props.totaltInnvilget}
                     barnet={props.barnet}
                     fomDato={props.FOMDato}
                     tomDato={props.TOMDato}
                 />
-                <ArbeidsituasjonPanel tekst={props.tekst.arbeidsforhold} arbeidsforhold={props.arbeidsforhold} />
+                <ArbeidssituasjonPanel tekst={props.tekst.arbeidsforhold} arbeidsforhold={props.arbeidsforhold} />
                 <UtbetalingerPanel tekst={props.tekst.utbetalinger} perioder={props.perioder} />
             </div>
         );
@@ -36,7 +36,7 @@ PleiepengerPanel.propTypes = {
     tekst: PT.object.isRequired,
     pleiepengedager: PT.number.isRequired,
     forbrukteDagerTOMIDag: PT.number.isRequired,
-    forbrukteDagerEtterDennePerioden: PT.number.isRequired,
+    totaltInnvilget: PT.number.isRequired,
     kompensasjonsgrad: PT.number,
     pleiepengegrad: PT.number,
     barnet: PT.string.isRequired,

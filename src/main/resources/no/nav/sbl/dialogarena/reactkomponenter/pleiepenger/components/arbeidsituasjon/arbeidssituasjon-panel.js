@@ -13,8 +13,11 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
             <DLElement etikett={tekst.arbeidsgiver} className="halvbredde">
                 {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverNavn)}
             </DLElement>
+            <DLElement etikett={tekst.arbeidskategori} className="halvbredde">
+                {arbeidsforhold.arbeidskategori}
+            </DLElement>
             <DLElement etikett={tekst.kontonummer} className="halvbredde">
-                {arbeidsforhold.arbeidsgiverKontonr}
+                {formaterOptionalVerdi(arbeidsforhold.arbeidsgiverKontonr)}
             </DLElement>
             <DLElement etikett={tekst.inntektsperiode} className="halvbredde">
                 {arbeidsforhold.inntektsperiode}
@@ -35,6 +38,7 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
 ArbeidsforholdKomponent.propTypes = {
     tekst: PT.object.isRequired,
     arbeidsforhold: PT.shape({
+        arbeidskategori: PT.string.isRequired,
         arbeidsgiverNavn: PT.string,
         arbeidsgiverKontonr: PT.string.isRequired,
         inntektsperiode: PT.string.isRequired,
@@ -68,18 +72,23 @@ class ArbeidssituasjonPanel extends React.Component {
 
         let arbeidsforholdKomponenter = sorterArbeidsforhold(props.arbeidsforhold).map((forhold, index) =>
             (<ArbeidsforholdKomponent key={index} arbeidsforhold={forhold} tekst={props.tekst} />));
+        const antallArbeidsforhold = arbeidsforholdKomponenter.length;
 
         if (!this.state.visFullListe) {
             arbeidsforholdKomponenter = arbeidsforholdKomponenter.slice(0, 1);
         }
 
+        const toggleAlleArbeidsforhold = (
+            <a className="toggle-arbeidsforhold" onClick={this.handleToggleListeClick}>
+                {this.state.visFullListe ? 'Skjul' : 'Vis alle arbeidsforhold'}
+            </a>
+        );
+
         return (
             <div className="arbeidssituasjon">
                 <h1 id="arbeidssituasjonTitle">{props.tekst.arbeidssituasjon}</h1>
                 {arbeidsforholdKomponenter}
-                <a className="toggle-arbeidsforhold" onClick={this.handleToggleListeClick}>
-                    {this.state.visFullListe ? 'Skjul alle arbeidsforhold' : 'Vis alle arbeidsforhold'}
-                </a>
+                {antallArbeidsforhold > 1 && toggleAlleArbeidsforhold}
             </div>
         );
     }
