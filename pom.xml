@@ -17,7 +17,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.3.4.RELEASE</spring.version>
         <wicket.version>6.20.0</wicket.version>
         <mockito.core.version>1.10.19</mockito.core.version>
         <joda-time.version>2.7</joda-time.version>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security-authorization</artifactId>
-            <version>2017.11.06.15.16</version>
+            <version>2017.11.07.15.26</version>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
