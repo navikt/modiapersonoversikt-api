@@ -1,4 +1,4 @@
-@sideMargin: 30px;
+@sideMargin: 0em;
 @modiasvart: #333;
 @graabakgrunn: #f1f1f1;
 @rammeborder: #e4e3e3;
@@ -13,7 +13,7 @@
 
 .dialogpanel {
   text-align: center;
-  padding: 0 @sideMargin;
+  padding: @sideMargin;
   .start-ny-dialog-lenke-container, .start-ny-dialog-lenke-container a {
     margin-top: 150px;
   }
@@ -348,6 +348,7 @@
   }
 
   .svarcontainer {
+    margin-top: 1em;
     a {
       display: block;
       padding-bottom: 15px;
@@ -362,7 +363,6 @@
   text-align: center;
   background-color: @modiasvart;
   padding: @sideMargin;
-  margin: @sideMargin 0;
   > div.robust-strek {
     padding-bottom: 1px;
     margin-bottom: 22px !important;
