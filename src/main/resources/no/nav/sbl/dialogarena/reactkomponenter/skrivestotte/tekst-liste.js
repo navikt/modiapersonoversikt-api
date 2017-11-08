@@ -10,15 +10,24 @@ class TekstListeKomponent extends React.Component {
         this.props.store.tekstChanged(this.props.tekst, DOMNode.parentNode);
         DOMNode.querySelector('input').focus();
     }
+
+    shouldComponentUpdate(nextProps) {
+        const dagensState = this.props.tekst === this.props.valgtTekst;
+        const nesteState = this.props.tekst === nextProps.valgtTekst;
+
+        return dagensState !== nesteState;
+    }
+
     render() {
         return (
-            <div className="sok-element" onClick={this._onClick.bind(this)}>
+            <div className="sok-element">
                 <input
                     id={'tekstElementRadio' + this.props.tekst.key}
                     name="tekstListeRadio"
                     type="radio"
                     readOnly
                     checked={this.props.tekst === this.props.valgtTekst}
+                    onClick={this._onClick.bind(this)}
                 />
                 <label htmlFor={'tekstElementRadio' + this.props.tekst.key}>
                     <span dangerouslySetInnerHTML={{ __html: this.props.tekst.tittel }}></span>
