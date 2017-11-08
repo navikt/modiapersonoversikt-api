@@ -28,13 +28,15 @@ function TraadVisning(props) {
         type: melding.meldingstype.split('_')[0].toLowerCase(),
         ...melding
     }));
-    const delviseSvar = traad.filter((melding) => melding.type === 'delvis');
 
-    const apneTraadVisning = delviseSvar.length === 0 && traad.length < 2;
+    const delviseSvar = traad.filter((melding) => melding.type === 'delvis');
+    const traadUtenDelviseSvar = traad.filter(melding => melding.type !== 'delvis');
+
+    const apneTraadVisning = traadUtenDelviseSvar.length < 2;
 
     const traadPanel = traad.length === 1 ?
-        lagMeldingspanel(traad[0], 0, true) :
-        lagNedtrekkspanel(traad, 'Vis tidligere meldingsdetaljer', apneTraadVisning);
+        lagMeldingspanel(traadUtenDelviseSvar[0], 0, true) :
+        lagNedtrekkspanel(traadUtenDelviseSvar, 'Vis tidligere meldingsdetaljer', apneTraadVisning);
     const delvisSvarPanel = delviseSvar.length !== 0 ?
         lagNedtrekkspanel(delviseSvar, 'Delvise Svar', true) :
         '';
