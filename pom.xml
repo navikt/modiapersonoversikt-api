@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.3.4.RELEASE</spring.version>
         <modig.wicket.version>3.0.0</modig.wicket.version>
         <wicket.version>6.11.0</wicket.version>
         <modig.frontend.version>1.1.108</modig.frontend.version>
