@@ -17,7 +17,7 @@
 
 	<properties>
         <!-- Tredjeparts -->
-		<spring.version>4.1.6.RELEASE</spring.version>
+		<spring.version>4.3.4.RELEASE</spring.version>
 		<modig.wicket.version>3.0.0</modig.wicket.version>
 		<wicket.version>6.20.0</wicket.version>
         <joda.version>2.2</joda.version>
