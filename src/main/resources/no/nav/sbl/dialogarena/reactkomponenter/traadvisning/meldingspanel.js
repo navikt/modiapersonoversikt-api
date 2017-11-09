@@ -4,64 +4,64 @@ import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../utils/utils-module';
 
-function Meldingspanel(props) {
-    function toNameCase(navn) {
-        return navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+function toNameCase(navn) {
+    return navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
+
+function lagTypeoverskrift(melding) {
+    switch (melding.type) {
+        case 'sporsmal':
+            return 'Spørsmål';
+        case 'delvis':
+            return 'Delvis Svar';
+        default:
+            return toNameCase(melding.type);
     }
+}
 
-    function lagTypeoverskrift(melding) {
-        switch (melding.type) {
-            case 'sporsmal':
-                return 'Spørsmål';
-            case 'delvis':
-                return 'Delvis Svar';
-            default:
-                return toNameCase(melding.type);
-        }
-    }
+function fraBruker(melding) {
+    return melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
+}
 
-    function fraBruker() {
-        const melding = props.melding;
-        return melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
-    }
+function lagTittel(melding) {
+    const typeoverskrift = lagTypeoverskrift(melding);
+    const dato = sanitize(melding.visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
+    const meldingsForfatter = melding.erDokumentMelding || melding.type === 'sporsmal'
+        ? ''
+        : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${fraBruker(melding)})`;
 
-    function lagTittel() {
-        const melding = props.melding;
-        const typeoverskrift = lagTypeoverskrift(melding);
-        const dato = sanitize(melding.visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
-        const meldingsForfatter = melding.erDokumentMelding || melding.type === 'sporsmal'
-            ? ''
-            : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${fraBruker()})`;
-
-        return (
-            <div>
-                <div className="metadata">
-                    <span className="meldingsDato">
-                        {dato}
-                    </span><br />
-                    <span className="meldingsForfatter">
-                        {meldingsForfatter}
-                    </span>
-                </div>
-                <div className="tittelwrapper">
-                    <h3 className="typeoverskrift fortsettdialogpaneloverskrift">
-                        {typeoverskrift}
-                    </h3>
-                    <h4 className="temagruppeoverskrift">
-                        {melding.temagruppeNavn}
-                    </h4>
-                </div>
+    return (
+        <div>
+            <div className="metadata">
+                <span className="meldingsDato">
+                    {dato}
+                </span><br />
+                <span className="meldingsForfatter">
+                    {meldingsForfatter}
+                </span>
             </div>
-        );
-    }
+            <div className="tittelwrapper">
+                <h3 className="typeoverskrift fortsettdialogpaneloverskrift">
+                    {typeoverskrift}
+                </h3>
+                <h4 className="temagruppeoverskrift">
+                    {melding.temagruppeNavn}
+                </h4>
+            </div>
+        </div>
+    );
+}
 
+function Meldingspanel(props) {
+    const melding = props.melding;
     const paragrafer = props.children.split(/[\r\n]+/)
         .map(Utils.leggTilLenkerTags)
         .map((avsnitt, index) => Utils.tilParagraf(avsnitt, index));
+    const tittel = lagTittel(melding);
     return (
         <Ekspanderbartpanel
             className="meldingspanel"
-            tittel={lagTittel()}
+            tittel={tittel}
             apen={props.apen}
         >
             <div className="ekspanderbartPanel__innhold__melding">
