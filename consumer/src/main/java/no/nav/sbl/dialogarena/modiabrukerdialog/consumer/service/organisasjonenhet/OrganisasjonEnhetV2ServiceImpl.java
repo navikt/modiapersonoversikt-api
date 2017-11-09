@@ -25,25 +25,25 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Service {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganisasjonEnhetV2ServiceImpl.class);
-    private static final String ORGENHET_21 = "orgEnhet_2.1";
+    private static final String ORGENHET_v21_feature_toggle = "orgEnhet_2.1";
     private static final String DEFAULT_ORGENHET21 = "false";
 
     @Inject
-    private OrganisasjonEnhetV2 enhet;
+    private OrganisasjonEnhetV2 organisasjonEnhetService;
 
     @Override
     public List<AnsattEnhet> hentAlleEnheter(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
-        final HentFullstendigEnhetListeResponse HentFullstendigEnhetListeResponse = enhet.hentFullstendigEnhetListe(lagHentFullstendigEnhetListeRequest(oppgavebehandlerFilter));
+        final HentFullstendigEnhetListeResponse hentFullstendigEnhetListeResponse = organisasjonEnhetService.hentFullstendigEnhetListe(lagHentFullstendigEnhetListeRequest(oppgavebehandlerFilter));
         final List<AnsattEnhet> enheter = new ArrayList<>();
 
-        enheter.addAll(HentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
+        enheter.addAll(hentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
 
         return on(enheter).collect(ENHET_ID_STIGENDE);
     }
 
     @Override
     public Optional<AnsattEnhet> hentEnhetGittEnhetId(String enhetId, WSOppgavebehandlerfilter oppgavebehandlerFilter) {
-        final HentEnhetBolkResponse response = enhet.hentEnhetBolk(lagHentEnhetBolkRequest(enhetId, oppgavebehandlerFilter));
+        final HentEnhetBolkResponse response = organisasjonEnhetService.hentEnhetBolk(lagHentEnhetBolkRequest(enhetId, oppgavebehandlerFilter));
 
         if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
             return of(TIL_ANSATTENHET.apply(response.getEnhetListe().get(0)));
@@ -64,7 +64,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
             FinnNAVKontorRequest.setDiskresjonskode(diskresjonskoder);
         }
         try {
-            final FinnNAVKontorResponse FinnNAVKontorResponse = enhet.finnNAVKontor(FinnNAVKontorRequest);
+            final FinnNAVKontorResponse FinnNAVKontorResponse = organisasjonEnhetService.finnNAVKontor(FinnNAVKontorRequest);
             if (FinnNAVKontorResponse != null && FinnNAVKontorResponse.getNAVKontor() != null) {
                 return of(TIL_ANSATTENHET.apply(FinnNAVKontorResponse.getNAVKontor()));
             } else {
@@ -79,7 +79,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     private HentFullstendigEnhetListeRequest lagHentFullstendigEnhetListeRequest(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
         final HentFullstendigEnhetListeRequest request = new HentFullstendigEnhetListeRequest();
-        if (valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
+        if (valueOf(getProperty(ORGENHET_v21_feature_toggle, DEFAULT_ORGENHET21))) {
             request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
         }
         return request;
@@ -89,7 +89,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
         HentEnhetBolkRequest hentEnhetBolkRequest = new HentEnhetBolkRequest();
 
         hentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
-        if (valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
+        if (valueOf(getProperty(ORGENHET_v21_feature_toggle, DEFAULT_ORGENHET21))) {
             hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
         }
 
