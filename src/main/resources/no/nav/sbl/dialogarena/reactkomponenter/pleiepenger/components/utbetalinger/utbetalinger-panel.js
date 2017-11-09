@@ -6,13 +6,13 @@ import Periode from './periode';
 
 export const sorterEtterIdDato = perioder => (
     perioder.sort((a, b) => (
-        konverterTilMomentDato(a.fraOgMed).diff(konverterTilMomentDato(b.fraOgMed))
+        konverterTilMomentDato(b.fraOgMed).diff(konverterTilMomentDato(a.fraOgMed))
     ))
 );
 
 const PleiepengerUtbetalingerPanel = ({ perioder, tekst }) => {
     const perioderKomponenter = sorterEtterIdDato(perioder).map((periode, index) =>
-        (<Periode key={index} tekst={tekst} periode={periode} periodeNummer={index + 1} />));
+        (<Periode key={index} tekst={tekst} periode={periode} periodeNummer={perioder.length - index} />));
 
     return (
         <div className="pleiepenger-utbetalinger">
