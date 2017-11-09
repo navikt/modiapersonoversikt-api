@@ -17,7 +17,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlin
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.*;
@@ -200,7 +201,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         typer.add(SPORSMAL_MODIA_UTGAAENDE.name());
         typer.add(SVAR_SBL_INNGAAENDE.name());
 
-        if (FeatureToggle.visDelviseSvarFunksjonalitet()) {
+        if (FeatureToggle.visFeature(Feature.DELVISE_SVAR)) {
             typer.add(DELVIS_SVAR_SKRIFTLIG.name());
         }
 

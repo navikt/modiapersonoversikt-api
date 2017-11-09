@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
@@ -41,7 +42,7 @@ public class HenvendelseController {
             @PathParam("id") String henvendelseId,
             @Context HttpServletRequest httpRequest, FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest) {
 
-        if (!FeatureToggle.visDelviseSvarFunksjonalitet()) {
+        if (!FeatureToggle.visFeature(Feature.DELVISE_SVAR)) {
             return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
         }
 
