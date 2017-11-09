@@ -129,7 +129,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         AjaxLink<Void> leggTilbakeKnapp = new AjaxLink<Void>("leggtilbake") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                if (traadenErEtEnkeltSporsmalFraBruker()) {
+                if (traadenKanLeggesTilbake()) {
                     traadContainer.setVisibilityAllowed(true);
                     animertVisningToggle(target, svarContainer);
                     animertVisningToggle(target, leggTilbakePanel);
@@ -143,7 +143,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             }
         };
 
-        if (traadenErEtEnkeltSporsmalFraBruker()) {
+        if (traadenKanLeggesTilbake()) {
             leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("fortsettdialogpanel.avbryt.leggtilbake")));
             leggTilbakeKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakePanel.getMarkupId()));
         } else {
@@ -203,8 +203,16 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         return on(traad).exists(where(Melding.TYPE, equalTo(SPORSMAL_MODIA_UTGAAENDE)));
     }
 
-    private boolean traadenErEtEnkeltSporsmalFraBruker() {
-        return svar.isEmpty() && sporsmal.erSporsmalSkriftlig();
+    private boolean traadenKanLeggesTilbake() {
+        return sporsmalErUbesvart() && sporsmal.erSporsmalSkriftlig();
+    }
+
+    private boolean sporsmalErUbesvart(){
+        return svar.stream()
+            .noneMatch((melding) ->
+                melding.meldingstype == Meldingstype.SVAR_OPPMOTE ||
+                melding.meldingstype == Meldingstype.SVAR_SKRIFTLIG ||
+                melding.meldingstype == Meldingstype.SVAR_TELEFON );
     }
 
     private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {

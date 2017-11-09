@@ -328,12 +328,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--Diverse-->
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-        </dependency>
-
         <!-- Denne må være her på grunn av classloading på JBoss -->
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
@@ -371,8 +365,8 @@
 
         <!--Testing-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
