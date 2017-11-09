@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
-import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.modig.core.context.*;
+import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -16,12 +17,16 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 
+import javax.ws.rs.NotAuthorizedException;
+import java.util.ArrayList;
 import java.util.Collections;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.lagWSOppgave;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.mockHentOppgaveResponseMedTilordning;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -39,7 +44,14 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
 
     @BeforeAll
     static void beforeAll() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        setInnloggetSaksbehandler();
+    }
+
+    private static void setInnloggetSaksbehandler() {
+        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils
+                .SubjectBuilder(OppgaveMockFactory.ANSVARLIG_SAKSBEHANDLER, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
     @BeforeEach
@@ -53,13 +65,20 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         oppgaveServiceMock = mock(OppgaveV3.class);
         ansattServiceMock = mockAnsattService();
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
-        rutingMock = mock(Ruting.class);
+        rutingMock = mockRutingService();
         saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
+    }
+
+    private Ruting mockRutingService() {
+        Ruting rutingMock = mock(Ruting.class);
+        when(rutingMock.finnAnsvarligEnhetForOppgavetype(any()))
+                .thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(new ArrayList<>()));
+        return rutingMock ;
     }
 
     private AnsattService mockAnsattService() {
         AnsattService ansattServiceMock = mock(AnsattService.class);
-        when(ansattServiceMock.hentAnsattNavn(anyString())).thenReturn("z666");
+        when(ansattServiceMock.hentAnsattNavn(anyString())).thenReturn(OppgaveMockFactory.ANSVARLIG_SAKSBEHANDLER);
         return ansattServiceMock;
     }
 
@@ -102,5 +121,16 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         assertThat(endreOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
         assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
         assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhet));
+    }
+
+    @Test
+    @DisplayName("Sjekker om innlogget saksbehandler er samme som saksbehandler som er ansvarlig for oppgaven i GSAK")
+    void skalKasteFeilOmSaksbehandlerIkkeHarTilgangTilOppgave() throws HentOppgaveOppgaveIkkeFunnet {
+        when(oppgaveServiceMock.hentOppgave(any()))
+                .thenReturn(new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("ANNEN_SAKSBEHANDLER")));
+
+        assertThrows(NotAuthorizedException.class, () -> {
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(OppgaveMockFactory.OPPGAVE_ID, "beskrivelse", Temagruppe.ARBD);
+        });
     }
 }
