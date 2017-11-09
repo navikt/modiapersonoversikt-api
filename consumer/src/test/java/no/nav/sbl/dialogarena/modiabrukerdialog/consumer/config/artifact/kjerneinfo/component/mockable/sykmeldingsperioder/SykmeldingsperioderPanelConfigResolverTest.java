@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjernei
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.utbtalinger.UtbetalingerServiceTestConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import org.junit.Test;
@@ -39,6 +40,10 @@ public class SykmeldingsperioderPanelConfigResolverTest {
     private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceDefault;
 
     @Inject
+    @Qualifier("pleiepengerServiceImpl")
+    private Wrapper<PleiepengerService> pleiepengerServiceImpl;
+
+    @Inject
     private SykmeldingsperioderPanelConfigResolver resolver;
 
     @Test
@@ -56,6 +61,5 @@ public class SykmeldingsperioderPanelConfigResolverTest {
         resolver.sykepengerWidgetService().getWidgetContent("");
         verify(sykepengerServiceDefault.wrappedObject, times(1)).hentSykmeldingsperioder(any(SykepengerRequest.class));
     }
-
 
 }

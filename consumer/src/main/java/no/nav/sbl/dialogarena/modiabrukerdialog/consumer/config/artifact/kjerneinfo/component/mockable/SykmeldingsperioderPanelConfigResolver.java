@@ -1,17 +1,20 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.SykmeldingsperioderPanelConfigImpl;
+import no.nav.modig.wicket.loader.TwoArgumentsModelLoader;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
+import no.nav.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengerettighet;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
+import org.apache.wicket.model.IModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,24 +43,24 @@ public class SykmeldingsperioderPanelConfigResolver {
     @Qualifier("foreldrepengerServiceMock")
     private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock;
 
+    @Inject
+    private PleiepengerService pleiepengerServiceImpl;
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
-        return new SykepengerWidgetServiceImpl(getSykepengerService(), getForeldrepengerService());
+        return new SykepengerWidgetServiceImpl(getSykepengerService(), getForeldrepengerService(), pleiepengerServiceImpl);
     }
 
     @Bean
+    @Qualifier("sykmeldingsperiodeLoader")
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        SykmeldingsperiodeLoader periodeLoader = new SykmeldingsperioderPanelConfigImpl().sykmeldingsperiodeLoader();
-        periodeLoader.setSykepengerService(getSykepengerService());
-        return periodeLoader;
+        return new SykmeldingsperiodeLoader(getSykepengerService());
     }
 
     @Bean
-    public ForeldrepengerLoader foreldrepengerLoader() {
-        ForeldrepengerLoader foreldrepengerLoader = new SykmeldingsperioderPanelConfigImpl().foreldrepengerLoader();
-        foreldrepengerLoader.setForeldrepengerService(getForeldrepengerService());
-        return foreldrepengerLoader;
+    @Qualifier("foreldrepengerLoader")
+    public TwoArgumentsModelLoader<IModel<String>, String, Foreldrepengerettighet> foreldrepengerLoader() {
+        return new ForeldrepengerLoader(getForeldrepengerService());
     }
 
     private ForeldrepengerServiceBi getForeldrepengerService() {

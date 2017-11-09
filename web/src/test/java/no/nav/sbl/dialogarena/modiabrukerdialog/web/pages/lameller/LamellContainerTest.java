@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.JacksonMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFactory;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.*;
-import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
-import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -46,20 +46,27 @@ public class LamellContainerTest extends WicketPageTest {
 
     @Test
     public void handleFeedItemEventsShouldGotoForeldrePengerLamellWhenForeeldrePengerEventHappens() {
-        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", FORELDREPENGER));
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", FORELDREPENGER_TYPE));
         assertThat(getSelectedLamell(), equalTo(LAMELL_FORELDREPENGER + "itemId"));
     }
 
     @Test
     public void handleFeedItemEventsShouldGotoSykePengerLamellWhenSykePengerEventHappens() {
-        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SYKEPENGER));
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SYKEPENGER_TYPE));
         assertThat(getSelectedLamell(), equalTo(LAMELL_SYKEPENGER + "itemId"));
+    }
+
+    @Test
+    public void handleFeedItemEventsShouldGotoPleiePengerLamellWhenPleiePengerEventHappens() {
+        String itemId = PleiepengerMockFactory.BARN_FNR;
+        lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", itemId , PLEIEPENGER_TYPE));
+        assertThat(getSelectedLamell(), equalTo(LAMELL_PLEIEPENGER + itemId));
     }
 
     @Test
     public void handleFeedItemEventsShouldReuseFactory() {
         IEvent<String> event = createEvent();
-        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER);
+        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER_TYPE);
         lamellContainer.handleFeedItemEvent(event, payload);
         String selectedLamell = getSelectedLamell();
 
@@ -72,12 +79,12 @@ public class LamellContainerTest extends WicketPageTest {
     @Test
     public void handleFeedItemEventsShouldGotoDifferentLammelWhenDifferentItemIsClicked() {
         IEvent<String> event = createEvent();
-        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER);
+        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER_TYPE);
         lamellContainer.handleFeedItemEvent(event, payload);
         String selectedLamell = getSelectedLamell();
 
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId"));
-        payload = new FeedItemPayload("widgetid", "itemId2", SYKEPENGER);
+        payload = new FeedItemPayload("widgetid", "itemId2", SYKEPENGER_TYPE);
         lamellContainer.handleFeedItemEvent(event, payload);
         selectedLamell = getSelectedLamell();
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId2"));
