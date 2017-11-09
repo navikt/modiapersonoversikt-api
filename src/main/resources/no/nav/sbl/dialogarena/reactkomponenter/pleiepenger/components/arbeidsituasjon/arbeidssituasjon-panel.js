@@ -7,6 +7,17 @@ import {
     formaterJavaDate, formaterBelop, formaterOptionalVerdi, konverterTilMomentDato
 } from '../../utils';
 
+const arbeidssituasjonTekstShape = PT.shape({
+    arbeidssituasjon: PT.string.isRequired,
+    arbeidskategori: PT.string.isRequired,
+    arbeidsgiver: PT.string.isRequired,
+    kontonummer: PT.string.isRequired,
+    inntektsperiode: PT.string.isRequired,
+    inntektForPerioden: PT.string.isRequired,
+    refusjonstype: PT.string.isRequired,
+    refusjonTilDato: PT.string.isRequired
+});
+
 const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
     <div className="arbeidsforhold">
         <dl className="pleiepenger-detaljer">
@@ -36,7 +47,7 @@ const ArbeidsforholdKomponent = ({ arbeidsforhold, tekst }) => (
 );
 
 ArbeidsforholdKomponent.propTypes = {
-    tekst: PT.object.isRequired,
+    tekst: arbeidssituasjonTekstShape.isRequired,
     arbeidsforhold: PT.shape({
         arbeidskategori: PT.string.isRequired,
         arbeidsgiverNavn: PT.string,
@@ -95,7 +106,7 @@ class ArbeidssituasjonPanel extends React.Component {
 }
 
 ArbeidssituasjonPanel.propTypes = {
-    tekst: PT.object.isRequired,
+    tekst: arbeidssituasjonTekstShape.isRequired,
     arbeidsforhold: PT.array.isRequired
 };
 

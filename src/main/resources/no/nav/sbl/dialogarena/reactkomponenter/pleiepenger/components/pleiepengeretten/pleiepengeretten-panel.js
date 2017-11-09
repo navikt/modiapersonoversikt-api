@@ -81,7 +81,19 @@ const PleiepengerettighetPanel = props => {
 };
 
 PleiepengerettighetPanel.propTypes = {
-    tekst: PT.object.isRequired,
+    tekst: PT.shape({
+        omPleiepengeretten: PT.string.isRequired,
+        barnetsDagkonto: PT.string.isRequired,
+        dagerEnhet: PT.string.isRequired,
+        forbrukteDagerPerIDag: PT.string.isRequired,
+        fraOgMedDato: PT.string.isRequired,
+        tilOgMedDato: PT.string.isRequired,
+        totaltInnvilget: PT.string.isRequired,
+        kompensasjonsgrad: PT.string.isRequired,
+        pleiepengegrad: PT.string.isRequired,
+        barnet: PT.string.isRequired,
+        annenForelder: PT.string.isRequired
+    }).isRequired,
     fomDato: javaDatoType,
     tomDato: javaDatoType,
     pleiepengedager: PT.number.isRequired,
