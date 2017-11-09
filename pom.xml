@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>13.4.0-pleiepenger-SNAPSHOT</version>
+    <version>13.4.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -73,7 +73,7 @@
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>2.10.3-PLEIEPENGER-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.10.3-SNAPSHOT</reactkomponenter.version>
         <nav-metrics.version>3.2.1</nav-metrics.version>
 
         <!-- java-avhengigheter -->
@@ -95,7 +95,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>2.1.0</personsok.version>
-        <kjerneinfo.versjon>5.1.5-pleiepenger-SNAPSHOT</kjerneinfo.versjon>
+        <kjerneinfo.versjon>5.1.5-SNAPSHOT</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
