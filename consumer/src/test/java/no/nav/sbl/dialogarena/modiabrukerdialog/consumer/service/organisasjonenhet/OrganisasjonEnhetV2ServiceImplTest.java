@@ -4,6 +4,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.FinnNAVKontorUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhetV2;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.Enhetstyper;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.Organisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
 import org.junit.Test;
@@ -63,7 +64,9 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
     @Test
     public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
-        when(enhet.hentEnhetBolk(any(HentEnhetBolkRequest.class))).thenReturn(new HentEnhetBolkResponse());
+        HentEnhetBolkResponse hentEnhetBolkResponse = new HentEnhetBolkResponse();
+//        hentEnhetBolkResponse.getEnhetListe().add(lagOrganisasjonsenhet("1234"));
+        when(enhet.hentEnhetBolk(any(HentEnhetBolkRequest.class))).thenReturn(hentEnhetBolkResponse);
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100", OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
         assertFalse(enhetFraTjenesten.isPresent());
     }
@@ -86,8 +89,6 @@ public class OrganisasjonEnhetV2ServiceImplTest {
         assertThat(ansattEnhet.isPresent(), is(true));
     }
 
-
-
     @Test
     @SuppressWarnings("ConstantConditions")
     public void finnNAVKontorReturnererOptionalMedKorrektMappetAnsattEnhetDersomWebserviceReturnererNAVKontor() throws Exception {
@@ -97,7 +98,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
         assertThat(ansattEnhet.isPresent(), is(true));
         assertThat(ansattEnhet.get().enhetId, is("1234"));
-        assertThat(ansattEnhet.get().enhetNavn, is("Enhet"));
+        assertThat(ansattEnhet.get().enhetNavn, is("MockEnhet"));
         assertThat(ansattEnhet.get().status, is("AKTIV"));
     }
 
@@ -131,7 +132,19 @@ public class OrganisasjonEnhetV2ServiceImplTest {
         FinnNAVKontorResponse finnNAVKontorResponse = new FinnNAVKontorResponse();
         Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
         organisasjonsenhet.setEnhetId(enhetId);
-        finnNAVKontorResponse.setNAVKontor(organisasjonsenhet);
+        finnNAVKontorResponse.setNAVKontor(lagOrganisasjonsenhet(enhetId));
         return finnNAVKontorResponse;
+    }
+
+    private Organisasjonsenhet lagOrganisasjonsenhet(String enhetId) {
+        Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
+        organisasjonsenhet.setStatus(AKTIV);
+        organisasjonsenhet.setEnhetNavn("MockEnhet");
+        organisasjonsenhet.setEnhetId(enhetId);
+        organisasjonsenhet.setOrganisasjonsnummer(enhetId);
+        Enhetstyper enhetstyper = new Enhetstyper();
+        enhetstyper.setValue("Mock");
+        organisasjonsenhet.setType(enhetstyper);
+        return organisasjonsenhet;
     }
 }
