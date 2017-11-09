@@ -6,8 +6,7 @@ import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -38,7 +37,6 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
@@ -127,7 +125,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         assertThat(melding.traadId, is(SPORSMAL_ID));
         assertThat(melding.temagruppe, is(TEMAGRUPPE));
         assertThat(melding.kanal, is(Kanal.TEKST.name()));
-        assertThat(melding.fritekst, is(FRITEKST));
+        assertThat(melding.getFritekst(), is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
         assertThat(melding.brukersEnhet, is(BRUKERS_ENHET));
     }
@@ -409,7 +407,11 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     }
 
     private Melding lagSvar() {
-        return new Melding().withOpprettetDato(now()).withType(SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(TEMAGRUPPE);
+        return new Melding()
+                .withOpprettetDato(now())
+                .withType(SVAR_SKRIFTLIG)
+                .withFritekst(new Fritekst("fritekst", new no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler("", "", ""), now()))
+                .withTemagruppe(TEMAGRUPPE);
     }
 
 }

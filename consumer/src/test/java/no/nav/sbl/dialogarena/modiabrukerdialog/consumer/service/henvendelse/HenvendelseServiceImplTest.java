@@ -54,7 +54,7 @@ class HenvendelseServiceImplTest {
         ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
         verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString());
 
-        assertEquals(SVAR, argumentCaptor.getValue().fritekst);
+        assertEquals(SVAR, argumentCaptor.getValue().getFritekst());
     }
 
     @Test
