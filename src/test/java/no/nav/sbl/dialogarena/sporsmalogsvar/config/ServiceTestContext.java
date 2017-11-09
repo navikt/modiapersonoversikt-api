@@ -121,7 +121,7 @@ public class ServiceTestContext {
     @Bean
     public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
         OrganisasjonEnhetV2Service organisasjonEnhetService = mock(OrganisasjonEnhetV2Service.class);
-        when(organisasjonEnhetService.hentAlleEnheter()).thenReturn(asList(new AnsattEnhet("1231", "Sinsen", "AKTIV")));
+        when(organisasjonEnhetService.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)).thenReturn(asList(new AnsattEnhet("1231", "Sinsen", "AKTIV")));
         return organisasjonEnhetService;
     }
 
