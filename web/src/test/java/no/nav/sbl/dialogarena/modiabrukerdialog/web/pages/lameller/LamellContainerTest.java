@@ -9,6 +9,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAn
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFactory;
 import org.apache.wicket.event.IEvent;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +60,8 @@ public class LamellContainerTest extends WicketPageTest {
 
     @Test
     public void handleFeedItemEventsShouldGotoPleiePengerLamellWhenPleiePengerEventHappens() {
-        String itemId = PleiepengerMockFactory.BARN_FNR;
+        String itemId = LocalDate.fromDateFields(PleiepengerMockFactory.PERIODEFRA)
+                .toString(DateTimeFormat.forPattern("dd.MM.yyyy"));
         lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", itemId , PLEIEPENGER_TYPE));
         assertThat(getSelectedLamell(), equalTo(LAMELL_PLEIEPENGER + itemId));
     }

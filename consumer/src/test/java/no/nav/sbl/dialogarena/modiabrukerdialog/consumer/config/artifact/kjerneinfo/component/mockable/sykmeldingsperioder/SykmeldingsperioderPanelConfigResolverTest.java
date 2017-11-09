@@ -8,6 +8,7 @@ import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceB
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,6 +47,7 @@ public class SykmeldingsperioderPanelConfigResolverTest {
     @Inject
     private SykmeldingsperioderPanelConfigResolver resolver;
 
+    @Ignore
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
