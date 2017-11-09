@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.FinnNAVKontorUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSOrganisasjonsenhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.FinnNAVKontorUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhetV2;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.Organisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSEnhetsstatus.AKTIV;
+import static no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.Enhetsstatus.AKTIV;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,18 +29,18 @@ import static org.mockito.Mockito.when;
 public class OrganisasjonEnhetV2ServiceImplTest {
 
     @Mock
-    private OrganisasjonEnhetV2 enhetWS;
+    private OrganisasjonEnhetV2 enhet;
 
     @InjectMocks
     private OrganisasjonEnhetV2ServiceImpl organisasjonEnhetServiceImpl;
 
     @Test
     public void skalSortereEnheterIStigendeRekkefolge() {
-        final WSHentFullstendigEnhetListeResponse response = new WSHentFullstendigEnhetListeResponse();
+        final HentFullstendigEnhetListeResponse response = new HentFullstendigEnhetListeResponse();
         response.getEnhetListe().addAll(asList(lagEnhet("3333"), lagEnhet("2222"), lagEnhet("1111")));
-        when(enhetWS.hentFullstendigEnhetListe(any(WSHentFullstendigEnhetListeRequest.class))).thenReturn(response);
+        when(enhet.hentFullstendigEnhetListe(any(HentFullstendigEnhetListeRequest.class))).thenReturn(response);
 
-        final List<AnsattEnhet> enheter = organisasjonEnhetServiceImpl.hentAlleEnheter();
+        final List<AnsattEnhet> enheter = organisasjonEnhetServiceImpl.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
 
         assertThat(enheter.get(0).enhetId, is(equalTo("1111")));
         assertThat(enheter.get(1).enhetId, is(equalTo("2222")));
@@ -48,12 +49,12 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
     @Test
     public void hentEnhetGittEnhetIdSkalReturnereHenteEnkeltEnhetGittEnhetId() throws Exception {
-        final WSHentEnhetBolkResponse response = new WSHentEnhetBolkResponse();
-        final WSOrganisasjonsenhet navEnhet = lagEnhet("0100");
+        final HentEnhetBolkResponse response = new HentEnhetBolkResponse();
+        final Organisasjonsenhet navEnhet = lagEnhet("0100");
         response.getEnhetListe().add(navEnhet);
-        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(response);
+        when(enhet.hentEnhetBolk(any(HentEnhetBolkRequest.class))).thenReturn(response);
 
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100", OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
 
         assertTrue(enhetFraTjenesten.isPresent());
         assertThat(navEnhet.getEnhetId(), is(equalTo(enhetFraTjenesten.get().enhetId)));
@@ -62,31 +63,35 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
     @Test
     public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
-        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100");
+        when(enhet.hentEnhetBolk(any(HentEnhetBolkRequest.class))).thenReturn(new HentEnhetBolkResponse());
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100", OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
         assertFalse(enhetFraTjenesten.isPresent());
     }
 
     @Test
     public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdInneholderUgyldigInput() throws Exception {
-        when(enhetWS.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
-        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("x0100");
+        when(enhet.hentEnhetBolk(any(HentEnhetBolkRequest.class))).thenReturn(new HentEnhetBolkResponse());
+        final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("x0100", OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
         assertFalse(enhetFraTjenesten.isPresent());
     }
 
     @Test
     public void finnNAVKontorReturnererOptionalMedAnsattEnhetDersomWebserviceReturnererNAVKontor() throws Exception {
-        when(enhetWS.finnNAVKontor(any())).thenReturn(new WSFinnNAVKontorResponse().withNAVKontor(lagEnhet("1234")));
+        final String enhetId = "1234";
+        FinnNAVKontorResponse finnNAVKontorResponse = lagFinnNAVKontorResponse(enhetId);
+        when(enhet.finnNAVKontor(any())).thenReturn(finnNAVKontorResponse);
 
-        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor(enhetId, null);
 
         assertThat(ansattEnhet.isPresent(), is(true));
     }
 
+
+
     @Test
     @SuppressWarnings("ConstantConditions")
     public void finnNAVKontorReturnererOptionalMedKorrektMappetAnsattEnhetDersomWebserviceReturnererNAVKontor() throws Exception {
-        when(enhetWS.finnNAVKontor(any())).thenReturn(new WSFinnNAVKontorResponse().withNAVKontor(lagEnhet("1234")));
+        when(enhet.finnNAVKontor(any())).thenReturn(lagFinnNAVKontorResponse("1234"));
 
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
 
@@ -98,7 +103,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
     @Test
     public void finnNAVKontorReturnererTomOptionalDersomWebserviceReturnererNull() throws Exception {
-        when(enhetWS.finnNAVKontor(any())).thenReturn(new WSFinnNAVKontorResponse().withNAVKontor(null));
+        when(enhet.finnNAVKontor(any())).thenReturn(new FinnNAVKontorResponse());
 
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
 
@@ -107,14 +112,26 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
     @Test
     public void finnNAVKontorReturnererTomOptionalDersomExceptionKastesFraWebservice() throws Exception {
-        when(enhetWS.finnNAVKontor(any())).thenThrow(new FinnNAVKontorUgyldigInput());
+        when(enhet.finnNAVKontor(any())).thenThrow(new FinnNAVKontorUgyldigInput(null,null));
 
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetServiceImpl.finnNAVKontor("1234", null);
 
         assertThat(ansattEnhet.isPresent(), is(false));
     }
 
-    private WSOrganisasjonsenhet lagEnhet(final String enhetId) {
-        return new WSOrganisasjonsenhet().withEnhetId(enhetId).withEnhetNavn("Enhet").withStatus(AKTIV);
+    private Organisasjonsenhet lagEnhet(final String enhetId) {
+        Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
+        organisasjonsenhet.setEnhetId(enhetId);
+        organisasjonsenhet.setEnhetNavn("Enhet");
+        organisasjonsenhet.setStatus(AKTIV);
+        return organisasjonsenhet;
+    }
+
+    private FinnNAVKontorResponse lagFinnNAVKontorResponse(String enhetId) {
+        FinnNAVKontorResponse finnNAVKontorResponse = new FinnNAVKontorResponse();
+        Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
+        organisasjonsenhet.setEnhetId(enhetId);
+        finnNAVKontorResponse.setNAVKontor(organisasjonsenhet);
+        return finnNAVKontorResponse;
     }
 }

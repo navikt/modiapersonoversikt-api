@@ -108,8 +108,8 @@
         <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>8.0.5</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
-        <modiabrukerdialog-api.version>8.3.5</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>7.1.15</sporsmalogsvar.version>
+        <modiabrukerdialog-api.version>8.3.6-SNAPSHOT</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>7.1.16-SNAPSHOT</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
@@ -120,7 +120,7 @@
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
-        <organisasjonenhet-v2.tjenestespesifikasjon.versjon>1.0.5</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
+        <organisasjonenhet-v2.tjenestespesifikasjon.versjon>2.1.0</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
         <egenansatt-tjenestespesifikasjon.version>1.0.5</egenansatt-tjenestespesifikasjon.version>
         <pensjon-sak.version>1.0.3</pensjon-sak.version>
@@ -458,11 +458,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
-                <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
                 <version>${egenansatt-tjenestespesifikasjon.version}</version>
             </dependency>
@@ -557,6 +552,14 @@
                 <artifactId>common-test</artifactId>
                 <version>${common-test.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!--Virksomhetstjenester-->
+            <dependency>
+                <groupId>no.nav.tjenester</groupId>
+                <artifactId>nav-organisasjonEnhet-v2-tjenestespesifikasjon</artifactId>
+                <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
+                <classifier>jaxws</classifier>
             </dependency>
 
             <!--Modig-->
@@ -1137,7 +1140,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-13.4.3</tag>
+        <tag>modiabrukerdialog-13.2.4</tag>
     </scm>
 
 </project>
