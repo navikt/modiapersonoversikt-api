@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
@@ -39,8 +40,18 @@ public class OppgaveController {
         }
 
         setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", null);
+
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", getTemagruppefromRequest(ferdigstillHenvendelseRestRequest.temagruppe));
+
         return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
+    }
+
+    private Temagruppe getTemagruppefromRequest(String temagruppe){
+        try {
+            return Temagruppe.valueOf(temagruppe);
+        }catch(IllegalArgumentException e){
+            throw new IllegalArgumentException("Ugyldig temagruppe");
+        }
     }
 
     private void setWicketRequestCycleForOperasjonerPaaCookies(@Context HttpServletRequest request) {

@@ -27,7 +27,7 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
     private static final String CACHE_NAME = "organisasjonEnhetV2";
 
     @Inject
-    private OrganisasjonEnhetV2 enhet;
+    private OrganisasjonEnhetV2 organisasjonEnhetService;
 
     public OrganisasjonEnhetV2EndpointCacheTest() {
         super(CACHE_NAME);
@@ -51,10 +51,10 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
         final HentEnhetBolkRequest request_2 = new HentEnhetBolkRequest();
         request_2.getEnhetIdListe().add("1234");
 
-        enhet.hentEnhetBolk(request_1);
-        enhet.hentEnhetBolk(request_2);
-        enhet.hentEnhetBolk(request_1);
-        enhet.hentEnhetBolk(request_2);
+        organisasjonEnhetService.hentEnhetBolk(request_1);
+        organisasjonEnhetService.hentEnhetBolk(request_2);
+        organisasjonEnhetService.hentEnhetBolk(request_1);
+        organisasjonEnhetService.hentEnhetBolk(request_2);
 
         assertThat(getCache().getName(), is(CACHE_NAME));
         assertThat(getCache().getKeys().size(), is(2));
@@ -65,20 +65,20 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
         final FinnNAVKontorRequest request_1 = lagFinnNAVKontorRequest("1234","1234");
         final FinnNAVKontorRequest request_2 = lagFinnNAVKontorRequest("4231", "4231");
 
-        enhet.finnNAVKontor(request_1);
-        enhet.finnNAVKontor(request_2);
-        enhet.finnNAVKontor(request_1);
-        enhet.finnNAVKontor(request_2);
+        organisasjonEnhetService.finnNAVKontor(request_1);
+        organisasjonEnhetService.finnNAVKontor(request_2);
+        organisasjonEnhetService.finnNAVKontor(request_1);
+        organisasjonEnhetService.finnNAVKontor(request_2);
 
         assertThat(getCache().getName(), is(CACHE_NAME));
         assertThat(getCache().getKeys().size(), is(2));
     }
 
-    private FinnNAVKontorRequest lagFinnNAVKontorRequest(String geografi, String diskresjonskode) {
+    private FinnNAVKontorRequest lagFinnNAVKontorRequest(String geografiskTilhorighet, String diskresjonskode) {
         FinnNAVKontorRequest request = new FinnNAVKontorRequest();
-        Geografi geografi_1 = new Geografi();
-        geografi_1.setValue(geografi);
-        request.setGeografiskTilknytning(geografi_1);
+        Geografi geografi = new Geografi();
+        geografi.setValue(geografiskTilhorighet);
+        request.setGeografiskTilknytning(geografi);
         Diskresjonskoder diskresjonskoder = new Diskresjonskoder();
         diskresjonskoder.setValue(diskresjonskode);
         request.setDiskresjonskode(diskresjonskoder);

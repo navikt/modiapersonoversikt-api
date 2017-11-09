@@ -33,13 +33,8 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     @Override
     public List<AnsattEnhet> hentAlleEnheter(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
+        final HentFullstendigEnhetListeResponse HentFullstendigEnhetListeResponse = enhet.hentFullstendigEnhetListe(lagHentFullstendigEnhetListeRequest(oppgavebehandlerFilter));
         final List<AnsattEnhet> enheter = new ArrayList<>();
-
-        final HentFullstendigEnhetListeRequest request = new HentFullstendigEnhetListeRequest();
-        if(valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
-            request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
-        }
-        final HentFullstendigEnhetListeResponse HentFullstendigEnhetListeResponse = enhet.hentFullstendigEnhetListe(request);
 
         enheter.addAll(HentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
 
@@ -48,14 +43,8 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     @Override
     public Optional<AnsattEnhet> hentEnhetGittEnhetId(String enhetId, WSOppgavebehandlerfilter oppgavebehandlerFilter) {
-        final HentEnhetBolkRequest hentEnhetBolkRequest = new HentEnhetBolkRequest();
-        final HentEnhetBolkResponse response;
+        final HentEnhetBolkResponse response = enhet.hentEnhetBolk(lagHentEnhetBolkRequest(enhetId, oppgavebehandlerFilter));
 
-        hentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
-        if(valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
-            hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
-        }
-        response = enhet.hentEnhetBolk(hentEnhetBolkRequest);
         if (response.getEnhetListe() != null && !response.getEnhetListe().isEmpty() && response.getEnhetListe().get(0) != null) {
             return of(TIL_ANSATTENHET.apply(response.getEnhetListe().get(0)));
         } else {
@@ -64,10 +53,10 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
     }
 
     @Override
-    public Optional<AnsattEnhet> finnNAVKontor(final String geografiskTilknytning, final String diskresjonskode) {
+    public Optional<AnsattEnhet> finnNAVKontor(final String geografiskTilhorighet, final String diskresjonskode) {
         final FinnNAVKontorRequest FinnNAVKontorRequest = new FinnNAVKontorRequest();
         Geografi geografi = new Geografi();
-        geografi.setValue(geografiskTilknytning);
+        geografi.setValue(geografiskTilhorighet);
         FinnNAVKontorRequest.setGeografiskTilknytning(geografi);
         if (StringUtils.isNotBlank(diskresjonskode)) {
             Diskresjonskoder diskresjonskoder = new Diskresjonskoder();
@@ -82,10 +71,29 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
                 return empty();
             }
         } catch (FinnNAVKontorUgyldigInput e) {
-            logger.error("Ugyldig input geografiskTilknytning=\"" + geografiskTilknytning +
+            logger.error("Ugyldig input geografiskTilhorighet=\"" + geografiskTilhorighet +
                     "\", diskresjonskode=\"" + diskresjonskode + "\" til OrganisasjonEnhetV2.hentNAVKontor.", e);
             return empty();
         }
+    }
+
+    private HentFullstendigEnhetListeRequest lagHentFullstendigEnhetListeRequest(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
+        final HentFullstendigEnhetListeRequest request = new HentFullstendigEnhetListeRequest();
+        if (valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
+            request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        }
+        return request;
+    }
+
+    private HentEnhetBolkRequest lagHentEnhetBolkRequest(String enhetId, WSOppgavebehandlerfilter oppgavebehandlerFilter) {
+        HentEnhetBolkRequest hentEnhetBolkRequest = new HentEnhetBolkRequest();
+
+        hentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
+        if (valueOf(getProperty(ORGENHET_21, DEFAULT_ORGENHET21))) {
+            hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+        }
+
+        return hentEnhetBolkRequest;
     }
 
     private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = comparing(o -> o.enhetId);
@@ -96,5 +104,4 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
                     Organisasjonsenhet.getEnhetNavn(),
                     Organisasjonsenhet.getStatus().value()
             );
-
 }
