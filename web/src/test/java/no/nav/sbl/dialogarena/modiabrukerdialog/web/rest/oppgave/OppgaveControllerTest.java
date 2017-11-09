@@ -52,7 +52,7 @@ class OppgaveControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        FeatureToggle.visFeature(DELVISE_SVAR);
+        FeatureToggle.toggleFeature(DELVISE_SVAR);
     }
 
     @AfterAll
