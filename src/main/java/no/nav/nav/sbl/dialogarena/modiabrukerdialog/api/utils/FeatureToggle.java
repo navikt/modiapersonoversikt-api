@@ -7,6 +7,8 @@ import static java.lang.System.setProperty;
 public class FeatureToggle {
     static final String ENDRE_NAVN_PROPERTY_KEY = "visEndreNavnFunksjonalitet";
     private static final String DEFAULT_ENDRE_NAVN_FUNKSJONALITET = "false";
+    private static final String PLEIEPENGER_PROPERTY_KEY = "visPleiepenger";
+    private static final String DEFAULT_PLEIEPENGER = "false";
 
     public static boolean visEndreNavnFunksjonalitet() {
         return valueOf(getProperty(ENDRE_NAVN_PROPERTY_KEY, DEFAULT_ENDRE_NAVN_FUNKSJONALITET));
@@ -19,4 +21,17 @@ public class FeatureToggle {
     public static void disableEndreNavnFunksjonalitet() {
         setProperty(ENDRE_NAVN_PROPERTY_KEY, "false");
     }
+
+    public static boolean visPleiepenger() {
+        return valueOf(getProperty(PLEIEPENGER_PROPERTY_KEY, DEFAULT_PLEIEPENGER));
+    }
+
+    public static void enablePleiepeneger() {
+        setProperty(PLEIEPENGER_PROPERTY_KEY, "true");
+    }
+
+    public static void disablePleiepeneger() {
+        setProperty(PLEIEPENGER_PROPERTY_KEY, "false");
+    }
+
 }
