@@ -14,7 +14,8 @@ import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
@@ -31,6 +32,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import javax.ws.rs.core.Response;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -47,12 +49,12 @@ class HenvendelseControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        FeatureToggle.enableDelviseSvarFunksjonalitet();
+        FeatureToggle.visFeature(DELVISE_SVAR);
     }
 
     @AfterAll
     static void afterAll() {
-        FeatureToggle.disableDelviseSvarFunksjonalitet();
+        FeatureToggle.disableFeature(DELVISE_SVAR);
     }
 
     @BeforeEach

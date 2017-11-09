@@ -7,7 +7,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
@@ -27,6 +28,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import javax.security.auth.Subject;
 import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
+
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -49,12 +52,12 @@ class OppgaveControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        FeatureToggle.enableDelviseSvarFunksjonalitet();
+        FeatureToggle.visFeature(DELVISE_SVAR);
     }
 
     @AfterAll
     static void afterAll() {
-        FeatureToggle.disableDelviseSvarFunksjonalitet();
+        FeatureToggle.disableFeature(DELVISE_SVAR);
     }
 
     @BeforeEach
