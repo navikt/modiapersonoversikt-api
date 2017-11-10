@@ -8,6 +8,10 @@ var babelify = require('babelify');
 var notify = require('gulp-notify');
 var eslint = require('gulp-eslint');
 var chalk = require('chalk');
+var fileFilter = require('browserify-file-filter');
+var less = require('gulp-less');
+var path = require('path');
+
 
 var config = require('./buildConfig.json');
 
@@ -24,6 +28,7 @@ function bundleJS(isDev) {
     props.fullPaths = isDev;
 
     bundler = isDev ? watchify(browserify(props)) : browserify(props);
+    bundler.plugin(fileFilter, { p: '\\.(?:css|less|scss|sass)$' });
     bundler.transform(babelify);
 
     function rebundle() {
@@ -67,11 +72,32 @@ function lessTask(options) {
     }
 }
 
+function importLessTask(options) { //leger import til egen fil pga less avhengiheter til modia brukerdialog.
+    function run() {
+        console.log('importing less');
+        gulp.src('./import.less')
+            .pipe(rename({ dirname: '' }))
+            .pipe(less({paths:[ path.join(__dirname, 'node-moduls')]}))
+            .pipe(gulp.dest(options.dest));
+        console.log('imported less from import.less');
+    }
+
+    run();
+
+    if (options.development) {
+        gulp.watch('./import.less', run);
+    }
+}
+
 gulp.task('dev', function runDev() {
     bundleJS(true);
     lessTask({
         development: true,
         src: config.srcPath + '**/*.less',
+        dest: config.targetPath
+    });
+    importLessTask({
+        development: true,
         dest: config.targetPath
     });
 });
@@ -81,6 +107,10 @@ gulp.task('default', function runDefault() {
     lessTask({
         development: false,
         src: config.srcPath + '**/*.less',
+        dest: config.targetPath
+    });
+    importLessTask({
+        development: false,
         dest: config.targetPath
     });
 });
