@@ -21,6 +21,15 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.avbrytCallbackId);
     }
 
+    lagKvittering() {
+        return (
+            <div className="kvittering">
+                <div className="robust-ikon-gront-sjekk" />
+                <h2 className="medium">Delvis svar er registrert</h2>
+            </div>
+        );
+    }
+
     render() {
         if (this.state.erUnderArbeid) {
             return (<DelvisSvar
@@ -36,7 +45,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 temagruppeMapping={this.props.temagruppeMapping}
             />);
         }
-        return <h1>Delvis svar er registrert</h1>;
+        return this.lagKvittering();
     }
 }
 
@@ -52,10 +61,10 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     temagruppe: PT.string.isRequired,
     oppgaveId: PT.string.isRequired,
     opprettetDato: PT.string.isRequired,
-    temagruppeMapping:PT.shape({
+    temagruppeMapping: PT.shape({
         temagruppeKode: PT.string,
-        temagruppeNavn: PT.string,
-    }),
+        temagruppeNavn: PT.string
+    })
 };
 
 export default LeggTilbakeDelvisSvarPanel;
