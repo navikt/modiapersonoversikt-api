@@ -12,6 +12,7 @@ public class ReactResources {
             .scripts(new JavaScriptResourceReference(ResourceReference.class, "build/reactkomponenter.js"))
             .stylesheets(new CssResourceReference(ResourceReference.class, "build/import.css"))
             .less(
+                    new PackageResourceReference(ResourceReference.class, "build/nav-core-variabler.less"),
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
                     new PackageResourceReference(ResourceReference.class, "build/sok-layout.less"),
                     new PackageResourceReference(ResourceReference.class, "build/meldinger-sok.less"),
@@ -21,8 +22,8 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/pleiepenger-panel.less"),
                     new PackageResourceReference(ResourceReference.class, "build/varsel-module.less"),
                     new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/alertstripe.less"),
                     new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/delvis-svar.less")
+                    new PackageResourceReference(ResourceReference.class, "build/delvis-svar.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/traadvisning.less")
             ).done();
 }

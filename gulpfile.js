@@ -73,7 +73,7 @@ function lessTask(options) {
 
 function importLessTask(options) { //leger import til egen fil pga less avhengiheter til modia brukerdialog.
     function run() {
-        console.log('importing less');
+        console.log('Importing LESS');
         gulp.src('./import.less')
             .pipe(less())
             .pipe(gulp.dest(options.dest));
