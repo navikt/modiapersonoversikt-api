@@ -15,14 +15,17 @@ class DelvisSvar extends Component {
     }
 
     ferdigstillHenvendelse() {
-        const url = `/modiabrukerdialog/rest/personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/ferdigstill`;
+        const url = `/modiabrukerdialog/rest/personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/delvisSvar`;
         const data = JSON.stringify({ svar: this.state.svarValue });
         return Ajax.put(url, data);
     }
 
     leggTilbakeOppgave() {
-        const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}`;
-        const data = JSON.stringify({ temagruppe: this.state.valgtTemagruppe });
+        const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}/leggTilbake`;
+        const data = JSON.stringify({
+            temagruppe: this.state.valgtTemagruppe,
+            beskrivelse: `Henvendelsen er besvart delvis og lagt tilbake med ny temagruppe ${this.state.valgtTemagruppe}`
+        });
         return Ajax.put(url, data);
     }
 
@@ -48,7 +51,7 @@ class DelvisSvar extends Component {
         const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
             <p key={`paragraf-${index}`}>{paragraf}</p>);
 
-        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key, index) =>
+        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
 
         return (
@@ -107,10 +110,10 @@ DelvisSvar.propTypes = {
     oppgaveId: PT.string.isRequired,
     avbrytCallback: PT.func.isRequired,
     opprettetDato: PT.string.isRequired,
-    temagruppeMapping:PT.shape({
+    temagruppeMapping: PT.shape({
         temagruppeKode: PT.string,
-        temagruppeNavn: PT.string,
-    }).isRequired,
+        temagruppeNavn: PT.string
+    }).isRequired
 };
 
 export default DelvisSvar;
