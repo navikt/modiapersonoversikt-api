@@ -1,4 +1,5 @@
-import React, { PropTypes as PT } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import IngenDokumenter from './info/ingen-dokumenter';
 import IngenDokumenterBidrag from './info/ingen-dokumenter-bidrag';

@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import ReactDOM from 'react-dom';
 import { generateId } from '../utils/utils-module';
 
@@ -53,8 +54,8 @@ class TypeValg extends React.Component {
 }
 
 TypeValg.propTypes = {
-    valgtKategori: React.PropTypes.string.isRequired,
-    endreKategori: React.PropTypes.func.isRequired
+    valgtKategori: PT.string.isRequired,
+    endreKategori: PT.func.isRequired
 };
 
 export default TypeValg;

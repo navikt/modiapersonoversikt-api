@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import Inngaaende from './inngaaende';
 import Utgaaende from './utgaaende';
@@ -19,11 +20,11 @@ const DokumentAvsender = ({ retning, avsender, mottaker, brukerNavn, navn, kateg
 };
 
 DokumentAvsender.propTypes = {
-    retning: pt.string.isRequired,
-    avsender: pt.string.isRequired,
-    mottaker: pt.string,
-    brukerNavn: pt.string,
-    navn: pt.string
+    retning: PT.string.isRequired,
+    avsender: PT.string.isRequired,
+    mottaker: PT.string,
+    brukerNavn: PT.string,
+    navn: PT.string
 };
 
 export default DokumentAvsender;

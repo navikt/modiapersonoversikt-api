@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import ReactDOM from 'react-dom';
 import sanitize from 'sanitize-html';
 import format from 'string-format';
@@ -16,6 +17,13 @@ class Listevisning extends React.Component {
         this.props.store.traadChanged(this.props.traad, ReactDOM.findDOMNode(this).parentNode);
     }
 
+    shouldComponentUpdate({ valgtTraad }) {
+        const dagensState = erValgtTekst(this.props.traad, this.props.valgtTraad);
+        const nesteState = erValgtTekst(this.props.traad, valgtTraad);
+
+        return dagensState !== nesteState;
+    }
+
     render() {
         const { traad, valgtTraad } = this.props;
         const { antallMeldingerIOpprinneligTraad, statusKlasse } = traad;
@@ -30,14 +38,14 @@ class Listevisning extends React.Component {
         const innhold = sanitize(traad.innhold, { allowedTags: ['em'] });
 
         const statusIkonTekst = format('{0}, {1} {2}',
-            traad.statusKlasse.match(/ubesvart$/) ? 'Ubesvart' : 'Besvart',
+            traad.ikontekst,
             antallMeldingerIOpprinneligTraad,
             antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
         );
 
         return (
-            <div className="sok-element" onClick={this.tekstChangedProxy}>
-                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} />
+            <div className="sok-element">
+                <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} onClick={this.tekstChangedProxy} />
                 <label htmlFor={`melding ${traad.key}`} className={cls}>
                     <div className={`melding-detaljer ${statusKlasse}`}>
                         <div className={`statusIkon ${statusKlasse}`} aria-hidden="true"></div>
@@ -56,15 +64,17 @@ class Listevisning extends React.Component {
 }
 
 Listevisning.propTypes = {
-    traad: pt.shape({
-        statusKlasse: pt.string,
-        antallMeldingerIOpprinneligTraad: pt.number,
-        statusTekst: pt.string.isRequired,
-        temagruppe: pt.string,
-        innhold: pt.string
+    traad: PT.shape({
+        statusKlasse: PT.string,
+        antallMeldingerIOpprinneligTraad: PT.number,
+        statusTekst: PT.string.isRequired,
+        ikontekst: PT.string.isRequired,
+        temagruppe: PT.string,
+        erMonolog: PT.bool,
+        innhold: PT.string
     }),
-    valgtTraad: pt.object.isRequired,
-    store: pt.object.isRequired
+    valgtTraad: PT.object.isRequired,
+    store: PT.object.isRequired
 };
 
 export default Listevisning;

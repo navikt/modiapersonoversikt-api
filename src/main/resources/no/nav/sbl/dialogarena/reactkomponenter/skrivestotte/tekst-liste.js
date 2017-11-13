@@ -1,6 +1,7 @@
 /* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PT from 'prop-types';
 import Utils from './../utils/utils-module';
 
 class TekstListeKomponent extends React.Component {
@@ -9,15 +10,24 @@ class TekstListeKomponent extends React.Component {
         this.props.store.tekstChanged(this.props.tekst, DOMNode.parentNode);
         DOMNode.querySelector('input').focus();
     }
+
+    shouldComponentUpdate(nextProps) {
+        const dagensState = this.props.tekst === this.props.valgtTekst;
+        const nesteState = this.props.tekst === nextProps.valgtTekst;
+
+        return dagensState !== nesteState;
+    }
+
     render() {
         return (
-            <div className="sok-element" onClick={this._onClick.bind(this)}>
+            <div className="sok-element">
                 <input
                     id={'tekstElementRadio' + this.props.tekst.key}
                     name="tekstListeRadio"
                     type="radio"
                     readOnly
                     checked={this.props.tekst === this.props.valgtTekst}
+                    onClick={this._onClick.bind(this)}
                 />
                 <label htmlFor={'tekstElementRadio' + this.props.tekst.key}>
                     <span dangerouslySetInnerHTML={{ __html: this.props.tekst.tittel }}></span>
@@ -29,10 +39,10 @@ class TekstListeKomponent extends React.Component {
 }
 
 TekstListeKomponent.propTypes = {
-    store: React.PropTypes.object.isRequired,
-    tekst: React.PropTypes.object.isRequired,
-    valgtTekst: React.PropTypes.object.isRequired,
-    locale: React.PropTypes.string.isRequired
+    store: PT.object.isRequired,
+    tekst: PT.object.isRequired,
+    valgtTekst: PT.object.isRequired,
+    locale: PT.string.isRequired
 };
 
 export default TekstListeKomponent;

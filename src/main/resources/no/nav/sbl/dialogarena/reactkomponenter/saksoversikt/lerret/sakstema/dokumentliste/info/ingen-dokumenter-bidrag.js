@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 const IngenDokumenterBidrag = ({ ingenDokumenterHeader }) => {
@@ -20,7 +21,7 @@ const IngenDokumenterBidrag = ({ ingenDokumenterHeader }) => {
 };
 
 IngenDokumenterBidrag.propTypes = {
-    ingenDokumenterHeader: pt.element.isRequired
+    ingenDokumenterHeader: PT.element.isRequired
 };
 
 export default IngenDokumenterBidrag;

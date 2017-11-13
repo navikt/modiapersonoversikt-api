@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import { wrapWithProvider } from './../utils/redux-utils';
 import { store } from './../store';
 import { connect } from 'react-redux';
@@ -87,13 +88,13 @@ export class SaksoversiktLerret extends React.Component {
 }
 
 SaksoversiktLerret.propTypes = {
-    fnr: React.PropTypes.string.isRequired,
-    brukerNavn: React.PropTypes.string.isRequired,
-    hentLerretData: React.PropTypes.func,
-    velgSak: React.PropTypes.func,
-    status: React.PropTypes.string,
-    tekster: React.PropTypes.object,
-    miljovariabler: React.PropTypes.object
+    fnr: PT.string.isRequired,
+    brukerNavn: PT.string.isRequired,
+    hentLerretData: PT.func,
+    velgSak: PT.func,
+    status: PT.string,
+    tekster: PT.object,
+    miljovariabler: PT.object
 };
 
 const mapStateToProps = (state) => (

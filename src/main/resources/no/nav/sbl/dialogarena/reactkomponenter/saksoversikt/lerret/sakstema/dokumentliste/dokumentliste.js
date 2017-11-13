@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import { groupBy } from 'lodash';
 import DokumentInfoElm from './dokument/dokument-info-elm';
 import { nyesteDokumentForst } from './../../../utils/siste-oppdatering/siste-oppdatering';
@@ -37,11 +38,11 @@ const DokumentListe = ({ dokumentMetadata, brukerNavn, visTema, velgJournalpost,
 };
 
 DokumentListe.propTypes = {
-    dokumentMetadata: pt.array.isRequired,
-    brukerNavn: pt.string.isRequired,
-    visTema: pt.bool.isRequired,
-    velgJournalpost: pt.func.isRequired,
-    visSide: pt.func.isRequired
+    dokumentMetadata: PT.array.isRequired,
+    brukerNavn: PT.string.isRequired,
+    visTema: PT.bool.isRequired,
+    velgJournalpost: PT.func.isRequired,
+    visSide: PT.func.isRequired
 };
 
 export default DokumentListe;

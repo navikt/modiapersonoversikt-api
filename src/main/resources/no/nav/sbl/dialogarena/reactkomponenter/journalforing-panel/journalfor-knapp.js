@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 import Snurrepipp from '../utils/snurrepipp';
 import Ajax from './../utils/ajax';
 
@@ -46,11 +47,11 @@ class JournalforKnapp extends React.Component {
 }
 
 JournalforKnapp.propTypes = {
-    sak: React.PropTypes.object.isRequired,
-    fnr: React.PropTypes.string.isRequired,
-    traadId: React.PropTypes.string.isRequired,
-    traadJournalfort: React.PropTypes.func.isRequired,
-    feiletCallback: React.PropTypes.func.isRequired
+    sak: PT.object.isRequired,
+    fnr: PT.string.isRequired,
+    traadId: PT.string.isRequired,
+    traadJournalfort: PT.func.isRequired,
+    feiletCallback: PT.func.isRequired
 };
 
 export default JournalforKnapp;

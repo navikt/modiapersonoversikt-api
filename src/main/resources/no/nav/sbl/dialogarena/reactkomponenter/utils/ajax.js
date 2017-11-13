@@ -29,8 +29,8 @@ class Ajax {
         return Ajax.doRequest(http.post(url).type('application/json').send(data), requestModifier);
     }
 
-    static put(url, requestModifier = (req) => req) {
-        return Ajax.doRequest(http.put(url), requestModifier);
+    static put(url, data, requestModifier = (req) => req) {
+        return Ajax.doRequest(http.put(url).type('application/json').send(data), requestModifier);
     }
 
     static delete(url, requestModifier = (req) => req) {

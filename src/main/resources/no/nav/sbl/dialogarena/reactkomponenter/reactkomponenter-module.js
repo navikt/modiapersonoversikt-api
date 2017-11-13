@@ -6,6 +6,9 @@ import VelgSakPanel from './velg-sak-panel/velg-sak-panel-module';
 import VarselLerret from './varsel-lerret/varsel-lerret-module';
 import FeilmeldingsModaler from './feilmeldingsmodaler/feilmeldingsmodaler-module';
 import SaksoversiktLerret from './saksoversikt/lerret/saksoversikt-lerret-module';
+import PleiepengerPanel from './pleiepenger/pleiepenger-panel';
+import AlertStripeSuksessSolid from './alertstriper/alertstripe-module';
+import LeggTilbakeDelvisSvarPanel from './dialog-panel/leggtilbakedelvissvar/legg-tilbake-delvis-svar-module';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -18,7 +21,10 @@ window.ModiaJS = {
         VelgSakPanel,
         VarselLerret,
         FeilmeldingsModaler,
-        SaksoversiktLerret
+        SaksoversiktLerret,
+        PleiepengerPanel,
+        AlertStripeSuksessSolid,
+        LeggTilbakeDelvisSvarPanel
     },
     InitializedComponents: {},
     React,

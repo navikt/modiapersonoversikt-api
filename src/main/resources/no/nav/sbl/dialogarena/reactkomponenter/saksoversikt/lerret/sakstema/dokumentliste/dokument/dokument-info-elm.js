@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import DokumentinfoVedlegg from './dokument-info-vedlegg';
 import DokumentAvsender from './avsender/dokument-avsender';
 import { FormattedDate, injectIntl } from 'react-intl';
@@ -69,10 +70,10 @@ class DokumentInfoElm extends React.Component {
 
 DokumentInfoElm.propTypes = {
     dokumentinfo: dokumentinfoShape.isRequired,
-    visTema: pt.bool.isRequired,
-    brukerNavn: pt.string,
-    velgJournalpost: pt.func.isRequired,
-    visSide: pt.func.isRequired
+    visTema: PT.bool.isRequired,
+    brukerNavn: PT.string,
+    velgJournalpost: PT.func.isRequired,
+    visSide: PT.func.isRequired
 };
 
 export default injectIntl(DokumentInfoElm);

@@ -1,4 +1,5 @@
-import React, { PropTypes as pt } from 'react';
+import React from 'react';
+import PT from 'prop-types';
 import Utils from './../utils/utils-module';
 import sanitize from 'sanitize-html';
 import Journalfort from './journalfort';
@@ -50,22 +51,22 @@ class Melding extends React.Component {
 }
 
 Melding.propTypes = {
-    melding: React.PropTypes.shape({
-        erInngaaende: pt.bool,
-        statusTekst: pt.string,
-        lestStatus: pt.string,
-        temagruppeNavn: pt.string,
-        journalfortTemanavn: pt.string,
-        journalfortDatoTekst: pt.string,
-        journalfortSaksId: pt.string,
-        journalfortAvNavIdent: pt.string,
-        visningsDatoTekst: pt.string,
-        erDokumentMelding: pt.bool,
-        skrevetAv: pt.shape({
-            navn: pt.string
+    melding: PT.shape({
+        erInngaaende: PT.bool,
+        statusTekst: PT.string,
+        lestStatus: PT.string,
+        temagruppeNavn: PT.string,
+        journalfortTemanavn: PT.string,
+        journalfortDatoTekst: PT.string,
+        journalfortSaksId: PT.string,
+        journalfortAvNavIdent: PT.string,
+        visningsDatoTekst: PT.string,
+        erDokumentMelding: PT.bool,
+        skrevetAv: PT.shape({
+            navn: PT.string
         }),
-        journalfortAv: pt.shape({
-            navn: pt.string
+        journalfortAv: PT.shape({
+            navn: PT.string
         })
     }).isRequired
 };

@@ -1,0 +1,40 @@
+@white: rgb(255, 255, 255);
+@navMorkGra: rgb(62, 56, 50);
+@navGronn: rgb(6, 137, 58);
+@navGronnLighten60: rgb(155, 208, 176);
+
+.alertstripe {
+  background-color: @white;
+  padding: 1rem;
+  display: flex;
+  align-content: center;
+  border-radius: 2px;
+  color: @navMorkGra;
+}
+
+.alertstripe__ikon {
+  margin-right: 0.75rem;
+  padding-right: 0.75rem;
+  width: 2.5rem;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.alertstripe--suksess {
+  border: 1px solid @navGronn;
+}
+
+.alertstripe--solid {
+  border: 0;
+}
+
+.alertstripe--solid.alertstripe--suksess {
+  background-color: @navGronnLighten60;
+}
+
+.alertstripe--tekst {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+};
