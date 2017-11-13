@@ -10,7 +10,6 @@ var eslint = require('gulp-eslint');
 var chalk = require('chalk');
 var fileFilter = require('browserify-file-filter');
 var less = require('gulp-less');
-var path = require('path');
 
 
 var config = require('./buildConfig.json');
@@ -76,8 +75,7 @@ function importLessTask(options) { //leger import til egen fil pga less avhengih
     function run() {
         console.log('importing less');
         gulp.src('./import.less')
-            .pipe(rename({ dirname: '' }))
-            .pipe(less({paths:[ path.join(__dirname, 'node-moduls')]}))
+            .pipe(less())
             .pipe(gulp.dest(options.dest));
         console.log('imported less from import.less');
     }
