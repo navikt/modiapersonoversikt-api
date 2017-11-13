@@ -22,7 +22,6 @@ public class ReactResourcesTest {
             "build/saksoversikt-module.less",
             "build/pleiepenger-panel.less",
             "build/delvis-svar.less",
-            "build/alertstripe.less",
             "build/traadvisning.less",
             "build/nav-core-variabler.less"
     );
