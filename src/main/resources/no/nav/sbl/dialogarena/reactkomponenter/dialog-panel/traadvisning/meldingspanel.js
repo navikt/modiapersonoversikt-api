@@ -2,7 +2,7 @@ import React from 'react';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
-import Utils from '../utils/utils-module';
+import Utils from '../../utils/utils-module';
 
 function toNameCase(navn) {
     return navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());

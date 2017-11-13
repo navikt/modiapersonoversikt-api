@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
-import TraadVisning from '../../traadvisning/traadvisning-module';
+import TraadVisning from '../traadvisning/traadvisning-module';
 
 class DelvisSvar extends Component {
     constructor(props) {

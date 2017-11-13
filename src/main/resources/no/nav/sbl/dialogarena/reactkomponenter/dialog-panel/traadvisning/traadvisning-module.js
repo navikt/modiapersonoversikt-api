@@ -38,7 +38,7 @@ function TraadVisning(props) {
         lagMeldingspanel(traadUtenDelviseSvar[0], 0, true) :
         lagNedtrekkspanel(traadUtenDelviseSvar, 'Vis tidligere meldingsdetaljer', apneTraadVisning);
     const delvisSvarPanel = delviseSvar.length !== 0 ?
-        lagNedtrekkspanel(delviseSvar, 'Delvise Svar', true) :
+        lagNedtrekkspanel(delviseSvar, 'Delvis Svar', true) :
         '';
 
     return (
