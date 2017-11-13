@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
-public class FerdigstillHenvendelseRequest {
+public class SvarDelvisRequest {
 
     public final String fodselsnummer;
     public final String traadId;
@@ -8,7 +8,7 @@ public class FerdigstillHenvendelseRequest {
     public final String henvendelseId;
     public final String navIdent;
 
-    private FerdigstillHenvendelseRequest(FerdigstillHenvendelseRequestBuilder builder) {
+    private SvarDelvisRequest(SvarDelvisRequestBuilder builder) {
         this.fodselsnummer = builder.fodselsnummer;
         this.svar = builder.svar;
         this.traadId = builder.traadId;
@@ -16,40 +16,40 @@ public class FerdigstillHenvendelseRequest {
         this.navIdent = builder.navIdent;
     }
 
-    public static class FerdigstillHenvendelseRequestBuilder {
+    public static class SvarDelvisRequestBuilder {
         private String svar;
         private String fodselsnummer;
         private String traadId;
         private String henvendelseId;
         private String navIdent;
 
-        public FerdigstillHenvendelseRequestBuilder withFodselsnummer(String fodselsnummer) {
+        public SvarDelvisRequestBuilder withFodselsnummer(String fodselsnummer) {
             this.fodselsnummer = fodselsnummer;
             return this;
         }
 
-        public FerdigstillHenvendelseRequestBuilder withTraadId(String traadId) {
+        public SvarDelvisRequestBuilder withTraadId(String traadId) {
             this.traadId = traadId;
             return this;
         }
 
-        public FerdigstillHenvendelseRequestBuilder withHenvendelseId(String henvendelseId) {
+        public SvarDelvisRequestBuilder withHenvendelseId(String henvendelseId) {
             this.henvendelseId = henvendelseId;
             return this;
         }
 
-        public FerdigstillHenvendelseRequestBuilder withSvar(String svar) {
+        public SvarDelvisRequestBuilder withSvar(String svar) {
             this.svar = svar;
             return this;
         }
 
-        public FerdigstillHenvendelseRequestBuilder withNavIdent(String navIdent) {
+        public SvarDelvisRequestBuilder withNavIdent(String navIdent) {
             this.navIdent = navIdent;
             return this;
         }
 
-        public FerdigstillHenvendelseRequest build() {
-            return new FerdigstillHenvendelseRequest(this);
+        public SvarDelvisRequest build() {
+            return new SvarDelvisRequest(this);
         }
     }
 

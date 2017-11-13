@@ -14,12 +14,11 @@ import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.HenvendelseController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.SvarDelvisRESTRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.SvarDelvisController;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -38,18 +37,18 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-class HenvendelseControllerTest {
+class SvarDelvisControllerTest {
 
     public static final String BRUKERS_FNR = "10108000398";
     public static final String TRAAD_ID = "trådID";
     public static final String HENVENDELSES_ID = "henvendelsesID";
 
-    private HenvendelseController henvendelseController;
+    private SvarDelvisController svarDelvisController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
 
     @BeforeAll
     static void beforeAll() {
-        FeatureToggle.visFeature(DELVISE_SVAR);
+        FeatureToggle.toggleFeature(DELVISE_SVAR);
     }
 
     @AfterAll
@@ -59,7 +58,8 @@ class HenvendelseControllerTest {
 
     @BeforeEach
     void before() {
-        henvendelseController = new HenvendelseController(new HenvendelseServiceImpl(setupHenvendelseUtsendingService()));
+        svarDelvisController = new SvarDelvisController(new SvarDelvisServiceImpl(setupHenvendelseUtsendingService(),
+                mock(SaksbehandlerInnstillingerServiceImpl.class)));
         setupSubjectHandler();
     }
 
@@ -129,20 +129,20 @@ class HenvendelseControllerTest {
     }
 
     @Test
-    @DisplayName("Ferdigstill henvendelse ferdigstiller henvendelse mot Henvendelse-applikasjonen")
+    @DisplayName("Svar delvis ferdigstiller henvendelse mot Henvendelse-tjenesten")
     void ferdigstillerHenvendelse() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest(), new FerdigstillHenvendelseRestRequest());
+        svarDelvisController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest(), new SvarDelvisRESTRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         assertEquals(argumentCaptor.getValue().getBehandlingsId().get(0), HENVENDELSES_ID);
     }
 
     @Test
-    @DisplayName("Ferdigstill henvendelse returnerer 200 OK")
+    @DisplayName("Delvis svar returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        Response response = henvendelseController.ferdigstill(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest(), new FerdigstillHenvendelseRestRequest());
+        Response response = svarDelvisController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, new MockHttpServletRequest(), new SvarDelvisRESTRequest());
 
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
     }

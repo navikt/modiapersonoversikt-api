@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest.SvarDelvisRequestBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisService;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
@@ -21,44 +20,45 @@ import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 
 @Path("/personer/{fnr}/traader/{traadId}/henvendelser/{id}")
 @Produces(APPLICATION_JSON)
-public class HenvendelseController {
+public class SvarDelvisController {
 
-    private final HenvendelseService henvendelseService;
+    private final SvarDelvisService svarDelvisService;
 
     @Inject
-    public HenvendelseController(HenvendelseService henvendelseService) {
-        this.henvendelseService = henvendelseService;
+    public SvarDelvisController(SvarDelvisService svarDelvisService) {
+        this.svarDelvisService = svarDelvisService;
     }
 
     @PUT
-    @Path("/ferdigstill")
+    @Path("/delvisSvar")
     @Consumes(APPLICATION_JSON)
-    public Response ferdigstill(
+    public Response svarDelvis(
             @PathParam("fnr") String fnr,
             @PathParam("traadId") String traadId,
             @PathParam("id") String henvendelseId,
-            @Context HttpServletRequest httpRequest, FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest) {
+            @Context HttpServletRequest httpRequest, SvarDelvisRESTRequest request) {
 
-        if (!FeatureToggle.visFeature(Feature.DELVISE_SVAR)) {
+        if (!FeatureToggle.visFeature(DELVISE_SVAR)) {
             return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
         }
 
         setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
 
-        FerdigstillHenvendelseRequest ferdigstillHenvendelseRequest = new FerdigstillHenvendelseRequestBuilder()
+        SvarDelvisRequest svarDelvisRequest = new SvarDelvisRequestBuilder()
                 .withFodselsnummer(fnr)
                 .withTraadId(traadId)
                 .withHenvendelseId(henvendelseId)
-                .withSvar(ferdigstillHenvendelseRestRequest.svar)
+                .withSvar(request.svar)
                 .withNavIdent(getSubjectHandler().getUid())
                 .build();
 
-        henvendelseService.ferdigstill(ferdigstillHenvendelseRequest);
+        svarDelvisService.svarDelvis(svarDelvisRequest);
 
-        return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
+        return Response.ok("{\"message\": \"Success\"}").build();
     }
 
     private void setWicketRequestCycleForOperasjonerPaaCookies(@Context HttpServletRequest request) {

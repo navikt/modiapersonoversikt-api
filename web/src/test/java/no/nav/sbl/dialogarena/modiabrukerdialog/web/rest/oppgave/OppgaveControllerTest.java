@@ -4,20 +4,23 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.modig.core.context.*;
+import no.nav.modig.core.context.ModigSecurityConstants;
+import no.nav.modig.core.context.SubjectHandler;
+import no.nav.modig.core.context.SubjectHandlerUtils;
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.*;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
@@ -25,6 +28,7 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
+
 import javax.security.auth.Subject;
 import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
@@ -32,6 +36,7 @@ import java.util.ArrayList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -48,7 +53,7 @@ class OppgaveControllerTest {
     private OppgavebehandlingV3 oppgaveBehandlingMock;
     private OppgaveV3 oppgaveWS;
     private Ruting ruting;
-    private FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest;
+    private LeggTilbakeRESTRequest leggTilbakeRESTRequest;
 
     @BeforeAll
     static void beforeAll() {
@@ -73,8 +78,8 @@ class OppgaveControllerTest {
         ruting = mock(Ruting.class);
         when(ruting.finnAnsvarligEnhetForOppgavetype(any())).thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(new ArrayList<>()));
 
-        ferdigstillHenvendelseRestRequest = new FerdigstillHenvendelseRestRequest();
-        ferdigstillHenvendelseRestRequest.temagruppe = TEMAGRUPPE_ARBEID;
+        leggTilbakeRESTRequest = new LeggTilbakeRESTRequest();
+        leggTilbakeRESTRequest.temagruppe = TEMAGRUPPE_ARBEID;
 
         OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWS, saksbehandlerInnstillingerService, ansattWS, ruting);
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
@@ -124,7 +129,7 @@ class OppgaveControllerTest {
     void leggerTilbakeOppgave() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         ArgumentCaptor<WSLagreOppgaveRequest> argumentCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
 
-        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
+        oppgaveController.leggTilbake(OPPGAVE_ID, new MockHttpServletRequest(), leggTilbakeRESTRequest);
 
         verify(oppgaveBehandlingMock).lagreOppgave(argumentCaptor.capture());
         WSEndreOppgave oppgave = argumentCaptor.getValue().getEndreOppgave();
@@ -137,7 +142,7 @@ class OppgaveControllerTest {
         ArgumentCaptor<WSLagreOppgaveRequest> argumentCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
         assumeTrue(oppgaveWS.hentOppgave(new WSHentOppgaveRequest()).getOppgave().getAnsvarligId().equals(SAKSBEHANDLERS_ID));
 
-        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
+        oppgaveController.leggTilbake(OPPGAVE_ID, new MockHttpServletRequest(), leggTilbakeRESTRequest);
 
         verify(oppgaveBehandlingMock).lagreOppgave(argumentCaptor.capture());
         WSEndreOppgave oppgave = argumentCaptor.getValue().getEndreOppgave();
@@ -145,11 +150,11 @@ class OppgaveControllerTest {
     }
 
     @Test
-    @DisplayName("Lagrer oppgave  til GSAK med ny temagruppe")
+    @DisplayName("Lagrer oppgave til GSAK med ny temagruppe")
     void lagrerMedNyTemagruppe() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         ArgumentCaptor<WSLagreOppgaveRequest> argumentCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
 
-        oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest);
+        oppgaveController.leggTilbake(OPPGAVE_ID, new MockHttpServletRequest(), leggTilbakeRESTRequest);
         verify(oppgaveBehandlingMock).lagreOppgave(argumentCaptor.capture());
 
         WSEndreOppgave oppgave = argumentCaptor.getValue().getEndreOppgave();
@@ -157,19 +162,20 @@ class OppgaveControllerTest {
     }
 
     @Test
-    @DisplayName("Legger tilbake oppgave, Test med ugyldig temagruppe")
+    @DisplayName("Legger tilbake oppgave med ugyldig temagruppe")
     void sjekkUgyldigTemagruppe() throws Exception{
-        ferdigstillHenvendelseRestRequest.temagruppe = "ARBDD";
+        leggTilbakeRESTRequest.temagruppe = "ARBDD";
 
-        IllegalArgumentException assertion = assertThrows(IllegalArgumentException.class, ()-> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
-        assertEquals("Ugyldig temagruppe", assertion.getMessage());
+        IllegalArgumentException assertion = assertThrows(IllegalArgumentException.class, ()-> oppgaveController.leggTilbake(OPPGAVE_ID, new MockHttpServletRequest(), leggTilbakeRESTRequest));
 
+        assertTrue(assertion.getMessage().contains("Ugyldig temagruppe"));
     }
+
     @Test
     @DisplayName("Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake")
     void validererTilgang() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet {
         setInnloggetSaksbehandler(new SubjectHandlerUtils.SubjectBuilder("Annen saksbehandler", IdentType.InternBruker).getSubject());
 
-        assertThrows(NotAuthorizedException.class, () -> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
+        assertThrows(NotAuthorizedException.class, () -> oppgaveController.leggTilbake(OPPGAVE_ID, new MockHttpServletRequest(), leggTilbakeRESTRequest));
     }
 }
