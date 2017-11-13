@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -200,7 +199,7 @@ public class MeldingerSokImpl implements MeldingerSok {
         Document document = new Document();
         document.add(new StoredField(ID, id));
         document.add(new StoredField(BEHANDLINGS_ID, melding.id));
-        document.add(new TextField(FRITEKST, ofNullable(melding.fritekst).orElse(""), YES));
+        document.add(new TextField(FRITEKST, ofNullable(melding.getFritekst()).orElse(""), YES));
         document.add(new TextField(TEMAGRUPPE, ofNullable(melding.temagruppeNavn).orElse(""), YES));
         document.add(new TextField(ARKIVTEMA, ofNullable(melding.journalfortTemanavn).orElse(""), YES));
         document.add(new TextField(DATO, ofNullable(melding.visningsDatoTekst).orElse(""), YES));
@@ -295,15 +294,15 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static Function<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
         return (melding) -> {
             MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
-            melding.fritekst = meldingerSokResultat.fritekst;
+            melding.withFritekst(new Fritekst(meldingerSokResultat.fritekst, melding.skrevetAv, melding.opprettetDato));
             melding.temagruppeNavn = meldingerSokResultat.temagruppe;
             melding.journalfortTemanavn = meldingerSokResultat.arkivtema;
             melding.visningsDatoTekst = meldingerSokResultat.dato;
-            melding.navIdent = meldingerSokResultat.navIdent;
             melding.kanal = meldingerSokResultat.kanal;
             melding.statusTekst = meldingerSokResultat.statustekst;
             melding.ikontekst = meldingerSokResultat.ikontekst;
             melding.lestStatus = meldingerSokResultat.lestStatus;
+            melding.navIdent = meldingerSokResultat.navIdent;
             melding.skrevetAv = new Person(meldingerSokResultat.skrevetAvNavn, "");
             melding.journalfortAv = new Person(meldingerSokResultat.journalfortAvNavn, "");
             melding.journalfortAvNavIdent = meldingerSokResultat.journalfortAvIdent;

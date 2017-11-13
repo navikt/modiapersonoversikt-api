@@ -59,7 +59,7 @@ public class NyOppgaveFormWrapper extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         this.innboksVM = innboksVM;
-        this.enheter = on(organisasjonEnhetV2Service.hentAlleEnheter())
+        this.enheter = on(organisasjonEnhetV2Service.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE))
                 .filter(enhet -> erGyldigEnhet(enhet))
                 .collect();
         this.foreslatteEnheter = new ArrayList<>();

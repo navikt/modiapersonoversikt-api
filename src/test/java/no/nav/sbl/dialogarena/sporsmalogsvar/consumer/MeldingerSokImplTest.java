@@ -5,8 +5,7 @@ import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -157,7 +156,7 @@ public class MeldingerSokImplTest {
                                       String arkivtema, DateTime dato, String statustekst, String kanal) {
         Melding melding = new Melding(behandlingsId, SAMTALEREFERAT_OPPMOTE, dato);
         melding.traadId = behandlingskjedeId;
-        melding.fritekst = fritekst;
+        melding.withFritekst(new Fritekst(fritekst, melding.skrevetAv, melding.opprettetDato));
         melding.temagruppeNavn = temagruppe;
         melding.journalfortTemanavn = arkivtema;
         melding.statusTekst = statustekst;

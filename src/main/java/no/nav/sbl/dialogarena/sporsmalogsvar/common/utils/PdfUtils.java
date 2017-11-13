@@ -97,7 +97,7 @@ public class PdfUtils {
             this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.navIdent;
             this.typeBeskrivelse = lagTypeBeskrivelse(melding);
             this.temagruppeBeskrivelse = lagTemagruppeBeskrivelse(melding.temagruppe);
-            this.fritekst = escapeHtml(melding.fritekst);
+            this.fritekst = escapeHtml(melding.getFritekst());
             this.opprettetDato = melding.opprettetDato;
             this.journalFortDato = melding.journalfortDato;
             this.journalfortTema = melding.journalfortTema;

@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -9,6 +11,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -45,18 +49,34 @@ public class TraadPanel extends Panel {
 
                 item.add(meldingstatusContainer);
                 item.add(new Label("visningsDato"));
-                item.add(new URLParsingMultiLineLabel("fritekst", new PropertyModel<String>(item.getModel(), "melding.fritekst")));
+                item.add(new URLParsingMultiLineLabel("fritekst", getFritekst(item.getModelObject().melding)));
                 item.add(new Journalpost("journalpost", item.getModel()));
                 item.add(append("aria-labelledby", meldingstatusContainer.getMarkupId()));
 
-                String navIdent = item.getModelObject().melding.navIdent;
-                String skrevetAvNavn = item.getModelObject().melding.skrevetAv.navn;
                 WebMarkupContainer skrevetAvContainer = new WebMarkupContainer("skrevetAvContainer");
                 skrevetAvContainer.add(visibleIf(new PropertyModel<>(item.getModel(), "erFraSaksbehandler()")));
                 skrevetAvContainer.add(new Label("skrevetAvLabel", new ResourceModel("melding.skrevet-av")));
-                skrevetAvContainer.add(new Label("skrevetAv", String.format("%s (%s)", skrevetAvNavn, navIdent)));
+                skrevetAvContainer.add(new Label("skrevetAv", getSkrevetAv(item.getModelObject().melding)));
                 skrevetAvContainer.setVisible(!item.getModelObject().erDokumentMelding && !item.getModelObject().erOppgaveMelding);
                 item.add(skrevetAvContainer);
+            }
+
+            private String getFritekst(Melding melding) {
+                return melding.getFriteksterMedEldsteForst().stream()
+                        .map(Fritekst::getFritekst)
+                        .collect(Collectors.joining("\n————————————————————————\n"));
+            }
+
+            private String getSkrevetAv(Melding melding) {
+                return melding.getFriteksterMedEldsteForst().stream()
+                        .map(this::formaterSaksbehandlersNavnOgIdent)
+                        .collect(Collectors.joining(" og "));
+            }
+
+            private String formaterSaksbehandlersNavnOgIdent(Fritekst fritekst) {
+                return fritekst.getSaksbehandler()
+                        .map(saksbehandler -> String.format("%s (%s)", saksbehandler.navn, saksbehandler.getIdent()))
+                        .orElse("Ukjent");
             }
         });
     }

@@ -11,10 +11,13 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -26,7 +29,9 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -36,6 +41,7 @@ import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -68,19 +74,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     @Override
     public List<Melding> hentMeldinger(String fnr, String valgtEnhet) {
-        List<String> typer = asList(
-                SPORSMAL_SKRIFTLIG.name(),
-                SVAR_SKRIFTLIG.name(),
-                SVAR_OPPMOTE.name(),
-                SVAR_TELEFON.name(),
-                REFERAT_OPPMOTE.name(),
-                REFERAT_TELEFON.name(),
-                SPORSMAL_MODIA_UTGAAENDE.name(),
-                SVAR_SBL_INNGAAENDE.name(),
-                DOKUMENT_VARSEL.name(),
-                OPPGAVE_VARSEL.name()
-                );
-
+        List<String> typer = getAkutelleHenvendelseTyper();
 
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
 
@@ -98,6 +92,27 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect();
+    }
+
+    private List<String> getAkutelleHenvendelseTyper() {
+        List<String> typer = new ArrayList<>(asList(
+                SPORSMAL_SKRIFTLIG.name(),
+                SVAR_SKRIFTLIG.name(),
+                SVAR_OPPMOTE.name(),
+                SVAR_TELEFON.name(),
+                REFERAT_OPPMOTE.name(),
+                REFERAT_TELEFON.name(),
+                SPORSMAL_MODIA_UTGAAENDE.name(),
+                SVAR_SBL_INNGAAENDE.name(),
+                DOKUMENT_VARSEL.name(),
+                OPPGAVE_VARSEL.name()
+        ));
+
+        if (FeatureToggle.visFeature(DELVISE_SVAR)) {
+            typer.add(DELVIS_SVAR_SKRIFTLIG.name());
+        }
+
+        return typer;
     }
 
     @Override
@@ -169,7 +184,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
-                melding.fritekst = propertyResolver.getProperty("tilgang.OKSOS");
+                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.OKSOS"), melding.skrevetAv, melding.opprettetDato));
             }
 
             return melding;
@@ -185,7 +200,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.fritekst = propertyResolver.getProperty("tilgang.journalfort");
+                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.journalfort"), melding.skrevetAv, melding.opprettetDato));
                 melding.ingenTilgangJournalfort = true;
             }
 

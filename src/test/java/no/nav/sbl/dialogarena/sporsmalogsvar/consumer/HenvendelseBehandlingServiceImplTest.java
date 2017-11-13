@@ -16,6 +16,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -25,10 +27,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -40,6 +39,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -49,7 +49,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HenvendelseBehandlingServiceImplTest {
-
 
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
@@ -134,6 +133,28 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
+    public void henterDelviseSvarHvisFeatureTogglet() {
+        FeatureToggle.toggleFeature(DELVISE_SVAR);
+
+        henvendelseBehandlingService.hentMeldinger(FNR);
+        verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
+        WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
+
+        assertThat(request.getTyper()).contains(DELVIS_SVAR_SKRIFTLIG.name());
+        FeatureToggle.disableFeature(DELVISE_SVAR);
+    }
+
+    @Test
+    public void henterIkkeDelviseSvarHvisIkkeFeatureTogglet() {
+        henvendelseBehandlingService.hentMeldinger(FNR);
+
+        verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
+        WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
+
+        assertThat(request.getTyper()).doesNotContain(DELVIS_SVAR_SKRIFTLIG.name());
+    }
+
+    @Test
     public void skalTransformereResponsenTilMeldingsliste() {
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
@@ -201,8 +222,8 @@ public class HenvendelseBehandlingServiceImplTest {
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
         assertThat(meldinger).hasSize(2);
-        assertThat(meldinger.get(0).fritekst).isEqualTo("fritekst");
-        assertThat(meldinger.get(1).fritekst).isEqualTo("tilgang.journalfort");
+        assertThat(meldinger.get(0).getFritekst()).isEqualTo("fritekst");
+        assertThat(meldinger.get(1).getFritekst()).isEqualTo("tilgang.journalfort");
     }
 
     @Test
@@ -249,8 +270,7 @@ public class HenvendelseBehandlingServiceImplTest {
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
-        assertThat(meldinger.get(0).fritekst).isNotEqualTo(fritekst);
-
+        assertThat(meldinger.get(0).getFritekst()).isNotEqualTo(fritekst);
     }
 
 }
