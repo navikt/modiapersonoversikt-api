@@ -17,7 +17,7 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         temagruppeMapping.remove(Temagruppe.valueOf(sporsmal.temagruppe));
 
         put("henvendelseId", henvendelseId);
-        put("sporsmal", sporsmal.fritekst);
+        put("sporsmal", sporsmal.getFritekst());
         put("traadId", sporsmal.traadId);
         put("fodselsnummer", sporsmal.fnrBruker);
         put("svarDelvisCallbackId", LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID);
@@ -28,4 +28,5 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         put("temagruppeMapping", temagruppeMapping);
         putAll(new TraadVisningProps(traad));
     }
+
 }

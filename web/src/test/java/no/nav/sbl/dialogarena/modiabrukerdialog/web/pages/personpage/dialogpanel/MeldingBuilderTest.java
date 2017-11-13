@@ -40,7 +40,7 @@ public class MeldingBuilderTest {
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
 
         assertThat(melding.kanal, is(henvendelseVM.kanal.name()));
-        assertThat(melding.fritekst, is(henvendelseVM.getFritekst()));
+        assertThat(melding.getFritekst(), is(henvendelseVM.getFritekst()));
         assertThat(melding.temagruppe, is(henvendelseVM.temagruppe.name()));
     }
 
@@ -72,7 +72,7 @@ public class MeldingBuilderTest {
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
 
         assertThat(melding.kanal, is(henvendelseVM.kanal.name()));
-        assertThat(melding.fritekst, is(henvendelseVM.getFritekst()));
+        assertThat(melding.getFritekst(), is(henvendelseVM.getFritekst()));
         assertThat(melding.temagruppe, is(eldsteMeldingITraad.temagruppe));
         assertThat(melding.traadId, is(eldsteMeldingITraad.id));
         assertThat(melding.kontorsperretEnhet, is(eldsteMeldingITraad.kontorsperretEnhet));

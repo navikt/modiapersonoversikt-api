@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -76,7 +78,7 @@ class LeggTilbakeDelvisSvarPropsTest {
                 .withOppgaveId(OPPGAVE_ID)
                 .withFnr(FODSELSNUMMER)
                 .withTraadId(TRAAD_ID)
-                .withFritekst(FRITEKST)
+                .withFritekst(new Fritekst(FRITEKST, new Saksbehandler("Jan", "Saksbehandler", "ident"), DateTime.now()))
                 .withTemagruppe(ARBD.name())
                 .withOpprettetDato(OPPRETTETDATO);
     }
