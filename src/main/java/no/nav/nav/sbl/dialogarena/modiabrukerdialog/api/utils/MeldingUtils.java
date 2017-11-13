@@ -2,6 +2,7 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
@@ -92,14 +93,15 @@ public class MeldingUtils {
             if (xmlMetadata instanceof XMLMeldingFraBruker) {
                 XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
                 settTemagruppe(melding, meldingFraBruker.getTemagruppe(), propertyResolver);
-                melding.fritekst = meldingFraBruker.getFritekst();
+                melding.withFritekst(new Fritekst(meldingFraBruker.getFritekst(), melding.skrevetAv, xmlHenvendelse.getOpprettetDato()));
             } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
                 XMLMeldingTilBruker meldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
                 settTemagruppe(melding, meldingTilBruker.getTemagruppe(), propertyResolver);
-                melding.fritekst = meldingTilBruker.getFritekst();
                 melding.kanal = meldingTilBruker.getKanal();
+                Saksbehandler skrevetAv = ldapService.hentSaksbehandler(meldingTilBruker.getNavident());
+                melding.skrevetAv = skrevetAv;
                 melding.navIdent = meldingTilBruker.getNavident();
-                melding.skrevetAv = ldapService.hentSaksbehandler(meldingTilBruker.getNavident());
+                melding.withFritekst(new Fritekst(meldingTilBruker.getFritekst(), skrevetAv, xmlHenvendelse.getOpprettetDato()));
             } else {
                 throw new RuntimeException("XMLMetadata er av en ukjent type: " + xmlMetadata);
             }
@@ -128,16 +130,15 @@ public class MeldingUtils {
     private static void oppdaterMeldingMedKasseringData(final PropertyResolver propertyResolver, final Melding melding) {
         settTemagruppe(melding, null, propertyResolver);
         melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
-        melding.fritekst = propertyResolver.getProperty("innhold.kassert");
+        melding.withFritekst(new Fritekst(propertyResolver.getProperty("innhold.kassert"), melding.skrevetAv, melding.opprettetDato));
         melding.kanal = null;
-        melding.navIdent = null;
         melding.kassert = true;
     }
 
     private static void oppdaterMeldingMedDokumentVarselData(final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
         XMLDokumentVarsel dokumentVarsel = (XMLDokumentVarsel) xmlMetadata;
         melding.statusTekst = dokumentVarsel.getDokumenttittel();
-        melding.fritekst = dokumentVarsel.getTemanavn();
+        melding.withFritekst(new Fritekst(dokumentVarsel.getTemanavn(), melding.skrevetAv, melding.opprettetDato));
         melding.erDokumentMelding = true;
         melding.withTraadId(xmlHenvendelse.getBehandlingsId());
         melding.lestStatus = lagLestStatusDokumentVarsel(melding);
@@ -149,7 +150,7 @@ public class MeldingUtils {
     private static void oppdaterMeldingMedOppgaveVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
         XMLOppgaveVarsel oppgaveVarsel = (XMLOppgaveVarsel) xmlMetadata;
         melding.statusTekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s", oppgaveVarsel.getOppgaveType()), "oppgave.GEN");
-        melding.fritekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s.fritekst", oppgaveVarsel.getOppgaveType()), "oppgave.GEN.fritekst");
+        melding.withFritekst(new Fritekst(hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s.fritekst", oppgaveVarsel.getOppgaveType()), "oppgave.GEN.fritekst"), melding.skrevetAv, melding.opprettetDato));
         melding.erOppgaveMelding = true;
         melding.traadId = xmlHenvendelse.getBehandlingsId();
         melding.lestStatus = lagLestStatusDokumentVarsel(melding);

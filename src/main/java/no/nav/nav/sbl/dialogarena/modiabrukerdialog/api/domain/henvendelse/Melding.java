@@ -7,13 +7,15 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class Melding implements Serializable {
 
-    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, fritekst, kontorsperretEnhet, journalfortTema,
+    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet, journalfortTema,
             journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, brukersEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
             lestStatus, visningsDatoTekst , journalfortDatoTekst, ikontekst;
     public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, visningsDato;
@@ -22,15 +24,20 @@ public class Melding implements Serializable {
     public Status status;
     public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding, erFerdigstiltUtenSvar;
     public Boolean erTilknyttetAnsatt;
-    public Person skrevetAv = new Person("", ""), journalfortAv = new Person("", "");
+    public Person journalfortAv = new Person("", "");
+    public Person skrevetAv = new Person("", "");
+
+    private final List<Fritekst> fritekster;
 
     public Melding() {
+        fritekster = new ArrayList<>();
     }
 
     public Melding(String id, Meldingstype meldingstype, DateTime opprettetDato) {
         this.id = id;
         this.meldingstype = meldingstype;
         this.opprettetDato = opprettetDato;
+        this.fritekster = new ArrayList<>();
     }
 
     public Melding withId(String id) {
@@ -58,11 +65,6 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public Melding withNavIdent(String navIdent) {
-        this.navIdent = navIdent;
-        return this;
-    }
-
     public Melding withTemagruppe(String temagruppe) {
         this.temagruppe = temagruppe;
         return this;
@@ -73,8 +75,12 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public Melding withFritekst(String fritekst) {
-        this.fritekst = fritekst;
+    public Melding withFritekst(Fritekst... fritekster) {
+        if (asList(fritekster).contains(null)) {
+            throw new IllegalArgumentException("Fritekst kan ikke være null");
+        }
+        this.fritekster.clear();
+        this.fritekster.addAll(asList(fritekster));
         return this;
     }
 
@@ -178,6 +184,10 @@ public class Melding implements Serializable {
         return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG);
     }
 
+    public boolean erDelvisSvar() {
+        return Meldingstype.DELVIS_SVAR_SKRIFTLIG.equals(meldingstype);
+    }
+
     public static final Comparator<Melding> ELDSTE_FORST = (o1, o2) -> o1.getVisningsDato().compareTo(o2.getVisningsDato());
 
     public static final Comparator<Melding> NYESTE_FORST = (o1, o2) -> o2.getVisningsDato().compareTo(o1.getVisningsDato());
@@ -194,4 +204,32 @@ public class Melding implements Serializable {
                 .findFirst();
     }
 
+    public Melding withDelviseSvar(List<Melding> delviseSvar) {
+        fritekster.addAll(delviseSvar.stream()
+                .map(delvisSvar -> new Fritekst(delvisSvar.getFritekst(), delvisSvar.skrevetAv, delvisSvar.opprettetDato))
+                .collect(Collectors.toList()));
+        return this;
+    }
+
+    public String getFritekst() {
+        if (fritekster.isEmpty()) {
+            return "";
+        } else {
+            return this.fritekster.get(0).getFritekst();
+        }
+    }
+
+    public Melding withNavIdent(String navIdent) {
+        this.navIdent = navIdent;
+        return this;
+    }
+
+    public List<Fritekst> getFriteksterMedEldsteForst() {
+        return fritekster.stream().sorted(Fritekst.ELDSTE_FORST).collect(Collectors.toList());
+    }
+
+    public Melding withSkrevetAv(Person person) {
+        this.skrevetAv = person;
+        return this;
+    }
 }

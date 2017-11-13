@@ -1,7 +1,7 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 
 public interface LDAPService {
-    Person hentSaksbehandler(String ident);
+    Saksbehandler hentSaksbehandler(String ident);
 }
