@@ -3,17 +3,40 @@ Reactkomponenter
 
 ## Forberedelser for å kjøre
 
-* Installer node.js, finnes på *F:\F2990\Felles Filer\3 Forvaltningsseksjonen\3.4 Kontor for brukerdialog\Portaler og SBL forvaltning\7. Teknisk\Programmer\nodejs*. Bruk versjon 0.10.33, senare versjoner fungerer ikke med eslint. 
+* Installer node.js, finnes på *F:\programvare\nodejs*. Bruk versjon 7.9.0.
 
-* Kjør følgende kommandoer i en terminal, (2a, 2b, 2c, 2d fra [denne confluence siden](http://confluence.adeo.no/display/AURA/Karma)):
+* Konfigurer npm - følgende må ligge i .npmrc:
 
 ```
-npm config set https-proxy "https://155.55.60.117:8088"
-npm config set proxy "http://155.55.60.117:8088/"
-npm config set registry "http://registry.npmjs.org/"
-npm config set strict-ssl false
+https-proxy=https://155.55.60.117:8088/
+proxy=http://155.55.60.117:8088/
+registry=http://registry.npmjs.org/
+strict-ssl=false
+http.http://stash.devillo.no.proxy=
+http.proxy=http://155.55.60.117.8088/
+url.https://.insteadof=git://
 ```
 
+* Konfigurer git - følgende må ligge i .gitconfig:
+
+```
+[user]
+	name = FORNAVN ETTERNAVN
+	email = INSERT_EMAIL
+[http]
+	proxy = http://155.55.60.117:8088/
+	sslVerify = false
+[http "http://stash.devillo.no"]
+	proxy =
+
+[https]
+	proxy = https://155.55.60.117:8088/
+
+[url "https://"]
+	insteadOf = git://
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+```
 
 * Kjør `mvn clean install` for å laste ned alle JS-avhengigheter og bygge JS-modulene (hvis du starter maven i en terminal, må den ha støtte for GIT).
 
@@ -36,6 +59,6 @@ Tester kan kjøres på to måter:
 
 ## Retningslinjer for kode
 
-Alle filnavn og mapper skal skriver som lowercase med dash (-) som skilletegn.
-Hovedfilen (eller komponenten) i en mappe skal ha samme navn som mappen den ligger i og "-module" postfix.
+Alle filnavn og mapper skal skrives som lowercase med dash (-) som skilletegn.
+Hovedfilen (eller komponenten) i en mappe skal ha samme navn som mappen den ligger i og ha "-module" postfix.
 Alle require/import uttrykk skal skrives uten ".js" postfixet.

@@ -27,13 +27,14 @@ class OppgiBegrunnelse extends React.Component {
         begrunnelseNode.value = '';
 
         if (begrunnelse.length > 0) {
-            this.sendToWicket(this.props.confirmCallback, begrunnelse);
+            this.sendToWicket(this.props.confirmCallback, { begrunnelse: begrunnelse, fnr: this.fnr });
         } else {
             this.setState({ showFeilmelding: true });
         }
     }
 
-    vis() {
+    vis(fnr) {
+        this.fnr = fnr;
         this.refs.modal.open();
     }
 

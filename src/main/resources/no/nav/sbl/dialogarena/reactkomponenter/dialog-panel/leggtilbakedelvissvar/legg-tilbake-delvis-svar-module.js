@@ -21,6 +21,15 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.avbrytCallbackId);
     }
 
+    lagKvittering() {
+        return (
+            <div className="kvittering">
+                <div className="robust-ikon-gront-sjekk" />
+                <h2 className="medium">Delvis svar er registrert</h2>
+            </div>
+        );
+    }
+
     render() {
         if (this.state.erUnderArbeid) {
             return (<DelvisSvar
@@ -37,7 +46,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 traad={this.props.traad}
             />);
         }
-        return <h1>Delvis svar er registrert</h1>;
+        return this.lagKvittering();
     }
 }
 

@@ -20,7 +20,7 @@ public class ReactResourcesTest {
             "build/journalforing-panel.less",
             "build/varsel-module.less",
             "build/saksoversikt-module.less",
-            "build/saksoversikt-module.less",
+            "build/pleiepenger-panel.less",
             "build/delvis-svar.less",
             "build/alertstripe.less",
             "build/traadvisning.less",
