@@ -27,6 +27,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicke
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.purgeoppgaver.PurgeOppgaverPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
@@ -166,6 +167,7 @@ public class WicketApplication extends WebApplication {
                 )
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
+                        Hode.LESS,
                         BasePage.MODIA_WIDGET_LESS,
                         BasePage.MODIA_LAMELL_LESS,
                         BasePage.MODIA_LAYOUT_LESS,

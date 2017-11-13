@@ -11,6 +11,7 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -40,7 +41,6 @@ public class HentPersonPageTest extends WicketPageTest {
     @Test
     public void shouldRenderHentPersonPage() {
         wicket.goTo(HentPersonPage.class)
-                .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)));
     }
 
@@ -52,7 +52,7 @@ public class HentPersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldRenderHentPersonPageWithErrorMessageAndFnr() {
-        wicket.goTo(HentPersonPage.class, with().param("error", "errorMessage").param(HentPersonPanel.JSON_SOKT_FNR, "wrongFnr"))
+        wicket.goTo(HentPersonPage.class, with().param("error", "errorMessage").param(SokOppBrukerCallback.JSON_SOKT_FNR, "wrongFnr"))
                 .should().containPatterns("errorMessage")
                 .should().containPatterns("wrongFnr");
     }
@@ -66,7 +66,7 @@ public class HentPersonPageTest extends WicketPageTest {
     @Test
     public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
         HentPersonPage page = new HentPersonPage(new PageParameters());
-        String sikkerhetstiltak = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}", HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        String sikkerhetstiltak = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}", SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         assertEquals("Farlig.", sikkerhetstiltak);
     }
 
@@ -74,21 +74,21 @@ public class HentPersonPageTest extends WicketPageTest {
     @Test
     public void shouldExtractErrortext() throws JSONException {
         HentPersonPage page = new HentPersonPage(new PageParameters());
-        String errorTxt = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}", HentPersonPanel.JSON_ERROR_TEXT);
+        String errorTxt = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}", SokOppBrukerCallback.JSON_ERROR_TEXT);
         assertEquals("Feil tekst", errorTxt);
     }
 
     @Test
     public void shouldExtractErrortextAndSoktFnr() throws JSONException {
         HentPersonPage page = new HentPersonPage(new PageParameters());
-        String soktFnr = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}", HentPersonPanel.JSON_SOKT_FNR);
+        String soktFnr = page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}", SokOppBrukerCallback.JSON_SOKT_FNR);
         assertEquals("wrongFnr", soktFnr);
     }
 
     @Test
     public void shouldExtractNullWhenFnrtExist() throws JSONException {
         HentPersonPage page = new HentPersonPage(new PageParameters());
-        String sikkerhetstiltak = page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        String sikkerhetstiltak = page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         assertNull(sikkerhetstiltak);
     }
 

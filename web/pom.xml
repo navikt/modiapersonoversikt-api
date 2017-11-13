@@ -88,10 +88,6 @@
         <!--Kjerneinfo-->
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-hentperson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-panel</artifactId>
         </dependency>
         <dependency>

@@ -19,6 +19,7 @@ public class RestConfig extends ResourceConfig {
                 SkrivestotteController.class,
                 MeldingerController.class,
                 JournalforingController.class,
+                HodeController.class,
                 VarslerController.class,
                 DokumentController.class,
                 SaksoversiktController.class,

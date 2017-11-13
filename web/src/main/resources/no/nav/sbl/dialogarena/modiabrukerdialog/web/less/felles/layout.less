@@ -1,4 +1,3 @@
-@headerHeight: 140px;
 .flexbox {
   // 2009 spec
   display: -webkit-box;
@@ -138,35 +137,29 @@
 }
 
 #modia-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
+  flex: auto;
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
   .navbar {
-    height: @headerHeight;
     z-index: 1000;
     position: relative;
   }
   .app-content {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    padding-top: @headerHeight;
-
+    display: flex;
+    flex: auto;
     .main-content, .sidebar-venstre, .sidebar-hoyre {
       position: relative;
-      float: left;
-      height: 100%;
     }
     .sidebar-venstre, .sidebar-hoyre {
       z-index: 500;
       width: 25%;
+      flex: 25% 0 0;
       overflow: auto;
     }
     .main-content {
       width: 50%;
+      flex-basis: 50% 0 0;
       overflow: hidden;
     }
   }
