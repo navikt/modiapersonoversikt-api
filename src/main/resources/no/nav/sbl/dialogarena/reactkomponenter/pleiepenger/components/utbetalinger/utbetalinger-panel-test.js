@@ -50,11 +50,11 @@ describe('Utbetalinger', () => {
         describe('sortering av perioder', () => {
             it('viser periode med siste ID-dato først når nyest er sist i listen', () => {
                 const perioder = sorterEtterIdDato([mockPeriode(2016), mockPeriode(2017)]);
-                expect(perioder[0].fraOgMed.year).to.equal(2016);
+                expect(perioder[0].fraOgMed.year).to.equal(2017);
             });
             it('viser periode med siste ID-dato først når nyest er først i listen', () => {
                 const perioder = sorterEtterIdDato([mockPeriode(2017), mockPeriode(2016)]);
-                expect(perioder[0].fraOgMed.year).to.equal(2016);
+                expect(perioder[0].fraOgMed.year).to.equal(2017);
             });
         });
     });
