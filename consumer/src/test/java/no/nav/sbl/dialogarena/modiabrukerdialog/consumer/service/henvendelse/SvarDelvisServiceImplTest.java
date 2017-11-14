@@ -1,16 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
-import no.nav.modig.core.context.ModigSecurityConstants;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.SubjectHandlerUtils;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.SaksbehandlerInnstillingerServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest.SvarDelvisRequestBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,9 +11,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class SvarDelvisServiceImplTest {
@@ -30,29 +20,16 @@ class SvarDelvisServiceImplTest {
     public static final String TRAAD_ID = "TRAAD_ID";
     public static final String SVAR = "SVAR";
     public static final String SAKSBEHANDLERS_IDENT = "z666777";
+    public static final String VALGT_ENHET = "0300";
 
     private HenvendelseUtsendingService henvendelseMock;
     private SvarDelvisService svarDelvisService;
 
     @BeforeEach
     void before() {
-        setupSubjectHandler();
         henvendelseMock = mock(HenvendelseUtsendingService.class);
-        when(henvendelseMock.hentTraad(BRUKERS_FNR, TRAAD_ID)).thenReturn(Collections.singletonList(new Melding()));
-        svarDelvisService = new SvarDelvisServiceImpl(henvendelseMock, new SaksbehandlerInnstillingerServiceImpl(mockAnsattService()));
-    }
-
-    private AnsattService mockAnsattService() {
-        AnsattService ansattServiceMock = mock(AnsattService.class);
-        when(ansattServiceMock.hentEnhetsliste())
-                .thenReturn(Collections.singletonList(new AnsattEnhet("enhetid", "enhetsnavn")));
-        return ansattServiceMock;
-    }
-
-    private void setupSubjectHandler() {
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(SAKSBEHANDLERS_IDENT, IdentType.InternBruker).getSubject());
+        when(henvendelseMock.hentTraad(BRUKERS_FNR, TRAAD_ID, VALGT_ENHET)).thenReturn(Collections.singletonList(new Melding()));
+        svarDelvisService = new SvarDelvisServiceImpl(henvendelseMock);
     }
 
     @Test
@@ -65,7 +42,8 @@ class SvarDelvisServiceImplTest {
         assertAll("Delvis svar",
                 () -> assertEquals(SVAR, argumentCaptor.getValue().getFritekst()),
                 () -> assertEquals(Kanal.TEKST.name(), argumentCaptor.getValue().kanal),
-                () -> assertEquals(SAKSBEHANDLERS_IDENT, argumentCaptor.getValue().navIdent)
+                () -> assertEquals(SAKSBEHANDLERS_IDENT, argumentCaptor.getValue().navIdent),
+                () -> assertEquals(VALGT_ENHET, argumentCaptor.getValue().tilknyttetEnhet)
         );
 
     }
@@ -83,9 +61,11 @@ class SvarDelvisServiceImplTest {
 
     private SvarDelvisRequest lagRequest() {
         return new SvarDelvisRequestBuilder()
+                .withNavIdent(SAKSBEHANDLERS_IDENT)
                 .withTraadId(TRAAD_ID)
                 .withSvar(SVAR)
                 .withFodselsnummer(BRUKERS_FNR)
+                .withValgtEnhet(VALGT_ENHET)
                 .build();
     }
 

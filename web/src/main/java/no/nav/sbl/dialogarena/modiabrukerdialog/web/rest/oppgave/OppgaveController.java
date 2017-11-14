@@ -1,15 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import org.apache.wicket.DefaultExceptionMapper;
-import org.apache.wicket.ThreadContext;
-import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
-import org.apache.wicket.mock.MockWebResponse;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.cycle.RequestCycleContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +26,7 @@ public class OppgaveController {
         this.oppgaveBehandlingService = oppgaveBehandlingService;
     }
 
-    @PUT
+    @POST
     @Path("/leggTilbake")
     @Consumes(APPLICATION_JSON)
     public Response leggTilbake(@PathParam("id") String oppgaveId, @Context HttpServletRequest httpRequest, LeggTilbakeRESTRequest request) {
@@ -39,9 +34,13 @@ public class OppgaveController {
             return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
         }
 
-        setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
+        LeggTilbakeOppgaveIGsakRequest leggTilbakeOppgaveIGsakRequest = new LeggTilbakeOppgaveIGsakRequest()
+                .withOppgaveId(oppgaveId)
+                .withBeskrivelse(request.beskrivelse)
+                .withTemagruppe(getTemagruppefraRequest(request.temagruppe))
+                .withSaksbehandlersValgteEnhet(CookieUtil.getSaksbehandlersValgteEnhet(httpRequest));
 
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, request.beskrivelse, getTemagruppefraRequest(request.temagruppe));
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest);
 
         return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
     }
@@ -52,12 +51,6 @@ public class OppgaveController {
         } catch(IllegalArgumentException e) {
             throw new IllegalArgumentException("Ugyldig temagruppe: " + temagruppe);
         }
-    }
-
-    private void setWicketRequestCycleForOperasjonerPaaCookies(@Context HttpServletRequest request) {
-        ThreadContext.setRequestCycle(new RequestCycle(new RequestCycleContext(new ServletWebRequest(request, ""),
-                new MockWebResponse(), new BufferedResponseMapper(), new DefaultExceptionMapper())));
-
     }
 
 }

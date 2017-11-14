@@ -4,13 +4,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Fe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest.SvarDelvisRequestBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisService;
-import org.apache.wicket.DefaultExceptionMapper;
-import org.apache.wicket.ThreadContext;
-import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
-import org.apache.wicket.mock.MockWebResponse;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.cycle.RequestCycleContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +26,7 @@ public class SvarDelvisController {
     public SvarDelvisController(SvarDelvisService svarDelvisService) {
         this.svarDelvisService = svarDelvisService;
     }
-
-    @PUT
+    @POST
     @Path("/delvisSvar")
     @Consumes(APPLICATION_JSON)
     public Response svarDelvis(
@@ -46,14 +39,13 @@ public class SvarDelvisController {
             return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
         }
 
-        setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
-
         SvarDelvisRequest svarDelvisRequest = new SvarDelvisRequestBuilder()
                 .withFodselsnummer(fnr)
                 .withTraadId(traadId)
                 .withHenvendelseId(henvendelseId)
                 .withSvar(request.svar)
                 .withNavIdent(getSubjectHandler().getUid())
+                .withValgtEnhet(CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
                 .build();
 
         svarDelvisService.svarDelvis(svarDelvisRequest);
@@ -61,8 +53,4 @@ public class SvarDelvisController {
         return Response.ok("{\"message\": \"Success\"}").build();
     }
 
-    private void setWicketRequestCycleForOperasjonerPaaCookies(@Context HttpServletRequest request) {
-        ThreadContext.setRequestCycle(new RequestCycle(new RequestCycleContext(new ServletWebRequest(request, ""),
-                new MockWebResponse(), new BufferedResponseMapper(), new DefaultExceptionMapper())));
-    }
 }
