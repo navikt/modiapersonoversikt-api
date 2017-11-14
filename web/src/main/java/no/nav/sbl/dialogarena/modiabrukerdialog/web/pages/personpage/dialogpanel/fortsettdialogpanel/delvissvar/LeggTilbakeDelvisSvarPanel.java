@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar;
 
-
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -13,6 +12,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,7 +32,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     @Inject
     WicketInjectablePropertyResolver wicketInjectablePropertyResolver;
 
-    public LeggTilbakeDelvisSvarPanel(Melding sporsmal, String behandlingsId) {
+    public LeggTilbakeDelvisSvarPanel(Melding sporsmal, String behandlingsId, final List<Melding> traad) {
         super(WICKET_REACT_WRAPPER_ID);
         setOutputMarkupPlaceholderTag(true);
 
@@ -44,8 +44,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
                                                                                  LinkedHashMap :: new
                                                                              )
                                                             );
-
-        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(sporsmal, behandlingsId, temagruppeMapping);
+        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(sporsmal, behandlingsId, temagruppeMapping, traad);
         add(lagReactPanel());
     }
 

@@ -97,9 +97,6 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     public void inneholderSporsmaalsspefikkeKomponenter() {
         wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
-                .should().containComponent(withId("sporsmal").and(ofType(TidligereMeldingPanel.class)))
-                .should().containComponent(withId("svarliste").and(ofType(ListView.class)))
-                .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
                 .should().containComponent(withId("kanalbeskrivelse").and(ofType(Label.class)))
                 .should().containComponent(withId("fortsettdialogform"))
@@ -293,26 +290,6 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, hasItem(testFortsettDialogPanel.getString("dialogpanel.feilmelding.journalforing")));
-    }
-
-    @Test
-    public void viserTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
-                .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
-    }
-
-    @Test
-    public void viserIkkeTraadToggleLenkeHvisIngenSvarFinnes() {
-        wicket.goToPageWith(testFortsettDialogPanel)
-                .should().containComponent(thatIsInvisible().and(withId("vistraadcontainer")));
-    }
-
-    @Test
-    public void togglerVisningAvTraad() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
-                .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
-                .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
-                .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
     }
 
     @Test
