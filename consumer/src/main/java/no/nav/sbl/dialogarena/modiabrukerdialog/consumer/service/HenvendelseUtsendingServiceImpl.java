@@ -154,8 +154,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     @Override
-    public List<Melding> hentTraad(String fnr, String traadId) {
-        final String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+    public List<Melding> hentTraad(String fnr, String traadId, String valgtEnhet) {
         List<Melding> meldinger =
                 on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
                         .withTyper(getHenvendelseTyper())

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
@@ -23,16 +24,16 @@ class LeggTilbakeOppgaveIGsakDelegate {
         this.ruting = ruting;
     }
 
-     void leggTilbake(WSOppgave oppgaveFraGsak, String beskrivelse, Temagruppe temagruppe) {
+     void leggTilbake(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
         validerTilgang(oppgaveFraGsak);
 
-        markerOppgaveSomLagtTilbake(oppgaveFraGsak, beskrivelse);
+        markerOppgaveSomLagtTilbake(oppgaveFraGsak, request);
 
-        if (temagrupeErSatt(temagruppe)) {
-            oppdaterForNyTemagruppe(oppgaveFraGsak, temagruppe);
+        if (temagrupeErSatt(request.getNyTemagruppe())) {
+            oppdaterForNyTemagruppe(oppgaveFraGsak, request.getNyTemagruppe());
         }
 
-         lagreOppgaveIGsak(oppgaveFraGsak, temagruppe);
+         lagreOppgaveIGsak(oppgaveFraGsak, request.getNyTemagruppe());
      }
 
     private void validerTilgang(WSOppgave oppgaveFraGsak) {
@@ -44,13 +45,14 @@ class LeggTilbakeOppgaveIGsakDelegate {
         }
     }
 
-    private void markerOppgaveSomLagtTilbake(WSOppgave oppgaveFraGsak, String beskrivelse) {
+    private void markerOppgaveSomLagtTilbake(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
         oppgaveFraGsak.withAnsvarligId("");
-        oppgaveFraGsak.withBeskrivelse(lagNyBeskrivelse(oppgaveFraGsak, beskrivelse));
+        oppgaveFraGsak.withBeskrivelse(lagNyBeskrivelse(oppgaveFraGsak, request));
     }
 
-    private String lagNyBeskrivelse(WSOppgave oppgaveFraGsak, String beskrivelse) {
-        return oppgaveBehandlingService.leggTilBeskrivelse(oppgaveFraGsak.getBeskrivelse(), beskrivelse);
+    private String lagNyBeskrivelse(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
+        return oppgaveBehandlingService.leggTilBeskrivelse(oppgaveFraGsak.getBeskrivelse(), request.getBeskrivelse(),
+                request.getSaksbehandlersValgteEnhet());
     }
 
     private boolean temagrupeErSatt(Temagruppe temagruppe) {

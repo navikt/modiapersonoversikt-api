@@ -27,23 +27,24 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     public static final String SVAR_DELVIS_CALLBACK_ID = "delvisSvarSendt";
     public static final String AVBRYT_CALLBACK_ID = "avbrytDelvisSvar";
     public static final String DEFAULT_SLIDE_DURATION = "400";
+
     private LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps;
 
     @Inject
-    WicketInjectablePropertyResolver wicketInjectablePropertyResolver;
+    private WicketInjectablePropertyResolver wicketInjectablePropertyResolver;
 
     public LeggTilbakeDelvisSvarPanel(Melding sporsmal, String behandlingsId, final List<Melding> traad) {
         super(WICKET_REACT_WRAPPER_ID);
         setOutputMarkupPlaceholderTag(true);
 
         Map<Temagruppe, String> temagruppeMapping = Temagruppe.PLUKKBARE.stream()
-                                                    .collect(Collectors.toMap(
-                                                                                (temagruppeKode) -> temagruppeKode,
-                                                                                (temagruppeKode) -> wicketInjectablePropertyResolver.getProperty(temagruppeKode.name()),
-                                                                                (temagruppeKode, temagruppeNavn) -> temagruppeKode,
-                                                                                 LinkedHashMap :: new
-                                                                             )
-                                                            );
+                .collect(Collectors.toMap(
+                        (temagruppeKode) -> temagruppeKode,
+                        (temagruppeKode) -> wicketInjectablePropertyResolver.getProperty(temagruppeKode.name()),
+                        (temagruppeKode, temagruppeNavn) -> temagruppeKode,
+                        LinkedHashMap :: new
+                        )
+                );
         leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(sporsmal, behandlingsId, temagruppeMapping, traad);
         add(lagReactPanel());
     }
@@ -63,7 +64,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
     }
 
-    public void lukkDelvisSvarPanel(AjaxRequestTarget target) {
+    private void lukkDelvisSvarPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
             send(getPage(), BREADTH, AVBRYT_CALLBACK_ID);

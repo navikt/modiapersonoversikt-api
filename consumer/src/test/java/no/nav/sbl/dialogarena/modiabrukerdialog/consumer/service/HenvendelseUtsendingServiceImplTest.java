@@ -71,6 +71,7 @@ public class HenvendelseUtsendingServiceImplTest {
     private static final String ENHET = "1234";
 
     public static final String JOURNALFORT_TEMA = "tema jobb";
+    public static final String VALGT_ENHET = "4300";
 
     @Captor
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
@@ -135,7 +136,7 @@ public class HenvendelseUtsendingServiceImplTest {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
-        Melding sporsmal = henvendelseUtsendingService.hentTraad("fnr", TRAAD_ID).get(0);
+        Melding sporsmal = henvendelseUtsendingService.hentTraad("fnr", TRAAD_ID, VALGT_ENHET).get(0);
 
         verify(henvendelsePortType).hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class));
         assertThat(sporsmal.id, is(TRAAD_ID));
@@ -252,7 +253,7 @@ public class HenvendelseUtsendingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
+        List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, VALGT_ENHET);
 
         assertThat(traad, hasSize(3));
         assertThat(traad.get(0).traadId, is(TRAAD_ID));
@@ -266,7 +267,7 @@ public class HenvendelseUtsendingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
         FeatureToggle.toggleFeature(Feature.DELVISE_SVAR);
 
-        henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
+        henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, VALGT_ENHET);
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
@@ -291,7 +292,7 @@ public class HenvendelseUtsendingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
+        List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, VALGT_ENHET);
 
         assertThat(traad, hasSize(2));
         assertThat(traad.get(0).meldingstype, is(SPORSMAL_SKRIFTLIG));
@@ -306,7 +307,7 @@ public class HenvendelseUtsendingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false).thenReturn(false).thenReturn(true);
 
-        List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
+        List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, VALGT_ENHET);
 
         assertThat(traad, hasSize(3));
         assertThat(traad.get(1).getFritekst(), isEmptyString());
@@ -399,7 +400,7 @@ public class HenvendelseUtsendingServiceImplTest {
                                 new XMLMeldingFraBruker().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
         ));
 
-        henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
+        henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, VALGT_ENHET);
         ArgumentCaptor<PolicyRequest> captor = ArgumentCaptor.forClass(PolicyRequest.class);
         verify(pep).assertAccess(captor.capture());
 
