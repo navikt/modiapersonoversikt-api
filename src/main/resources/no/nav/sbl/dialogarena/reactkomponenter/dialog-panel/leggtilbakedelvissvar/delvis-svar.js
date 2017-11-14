@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
+import TraadVisning from '../traadvisning/traadvisning-module';
+
+const API_BASE_URL = '/modiabrukerdialog/rest/';
 
 class DelvisSvar extends Component {
     constructor(props) {
@@ -15,15 +18,20 @@ class DelvisSvar extends Component {
     }
 
     ferdigstillHenvendelse() {
-        const url = `/modiabrukerdialog/rest/personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/ferdigstill`;
-        const data = JSON.stringify({ svar: this.state.svarValue });
-        return Ajax.put(url, data);
+        const url = `${API_BASE_URL}personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/delvisSvar`;
+        const data = JSON.stringify({
+            svar: this.state.svarValue
+        });
+        return Ajax.post(url, data);
     }
 
     leggTilbakeOppgave() {
-        const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}`;
-        const data = JSON.stringify({ temagruppe: this.state.valgtTemagruppe });
-        return Ajax.put(url, data);
+        const url = `${API_BASE_URL}oppgaver/${this.props.oppgaveId}/leggTilbake`;
+        const data = JSON.stringify({
+            temagruppe: this.state.valgtTemagruppe,
+            beskrivelse: `Henvendelsen er besvart delvis og lagt tilbake med ny temagruppe ${this.state.valgtTemagruppe}`
+        });
+        return Ajax.post(url, data);
     }
 
     svarDelvis() {
@@ -40,26 +48,20 @@ class DelvisSvar extends Component {
         this.setState({ svarValue: event.target.value });
     }
 
-    velgTemagruppe(event){
+    velgTemagruppe(event) {
         this.setState({ valgtTemagruppe: event.target.value });
     }
 
     render() {
-        const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
-            <p key={`paragraf-${index}`}>{paragraf}</p>);
-
-        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key, index) =>
+        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
 
         return (
             <div>
                 <h3>Legg tilbake med delvis svar</h3>
-                <h2>Spørsmål</h2>
-                <h3>{this.props.temagruppe}</h3>
-                <p>{this.props.opprettetDato}</p>
-                <div className="sporsmaal">
-                    {sporsmal}
-                </div>
+
+                <TraadVisning traad={this.props.traad} />
+
                 <div className="svar">
                     <div className="svar-overskrift-boks">
                         <h1 className="overskrift medium"><span>Delvis svar</span></h1>
@@ -68,7 +70,8 @@ class DelvisSvar extends Component {
                         value={this.state.svarValue}
                         onChange={this.handleSvarEndring}
                         className="svar-tekst"
-                        placeholder="Svaret blir ikke synlig for brukeren">
+                        placeholder="Svaret blir ikke synlig for brukeren"
+                    >
                     </textarea>
                 </div>
 
@@ -98,6 +101,7 @@ class DelvisSvar extends Component {
 }
 
 DelvisSvar.propTypes = {
+    traad: PT.array.isRequired,
     henvendelseId: PT.string.isRequired,
     sporsmal: PT.string.isRequired,
     fodselsnummer: PT.string.isRequired,
@@ -107,10 +111,10 @@ DelvisSvar.propTypes = {
     oppgaveId: PT.string.isRequired,
     avbrytCallback: PT.func.isRequired,
     opprettetDato: PT.string.isRequired,
-    temagruppeMapping:PT.shape({
+    temagruppeMapping: PT.shape({
         temagruppeKode: PT.string,
-        temagruppeNavn: PT.string,
-    }).isRequired,
+        temagruppeNavn: PT.string
+    }).isRequired
 };
 
 export default DelvisSvar;
