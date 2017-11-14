@@ -7,16 +7,18 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.*;
@@ -26,7 +28,7 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -48,31 +50,44 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingService {
 
+    private final HenvendelsePortType henvendelsePortType;
+    private final SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    private final BehandleHenvendelsePortType behandleHenvendelsePortType;
+    private final OppgaveBehandlingService oppgaveBehandlingService;
+    private final SakerService sakerService;
+    private final EnforcementPoint pep;
+    private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private final PropertyResolver propertyResolver;
+    private final PersonKjerneinfoServiceBi kjerneinfo;
+    private final LDAPService ldapService;
+
     @Inject
-    private HenvendelsePortType henvendelsePortType;
-    @Inject
-    private SendUtHenvendelsePortType sendUtHenvendelsePortType;
-    @Inject
-    private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
-    @Inject
-    private SakerService sakerService;
-    @Inject
-    @Named("pep")
-    private EnforcementPoint pep;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private PropertyResolver propertyResolver;
-    @Inject
-    private PersonKjerneinfoServiceBi kjerneinfo;
-    @Inject
-    private LDAPService ldapService;
+    public HenvendelseUtsendingServiceImpl(HenvendelsePortType henvendelsePortType,
+                                           SendUtHenvendelsePortType sendUtHenvendelsePortType,
+                                           BehandleHenvendelsePortType behandleHenvendelsePortType,
+                                           OppgaveBehandlingService oppgaveBehandlingService,
+                                           SakerService sakerService,
+                                           @Named("pep") EnforcementPoint pep,
+                                           SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
+                                           PropertyResolver propertyResolver,
+                                           PersonKjerneinfoServiceBi kjerneinfo,
+                                           LDAPService ldapService) {
+
+        this.henvendelsePortType = henvendelsePortType;
+        this.sendUtHenvendelsePortType = sendUtHenvendelsePortType;
+        this.behandleHenvendelsePortType = behandleHenvendelsePortType;
+        this.oppgaveBehandlingService = oppgaveBehandlingService;
+        this.sakerService = sakerService;
+        this.pep = pep;
+        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
+        this.propertyResolver = propertyResolver;
+        this.kjerneinfo = kjerneinfo;
+        this.ldapService = ldapService;
+    }
 
     @Override
     public void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception {
-        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
+        if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
 
@@ -93,7 +108,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
     @Override
     public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId) throws Exception {
-        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
+        if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
 
@@ -127,10 +142,10 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         if (melding.traadId == null) {
             melding.traadId = melding.id;
         }
-        if (sak.isSome()) {
+        if (sak.isPresent()) {
             sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get());
         }
-        if (oppgaveId.isSome()) {
+        if (oppgaveId.isPresent()) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId.get(), temagruppe);
         }
         if (temagruppe == ANSOS) {
@@ -143,15 +158,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         final String valgtEnhet = defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         List<Melding> meldinger =
                 on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
-                        .withTyper(
-                                SPORSMAL_SKRIFTLIG.name(),
-                                SVAR_SKRIFTLIG.name(),
-                                SVAR_OPPMOTE.name(),
-                                SVAR_TELEFON.name(),
-                                REFERAT_OPPMOTE.name(),
-                                REFERAT_TELEFON.name(),
-                                SPORSMAL_MODIA_UTGAAENDE.name(),
-                                SVAR_SBL_INNGAAENDE.name())
+                        .withTyper(getHenvendelseTyper())
                         .withFodselsnummer(fnr))
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
@@ -183,6 +190,24 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         return meldinger;
     }
 
+    private String[] getHenvendelseTyper() {
+        List<String> typer = new ArrayList<>();
+        typer.add(SPORSMAL_SKRIFTLIG.name());
+        typer.add(SVAR_SKRIFTLIG.name());
+        typer.add(SVAR_OPPMOTE.name());
+        typer.add(SVAR_TELEFON.name());
+        typer.add(REFERAT_OPPMOTE.name());
+        typer.add(REFERAT_TELEFON.name());
+        typer.add(SPORSMAL_MODIA_UTGAAENDE.name());
+        typer.add(SVAR_SBL_INNGAAENDE.name());
+
+        if (FeatureToggle.visFeature(Feature.DELVISE_SVAR)) {
+            typer.add(DELVIS_SVAR_SKRIFTLIG.name());
+        }
+
+        return typer.toArray(new String[typer.size()]);
+    }
+
     private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
         return melding -> {
             PolicyRequest temagruppePolicyRequest = forRequest(
@@ -192,7 +217,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
             );
             if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.fritekst = "";
+                melding.withFritekst(new Fritekst("", melding.skrevetAv, melding.opprettetDato));
             }
 
             return melding;

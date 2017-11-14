@@ -10,10 +10,13 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
+import no.nav.metrics.Timer;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.constants.ModiaConstants;
-import no.nav.modig.modia.events.*;
+import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.LamellPayload;
+import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -28,7 +31,9 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
@@ -37,7 +42,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutB
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import org.apache.commons.collections15.Closure;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.*;
+import org.apache.wicket.Page;
+import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -54,8 +61,11 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
@@ -152,7 +162,7 @@ public class PersonPage extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
-                new DialogPanel("dialogPanel", fnr, grunnInfo),
+                new DialogPanel("dialogPanel", grunnInfo),
                 new ReactTimeoutBoksModal("timeoutBoks", fnr)
         );
 
@@ -191,7 +201,7 @@ public class PersonPage extends BasePage {
         Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
         String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
-        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetV2Service.hentEnhetGittEnhetId(valgtEnhet);
+        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetV2Service.hentEnhetGittEnhetId(valgtEnhet, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
         return new GrunnInfo.Saksbehandler(
                 ansattEnhet.map(ae -> ae.enhetNavn).orElse(""),
                 saksbehandler.fornavn,
@@ -313,11 +323,16 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+        Timer timer = createTimer("hendelse.feeditem.klikk." + feedItemPayload.getType().toLowerCase());
+        timer.start();
         try {
             lamellContainer.handleFeedItemEvent(event, feedItemPayload);
         } catch (ApplicationException e) {
             logger.warn("Burde ikke skje, klarte ikke håndtere feeditemevent: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
+        } finally {
+            timer.stop();
+            timer.report();
         }
     }
 

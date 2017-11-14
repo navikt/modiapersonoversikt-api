@@ -2,13 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -28,20 +26,17 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
@@ -94,7 +89,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", ""), new Saksbehandler("", "", ""));
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
 
-        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), Optional.<String>none());
+        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), null);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -130,7 +125,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         assertThat(melding.traadId, is(SPORSMAL_ID));
         assertThat(melding.temagruppe, is(TEMAGRUPPE));
         assertThat(melding.kanal, is(Kanal.TEKST.name()));
-        assertThat(melding.fritekst, is(FRITEKST));
+        assertThat(melding.getFritekst(), is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
         assertThat(melding.brukersEnhet, is(BRUKERS_ENHET));
     }
@@ -207,7 +202,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         reset(henvendelseUtsendingService);
 
         String oppgaveId = "oppgaveid";
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), optional(oppgaveId)))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), oppgaveId))
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
                 .select("fortsettdialogformelementer:kanal", 1)
@@ -302,7 +297,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
                 .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
     }
 
@@ -314,7 +309,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void togglerVisningAvTraad() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
                 .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
                 .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
@@ -330,7 +325,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserIkkeLeggTilbakeDersomSporsmalIkkeErEtSporsmalFraBruker() {
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), null))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")));
@@ -339,7 +334,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     public void senderAvbrytTilHenvendelseDersomBrukerAvbryterMelding() {
         when(henvendelseUtsendingService.opprettHenvendelse(anyString(), anyString(), anyString())).thenReturn(BEHANDLINGS_ID);
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), null))
                 .click().link(withId("leggtilbake"));
 
         verify(henvendelseUtsendingService, times(1)).avbrytHenvendelse(BEHANDLINGS_ID);
@@ -349,7 +344,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     public void skalViseFornavnISubmitKnapp() {
         when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), Optional.<String>none()))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), null))
                 .should().containPatterns(FORNAVN);
     }
 
@@ -412,7 +407,11 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     }
 
     private Melding lagSvar() {
-        return new Melding().withOpprettetDato(now()).withType(SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(TEMAGRUPPE);
+        return new Melding()
+                .withOpprettetDato(now())
+                .withType(SVAR_SKRIFTLIG)
+                .withFritekst(new Fritekst("fritekst", new no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler("", "", ""), now()))
+                .withTemagruppe(TEMAGRUPPE);
     }
 
 }

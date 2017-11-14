@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
@@ -21,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.journalforing.ReactJournalforingsPanel;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -43,15 +43,12 @@ import org.apache.wicket.model.*;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
@@ -188,7 +185,8 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder", grunnInfo.bruker.fornavn)
+                        .withPlaceholderTextKey("nydialogform.tekstfelt.placeholder",
+                                StringEscapeUtils.escapeEcmaScript(grunnInfo.bruker.fornavn))
         );
         tekstfelt.setOutputMarkupId(true);
         return tekstfelt;
@@ -345,7 +343,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private void sendReferat() throws Exception {
-        sendHenvendelse(getModelObject(), referatType(getModelObject().kanal), Optional.<Melding>none());
+        sendHenvendelse(getModelObject(), referatType(getModelObject().kanal), Optional.empty());
     }
 
     private Meldingstype referatType(Kanal kanal) {
@@ -361,7 +359,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             henvendelseVM.temagruppe = Temagruppe.valueOf(hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode));
         }
         henvendelseVM.kanal = Kanal.TEKST;
-        sendHenvendelse(henvendelseVM, SPORSMAL_MODIA_UTGAAENDE, Optional.<Melding>none());
+        sendHenvendelse(henvendelseVM, SPORSMAL_MODIA_UTGAAENDE, Optional.empty());
     }
 
     private void sendHenvendelse(HenvendelseVM henvendelseVM, Meldingstype meldingstype, Optional<Melding> eldsteMeldingITraad) throws Exception {
@@ -374,12 +372,12 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 .withValgtEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
                 .build();
 
-        Optional<Sak> sak = none();
+        Optional<Sak> sak = Optional.empty();
         if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
-            sak = optional(henvendelseVM.valgtSak);
+            sak = Optional.ofNullable(henvendelseVM.valgtSak);
         }
 
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), sak);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), sak);
     }
 
 }

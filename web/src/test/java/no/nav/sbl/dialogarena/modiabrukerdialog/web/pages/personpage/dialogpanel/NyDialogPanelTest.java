@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -28,6 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
@@ -122,7 +122,7 @@ public class NyDialogPanelTest extends WicketPageTest {
         assertThat(melding.fnrBruker, is(FNR));
         assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
         assertThat(melding.temagruppe, is(ARBD.name()));
-        assertThat(melding.fritekst, is(FRITEKST));
+        assertThat(melding.getFritekst(), is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
     }

@@ -11,35 +11,34 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.lang.collections.PredicateUtils;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.modig.security.tilgangskontroll.policy.request.attributes.ActionId;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.hamcrest.Matchers;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.*;
@@ -140,14 +139,18 @@ public class HenvendelseUtsendingServiceImplTest {
 
         verify(henvendelsePortType).hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class));
         assertThat(sporsmal.id, is(TRAAD_ID));
-        assertThat(sporsmal.fritekst, is(FRITEKST));
+        assertThat(sporsmal.getFritekst(), is(FRITEKST));
         assertThat(sporsmal.temagruppe, is(TEMAGRUPPE));
     }
 
     @Test
     public void skalSendeSvar() throws Exception {
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(mockFritekst())
+                .withType(SVAR_SKRIFTLIG)
+                .withTemagruppe(TEMAGRUPPE);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SVAR_SKRIFTLIG.name()));
@@ -155,8 +158,12 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @Test
     public void skalSendeReferat() throws Exception {
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(mockFritekst())
+                .withType(SAMTALEREFERAT_OPPMOTE)
+                .withTemagruppe(TEMAGRUPPE);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.REFERAT_OPPMOTE.name()));
@@ -164,8 +171,12 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @Test
     public void skalSendeSporsmal() throws Exception {
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(mockFritekst())
+                .withType(SPORSMAL_MODIA_UTGAAENDE)
+                .withTemagruppe(TEMAGRUPPE);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name()));
@@ -180,9 +191,13 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @Test
     public void skalFerdigstilleHenvendelse() throws Exception {
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(mockFritekst())
+                .withType(SPORSMAL_MODIA_UTGAAENDE)
+                .withTemagruppe(TEMAGRUPPE);
 
-        henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none(), BEHANDLINGS_ID);
+        henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.empty(), Optional.empty(), BEHANDLINGS_ID);
 
         verify(sendUtHenvendelsePortType).ferdigstillHenvendelse(wsFerdigstillHenvendelseRequestCaptor.capture());
         assertThat(wsFerdigstillHenvendelseRequestCaptor.getValue().getBehandlingsId(), is(singletonList(BEHANDLINGS_ID)));
@@ -192,8 +207,12 @@ public class HenvendelseUtsendingServiceImplTest {
     public void skalJournalforeHenvendelseDersomSakErSatt() throws Exception {
         Sak sak = new Sak();
         sak.saksId = optional("sakid");
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(TEMAGRUPPE);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), optional(sak));
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(mockFritekst())
+                .withType(SPORSMAL_MODIA_UTGAAENDE)
+                .withTemagruppe(TEMAGRUPPE);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.of(sak));
 
         verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture());
 
@@ -204,8 +223,13 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalFerdigstilleOppgaveDersomDenneErSatt() throws Exception {
         String oppgaveId = "oppgaveId";
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SPORSMAL_MODIA_UTGAAENDE).withTemagruppe(Temagruppe.ARBD.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, optional(oppgaveId), Optional.<Sak>none());
+        Melding melding = new Melding()
+                .withFnr(FNR)
+                .withFritekst(mockFritekst())
+                .withType(SPORSMAL_MODIA_UTGAAENDE)
+                .withTemagruppe(Temagruppe.ARBD.toString());
+
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.of(oppgaveId), Optional.empty());
         ArgumentCaptor<Temagruppe> temagruppeCaptor = ArgumentCaptor.forClass(Temagruppe.class);
 
         verify(oppgaveBehandlingService).ferdigstillOppgaveIGsak(stringArgumentCaptor.capture(), temagruppeCaptor.capture());
@@ -239,8 +263,8 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(TRAAD_ID));
-
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
+        FeatureToggle.toggleFeature(Feature.DELVISE_SVAR);
 
         henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
 
@@ -251,11 +275,13 @@ public class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.SVAR_SKRIFTLIG.name(),
                 XMLHenvendelseType.SVAR_OPPMOTE.name(),
                 XMLHenvendelseType.SVAR_TELEFON.name(),
+                XMLHenvendelseType.DELVIS_SVAR_SKRIFTLIG.name(),
                 XMLHenvendelseType.REFERAT_OPPMOTE.name(),
                 XMLHenvendelseType.REFERAT_TELEFON.name(),
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),
                 XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name()));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(Matchers.contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
+        FeatureToggle.disableFeature(Feature.DELVISE_SVAR);
     }
 
     @Test
@@ -283,30 +309,30 @@ public class HenvendelseUtsendingServiceImplTest {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
 
         assertThat(traad, hasSize(3));
-        assertThat(traad.get(1).fritekst, isEmptyString());
-        assertThat(traad.get(2).fritekst, not(isEmptyString()));
+        assertThat(traad.get(1).getFritekst(), isEmptyString());
+        assertThat(traad.get(2).getFritekst(), not(isEmptyString()));
     }
 
     @Test
     public void kontorsperrerHenvendelsePaaAndreSosialeTjenester() throws Exception {
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(behandleHenvendelsePortType).oppdaterKontorsperre(ENHET, singletonList(BEHANDLINGS_ID));
     }
 
     @Test
     public void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() throws Exception {
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(behandleHenvendelsePortType, never()).oppdaterKontorsperre(anyString(), anyList());
     }
 
     @Test
     public void knyttetHenvendelsenTilBrukersEnhetFraTPS() throws Exception {
-        Melding melding = new Melding().withFnr(FNR).withFritekst(FRITEKST).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         verify(kjerneinfo, times(1)).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
@@ -320,11 +346,11 @@ public class HenvendelseUtsendingServiceImplTest {
 
         Melding melding = new Melding()
                 .withFnr(FNR)
-                .withFritekst(FRITEKST)
+                .withFritekst(mockFritekst())
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
                 .withBrukersEnhet(brukersEnhet);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         verify(kjerneinfo, never()).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
@@ -346,11 +372,11 @@ public class HenvendelseUtsendingServiceImplTest {
 
         Melding melding = new Melding()
                 .withFnr(FNR)
-                .withFritekst(FRITEKST)
+                .withFritekst(mockFritekst())
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
                 .withBrukersEnhet(brukersEnhet);
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.<String>none(), Optional.<Sak>none());
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
@@ -381,6 +407,10 @@ public class HenvendelseUtsendingServiceImplTest {
         ActionId actionId = on(policyRequest.getAttributes()).filter(PredicateUtils.isA(ActionId.class)).map(castTo(ActionId.class)).head().get();
 
         assertThat((String) actionId.getAttributeValue().getValue(), is("oksos"));
+    }
+
+    private Fritekst mockFritekst() {
+        return new Fritekst(FRITEKST, new Saksbehandler("Jan", "Saksbehandler", "ident"), DateTime.now());
     }
 
     private WSHentHenvendelseListeResponse mockWSHentHenvendelseResponse() {

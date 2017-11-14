@@ -3,11 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -53,7 +53,7 @@ public class HentPersonPanelMockContext {
     @Bean
     public LDAPService ldapService() {
         LDAPService mock = mock(LDAPService.class);
-        when(mock.hentSaksbehandler(anyString())).thenReturn(new Person("Test", "McTest"));
+        when(mock.hentSaksbehandler(anyString())).thenReturn(new Saksbehandler("Test", "McTest", "ident"));
         return mock;
     }
 }

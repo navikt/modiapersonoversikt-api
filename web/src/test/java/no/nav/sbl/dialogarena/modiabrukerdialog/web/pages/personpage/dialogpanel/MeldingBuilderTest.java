@@ -1,11 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
+
+import java.util.Optional;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_OPPMOTE;
 import static org.hamcrest.Matchers.is;
@@ -39,7 +40,7 @@ public class MeldingBuilderTest {
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
 
         assertThat(melding.kanal, is(henvendelseVM.kanal.name()));
-        assertThat(melding.fritekst, is(henvendelseVM.getFritekst()));
+        assertThat(melding.getFritekst(), is(henvendelseVM.getFritekst()));
         assertThat(melding.temagruppe, is(henvendelseVM.temagruppe.name()));
     }
 
@@ -57,7 +58,7 @@ public class MeldingBuilderTest {
 
         Melding melding = new MeldingBuilder()
                 .withHenvendelseVM(henvendelseVM)
-                .withEldsteMeldingITraad(Optional.optional(eldsteMeldingITraad))
+                .withEldsteMeldingITraad(Optional.of(eldsteMeldingITraad))
                 .withMeldingstype(SVAR_OPPMOTE)
                 .withFnr(FNR)
                 .withNavident(NAVIDENT)
@@ -71,7 +72,7 @@ public class MeldingBuilderTest {
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
 
         assertThat(melding.kanal, is(henvendelseVM.kanal.name()));
-        assertThat(melding.fritekst, is(henvendelseVM.getFritekst()));
+        assertThat(melding.getFritekst(), is(henvendelseVM.getFritekst()));
         assertThat(melding.temagruppe, is(eldsteMeldingITraad.temagruppe));
         assertThat(melding.traadId, is(eldsteMeldingITraad.id));
         assertThat(melding.kontorsperretEnhet, is(eldsteMeldingITraad.kontorsperretEnhet));

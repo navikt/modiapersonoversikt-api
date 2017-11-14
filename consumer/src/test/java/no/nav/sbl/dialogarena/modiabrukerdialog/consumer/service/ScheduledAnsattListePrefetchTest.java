@@ -40,7 +40,7 @@ public class ScheduledAnsattListePrefetchTest {
     @Before
     public void setUp() throws Exception {
         enheter = Arrays.asList(new AnsattEnhet("0100", "Nav Østfold"), new AnsattEnhet("2960", "Nav Drift"));
-        when(organisasjonEnhetService.hentAlleEnheter()).thenReturn(enheter);
+        when(organisasjonEnhetService.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)).thenReturn(enheter);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 
