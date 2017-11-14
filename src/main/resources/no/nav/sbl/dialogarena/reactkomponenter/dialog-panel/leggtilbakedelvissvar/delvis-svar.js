@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
 import TraadVisning from '../traadvisning/traadvisning-module';
+
+const API_BASE_URL = '/modiabrukerdialog/rest/';
 
 class DelvisSvar extends Component {
     constructor(props) {
@@ -16,15 +18,20 @@ class DelvisSvar extends Component {
     }
 
     ferdigstillHenvendelse() {
-        const url = `/modiabrukerdialog/rest/personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/ferdigstill`;
-        const data = JSON.stringify({ svar: this.state.svarValue });
-        return Ajax.put(url, data);
+        const url = `${API_BASE_URL}personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/delvisSvar`;
+        const data = JSON.stringify({
+            svar: this.state.svarValue
+        });
+        return Ajax.post(url, data);
     }
 
     leggTilbakeOppgave() {
-        const url = `/modiabrukerdialog/rest/oppgaver/${this.props.oppgaveId}`;
-        const data = JSON.stringify({ temagruppe: this.state.valgtTemagruppe });
-        return Ajax.put(url, data);
+        const url = `${API_BASE_URL}oppgaver/${this.props.oppgaveId}/leggTilbake`;
+        const data = JSON.stringify({
+            temagruppe: this.state.valgtTemagruppe,
+            beskrivelse: `Henvendelsen er besvart delvis og lagt tilbake med ny temagruppe ${this.state.valgtTemagruppe}`
+        });
+        return Ajax.post(url, data);
     }
 
     svarDelvis() {
@@ -46,7 +53,7 @@ class DelvisSvar extends Component {
     }
 
     render() {
-        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key, index) =>
+        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
 
         return (
