@@ -55,7 +55,7 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding()));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagMelding()));
     }
 
     private GrunnInfo getMockGrunnInfo() {
@@ -118,7 +118,7 @@ public class DialogPanelTest extends WicketPageTest {
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventForEnkeltstaaendeSpormalFraBrukerUtenParametereSatt() {
         Melding spsm = lagBrukerSporsmalMedOppgaveId();
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING))
@@ -170,7 +170,7 @@ public class DialogPanelTest extends WicketPageTest {
         reset(oppgaveBehandlingService);
 
         Melding spsm = lagBrukerSporsmalMedOppgaveId();
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));

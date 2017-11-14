@@ -4,7 +4,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 
 import java.util.NoSuchElementException;
@@ -13,12 +12,9 @@ import java.util.Optional;
 public class SvarDelvisServiceImpl implements SvarDelvisService {
 
     private final HenvendelseUtsendingService henvendelseUtsendingService;
-    private final SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
-    public SvarDelvisServiceImpl(HenvendelseUtsendingService henvendelseUtsendingService,
-                                 SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
+    public SvarDelvisServiceImpl(HenvendelseUtsendingService henvendelseUtsendingService) {
         this.henvendelseUtsendingService = henvendelseUtsendingService;
-        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
     }
 
     public void svarDelvis(SvarDelvisRequest request) {
@@ -42,12 +38,12 @@ public class SvarDelvisServiceImpl implements SvarDelvisService {
                 .withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG)
                 .withFnr(brukersSporsmal.fnrBruker)
                 .withNavIdent(request.navIdent)
-                .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+                .withTilknyttetEnhet(request.valgtEnhet)
                 .withBrukersEnhet(brukersSporsmal.brukersEnhet);
     }
 
     private Melding hentBrukersSporsmal(SvarDelvisRequest request) {
-        return henvendelseUtsendingService.hentTraad(request.fodselsnummer, request.traadId).stream()
+        return henvendelseUtsendingService.hentTraad(request.fodselsnummer, request.traadId, request.valgtEnhet).stream()
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
     }

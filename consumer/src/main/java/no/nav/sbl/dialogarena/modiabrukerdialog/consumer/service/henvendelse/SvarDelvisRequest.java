@@ -7,6 +7,7 @@ public class SvarDelvisRequest {
     public final String svar;
     public final String henvendelseId;
     public final String navIdent;
+    public final String valgtEnhet;
 
     private SvarDelvisRequest(SvarDelvisRequestBuilder builder) {
         this.fodselsnummer = builder.fodselsnummer;
@@ -14,6 +15,7 @@ public class SvarDelvisRequest {
         this.traadId = builder.traadId;
         this.henvendelseId = builder.henvendelseId;
         this.navIdent = builder.navIdent;
+        this.valgtEnhet = builder.valgtEnhet;
     }
 
     public static class SvarDelvisRequestBuilder {
@@ -22,6 +24,7 @@ public class SvarDelvisRequest {
         private String traadId;
         private String henvendelseId;
         private String navIdent;
+        private String valgtEnhet;
 
         public SvarDelvisRequestBuilder withFodselsnummer(String fodselsnummer) {
             this.fodselsnummer = fodselsnummer;
@@ -45,6 +48,11 @@ public class SvarDelvisRequest {
 
         public SvarDelvisRequestBuilder withNavIdent(String navIdent) {
             this.navIdent = navIdent;
+            return this;
+        }
+
+        public SvarDelvisRequestBuilder withValgtEnhet(String saksbehandlersValgteEnhet) {
+            this.valgtEnhet = saksbehandlersValgteEnhet;
             return this;
         }
 

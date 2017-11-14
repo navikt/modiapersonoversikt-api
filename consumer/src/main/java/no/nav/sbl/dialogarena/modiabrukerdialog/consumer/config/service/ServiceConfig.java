@@ -66,9 +66,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SvarDelvisService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService,
-                                                SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
-        return new SvarDelvisServiceImpl(henvendelseUtsendingService, saksbehandlerInnstillingerService);
+    public SvarDelvisService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService) {
+        return new SvarDelvisServiceImpl(henvendelseUtsendingService);
     }
 
     @Bean
