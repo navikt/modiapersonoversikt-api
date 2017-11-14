@@ -17,8 +17,8 @@ class AlertstripeSuksessSolid extends Component {
                 aria-atomic="true"
                 role="alert"
             >
-                <Icon className="ikon" kind="ok-sirkel-fylt" />
-                <span className="alertstripe--tekst">
+                <Icon className="alertstripe__ikon" kind="ok-sirkel-fylt" />
+                <span className="alertstripe__tekst">
                     {tekst}
                 </span>
             </div>
