@@ -4,7 +4,6 @@ import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.FerdigstillHenvendelseRequest.FerdigstillHenvendelseRequestBuilder;
 import org.junit.jupiter.api.*;
@@ -54,7 +53,7 @@ class HenvendelseServiceImplTest {
         ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
         verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString());
 
-        assertEquals(SVAR, argumentCaptor.getValue().fritekst);
+        assertEquals(SVAR, argumentCaptor.getValue().getFritekst());
     }
 
     @Test

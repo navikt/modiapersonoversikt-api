@@ -17,7 +17,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.HodeCallbackWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
-import no.nav.tjeneste.virksomhet.person.v2.HentKjerneinformasjonPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -175,9 +175,11 @@ public class Hode extends WebMarkupContainer {
             logger.error("ApplicationException ved kall på getPersonKjerneinfo", ex.getMessage());
             target.appendJavaScript(component.getUpdateScript(component.getString(ex.getLocalizedMessage())));
 
-            if (ex.getCause() instanceof HentKjerneinformasjonPersonIkkeFunnet) {
+            if (ex.getCause() instanceof HentPersonPersonIkkeFunnet) {
+                logger.info("person ikke funnet");
                 sendGotoHentPersonPageEvent(component, component.getString(ex.getLocalizedMessage()), null, fnr);
             } else {
+                logger.error("ApplicationException ved kall på getPersonKjerneinfo", ex);
                 sendGotoHentPersonPageEvent(component, component.getString(ex.getLocalizedMessage()), null, null);
             }
 

@@ -8,6 +8,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
+import no.nav.metrics.Timer;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.constants.ModiaConstants;
@@ -59,7 +60,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
@@ -282,11 +285,16 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+        Timer timer = createTimer("hendelse.feeditem.klikk." + feedItemPayload.getType().toLowerCase());
+        timer.start();
         try {
             lamellContainer.handleFeedItemEvent(event, feedItemPayload);
         } catch (ApplicationException e) {
             logger.warn("Burde ikke skje, klarte ikke håndtere feeditemevent: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
+        } finally {
+            timer.stop();
+            timer.report();
         }
     }
 

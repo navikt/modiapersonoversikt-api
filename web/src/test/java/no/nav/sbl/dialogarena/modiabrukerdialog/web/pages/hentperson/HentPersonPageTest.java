@@ -1,11 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
-import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
-import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;

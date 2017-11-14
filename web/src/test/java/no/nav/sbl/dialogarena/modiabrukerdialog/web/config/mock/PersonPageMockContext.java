@@ -2,18 +2,20 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.support.EgenAnsattServiceBi;
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.PropertyResolver;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +47,7 @@ public class PersonPageMockContext {
     @Bean
     public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
         OrganisasjonEnhetV2Service organisasjonEnhetService = mock(OrganisasjonEnhetV2Service.class);
-        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString())).thenReturn(Optional.of(new AnsattEnhet("", "")));
+        when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString(), any())).thenReturn(Optional.of(new AnsattEnhet("", "")));
         return organisasjonEnhetService;
     }
 
@@ -62,10 +64,10 @@ public class PersonPageMockContext {
     }
 
     @Bean
-    public EgenAnsattServiceBi egenAnsattServiceBi(){
-        EgenAnsattServiceBi egenAnsattServiceBi  = mock(EgenAnsattServiceBi.class);
-        when(egenAnsattServiceBi.erEgenAnsatt(any(String.class))).thenReturn(true);
-        return egenAnsattServiceBi;
+    public EgenAnsattService egenAnsattServiceBi(){
+        EgenAnsattService egenAnsattService = mock(EgenAnsattService.class);
+        when(egenAnsattService.erEgenAnsatt(any(String.class))).thenReturn(true);
+        return egenAnsattService;
     }
 
 
@@ -91,6 +93,18 @@ public class PersonPageMockContext {
     public GrunninfoService grunninfoService() {
         return new GrunninfoServiceImpl();
 //        return mock(GrunninfoService.class);
+    }
+
+    @Bean
+    public WicketInjectablePropertyResolver wicketInjectablePropertyResolver() {
+        WicketInjectablePropertyResolver mock = mock(WicketInjectablePropertyResolver.class);
+        when(mock.getProperty(anyString())).thenReturn("Property");
+        return mock;
+    }
+
+    @Bean
+    public PropertyResolver propertyResolver() {
+        return mock(PropertyResolver.class);
     }
 
     private HentKjerneinformasjonResponse lagMockKjerneinfoResponse() {

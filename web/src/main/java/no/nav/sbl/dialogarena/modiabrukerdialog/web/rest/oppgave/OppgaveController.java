@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.FeatureToggle;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ThreadContext;
@@ -18,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 
 @Path("/oppgaver/{id}")
 @Produces(APPLICATION_JSON)
@@ -34,13 +37,23 @@ public class OppgaveController {
     @Path("/")
     @Consumes(APPLICATION_JSON)
     public Response put(@PathParam("id") String oppgaveId, @Context HttpServletRequest httpRequest, FerdigstillHenvendelseRestRequest ferdigstillHenvendelseRestRequest) {
-        if (!FeatureToggle.visDelviseSvarFunksjonalitet()) {
+        if (!FeatureToggle.visFeature(DELVISE_SVAR)) {
             return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
         }
 
         setWicketRequestCycleForOperasjonerPaaCookies(httpRequest);
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", null);
+
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(oppgaveId, "beskrivelse", getTemagruppefromRequest(ferdigstillHenvendelseRestRequest.temagruppe));
+
         return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
+    }
+
+    private Temagruppe getTemagruppefromRequest(String temagruppe){
+        try {
+            return Temagruppe.valueOf(temagruppe);
+        }catch(IllegalArgumentException e){
+            throw new IllegalArgumentException("Ugyldig temagruppe");
+        }
     }
 
     private void setWicketRequestCycleForOperasjonerPaaCookies(@Context HttpServletRequest request) {

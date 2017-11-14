@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import junit.framework.Assert;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.support.EgenAnsattServiceBi;
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.*;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
@@ -66,7 +66,7 @@ public class PersonPageTest extends WicketPageTest {
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
 
     @Inject
-    private EgenAnsattServiceBi egenAnsattServiceBi;
+    private EgenAnsattService egenAnsattService;
 
     private final static String testFnr = "12037649749";
 

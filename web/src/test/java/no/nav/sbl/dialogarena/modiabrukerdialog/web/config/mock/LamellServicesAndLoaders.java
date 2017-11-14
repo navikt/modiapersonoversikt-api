@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService;
 import no.nav.kjerneinfo.kontrakter.oppfolging.loader.OppfolgingsLoader;
 import no.nav.kjerneinfo.kontrakter.ytelser.YtelseskontrakterLoader;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
@@ -10,14 +11,24 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl;
+import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFactory;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerService;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
+import no.nav.tjeneste.virksomhet.pleiepenger.v1.*;
+import no.nav.tjeneste.virksomhet.pleiepenger.v1.meldinger.WSHentPleiepengerettighetRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Optional;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class LamellServicesAndLoaders {
@@ -54,12 +65,27 @@ public class LamellServicesAndLoaders {
 
     @Bean
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        return new SykmeldingsperiodeLoader();
+        return mock(SykmeldingsperiodeLoader.class);
     }
 
     @Bean
     public SykepengerServiceBi sykepengerServiceBi() {
         return mock(SykepengerServiceBi.class);
+    }
+
+    @Bean
+    public PleiepengerService pleiepengerServiceBi() throws HentPleiepengerettighetUgyldigIdentNr, HentPleiepengerettighetSikkerhetsbegrensning {
+        PleiepengerV1 pleiepengerV1 = mock(PleiepengerV1.class);
+        when(pleiepengerV1.hentPleiepengerettighet(any(WSHentPleiepengerettighetRequest.class)))
+                .thenReturn(PleiepengerMockFactory.createWsHentPleiepengerListeResponse());
+        return new PleiepengerServiceImpl(pleiepengerV1);
+    }
+
+    @Bean
+    public OrganisasjonService organisasjonService() {
+        OrganisasjonService mock = mock(OrganisasjonService.class);
+        when(mock.hentNoekkelinfo(anyString())).thenReturn(Optional.empty());
+        return mock;
     }
 
     @Bean
