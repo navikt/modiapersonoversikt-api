@@ -4,7 +4,9 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -38,6 +40,8 @@ public class Innboks extends Lerret {
 
     @Inject
     OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public Innboks(String id, final InnboksVM innboksVM) {
         super(id);
@@ -96,8 +100,12 @@ public class Innboks extends Lerret {
 
         if (innboksVM.harFeilmelding().getObject().equals(true)) {
             String beskrivelse = "Teknisk feil modiabrukerdialog, oppgave lagt tilbake.";
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(innboksVM.getSessionOppgaveId().orElse(null),
-                    beskrivelse, null);
+            LeggTilbakeOppgaveIGsakRequest request = new LeggTilbakeOppgaveIGsakRequest()
+                    .withBeskrivelse(beskrivelse)
+                    .withOppgaveId(innboksVM.getSessionOppgaveId().orElse(null))
+                    .withTemagruppe(null)
+                    .withSaksbehandlersValgteEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(request);
             innboksVM.setSessionHenvendelseId(null);
             innboksVM.setSessionOppgaveId(null);
         }
