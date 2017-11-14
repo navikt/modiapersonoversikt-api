@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
+import TraadVisning from '../traadvisning/traadvisning-module';
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
 
@@ -47,26 +48,20 @@ class DelvisSvar extends Component {
         this.setState({ svarValue: event.target.value });
     }
 
-    velgTemagruppe(event){
+    velgTemagruppe(event) {
         this.setState({ valgtTemagruppe: event.target.value });
     }
 
     render() {
-        const sporsmal = this.props.sporsmal.split('\n').map((paragraf, index) =>
-            <p key={`paragraf-${index}`}>{paragraf}</p>);
-
         const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
 
         return (
             <div>
                 <h3>Legg tilbake med delvis svar</h3>
-                <h2>Spørsmål</h2>
-                <h3>{this.props.temagruppe}</h3>
-                <p>{this.props.opprettetDato}</p>
-                <div className="sporsmaal">
-                    {sporsmal}
-                </div>
+
+                <TraadVisning traad={this.props.traad} />
+
                 <div className="svar">
                     <div className="svar-overskrift-boks">
                         <h1 className="overskrift medium"><span>Delvis svar</span></h1>
@@ -75,7 +70,8 @@ class DelvisSvar extends Component {
                         value={this.state.svarValue}
                         onChange={this.handleSvarEndring}
                         className="svar-tekst"
-                        placeholder="Svaret blir ikke synlig for brukeren">
+                        placeholder="Svaret blir ikke synlig for brukeren"
+                    >
                     </textarea>
                 </div>
 
@@ -105,6 +101,7 @@ class DelvisSvar extends Component {
 }
 
 DelvisSvar.propTypes = {
+    traad: PT.array.isRequired,
     henvendelseId: PT.string.isRequired,
     sporsmal: PT.string.isRequired,
     fodselsnummer: PT.string.isRequired,
