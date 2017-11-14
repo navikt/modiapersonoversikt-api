@@ -52,7 +52,7 @@ public class MeldingVMTest extends WicketPageTest {
 
     @Test
     public void lagerStatusTekstKey() {
-        assertThat(meldingVM.getMeldingStatusTekstKey(), is(lagMeldingStatusTekstKey(meldingVM.melding)));
+        assertThat(meldingVM.getMeldingStatusTekstKey(), is(lagMeldingStatusTekstKey(meldingVM.melding.meldingstype)));
     }
 
     @Test

@@ -42,7 +42,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getMeldingStatusTekstKey() {
-        return lagMeldingStatusTekstKey(melding);
+        return lagMeldingStatusTekstKey(melding.meldingstype);
     }
 
     public String getJournalfortDatoFormatert() {
