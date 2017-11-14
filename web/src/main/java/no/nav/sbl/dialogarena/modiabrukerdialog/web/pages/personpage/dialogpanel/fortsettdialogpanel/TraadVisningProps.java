@@ -17,7 +17,7 @@ public class TraadVisningProps extends HashMap<String, Object> implements Serial
                     put("temagruppeNavn", melding.temagruppeNavn);
                     put("visningsDatoTekst", DateUtils.toString(melding.erDokumentMelding ?
                             melding.ferdigstiltDato : melding.opprettetDato));
-                    put("fritekst", melding.fritekst);
+                    put("fritekst", melding.getFritekst());
                     put("erDokumentMelding", melding.erDokumentMelding);
                     put("id", melding.id);
                     put("statusTekst", melding.statusTekst);
