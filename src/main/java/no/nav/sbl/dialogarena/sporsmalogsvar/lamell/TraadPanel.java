@@ -64,7 +64,7 @@ public class TraadPanel extends Panel {
             private String getFritekst(Melding melding) {
                 return melding.getFriteksterMedEldsteForst().stream()
                         .map(Fritekst::getFritekst)
-                        .collect(Collectors.joining("\n————————————————————————\n"));
+                        .collect(Collectors.joining("\n————————————————\n"));
             }
 
             private String getSkrevetAv(Melding melding) {
