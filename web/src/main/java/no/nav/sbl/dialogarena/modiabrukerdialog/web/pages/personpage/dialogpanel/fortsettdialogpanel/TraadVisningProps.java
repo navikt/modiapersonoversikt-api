@@ -25,6 +25,7 @@ public class TraadVisningProps extends HashMap<String, Object> implements Serial
                     put("skrevetAv", melding.skrevetAv);
                     put("fnrBruker", melding.fnrBruker);
                     put("meldingstype", melding.meldingstype);
+                    put("opprettetDato", melding.opprettetDato);
                 }
             })).collect(Collectors.toList())
         );
