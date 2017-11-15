@@ -4,12 +4,15 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.DOKUMENT_VARSEL;
@@ -303,11 +306,11 @@ public class MeldingUtilsTest {
 
     @Test
     public void hentEnonicTekstForDynamiskNokkelSkalReturnereKeyBruktSomParameterDersomKeyIkkeEksiserer() throws Exception {
-        final String key = "key-parameter";
+        final String key = "melding.status.SVAR_SKRIFTLIG";
         final PropertyResolver propertyResolver = mock(PropertyResolver.class);
         when(propertyResolver.getProperty(anyString())).thenThrow(new NoSuchElementException());
 
-        final String returVerdi = hentEnonicTekstForDynamiskNokkel(propertyResolver, key);
+        final String returVerdi = hentEnonicTekstForMeldingStatus(propertyResolver, Meldingstype.SVAR_SKRIFTLIG);
 
         assertThat(returVerdi, is(key));
     }

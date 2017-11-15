@@ -1,6 +1,5 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 
 import java.util.List;
@@ -17,8 +16,8 @@ public class VisningUtils {
     public static final List<Meldingstype> VARSEL = asList(OPPGAVE_VARSEL, DOKUMENT_VARSEL);
     public static final List<Meldingstype> SPORSMAL = asList(SPORSMAL_SKRIFTLIG, SPORSMAL_MODIA_UTGAAENDE);
 
-    public static String lagMeldingStatusTekstKey(Melding melding) {
-        return String.format("melding.status.%s", melding.meldingstype.name());
+    public static String lagMeldingStatusTekstKey(Meldingstype meldingstype) {
+        return String.format("melding.status.%s", meldingstype.name());
     }
 
 }

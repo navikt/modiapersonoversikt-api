@@ -4,7 +4,10 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
@@ -12,7 +15,10 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
@@ -89,7 +95,7 @@ public class MeldingUtils {
                 return melding;
             }
 
-            melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
+            melding.statusTekst = hentEnonicTekstForMeldingStatus(propertyResolver, melding.meldingstype);
             if (xmlMetadata instanceof XMLMeldingFraBruker) {
                 XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
                 settTemagruppe(melding, meldingFraBruker.getTemagruppe(), propertyResolver);
@@ -118,7 +124,7 @@ public class MeldingUtils {
     private static void oppdaterMeldingMedJournalfortInformasjon(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
         XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
         if (journalfortInformasjon != null) {
-            melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
+            melding.statusTekst = hentEnonicTekstForMeldingStatus(propertyResolver, melding.meldingstype);
             melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
             melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
             melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
@@ -129,7 +135,7 @@ public class MeldingUtils {
 
     private static void oppdaterMeldingMedKasseringData(final PropertyResolver propertyResolver, final Melding melding) {
         settTemagruppe(melding, null, propertyResolver);
-        melding.statusTekst = hentEnonicTekstForDynamiskNokkel(propertyResolver, lagMeldingStatusTekstKey(melding));
+        melding.statusTekst = hentEnonicTekstForMeldingStatus(propertyResolver, melding.meldingstype);
         melding.withFritekst(new Fritekst(propertyResolver.getProperty("innhold.kassert"), melding.skrevetAv, melding.opprettetDato));
         melding.kanal = null;
         melding.kassert = true;
@@ -157,13 +163,22 @@ public class MeldingUtils {
         melding.statusKlasse = "oppgave";
     }
 
-    protected static String hentEnonicTekstForDynamiskNokkel(PropertyResolver propertyResolver, String key) {
+    static String hentEnonicTekstForMeldingStatus(PropertyResolver propertyResolver, Meldingstype meldingstype) {
+        if(!skalHenteStatusTekstForMelding(meldingstype)) {
+            return "";
+        }
+
+        String key = lagMeldingStatusTekstKey(meldingstype);
         try {
             return propertyResolver.getProperty(key);
         } catch(NoSuchElementException exception) {
             logger.error("Finner ikke cms-oppslag for " + key, exception.getMessage());
             return key;
         }
+    }
+
+    private static boolean skalHenteStatusTekstForMelding(Meldingstype meldingstype) {
+        return meldingstype != DELVIS_SVAR_SKRIFTLIG;
     }
 
     protected static String hentEnonicTekstDynamic(PropertyResolver resolver, String key, String defaultKey) {
