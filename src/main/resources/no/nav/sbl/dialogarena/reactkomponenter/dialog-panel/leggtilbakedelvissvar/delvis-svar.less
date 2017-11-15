@@ -15,6 +15,13 @@
   .svar {
     padding-bottom: 35px;
     padding-top: 1em;
+    .skjemaelement__label {
+      display: none;
+    }
+    .textareamirror {
+      min-height: 125px;
+    }
+
     .svar-tekst {
       width: 100%;
       display: block;
@@ -23,9 +30,27 @@
     .svar-overskrift-boks {
       background: #333333;
       padding: 7px 0;
+      position: relative;
+
+      button.skrivestotteToggle {
+        border: 0;
+        border-radius: 1rem;
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        width: 24px;
+        height: 24px;
+        background: url(../img/dokument.svg) no-repeat;
+        background-size: 24px;
+
+        &:focus, &:hover {
+          outline: none;
+          background-image: url(../img/dokument_hover_light.svg);
+        }
+      }
 
       .overskrift {
-        margin:0;
+        margin: 0;
         color: #b7b1a9;
         font-weight: 600;
         font-size: 1.21rem;
@@ -33,9 +58,9 @@
     }
   }
 
-  .avbryt{
+  .avbryt {
     cursor: pointer;
-}
+  }
 
   .submit {
     display: block;
@@ -46,6 +71,55 @@
 
   .temagruppe-velger {
     padding-bottom: 55px;
+  }
+
+  //Textarea fra nav frontend - tellerstyle
+
+  .textarea--medMeta {
+    resize: none;
+    width: 100%;
+    overflow: hidden;
+    min-height: 4rem;
+    transition: height 0.1s ease-out;
+    display: block;
+  }
+
+  .expandingtextarea {
+    resize: none;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    margin: 0px 0px 1em;
+  }
+
+  .textareamirror, .expandingtextarea {
+    line-height: 1.1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 1em;
+  }
+
+
+  .textarea--medMeta {
+    resize: none;
+    width: 100%;
+    overflow: hidden;
+    min-height: 4rem;
+    transition: height 0.1s ease-out;
+    display: block;
+  }
+
+  .textareamirror {
+    white-space: pre-wrap;
+    display: inline-block;
+    width: 100%;
+    word-wrap: break-word;
+    position: absolute;
+    left: -99999px;
+  }
+
+  .textarea__container {
+    position: relative; // begrenser bredden til textareamirror, viktig for at tekstbryting blir riktig
   }
 
 }
