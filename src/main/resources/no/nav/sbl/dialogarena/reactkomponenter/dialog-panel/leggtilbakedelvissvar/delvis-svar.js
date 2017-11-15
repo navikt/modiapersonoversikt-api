@@ -59,7 +59,7 @@ class DelvisSvar extends Component {
     render() {
         const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
-        const hidenLabel = <div className="vekk" aria-hidden="true" />;
+        const hiddenLabel = <span className="vekk">delevis svar</span>;
 
         return (
             <div>
@@ -79,7 +79,7 @@ class DelvisSvar extends Component {
                         onChange={this.handleSvarEndring}
                         maxLength={5000}
                         id={this.textId}
-                        label={hidenLabel}
+                        label={hiddenLabel}
                         placeholder="Svaret blir ikke synlig for brukeren"
                     />
                 </div>
