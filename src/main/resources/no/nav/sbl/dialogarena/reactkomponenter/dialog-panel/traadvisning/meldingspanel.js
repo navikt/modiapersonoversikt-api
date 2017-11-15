@@ -3,32 +3,34 @@ import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../../utils/utils-module';
-
-function toNameCase(navn) {
-    return navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-}
+import { fraBruker, MeldingsTyper } from '../../utils/melding-utils';
 
 function lagTypeoverskrift(melding) {
-    switch (melding.type) {
-        case 'sporsmal':
+    switch (melding.meldingstype) {
+        case MeldingsTyper.SPORSMAL_SKRIFTLIG:
             return 'Spørsmål';
-        case 'delvis':
+        case MeldingsTyper.DELVIS_SVAR:
             return 'Delvis Svar';
+        case MeldingsTyper.SVAR_SKRIFTLIG:
+            return 'Svar';
         default:
-            return toNameCase(melding.type);
+            return melding.meldingstype;
     }
 }
 
-function fraBruker(melding) {
-    return melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
+function finnMeldingsForfatter(melding) {
+    if (typeof melding.skrevetAvFlere !== 'undefined') {
+        return `Skrevet av: ${melding.skrevetAvFlere}`;
+    }
+    return melding.erDokumentMelding || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG ?
+        '' :
+        `Skrevet av: ${melding.skrevetAv.navn} (${fraBruker(melding)})`;
 }
 
 function lagTittel(melding) {
     const typeoverskrift = lagTypeoverskrift(melding);
     const dato = sanitize(melding.visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
-    const meldingsForfatter = melding.erDokumentMelding || melding.type === 'sporsmal'
-        ? ''
-        : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${fraBruker(melding)})`;
+    const meldingsForfatter = finnMeldingsForfatter(melding);
 
     return (
         <div>
