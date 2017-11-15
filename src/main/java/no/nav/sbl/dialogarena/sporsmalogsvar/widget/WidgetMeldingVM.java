@@ -25,7 +25,7 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
     }
 
     public String getMeldingStatusTekstKey() {
-        return lagMeldingStatusTekstKey(melding);
+        return lagMeldingStatusTekstKey(melding.meldingstype);
     }
 
     public String getVisningsDato() {
