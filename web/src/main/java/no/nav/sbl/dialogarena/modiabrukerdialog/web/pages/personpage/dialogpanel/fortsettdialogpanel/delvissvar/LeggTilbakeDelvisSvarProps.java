@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.TraadVisningProps;
 import no.nav.sbl.dialogarena.time.Datoformat;
 
@@ -12,7 +13,7 @@ import java.util.Map;
 
 class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Serializable {
 
-    LeggTilbakeDelvisSvarProps(Melding sporsmal, String henvendelseId, Map<Temagruppe, String> temagruppeMapping, final List<Melding> traad) {
+    LeggTilbakeDelvisSvarProps(Melding sporsmal, String henvendelseId, Map<Temagruppe, String> temagruppeMapping, GrunnInfo grunnInfo, final List<Melding> traad) {
         String temagruppe = temagruppeMapping.get(Temagruppe.valueOf(sporsmal.temagruppe));
         temagruppeMapping.remove(Temagruppe.valueOf(sporsmal.temagruppe));
 
@@ -26,6 +27,7 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         put("temagruppe", temagruppe);
         put("opprettetDato", Datoformat.kortMedTid(sporsmal.opprettetDato));
         put("temagruppeMapping", temagruppeMapping);
+        put("grunnInfo", grunnInfo);
         putAll(new TraadVisningProps(traad));
     }
 
