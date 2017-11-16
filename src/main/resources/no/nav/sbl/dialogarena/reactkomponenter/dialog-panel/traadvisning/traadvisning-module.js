@@ -3,6 +3,7 @@ import Meldingspanel from './meldingspanel';
 import Kategoripanel from './kategoripanel';
 import PT from 'prop-types';
 import { eldsteMeldingForst, erDelvisSvar, erSkriftligSvar } from '../../utils/melding-utils';
+import { meldingITraadVisning } from '../props';
 
 function lagMeldingspanel(melding, key, apen) {
     return (
@@ -38,7 +39,7 @@ function flettDelviseSvarInnISkriftligSvar(traad, delviseSvar) {
     }
 }
 
-function sammenslaTraad(traad) {
+function slaaSammen(traad) {
     const delviseSvar = traad.filter(erDelvisSvar);
     if (delviseSvar.length > 0) {
         flettDelviseSvarInnISkriftligSvar(traad, delviseSvar);
@@ -55,19 +56,19 @@ function erUtenSvar(sammenslattTraad) {
 }
 
 function lagTraadPanel(traad) {
-    const sammenslattTraad = sammenslaTraad(traad);
-    const sporsmal = sammenslattTraad[0];
-    const skalNedtrekkspanelVisesApen = erUtenSvar(sammenslattTraad);
-    const tittel = 'Vis tidligere meldingsdetaljer';
+    const sammenslaattTraad = slaaSammen(traad);
+    const sporsmal = sammenslaattTraad[0];
+    const skalNedtrekkspanelVisesApen = erUtenSvar(sammenslaattTraad);
+    const tittel = 'Vis tidligere meldinger';
     const key = 0;
     return erUtenSvar(traad) ?
         lagMeldingspanel(sporsmal, key, skalNedtrekkspanelVisesApen) :
-        lagNedtrekkspanel(sammenslattTraad, tittel, skalNedtrekkspanelVisesApen);
+        lagNedtrekkspanel(sammenslaattTraad, tittel, skalNedtrekkspanelVisesApen);
 }
 
 function lagDelviseSvarPanel(traad) {
     const delviseSvar = traad.filter(erDelvisSvar);
-    const tittel = 'Delvis Svar';
+    const tittel = 'Tidligere delvise svar';
     const skalVisesApen = true;
     return delviseSvar.length > 0 && sporsmalErIkkeBesvart(traad) ?
         lagNedtrekkspanel(delviseSvar, tittel, skalVisesApen) :
@@ -78,7 +79,6 @@ function TraadVisning(props) {
     const traad = props.traad;
     const traadPanel = lagTraadPanel(traad);
     const delvisSvarPanel = lagDelviseSvarPanel(traad);
-
     return (
         <div className="reactTraadVisning">
             {traadPanel}
@@ -88,7 +88,7 @@ function TraadVisning(props) {
 }
 
 TraadVisning.propTypes = {
-    traad: PT.array.isRequired
+    traad: PT.arrayOf(meldingITraadVisning).isRequired
 };
 
 export default TraadVisning;

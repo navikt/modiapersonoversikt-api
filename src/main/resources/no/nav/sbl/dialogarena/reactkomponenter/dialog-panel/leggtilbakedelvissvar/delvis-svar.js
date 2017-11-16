@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
 import TraadVisning from '../traadvisning/traadvisning-module';
 import { Textarea } from 'nav-frontend-skjema';
-import Skrivestotte from "../../skrivestotte/skrivestotte-module";
-import {generateId} from "../../utils/utils-module";
+import Skrivestotte from '../../skrivestotte/skrivestotte-module';
+import { generateId } from '../../utils/utils-module';
+import { grunnInfoType } from '../props';
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
 
@@ -59,19 +60,19 @@ class DelvisSvar extends Component {
     render() {
         const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
-        const hiddenLabel = <span className="vekk">delevis svar</span>;
+        const hiddenLabel = <span className="vekk">Skriv delevis svar</span>;
 
         return (
             <div>
-                <Skrivestotte tekstfeltId={this.textId} autofullfor={this.props.grunnInfo} ref={(input) => {this.skrivestoote = input}}/>
+                <Skrivestotte tekstfeltId={this.textId} autofullfor={this.props.grunnInfo} ref={(input) => { this.skrivestoote = input; }} />
                 <h3>Legg tilbake med delvis svar</h3>
 
                 <TraadVisning traad={this.props.traad} />
 
                 <div className="svar">
                     <div className="svar-overskrift-boks">
-                        <h1 className="overskrift medium"><span>Delvis svar</span></h1>
-                        <button className="skrivestotteToggle" id="skrivestotteToggler10c" title="Hurtigtast: ALT + C" onClick={() => {this.skrivestoote.vis()}}> <span className="vekk">Skrivestøtte.</span> </button>
+                        <h1 className="overskrift medium"><span>Skriv delvis svar</span></h1>
+                        <button className="skrivestotteToggle" id="skrivestotteToggler10c" title="Hurtigtast: ALT + C" onClick={() => { this.skrivestoote.vis(); }}> <span className="vekk">Skrivestøtte.</span> </button>
                     </div>
                     <Textarea
                         className="expandingtextarea"
@@ -111,6 +112,7 @@ class DelvisSvar extends Component {
 
 DelvisSvar.propTypes = {
     traad: PT.array.isRequired,
+    grunnInfo: grunnInfoType.isRequired,
     henvendelseId: PT.string.isRequired,
     sporsmal: PT.string.isRequired,
     fodselsnummer: PT.string.isRequired,

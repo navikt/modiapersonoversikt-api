@@ -3,23 +3,11 @@ import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../../utils/utils-module';
-import { fraBruker, MeldingsTyper } from '../../utils/melding-utils';
+import { fraBruker, getMeldingsTypeTekst, MeldingsTyper } from '../../utils/melding-utils';
+import { meldingITraadVisning } from '../props';
 
-function lagTypeoverskrift(melding) {
-    switch (melding.meldingstype) {
-        case MeldingsTyper.SPORSMAL_SKRIFTLIG:
-            return 'Spørsmål';
-        case MeldingsTyper.DELVIS_SVAR:
-            return 'Delvis Svar';
-        case MeldingsTyper.SVAR_SKRIFTLIG:
-            return 'Svar';
-        default:
-            return melding.meldingstype;
-    }
-}
-
-function finnMeldingsForfatter(melding) {
-    if (typeof melding.skrevetAvFlere !== 'undefined') {
+function finnMeldingsForfattere(melding) {
+    if (melding.skrevetAvFlere !== undefined) {
         return `Skrevet av: ${melding.skrevetAvFlere}`;
     }
     return melding.erDokumentMelding || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG ?
@@ -28,9 +16,9 @@ function finnMeldingsForfatter(melding) {
 }
 
 function lagTittel(melding) {
-    const typeoverskrift = lagTypeoverskrift(melding);
+    const typeoverskrift = getMeldingsTypeTekst(melding);
     const dato = sanitize(melding.visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
-    const meldingsForfatter = finnMeldingsForfatter(melding);
+    const meldingsForfatter = finnMeldingsForfattere(melding);
 
     return (
         <div className="meldingsHeader">
@@ -63,7 +51,7 @@ function Meldingspanel(props) {
     return (
         <EkspanderbartpanelBase
             className="meldingspanel"
-            ariaTittel={`Ekspander ${lagTypeoverskrift(melding)}`}
+            ariaTittel={`Ekspander ${getMeldingsTypeTekst(melding)}`}
             heading={tittel}
             apen={props.apen}
         >
@@ -75,7 +63,7 @@ function Meldingspanel(props) {
 }
 
 Meldingspanel.propTypes = {
-    melding: PT.object.isRequired,
+    melding: meldingITraadVisning.isRequired,
     apen: PT.bool,
     children: PT.node.isRequired
 };
