@@ -85,7 +85,7 @@ class DelvisSvar extends Component {
     render() {
         const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
-        const feilmeldingModel = this.lagFeilmeldingModalHvisFeil();
+        const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
         const hiddenLabel = <span className="vekk">Delvis svar</span>;
         return (
             <div>
@@ -123,7 +123,7 @@ class DelvisSvar extends Component {
                 >
                     Svar delvis og legg tilbake
                 </a>
-                {feilmeldingModel}
+                {feilmeldingModal}
                 <a
                     role="button"
                     onClick={this.props.avbrytCallback}
