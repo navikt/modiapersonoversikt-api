@@ -2,11 +2,19 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinf
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.common.domain.Periode;
+import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi;
+import no.nav.kjerneinfo.consumer.fim.behandleperson.mock.BehandlePersonServiceBiMock;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.domain.person.*;
-import no.nav.kjerneinfo.domain.person.fakta.*;
+import no.nav.kjerneinfo.domain.person.Adresse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
+import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
+import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
+import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
+import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
 
 import java.util.Arrays;
 
@@ -25,6 +33,10 @@ public class PersonKjerneinfoServiceBiMock {
 
         when(serviceMock.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(mockReturnValue);
         return serviceMock;
+    }
+
+    public static BehandlePersonServiceBi getBehandlePersonServiceBiMock() {
+        return new BehandlePersonServiceBiMock();
     }
 
     public static HentKjerneinformasjonResponse createPersonResponse() {

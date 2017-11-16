@@ -104,6 +104,7 @@
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
+        <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>8.0.5</saksoversikt.version>
@@ -420,6 +421,11 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>behandle-henvendelse</artifactId>
                 <version>${behandle.henvendelse.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>behandle-person-v1-tjenestespesifikasjon</artifactId>
+                <version>${behandle.person.v1.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
