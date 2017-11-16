@@ -98,6 +98,7 @@ class SkrivstotteStore extends Store {
                     ), this.state.autofullfor);
             const thisEvent = document.createEvent('Event');
             thisEvent.initEvent('input', true, true);
+            thisEvent.simulated = true;
             tekstfelt.dispatchEvent(thisEvent);
 
             onSubmit();
