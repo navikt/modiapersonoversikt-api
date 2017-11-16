@@ -13,7 +13,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
@@ -136,11 +135,16 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             public void onClick(AjaxRequestTarget target) {
                 if (kanBesvaresDelvis()) {
                     traadVisning.setVisibilityAllowed(false);
-                    animertVisningToggle(target, svarContainer);
+                    target.prependJavaScript(settTekstInnIDelvisSvarTekstfeltHack());
+                    svarContainer.setVisibilityAllowed(false);
                     leggTilbakeDelvisSvarPanel.setVisibilityAllowed(true);
                     leggTilbakeDelvisSvarPanel.add(AttributeModifier.replace("aria-expanded", "true"));
                     target.add(FortsettDialogPanel.this);
                 }
+            }
+
+            private String settTekstInnIDelvisSvarTekstfeltHack() {
+                return "(function(){const value = $('.dialogpanel textarea').val();setTimeout(function() {$('.dialogpanel textarea').val(value);}, 1000);})();";
             }
         };
 
@@ -208,7 +212,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     @RunOnEvents(LeggTilbakeDelvisSvarPanel.AVBRYT_CALLBACK_ID)
     public void skjulDelvisSvarPanel(AjaxRequestTarget target) {
         traadVisning.setVisibilityAllowed(true);
-        animertVisningToggle(target, svarContainer);
+        svarContainer.setVisibilityAllowed(true);
         target.add(this);
     }
 
