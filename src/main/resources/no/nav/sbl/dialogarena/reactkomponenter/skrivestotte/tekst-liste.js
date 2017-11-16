@@ -1,14 +1,23 @@
-/* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PT from 'prop-types';
 import Utils from './../utils/utils-module';
+import {generateId} from "../utils/utils-module";
 
 class TekstListeKomponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.inputId = generateId('tekstElementRadio' + this.props.tekst.key);
+
+        Utils.autobind(this);
+    }
+
+    _bindInputRef(input) {
+        this.input = input;
+    }
+
     _onClick() {
-        const DOMNode = ReactDOM.findDOMNode(this);
-        this.props.store.tekstChanged(this.props.tekst, DOMNode.parentNode);
-        DOMNode.querySelector('input').focus();
+        this.props.store.tekstChanged(this.props.tekst);
+        this.input.focus();
     }
 
     shouldComponentUpdate(nextProps) {
@@ -22,14 +31,15 @@ class TekstListeKomponent extends React.Component {
         return (
             <div className="sok-element">
                 <input
-                    id={'tekstElementRadio' + this.props.tekst.key}
+                    id={this.inputId}
                     name="tekstListeRadio"
                     type="radio"
+                    ref={this._bindInputRef}
                     readOnly
                     checked={this.props.tekst === this.props.valgtTekst}
-                    onClick={this._onClick.bind(this)}
+                    onClick={this._onClick}
                 />
-                <label htmlFor={'tekstElementRadio' + this.props.tekst.key}>
+                <label htmlFor={this.inputId}>
                     <span dangerouslySetInnerHTML={{ __html: this.props.tekst.tittel }}></span>
                     <span className="vekk">{' | ' + Utils.getInnhold(this.props.tekst, this.props.locale)}</span>
                 </label>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PT from 'prop-types';
 import wicketSender from '../../react-wicket-mixin/wicket-sender';
 import DelvisSvar from './delvis-svar';
@@ -12,13 +12,23 @@ class LeggTilbakeDelvisSvarPanel extends Component {
             erUnderArbeid: true
         };
     }
+
     svarCallback() {
-        this.setState({ erUnderArbeid: false });
+        this.setState({erUnderArbeid: false});
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.svarDelvisCallbackId);
     }
 
     avbrytCallback() {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.avbrytCallbackId);
+    }
+
+    lagKvittering() {
+        return (
+            <div className="kvittering">
+                <div className="robust-ikon-gront-sjekk"/>
+                <h2 className="medium">Delvis svar er registrert</h2>
+            </div>
+        );
     }
 
     render() {
@@ -34,13 +44,16 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 temagruppe={this.props.temagruppe}
                 opprettetDato={this.props.opprettetDato}
                 temagruppeMapping={this.props.temagruppeMapping}
+                traad={this.props.traad}
+                grunnInfo={this.props.grunnInfo}
             />);
         }
-        return <h1>Delvis svar er registrert</h1>;
+        return this.lagKvittering();
     }
 }
 
 LeggTilbakeDelvisSvarPanel.propTypes = {
+    traad: PT.array.isRequired,
     wicketurl: PT.string.isRequired,
     wicketcomponent: PT.string.isRequired,
     svarDelvisCallbackId: PT.string.isRequired,
@@ -52,10 +65,24 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     temagruppe: PT.string.isRequired,
     oppgaveId: PT.string.isRequired,
     opprettetDato: PT.string.isRequired,
-    temagruppeMapping:PT.shape({
+    temagruppeMapping: PT.shape({
         temagruppeKode: PT.string,
-        temagruppeNavn: PT.string,
+        temagruppeNavn: PT.string
     }),
+    grunnInfo: PT.shape({
+        bruker: PT.shape({
+            fnr: PT.string,
+            fornavn: PT.string,
+            etternavn: PT.string,
+            navkontor: PT.string
+        }),
+        Saksbehandler: PT.shape({
+                enhet: PT.string,
+                fornavn: PT.string,
+                etternavn: PT.string
+            }
+        )
+    })
 };
 
 export default LeggTilbakeDelvisSvarPanel;

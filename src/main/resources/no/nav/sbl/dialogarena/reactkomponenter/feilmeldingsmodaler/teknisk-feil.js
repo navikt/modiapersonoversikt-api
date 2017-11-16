@@ -18,19 +18,32 @@ class TekniskFeil extends React.Component {
     constructor(props) {
         super(props);
         this.skjul = this.skjul.bind(this);
+        this.vis = this.vis.bind(this);
+        this.state = { isOpen: this.props.isOpen };
     }
 
     vis() {
+        this.setState({ isOpen: true });
         this.modaldialog.open();
     }
 
     skjul() {
-        this.modaldialog.close();
+        this.setState({ isOpen: false });
+        if (this.props.closeButtonCallback) {
+            this.props.closeButtonCallback();
+        }
     }
 
     render() {
-        const { isOpen, title, closeButton, tekst } = this.props;
-        const modalProps = { isOpen, title, closeButton };
+        const { title, closeButton, tekst } = this.props;
+        const modalProps = {
+            isOpen: this.state.isOpen, title, closeButton
+        };
+
+        if (!this.state.isOpen) {
+            return <div />;
+        }
+
         return (
             <Modal
                 {...modalProps}
@@ -62,7 +75,8 @@ TekniskFeil.propTypes = {
     title: AriaPropType,
     description: AriaPropType,
     closeButton: AriaPropType,
-    isOpen: PT.bool
+    isOpen: PT.bool,
+    closeButtonCallback: PT.func
 };
 
 export default TekniskFeil;
