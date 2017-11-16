@@ -1,6 +1,5 @@
 
 .reactTraadVisning {
-  margin-top: 1em;
   .ekspanderbartPanel {
     background-color: white;
     box-shadow: 0 0 1px @navGra40;
@@ -27,7 +26,12 @@
       padding: 0.5em 1em;
       z-index: inherit;
 
-      .typo-undertittel {
+      .dialogpanel-header{
+        width: 110%;
+      }
+
+      .meldingsHeader {
+        margin-top: 0.5rem;
         width: 95%;
       }
 
@@ -48,11 +52,7 @@
       .metadata {
         text-align: left;
         color: @navGra60;
-        font-size: 0.85em;
-        .meldingsDato {
-        }
-        .meldingsForfatter {
-        }
+        font-size: 0.85rem;
       }
 
       &:hover,
