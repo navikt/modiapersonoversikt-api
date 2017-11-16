@@ -87,7 +87,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
-        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(sporsmal, behandlingsId, traad);
+        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(sporsmal, behandlingsId, grunnInfo, traad);
         traadVisning = new ReactComponentPanel(TRAADVISNING_WICKET_CONTAINER_ID, TRAADVISNING_REACT_MODULE, new TraadVisningProps(traad));
         kvittering = new KvitteringsPanel("kvittering");
 

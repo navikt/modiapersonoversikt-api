@@ -4,6 +4,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +33,9 @@ class LeggTilbakeDelvisSvarPropsTest {
     private static Map<Temagruppe, String> TEMAGRUPPE_MAP = new HashMap<>();
     private final Map<Temagruppe, String> FORVENTET_TEMAGRUPPE_MAP = new HashMap<>(TEMAGRUPPE_MAP);
     private final List<Melding> traad = new ArrayList<>();
+    private final GrunnInfo.Bruker bruker  = new GrunnInfo.Bruker("10108000398", "testesen", "testfamilien", "NAV Aremark");
+    private final GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("0118", "F_z123456", "E_z123456");
+    private final GrunnInfo grunnInfo = new GrunnInfo(bruker, saksbehandler);
 
    static{
         HashMap<Temagruppe, String> map = new HashMap<>();
@@ -56,7 +60,7 @@ class LeggTilbakeDelvisSvarPropsTest {
     @Test
     @DisplayName("Lager korrekte props til reactkomponenten")
     void lagerPropsSomForventet() {
-        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, traad);
+        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, grunnInfo, traad);
         FORVENTET_TEMAGRUPPE_MAP.remove(ARBD);
 
         assertAll("props",
