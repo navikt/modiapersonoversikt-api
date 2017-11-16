@@ -62,9 +62,10 @@ public class TraadPanel extends Panel {
             }
 
             private String getFritekst(Melding melding) {
+                String linjeskift = "\n\u00A0\n";
                 return melding.getFriteksterMedEldsteForst().stream()
                         .map(Fritekst::getFritekst)
-                        .collect(Collectors.joining("\n————————————————\n"));
+                        .collect(Collectors.joining(linjeskift));
             }
 
             private String getSkrevetAv(Melding melding) {
