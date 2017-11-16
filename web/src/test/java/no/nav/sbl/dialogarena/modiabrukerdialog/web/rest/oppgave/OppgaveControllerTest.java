@@ -25,7 +25,6 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
-
 import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
 
