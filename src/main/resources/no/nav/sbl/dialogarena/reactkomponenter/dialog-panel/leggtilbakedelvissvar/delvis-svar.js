@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
 import TraadVisning from '../traadvisning/traadvisning-module';
 import TekniskFeil from '../../feilmeldingsmodaler/teknisk-feil';
 import { Textarea } from 'nav-frontend-skjema';
-import Skrivestotte from "../../skrivestotte/skrivestotte-module";
-import { generateId } from "../../utils/utils-module";
+import Skrivestotte from '../../skrivestotte/skrivestotte-module';
+import { generateId } from '../../utils/utils-module';
+import { grunnInfoType } from '../props';
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
 
@@ -106,8 +107,7 @@ class DelvisSvar extends Component {
                 </option>);
 
         const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
-        const hiddenLabel = <span className="vekk">Delvis svar</span>;
-
+        const hiddenLabel = <span className="vekk">Skriv delvis svar</span>;
         return (
             <div>
                 <Skrivestotte tekstfeltId={this.textId} autofullfor={this.props.grunnInfo} ref={(input) => {this.skrivestoote = input}}/>
@@ -164,6 +164,7 @@ class DelvisSvar extends Component {
 
 DelvisSvar.propTypes = {
     traad: PT.array.isRequired,
+    grunnInfo: grunnInfoType.isRequired,
     henvendelseId: PT.string.isRequired,
     sporsmal: PT.string.isRequired,
     fodselsnummer: PT.string.isRequired,
