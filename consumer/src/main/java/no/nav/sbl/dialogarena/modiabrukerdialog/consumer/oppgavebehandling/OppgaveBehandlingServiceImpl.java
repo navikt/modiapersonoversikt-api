@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -82,7 +83,8 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     public void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe) {
         try {
             WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
-            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
+            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia",
+                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
             lagreOppgaveIGsak(oppgave, temagruppe);
 
             oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe))));
@@ -92,13 +94,13 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     @Override
-    public void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, Temagruppe temagruppe) {
-        if (oppgaveId == null) {
+    public void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request) {
+        if (request.getOppgaveId() == null) {
             return;
         }
 
-        WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(oppgaveId);
-        leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, beskrivelse, temagruppe);
+        WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
+        leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, request);
     }
 
     @Override
@@ -116,13 +118,13 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         return equalsIgnoreCase(hentOppgaveFraGsak(oppgaveid).getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
     }
 
-    String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
+    String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil, String valgtEnhet) {
         String ident = getSubjectHandler().getUid();
         String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
                 ansattWS.hentAnsattNavn(ident),
                 ident,
-                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+                valgtEnhet);
 
         String nyBeskrivelse = header + leggTil;
         return isBlank(gammelBeskrivelse) ? nyBeskrivelse :  nyBeskrivelse + "\n\n" + gammelBeskrivelse;

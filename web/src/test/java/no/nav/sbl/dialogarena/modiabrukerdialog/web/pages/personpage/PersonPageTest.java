@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import junit.framework.Assert;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.support.EgenAnsattServiceBi;
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.*;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
@@ -66,14 +66,14 @@ public class PersonPageTest extends WicketPageTest {
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
 
     @Inject
-    private EgenAnsattServiceBi egenAnsattServiceBi;
+    private EgenAnsattService egenAnsattService;
 
     private final static String testFnr = "12037649749";
 
     @Before
     public void setUp() {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any())).thenReturn(lagHentKjerneinformasjonResponse());
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding()));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagMelding()));
         when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(asList(
                 new GsakKodeTema.Tema("kode", "tekst",
                         new ArrayList<>(asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),

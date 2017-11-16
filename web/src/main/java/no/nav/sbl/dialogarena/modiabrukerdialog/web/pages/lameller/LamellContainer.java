@@ -4,9 +4,7 @@ import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.modia.events.LamellPayload;
-import no.nav.modig.modia.events.WidgetHeaderPayload;
+import no.nav.modig.modia.events.*;
 import no.nav.modig.modia.lamell.*;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -24,6 +22,7 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
+import no.nav.sykmeldingsperioder.pleiepenger.PleiepengerPanel;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -46,8 +45,7 @@ import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.visUtbetalinger;
-import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
-import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
 
 /**
  * Holder på lameller og tilhørende lerreter
@@ -60,6 +58,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String LAMELL_UTBETALINGER = "utbetalinger";
     public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
     public static final String LAMELL_SYKEPENGER = "sykepenger";
+    public static final String LAMELL_PLEIEPENGER = "pleiepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String LAMELL_SAKSOVERSIKT = "saksoversikt";
@@ -146,10 +145,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
-        if (SYKEPENGER.equalsIgnoreCase(type)) {
+        if (SYKEPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-        } else if (FORELDREPENGER.equalsIgnoreCase(type)) {
+        } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+        } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
+            panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId);
         } else {
             ApplicationException exc = new ApplicationException("Ukjent type lerret: " + type);
             logger.warn("ukjent lerret: {}", type, exc);
@@ -175,7 +176,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static boolean canHaveMoreThanOneLamell(String type) {
-        return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
+        return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
     private static List<LamellFactory> createLamellFactories(final String fnrFromRequest, final GrunnInfo grunnInfo) {

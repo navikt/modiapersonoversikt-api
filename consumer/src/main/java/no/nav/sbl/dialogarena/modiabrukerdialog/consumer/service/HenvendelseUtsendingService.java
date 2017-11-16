@@ -15,7 +15,7 @@ public interface HenvendelseUtsendingService {
 
     void avbrytHenvendelse(String behandlingsId);
 
-    List<Melding> hentTraad(String fnr, String traadId);
+    List<Melding> hentTraad(String fnr, String traadId, String valgtEnhet);
 
     void merkSomKontorsperret(String fnr, List<String> meldingsIDer);
 

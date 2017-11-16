@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 
 import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi;
 import no.nav.kjerneinfo.consumer.fim.behandleperson.config.BehandlePersonConsumerConfig;
-import no.nav.kjerneinfo.consumer.fim.mapping.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.config.PersonKjerneinfoConsumerConfig;
+import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.KjerneinfoMapperConfigResolver;

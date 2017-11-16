@@ -6,8 +6,7 @@ import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -101,9 +100,6 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     public void inneholderSporsmaalsspefikkeKomponenter() {
         wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
-                .should().containComponent(withId("sporsmal").and(ofType(TidligereMeldingPanel.class)))
-                .should().containComponent(withId("svarliste").and(ofType(ListView.class)))
-                .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
                 .should().containComponent(withId("kanalbeskrivelse").and(ofType(Label.class)))
                 .should().containComponent(withId("fortsettdialogform"))
@@ -129,7 +125,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         assertThat(melding.traadId, is(SPORSMAL_ID));
         assertThat(melding.temagruppe, is(TEMAGRUPPE));
         assertThat(melding.kanal, is(Kanal.TEKST.name()));
-        assertThat(melding.fritekst, is(FRITEKST));
+        assertThat(melding.getFritekst(), is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
         assertThat(melding.brukersEnhet, is(BRUKERS_ENHET));
     }
@@ -300,26 +296,6 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void viserTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
-                .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
-    }
-
-    @Test
-    public void viserIkkeTraadToggleLenkeHvisIngenSvarFinnes() {
-        wicket.goToPageWith(testFortsettDialogPanel)
-                .should().containComponent(thatIsInvisible().and(withId("vistraadcontainer")));
-    }
-
-    @Test
-    public void togglerVisningAvTraad() {
-        wicket.goToPageWith(new FortsettDialogPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmalFraBruker(), lagSvar()), null))
-                .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
-                .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
-                .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
-    }
-
-    @Test
     public void viserLeggTilbakePanelDersomSporsmalErFraBruker() {
         wicket.goToPageWith(testFortsettDialogPanel)
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
@@ -411,7 +387,11 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     }
 
     private Melding lagSvar() {
-        return new Melding().withOpprettetDato(now()).withType(SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(TEMAGRUPPE);
+        return new Melding()
+                .withOpprettetDato(now())
+                .withType(SVAR_SKRIFTLIG)
+                .withFritekst(new Fritekst("fritekst", new no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler("", "", ""), now()))
+                .withTemagruppe(TEMAGRUPPE);
     }
 
 }

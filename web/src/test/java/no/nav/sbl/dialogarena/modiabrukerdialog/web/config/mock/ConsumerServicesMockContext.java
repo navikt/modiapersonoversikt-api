@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
@@ -45,7 +45,7 @@ public class ConsumerServicesMockContext {
     @Bean
     public LDAPService ldapService() {
         LDAPService mock = mock(LDAPService.class);
-        when(mock.hentSaksbehandler(anyString())).thenReturn(new Person("Daniel", "Franck"));
+        when(mock.hentSaksbehandler(anyString())).thenReturn(new Saksbehandler("Daniel", "Franck", "ident"));
         return mock;
     }
 

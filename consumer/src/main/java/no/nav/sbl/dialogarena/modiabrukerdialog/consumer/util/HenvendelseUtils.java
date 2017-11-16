@@ -32,7 +32,7 @@ public class HenvendelseUtils {
                         new XMLMeldingTilBruker()
                                 .withTemagruppe(henvendelse.temagruppe)
                                 .withKanal(henvendelse.kanal)
-                                .withFritekst(henvendelse.fritekst)
+                                .withFritekst(henvendelse.getFritekst())
                                 .withNavident(henvendelse.navIdent)
                 ))
                 .withFerdigstiltUtenSvar(henvendelse.erFerdigstiltUtenSvar);

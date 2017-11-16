@@ -4,7 +4,9 @@ import no.nav.metrics.Timer;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -46,6 +48,8 @@ public class LeggTilbakePanel extends Panel {
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private final Radio<Aarsak> feiltema;
     private final String oppgaveId;
@@ -150,12 +154,13 @@ public class LeggTilbakePanel extends Panel {
                 Timer timer = createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak);
                 timer.start();
                 try {
-                    oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                            oppgaveId,
-                            leggTilbakeVM.lagBeskrivelse(
-                                    new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
-                            leggTilbakeVM.nyTemagruppe
-                    );
+                    LeggTilbakeOppgaveIGsakRequest request = new LeggTilbakeOppgaveIGsakRequest()
+                            .withSaksbehandlersValgteEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+                            .withOppgaveId(oppgaveId)
+                            .withBeskrivelse(leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()))
+                            .withTemagruppe(leggTilbakeVM.nyTemagruppe);
+
+                    oppgaveBehandlingService.leggTilbakeOppgaveIGsak(request);
                     oppgaveLagtTilbake.setObject(true);
 
                     if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE) {

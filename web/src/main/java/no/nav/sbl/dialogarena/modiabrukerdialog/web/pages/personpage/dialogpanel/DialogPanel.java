@@ -6,6 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
@@ -41,6 +42,8 @@ public class DialogPanel extends Panel {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private final OppgavetilordningFeilet oppgavetilordningFeiletModal;
     private final GrunnInfo grunnInfo;
@@ -81,7 +84,8 @@ public class DialogPanel extends Panel {
     private void settOppRiktigMeldingPanel() {
         if (!isBlank(henvendelsesIdFraParametere) && !isBlank(oppgaveIdFraParametere)) {
             if (besvaresFraParametere) {
-                List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere);
+                List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere,
+                        saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
                     try {
                         oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere, Temagruppe.valueOf(traad.get(0).temagruppe));
@@ -99,7 +103,8 @@ public class DialogPanel extends Panel {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
-        List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId);
+        List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId,
+                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         String oppgaveId = null;
         if (!isBlank(henvendelsesIdFraParametere) && !isBlank(oppgaveIdFraParametere)
                 && traadId.equals(henvendelsesIdFraParametere)
