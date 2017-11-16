@@ -2,12 +2,16 @@ import React, {Component} from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
 import TraadVisning from '../traadvisning/traadvisning-module';
+import { Textarea } from 'nav-frontend-skjema';
+import Skrivestotte from "../../skrivestotte/skrivestotte-module";
+import {generateId} from "../../utils/utils-module";
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
 
 class DelvisSvar extends Component {
     constructor(props) {
         super(props);
+        this.textId = generateId('textarea');
         this.svarDelvis = this.svarDelvis.bind(this);
         this.handleSvarEndring = this.handleSvarEndring.bind(this);
         this.velgTemagruppe = this.velgTemagruppe.bind(this);
@@ -55,9 +59,11 @@ class DelvisSvar extends Component {
     render() {
         const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
+        const hiddenLabel = <span className="vekk">delevis svar</span>;
 
         return (
             <div>
+                <Skrivestotte tekstfeltId={this.textId} autofullfor={this.props.grunnInfo} ref={(input) => {this.skrivestoote = input}}/>
                 <h3>Legg tilbake med delvis svar</h3>
 
                 <TraadVisning traad={this.props.traad} />
@@ -65,14 +71,17 @@ class DelvisSvar extends Component {
                 <div className="svar">
                     <div className="svar-overskrift-boks">
                         <h1 className="overskrift medium"><span>Delvis svar</span></h1>
+                        <button className="skrivestotteToggle" id="skrivestotteToggler10c" title="Hurtigtast: ALT + C" onClick={() => {this.skrivestoote.vis()}}> <span className="vekk">Skrivestøtte.</span> </button>
                     </div>
-                    <textarea
+                    <Textarea
+                        className="expandingtextarea"
                         value={this.state.svarValue}
                         onChange={this.handleSvarEndring}
-                        className="svar-tekst"
+                        maxLength={5000}
+                        id={this.textId}
+                        label={hiddenLabel}
                         placeholder="Svaret blir ikke synlig for brukeren"
-                    >
-                    </textarea>
+                    />
                 </div>
 
                 <div className="temagruppe-velger">
