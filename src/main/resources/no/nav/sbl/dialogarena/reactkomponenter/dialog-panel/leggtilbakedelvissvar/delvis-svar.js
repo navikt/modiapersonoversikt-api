@@ -2,12 +2,19 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
 import TraadVisning from '../traadvisning/traadvisning-module';
+import TekniskFeil from '../../feilmeldingsmodaler/teknisk-feil';
 import { Textarea } from 'nav-frontend-skjema';
 import Skrivestotte from '../../skrivestotte/skrivestotte-module';
 import { generateId } from '../../utils/utils-module';
 import { grunnInfoType } from '../props';
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
+
+const panelState = {
+    PENDING: 'PENDING',
+    ERROR: 'ERROR',
+    INITIALIZED: 'INITIALIZED'
+};
 
 class DelvisSvar extends Component {
     constructor(props) {
@@ -16,9 +23,12 @@ class DelvisSvar extends Component {
         this.svarDelvis = this.svarDelvis.bind(this);
         this.handleSvarEndring = this.handleSvarEndring.bind(this);
         this.velgTemagruppe = this.velgTemagruppe.bind(this);
+        this.lagFeilmeldingModalHvisFeil = this.lagFeilmeldingModalHvisFeil.bind(this);
+        this.feilmeldingCloseButtonCallback = this.feilmeldingCloseButtonCallback.bind(this);
         this.state = {
             svarValue: '',
-            valgtTemagruppe: ''
+            valgtTemagruppe: '',
+            panelState: panelState.INITIALIZED
         };
     }
 
@@ -45,7 +55,10 @@ class DelvisSvar extends Component {
         Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
             this.props.svarCallback();
         }, (err) => {
-            console.error(err);
+            this.setState({
+                panelState: panelState.ERROR,
+                feilmelding: `Teknisk feil: ${err[0].message}`
+            });
         });
     }
 
@@ -57,11 +70,24 @@ class DelvisSvar extends Component {
         this.setState({ valgtTemagruppe: event.target.value });
     }
 
+    feilmeldingCloseButtonCallback() {
+        this.setState({ feilmelding: null, panelState: panelState.INITIALIZED });
+    }
+
+    lagFeilmeldingModalHvisFeil() {
+        return this.state.panelState === panelState.ERROR ?
+            (<TekniskFeil
+                closeButtonCallback={this.feilmeldingCloseButtonCallback}
+                tekst={this.state.feilmelding} isOpen
+            />) :
+            <div />;
+    }
+
     render() {
         const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
             <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
-        const hiddenLabel = <span className="vekk">Skriv delevis svar</span>;
-
+        const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
+        const hiddenLabel = <span className="vekk">Skriv delvis svar</span>;
         return (
             <div>
                 <Skrivestotte tekstfeltId={this.textId} autofullfor={this.props.grunnInfo} ref={(input) => { this.skrivestoote = input; }} />
@@ -98,6 +124,7 @@ class DelvisSvar extends Component {
                 >
                     Svar delvis og legg tilbake
                 </a>
+                {feilmeldingModal}
                 <a
                     role="button"
                     onClick={this.props.avbrytCallback}
