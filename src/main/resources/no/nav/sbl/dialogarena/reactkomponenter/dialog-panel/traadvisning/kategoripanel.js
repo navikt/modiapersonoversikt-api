@@ -1,14 +1,20 @@
 import React from 'react';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
+import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 
 function Kategoripanel(props) {
     const tittel = <h1 className="medium dialogpanel-header">{props.tittel}</h1>;
 
     return (
-        <Ekspanderbartpanel className="kategoripanel kanaloverskrift" tittel={tittel} apen={props.apen}>
+        <EkspanderbartpanelBase
+            collapseProps={{ hasNestedCollapse: true }}
+            className="kategoripanel kanaloverskrift"
+            ariaTittel={`Ekspander ${props.tittel}`}
+            heading={tittel}
+            apen={props.apen}
+        >
             {props.children}
-        </Ekspanderbartpanel>
+        </EkspanderbartpanelBase>
     );
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
+import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../../utils/utils-module';
@@ -33,7 +33,7 @@ function lagTittel(melding) {
     const meldingsForfatter = finnMeldingsForfatter(melding);
 
     return (
-        <div>
+        <div className="meldingsHeader">
             <div className="metadata">
                 <span className="meldingsDato">
                     {dato}
@@ -61,15 +61,16 @@ function Meldingspanel(props) {
         .map((avsnitt, index) => Utils.tilParagraf(avsnitt, index));
     const tittel = lagTittel(melding);
     return (
-        <Ekspanderbartpanel
+        <EkspanderbartpanelBase
             className="meldingspanel"
-            tittel={tittel}
+            ariaTittel={`Ekspander ${lagTypeoverskrift(melding)}`}
+            heading={tittel}
             apen={props.apen}
         >
             <div className="ekspanderbartPanel__innhold__melding">
                 {paragrafer}
             </div>
-        </Ekspanderbartpanel>
+        </EkspanderbartpanelBase>
     );
 }
 
