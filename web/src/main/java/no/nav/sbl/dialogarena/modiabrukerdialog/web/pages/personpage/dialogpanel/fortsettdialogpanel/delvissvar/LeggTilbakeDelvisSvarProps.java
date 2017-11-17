@@ -11,11 +11,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+
 class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Serializable {
 
-    LeggTilbakeDelvisSvarProps(Melding sporsmal, String henvendelseId, Map<Temagruppe, String> temagruppeMapping, GrunnInfo grunnInfo, final List<Melding> traad) {
+    LeggTilbakeDelvisSvarProps(Melding sporsmal, String henvendelseId, Map<Temagruppe, String> temagruppeMapping, GrunnInfo grunnInfo, final List<Melding> traad, String saksbehandlerValgtEnhet) {
         String temagruppe = temagruppeMapping.get(Temagruppe.valueOf(sporsmal.temagruppe));
         temagruppeMapping.remove(Temagruppe.valueOf(sporsmal.temagruppe));
+
+
+        if(saksbehandlerValgtEnhet.startsWith("41")){
+            put("knagger", asList("ks"));
+        }
 
         put("henvendelseId", henvendelseId);
         put("sporsmal", sporsmal.getFritekst());

@@ -4,6 +4,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
@@ -34,6 +35,9 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     @Inject
     private WicketInjectablePropertyResolver wicketInjectablePropertyResolver;
 
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     public LeggTilbakeDelvisSvarPanel(Melding sporsmal, String behandlingsId, GrunnInfo grunnInfo, final List<Melding> traad) {
         super(WICKET_REACT_WRAPPER_ID);
         setOutputMarkupPlaceholderTag(true);
@@ -46,7 +50,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
                         LinkedHashMap :: new
                         )
                 );
-        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(sporsmal, behandlingsId, temagruppeMapping, grunnInfo, traad);
+        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(sporsmal, behandlingsId, temagruppeMapping, grunnInfo, traad, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         add(lagReactPanel());
     }
 

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -60,7 +61,8 @@ class LeggTilbakeDelvisSvarPropsTest {
     @Test
     @DisplayName("Lager korrekte props til reactkomponenten")
     void lagerPropsSomForventet() {
-        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, grunnInfo, traad);
+        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, grunnInfo, traad, "4100");
+        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarPropsUtenKs = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, grunnInfo, traad, "4200");
         FORVENTET_TEMAGRUPPE_MAP.remove(ARBD);
 
         assertAll("props",
@@ -72,7 +74,10 @@ class LeggTilbakeDelvisSvarPropsTest {
                 () -> assertEquals(FORVENTET_TEMAGRUPPE, leggTilbakeDelvisSvarProps.get("temagruppe")),
                 () -> assertEquals(FRITEKST, leggTilbakeDelvisSvarProps.get("sporsmal")),
                 () -> assertEquals(FORVENTET_OPPRETTETDATO, leggTilbakeDelvisSvarProps.get("opprettetDato")),
-                () -> assertEquals(FORVENTET_TEMAGRUPPE_MAP, leggTilbakeDelvisSvarProps.get("temagruppeMapping"))
+                () -> assertEquals(FORVENTET_TEMAGRUPPE_MAP, leggTilbakeDelvisSvarProps.get("temagruppeMapping")),
+                () -> assertEquals(grunnInfo, leggTilbakeDelvisSvarProps.get("grunnInfo")),
+                () -> assertEquals(asList("ks"), leggTilbakeDelvisSvarProps.get("knagger")),
+                () -> assertEquals(null, leggTilbakeDelvisSvarPropsUtenKs.get("knagger"))
                 );
     }
 
