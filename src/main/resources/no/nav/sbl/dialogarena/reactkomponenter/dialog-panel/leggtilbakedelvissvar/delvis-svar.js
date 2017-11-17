@@ -50,19 +50,15 @@ class DelvisSvar extends Component {
         return Ajax.post(url, data);
     }
 
-    validTemagruppe(){
+    validTemagruppe() {
         return this.state.valgtTemagruppe !== 'Velg Temagruppe';
     }
 
     svarDelvis() {
-        if (this.validTemagruppe()) {
-            this.leggDelvisesvar();
-        } else {
-            this.setState({ valideringFeil: true })
-        }
+        this.validTemagruppe() ? this.leggDelvisesvar() : this.setState({ valideringFeil: true }) ;
     }
 
-    leggDelvisesvar(){
+    leggDelvisesvar() {
         const ferdigstillHenvendelsePromise = this.ferdigstillHenvendelse();
         const leggTilbakeOppgavePromise = this.leggTilbakeOppgave();
         Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
@@ -76,10 +72,10 @@ class DelvisSvar extends Component {
     }
 
     velgTemagruppe(event) {
-        const valgtTemagruppe = event.target.value ;
-        this.setState({ valgtTemagruppe: valgtTemagruppe ,
-            valideringFeil: this.validTemagruppe()
-        });
+        this.setState({
+                        valgtTemagruppe: event.target.value ,
+                        valideringFeil: this.validTemagruppe()
+                      });
     }
 
     handleSvarEndring(event) {
