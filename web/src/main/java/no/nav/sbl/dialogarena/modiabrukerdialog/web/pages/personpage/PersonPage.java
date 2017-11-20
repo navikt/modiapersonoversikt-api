@@ -116,9 +116,9 @@ public class PersonPage extends BasePage {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private LDAPService ldapService;
-
     @Inject
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
+    @Inject
     private GrunninfoService grunninfoService;
 
     public PersonPage(PageParameters pageParameters) {

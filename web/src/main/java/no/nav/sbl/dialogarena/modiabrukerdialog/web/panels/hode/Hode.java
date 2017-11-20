@@ -99,7 +99,7 @@ public class Hode extends WebMarkupContainer {
             }
         });
 
-        addCallback("sokperson", new HodeCallbackWrapper<>(String.class, new SokOppBrukerCallback(personService)));
+        addCallback("sokperson", new HodeCallbackWrapper<>(String.class, new SokOppBrukerCallback(personService, this)));
     }
 
     public void addCallback(String event, HodeCallbackWrapper<?> callback) {

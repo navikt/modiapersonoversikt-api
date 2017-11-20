@@ -6,7 +6,7 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest;
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +19,13 @@ public class SokOppBrukerCallback implements HodeCallback<String> {
     public static final String JSON_ERROR_TEXT = "errortext";
     public static final String JSON_SOKT_FNR = "soektfnr";
     private final PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
+    private final Component component;
 
     public SokOppBrukerCallback(
-            PersonKjerneinfoServiceBi personKjerneinfoServiceBi
-    ) {
+            PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
+            Component component) {
         this.personKjerneinfoServiceBi = personKjerneinfoServiceBi;
+        this.component = component;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class SokOppBrukerCallback implements HodeCallback<String> {
             String message = null;
 
             if (ex instanceof AuthorizationWithSikkerhetstiltakException) {
-                message = ex.getMessage();
+                message = component.getString(ex.getMessage());
             } else {
                 HentSikkerhetstiltakRequest sikkerhetstiltakRequest = new HentSikkerhetstiltakRequest(fnr);
                 Sikkerhetstiltak sikkerhetstiltak = personKjerneinfoServiceBi.hentSikkerhetstiltak(sikkerhetstiltakRequest);

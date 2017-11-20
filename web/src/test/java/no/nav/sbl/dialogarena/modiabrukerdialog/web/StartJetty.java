@@ -5,29 +5,22 @@ import no.nav.brukerdialog.security.domain.OidcCredential;
 import no.nav.dialogarena.config.fasit.FasitUtils;
 import no.nav.dialogarena.config.fasit.TestUser;
 import no.nav.dialogarena.config.security.ISSOProvider;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 import no.nav.sbl.dialogarena.test.SystemProperties;
 import org.apache.geronimo.components.jaspi.AuthConfigFactoryImpl;
 
 import javax.security.auth.message.config.AuthConfigFactory;
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.lang.System.setProperty;
 import static no.nav.modig.core.test.FilesAndDirs.TEST_RESOURCES;
 import static no.nav.modig.core.test.FilesAndDirs.WEBAPP_SOURCE;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
-import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
 public class StartJetty {
     static {
-        System.setProperty("veilederident", "Z990322");
+        System.setProperty("veilederident", "Z990844");
         System.setProperty("veilederpassord", "***REMOVED***");
         System.setProperty("testmiljo", "t6");
     }
