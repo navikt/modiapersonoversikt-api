@@ -318,7 +318,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 sak = Optional.ofNullable(henvendelseVM.valgtSak);
             }
 
-            henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.ofNullable(oppgaveId), sak, behandlingsId);
+            henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.ofNullable(oppgaveId), sak, behandlingsId, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         }
 
         private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {

@@ -41,6 +41,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class OppgaveBehandlingServiceImplTest {
 
+    public static final String SAKSBEHANDLERS_VALGTE_ENHET = "4100";
     @Captor
     ArgumentCaptor<WSFerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
     @Captor
@@ -71,7 +72,7 @@ public class OppgaveBehandlingServiceImplTest {
     public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, OppgaveBehandlingService.FikkIkkeTilordnet {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
-        oppgaveBehandlingService.tilordneOppgaveIGsak("oppgaveid", Temagruppe.ARBD);
+        oppgaveBehandlingService.tilordneOppgaveIGsak("oppgaveid", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSLagreOppgaveRequest request = lagreOppgaveRequestCaptor.getValue();
@@ -90,9 +91,9 @@ public class OppgaveBehandlingServiceImplTest {
 
         when(oppgavebehandlingWS.tildelOppgave(any(WSTildelOppgaveRequest.class))).thenReturn(tildelOppgaveResponse);
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(hentOppgaveResponse);
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("4100");
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(SAKSBEHANDLERS_VALGTE_ENHET);
 
-        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
+        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
         verify(oppgavebehandlingWS).tildelOppgave(tildelOppgaveRequestCaptor.capture());
         verify(oppgaveWS).hentOppgave(hentOppgaveRequestCaptor.capture());
         assertNotNull(tildelOppgaveRequestCaptor.getValue().getSok());
@@ -106,7 +107,7 @@ public class OppgaveBehandlingServiceImplTest {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
-        oppgaveBehandlingService.ferdigstillOppgaveIGsak("1", Temagruppe.ARBD);
+        oppgaveBehandlingService.ferdigstillOppgaveIGsak("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
         verify(oppgavebehandlingWS).ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor.capture());
         assertThat(ferdigstillOppgaveBolkRequestCaptor.getValue().getOppgaveIdListe().get(0), is("1"));
     }
@@ -115,7 +116,7 @@ public class OppgaveBehandlingServiceImplTest {
     public void systemetLeggerTilbakeOppgaveIGsakUtenEndringer() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
-        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak("1", Temagruppe.ARBD);
+        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();

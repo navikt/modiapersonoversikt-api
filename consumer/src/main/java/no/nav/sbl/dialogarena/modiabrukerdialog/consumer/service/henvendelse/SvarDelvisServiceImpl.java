@@ -21,7 +21,7 @@ public class SvarDelvisServiceImpl implements SvarDelvisService {
         Melding delvisSvar = lagDelvisSvar(hentBrukersSporsmal(request), request);
         try {
             henvendelseUtsendingService.ferdigstillHenvendelse(delvisSvar, Optional.empty(),
-                    Optional.empty(), request.henvendelseId);
+                    Optional.empty(), request.henvendelseId, request.saksbehandlersValgteEnhet);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -38,12 +38,12 @@ public class SvarDelvisServiceImpl implements SvarDelvisService {
                 .withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG)
                 .withFnr(brukersSporsmal.fnrBruker)
                 .withNavIdent(request.navIdent)
-                .withTilknyttetEnhet(request.valgtEnhet)
+                .withTilknyttetEnhet(request.saksbehandlersValgteEnhet)
                 .withBrukersEnhet(brukersSporsmal.brukersEnhet);
     }
 
     private Melding hentBrukersSporsmal(SvarDelvisRequest request) {
-        return henvendelseUtsendingService.hentTraad(request.fodselsnummer, request.traadId, request.valgtEnhet).stream()
+        return henvendelseUtsendingService.hentTraad(request.fodselsnummer, request.traadId, request.saksbehandlersValgteEnhet).stream()
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
     }

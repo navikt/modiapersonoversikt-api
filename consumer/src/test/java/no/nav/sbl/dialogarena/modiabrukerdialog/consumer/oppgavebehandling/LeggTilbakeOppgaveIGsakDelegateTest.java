@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.stubbing.OngoingStubbing;
 
-import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.ForbiddenException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -70,8 +70,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     @BeforeEach
     void before() {
         mockTjenester();
-        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock,
-                saksbehandlerInnstillingerService, ansattServiceMock, rutingMock);
+        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock, ansattServiceMock, rutingMock);
     }
 
     private void mockTjenester() {
@@ -145,7 +144,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         when(oppgaveServiceMock.hentOppgave(any()))
                 .thenReturn(new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("ANNEN_SAKSBEHANDLER")));
 
-        assertThrows(NotAuthorizedException.class, () -> {
+        assertThrows(ForbiddenException.class, () -> {
             oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest());
         });
     }
