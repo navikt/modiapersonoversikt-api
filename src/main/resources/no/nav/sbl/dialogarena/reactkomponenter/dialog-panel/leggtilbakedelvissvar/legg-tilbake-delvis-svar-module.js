@@ -8,7 +8,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         super(props);
         this.svarCallback = this.svarCallback.bind(this);
         this.avbrytCallback = this.avbrytCallback.bind(this);
-        this.startNyDialog = this.startNyDialog.bind(this);
+        this.startNyDialogCallback = this.startNyDialogCallback.bind(this);
         this.state = {
             erUnderArbeid: true
         };
@@ -23,7 +23,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.avbrytCallbackId);
     }
 
-    startNyDialog() {
+    startNyDialogCallback() {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.startNyDialogId);
     }
 
@@ -32,7 +32,9 @@ class LeggTilbakeDelvisSvarPanel extends Component {
             <div className="kvittering">
                 <div className="robust-ikon-gront-sjekk" />
                 <h2 className="medium">Delvis svar er registrert</h2>
-                <button className="startNyDialog knapp-stor" onClick={this.startNyDialog}>Start Ny Dialog</button>
+                <button className="startNyDialog knapp-stor" onClick={this.startNyDialogCallback}>
+                    Start Ny Dialog
+                </button>
             </div>
         );
     }
