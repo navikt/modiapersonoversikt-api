@@ -38,8 +38,9 @@ class LeggTilbakeDelvisSvarPropsTest {
     private final GrunnInfo.Bruker bruker  = new GrunnInfo.Bruker("10108000398", "testesen", "testfamilien", "NAV Aremark");
     private final GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("0118", "F_z123456", "E_z123456");
     private final GrunnInfo grunnInfo = new GrunnInfo(bruker, saksbehandler);
+    private final SkrivestotteProps skrivestotteProps = new SkrivestotteProps(grunnInfo, "5110");
 
-   static{
+    static{
         HashMap<Temagruppe, String> map = new HashMap<>();
         map.put(ARBD, "Arbeid");
         map.put(FMLI, "Familie");
@@ -62,8 +63,7 @@ class LeggTilbakeDelvisSvarPropsTest {
     @Test
     @DisplayName("Lager korrekte props til reactkomponenten")
     void lagerPropsSomForventet() {
-        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, grunnInfo, traad, "4100");
-        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarPropsUtenKs = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, grunnInfo, traad, "4200");
+        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(BEHANDLINGS_ID, TEMAGRUPPE_MAP, traad, skrivestotteProps);
         FORVENTET_TEMAGRUPPE_MAP.remove(ARBD);
 
         assertAll("props",
@@ -77,9 +77,7 @@ class LeggTilbakeDelvisSvarPropsTest {
                 () -> assertEquals(FRITEKST, leggTilbakeDelvisSvarProps.get("sporsmal")),
                 () -> assertEquals(FORVENTET_OPPRETTETDATO, leggTilbakeDelvisSvarProps.get("opprettetDato")),
                 () -> assertEquals(FORVENTET_TEMAGRUPPE_MAP, leggTilbakeDelvisSvarProps.get("temagruppeMapping")),
-                () -> assertEquals(grunnInfo, leggTilbakeDelvisSvarProps.get("grunnInfo")),
-                () -> assertEquals(asList("ks"), leggTilbakeDelvisSvarProps.get("knagger")),
-                () -> assertEquals(null, leggTilbakeDelvisSvarPropsUtenKs.get("knagger"))
+                () -> assertEquals(skrivestotteProps, leggTilbakeDelvisSvarProps.get("skrivestotteprops"))
                 );
     }
 
