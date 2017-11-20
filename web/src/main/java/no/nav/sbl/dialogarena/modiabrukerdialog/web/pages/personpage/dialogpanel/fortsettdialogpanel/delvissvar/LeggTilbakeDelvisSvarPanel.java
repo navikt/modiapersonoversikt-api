@@ -77,7 +77,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     }
 
     private void startNyDialog(AjaxRequestTarget target) {
-        if(isVisibilityAllowed()) {
+        if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
             send(getPage(), BREADTH, new NamedEventPayload(DialogPanel.NY_DIALOG_LENKE_VALGT));
             smoothTransition(target);
