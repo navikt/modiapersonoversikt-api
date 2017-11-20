@@ -7,6 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
@@ -49,13 +50,14 @@ public class DialogPanelTest extends WicketPageTest {
     private static final String OPPGAVEID_FOR_SPORSMAL = "oppgaveid";
 
     @Inject
-    private HenvendelseUtsendingService henvendelseUtsendingService;
+    private HenvendelseUtsendingService henvendelseUtsendingServiceMock;
     @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
+    private OppgaveBehandlingService oppgaveBehandlingServiceMock;
 
     @Before
     public void setUp() {
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagMelding()));
+        reset(oppgaveBehandlingServiceMock);
+        when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagMelding()));
     }
 
     private GrunnInfo getMockGrunnInfo() {
@@ -92,14 +94,14 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void tilordnerOppgaveHvisOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() throws OppgaveBehandlingService.FikkIkkeTilordnet {
+    public void tilordnerOppgaveHvisOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() throws FikkIkkeTilordnet {
         settSessionVerdier(OPPGAVEID_VERDI, HENVENDELSEID_VERDI, true);
-        reset(oppgaveBehandlingService);
+
 
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .should().containComponent(ofType(FortsettDialogPanel.class));
 
-        verify(oppgaveBehandlingService, times(1)).tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class));
+        verify(oppgaveBehandlingServiceMock, times(1)).tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class));
     }
 
     @Test
@@ -118,7 +120,7 @@ public class DialogPanelTest extends WicketPageTest {
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventForEnkeltstaaendeSpormalFraBrukerUtenParametereSatt() {
         Melding spsm = lagBrukerSporsmalMedOppgaveId();
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(spsm));
+        when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING))
@@ -156,26 +158,32 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void tilordnerIkkeOppgaveIGsakDersomerTraadenIkkeErEtEnkeltstaaendeSporsmalFraBrukerVedEventetSVAR_PAA_MELDING() throws OppgaveBehandlingService.FikkIkkeTilordnet {
-        reset(oppgaveBehandlingService);
-
+    public void tilordnerIkkeOppgaveIGsakDersomerTraadenIkkeErEtEnkeltstaaendeSporsmalFraBrukerVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class));
+        verify(oppgaveBehandlingServiceMock, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class));
     }
 
     @Test
-    public void tilordnerOppgaveIGsakDersomerTraadenErEtEnkeltstaaendeSporsmalFraBrukerVedEventetSVAR_PAA_MELDING() throws OppgaveBehandlingService.FikkIkkeTilordnet {
-        reset(oppgaveBehandlingService);
-
+    public void tilordnerOppgaveIGsakDersomerTraadenErEtEnkeltstaaendeSporsmalFraBrukerVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
         Melding spsm = lagBrukerSporsmalMedOppgaveId();
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(spsm));
+        when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(spsm));
 
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingService).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD);
+        verify(oppgaveBehandlingServiceMock).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD);
+    }
+
+    @Test
+    public void tilordnerOppgaveIGsakDersomEnkeltstaaendeSporsmalMedDelvisSvar() throws FikkIkkeTilordnet {
+        when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagBrukerSporsmalMedOppgaveId(), lagDelvisSvar()));
+
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
+
+        verify(oppgaveBehandlingServiceMock).tilordneOppgaveIGsak(OPPGAVEID_FOR_SPORSMAL, ARBD);
     }
 
     @Test
@@ -203,6 +211,10 @@ public class DialogPanelTest extends WicketPageTest {
                 .withTraadId(HENVENDELSEID_VERDI)
                 .withTemagruppe(ARBD.name())
                 .withErTilknyttetAnsatt(false);
+    }
+
+    private Melding lagDelvisSvar() {
+        return new Melding().withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG);
     }
 
     private Melding lagBrukerSporsmalMedOppgaveId() {

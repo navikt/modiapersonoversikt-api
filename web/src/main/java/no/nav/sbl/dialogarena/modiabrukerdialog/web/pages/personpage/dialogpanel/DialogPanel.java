@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.*;
@@ -135,7 +136,13 @@ public class DialogPanel extends Panel {
     }
 
     private static boolean erEnkeltstaaendeSporsmalFraBruker(List<Melding> traad) {
-        return traad.size() == 1 && traad.get(0).meldingstype == SPORSMAL_SKRIFTLIG;
+        return filtrerTraad(traad).size() == 1 && traad.get(0).meldingstype == SPORSMAL_SKRIFTLIG;
+    }
+
+    private static List<Melding> filtrerTraad(List<Melding> traad) {
+        return traad.stream()
+                .filter(melding -> melding.meldingstype != Meldingstype.DELVIS_SVAR_SKRIFTLIG)
+                .collect(toList());
     }
 
     private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, String oppgaveId) {
