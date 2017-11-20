@@ -107,6 +107,10 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>arena-arbeid-og-aktivitet</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>arbeidsfordeling-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
 
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
