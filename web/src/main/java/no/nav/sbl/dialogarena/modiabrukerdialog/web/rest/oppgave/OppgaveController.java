@@ -5,6 +5,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppga
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +15,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static no.nav.metrics.MetricsFactory.createEvent;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 
 @Path("/oppgaver/{id}")
 @Produces(APPLICATION_JSON)
 public class OppgaveController {
+
+    private static Logger logger = LoggerFactory.getLogger(OppgaveController.class);
 
     private final OppgaveBehandlingService oppgaveBehandlingService;
 
@@ -40,9 +45,13 @@ public class OppgaveController {
                 .withTemagruppe(getTemagruppefraRequest(request.temagruppe))
                 .withSaksbehandlersValgteEnhet(CookieUtil.getSaksbehandlersValgteEnhet(httpRequest));
 
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest);
-
-        return Response.ok("{\"message\": \"Det gikk bra!\"}").build();
+        try {
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest);
+        } catch (RuntimeException exception) {
+            throw handterRuntimeFeil(exception);
+        }
+        createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort");
+        return Response.ok("{\"message\": \"Success\"}").build();
     }
 
     private Temagruppe getTemagruppefraRequest(String temagruppe){
@@ -51,6 +60,12 @@ public class OppgaveController {
         } catch(IllegalArgumentException e) {
             throw new IllegalArgumentException("Ugyldig temagruppe: " + temagruppe);
         }
+    }
+
+    private RuntimeException handterRuntimeFeil(RuntimeException exception) {
+        logger.error("Feil ved legging av oppgave tilbake til GSAK", exception);
+        createEvent("hendelse.oppgavecontroller.leggtilbake.runtime-exception");
+        return exception;
     }
 
 }

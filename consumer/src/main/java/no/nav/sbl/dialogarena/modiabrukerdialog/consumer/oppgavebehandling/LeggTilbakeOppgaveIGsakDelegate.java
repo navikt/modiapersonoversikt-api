@@ -9,7 +9,7 @@ import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 
-import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.ForbiddenException;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -39,9 +39,10 @@ class LeggTilbakeOppgaveIGsakDelegate {
     private void validerTilgang(WSOppgave oppgaveFraGsak) {
         String innloggetSaksbehandler = getSubjectHandler().getUid();
         if (!innloggetSaksbehandler.equals(oppgaveFraGsak.getAnsvarligId())) {
-            throw new NotAuthorizedException("Innlogget saksbehandler " + innloggetSaksbehandler
+            String feilmelding = "Innlogget saksbehandler " + innloggetSaksbehandler
                     + " har ikke tilgang til oppgave " + oppgaveFraGsak.getOppgaveId()
-                    + ". Oppgavens ansvarlige id er satt til : " + oppgaveFraGsak.getAnsvarligId() + ".");
+                    + ". Oppgavens ansvarlige id er satt til : " + oppgaveFraGsak.getAnsvarligId() + ".";
+            throw new ForbiddenException(feilmelding);
         }
     }
 

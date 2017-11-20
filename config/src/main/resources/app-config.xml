@@ -35,6 +35,7 @@
         <baseUrl alias="server.pesys" mapToProperty="server.pesys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
+        <baseUrl alias="server.aktivitetsplan" mapToProperty="server.aktivitetsplan"/>
         <baseUrl alias="server.veilarbportefoljeflatefs" mapToProperty="server.veilarbportefoljeflatefs"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>

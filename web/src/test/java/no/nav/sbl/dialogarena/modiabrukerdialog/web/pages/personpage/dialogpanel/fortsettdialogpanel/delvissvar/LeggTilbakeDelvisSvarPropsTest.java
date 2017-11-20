@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.START_NY_DIALOG_CALLBACK_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,6 +71,7 @@ class LeggTilbakeDelvisSvarPropsTest {
                 () -> assertEquals(FODSELSNUMMER, leggTilbakeDelvisSvarProps.get("fodselsnummer")),
                 () -> assertEquals(TRAAD_ID, leggTilbakeDelvisSvarProps.get("traadId")),
                 () -> assertEquals(SVAR_DELVIS_CALLBACK_ID, leggTilbakeDelvisSvarProps.get("svarDelvisCallbackId")),
+                () -> assertEquals(START_NY_DIALOG_CALLBACK_ID, leggTilbakeDelvisSvarProps.get("startNyDialogId")),
                 () -> assertEquals(OPPGAVE_ID, leggTilbakeDelvisSvarProps.get("oppgaveId")),
                 () -> assertEquals(FORVENTET_TEMAGRUPPE, leggTilbakeDelvisSvarProps.get("temagruppe")),
                 () -> assertEquals(FRITEKST, leggTilbakeDelvisSvarProps.get("sporsmal")),
