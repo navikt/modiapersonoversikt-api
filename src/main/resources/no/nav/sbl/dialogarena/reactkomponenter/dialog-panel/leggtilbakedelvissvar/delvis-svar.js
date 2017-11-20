@@ -27,8 +27,9 @@ class DelvisSvar extends Component {
         this.feilmeldingCloseButtonCallback = this.feilmeldingCloseButtonCallback.bind(this);
         this.state = {
             svarValue: '',
-            valgtTemagruppe: '',
-            panelState: panelState.INITIALIZED
+            valgtTemagruppe: 'Velg Temagruppe',
+            panelState: panelState.INITIALIZED,
+            valideringFeil: false
         };
     }
 
@@ -49,7 +50,15 @@ class DelvisSvar extends Component {
         return Ajax.post(url, data);
     }
 
+    validTemagruppe() {
+        return this.state.valgtTemagruppe !== 'Velg Temagruppe';
+    }
+
     svarDelvis() {
+        this.validTemagruppe() ? this.leggDelvisesvar() : this.setState({ valideringFeil: true }) ;
+    }
+
+    leggDelvisesvar() {
         const ferdigstillHenvendelsePromise = this.ferdigstillHenvendelse();
         const leggTilbakeOppgavePromise = this.leggTilbakeOppgave();
         Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
@@ -62,12 +71,15 @@ class DelvisSvar extends Component {
         });
     }
 
-    handleSvarEndring(event) {
-        this.setState({ svarValue: event.target.value });
+    velgTemagruppe(event) {
+        this.setState({
+                        valgtTemagruppe: event.target.value ,
+                        valideringFeil: this.validTemagruppe()
+                      });
     }
 
-    velgTemagruppe(event) {
-        this.setState({ valgtTemagruppe: event.target.value });
+    handleSvarEndring(event) {
+        this.setState({ svarValue: event.target.value });
     }
 
     feilmeldingCloseButtonCallback() {
@@ -84,8 +96,12 @@ class DelvisSvar extends Component {
     }
 
     render() {
-        const valgTemagruppe = Object.keys(this.props.temagruppeMapping).map((key) =>
-            <option key={key} value={key} >{this.props.temagruppeMapping[key]}</option>);
+        const valgTemagruppe = Object.keys(this.props.temagruppeMapping)
+            .map((key) =>
+                <option key={key} value={key}>
+                    { this.props.temagruppeMapping[key] }
+                </option>);
+
         const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
         const hiddenLabel = <span className="vekk">Skriv delvis svar</span>;
         return (
@@ -113,10 +129,15 @@ class DelvisSvar extends Component {
 
                 <div className="temagruppe-velger">
                     <h3>Velg temagruppe</h3>
-                    <select onChange={this.velgTemagruppe}>
+                    <select
+                        onChange={this.velgTemagruppe}
+                        className={this.state.valideringFeil === true ? 'valideringFeltFeil' : ''}
+                    >
+                        <option value="Velg Temagruppe">Velg Temagruppe</option>
                         {valgTemagruppe}
                     </select>
                 </div>
+
                 <a
                     className="knapp-hoved-stor submit"
                     role="button"
