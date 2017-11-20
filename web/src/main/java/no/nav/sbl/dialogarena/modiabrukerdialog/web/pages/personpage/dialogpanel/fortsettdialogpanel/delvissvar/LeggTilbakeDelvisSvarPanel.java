@@ -72,8 +72,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
             send(getPage(), BREADTH, AVBRYT_CALLBACK_ID);
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
-            target.add(this);
+            smoothTransition(target);
         }
     }
 
@@ -81,8 +80,12 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         if(isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
             send(getPage(), BREADTH, new NamedEventPayload(DialogPanel.NY_DIALOG_LENKE_VALGT));
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
-            target.add(this);
+            smoothTransition(target);
         }
+    }
+
+    private void smoothTransition(AjaxRequestTarget target){
+        target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
+        target.add(this);
     }
 }
