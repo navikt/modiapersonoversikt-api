@@ -64,13 +64,6 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         return reactComponentPanel;
     }
 
-    private void startNyDialog(AjaxRequestTarget target) {
-        if(isVisibilityAllowed()) {
-            this.setVisibilityAllowed(false);
-            send(getPage(), BREADTH, new NamedEventPayload(DialogPanel.NY_DIALOG_LENKE_VALGT));
-        }
-    }
-
     private void oppdaterMeldingerUI() {
         send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
     }
@@ -79,6 +72,15 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         if (isVisibilityAllowed()) {
             this.setVisibilityAllowed(false);
             send(getPage(), BREADTH, AVBRYT_CALLBACK_ID);
+            target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
+            target.add(this);
+        }
+    }
+
+    private void startNyDialog(AjaxRequestTarget target) {
+        if(isVisibilityAllowed()) {
+            this.setVisibilityAllowed(false);
+            send(getPage(), BREADTH, new NamedEventPayload(DialogPanel.NY_DIALOG_LENKE_VALGT));
             target.prependJavaScript(format("lukket|$('#%s').slideUp(" + DEFAULT_SLIDE_DURATION + ", lukket)", this.getMarkupId()));
             target.add(this);
         }
