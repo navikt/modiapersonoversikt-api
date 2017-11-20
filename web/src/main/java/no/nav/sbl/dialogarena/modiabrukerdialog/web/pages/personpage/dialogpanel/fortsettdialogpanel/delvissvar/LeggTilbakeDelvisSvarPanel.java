@@ -5,6 +5,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.Component;
@@ -27,6 +28,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     public static final String REACT_ID = "LeggTilbakeDelvisSvarPanel";
     public static final String SVAR_DELVIS_CALLBACK_ID = "delvisSvarSendt";
     public static final String AVBRYT_CALLBACK_ID = "avbrytDelvisSvar";
+    public static final String START_NY_DIALOG_CALLBACK_ID = "startNyDialog";
     public static final String DEFAULT_SLIDE_DURATION = "400";
 
     private LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps;
@@ -54,11 +56,19 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         ReactComponentPanel reactComponentPanel = new ReactComponentPanel(WICKET_REACT_PANEL_ID, REACT_ID, leggTilbakeDelvisSvarProps);
         reactComponentPanel.addCallback(SVAR_DELVIS_CALLBACK_ID, Void.class, (target, data) -> oppdaterMeldingerUI());
         reactComponentPanel.addCallback(AVBRYT_CALLBACK_ID, Void.class, (target, data) -> lukkDelvisSvarPanel(target));
+        reactComponentPanel.addCallback(START_NY_DIALOG_CALLBACK_ID, Void.class, ((target, data) -> startNyDialog(target)));
         reactComponentPanel
                 .setOutputMarkupId(true)
                 .setVisibilityAllowed(true);
 
         return reactComponentPanel;
+    }
+
+    private void startNyDialog(AjaxRequestTarget target) {
+        if(isVisibilityAllowed()) {
+            this.setVisibilityAllowed(false);
+            send(getPage(), BREADTH, new NamedEventPayload(DialogPanel.NY_DIALOG_LENKE_VALGT));
+        }
     }
 
     private void oppdaterMeldingerUI() {

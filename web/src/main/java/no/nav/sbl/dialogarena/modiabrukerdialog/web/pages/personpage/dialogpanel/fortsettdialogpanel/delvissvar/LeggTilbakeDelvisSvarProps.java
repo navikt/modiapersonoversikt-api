@@ -23,6 +23,7 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         put("fodselsnummer", sporsmal.fnrBruker);
         put("svarDelvisCallbackId", LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID);
         put("avbrytCallbackId", LeggTilbakeDelvisSvarPanel.AVBRYT_CALLBACK_ID);
+        put("startNyDialogId", LeggTilbakeDelvisSvarPanel.START_NY_DIALOG_CALLBACK_ID);
         put("oppgaveId", sporsmal.oppgaveId);
         put("temagruppe", temagruppe);
         put("opprettetDato", Datoformat.kortMedTid(sporsmal.opprettetDato));
