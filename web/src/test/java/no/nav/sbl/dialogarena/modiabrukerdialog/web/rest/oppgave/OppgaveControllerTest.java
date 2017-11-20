@@ -25,6 +25,8 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
 
@@ -150,7 +152,7 @@ class OppgaveControllerTest {
     void validererTilgang() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet {
         SubjectHandlerUtil.setInnloggetSaksbehandler("annen-saksbehandler");
 
-        assertThrows(NotAuthorizedException.class, () -> {
+        assertThrows(ForbiddenException.class, () -> {
             MockHttpServletRequest httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie("annen-saksbehandler", VALGT_ENHET);
             oppgaveController.leggTilbake(OPPGAVE_ID, httpRequest, lagRequest());
         });
