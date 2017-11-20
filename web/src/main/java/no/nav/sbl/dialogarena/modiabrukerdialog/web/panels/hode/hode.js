@@ -1,3 +1,34 @@
+// Websocket
+function finnMiljoStreng() {
+    const host = window.location.host;
+    const bindestrekIndex = host.indexOf('-');
+    if (bindestrekIndex === -1) {
+        return '';
+    }
+    const dotIndex = host.indexOf('.');
+    return host.substring(bindestrekIndex, dotIndex);
+}
+function opprettWebSocket(callback) {
+    if (window.location.hostname.indexOf('localhost') !==  -1) {
+        return;
+    }
+
+    const connection = new WebSocket(`wss://veilederflatehendelser${finnMiljoStreng()}.adeo.no/modiaeventdistribution/websocket`);
+    connection.onmessage = callback;
+
+    connection.onerror = function(error) {
+        console.error(error);
+    };
+
+    connection.onclose = function () {
+        setTimeout(function () {
+            opprettWebSocket(callback);
+        }, 1000);
+    }
+}
+window.opprettWebSocket = opprettWebSocket;
+debugger;
+
 // Wicket integration
 function JSWicket(url, component) {
     this.url = url;
