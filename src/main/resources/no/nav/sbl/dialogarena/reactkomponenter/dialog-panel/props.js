@@ -14,6 +14,11 @@ export const grunnInfoType = PT.shape({
     })
 });
 
+export const skrivestotteprops = PT.shape({
+    autofullfor: grunnInfoType.isRequired,
+    knagger: PT.array
+});
+
 export const meldingITraadVisning = PT.shape({
     temagruppeNavn: PT.string,
     visningsDatoTekst: PT.string,

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import wicketSender from '../../react-wicket-mixin/wicket-sender';
 import DelvisSvar from './delvis-svar';
+import { skrivestotteprops } from '../props';
 
 class LeggTilbakeDelvisSvarPanel extends Component {
     constructor(props) {
@@ -53,7 +54,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 opprettetDato={this.props.opprettetDato}
                 temagruppeMapping={this.props.temagruppeMapping}
                 traad={this.props.traad}
-                grunnInfo={this.props.grunnInfo}
+                skrivestotteprops={this.props.skrivestotteprops}
             />);
         }
         return this.lagKvittering();
@@ -78,19 +79,7 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
         temagruppeKode: PT.string,
         temagruppeNavn: PT.string
     }),
-    grunnInfo: PT.shape({
-        bruker: PT.shape({
-            fnr: PT.string,
-            fornavn: PT.string,
-            etternavn: PT.string,
-            navkontor: PT.string
-        }),
-        Saksbehandler: PT.shape({
-            enhet: PT.string,
-            fornavn: PT.string,
-            etternavn: PT.string
-        })
-    })
+    skrivestotteprops: skrivestotteprops.isRequired
 };
 
 export default LeggTilbakeDelvisSvarPanel;
