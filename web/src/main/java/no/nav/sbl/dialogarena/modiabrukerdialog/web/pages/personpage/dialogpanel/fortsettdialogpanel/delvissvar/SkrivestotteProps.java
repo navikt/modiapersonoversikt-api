@@ -9,13 +9,13 @@ import static java.util.Arrays.asList;
 
 public class SkrivestotteProps extends HashMap<String, Object> implements Serializable {
 
-    private static final String KONTAKTSENTER_SKRIVESTOT_TETAG = "ks";
+    private static final String KONTAKTSENTER_SKRIVESTOTTE_TAG = "ks";
 
     public SkrivestotteProps(GrunnInfo grunnInfo, String saksbehandlerValgtEnhet) {
         put("autofullfor", grunnInfo);
 
         if (isKontaktsenter(saksbehandlerValgtEnhet)) {
-            put("knagger", asList(KONTAKTSENTER_SKRIVESTOT_TETAG));
+            put("knagger", asList(KONTAKTSENTER_SKRIVESTOTTE_TAG));
         }
     }
 
