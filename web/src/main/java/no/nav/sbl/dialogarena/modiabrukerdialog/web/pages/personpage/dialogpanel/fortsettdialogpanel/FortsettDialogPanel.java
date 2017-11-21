@@ -149,7 +149,17 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             }
 
             private String settTekstInnIDelvisSvarTekstfeltHack() {
-                return "(function () {const value = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0].value;setTimeout(function () {const textarea = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0];textarea.value = value;const ev = new Event('input', {bubbles: true});ev.simulated = true;textarea.dispatchEvent(ev);}, 1000);})();";
+                return "(function () {" +
+                        "    const value = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0].value;" +
+                        "    setTimeout(function () {" +
+                        "        const textarea = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0];" +
+                        "        textarea.value = value;" +
+                        "        const ev = document.createEvent('Event');" +
+                        "        ev.initEvent('input', true, true);" +
+                        "        ev.simulated = true;" +
+                        "        textarea.dispatchEvent(ev);" +
+                        "    }, 1000);" +
+                        "})();";
             }
         };
 
