@@ -59,13 +59,13 @@ public class SvarDelvisController {
             throw handterRuntimeFeil(exception);
         }
 
-        createEvent("hendelse.svardelviscontroller.svardelvis.fullfort");
+        createEvent("hendelse.svardelviscontroller.svardelvis.fullfort").report();
         return Response.ok("{\"message\": \"Success\"}").build();
     }
 
     private RuntimeException handterRuntimeFeil(RuntimeException exception) {
         logger.error("Feil ved opprettelse av delvis svar", exception);
-        createEvent("hendelse.svardelviscontroller.svardelvis.runtime-exception");
+        createEvent("hendelse.svardelviscontroller.svardelvis.runtime-exception").report();
         return exception;
     }
 
