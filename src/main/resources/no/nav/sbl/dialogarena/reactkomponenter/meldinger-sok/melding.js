@@ -3,9 +3,7 @@ import PT from 'prop-types';
 import Utils from './../utils/utils-module';
 import sanitize from 'sanitize-html';
 import Journalfort from './journalfort';
-
-const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+import { finnMeldingsForfattere } from '../utils/melding-utils';
 
 class Melding extends React.Component {
 
@@ -27,11 +25,8 @@ class Melding extends React.Component {
             .map(Utils.tilParagraf);
 
         const datoTekst = melding.visningsDatoTekst;
-
         const dato = sanitize(datoTekst || 'Fant ingen data', { allowedTags: ['em'] });
-        const skrevetMelding = melding.erDokumentMelding
-            ? ''
-            : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${melding.fraBruker})`;
+        const meldingsForfatter = finnMeldingsForfattere(melding);
 
         return (
             <div className={cls}>
@@ -40,7 +35,7 @@ class Melding extends React.Component {
                     <article className="melding-header">
                         <p className="meldingstatus" dangerouslySetInnerHTML={{ __html: meldingsStatusTekst }}></p>
                         <p>{dato}</p>
-                        <span dangerouslySetInnerHTML={{ __html: skrevetMelding }}></span>
+                        <span dangerouslySetInnerHTML={{ __html: meldingsForfatter }}></span>
                     </article>
                     <article className="fritekst">{paragrafer}</article>
                 </div>

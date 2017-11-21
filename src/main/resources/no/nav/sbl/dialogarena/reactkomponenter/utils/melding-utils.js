@@ -26,6 +26,22 @@ export const MeldingsTyperTekst = {
     SPORSMAL_MODIA_UTGAAENDE: 'Spørsmål fra NAV'
 };
 
+const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
+export function fraBruker(melding) {
+    return erInngaaende(melding) ? melding.fnrBruker : melding.navIdent;
+}
+
+export function finnMeldingsForfattere(melding) {
+    if (melding.skrevetAvFlere !== undefined) {
+        return `Skrevet av: ${melding.skrevetAvFlere}`;
+    }
+    return melding.erDokumentMelding || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG ?
+        '' :
+        `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${fraBruker(melding)})`;
+}
+
 export function eldsteMeldingForst(melding1, melding2) {
     const d1 = new Date(melding1.opprettetDato);
     const d2 = new Date(melding2.opprettetDato);
@@ -42,10 +58,6 @@ export function erSkriftligSvar(melding) {
 
 export function erInngaaende(melding) {
     return [MeldingsTyper.SPORSMAL_SKRIFTLIG, MeldingsTyper.SVAR_SBL_INNGAAENDE].includes(melding.meldingstype);
-}
-
-export function fraBruker(melding) {
-    return erInngaaende(melding) ? melding.fnrBruker : melding.navIdent;
 }
 
 export function getMeldingsTypeTekst(melding) {
