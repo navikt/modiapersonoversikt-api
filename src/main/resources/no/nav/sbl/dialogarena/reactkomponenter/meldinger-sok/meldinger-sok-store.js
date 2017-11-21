@@ -3,7 +3,7 @@ import Store from './../utils/store';
 import WicketSender from './../react-wicket-mixin/wicket-sender';
 import Ajax from './../utils/ajax';
 import { slaaSammenDelviseSvar, erIkkeBesvart, traadInneholderDelvisSvar } from './../utils/traad-utils';
-import { fraBruker } from '../utils/melding-utils';
+import { hentForfatterIdent } from '../utils/melding-utils';
 
 class MeldingerSokStore extends Store {
     constructor(props) {
@@ -149,7 +149,7 @@ function onFulfilled(traader) {
         traad.innhold = traad.meldinger[0].fritekst;
         traad.visningsDato = traad.meldinger[0].visningsDatoTekst;
         traad.meldinger.forEach((melding) => {
-            melding.fraBruker = fraBruker(melding);
+            melding.fraBruker = hentForfatterIdent(melding);
         });
         if (traadInneholderDelvisSvar(traad.meldinger)) {
             haandterDelviseSvar(traad);
