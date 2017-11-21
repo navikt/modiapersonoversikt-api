@@ -106,7 +106,7 @@ class DelvisSvar extends Component {
         const hiddenLabel = <span className="vekk">Skriv delvis svar</span>;
         return (
             <div>
-                <Skrivestotte {...skrivestotteprops} knagger={this.props.knagger} ref={(input) => { this.skrivestoote = input; }} />
+                <Skrivestotte {...skrivestotteprops} ref={(input) => { this.skrivestoote = input; }} />
                 <h3>Legg tilbake med delvis svar</h3>
 
                 <TraadVisning traad={this.props.traad} />
