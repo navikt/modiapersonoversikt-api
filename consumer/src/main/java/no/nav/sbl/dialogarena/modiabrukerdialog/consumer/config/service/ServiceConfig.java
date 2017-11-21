@@ -55,13 +55,12 @@ public class ServiceConfig {
                                                                    OppgaveBehandlingService oppgaveBehandlingService,
                                                                    SakerService sakerService,
                                                                    @Named("pep") EnforcementPoint pep,
-                                                                   SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
                                                                    PropertyResolver propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
                                                                    LDAPService ldapService) {
 
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
-                behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, pep, saksbehandlerInnstillingerService,
+                behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, pep,
                 propertyResolver, personKjerneinfoServiceBi, ldapService);
     }
 
@@ -72,10 +71,8 @@ public class ServiceConfig {
 
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3, OppgaveV3 oppgaveV3,
-                                                             SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
                                                              AnsattService ansattService, Ruting ruting) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, saksbehandlerInnstillingerService,
-                ansattService, ruting);
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, ansattService, ruting);
     }
 
     @Bean

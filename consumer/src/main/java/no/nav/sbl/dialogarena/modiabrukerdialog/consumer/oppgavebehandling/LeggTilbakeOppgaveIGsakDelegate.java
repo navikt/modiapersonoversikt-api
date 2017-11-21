@@ -33,7 +33,7 @@ class LeggTilbakeOppgaveIGsakDelegate {
             oppdaterForNyTemagruppe(oppgaveFraGsak, request.getNyTemagruppe());
         }
 
-         lagreOppgaveIGsak(oppgaveFraGsak, request.getNyTemagruppe());
+         lagreOppgaveIGsak(oppgaveFraGsak, request);
      }
 
     private void validerTilgang(WSOppgave oppgaveFraGsak) {
@@ -84,9 +84,9 @@ class LeggTilbakeOppgaveIGsakDelegate {
                 .getEnhetListe();
     }
 
-    private void lagreOppgaveIGsak(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
+    private void lagreOppgaveIGsak(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
         try {
-            oppgaveBehandlingService.lagreOppgaveIGsak(oppgaveFraGsak, temagruppe);
+            oppgaveBehandlingService.lagreOppgaveIGsak(oppgaveFraGsak, request.getNyTemagruppe(), request.getSaksbehandlersValgteEnhet());
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }

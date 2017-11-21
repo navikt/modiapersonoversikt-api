@@ -379,7 +379,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             sak = Optional.ofNullable(henvendelseVM.valgtSak);
         }
 
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), sak);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), sak, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
     }
 
 }
