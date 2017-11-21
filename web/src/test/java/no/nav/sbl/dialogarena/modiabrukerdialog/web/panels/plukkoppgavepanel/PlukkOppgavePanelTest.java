@@ -4,6 +4,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
@@ -47,6 +48,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private PlukkOppgaveService plukkOppgaveService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Before
     public void setUp() {
@@ -54,6 +57,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
         Melding sporsmal = new Melding().withId("sporsmal").withType(SPORSMAL_SKRIFTLIG).withTemagruppe(ARBD.toString()).withOpprettetDato(now());
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(sporsmal));
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("4444");
     }
 
     @Test
