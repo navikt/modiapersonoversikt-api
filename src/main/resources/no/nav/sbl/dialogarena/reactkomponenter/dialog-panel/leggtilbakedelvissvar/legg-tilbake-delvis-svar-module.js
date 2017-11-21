@@ -54,8 +54,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 opprettetDato={this.props.opprettetDato}
                 temagruppeMapping={this.props.temagruppeMapping}
                 traad={this.props.traad}
-                grunnInfo={this.props.grunnInfo}
-                knagger={this.props.knagger}
+                skrivestotteprops={this.props.skrivestotteprops}
             />);
         }
         return this.lagKvittering();
