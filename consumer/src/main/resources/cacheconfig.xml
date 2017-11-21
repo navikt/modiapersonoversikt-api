@@ -99,6 +99,11 @@
             <cache:cacheable method="finn*" />
         </cache:caching>
     </cache:advice>
+    <cache:advice id="kodeverksmapperAdvice" key-generator="defaultkeygenerator">
+        <cache:caching cache="kodeverksmapperCache">
+            <cache:cacheable method="hent*" />
+        </cache:caching>
+    </cache:advice>
 
     <aop:config>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
@@ -116,6 +121,7 @@
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
         <aop:advisor advice-ref="pesysService" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
+        <aop:advisor advice-ref="kodeverksmapperAdvice" pointcut="bean(kodeverksmapper)"/>
     </aop:config>
 
 </beans>

@@ -127,6 +127,7 @@
         <arbeidsfordeling-v1.version>1.0.3</arbeidsfordeling-v1.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
+        <apache.http.version>4.4</apache.http.version>
     </properties>
 
     <dependencyManagement>
@@ -1030,6 +1031,16 @@
                 <version>${metrics.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${apache.http.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache.http.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>fluent-hc</artifactId>
