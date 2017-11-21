@@ -11,11 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+
 class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Serializable {
 
-    LeggTilbakeDelvisSvarProps(Melding sporsmal, String henvendelseId, Map<Temagruppe, String> temagruppeMapping, GrunnInfo grunnInfo, final List<Melding> traad) {
+    LeggTilbakeDelvisSvarProps(String henvendelseId, Map<Temagruppe, String> temagruppeMapping, final List<Melding> traad, SkrivestotteProps skrivestotteProps) {
+        Melding sporsmal = traad.get(0);
         String temagruppe = temagruppeMapping.get(Temagruppe.valueOf(sporsmal.temagruppe));
         temagruppeMapping.remove(Temagruppe.valueOf(sporsmal.temagruppe));
+
+        put("skrivestotteprops", skrivestotteProps);
 
         put("henvendelseId", henvendelseId);
         put("sporsmal", sporsmal.getFritekst());
@@ -28,7 +33,6 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         put("temagruppe", temagruppe);
         put("opprettetDato", Datoformat.kortMedTid(sporsmal.opprettetDato));
         put("temagruppeMapping", temagruppeMapping);
-        put("grunnInfo", grunnInfo);
         putAll(new TraadVisningProps(traad));
     }
 

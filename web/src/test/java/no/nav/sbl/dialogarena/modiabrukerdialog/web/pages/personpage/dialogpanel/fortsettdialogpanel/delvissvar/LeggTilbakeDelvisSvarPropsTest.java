@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.START_NY_DIALOG_CALLBACK_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel.SVAR_DELVIS_CALLBACK_ID;
@@ -37,8 +38,9 @@ class LeggTilbakeDelvisSvarPropsTest {
     private final GrunnInfo.Bruker bruker  = new GrunnInfo.Bruker("10108000398", "testesen", "testfamilien", "NAV Aremark");
     private final GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("0118", "F_z123456", "E_z123456");
     private final GrunnInfo grunnInfo = new GrunnInfo(bruker, saksbehandler);
+    private final SkrivestotteProps skrivestotteProps = new SkrivestotteProps(grunnInfo, "5110");
 
-   static{
+    static{
         HashMap<Temagruppe, String> map = new HashMap<>();
         map.put(ARBD, "Arbeid");
         map.put(FMLI, "Familie");
@@ -61,7 +63,7 @@ class LeggTilbakeDelvisSvarPropsTest {
     @Test
     @DisplayName("Lager korrekte props til reactkomponenten")
     void lagerPropsSomForventet() {
-        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(lagMelding(), BEHANDLINGS_ID, TEMAGRUPPE_MAP, grunnInfo, traad);
+        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(BEHANDLINGS_ID, TEMAGRUPPE_MAP, traad, skrivestotteProps);
         FORVENTET_TEMAGRUPPE_MAP.remove(ARBD);
 
         assertAll("props",
@@ -74,7 +76,8 @@ class LeggTilbakeDelvisSvarPropsTest {
                 () -> assertEquals(FORVENTET_TEMAGRUPPE, leggTilbakeDelvisSvarProps.get("temagruppe")),
                 () -> assertEquals(FRITEKST, leggTilbakeDelvisSvarProps.get("sporsmal")),
                 () -> assertEquals(FORVENTET_OPPRETTETDATO, leggTilbakeDelvisSvarProps.get("opprettetDato")),
-                () -> assertEquals(FORVENTET_TEMAGRUPPE_MAP, leggTilbakeDelvisSvarProps.get("temagruppeMapping"))
+                () -> assertEquals(FORVENTET_TEMAGRUPPE_MAP, leggTilbakeDelvisSvarProps.get("temagruppeMapping")),
+                () -> assertEquals(skrivestotteProps, leggTilbakeDelvisSvarProps.get("skrivestotteprops"))
                 );
     }
 

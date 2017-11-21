@@ -6,28 +6,29 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TraadVisningProps extends HashMap<String, Object> implements Serializable {
 
     public TraadVisningProps(final List<Melding> traad) {
-        put("traad", traad.stream().map((melding ->
-            new HashMap<String, Object>() {
-                {
-                    put("temagruppeNavn", melding.temagruppeNavn);
-                    put("visningsDatoTekst", DateUtils.toString(melding.erDokumentMelding ?
-                            melding.ferdigstiltDato : melding.opprettetDato));
-                    put("fritekst", melding.getFritekst());
-                    put("erDokumentMelding", melding.erDokumentMelding);
-                    put("id", melding.id);
-                    put("statusTekst", melding.statusTekst);
-                    put("navIdent", melding.navIdent);
-                    put("skrevetAv", melding.skrevetAv);
-                    put("fnrBruker", melding.fnrBruker);
-                    put("meldingstype", melding.meldingstype);
-                    put("opprettetDato", melding.opprettetDato);
-                }
-            })).collect(Collectors.toList())
-        );
+        put("traad", traad.stream().map(this::meldingsvinsingsprops).collect(Collectors.toList()));
+    }
+
+    private Map<String, Object> meldingsvinsingsprops(Melding melding){
+        HashMap<String, Object> meldingsProps = new HashMap<>();
+        meldingsProps.put("temagruppeNavn",melding.temagruppeNavn);
+        meldingsProps.put("visningsDatoTekst", DateUtils.toString(melding.erDokumentMelding ?
+                melding.ferdigstiltDato : melding.opprettetDato));
+        meldingsProps.put("fritekst", melding.getFritekst());
+        meldingsProps.put("erDokumentMelding", melding.erDokumentMelding);
+        meldingsProps.put("id", melding.id);
+        meldingsProps.put("statusTekst", melding.statusTekst);
+        meldingsProps.put("navIdent", melding.navIdent);
+        meldingsProps.put("skrevetAv", melding.skrevetAv);
+        meldingsProps.put("fnrBruker", melding.fnrBruker);
+        meldingsProps.put("meldingstype", melding.meldingstype);
+        meldingsProps.put("opprettetDato", melding.opprettetDato);
+        return meldingsProps;
     }
 }
