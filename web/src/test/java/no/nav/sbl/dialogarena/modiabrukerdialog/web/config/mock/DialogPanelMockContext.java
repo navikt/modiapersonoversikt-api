@@ -4,8 +4,9 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
-import org.junit.jupiter.api.BeforeAll;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;

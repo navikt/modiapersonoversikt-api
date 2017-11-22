@@ -6,6 +6,7 @@ import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
@@ -26,13 +27,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.stubbing.OngoingStubbing;
 
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.lagWSOppgave;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.mockHentOppgaveResponseMedTilordning;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -43,6 +45,8 @@ import static org.mockito.Mockito.*;
 
 
 class LeggTilbakeOppgaveIGsakDelegateTest {
+
+    public static final String VALGT_ENHET = "4300";
 
     private OppgaveV3 oppgaveServiceMock;
     private AnsattService ansattServiceMock;
@@ -67,8 +71,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     @BeforeEach
     void before() {
         mockTjenester();
-        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock,
-                saksbehandlerInnstillingerService, ansattServiceMock, rutingMock);
+        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock, ansattServiceMock, rutingMock);
     }
 
     private void mockTjenester() {
@@ -97,11 +100,10 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
             LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         WSHentOppgaveResponse hentOppgaveResponse = mockHentOppgaveResponseMedTilordning();
         when(oppgaveServiceMock.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(hentOppgaveResponse);
-        String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = hentOppgaveResponse.getOppgave().getBeskrivelse();
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak("1", nyBeskrivelse, null);
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest());
 
         verify(oppgavebehandlingMock).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
@@ -117,13 +119,11 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         when(oppgaveServiceMock.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
         String nyEnhet = "4100";
-        when(rutingMock.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class)))
-                .thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(Collections.singletonList(new WSEnhet().withEnhetId(nyEnhet))));
-        String nyBeskrivelse = "nyBeskrivelse";
+        mockRuting(nyEnhet);
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak("1", nyBeskrivelse, Temagruppe.FMLI);
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest());
 
         verify(oppgavebehandlingMock).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
@@ -133,14 +133,29 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhet));
     }
 
+    private OngoingStubbing<WSFinnAnsvarligEnhetForOppgavetypeResponse> mockRuting(String nyEnhet) {
+        return when(rutingMock.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class)))
+                .thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse()
+                        .withEnhetListe(Collections.singletonList(new WSEnhet().withEnhetId(nyEnhet))));
+    }
+
     @Test
     @DisplayName("Sjekker om innlogget saksbehandler er samme som saksbehandler som er ansvarlig for oppgaven i GSAK")
     void skalKasteFeilOmSaksbehandlerIkkeHarTilgangTilOppgave() throws HentOppgaveOppgaveIkkeFunnet {
         when(oppgaveServiceMock.hentOppgave(any()))
                 .thenReturn(new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("ANNEN_SAKSBEHANDLER")));
 
-        assertThrows(NotAuthorizedException.class, () -> {
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(OppgaveMockFactory.OPPGAVE_ID, "beskrivelse", Temagruppe.ARBD);
+        assertThrows(ForbiddenException.class, () -> {
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest());
         });
+    }
+
+    private LeggTilbakeOppgaveIGsakRequest lagRequest() {
+        String nyBeskrivelse = "nyBeskrivelse";
+        return new LeggTilbakeOppgaveIGsakRequest()
+                .withSaksbehandlersValgteEnhet(VALGT_ENHET)
+                .withTemagruppe(Temagruppe.FMLI)
+                .withOppgaveId(OPPGAVE_ID)
+                .withBeskrivelse(nyBeskrivelse);
     }
 }

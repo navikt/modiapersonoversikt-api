@@ -114,6 +114,7 @@
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
+        <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
@@ -424,6 +425,11 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>behandle-henvendelse</artifactId>
                 <version>${behandle.henvendelse.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>behandle-person-v1-tjenestespesifikasjon</artifactId>
+                <version>${behandle.person.v1.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -1106,7 +1112,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-13.3.7</tag>
+        <tag>modiabrukerdialog-13.5.8</tag>
     </scm>
 
 </project>

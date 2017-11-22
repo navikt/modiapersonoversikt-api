@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HenvendelseUtsendingService {
-    void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak) throws Exception;
+    void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception;
 
     String opprettHenvendelse(String type, String fnr, String behandlingskjedeId);
 
-    void ferdigstillHenvendelse (Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId) throws Exception;
+    void ferdigstillHenvendelse (Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId, String saksbehandlersValgteEnhet) throws Exception;
 
     void avbrytHenvendelse(String behandlingsId);
 
-    List<Melding> hentTraad(String fnr, String traadId);
+    List<Melding> hentTraad(String fnr, String traadId, String valgtEnhet);
 
     void merkSomKontorsperret(String fnr, List<String> meldingsIDer);
 

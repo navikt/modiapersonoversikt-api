@@ -73,7 +73,7 @@ public class PersonPageTest extends WicketPageTest {
     @Before
     public void setUp() {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any())).thenReturn(lagHentKjerneinformasjonResponse());
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding()));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagMelding()));
         when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(asList(
                 new GsakKodeTema.Tema("kode", "tekst",
                         new ArrayList<>(asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),

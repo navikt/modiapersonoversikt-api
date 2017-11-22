@@ -33,13 +33,13 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
     private EnforcementPoint pep;
 
     @Override
-    public Optional<Oppgave> plukkOppgave(Temagruppe temagruppe) {
-        Optional<Oppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(temagruppe);
+    public Optional<Oppgave> plukkOppgave(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
+        Optional<Oppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(temagruppe, saksbehandlersValgteEnhet);
         if (oppgave.isSome()) {
             if (saksbehandlerHarTilgangTilBruker(oppgave.get())) {
                 return oppgave;
             } else {
-                return leggTilbakeOgPlukkNyOppgave(oppgave.get(), temagruppe);
+                return leggTilbakeOgPlukkNyOppgave(oppgave.get(), temagruppe, saksbehandlersValgteEnhet);
             }
         } else {
             return none();
@@ -51,9 +51,9 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
         return oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveid);
     }
 
-    private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, Temagruppe temagruppe) {
-        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe);
-        return plukkOppgave(temagruppe);
+    private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
+        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe, saksbehandlersValgteEnhet);
+        return plukkOppgave(temagruppe, saksbehandlersValgteEnhet);
     }
 
     private boolean saksbehandlerHarTilgangTilBruker(Oppgave oppgave) {
