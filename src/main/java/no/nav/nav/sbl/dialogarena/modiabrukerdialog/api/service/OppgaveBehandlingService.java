@@ -6,17 +6,17 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 
 public interface OppgaveBehandlingService {
 
-    void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe) throws FikkIkkeTilordnet;
+    void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet;
 
-    Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe);
+    Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 
-    void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe);
+    void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet);
 
-    void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe);
+    void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 
-    void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, Temagruppe temagruppe);
+    void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request);
 
-    void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe);
+    void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 
     boolean oppgaveErFerdigstilt(String oppgaveid);
 

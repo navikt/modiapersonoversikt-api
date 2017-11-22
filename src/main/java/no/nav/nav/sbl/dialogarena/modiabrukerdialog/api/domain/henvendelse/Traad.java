@@ -16,10 +16,10 @@ public class Traad {
 
     public Traad(String traadId, int antallMeldingerIOpprinneligTraad, List<Melding> meldinger) {
         this.traadId = traadId;
-        this.antallMeldingerIOpprinneligTraad = antallMeldingerIOpprinneligTraad;
         this.meldinger = meldinger.stream().sorted(comparing(Melding::getVisningsDato).reversed()).collect(toList());
         Melding forsteMelding = this.meldinger.get(this.meldinger.size() - 1);
         Melding sisteMelding = this.meldinger.get(0);
+        this.antallMeldingerIOpprinneligTraad = sisteMelding.erFerdigstiltUtenSvar ? ++antallMeldingerIOpprinneligTraad : antallMeldingerIOpprinneligTraad;
         this.temagruppe = forsteMelding.temagruppeNavn;
         this.journalfortTema = forsteMelding.journalfortTemanavn;
         this.dato = sisteMelding.getVisningsDato();
@@ -46,7 +46,10 @@ public class Traad {
             case DOKUMENT_VARSEL:
                 return "dokument";
             default:
-                if (erMonolog) {
+                if (sisteMelding.erFerdigstiltUtenSvar) {
+                    statusklasse = "dialog besvart";
+                }
+                else if (erMonolog) {
                     statusklasse = "monolog";
                     if (!sisteMelding.erFraSaksbehandler()) {
                         statusklasse += " ubesvart";
