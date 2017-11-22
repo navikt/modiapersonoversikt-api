@@ -2,12 +2,13 @@ import React from 'react';
 import Meldingspanel from './meldingspanel';
 import Kategoripanel from './kategoripanel';
 import PT from 'prop-types';
-import { eldsteMeldingForst, erDelvisSvar, erSkriftligSvar } from '../../utils/melding-utils';
+import { erDelvisSvar } from '../../utils/melding-utils';
 import { meldingITraadVisning } from '../props';
+import { slaaSammenDelviseSvar, erBesvart, erIkkeBesvart } from '../../utils/traad-utils';
 
 function lagMeldingspanel(melding, key, apen) {
     return (
-        <Meldingspanel key={key} apen={apen} melding={melding}>
+        <Meldingspanel key={'melding-' + key} apen={apen} melding={melding}>
             {melding.fritekst}
         </Meldingspanel>
     );
@@ -25,54 +26,27 @@ function lagNedtrekkspanel(traad, tittel, skalVisesApen) {
     );
 }
 
-function flettDelviseSvarInnISkriftligSvar(traad, delviseSvar) {
-    const skriftligeSvar = traad.filter(erSkriftligSvar);
-    if (skriftligeSvar.length > 0) {
-        const avsluttendeSvar = skriftligeSvar.sort(eldsteMeldingForst)[0];
-        const dobbeltLinjeskift = '\n\u00A0\n';
-        avsluttendeSvar.fritekst = delviseSvar.concat(avsluttendeSvar)
-            .map(melding => melding.fritekst)
-            .join(dobbeltLinjeskift);
-        avsluttendeSvar.skrevetAvFlere = delviseSvar.concat(avsluttendeSvar)
-            .map(melding => melding.skrevetAv.navn + ' (' + melding.navIdent + ')')
-            .join(' og ');
-    }
-}
-
-function slaaSammen(traad) {
-    const delviseSvar = traad.filter(erDelvisSvar);
-    if (delviseSvar.length > 0) {
-        flettDelviseSvarInnISkriftligSvar(traad, delviseSvar);
-    }
-    return traad.filter(melding => !erDelvisSvar(melding));
-}
-
-function sporsmalErIkkeBesvart(traad) {
-    return traad.filter(erSkriftligSvar) < 1;
-}
-
-function erUtenSvar(sammenslattTraad) {
-    return sammenslattTraad.length === 1;
-}
-
 function lagTraadPanel(traad) {
-    const sammenslaattTraad = slaaSammen(traad);
+    const sammenslaattTraad = slaaSammenDelviseSvar(traad);
     const sporsmal = sammenslaattTraad[0];
-    const skalNedtrekkspanelVisesApen = erUtenSvar(sammenslaattTraad);
+    const skalIkkeVisesApen = false;
+    const skalVisesApen = true;
     const tittel = 'Vis tidligere meldinger';
-    const key = 0;
-    return erUtenSvar(traad) ?
-        lagMeldingspanel(sporsmal, key, skalNedtrekkspanelVisesApen) :
-        lagNedtrekkspanel(sammenslaattTraad, tittel, skalNedtrekkspanelVisesApen);
+    const key = 'traadpanel-0';
+    return erIkkeBesvart(traad)
+        ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(sporsmal, key, skalVisesApen)}</div>
+        : lagNedtrekkspanel(sammenslaattTraad, tittel, skalIkkeVisesApen);
 }
 
 function lagDelviseSvarPanel(traad) {
     const delviseSvar = traad.filter(erDelvisSvar);
-    const tittel = 'Tidligere delvise svar';
+    if (delviseSvar.length === 0 || erBesvart(traad)) return '';
+    const tittel = 'Tidligere delsvar';
     const skalVisesApen = true;
-    return delviseSvar.length > 0 && sporsmalErIkkeBesvart(traad) ?
-        lagNedtrekkspanel(delviseSvar, tittel, skalVisesApen) :
-        '';
+    const key = 'delvissvarpanel-0';
+    return delviseSvar.length === 1
+        ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(delviseSvar[0], key, skalVisesApen)}</div>
+        : lagNedtrekkspanel(delviseSvar, tittel, skalVisesApen);
 }
 
 function TraadVisning(props) {
