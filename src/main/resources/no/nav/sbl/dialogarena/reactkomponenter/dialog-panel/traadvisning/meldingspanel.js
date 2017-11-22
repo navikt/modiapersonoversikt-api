@@ -1,37 +1,18 @@
 import React from 'react';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
+import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../../utils/utils-module';
-
-function toNameCase(navn) {
-    return navn.replace(/\b(?!em)\w+?\b/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-}
-
-function lagTypeoverskrift(melding) {
-    switch (melding.type) {
-        case 'sporsmal':
-            return 'Spørsmål';
-        case 'delvis':
-            return 'Delvis Svar';
-        default:
-            return toNameCase(melding.type);
-    }
-}
-
-function fraBruker(melding) {
-    return melding.erInngaaende ? melding.fnrBruker : melding.navIdent;
-}
+import { finnMeldingsForfattere, getMeldingsTypeTekst } from '../../utils/melding-utils';
+import { meldingITraadVisning } from '../props';
 
 function lagTittel(melding) {
-    const typeoverskrift = lagTypeoverskrift(melding);
+    const typeoverskrift = getMeldingsTypeTekst(melding);
     const dato = sanitize(melding.visningsDatoTekst || 'Fant ingen data', { allowedTags: ['em'] });
-    const meldingsForfatter = melding.erDokumentMelding || melding.type === 'sporsmal'
-        ? ''
-        : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${fraBruker(melding)})`;
+    const meldingsForfatter = finnMeldingsForfattere(melding);
 
     return (
-        <div>
+        <div className="meldingsHeader">
             <div className="metadata">
                 <span className="meldingsDato">
                     {dato}
@@ -59,20 +40,21 @@ function Meldingspanel(props) {
         .map((avsnitt, index) => Utils.tilParagraf(avsnitt, index));
     const tittel = lagTittel(melding);
     return (
-        <Ekspanderbartpanel
+        <EkspanderbartpanelBase
             className="meldingspanel"
-            tittel={tittel}
+            ariaTittel={`Ekspander ${getMeldingsTypeTekst(melding)}`}
+            heading={tittel}
             apen={props.apen}
         >
             <div className="ekspanderbartPanel__innhold__melding">
                 {paragrafer}
             </div>
-        </Ekspanderbartpanel>
+        </EkspanderbartpanelBase>
     );
 }
 
 Meldingspanel.propTypes = {
-    melding: PT.object.isRequired,
+    melding: meldingITraadVisning.isRequired,
     apen: PT.bool,
     children: PT.node.isRequired
 };

@@ -1,12 +1,11 @@
 
 .reactTraadVisning {
-  margin-top: 1em;
   .ekspanderbartPanel {
     background-color: white;
     box-shadow: 0 0 1px @navGra40;
 
     &.kategoripanel {
-      margin-top: 1em;
+      margin-bottom: 1em;
     }
 
     &.meldingspanel{
@@ -27,7 +26,12 @@
       padding: 0.5em 1em;
       z-index: inherit;
 
-      .typo-undertittel {
+      .dialogpanel-header{
+        width: 110%;
+      }
+
+      .meldingsHeader {
+        margin-top: 0.5rem;
         width: 95%;
       }
 
@@ -48,11 +52,7 @@
       .metadata {
         text-align: left;
         color: @navGra60;
-        font-size: 0.85em;
-        .meldingsDato {
-        }
-        .meldingsForfatter {
-        }
+        font-size: 0.85rem;
       }
 
       &:hover,
@@ -77,6 +77,12 @@
         padding: 0em 1.5em 0.5em;
         text-align: left;
         overflow-wrap: break-word;
+
+        p{
+          margin: 0;
+          padding-top: 0.6em;
+          padding-bottom: 0.6em;
+        }
       }
     }
   }
