@@ -8,7 +8,7 @@ import { slaaSammenDelviseSvar, erBesvart, erIkkeBesvart } from '../../utils/tra
 
 function lagMeldingspanel(melding, key, apen) {
     return (
-        <Meldingspanel key={'melding-' + key} apen={apen} melding={melding}>
+        <Meldingspanel key={key} apen={apen} melding={melding}>
             {melding.fritekst}
         </Meldingspanel>
     );
@@ -17,7 +17,7 @@ function lagMeldingspanel(melding, key, apen) {
 function lagNedtrekkspanel(traad, tittel, skalVisesApen) {
     const apneMeldingsPanel = skalVisesApen || traad.length < 2;
     const meldingspaneler = traad.map((melding, index) => (
-        lagMeldingspanel(melding, index, apneMeldingsPanel)
+        lagMeldingspanel(melding, `meldingspanel-${index}`, apneMeldingsPanel)
     ));
     return (
         <Kategoripanel tittel={tittel} apen={skalVisesApen}>
@@ -32,7 +32,7 @@ function lagTraadPanel(traad) {
     const skalIkkeVisesApen = false;
     const skalVisesApen = true;
     const tittel = 'Vis tidligere meldinger';
-    const key = 'traadpanel-0';
+    const key = 'meldingspanel';
     return erIkkeBesvart(traad)
         ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(sporsmal, key, skalVisesApen)}</div>
         : lagNedtrekkspanel(sammenslaattTraad, tittel, skalIkkeVisesApen);
@@ -43,7 +43,7 @@ function lagDelviseSvarPanel(traad) {
     if (delviseSvar.length === 0 || erBesvart(traad)) return '';
     const tittel = 'Tidligere delsvar';
     const skalVisesApen = true;
-    const key = 'delvissvarpanel-0';
+    const key = 'delvissvarpanel';
     return delviseSvar.length === 1
         ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(delviseSvar[0], key, skalVisesApen)}</div>
         : lagNedtrekkspanel(delviseSvar, tittel, skalVisesApen);
