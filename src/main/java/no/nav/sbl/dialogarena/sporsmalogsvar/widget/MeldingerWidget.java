@@ -36,7 +36,10 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
     @Override
     public List<WidgetMeldingVM> getFeedItems() {
-        return skillUtTraader(henvendelseBehandlingService.hentMeldinger(fnr))
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
+        List<Melding> filtrerteMeldinger = meldinger.stream()
+                .filter(melding -> !melding.erDelvisSvar()).collect(toList());
+        return skillUtTraader(filtrerteMeldinger)
                 .values().stream()
                 .map(TIL_MELDINGVM)
                 .sorted(comparing(WidgetMeldingVM::getDato).reversed())

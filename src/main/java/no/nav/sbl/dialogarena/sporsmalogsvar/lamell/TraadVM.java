@@ -47,6 +47,9 @@ public class TraadVM implements Serializable {
     }
 
     public MeldingVM getEldsteMelding() {
+        if(meldinger.isEmpty()){
+            return null;
+        }
         return meldinger.get(meldinger.size() - 1);
     }
 
@@ -71,6 +74,10 @@ public class TraadVM implements Serializable {
     }
 
     public Optional<String> getKontorsperretEnhet() {
+        if(meldinger.isEmpty()) {
+            return Optional.empty();
+        }
+
         return ofNullable(getEldsteMelding().melding.kontorsperretEnhet);
     }
 

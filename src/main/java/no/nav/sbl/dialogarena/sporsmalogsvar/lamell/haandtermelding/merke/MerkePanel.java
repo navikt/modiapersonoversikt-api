@@ -216,8 +216,9 @@ public class MerkePanel extends AnimertPanel {
         }
 
         private void haandterAvsluttet(AjaxRequestTarget target) {
-            henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
-            oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, none());
+            String saksbehandlerValgteEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+            henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad(), saksbehandlerValgteEnhet);
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, none(), saksbehandlerValgteEnhet);
 
             send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
             send(getPage(), Broadcast.DEPTH, FERDIGSTILT_UTEN_SVAR);

@@ -15,9 +15,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.DELVIS_SVAR_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,6 +66,18 @@ public class MeldingerWidgetTest extends WicketPageTest {
         assertThat(new MeldingerWidget("meldinger", "M", "fnr").getFeedItems().stream()
                 .map(WidgetMeldingVM::getId).collect(toList()),
                 is(asList("id3", "id2", "id1")));
+    }
+
+    @Test
+    public void filtrererBortDelviseSvar() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding("id1", SPORSMAL_SKRIFTLIG, DateTime.parse("2017-09-01"), Temagruppe.ARBD, "id1"),
+                createMelding("id3", DELVIS_SVAR_SKRIFTLIG, DateTime.parse("2017-11-01"), Temagruppe.ARBD, "id3")
+        ));
+
+        List<WidgetMeldingVM> collect = new MeldingerWidget("meldinger", "M", "fnr").getFeedItems();
+        assertThat(collect.size(), is(1));
+
     }
 
 }
