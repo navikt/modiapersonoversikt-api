@@ -63,7 +63,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     private static final String SPORSMAL_ID = "id";
     private static final String FRITEKST = "fritekst";
     private static final String TEMAGRUPPE = Temagruppe.FMLI.name();
-    private static final String VALGT_ENHET = "valgtEnhet";
+    private static final String VALGT_ENHET = "1307";
     private static final String BRUKERS_ENHET = "1234";
     private static final String BEHANDLINGS_ID = "behandlingsId";
 
@@ -118,7 +118,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .select("fortsettdialogformelementer:kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString());
+        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString(), eq(VALGT_ENHET));
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.fnrBruker, is(FNR));
         assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
@@ -141,7 +141,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .select("fortsettdialogformelementer:kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString());
+        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString(), eq(VALGT_ENHET));
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.meldingstype, is(SVAR_SKRIFTLIG));
     }
@@ -157,7 +157,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .select("fortsettdialogformelementer:kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString());
+        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString(), eq(VALGT_ENHET));
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.meldingstype, is(SVAR_TELEFON));
     }
@@ -173,7 +173,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .select("fortsettdialogformelementer:kanal", 2)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString());
+        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString(), eq(VALGT_ENHET));
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
     }
@@ -190,7 +190,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .check("fortsettdialogformelementer:brukerKanSvare", true)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString());
+        verify(henvendelseUtsendingService).ferdigstillHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), anyString(), eq(VALGT_ENHET));
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
     }
@@ -208,7 +208,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
                 .select("fortsettdialogformelementer:kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).ferdigstillHenvendelse(any(Melding.class), optionalStringArgumentCaptor.capture(), any(Optional.class), anyString());
+        verify(henvendelseUtsendingService).ferdigstillHenvendelse(any(Melding.class), optionalStringArgumentCaptor.capture(), any(Optional.class), anyString(), eq(VALGT_ENHET));
 
         String sendtOppgaveId = optionalStringArgumentCaptor.getValue().get();
         assertThat(sendtOppgaveId, is(oppgaveId));
@@ -263,7 +263,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @SuppressWarnings("unchecked")
     public void viserFeilmeldingDersomSendHenvendelseKasterOppgaveErFerdigstilt() throws Exception {
         doThrow(new HenvendelseUtsendingService.OppgaveErFerdigstilt())
-                .when(henvendelseUtsendingService).ferdigstillHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class), anyString());
+                .when(henvendelseUtsendingService).ferdigstillHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class), anyString(), eq(VALGT_ENHET));
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
@@ -281,7 +281,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void viserFeilmeldingDersomSendHenvendelseKasterException() throws Exception {
-        doThrow(new Exception()).when(henvendelseUtsendingService).ferdigstillHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class), anyString());
+        doThrow(new Exception()).when(henvendelseUtsendingService).ferdigstillHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class), anyString(), eq(VALGT_ENHET));
         wicket.goToPageWith(testFortsettDialogPanel)
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)

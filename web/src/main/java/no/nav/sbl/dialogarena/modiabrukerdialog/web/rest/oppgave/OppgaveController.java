@@ -50,7 +50,7 @@ public class OppgaveController {
         } catch (RuntimeException exception) {
             throw handterRuntimeFeil(exception);
         }
-        createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort");
+        createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort").report();
         return Response.ok("{\"message\": \"Success\"}").build();
     }
 
@@ -64,7 +64,7 @@ public class OppgaveController {
 
     private RuntimeException handterRuntimeFeil(RuntimeException exception) {
         logger.error("Feil ved legging av oppgave tilbake til GSAK", exception);
-        createEvent("hendelse.oppgavecontroller.leggtilbake.runtime-exception");
+        createEvent("hendelse.oppgavecontroller.leggtilbake.runtime-exception").report();
         return exception;
     }
 

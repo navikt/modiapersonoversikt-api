@@ -6,7 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 
 
 public interface PlukkOppgaveService {
-    Optional<Oppgave> plukkOppgave(Temagruppe temagruppe);
+    Optional<Oppgave> plukkOppgave(Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 
     boolean oppgaveErFerdigstilt(String oppgaveid);
 }

@@ -89,7 +89,7 @@ public class DialogPanel extends Panel {
                         saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
                     try {
-                        oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere, Temagruppe.valueOf(traad.get(0).temagruppe));
+                        oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere, Temagruppe.valueOf(traad.get(0).temagruppe), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                         erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveIdFraParametere);
                     } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                         throw new RuntimeException(fikkIkkeTilordnet);
@@ -118,7 +118,7 @@ public class DialogPanel extends Panel {
                 try {
                     Melding sporsmal = traad.get(0);
                     String sporsmalOppgaveId = sporsmal.oppgaveId;
-                    oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId, Temagruppe.valueOf(sporsmal.temagruppe));
+                    oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId, Temagruppe.valueOf(sporsmal.temagruppe), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                     oppgaveId = sporsmalOppgaveId;
                 } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                     oppgavetilordningFeiletModal.vis(target);
