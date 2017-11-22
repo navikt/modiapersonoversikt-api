@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
+import no.nav.brukerdialog.isso.RelyingPartyCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.SvarDelvisController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
