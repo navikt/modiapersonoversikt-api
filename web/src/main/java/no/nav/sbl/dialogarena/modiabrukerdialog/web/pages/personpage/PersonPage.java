@@ -145,7 +145,7 @@ public class PersonPage extends BasePage {
         final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
-        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo);
+        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
         hode.addCallback("fjernperson", new VoidCallback((target, component) -> {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);

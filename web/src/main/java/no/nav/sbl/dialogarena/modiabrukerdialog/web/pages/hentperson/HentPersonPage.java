@@ -50,18 +50,21 @@ public class HentPersonPage extends BasePage {
     private static final Logger PERSON_ACCESS_LOGGER = LoggerFactory.getLogger("personaccess");
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final String ERROR = "error";
+    public static final String FNR = "fnr";
     public static final String SOKT_FNR = "soektfnr";
 
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     private final ReactBegrunnelseModal oppgiBegrunnelseModal;
-
+    private final Optional<String> urlFnr;
 
     public HentPersonPage(PageParameters pageParameters) {
         super(pageParameters);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
-        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi);
+        urlFnr = Optional.ofNullable(pageParameters.get(FNR).toString());
+
+        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, urlFnr.orElse(null));
         add(
                 hode,
                 new PlukkOppgavePanel("plukkOppgave"),
@@ -73,6 +76,16 @@ public class HentPersonPage extends BasePage {
         add(lenkePanel);
         setUpSikkerhetstiltakspanel(pageParameters);
         configureModalWindow(oppgiBegrunnelseModal, pageParameters);
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(forScript("jQuery('#js-deokorator-sokefelt').focus();SaksbehandlerInnstillinger.focus();"));
+        if (urlFnr.isPresent()) {
+//            String searchScript = "jQuery('#js-deokorator-sokefelt').val('%s');jQuery('#forstorrelsesglass_sokefelt').click();";
+//            response.render(forScript(String.format(searchScript, urlFnr.get())));
+        }
     }
 
     public static void configureModalWindow(ReactBegrunnelseModal oppgiBegrunnelseModal, final PageParameters pageParameters) {
@@ -118,12 +131,6 @@ public class HentPersonPage extends BasePage {
         } else {
             add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, ""));
         }
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        response.render(forScript("jQuery('#foedselsnummerInput').focus();SaksbehandlerInnstillinger.focus();"));
     }
 
     public boolean isVersioned() {

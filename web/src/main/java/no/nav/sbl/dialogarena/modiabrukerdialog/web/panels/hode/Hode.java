@@ -62,11 +62,15 @@ public class Hode extends WebMarkupContainer {
         this(id, modal, personService, new GrunnInfo(null, null), "");
     }
 
-    public Hode(String id, ReactBegrunnelseModal modal, PersonKjerneinfoServiceBi personService, GrunnInfo grunnInfo) {
-        this(id, modal, personService, grunnInfo, "");
+    public Hode(String id, ReactBegrunnelseModal modal, PersonKjerneinfoServiceBi personService, String byttTilFnr) {
+        this(id, modal, personService, new GrunnInfo(new GrunnInfo.Bruker(byttTilFnr), null), byttTilFnr, "");
     }
 
-    public Hode(String id, ReactBegrunnelseModal modal, PersonKjerneinfoServiceBi personService, GrunnInfo grunnInfo, String feilmelding) {
+    public Hode(String id, ReactBegrunnelseModal modal, PersonKjerneinfoServiceBi personService, GrunnInfo grunnInfo, String byttTilFnr) {
+        this(id, modal, personService, grunnInfo, byttTilFnr, "");
+    }
+
+    public Hode(String id, ReactBegrunnelseModal modal, PersonKjerneinfoServiceBi personService, GrunnInfo grunnInfo, String byttTilFnr, String feilmelding) {
         super(id);
         this.grunnInfo = grunnInfo;
         this.modal = modal;
@@ -93,8 +97,9 @@ public class Hode extends WebMarkupContainer {
 
             @Override
             public void renderHead(Component component, IHeaderResponse response) {
+                boolean autoSubmit = byttTilFnr != null && byttTilFnr.length() > 0;
                 response.render(JavaScriptContentHeaderItem.forReference(JS));
-                response.render(forScript(lagHodeInitScript(grunnInfo, getCallbackUrl(), getMarkupId(), feilmelding)));
+                response.render(forScript(lagHodeInitScript(grunnInfo, getCallbackUrl(), getMarkupId(), autoSubmit, feilmelding)));
                 super.renderHead(component, response);
             }
         });
@@ -110,7 +115,7 @@ public class Hode extends WebMarkupContainer {
         return String.format("updateHode('%s', '%s');", getMarkupId(), feilmelding);
     }
 
-    private static String lagHodeInitScript(GrunnInfo grunnInfo, CharSequence callbackUrl, String markupId, String feilmelding) {
+    private static String lagHodeInitScript(GrunnInfo grunnInfo, CharSequence callbackUrl, String markupId, boolean autoSubmit, String feilmelding) {
         String fnr = Optional
                 .ofNullable(grunnInfo)
                 .map((gr) -> gr.bruker)
@@ -118,7 +123,7 @@ public class Hode extends WebMarkupContainer {
                 .filter((fdato) -> fdato.length() > 0)
                 .orElse("");
 
-        return String.format("initHode('%s', '%s', '%s', '%s')", callbackUrl, markupId, fnr, feilmelding);
+        return String.format("initHode('%s', '%s', '%s', %s, '%s')", callbackUrl, markupId, fnr, autoSubmit, feilmelding);
     }
 
     private static void ensureMapper() {
