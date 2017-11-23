@@ -2,30 +2,15 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.lang.option.Optional.optional;
 
 public class TemagruppeTemaMapping {
 
     public static final Temagruppe TEMA_UTEN_TEMAGRUPPE = Temagruppe.OVRG;
-
-    public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
-        {
-            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
-            put(Temagruppe.FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
-            put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
-            put(Temagruppe.PENS.name(), asList("PEN", "SUP"));
-            put(Temagruppe.HJLPM.name(), asList("HJE", "BIL", "HEL"));
-            put(Temagruppe.BIL.name(), asList("HJE", "BIL", "HEL"));
-            put(Temagruppe.ORT_HJE.name(), asList("HJE", "BIL", "HEL"));
-            put(Temagruppe.UFRT.name(), asList("UFO"));
-        }
-    };
 
     public static final Map<String, String> TEMA_TEMAGRUPPE_MAPPING = new HashMap<String, String>() {
         {
@@ -77,6 +62,21 @@ public class TemagruppeTemaMapping {
             put("HJE", Temagruppe.HJLPM.name());
             put("BIL", Temagruppe.BIL.name());
             put("HEL", Temagruppe.ORT_HJE.name());
+        }
+    };
+
+    public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
+        {
+            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
+            put(Temagruppe.FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
+            put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
+            put(Temagruppe.PENS.name(), asList("PEN", "SUP"));
+            put(Temagruppe.HJLPM.name(), asList("HJE", "BIL", "HEL"));
+            put(Temagruppe.BIL.name(), asList("HJE", "BIL", "HEL"));
+            put(Temagruppe.ORT_HJE.name(), asList("HJE", "BIL", "HEL"));
+            put(Temagruppe.UFRT.name(), singletonList("UFO"));
+            put(Temagruppe.PLEIEPENGERSY.name(), singletonList("OMS"));
+            put(Temagruppe.UTLAND.name(), new ArrayList<>(TEMA_TEMAGRUPPE_MAPPING.keySet()));
         }
     };
 
