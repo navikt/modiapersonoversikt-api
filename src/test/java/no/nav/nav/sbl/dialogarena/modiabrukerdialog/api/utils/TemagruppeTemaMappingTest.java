@@ -26,6 +26,7 @@ public class TemagruppeTemaMappingTest {
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("UFO"), is(UFRT.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TSO"), is(ARBD.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TSR"), is(ARBD.name()));
+        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("OMS"), is(FMLI.name()));
     }
 
     @Test
@@ -39,6 +40,14 @@ public class TemagruppeTemaMappingTest {
             }
         }
         assertThat(ufoFound, is(true));
+    }
+
+    @Test
+    public void temaGruppeTilTemaTestUTLANDSkalMappeTilNoe() {
+        List<String> temaer = TemagruppeTemaMapping.hentTemaForTemagruppe("UTLAND");
+
+        assertThat(temaer.contains("OMS"), is(true));
+        assertThat(temaer.contains("SUP"), is(true));
     }
 
 }
