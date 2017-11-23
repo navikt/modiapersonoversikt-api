@@ -33,7 +33,7 @@ public class YtelseskontraktServiceBiMock {
         FimHentYtelseskontraktListeResponse respons = new FimHentYtelseskontraktListeResponse()
                 .withBruker(new FimBruker().withRettighetsgruppe(new FimRettighetsgruppe().withRettighetsGruppe("test")))
                 .withYtelseskontraktListe(createYtelsesKontrakter());
-        return new YtelseskontraktMapper().map(respons, YtelseskontraktResponse.class);
+        return YtelseskontraktMapper.getInstance().map(respons, YtelseskontraktResponse.class);
     }
 
     private static List<FimYtelseskontrakt> createYtelsesKontrakter() {

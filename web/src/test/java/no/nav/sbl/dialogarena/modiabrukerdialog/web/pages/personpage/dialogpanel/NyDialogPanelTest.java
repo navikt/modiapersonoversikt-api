@@ -114,7 +114,7 @@ public class NyDialogPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class), any(Optional.class), eq(VALGT_ENHET));
 
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.kanal, is(TELEFON.name()));
@@ -155,7 +155,7 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void viserFeilmeldingDersomSendHenvendelseKasterException() throws Exception {
-        doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class));
+        doThrow(new Exception()).when(henvendelseUtsendingService).sendHenvendelse(any(Melding.class), any(Optional.class), any(Optional.class), eq(VALGT_ENHET));
         wicket.goToPageWith(testNyDialogPanel)
                 .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")

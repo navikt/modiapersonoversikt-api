@@ -37,7 +37,7 @@ class SvarDelvisServiceImplTest {
     void ferdigstillerHenvendelse() throws Exception {
         svarDelvisService.svarDelvis(lagRequest());
         ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
-        verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString());
+        verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString(), anyString());
 
         assertAll("Delvis svar",
                 () -> assertEquals(SVAR, argumentCaptor.getValue().getFritekst()),
@@ -52,7 +52,7 @@ class SvarDelvisServiceImplTest {
     @DisplayName("Fanger feil fra service og konverterer til RuntimeException")
     void fangerExceptionsOgKasterRuntimeException() throws Exception {
         String opprinneligFeil = "Opprinnelig feil";
-        doThrow(new IllegalArgumentException(opprinneligFeil)).when(henvendelseMock).ferdigstillHenvendelse(any(), any(), any(), any());
+        doThrow(new IllegalArgumentException(opprinneligFeil)).when(henvendelseMock).ferdigstillHenvendelse(any(), any(), any(), any(), any());
 
         Throwable exception = assertThrows(RuntimeException.class, () -> svarDelvisService.svarDelvis(lagRequest()));
 
