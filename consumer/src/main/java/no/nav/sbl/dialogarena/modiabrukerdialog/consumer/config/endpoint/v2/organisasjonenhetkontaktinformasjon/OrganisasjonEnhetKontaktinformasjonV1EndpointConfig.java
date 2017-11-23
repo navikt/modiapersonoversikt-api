@@ -2,7 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.org
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
+import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetV2Mock;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhetV2;
@@ -28,7 +31,11 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
 
     @Bean
     public Pingable OrganisasjonEnhetKontaktinformasjonPing() {
-        return new PingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV1", lagEndpoint());
+        if(FeatureToggle.visFeature(Feature.NORG_ORGENHET_KONTAKTINFORMASJON)) {
+            return new PingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV1", lagEndpoint());
+        } else {
+            return new UnpingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV (feature togglet av)", "");
+        }
     }
 
     private OrganisasjonEnhetKontaktinformasjonV1 lagMockEnpoint() {
