@@ -47,10 +47,10 @@ export function traadInneholderDelvisSvar(traad) {
 }
 
 export function erBesvart(traad) {
-    return traad.filter(erSkriftligSvar).length > 0
-        || traad.filter(erInngaaendeSvar).length > 0
-        || traad.filter(erOppmoteSvar).length > 0
-        || traad.filter(erTelefonSvar).length > 0;
+    return traad.some(erSkriftligSvar)
+        || traad.some(erInngaaendeSvar)
+        || traad.some(erOppmoteSvar)
+        || traad.some(erTelefonSvar);
 }
 
 export function erIkkeBesvart(traad) {

@@ -6,9 +6,9 @@ import { erDelvisSvar } from '../../utils/melding-utils';
 import { meldingITraadVisning } from '../props';
 import { slaaSammenDelviseSvar, erBesvart, erIkkeBesvart } from '../../utils/traad-utils';
 
-function lagMeldingspanel(melding, key, apen) {
+function lagMeldingspanel(melding, apen) {
     return (
-        <Meldingspanel key={key} apen={apen} melding={melding}>
+        <Meldingspanel key={melding.id} apen={apen} melding={melding}>
             {melding.fritekst}
         </Meldingspanel>
     );
@@ -16,8 +16,8 @@ function lagMeldingspanel(melding, key, apen) {
 
 function lagNedtrekkspanel(traad, tittel, skalVisesApen) {
     const apneMeldingsPanel = skalVisesApen || traad.length < 2;
-    const meldingspaneler = traad.map((melding, index) => (
-        lagMeldingspanel(melding, `meldingspanel-${index}`, apneMeldingsPanel)
+    const meldingspaneler = traad.map((melding) => (
+        lagMeldingspanel(melding, apneMeldingsPanel)
     ));
     return (
         <Kategoripanel tittel={tittel} apen={skalVisesApen}>
@@ -32,9 +32,8 @@ function lagTraadPanel(traad) {
     const skalIkkeVisesApen = false;
     const skalVisesApen = true;
     const tittel = 'Vis tidligere meldinger';
-    const key = 'meldingspanel';
     return erIkkeBesvart(traad)
-        ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(sporsmal, key, skalVisesApen)}</div>
+        ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(sporsmal, skalVisesApen)}</div>
         : lagNedtrekkspanel(sammenslaattTraad, tittel, skalIkkeVisesApen);
 }
 
@@ -43,9 +42,8 @@ function lagDelviseSvarPanel(traad) {
     if (delviseSvar.length === 0 || erBesvart(traad)) return '';
     const tittel = 'Tidligere delsvar';
     const skalVisesApen = true;
-    const key = 'delvissvarpanel';
     return delviseSvar.length === 1
-        ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(delviseSvar[0], key, skalVisesApen)}</div>
+        ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(delviseSvar[0], skalVisesApen)}</div>
         : lagNedtrekkspanel(delviseSvar, tittel, skalVisesApen);
 }
 
