@@ -35,15 +35,7 @@
         <!--Personsok-->
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>personsok-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-search</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-result</artifactId>
+            <artifactId>personsok-web</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
