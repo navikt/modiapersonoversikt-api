@@ -14,6 +14,7 @@ public class ReactResources {
             .less(
                     new PackageResourceReference(ResourceReference.class, "build/nav-core-variabler.less"),
                     new PackageResourceReference(ResourceReference.class, "build/modal.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/redirect-modal.less"),
                     new PackageResourceReference(ResourceReference.class, "build/sok-layout.less"),
                     new PackageResourceReference(ResourceReference.class, "build/meldinger-sok.less"),
                     new PackageResourceReference(ResourceReference.class, "build/knagginput.less"),

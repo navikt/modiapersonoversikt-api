@@ -5,6 +5,7 @@
   "author": "NAV",
   "license": "MIT",
   "scripts": {
+    "start": "gulp dev",
     "test": "mocha --require src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/test-config.js --recursive \"src/main/resources/no/nav/sbl/dialogarena/reactkomponenter/**/*-test.js\" --compilers js:babel-core/register"
   },
   "devDependencies": {
