@@ -24,7 +24,7 @@
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <modig.security.version>1.0.24</modig.security.version>
         <collections-generic.version>4.01</collections-generic.version>
-        <reactkomponenter.version>2.10.2-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>2.10.11-SNAPSHOT</reactkomponenter.version>
         <modia-felleskomponenter.version>3.4-oidc-SNAPSHOT</modia-felleskomponenter.version>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
     </properties>
