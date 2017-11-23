@@ -3,17 +3,8 @@ import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../../utils/utils-module';
-import { fraBruker, getMeldingsTypeTekst, MeldingsTyper } from '../../utils/melding-utils';
+import { finnMeldingsForfattere, getMeldingsTypeTekst } from '../../utils/melding-utils';
 import { meldingITraadVisning } from '../props';
-
-function finnMeldingsForfattere(melding) {
-    if (melding.skrevetAvFlere !== undefined) {
-        return `Skrevet av: ${melding.skrevetAvFlere}`;
-    }
-    return melding.erDokumentMelding || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG ?
-        '' :
-        `Skrevet av: ${melding.skrevetAv.navn} (${fraBruker(melding)})`;
-}
 
 function lagTittel(melding) {
     const typeoverskrift = getMeldingsTypeTekst(melding);

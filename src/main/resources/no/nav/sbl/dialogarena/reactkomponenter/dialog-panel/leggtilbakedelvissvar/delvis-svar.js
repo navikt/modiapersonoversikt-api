@@ -6,7 +6,7 @@ import TekniskFeil from '../../feilmeldingsmodaler/teknisk-feil';
 import { Textarea } from 'nav-frontend-skjema';
 import Skrivestotte from '../../skrivestotte/skrivestotte-module';
 import { generateId } from '../../utils/utils-module';
-import { grunnInfoType } from '../props';
+import { skrivestotteprops } from '../props';
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
 const DEFAULT_VALGT_TEMAGRUPPE = 'Velg Temagruppe';
@@ -108,18 +108,19 @@ class DelvisSvar extends Component {
     render() {
         const valgTemagruppe = this.lagTemagruppeValg();
         const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
-        const hiddenLabel = <span className="vekk">Skriv delvis svar</span>;
+        const hiddenLabel = <span className="vekk">Skriv delsvar</span>;
 
         return (
             <div>
-                <Skrivestotte tekstfeltId={this.textId} autofullfor={this.props.grunnInfo} ref={(input) => { this.skrivestoote = input; }} />
-                <h3>Legg tilbake med delvis svar</h3>
+                <Skrivestotte {...this.props.skrivestotteprops} tekstfeltId={this.textId} ref={(input) => { this.skrivestoote = input; }} />
+
+                <h3>Legg tilbake med delsvar</h3>
 
                 <TraadVisning traad={this.props.traad} />
 
                 <div className="svar">
                     <div className="svar-overskrift-boks">
-                        <h1 className="overskrift medium"><span>Skriv delvis svar</span></h1>
+                        <h1 className="overskrift medium"><span>Skriv delsvar</span></h1>
                         <button className="skrivestotteToggle" id="skrivestotteToggler10c" title="Hurtigtast: ALT + C" onClick={() => { this.skrivestoote.vis(); }}> <span className="vekk">Skrivestøtte.</span> </button>
                     </div>
                     <Textarea
@@ -149,7 +150,7 @@ class DelvisSvar extends Component {
                     role="button"
                     onClick={this.svarDelvis}
                 >
-                    Svar delvis og legg tilbake
+                    Skriv delsvar og legg tilbake
                 </a>
                 {feilmeldingModal}
                 <a
@@ -166,7 +167,7 @@ class DelvisSvar extends Component {
 
 DelvisSvar.propTypes = {
     traad: PT.array.isRequired,
-    grunnInfo: grunnInfoType.isRequired,
+    skrivestotteprops: skrivestotteprops.isRequired,
     henvendelseId: PT.string.isRequired,
     sporsmal: PT.string.isRequired,
     fodselsnummer: PT.string.isRequired,

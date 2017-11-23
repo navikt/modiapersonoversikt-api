@@ -20,11 +20,31 @@ export const MeldingsTyperTekst = {
     OPPGAVE_VARSEL: 'Oppgave varsel',
     SVAR_OPPMOTE: 'Svar oppmøte',
     SVAR_TELEFON: 'Svar telefon',
-    DELVIS_SVAR_SKRIFTLIG: 'Delvis svar',
+    DELVIS_SVAR_SKRIFTLIG: 'Delsvar',
     SAMTALEREFERAT_OPPMOTE: 'Samtalereferat oppmøte',
     SAMTALEREFERAT_TELEFON: 'Samtalereferat telefon',
     SPORSMAL_MODIA_UTGAAENDE: 'Spørsmål fra NAV'
 };
+
+const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
+export function erInngaaende(melding) {
+    return [MeldingsTyper.SPORSMAL_SKRIFTLIG, MeldingsTyper.SVAR_SBL_INNGAAENDE].includes(melding.meldingstype);
+}
+
+export function hentForfatterIdent(melding) {
+    return erInngaaende(melding) ? melding.fnrBruker : melding.navIdent;
+}
+
+export function finnMeldingsForfattere(melding) {
+    if (melding.skrevetAvFlere !== undefined) {
+        return `Skrevet av: ${melding.skrevetAvFlere}`;
+    }
+    return melding.erDokumentMelding || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG ?
+        '' :
+        `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${hentForfatterIdent(melding)})`;
+}
 
 export function eldsteMeldingForst(melding1, melding2) {
     const d1 = new Date(melding1.opprettetDato);
@@ -40,12 +60,16 @@ export function erSkriftligSvar(melding) {
     return melding.meldingstype === MeldingsTyper.SVAR_SKRIFTLIG;
 }
 
-export function erInngaaende(melding) {
-    return [MeldingsTyper.SPORSMAL_SKRIFTLIG, MeldingsTyper.SVAR_SBL_INNGAAENDE].includes(melding.meldingstype);
+export function erInngaaendeSvar(melding) {
+    return melding.meldingstype === MeldingsTyper.SVAR_SBL_INNGAAENDE;
 }
 
-export function fraBruker(melding) {
-    return erInngaaende(melding) ? melding.fnrBruker : melding.navIdent;
+export function erOppmoteSvar(melding) {
+    return melding.meldingstype === MeldingsTyper.SVAR_OPPMOTE;
+}
+
+export function erTelefonSvar(melding) {
+    return melding.meldingstype === MeldingsTyper.SVAR_TELEFON;
 }
 
 export function getMeldingsTypeTekst(melding) {

@@ -1,20 +1,22 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PT from 'prop-types';
 import wicketSender from '../../react-wicket-mixin/wicket-sender';
 import DelvisSvar from './delvis-svar';
+import { skrivestotteprops } from '../props';
 
 class LeggTilbakeDelvisSvarPanel extends Component {
     constructor(props) {
         super(props);
         this.svarCallback = this.svarCallback.bind(this);
         this.avbrytCallback = this.avbrytCallback.bind(this);
+        this.startNyDialogCallback = this.startNyDialogCallback.bind(this);
         this.state = {
             erUnderArbeid: true
         };
     }
 
     svarCallback() {
-        this.setState({erUnderArbeid: false});
+        this.setState({ erUnderArbeid: false });
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.svarDelvisCallbackId);
     }
 
@@ -22,11 +24,18 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.avbrytCallbackId);
     }
 
+    startNyDialogCallback() {
+        wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.startNyDialogId);
+    }
+
     lagKvittering() {
         return (
             <div className="kvittering">
-                <div className="robust-ikon-gront-sjekk"/>
-                <h2 className="medium">Delvis svar er registrert</h2>
+                <div className="robust-ikon-gront-sjekk" />
+                <h2 className="medium">Delsvar er registrert</h2>
+                <button className="startNyDialog knapp-stor" onClick={this.startNyDialogCallback}>
+                    Start Ny Dialog
+                </button>
             </div>
         );
     }
@@ -45,7 +54,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                 opprettetDato={this.props.opprettetDato}
                 temagruppeMapping={this.props.temagruppeMapping}
                 traad={this.props.traad}
-                grunnInfo={this.props.grunnInfo}
+                skrivestotteprops={this.props.skrivestotteprops}
             />);
         }
         return this.lagKvittering();
@@ -58,6 +67,7 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     wicketcomponent: PT.string.isRequired,
     svarDelvisCallbackId: PT.string.isRequired,
     avbrytCallbackId: PT.string.isRequired,
+    startNyDialogId: PT.string.isRequired,
     henvendelseId: PT.string.isRequired,
     sporsmal: PT.string.isRequired,
     fodselsnummer: PT.string.isRequired,
@@ -69,20 +79,7 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
         temagruppeKode: PT.string,
         temagruppeNavn: PT.string
     }),
-    grunnInfo: PT.shape({
-        bruker: PT.shape({
-            fnr: PT.string,
-            fornavn: PT.string,
-            etternavn: PT.string,
-            navkontor: PT.string
-        }),
-        Saksbehandler: PT.shape({
-                enhet: PT.string,
-                fornavn: PT.string,
-                etternavn: PT.string
-            }
-        )
-    })
+    skrivestotteprops: skrivestotteprops.isRequired
 };
 
 export default LeggTilbakeDelvisSvarPanel;
