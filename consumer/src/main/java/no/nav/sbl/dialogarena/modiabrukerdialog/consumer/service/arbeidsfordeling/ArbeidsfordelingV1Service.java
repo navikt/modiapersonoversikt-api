@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ArbeidsfordelingV1Service {
@@ -51,14 +53,14 @@ public class ArbeidsfordelingV1Service {
             return response.getBehandlendeEnhetListe().stream()
                     .map(WSOrganisasjonsenhet::getEnhetId)
                     .collect(Collectors.toList());
-        } catch (FinnBehandlendeEnhetListeUgyldigInput e) {
+        } catch (FinnBehandlendeEnhetListeUgyldigInput | IOException | RuntimeException e) {
             LOG.error(e.getMessage(), e);
-            return new ArrayList<>();
+            throw new FinnBehandlendeEnhetException(e.getMessage(), e);
         }
     }
 
     private String hentGeografiskTilknytning(String brukerIdent) {
-        return Optional.of(personService.hentKjerneinformasjon(new HentKjerneinformasjonRequest(brukerIdent)))
+        return Optional.ofNullable(personService.hentKjerneinformasjon(new HentKjerneinformasjonRequest(brukerIdent)))
                 .map(HentKjerneinformasjonResponse::getPerson)
                 .map(Person::getPersonfakta)
                 .map(Personfakta::getGeografiskTilknytning)
