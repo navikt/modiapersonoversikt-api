@@ -24,7 +24,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
 import javax.servlet.http.Cookie;
-
 import java.util.Optional;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -33,19 +32,19 @@ import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
+import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_CLEAR_MESSAGES;
 import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_SEARCH_PERFORMED;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
 
 public class HentPersonPage extends BasePage {
 
-	public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
-	public static final String ERROR = "error";
+    public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
+    public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
 
 
@@ -65,19 +64,19 @@ public class HentPersonPage extends BasePage {
 
         LenkePanel lenkePanel = new LenkePanel("lenkePanel", getVeiledersEnhetParameter());
         add(lenkePanel);
-		setUpSikkerhetstiltakspanel(pageParameters);
+        setUpSikkerhetstiltakspanel(pageParameters);
     }
 
-	private void setUpSikkerhetstiltakspanel(PageParameters pageParameters) {
-		StringValue sikkerhetstiltakBeskrivelse = pageParameters.get(SIKKERHETSTILTAK);
-		if (!sikkerhetstiltakBeskrivelse.isEmpty()) {
-			add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, sikkerhetstiltakBeskrivelse.toString()));
-		} else {
-			add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, ""));
-		}
-	}
+    private void setUpSikkerhetstiltakspanel(PageParameters pageParameters) {
+        StringValue sikkerhetstiltakBeskrivelse = pageParameters.get(SIKKERHETSTILTAK);
+        if (!sikkerhetstiltakBeskrivelse.isEmpty()) {
+            add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, sikkerhetstiltakBeskrivelse.toString()));
+        } else {
+            add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, ""));
+        }
+    }
 
-	private void setupErrorText(PageParameters pageParameters, HentPersonPanel hentPersonPanel) {
+    private void setupErrorText(PageParameters pageParameters, HentPersonPanel hentPersonPanel) {
         StringValue errorText = pageParameters.get(ERROR);
         if (!errorText.isEmpty()) {
             hentPersonPanel.setErrorText(errorText.toString());
@@ -99,22 +98,22 @@ public class HentPersonPage extends BasePage {
         throw new RestartResponseException(PersonPage.class, pageParameters);
     }
 
-	@RunOnEvents(GOTO_HENT_PERSONPAGE)
-	public void refreshKjerneinfoSikkerhetsInfo(AjaxRequestTarget target, String query) throws JSONException {
-		String errorText = getTextFromPayload(query, HentPersonPanel.JSON_ERROR_TEXT);
+    @RunOnEvents(GOTO_HENT_PERSONPAGE)
+    public void refreshKjerneinfoSikkerhetsInfo(AjaxRequestTarget target, String query) throws JSONException {
+        String errorText = getTextFromPayload(query, HentPersonPanel.JSON_ERROR_TEXT);
         String soktFnr = getTextFromPayload(query, HentPersonPanel.JSON_SOKT_FNR);
-		String sikkerhetstiltak = getTextFromPayload(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        String sikkerhetstiltak = getTextFromPayload(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
 
-		PageParameters pageParameters = new PageParameters();
-		if (!StringUtils.isEmpty(sikkerhetstiltak)) {
-			pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak)
+        PageParameters pageParameters = new PageParameters();
+        if (!StringUtils.isEmpty(sikkerhetstiltak)) {
+            pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak)
                     .set(SOKT_FNR, soktFnr);
-		} else {
-			pageParameters.set(ERROR, errorText).set(SOKT_FNR, soktFnr);
-		}
+        } else {
+            pageParameters.set(ERROR, errorText).set(SOKT_FNR, soktFnr);
+        }
 
-		throw new RestartResponseException(HentPersonPage.class, pageParameters);
-	}
+        throw new RestartResponseException(HentPersonPage.class, pageParameters);
+    }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, PageParameters pageParameters) {
@@ -139,23 +138,24 @@ public class HentPersonPage extends BasePage {
 
     /**
      * Hente forskjellige teksten fra en payload (JSONobjekt).
+     *
      * @param query
      * @param jsonField
      * @return
      * @throws JSONException
      */
-	protected String getTextFromPayload(String query, String jsonField) throws JSONException {
-		return getJsonField(query, jsonField);
-	}
+    protected String getTextFromPayload(String query, String jsonField) throws JSONException {
+        return getJsonField(query, jsonField);
+    }
 
-	private String getJsonField(String query, String field) throws JSONException {
-		JSONObject jsonObject =  new JSONObject(query);
-		if (jsonObject.has(field)) {
-			return new JSONObject(query).getString(field);
-		} else {
-			return null;
-		}
-	}
+    private String getJsonField(String query, String field) throws JSONException {
+        JSONObject jsonObject = new JSONObject(query);
+        if (jsonObject.has(field)) {
+            return new JSONObject(query).getString(field);
+        } else {
+            return null;
+        }
+    }
 
     private String getVeiledersEnhetParameter() {
         WebRequest webRequest = (WebRequest) RequestCycle.get().getRequest();
