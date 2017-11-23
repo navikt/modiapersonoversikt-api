@@ -43,7 +43,9 @@ import org.apache.wicket.model.*;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -377,7 +379,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             sak = Optional.ofNullable(henvendelseVM.valgtSak);
         }
 
-        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), sak);
+        henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), sak, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
     }
 
 }

@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>13.4.2</version>
+        <version>13.5.13-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-mock</artifactId>
@@ -141,10 +141,8 @@
             <groupId>no.nav.sbl</groupId>
             <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
-        </dependency>
+
+
 
         <!--Dialogarena-->
         <dependency>
@@ -154,6 +152,13 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>aktorid-jaxws</artifactId>
+        </dependency>
+
+        <!--Virksomhetstjenester-->
+        <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-organisasjonEnhet-v2-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
         </dependency>
 
         <!--Modig-->

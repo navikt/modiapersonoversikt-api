@@ -19,4 +19,5 @@
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:okonomisk-sosialhjelp</PolicyIdReference>
 	<PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:pesys-tilgang</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:oppfolging</PolicyIdReference>
+    <PolicyIdReference>urn:xacml:2.0:nav:modia:policyid:navnpanel</PolicyIdReference>
 </PolicySet>

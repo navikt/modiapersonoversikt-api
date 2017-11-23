@@ -3,12 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Personfakta;
+import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
+import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -17,10 +19,11 @@ import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static org.apache.commons.lang3.StringUtils.defaultString;
 
 public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
 
+    public static final String ATTRIBUTT_ID_ANSVARLIG_ENHET = "urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet";
+    public static final String ATTRIBUTT_ID_DISKRESJONSKODE = "urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code";
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
@@ -30,13 +33,13 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
     private EnforcementPoint pep;
 
     @Override
-    public Optional<Oppgave> plukkOppgave(Temagruppe temagruppe) {
-        Optional<Oppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(temagruppe);
+    public Optional<Oppgave> plukkOppgave(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
+        Optional<Oppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(temagruppe, saksbehandlersValgteEnhet);
         if (oppgave.isSome()) {
             if (saksbehandlerHarTilgangTilBruker(oppgave.get())) {
                 return oppgave;
             } else {
-                return leggTilbakeOgPlukkNyOppgave(oppgave.get(), temagruppe);
+                return leggTilbakeOgPlukkNyOppgave(oppgave.get(), temagruppe, saksbehandlersValgteEnhet);
             }
         } else {
             return none();
@@ -48,9 +51,9 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
         return oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveid);
     }
 
-    private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, Temagruppe temagruppe) {
-        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe);
-        return plukkOppgave(temagruppe);
+    private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
+        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe, saksbehandlersValgteEnhet);
+        return plukkOppgave(temagruppe, saksbehandlersValgteEnhet);
     }
 
     private boolean saksbehandlerHarTilgangTilBruker(Oppgave oppgave) {
@@ -61,12 +64,18 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
             Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(kjerneinfoRequest).getPerson().getPersonfakta();
 
             String brukersDiskresjonskode = personfakta.getDiskresjonskode() == null ? "" : personfakta.getDiskresjonskode().getValue();
-            String brukersEnhet = defaultString(personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
+            String brukersEnhet = getBrukersEnhet(personfakta).orElse("");
 
-            return pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)))
-                    && pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
+            return pep.hasAccess(forRequest(resourceAttribute(ATTRIBUTT_ID_DISKRESJONSKODE, brukersDiskresjonskode)))
+                    && pep.hasAccess(forRequest(actionId("les"), resourceAttribute(ATTRIBUTT_ID_ANSVARLIG_ENHET, brukersEnhet)));
         } catch (AuthorizationException e) {
             return false;
         }
+    }
+
+    private java.util.Optional<String> getBrukersEnhet(Personfakta personfakta) {
+        return java.util.Optional.ofNullable(personfakta.getAnsvarligEnhet())
+                .map(AnsvarligEnhet::getOrganisasjonsenhet)
+                .map(Organisasjonsenhet::getOrganisasjonselementId);
     }
 }

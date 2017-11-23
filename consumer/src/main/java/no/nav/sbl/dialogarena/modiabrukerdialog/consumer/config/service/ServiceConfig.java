@@ -17,8 +17,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PsakServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
@@ -55,27 +55,24 @@ public class ServiceConfig {
                                                                    OppgaveBehandlingService oppgaveBehandlingService,
                                                                    SakerService sakerService,
                                                                    @Named("pep") EnforcementPoint pep,
-                                                                   SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
                                                                    PropertyResolver propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
                                                                    LDAPService ldapService) {
 
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
-                behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, pep, saksbehandlerInnstillingerService,
+                behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, pep,
                 propertyResolver, personKjerneinfoServiceBi, ldapService);
     }
 
     @Bean
-    public HenvendelseService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService) {
-        return new HenvendelseServiceImpl(henvendelseUtsendingService);
+    public SvarDelvisService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService) {
+        return new SvarDelvisServiceImpl(henvendelseUtsendingService);
     }
 
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3, OppgaveV3 oppgaveV3,
-                                                             SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
                                                              AnsattService ansattService, Ruting ruting) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, saksbehandlerInnstillingerService,
-                ansattService, ruting);
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, ansattService, ruting);
     }
 
     @Bean

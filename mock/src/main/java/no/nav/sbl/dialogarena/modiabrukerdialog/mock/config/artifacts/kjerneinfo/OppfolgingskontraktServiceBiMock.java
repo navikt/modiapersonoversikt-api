@@ -44,7 +44,7 @@ public class OppfolgingskontraktServiceBiMock {
     private static OppfolgingskontraktResponse lagOppfolgingsMockRespons() {
         FimOppHentOppfoelgingskontraktListeResponse respons = new FimOppHentOppfoelgingskontraktListeResponse();
         respons.withOppfoelgingskontraktListe(createOppfoelgingskontrakt());
-        OppfolgingskontraktResponse returRespons = new OppfolgingskontraktMapper().map(respons, OppfolgingskontraktResponse.class);
+        OppfolgingskontraktResponse returRespons = OppfolgingskontraktMapper.getInstance().map(respons, OppfolgingskontraktResponse.class);
         returRespons.setSyfoPunkter(createSYFOpunkter());
         return returRespons;
     }
