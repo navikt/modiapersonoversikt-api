@@ -27,7 +27,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
@@ -50,7 +49,6 @@ class OppgaveControllerTest {
     private OppgavebehandlingV3 oppgaveBehandlingMock;
     private OppgaveV3 oppgaveWSMock;
     private Ruting rutingMock;
-    private SaksbehandlerInnstillingerServiceImpl saksbehandlerInnstillingerService;
     private AnsattServiceImpl ansattWSMock;
 
     @BeforeAll
@@ -68,7 +66,7 @@ class OppgaveControllerTest {
             HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
         setupMocks();
-        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, saksbehandlerInnstillingerService, ansattWSMock, rutingMock);
+        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, ansattWSMock, rutingMock);
 
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
     }
@@ -78,7 +76,6 @@ class OppgaveControllerTest {
         oppgaveWSMock = mockOppgaveWs();
         rutingMock = mockRuting();
         ansattWSMock = new AnsattServiceImpl(mockGosysNavAnsatt());
-        saksbehandlerInnstillingerService = new SaksbehandlerInnstillingerServiceImpl(ansattWSMock);
     }
 
     private OppgaveV3 mockOppgaveWs() throws HentOppgaveOppgaveIkkeFunnet {

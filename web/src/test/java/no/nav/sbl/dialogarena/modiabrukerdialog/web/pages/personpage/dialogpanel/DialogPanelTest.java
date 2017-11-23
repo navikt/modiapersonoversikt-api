@@ -8,6 +8,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService.FikkIkkeTilordnet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
@@ -48,16 +49,20 @@ public class DialogPanelTest extends WicketPageTest {
     private static final String OPPGAVEID_VERDI = "123";
     private static final String HENVENDELSEID_VERDI = "321";
     private static final String OPPGAVEID_FOR_SPORSMAL = "oppgaveid";
+    public static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingServiceMock;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingServiceMock;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Before
     public void setUp() {
         reset(oppgaveBehandlingServiceMock);
         when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagMelding()));
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(SAKSBEHANDLERS_VALGTE_ENHET);
     }
 
     private GrunnInfo getMockGrunnInfo() {
@@ -101,7 +106,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .should().containComponent(ofType(FortsettDialogPanel.class));
 
-        verify(oppgaveBehandlingServiceMock, times(1)).tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class));
+        verify(oppgaveBehandlingServiceMock, times(1)).tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class), anyString());
     }
 
     @Test
@@ -162,7 +167,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingServiceMock, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class));
+        verify(oppgaveBehandlingServiceMock, never()).tilordneOppgaveIGsak(anyString(), any(Temagruppe.class), anyString());
     }
 
     @Test
@@ -173,7 +178,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingServiceMock).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD);
+        verify(oppgaveBehandlingServiceMock).tilordneOppgaveIGsak(spsm.oppgaveId, ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
     }
 
     @Test
@@ -183,7 +188,7 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
 
-        verify(oppgaveBehandlingServiceMock).tilordneOppgaveIGsak(OPPGAVEID_FOR_SPORSMAL, ARBD);
+        verify(oppgaveBehandlingServiceMock).tilordneOppgaveIGsak(OPPGAVEID_FOR_SPORSMAL, ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
     }
 
     @Test

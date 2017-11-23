@@ -58,7 +58,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void plukkerOppgaveOgSetterSessionAttributes() {
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
@@ -105,12 +105,12 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().notContainComponent(ofType(NyDialogPanel.class));
 
-        verify(plukkOppgaveService, never()).plukkOppgave(any(Temagruppe.class));
+        verify(plukkOppgaveService, never()).plukkOppgave(any(Temagruppe.class), anyString());
     }
 
     @Test
     public void girFeilmeldingHvisIngenOppgaverPaaTema() {
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(Optional.<Oppgave>none());
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(Optional.<Oppgave>none());
 
         PlukkOppgavePanel plukkoppgave = new PlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
@@ -127,7 +127,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         reset(plukkOppgaveService);
 
         when(plukkOppgaveService.oppgaveErFerdigstilt(anyString())).thenReturn(true);
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"));
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
@@ -141,7 +141,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().notContainComponent(ofType(NyDialogPanel.class));
 
-        verify(plukkOppgaveService, times(1)).plukkOppgave(any(Temagruppe.class));
+        verify(plukkOppgaveService, times(1)).plukkOppgave(any(Temagruppe.class), anyString());
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR), is((Serializable) "oppgave2"));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR), is((Serializable) "fnr2"));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR), is((Serializable) "henvendelse2"));

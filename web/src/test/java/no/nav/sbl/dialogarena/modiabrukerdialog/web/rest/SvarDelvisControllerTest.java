@@ -1,11 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -17,9 +11,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.SaksbehandlerInnstillingerServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.SvarDelvisController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.SvarDelvisRESTRequest;
@@ -73,23 +65,17 @@ class SvarDelvisControllerTest {
     }
 
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
-        SaksbehandlerInnstillingerServiceImpl saksbehandlerInnstillingerService = setupSaksbehandlerInnstillingerService();
         HenvendelsePortType henvendelsePortTypeMock = getHenvendelsePortTypeMock();
         PropertyResolver propertyResolver = mockPropertyResolver();
         PersonKjerneinfoServiceBi kjerneinfoMock = mockPersonKjerneinfoService();
         sendUtHenvendelsePortTypeMock = mock(SendUtHenvendelsePortType.class);
-        return new HenvendelseUtsendingServiceImpl(henvendelsePortTypeMock, sendUtHenvendelsePortTypeMock, null, null, null, null, saksbehandlerInnstillingerService, propertyResolver, kjerneinfoMock, null);
+        return new HenvendelseUtsendingServiceImpl(henvendelsePortTypeMock, sendUtHenvendelsePortTypeMock, null, null, null, null, propertyResolver, kjerneinfoMock, null);
     }
 
     private PropertyResolver mockPropertyResolver() {
         PropertyResolver propertyResolver = mock(PropertyResolver.class);
         when(propertyResolver.getProperty(anyString())).thenReturn("asd");
         return propertyResolver;
-    }
-
-    private SaksbehandlerInnstillingerServiceImpl setupSaksbehandlerInnstillingerService() {
-        GOSYSNAVansatt gosysnavAnsatt = mockGosysNavAnsatt();
-        return new SaksbehandlerInnstillingerServiceImpl(new AnsattServiceImpl(gosysnavAnsatt));
     }
 
     private HenvendelsePortType getHenvendelsePortTypeMock() {
@@ -119,18 +105,6 @@ class SvarDelvisControllerTest {
         response.setPerson(person);
         when(mock.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(response);
         return mock;
-    }
-
-    private GOSYSNAVansatt mockGosysNavAnsatt() {
-        GOSYSNAVansatt gosysnavAnsatt = mock(GOSYSNAVansatt.class);
-        try {
-            ASBOGOSYSNAVEnhetListe ansattListe = new ASBOGOSYSNAVEnhetListe();
-            ansattListe.getNAVEnheter().add(new ASBOGOSYSNavEnhet());
-            when(gosysnavAnsatt.hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(ansattListe);
-        } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg e) {
-            throw new RuntimeException(e);
-        }
-        return gosysnavAnsatt;
     }
 
     @Test
