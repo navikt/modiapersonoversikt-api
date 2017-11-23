@@ -20,7 +20,7 @@ export const MeldingsTyperTekst = {
     OPPGAVE_VARSEL: 'Oppgave varsel',
     SVAR_OPPMOTE: 'Svar oppmøte',
     SVAR_TELEFON: 'Svar telefon',
-    DELVIS_SVAR_SKRIFTLIG: 'Delvis svar',
+    DELVIS_SVAR_SKRIFTLIG: 'Delsvar',
     SAMTALEREFERAT_OPPMOTE: 'Samtalereferat oppmøte',
     SAMTALEREFERAT_TELEFON: 'Samtalereferat telefon',
     SPORSMAL_MODIA_UTGAAENDE: 'Spørsmål fra NAV'
@@ -58,6 +58,18 @@ export function erDelvisSvar(melding) {
 
 export function erSkriftligSvar(melding) {
     return melding.meldingstype === MeldingsTyper.SVAR_SKRIFTLIG;
+}
+
+export function erInngaaendeSvar(melding) {
+    return melding.meldingstype === MeldingsTyper.SVAR_SBL_INNGAAENDE;
+}
+
+export function erOppmoteSvar(melding) {
+    return melding.meldingstype === MeldingsTyper.SVAR_OPPMOTE;
+}
+
+export function erTelefonSvar(melding) {
+    return melding.meldingstype === MeldingsTyper.SVAR_TELEFON;
 }
 
 export function getMeldingsTypeTekst(melding) {

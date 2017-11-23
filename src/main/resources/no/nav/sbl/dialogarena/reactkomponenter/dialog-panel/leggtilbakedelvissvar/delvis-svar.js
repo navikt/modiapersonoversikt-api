@@ -55,7 +55,7 @@ class DelvisSvar extends Component {
     }
 
     svarDelvis() {
-        this.validTemagruppe() ? this.leggDelvisesvar() : this.setState({ valideringFeil: true }) ;
+        this.validTemagruppe() ? this.leggDelvisesvar() : this.setState({ valideringFeil: true });
     }
 
     leggDelvisesvar() {
@@ -73,9 +73,9 @@ class DelvisSvar extends Component {
 
     velgTemagruppe(event) {
         this.setState({
-                        valgtTemagruppe: event.target.value ,
-                        valideringFeil: this.validTemagruppe()
-                      });
+            valgtTemagruppe: event.target.value,
+            valideringFeil: this.validTemagruppe()
+        });
     }
 
     handleSvarEndring(event) {
@@ -103,18 +103,18 @@ class DelvisSvar extends Component {
                 </option>);
 
         const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
-        const hiddenLabel = <span className="vekk">Skriv delvis svar</span>;
+        const hiddenLabel = <span className="vekk">Skriv delsvar</span>;
         return (
             <div>
-                <Skrivestotte {...this.props.skrivestotteprops} tekstfeltId={this.textId}   ref={(input) => { this.skrivestoote = input; }} />
+                <Skrivestotte {...this.props.skrivestotteprops} tekstfeltId={this.textId} ref={(input) => { this.skrivestoote = input; }} />
 
-                <h3>Legg tilbake med delvis svar</h3>
+                <h3>Legg tilbake med delsvar</h3>
 
                 <TraadVisning traad={this.props.traad} />
 
                 <div className="svar">
                     <div className="svar-overskrift-boks">
-                        <h1 className="overskrift medium"><span>Skriv delvis svar</span></h1>
+                        <h1 className="overskrift medium"><span>Skriv delsvar</span></h1>
                         <button className="skrivestotteToggle" id="skrivestotteToggler10c" title="Hurtigtast: ALT + C" onClick={() => { this.skrivestoote.vis(); }}> <span className="vekk">Skrivestøtte.</span> </button>
                     </div>
                     <Textarea
@@ -144,7 +144,7 @@ class DelvisSvar extends Component {
                     role="button"
                     onClick={this.svarDelvis}
                 >
-                    Svar delvis og legg tilbake
+                    Skriv delsvar og legg tilbake
                 </a>
                 {feilmeldingModal}
                 <a

@@ -1,4 +1,7 @@
-import { eldsteMeldingForst, erDelvisSvar, erSkriftligSvar, MeldingsTyper } from './melding-utils';
+import {
+    eldsteMeldingForst, erDelvisSvar, erInngaaendeSvar, erOppmoteSvar, erSkriftligSvar, erTelefonSvar,
+    MeldingsTyper
+} from './melding-utils';
 
 function byggSamletSvar(avsluttendeSvar, delviseSvar) {
     const dobbeltLinjeskift = '\n\u00A0\n';
@@ -44,7 +47,10 @@ export function traadInneholderDelvisSvar(traad) {
 }
 
 export function erBesvart(traad) {
-    return filtrerBortDelviseSvar(traad).length > 1;
+    return traad.some(erSkriftligSvar)
+        || traad.some(erInngaaendeSvar)
+        || traad.some(erOppmoteSvar)
+        || traad.some(erTelefonSvar);
 }
 
 export function erIkkeBesvart(traad) {

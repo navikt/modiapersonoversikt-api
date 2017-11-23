@@ -32,7 +32,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         return (
             <div className="kvittering">
                 <div className="robust-ikon-gront-sjekk" />
-                <h2 className="medium">Delvis svar er registrert</h2>
+                <h2 className="medium">Delsvar er registrert</h2>
                 <button className="startNyDialog knapp-stor" onClick={this.startNyDialogCallback}>
                     Start Ny Dialog
                 </button>
