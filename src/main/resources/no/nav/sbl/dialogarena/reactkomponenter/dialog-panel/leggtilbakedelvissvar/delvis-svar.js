@@ -74,9 +74,9 @@ class DelvisSvar extends Component {
 
     velgTemagruppe(event) {
         this.setState({
-                        valgtTemagruppe: event.target.value ,
-                        temagruppeValidFeil: this.validTemagruppe()
-                      });
+            valgtTemagruppe: event.target.value,
+            temagruppeValidFeil: !this.validTemagruppe()
+        });
     }
 
     handleSvarEndring(event) {
@@ -138,7 +138,7 @@ class DelvisSvar extends Component {
                     <h3>Velg temagruppe</h3>
                     <select
                         onChange={this.velgTemagruppe}
-                        className={this.state.temagruppeValidFeil === true? 'valideringFeltFeil' : ''}
+                        className={this.state.temagruppeValidFeil === true ? 'valideringFeltFeil' : ''}
                     >
                         <option value="Velg Temagruppe">Velg Temagruppe</option>
                         {valgTemagruppe}
