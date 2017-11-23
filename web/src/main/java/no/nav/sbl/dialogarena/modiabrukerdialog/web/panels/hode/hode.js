@@ -10,7 +10,7 @@ function finnMiljoStreng() {
 }
 
 function opprettWebSocket(callback) {
-    if (window.location.hostname.indexOf('localhost') !== -1) {
+    if (window.location.hostname.indexOf('modapp') === -1) {
         return;
     }
 
@@ -97,6 +97,12 @@ JSWicket.prototype.send = function (action, data) {
     });
 };
 
+// Redirect modal
+function lagRedirectModal(endreCallback, beholdCallback) {
+    const modalComponent = ModiaJS.React.createElement(ModiaJS.Components.RedirectModal, {});
+    return ModiaJS.ReactDOM.render(modalComponent, document.getElementById("feilmeldingsmodaler"));
+}
+
 // Hode init
 (function () {
     let sendToWicket = null;
@@ -134,6 +140,7 @@ JSWicket.prototype.send = function (action, data) {
 
 
     window.initHode = function (callbackUrl, markupId, fnr, autoSubmit, feilmelding) {
+        const redirectModal = lagRedirectModal();
         let config = hodeConfig;
         if (fnr && fnr.length > 0) {
             config = JSON.parse(JSON.stringify(hodeConfig));
@@ -162,7 +169,15 @@ JSWicket.prototype.send = function (action, data) {
                         if (data.aktivBruker === fnr) {
                             return;
                         }
-                        window.location = `https://modapp${finnMiljoStreng()}.adeo.no/modiabrukerdialog/hentPerson/${data.aktivBruker}`;
+                        const endreCallback = function() {
+                            window.location = `https://modapp${finnMiljoStreng()}.adeo.no/modiabrukerdialog/hentPerson/${data.aktivBruker}`;
+                        };
+                        const beholdCallback = function() {
+                            redirectModal.skjul();
+                            oppdaterContextBruker(fnr);
+                        };
+
+                        redirectModal.vis(data.aktivBruker, endreCallback, beholdCallback);
                     });
             } else if (type === 'NY_AKTIV_ENHET') {
                 hentContextEnhet()

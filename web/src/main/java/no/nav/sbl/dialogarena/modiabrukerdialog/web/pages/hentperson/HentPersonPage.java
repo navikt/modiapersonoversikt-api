@@ -56,15 +56,14 @@ public class HentPersonPage extends BasePage {
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     private final ReactBegrunnelseModal oppgiBegrunnelseModal;
-    private final Optional<String> urlFnr;
 
     public HentPersonPage(PageParameters pageParameters) {
         super(pageParameters);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
-        urlFnr = Optional.ofNullable(pageParameters.get(FNR).toString());
+        String urlFnr = Optional.ofNullable(pageParameters.get(FNR).toString()).orElse(null);
 
-        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, urlFnr.orElse(null));
+        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, urlFnr);
         add(
                 hode,
                 new PlukkOppgavePanel("plukkOppgave"),
@@ -82,10 +81,6 @@ public class HentPersonPage extends BasePage {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(forScript("jQuery('#js-deokorator-sokefelt').focus();SaksbehandlerInnstillinger.focus();"));
-        if (urlFnr.isPresent()) {
-//            String searchScript = "jQuery('#js-deokorator-sokefelt').val('%s');jQuery('#forstorrelsesglass_sokefelt').click();";
-//            response.render(forScript(String.format(searchScript, urlFnr.get())));
-        }
     }
 
     public static void configureModalWindow(ReactBegrunnelseModal oppgiBegrunnelseModal, final PageParameters pageParameters) {
