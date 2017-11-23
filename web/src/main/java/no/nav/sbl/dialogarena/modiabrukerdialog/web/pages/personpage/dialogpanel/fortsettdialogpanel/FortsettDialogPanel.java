@@ -20,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.LeggTilbakeDelvisSvarPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar.SkrivestotteProps;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -91,7 +92,8 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
-        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(sporsmal, behandlingsId, grunnInfo, traad);
+        SkrivestotteProps skrivestotteProps = new SkrivestotteProps(grunnInfo, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        leggTilbakeDelvisSvarPanel = new LeggTilbakeDelvisSvarPanel(behandlingsId, traad, skrivestotteProps);
         traadVisning = new ReactComponentPanel(TRAADVISNING_WICKET_CONTAINER_ID, TRAADVISNING_REACT_MODULE, new TraadVisningProps(traad));
         kvittering = new KvitteringsPanel("kvittering");
 
@@ -149,7 +151,17 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             }
 
             private String settTekstInnIDelvisSvarTekstfeltHack() {
-                return "(function () {const value = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0].value;setTimeout(function () {const textarea = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0];textarea.value = value;const ev = new Event('input', {bubbles: true});ev.simulated = true;textarea.dispatchEvent(ev);}, 1000);})();";
+                return "(function () {" +
+                        "    const value = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0].value;" +
+                        "    setTimeout(function () {" +
+                        "        const textarea = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0];" +
+                        "        textarea.value = value;" +
+                        "        const ev = document.createEvent('Event');" +
+                        "        ev.initEvent('input', true, true);" +
+                        "        ev.simulated = true;" +
+                        "        textarea.dispatchEvent(ev);" +
+                        "    }, 1000);" +
+                        "})();";
             }
         };
 

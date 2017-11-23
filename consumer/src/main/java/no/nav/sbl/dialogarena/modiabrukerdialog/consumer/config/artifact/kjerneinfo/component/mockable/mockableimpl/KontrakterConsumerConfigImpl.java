@@ -12,14 +12,14 @@ public class KontrakterConsumerConfigImpl {
     public static DefaultYtelseskontraktService createYtelseskontraktService(YtelseskontraktV3 ytelseskontraktV3) {
         DefaultYtelseskontraktService ytelseskontraktService = new DefaultYtelseskontraktService();
         ytelseskontraktService.setYtelseskontraktService(ytelseskontraktV3);
-        ytelseskontraktService.setMapper(new YtelseskontraktMapper());
+        ytelseskontraktService.setMapper(YtelseskontraktMapper.getInstance());
         return ytelseskontraktService;
     }
 
     public static DefaultOppfolgingskontraktService createOppfolgingskontraktService(OppfoelgingPortType oppfoelgingPortType) {
         DefaultOppfolgingskontraktService oppfolgingskontraktServiceBi = new DefaultOppfolgingskontraktService();
         oppfolgingskontraktServiceBi.setOppfolgingskontraktService(oppfoelgingPortType);
-        oppfolgingskontraktServiceBi.setMapper(new OppfolgingskontraktMapper());
+        oppfolgingskontraktServiceBi.setMapper(OppfolgingskontraktMapper.getInstance());
         return oppfolgingskontraktServiceBi;
     }
 
