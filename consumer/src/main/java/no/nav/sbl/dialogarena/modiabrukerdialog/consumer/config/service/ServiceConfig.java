@@ -15,17 +15,21 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnh
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PsakServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.HenvendelseServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.ArbeidsfordelingV1;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
@@ -71,11 +75,23 @@ public class ServiceConfig {
     }
 
     @Bean
+    public KodeverksmapperService kodeverksmapperService(Kodeverksmapper kodeverksmapper) {
+        return new KodeverksmapperService(kodeverksmapper);
+    }
+
+    @Bean
+    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingV1 arbeidsfordeling, PersonKjerneinfoServiceBi personService,
+                                                               KodeverksmapperService kodeverksmapper) {
+        return new ArbeidsfordelingV1Service(arbeidsfordeling, personService, kodeverksmapper);
+    }
+
+    @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3, OppgaveV3 oppgaveV3,
                                                              SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
-                                                             AnsattService ansattService, Ruting ruting) {
+                                                             AnsattService ansattService, Ruting ruting,
+                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service) {
         return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, saksbehandlerInnstillingerService,
-                ansattService, ruting);
+                ansattService, ruting, arbeidsfordelingV1Service);
     }
 
     @Bean

@@ -7,10 +7,10 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.FerdigstillHenvendelseRestRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -25,6 +25,7 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
+
 import javax.security.auth.Subject;
 import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ class OppgaveControllerTest {
         ferdigstillHenvendelseRestRequest = new FerdigstillHenvendelseRestRequest();
         ferdigstillHenvendelseRestRequest.temagruppe = TEMAGRUPPE_ARBEID;
 
-        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWS, saksbehandlerInnstillingerService, ansattWS, ruting);
+        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWS, saksbehandlerInnstillingerService, ansattWS, ruting, mock(ArbeidsfordelingV1Service.class));
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
     }
 
@@ -158,13 +159,14 @@ class OppgaveControllerTest {
 
     @Test
     @DisplayName("Legger tilbake oppgave, Test med ugyldig temagruppe")
-    void sjekkUgyldigTemagruppe() throws Exception{
+    void sjekkUgyldigTemagruppe() throws Exception {
         ferdigstillHenvendelseRestRequest.temagruppe = "ARBDD";
 
-        IllegalArgumentException assertion = assertThrows(IllegalArgumentException.class, ()-> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
+        IllegalArgumentException assertion = assertThrows(IllegalArgumentException.class, () -> oppgaveController.put(OPPGAVE_ID, new MockHttpServletRequest(), ferdigstillHenvendelseRestRequest));
         assertEquals("Ugyldig temagruppe", assertion.getMessage());
 
     }
+
     @Test
     @DisplayName("Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake")
     void validererTilgang() throws LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet {

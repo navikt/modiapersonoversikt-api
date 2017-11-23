@@ -6,6 +6,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -44,13 +45,13 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
 
     @Inject
-    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService, AnsattService ansattWS, Ruting ruting) {
+    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService, AnsattService ansattWS, Ruting ruting, ArbeidsfordelingV1Service arbeidsfordelingService) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.oppgaveWS = oppgaveWS;
         this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
         this.ansattWS = ansattWS;
         this.ruting = ruting;
-        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting);
+        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting, arbeidsfordelingService);
     }
 
     @Override
@@ -122,7 +123,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
         String nyBeskrivelse = header + leggTil;
-        return isBlank(gammelBeskrivelse) ? nyBeskrivelse :  nyBeskrivelse + "\n\n" + gammelBeskrivelse;
+        return isBlank(gammelBeskrivelse) ? nyBeskrivelse : nyBeskrivelse + "\n\n" + gammelBeskrivelse;
     }
 
     WSOppgave hentOppgaveFraGsak(String oppgaveId) {
