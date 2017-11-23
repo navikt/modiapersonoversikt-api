@@ -125,7 +125,7 @@
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
         <egenansatt-tjenestespesifikasjon.version>1.0.5</egenansatt-tjenestespesifikasjon.version>
         <pensjon-sak.version>1.0.3</pensjon-sak.version>
-        <organisasjon-enhet-kontaktinformasjon>1.0.5</organisasjon-enhet-kontaktinformasjon>
+        <organisasjon-enhet-kontaktinformasjon>1.1.0</organisasjon-enhet-kontaktinformasjon>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
     </properties>
