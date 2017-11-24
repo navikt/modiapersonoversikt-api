@@ -4,6 +4,8 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.ArbeidsfordelingV1;
@@ -45,7 +47,7 @@ class ArbeidsfordelingV1ServiceTest {
         arbeidsfordeling = lagArbeidsfordelingMock();
         personService = lagPersonServiceMock();
         kodeverksmapper = lagKodeverksmapperMock();
-        arbeidsfordelingService = new ArbeidsfordelingV1Service(arbeidsfordeling, personService, kodeverksmapper);
+        arbeidsfordelingService = new ArbeidsfordelingV1ServiceImpl(arbeidsfordeling, personService, kodeverksmapper);
     }
 
     private PersonKjerneinfoServiceBi lagPersonServiceMock() {

@@ -7,7 +7,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.HttpRequestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.SubjectHandlerUtil;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
@@ -66,7 +66,7 @@ class OppgaveControllerTest {
             HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
         setupMocks();
-        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, ansattWSMock, rutingMock, mock(ArbeidsfordelingV1Service.class));
+        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, ansattWSMock, rutingMock, mock(ArbeidsfordelingV1ServiceImpl.class));
 
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
     }

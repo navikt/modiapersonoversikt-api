@@ -6,10 +6,12 @@ import no.nav.modig.core.context.SubjectHandlerUtils;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
@@ -31,7 +33,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.stubbing.OngoingStubbing;
 
 import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.NotAuthorizedException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -81,7 +82,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
         rutingMock = mockRutingService();
         saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
-        arbeidsfordelingMock = mock(ArbeidsfordelingV1Service.class);
+        arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
     }
 
     private Ruting mockRutingService() {
@@ -120,10 +121,10 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
             LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         when(oppgaveServiceMock.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
-        String nyEnhet = "4100";
+        String nyEnhetId = "4100";
 
         when(arbeidsfordelingMock.finnBehandlendeEnhetListe(anyString(), anyString(), anyString(), anyString()))
-                .thenReturn(Collections.singletonList(nyEnhet));
+                .thenReturn(Collections.singletonList(new AnsattEnhet(nyEnhetId, null)));
 
         String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
@@ -136,7 +137,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         assertThat(endreOppgave.getAnsvarligId(), is(""));
         assertThat(endreOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
         assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
-        assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhet));
+        assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhetId));
     }
 
     private OngoingStubbing<WSFinnAnsvarligEnhetForOppgavetypeResponse> mockRuting(String nyEnhet) {

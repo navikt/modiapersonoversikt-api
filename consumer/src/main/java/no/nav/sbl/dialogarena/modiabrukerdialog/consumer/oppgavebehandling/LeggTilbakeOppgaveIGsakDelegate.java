@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
@@ -11,6 +12,7 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import javax.ws.rs.ForbiddenException;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 class LeggTilbakeOppgaveIGsakDelegate {
@@ -71,11 +73,13 @@ class LeggTilbakeOppgaveIGsakDelegate {
     }
 
     private String getAnsvarligEnhet(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
-        List<String> enheter = finnBehandlendeEnhetListe(oppgaveFraGsak, temagruppe);
+        List<String> enheter = finnBehandlendeEnhetListe(oppgaveFraGsak, temagruppe).stream()
+                .map(enhet -> enhet.enhetId)
+                .collect(toList());
         return enheter.isEmpty() ? oppgaveFraGsak.getAnsvarligEnhetId() : enheter.get(0);
     }
 
-    private List<String> finnBehandlendeEnhetListe(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
+    private List<AnsattEnhet> finnBehandlendeEnhetListe(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
         return arbeidsfordelingService.finnBehandlendeEnhetListe(oppgaveFraGsak.getGjelder().getBrukerId(),
                 oppgaveFraGsak.getFagomrade().getKode(),
                 oppgaveFraGsak.getOppgavetype().getKode(),

@@ -6,6 +6,7 @@ import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
@@ -18,7 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PsakServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
@@ -81,7 +82,7 @@ public class ServiceConfig {
     @Bean
     public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingV1 arbeidsfordeling, PersonKjerneinfoServiceBi personService,
                                                                KodeverksmapperService kodeverksmapper) {
-        return new ArbeidsfordelingV1Service(arbeidsfordeling, personService, kodeverksmapper);
+        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordeling, personService, kodeverksmapper);
     }
 
     @Bean
