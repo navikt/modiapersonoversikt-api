@@ -93,8 +93,7 @@ class DelvisSvar extends Component {
     }
 
     handleSvarEndring(event) {
-        const ugyldigText= event.target.value.length === 0;
-        this.setState({svarValue: event.target.value, tekstValidFiel: ugyldigText, valideringsFeil: ugyldigText || this.state.temagruppeValidFeil});
+        this.setState({svarValue: event.target.value});
     }
 
     feilmeldingCloseButtonCallback() {
