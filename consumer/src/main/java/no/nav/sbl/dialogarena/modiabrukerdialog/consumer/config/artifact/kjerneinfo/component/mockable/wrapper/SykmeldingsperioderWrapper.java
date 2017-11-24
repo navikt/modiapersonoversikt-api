@@ -32,7 +32,7 @@ public class SykmeldingsperioderWrapper {
     @Bean
     @Qualifier("sykepengerServiceMock")
     public Wrapper<SykepengerServiceBi> sykepengerServiceMock() {
-        return new Wrapper<>(new SykepengerMockService(new SykepengerMapper()));
+        return new Wrapper<>(new SykepengerMockService(SykepengerMapper.getInstance()));
     }
 
     @Bean
@@ -44,7 +44,7 @@ public class SykmeldingsperioderWrapper {
     @Bean
     @Qualifier("foreldrepengerServiceMock")
     public Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock() {
-        return new Wrapper<>(new ForeldrepengerMockService(new ForeldrepengerMapper()));
+        return new Wrapper<>(new ForeldrepengerMockService(ForeldrepengerMapper.getInstance()));
     }
 
 }

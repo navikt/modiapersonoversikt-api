@@ -5,7 +5,7 @@ import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.apache.wicket.Component;
@@ -27,6 +27,8 @@ public class PurgeOppgaverPage extends BasePage {
     private PlukkOppgaveService plukkOppgaveService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public PurgeOppgaverPage(PageParameters pageParameters) {
         super(pageParameters);
@@ -55,11 +57,12 @@ public class PurgeOppgaverPage extends BasePage {
     }
 
     private void purgeTemagruppe(Temagruppe temagruppe) {
-        Optional<Oppgave> optionalOppgave = plukkOppgaveService.plukkOppgave(temagruppe);
+        String saksbehandlerValgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        Optional<Oppgave> optionalOppgave = plukkOppgaveService.plukkOppgave(temagruppe, saksbehandlerValgtEnhet);
         while (optionalOppgave.isSome()) {
             Oppgave oppgave = optionalOppgave.get();
-            oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe);
-            optionalOppgave = plukkOppgaveService.plukkOppgave(temagruppe);
+            oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe, saksbehandlerValgtEnhet);
+            optionalOppgave = plukkOppgaveService.plukkOppgave(temagruppe, saksbehandlerValgtEnhet);
         }
     }
 }

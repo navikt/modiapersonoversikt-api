@@ -35,6 +35,7 @@
         <baseUrl alias="server.pesys" mapToProperty="server.pesys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
+        <baseUrl alias="server.aktivitetsplan" mapToProperty="server.aktivitetsplan"/>
         <baseUrl alias="server.veilarbportefoljeflatefs" mapToProperty="server.veilarbportefoljeflatefs"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
@@ -44,6 +45,7 @@
         <webservice alias="virksomhet:ArbeidOgAktivitet_v1" mapToProperty="arena.arbeidogaktivitet.v1"/>
         <webservice alias="virksomhet:Ruting_v1" mapToProperty="gsak.ruting.v1"/>
         <webservice alias="virksomhet:Person_v3" mapToProperty="tps.person.v3"/>
+        <webservice alias="virksomhet:BehandlePerson_v1" mapToProperty="tps.behandleperson.v1"/>
         <webservice alias="virksomhet:Organisasjon_v4" mapToProperty="organisasjonendpoint.v4"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>

@@ -6,6 +6,7 @@ import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -45,6 +46,8 @@ public class PlukkOppgavePanel extends Panel {
 
     @Inject
     private PlukkOppgaveService plukkOppgaveService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private final IModel<Temagruppe> valgtTemagruppe;
     private final AriaFeedbackPanel feedbackPanel;
@@ -118,7 +121,7 @@ public class PlukkOppgavePanel extends Panel {
                     return;
                 }
 
-                Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject());
+                Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (oppgave.isSome()) {
                     lagrePlukketOppgavePaaSession(oppgave.get());
                     lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());

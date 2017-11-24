@@ -1,13 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 
-import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.ForbiddenException;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -24,34 +25,36 @@ class LeggTilbakeOppgaveIGsakDelegate {
         this.arbeidsfordelingService = arbeidsfordelingService;
     }
 
-    void leggTilbake(WSOppgave oppgaveFraGsak, String beskrivelse, Temagruppe temagruppe) {
+    void leggTilbake(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
         validerTilgang(oppgaveFraGsak);
 
-        markerOppgaveSomLagtTilbake(oppgaveFraGsak, beskrivelse);
+        markerOppgaveSomLagtTilbake(oppgaveFraGsak, request);
 
-        if (temagrupeErSatt(temagruppe)) {
-            oppdaterForNyTemagruppe(oppgaveFraGsak, temagruppe);
+        if (temagrupeErSatt(request.getNyTemagruppe())) {
+            oppdaterForNyTemagruppe(oppgaveFraGsak, request.getNyTemagruppe());
         }
 
-        lagreOppgaveIGsak(oppgaveFraGsak, temagruppe);
+        lagreOppgaveIGsak(oppgaveFraGsak, request);
     }
 
     private void validerTilgang(WSOppgave oppgaveFraGsak) {
         String innloggetSaksbehandler = getSubjectHandler().getUid();
         if (!innloggetSaksbehandler.equals(oppgaveFraGsak.getAnsvarligId())) {
-            throw new NotAuthorizedException("Innlogget saksbehandler " + innloggetSaksbehandler
+            String feilmelding = "Innlogget saksbehandler " + innloggetSaksbehandler
                     + " har ikke tilgang til oppgave " + oppgaveFraGsak.getOppgaveId()
-                    + ". Oppgavens ansvarlige id er satt til : " + oppgaveFraGsak.getAnsvarligId() + ".");
+                    + ". Oppgavens ansvarlige id er satt til : " + oppgaveFraGsak.getAnsvarligId() + ".";
+            throw new ForbiddenException(feilmelding);
         }
     }
 
-    private void markerOppgaveSomLagtTilbake(WSOppgave oppgaveFraGsak, String beskrivelse) {
+    private void markerOppgaveSomLagtTilbake(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
         oppgaveFraGsak.withAnsvarligId("");
-        oppgaveFraGsak.withBeskrivelse(lagNyBeskrivelse(oppgaveFraGsak, beskrivelse));
+        oppgaveFraGsak.withBeskrivelse(lagNyBeskrivelse(oppgaveFraGsak, request));
     }
 
-    private String lagNyBeskrivelse(WSOppgave oppgaveFraGsak, String beskrivelse) {
-        return oppgaveBehandlingService.leggTilBeskrivelse(oppgaveFraGsak.getBeskrivelse(), beskrivelse);
+    private String lagNyBeskrivelse(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
+        return oppgaveBehandlingService.leggTilBeskrivelse(oppgaveFraGsak.getBeskrivelse(), request.getBeskrivelse(),
+                request.getSaksbehandlersValgteEnhet());
     }
 
     private boolean temagrupeErSatt(Temagruppe temagruppe) {
@@ -79,9 +82,9 @@ class LeggTilbakeOppgaveIGsakDelegate {
                 underkategoriKode(temagruppe));
     }
 
-    private void lagreOppgaveIGsak(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
+    private void lagreOppgaveIGsak(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
         try {
-            oppgaveBehandlingService.lagreOppgaveIGsak(oppgaveFraGsak, temagruppe);
+            oppgaveBehandlingService.lagreOppgaveIGsak(oppgaveFraGsak, request.getNyTemagruppe(), request.getSaksbehandlersValgteEnhet());
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }

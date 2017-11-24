@@ -2,8 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
@@ -25,8 +26,8 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel.TEMAGRUPPE_ATTR;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
@@ -47,18 +48,21 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private PlukkOppgaveService plukkOppgaveService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Before
     public void setUp() {
         wicket.tester.getApplication().getSecuritySettings().setAuthorizationStrategy(ALLOW_ALL);
 
         Melding sporsmal = new Melding().withId("sporsmal").withType(SPORSMAL_SKRIFTLIG).withTemagruppe(ARBD.toString()).withOpprettetDato(now());
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(sporsmal));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(sporsmal));
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("4444");
     }
 
     @Test
     public void plukkerOppgaveOgSetterSessionAttributes() {
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
@@ -105,12 +109,12 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().notContainComponent(ofType(NyDialogPanel.class));
 
-        verify(plukkOppgaveService, never()).plukkOppgave(any(Temagruppe.class));
+        verify(plukkOppgaveService, never()).plukkOppgave(any(Temagruppe.class), anyString());
     }
 
     @Test
     public void girFeilmeldingHvisIngenOppgaverPaaTema() {
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(Optional.<Oppgave>none());
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(Optional.<Oppgave>none());
 
         PlukkOppgavePanel plukkoppgave = new PlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
@@ -127,7 +131,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         reset(plukkOppgaveService);
 
         when(plukkOppgaveService.oppgaveErFerdigstilt(anyString())).thenReturn(true);
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"));
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
@@ -141,7 +145,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().notContainComponent(ofType(NyDialogPanel.class));
 
-        verify(plukkOppgaveService, times(1)).plukkOppgave(any(Temagruppe.class));
+        verify(plukkOppgaveService, times(1)).plukkOppgave(any(Temagruppe.class), anyString());
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR), is((Serializable) "oppgave2"));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR), is((Serializable) "fnr2"));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR), is((Serializable) "henvendelse2"));

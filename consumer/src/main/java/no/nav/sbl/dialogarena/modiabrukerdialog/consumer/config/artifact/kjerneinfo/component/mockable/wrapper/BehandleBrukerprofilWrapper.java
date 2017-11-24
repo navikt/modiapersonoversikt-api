@@ -32,7 +32,12 @@ public class BehandleBrukerprofilWrapper {
     @Bean
     @Qualifier("behandleBrukerprofilService")
     public Wrapper<DefaultBehandleBrukerprofilService> defaultService() {
-        return new Wrapper<>(new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper(), cacheManager));
+        return new Wrapper<>(new DefaultBehandleBrukerprofilService(
+                behandleBrukerprofilPortType,
+                selfTestBehandleBrukerprofilPortType,
+                BehandleBrukerprofilMapper.getInstance(),
+                cacheManager
+        ));
     }
 
     @Bean
