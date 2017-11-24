@@ -22,6 +22,7 @@ import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,14 +32,12 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.apache.commons.collections15.Transformer;
 
 import java.util.List;
 
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
@@ -77,7 +76,6 @@ public class GsakServiceImplTest {
     @InjectMocks
     private GsakServiceImpl gsakService;
 
-
     @Before
     public void setUp() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFORENDE_ENHET);
@@ -85,35 +83,6 @@ public class GsakServiceImplTest {
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-    }
-
-    @Test
-    public void skalKunneHenteForeslatteEnheter() {
-        WSFinnAnsvarligEnhetForOppgavetypeResponse ansvarligEnhetResponse = opprettAnsvarligEnhetResponse();
-
-        when(ruting.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class))).thenReturn(ansvarligEnhetResponse);
-
-        String fnr = "1234567";
-        String tema = "tema";
-        String type = "type";
-        String kode = "kode";
-        Underkategori underkategori = new Underkategori(kode, "tekst");
-
-        List<AnsattEnhet> listAnsattEnhet = gsakService.hentForeslatteEnheter(fnr, tema, type, optional(underkategori));
-
-
-        verify(ruting).finnAnsvarligEnhetForOppgavetype(wsFinnAnsvarligEnhetCaptor.capture());
-        WSFinnAnsvarligEnhetForOppgavetypeRequest request = wsFinnAnsvarligEnhetCaptor.getValue();
-        assertThat(request.getBrukerId(), is(fnr));
-        assertThat(request.getFagomradeKode(), is(tema));
-        assertThat(request.getOppgaveKode(), is(type));
-        assertThat(request.getGjelderKode(), is(kode));
-
-        List<AnsattEnhet> refList = getAnsattEnhetListe(ansvarligEnhetResponse.getEnhetListe());
-
-        assertThat(listAnsattEnhet.get(0).enhetId, is(refList.get(0).enhetId));
-        assertThat(listAnsattEnhet.get(1).enhetId, is(refList.get(1).enhetId));
-        assertThat(listAnsattEnhet.get(2).enhetId, is(refList.get(2).enhetId));
     }
 
     private List<AnsattEnhet> getAnsattEnhetListe(final List<WSEnhet> enheter) {
@@ -180,7 +149,6 @@ public class GsakServiceImplTest {
 
         assertThat(oppgaveKanManuelltAvsluttes, is(true));
     }
-
 
     private WSHentOppgaveResponse oppretteOppgaveResponse(String kodeFagomrade, String kodeStatus) {
         WSHentOppgaveResponse wsHentOppgaveResponse = new WSHentOppgaveResponse();

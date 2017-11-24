@@ -9,6 +9,7 @@ import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -53,6 +54,11 @@ public class ServiceTestContext {
     @Bean
     public GsakService gsakService() {
         return mock(GsakService.class);
+    }
+
+    @Bean
+    public ArbeidsfordelingV1Service arbeidsfordelingV1Service() {
+        return mock(ArbeidsfordelingV1Service.class);
     }
 
     @Bean
