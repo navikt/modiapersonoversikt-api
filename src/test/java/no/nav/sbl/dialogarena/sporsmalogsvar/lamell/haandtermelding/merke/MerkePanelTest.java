@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingServi
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -169,6 +170,7 @@ public class MerkePanelTest extends WicketPageTest {
     }
 
     @Test
+    @Ignore
     public void disablerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
         wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
