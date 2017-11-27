@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
@@ -19,7 +19,9 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavefor
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
@@ -58,6 +61,8 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     private GsakService gsakService;
     @Inject
     private GsakKodeverk gsakKodeverk;
+    @Inject
+    private ArbeidsfordelingV1Service arbeidsfordeling;
 
     @Inject
     private EnforcementPoint pep;
@@ -93,7 +98,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void oppretterOppgave() {
-        when(gsakService.hentForeslatteEnheter(anyString(), anyString(), anyString(), any(Optional.class))).thenReturn(asList(createEnhet("1231", "Sinsen")));
+        when(arbeidsfordeling.finnBehandlendeEnhetListe(anyString(), anyString(), anyString(), anyString())).thenReturn(singletonList(createEnhet("1231", "Sinsen")));
 
         wicket.goToPageWith(new NyOppgaveFormWrapper("panel", innboksVM));
 
@@ -117,9 +122,9 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     }
 
     @Test
-    public void enheterMedEnhetsIdUnder100FiltreresBort(){
+    public void enheterMedEnhetsIdUnder100FiltreresBort() {
         List<AnsattEnhet> enheter = new ArrayList<>();
-        enheter.add(createEnhet( "1", "en"));
+        enheter.add(createEnhet("1", "en"));
         enheter.add(createEnhet("99", "nittiNi"));
         enheter.add(createEnhet("100", "hundre"));
         enheter.add(createEnhet("200", "toHundre"));
@@ -129,7 +134,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     }
 
     @Test
-    public void enheterSomIkkeErAktiveFiltreresBort(){
+    public void enheterSomIkkeErAktiveFiltreresBort() {
         List<AnsattEnhet> enheter = new ArrayList<>();
         enheter.add(createEnhet("707", "enmanns kontor", "AKTIV"));
         enheter.add(createEnhet("101", "lite kontor", "AKTIV"));
