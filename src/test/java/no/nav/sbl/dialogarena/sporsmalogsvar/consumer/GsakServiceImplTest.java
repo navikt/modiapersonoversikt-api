@@ -18,11 +18,6 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,11 +28,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
-
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
@@ -59,9 +51,6 @@ public class GsakServiceImplTest {
     @Captor
     private ArgumentCaptor<WSLagreOppgaveRequest> wsLagreOppgaveRequestArgumentCaptor;
 
-    @Captor
-    private ArgumentCaptor<WSFinnAnsvarligEnhetForOppgavetypeRequest> wsFinnAnsvarligEnhetCaptor;
-
     @Mock
     private OppgavebehandlingV3 oppgavebehandling;
     @Mock
@@ -70,8 +59,6 @@ public class GsakServiceImplTest {
     private AnsattService ansattWS;
     @Mock
     private OppgaveV3 oppgaveWS;
-    @Mock
-    private Ruting ruting;
 
     @InjectMocks
     private GsakServiceImpl gsakService;
@@ -83,32 +70,6 @@ public class GsakServiceImplTest {
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-    }
-
-    private List<AnsattEnhet> getAnsattEnhetListe(final List<WSEnhet> enheter) {
-
-        return on(enheter).map(new Transformer<WSEnhet, AnsattEnhet>() {
-            @Override
-            public AnsattEnhet transform(WSEnhet wsEnhet) {
-                return new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn());
-            }
-        }).collect();
-    }
-
-    private WSFinnAnsvarligEnhetForOppgavetypeResponse opprettAnsvarligEnhetResponse() {
-        WSFinnAnsvarligEnhetForOppgavetypeResponse ansvarligEnhetResponse = new WSFinnAnsvarligEnhetForOppgavetypeResponse();
-        List<WSEnhet> list = ansvarligEnhetResponse.getEnhetListe();
-        list.add(opprettEnhet("111", "testEnhet1"));
-        list.add(opprettEnhet("222", "testEnhet2"));
-        list.add(opprettEnhet("333", "testEnhet3"));
-        return ansvarligEnhetResponse;
-    }
-
-    private WSEnhet opprettEnhet(String id, String enhetsNavn) {
-        WSEnhet enhet = new WSEnhet();
-        enhet.setEnhetId(id);
-        enhet.setEnhetNavn(enhetsNavn);
-        return enhet;
     }
 
     @Test
