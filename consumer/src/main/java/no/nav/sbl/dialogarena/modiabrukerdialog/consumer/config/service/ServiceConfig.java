@@ -34,7 +34,6 @@ import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.ArbeidsfordelingV1;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -87,9 +86,8 @@ public class ServiceConfig {
 
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3, OppgaveV3 oppgaveV3,
-                                                             AnsattService ansattService, Ruting ruting,
-                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, ansattService, ruting, arbeidsfordelingV1Service);
+                                                             AnsattService ansattService, ArbeidsfordelingV1Service arbeidsfordelingV1Service) {
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, ansattService, arbeidsfordelingV1Service);
     }
 
     @Bean

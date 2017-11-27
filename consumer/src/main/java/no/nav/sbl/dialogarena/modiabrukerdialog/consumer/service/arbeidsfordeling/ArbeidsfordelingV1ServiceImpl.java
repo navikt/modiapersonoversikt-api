@@ -23,7 +23,8 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service {
 
@@ -58,7 +59,7 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
                                     .withValue(geografiskTilknytning))));
             return response.getBehandlendeEnhetListe().stream()
                     .map(wsEnhet -> new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()))
-                    .collect(Collectors.toList());
+                    .collect(toList());
         } catch (FinnBehandlendeEnhetListeUgyldigInput | IOException | RuntimeException e) {
             LOG.error(e.getMessage(), e);
             throw new FinnBehandlendeEnhetException(e.getMessage(), e);

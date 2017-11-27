@@ -7,7 +7,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 
 import javax.ws.rs.ForbiddenException;
 import java.util.List;
@@ -18,12 +17,10 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 class LeggTilbakeOppgaveIGsakDelegate {
 
     private final OppgaveBehandlingServiceImpl oppgaveBehandlingService;
-    private final Ruting ruting;
     private final ArbeidsfordelingV1Service arbeidsfordelingService;
 
-    LeggTilbakeOppgaveIGsakDelegate(OppgaveBehandlingServiceImpl oppgaveBehandlingService, Ruting ruting, ArbeidsfordelingV1Service arbeidsfordelingService) {
+    LeggTilbakeOppgaveIGsakDelegate(OppgaveBehandlingServiceImpl oppgaveBehandlingService, ArbeidsfordelingV1Service arbeidsfordelingService) {
         this.oppgaveBehandlingService = oppgaveBehandlingService;
-        this.ruting = ruting;
         this.arbeidsfordelingService = arbeidsfordelingService;
     }
 
