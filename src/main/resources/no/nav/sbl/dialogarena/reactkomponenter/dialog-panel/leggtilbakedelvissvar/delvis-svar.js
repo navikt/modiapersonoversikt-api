@@ -63,7 +63,7 @@ class DelvisSvar extends Component {
             tekstValidFiel: ugyldigTekst,
             valideringsFeil: valideringfeil
         });
-        return valideringfeil;
+        return !valideringfeil;
     }
 
     svarDelvis() {
