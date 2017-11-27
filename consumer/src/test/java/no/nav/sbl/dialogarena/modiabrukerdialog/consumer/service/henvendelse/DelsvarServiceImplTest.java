@@ -43,6 +43,7 @@ class DelsvarServiceImplTest {
                 () -> assertEquals(SVAR, argumentCaptor.getValue().getFritekst()),
                 () -> assertEquals(Kanal.TEKST.name(), argumentCaptor.getValue().kanal),
                 () -> assertEquals(SAKSBEHANDLERS_IDENT, argumentCaptor.getValue().navIdent),
+                () -> assertEquals(SAKSBEHANDLERS_IDENT, argumentCaptor.getValue().eksternAktor),
                 () -> assertEquals(VALGT_ENHET, argumentCaptor.getValue().tilknyttetEnhet)
         );
 

@@ -38,6 +38,7 @@ public class DelsvarServiceImpl implements DelsvarService {
                 .withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG)
                 .withFnr(brukersSporsmal.fnrBruker)
                 .withNavIdent(request.navIdent)
+                .withEksternAktor(request.navIdent)
                 .withTilknyttetEnhet(request.saksbehandlersValgteEnhet)
                 .withBrukersEnhet(brukersSporsmal.brukersEnhet);
     }
