@@ -7,6 +7,7 @@ import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -199,7 +200,7 @@ public class HentPersonPage extends BasePage {
     private String getVeiledersEnhetParameter() {
         WebRequest webRequest = (WebRequest) RequestCycle.get().getRequest();
         Optional<Cookie> maybeNavEnhetCookie = webRequest.getCookies().stream()
-                .filter(cookie -> cookie.getName().equals("saksbehandlerinnstillinger-" + getSubjectHandler().getUid()))
+                .filter(cookie -> cookie.getName().equals(RestUtils.saksbehandlerInnstillingerCookieId()))
                 .findAny();
         return maybeNavEnhetCookie.isPresent() ? maybeNavEnhetCookie.get().getValue() : "";
     }
