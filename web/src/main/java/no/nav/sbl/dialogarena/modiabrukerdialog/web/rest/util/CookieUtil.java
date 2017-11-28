@@ -24,9 +24,11 @@ public class CookieUtil {
     public static void setSaksbehandlersValgteEnhet(HttpServletResponse response, String enhetId) {
         Cookie enhetCookie = new Cookie(saksbehandlerInnstillingerCookieId(), enhetId);
         enhetCookie.setMaxAge(3600 * 24 * 365);
+        enhetCookie.setPath("/modiabrukerdialog/");
 
         Cookie timeoutCookie = new Cookie(saksbehandlerInnstillingerTimeoutCookieId(), "");
         timeoutCookie.setMaxAge(3600 * 12);
+        timeoutCookie.setPath("/modiabrukerdialog/");
 
         response.addCookie(enhetCookie);
         response.addCookie(timeoutCookie);
