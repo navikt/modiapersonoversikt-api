@@ -7,8 +7,9 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informa
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informasjon.Organisasjonsenhet;
 
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,7 +63,10 @@ public class OrganisasjonEnhetKontaktinformasjonMapper {
 
     private static Apningstid map(Aapningstid apningtidWS, Ukedag ukedag) {
         return Optional.ofNullable(apningtidWS)
-                .map(apningstid -> new Apningstid().withApentFra(map(apningtidWS.getAapentFra())).withUkedag(ukedag))
+                .map(apningstid -> new Apningstid()
+                        .withApentTil(map(apningtidWS.getAapentTil()))
+                        .withApentFra(map(apningtidWS.getAapentFra()))
+                        .withUkedag(ukedag))
                 .orElse(null);
     }
 

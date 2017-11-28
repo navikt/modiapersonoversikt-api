@@ -1,11 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain;
 
-import java.time.LocalDateTime;
-
 public class Apningstid {
 
     private Ukedag ukedag;
     private Klokkeslett apentFra;
+    private Klokkeslett apentTil;
 
     public Ukedag getUkedag() {
         return ukedag;
@@ -22,6 +21,15 @@ public class Apningstid {
 
     public Apningstid withApentFra(Klokkeslett apentFra) {
         this.apentFra = apentFra;
+        return this;
+    }
+
+    public Klokkeslett getApentTil() {
+        return apentTil;
+    }
+
+    public Apningstid withApentTil(Klokkeslett apentTil) {
+        this.apentTil = apentTil;
         return this;
     }
 }

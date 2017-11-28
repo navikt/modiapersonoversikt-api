@@ -15,7 +15,9 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,6 +33,10 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
     public static final String APNER_TIRSDAG_TIME = "9";
     public static final String APNER_TIRSDAG_MINUTT = "15";
     public static final String APNER_TIRSDAG_SEKUND = "17";
+    public static final String STENGER_TIRSDAG_TIME = "18";
+    public static final String STENGER_TIRSDAG_MINUTT = "0";
+    public static final String STENGER_TIRSDAG_SEKUND = "17";
+
 
     @Test
     @DisplayName("Mapping av organisasjonsenhet")
@@ -103,6 +109,11 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
                 () -> assertEquals(APNER_TIRSDAG_MINUTT, apningstidTirsdag.getApentFra().getMinutt()),
                 () -> assertEquals(APNER_TIRSDAG_SEKUND, apningstidTirsdag.getApentFra().getSekund())
         );
+        assertAll("Tidspunkt åpent til",
+                () -> assertEquals(STENGER_TIRSDAG_TIME, apningstidTirsdag.getApentTil().getTime()),
+                () -> assertEquals(STENGER_TIRSDAG_MINUTT, apningstidTirsdag.getApentTil().getMinutt()),
+                () -> assertEquals(STENGER_TIRSDAG_SEKUND, apningstidTirsdag.getApentTil().getSekund())
+        );
     }
 
     private Apningstid getApningstid(Apningstider apningstider, Ukedag ukedag) {
@@ -146,6 +157,7 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
         Aapningstider aapningstider = new Aapningstider();
         Aapningstid aapningstidTirsdag = new Aapningstid();
         aapningstidTirsdag.setAapentFra(lagTidPaDagen(String.valueOf(APNER_TIRSDAG_TIME), String.valueOf(APNER_TIRSDAG_MINUTT), String.valueOf(APNER_TIRSDAG_SEKUND)));
+        aapningstidTirsdag.setAapentTil(lagTidPaDagen(String.valueOf(STENGER_TIRSDAG_TIME), String.valueOf(STENGER_TIRSDAG_MINUTT), String.valueOf(STENGER_TIRSDAG_SEKUND)));
         aapningstider.setTirsdag(aapningstidTirsdag);
         return aapningstider;
     }
