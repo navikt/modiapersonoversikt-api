@@ -80,6 +80,17 @@ function oppdaterContextEnhet(enhet) {
     });
 }
 
+function oppdatertValgtEnhet(valgtEnhet) {
+    fetch('/modiabrukerdialog/rest/hode/velgenhet', {
+        credentials: 'same-origin',
+        method: 'POST',
+        body: valgtEnhet,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
 // Wicket integration
 function JSWicket(url, component) {
     this.url = url;
@@ -150,6 +161,8 @@ function lagRedirectModal(endreCallback, beholdCallback) {
         if (feilmelding && feilmelding.length > 0) {
             config.config.feilmelding = feilmelding;
         }
+
+        config.config.handleChangeEnhet = oppdatertValgtEnhet;
 
         console.log('config', hodeConfig, config, markupId);
         sendToWicket = new JSWicket(callbackUrl, markupId);
