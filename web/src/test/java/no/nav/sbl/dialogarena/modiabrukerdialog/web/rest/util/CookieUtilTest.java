@@ -15,7 +15,7 @@ class CookieUtilTest {
     @Test
     void getSaksbehandlersValgteEnhet() {
         MockHttpServletRequest httpRequest = new MockHttpServletRequest();
-        httpRequest.setCookies(new Cookie(CookieUtil.VALGT_ENHET_COOKIE_NAME_PREFIX + SAKSBEHANDLERS_IDENT, VALGT_ENHET));
+        httpRequest.setCookies(new Cookie("saksbehandlerinnstillinger-" + SAKSBEHANDLERS_IDENT, VALGT_ENHET));
 
         String valgtEnhet = CookieUtil.getSaksbehandlersValgteEnhet(httpRequest);
 

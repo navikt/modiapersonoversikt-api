@@ -8,7 +8,7 @@ public class HttpRequestUtil {
 
     public static MockHttpServletRequest mockHttpServletRequestMedCookie(String ident, String valgtEnhet) {
         MockHttpServletRequest httpRequest = new MockHttpServletRequest();
-        httpRequest.setCookies(new Cookie(CookieUtil.VALGT_ENHET_COOKIE_NAME_PREFIX + ident, valgtEnhet));
+        httpRequest.setCookies(new Cookie("saksbehandlerinnstillinger-" + ident, valgtEnhet));
         return httpRequest;
     }
 
