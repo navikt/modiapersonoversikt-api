@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest.SvarDelvisRequestBuilder;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +21,15 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretogg
 
 @Path("/personer/{fnr}/traader/{traadId}/henvendelser/{id}")
 @Produces(APPLICATION_JSON)
-public class SvarDelvisController {
+public class DelsvarController {
 
-    private static Logger logger = LoggerFactory.getLogger(SvarDelvisController.class);
+    private static Logger logger = LoggerFactory.getLogger(DelsvarController.class);
 
-    private final SvarDelvisService svarDelvisService;
+    private final DelsvarService delsvarService;
 
     @Inject
-    public SvarDelvisController(SvarDelvisService svarDelvisService) {
-        this.svarDelvisService = svarDelvisService;
+    public DelsvarController(DelsvarService delsvarService) {
+        this.delsvarService = delsvarService;
     }
     @POST
     @Path("/delvisSvar")
@@ -38,13 +38,13 @@ public class SvarDelvisController {
             @PathParam("fnr") String fnr,
             @PathParam("traadId") String traadId,
             @PathParam("id") String henvendelseId,
-            @Context HttpServletRequest httpRequest, SvarDelvisRESTRequest request) {
+            @Context HttpServletRequest httpRequest, DelsvarRestRequest request) {
 
         if (!FeatureToggle.visFeature(DELVISE_SVAR)) {
             return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
         }
 
-        SvarDelvisRequest svarDelvisRequest = new SvarDelvisRequestBuilder()
+        DelsvarRequest delsvarRequest = new DelsvarRequestBuilder()
                 .withFodselsnummer(fnr)
                 .withTraadId(traadId)
                 .withHenvendelseId(henvendelseId)
@@ -54,7 +54,7 @@ public class SvarDelvisController {
                 .build();
 
         try {
-            svarDelvisService.svarDelvis(svarDelvisRequest);
+            delsvarService.svarDelvis(delsvarRequest);
         } catch (RuntimeException exception) {
             throw handterRuntimeFeil(exception);
         }
