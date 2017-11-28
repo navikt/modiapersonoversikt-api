@@ -3,11 +3,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,5 +76,12 @@ public class HodeController {
                 .collect(Collectors.toList());
 
         return new Enheter(ident, enheter);
+    }
+
+    @POST
+    @Path("/velgenhet")
+    public String settValgtEnhet(@Context HttpServletResponse response, String enhetId) {
+        CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
+        return enhetId;
     }
 }
