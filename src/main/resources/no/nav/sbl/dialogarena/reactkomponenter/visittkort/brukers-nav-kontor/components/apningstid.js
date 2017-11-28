@@ -13,10 +13,12 @@ function formaterTilToSiffer(siffer) {
 function Apningstid({ apningstid }) {
     const apentFraTime = formaterTilToSiffer(apningstid.apentFra.time);
     const apentFraMinutt = formaterTilToSiffer(apningstid.apentFra.minutt);
+    const stengtFraTime = formaterTilToSiffer(apningstid.apentTil.time);
+    const stengtFraMinutt = formaterTilToSiffer(apningstid.apentTil.minutt);
     return (
         <div className="apningstider">
             <p className="apningstid">{apningstid.ukedag}</p>
-            <p className="apningstid">{apentFraTime}.{apentFraMinutt} - 17.00</p>
+            <p className="apningstid">{apentFraTime}.{apentFraMinutt} - {stengtFraTime}.{stengtFraMinutt}</p>
         </div>
     );
 }

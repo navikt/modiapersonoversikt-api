@@ -12,6 +12,11 @@ export const apningstidType = PT.shape({
         time: PT.string.isRequired,
         minutt: PT.string.isRequired,
         sekund: PT.string.isRequired
+    }).isRequired,
+    apentTil: PT.shape({
+        time: PT.string.isRequired,
+        minutt: PT.string.isRequired,
+        sekund: PT.string.isRequired
     }).isRequired
 });
 
