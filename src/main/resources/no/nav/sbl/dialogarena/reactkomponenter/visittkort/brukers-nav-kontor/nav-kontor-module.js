@@ -5,24 +5,23 @@ import { API_BASE_URL } from '../../constants';
 import AsyncLoader from './async-loader';
 import Ajax from '../../utils/ajax';
 import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
-import { OrganiasjonType } from './types';
-import Apningstider from './components/apningstider';
+import { organisasjonType } from './types';
 import NavKontorHeader from './components/header';
-import Adresse from './components/adresse';
-
+import DetaljertEnhetsInformasjon from './components/detaljert-enhets-informasjon';
 
 function NavKontor({ organisasjon }) {
     return (
         <div className="nav-kontor-panel">
-            <EkspanderbartpanelBase heading={<NavKontorHeader organisasjon={organisasjon} />}>
-                <Adresse organisasjon={organisasjon} />
-                <Apningstider organisasjon={organisasjon} />
+            <EkspanderbartpanelBase
+                ariaTittel={"Brukers NAV-kontor"}
+                heading={<NavKontorHeader organisasjon={organisasjon} />}
+            >
+                <DetaljertEnhetsInformasjon organisasjon={organisasjon} />
             </EkspanderbartpanelBase>
         </div>
     );
 }
-
-NavKontor.propTypes = OrganiasjonType;
+NavKontor.propTypes = organisasjonType;
 
 class BrukersNavKontor extends React.Component {
     constructor(props) {
@@ -41,7 +40,6 @@ class BrukersNavKontor extends React.Component {
         );
     }
 }
-
 BrukersNavKontor.propTypes = {
     organisasjonsenhetId: PT.string.isRequired
 };

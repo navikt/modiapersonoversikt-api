@@ -1,15 +1,34 @@
 import PT from 'prop-types';
 
-export const OrganiasjonType = {
+export const besoeksadresseType = PT.shape({
+    gatenavn: PT.string.isRequired,
+    husnummer: PT.string.isRequired,
+    husbokstav: PT.string
+});
+
+export const apningstidType = PT.shape({
+    ukedag: PT.string.isRequired,
+    apentFra: PT.shape({
+        time: PT.string.isRequired,
+        minutt: PT.string.isRequired,
+        sekund: PT.string.isRequired
+    }).isRequired
+});
+
+export const apningstiderType = PT.shape({
+    apningstider: PT.arrayOf(apningstidType).isRequired
+});
+
+
+export const organisasjonType = {
     organisasjon: PT.shape({
         enhetId: PT.string.isRequired,
         enhetNavn: PT.string.isRequired,
         kontaktinformasjon: PT.shape({
             publikumsmottak: PT.arrayOf(PT.shape({
-                besoeksadresse: PT.shape({
-                    gatenavn: PT.string.isRequired
-                }).isRequired
-            })).isRequired
-        }).isRequired
+                besoeksadresse: besoeksadresseType.isRequired,
+                apningstider: apningstiderType.isRequired
+            }))
+        })
     })
 };
