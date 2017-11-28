@@ -11,6 +11,10 @@ public class RestUtils {
         return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
     }
 
+    public static  String saksbehandlerInnstillingerTimeoutCookieId() {
+        return "saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid();
+    }
+
     public static String hentValgtEnhet(HttpServletRequest request) {
         String key = saksbehandlerInnstillingerCookieId();
         for (Cookie cookie : request.getCookies()) {
