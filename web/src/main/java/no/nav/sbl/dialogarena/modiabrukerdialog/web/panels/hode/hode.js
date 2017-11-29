@@ -91,6 +91,10 @@ function oppdatertValgtEnhet(valgtEnhet) {
     });
 }
 
+function lastInnBruker(fnr) {
+    window.location = `https://modapp${finnMiljoStreng()}.adeo.no/modiabrukerdialog/hentPerson/${fnr}`;
+}
+
 // Wicket integration
 function JSWicket(url, component) {
     this.url = url;
@@ -114,10 +118,23 @@ function lagRedirectModal(endreCallback, beholdCallback) {
     return ModiaJS.ReactDOM.render(modalComponent, document.getElementById("feilmeldingsmodaler"));
 }
 
-// Hode init
-(function () {
-    let sendToWicket = null;
-    const hodeConfig = {
+function sokOppFnr(sendToWicket) {
+    return function(event) {
+        const fnr = event.fodselsnummer;
+        sendToWicket && sendToWicket.send('sokperson', fnr);
+    }
+}
+function resetBruker(sendToWicket) {
+    return function() {
+        sendToWicket && sendToWicket.send('fjernperson');
+    }
+}
+function byttEnhet(enhet) {
+    console.log('byttet enhet', enhet);
+}
+
+function lagDecoratorConfig(fnr, autoSubmit, feilmelding) {
+    const config = {
         config: {
             dataSources: {
                 veileder: '/modiabrukerdialog/rest/hode/me',
@@ -132,81 +149,86 @@ function lagRedirectModal(endreCallback, beholdCallback) {
         }
     };
 
-    function sokOppFnr(event) {
-        const fnr = event.fodselsnummer;
-        sendToWicket && sendToWicket.send('sokperson', fnr);
+    if (fnr && fnr.length > 0) {
+        config.config.fnr = fnr;
+        config.config.autoSubmit = autoSubmit;
+    }
+    if (feilmelding && feilmelding.length > 0) {
+        config.config.feilmelding = feilmelding;
     }
 
-    function resetBruker(event) {
-        sendToWicket && sendToWicket.send('fjernperson');
-    }
+    config.config.handleChangeEnhet = oppdatertValgtEnhet;
 
-    function byttEnhet(enhet) {
-        console.log('byttet enhet', enhet);
-    }
+    return config;
+}
+const websocketCallbackMap = {
+    'NY_AKTIV_BRUKER': (fnr, redirectModal) => {
+        hentContextBruker()
+            .then((data) => {
+                if (data.aktivBruker === fnr) {
+                    return;
+                }
+                const endreCallback = function() {
+                    lastInnBruker(data.aktivBruker);
+                };
+                const beholdCallback = function() {
+                    redirectModal.skjul();
+                    oppdaterContextBruker(fnr);
+                };
 
-    console.log('hode lastet....');
-    document.addEventListener('dekorator-hode-personsok', sokOppFnr);
-    document.addEventListener('dekorator-hode-fjernperson', resetBruker);
+                redirectModal.vis(data.aktivBruker, endreCallback, beholdCallback);
+            });
+    },
+    'NY_AKTIV_ENHET': (fnr, redirectModal) => {
+        hentContextEnhet()
+            .then((data) => console.log('data', data));
+    },
+};
 
+// Hode init
+(function () {
+    let decoratorConfig = null; // Må legges hit for å kunne deles mellom `initHode` og `update`
 
     window.initHode = function (callbackUrl, markupId, fnr, autoSubmit, feilmelding) {
+        // Setter opp wicket-callback-handler
+        const sendToWicket = new JSWicket(callbackUrl, markupId);
+        document.addEventListener('dekorator-hode-personsok', sokOppFnr(sendToWicket));
+        document.addEventListener('dekorator-hode-fjernperson', resetBruker(sendToWicket));
+
+        // Lager decorator og redirect modal
+        decoratorConfig = lagDecoratorConfig(fnr, autoSubmit, feilmelding);
         const redirectModal = lagRedirectModal();
-        let config = hodeConfig;
-        if (fnr && fnr.length > 0) {
-            config = JSON.parse(JSON.stringify(hodeConfig));
-            config.config.fnr = fnr;
-            config.config.autoSubmit = autoSubmit;
-        }
-        if (feilmelding && feilmelding.length > 0) {
-            config.config.feilmelding = feilmelding;
-        }
+        console.log('config', decoratorConfig);
+        window.renderDecoratorHead(decoratorConfig, markupId);
 
-        config.config.handleChangeEnhet = oppdatertValgtEnhet;
-
-        console.log('config', hodeConfig, config, markupId);
-        sendToWicket = new JSWicket(callbackUrl, markupId);
-        window.renderDecoratorHead(config, markupId);
-
+        // Laster inn/Oppdater bruker ved sidelast
         hentContextBruker().then((data) => {
+            console.log('brukerIContext', data);
             if (data.aktivBruker !== fnr) {
-                oppdaterContextBruker(fnr);
+                if (fnr && fnr.length > 0) {
+                    oppdaterContextBruker(fnr);
+                } else {
+                    lastInnBruker(data.aktivBruker);
+                }
             }
         });
 
+
+        // Setter opp context-lyttere
         opprettWebSocket((event) => {
             const type = event.data;
-            if (type === 'NY_AKTIV_BRUKER') {
-                hentContextBruker()
-                    .then((data) => {
-                        if (data.aktivBruker === fnr) {
-                            return;
-                        }
-                        const endreCallback = function() {
-                            window.location = `https://modapp${finnMiljoStreng()}.adeo.no/modiabrukerdialog/hentPerson/${data.aktivBruker}`;
-                        };
-                        const beholdCallback = function() {
-                            redirectModal.skjul();
-                            oppdaterContextBruker(fnr);
-                        };
+            const handler = websocketCallbackMap[type] || (() => console.warn('Ukjent event fra contextholder', event));
 
-                        redirectModal.vis(data.aktivBruker, endreCallback, beholdCallback);
-                    });
-            } else if (type === 'NY_AKTIV_ENHET') {
-                hentContextEnhet()
-                    .then((data) => console.log('data', data));
-            } else {
-                console.warn('Ukjent event fra contextholder', event);
-            }
+            handler(fnr, redirectModal);
         });
     };
 
     window.updateHode = function (markupId, feilmelding) {
-        let config = hodeConfig;
+        let config = decoratorConfig;
         if (feilmelding && feilmelding.length > 0) {
             config.config.feilmelding = feilmelding;
         }
-        console.log('update config', hodeConfig, config, markupId);
+        console.log('update config', config, markupId);
         window.renderDecoratorHead(config, markupId);
     };
 })();
