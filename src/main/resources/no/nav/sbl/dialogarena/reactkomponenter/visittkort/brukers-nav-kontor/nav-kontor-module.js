@@ -14,6 +14,7 @@ import Adresse from './components/adresse';
 function NavKontor({ organisasjon }) {
     return (
         <div className="nav-kontor-panel">
+            <div className="nav-ikon"></div>
             <EkspanderbartpanelBase heading={<NavKontorHeader organisasjon={organisasjon} />}>
                 <Adresse organisasjon={organisasjon} />
                 <Apningstider organisasjon={organisasjon} />
