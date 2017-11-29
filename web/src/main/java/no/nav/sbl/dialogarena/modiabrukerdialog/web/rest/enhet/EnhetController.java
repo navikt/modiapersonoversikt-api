@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.organisasjon;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
@@ -11,14 +11,14 @@ import javax.ws.rs.Produces;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-@Path("/organisasjoner/{id}")
+@Path("/enheter/{id}")
 @Produces(APPLICATION_JSON)
-public class OrganisasjonController {
+public class EnhetController {
 
     private final OrganisasjonEnhetKontaktinformasjonService service;
 
     @Inject
-    public OrganisasjonController(OrganisasjonEnhetKontaktinformasjonService service) {
+    public EnhetController(OrganisasjonEnhetKontaktinformasjonService service) {
         this.service = service;
     }
 
