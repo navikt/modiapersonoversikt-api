@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
         KjerneinfoMapperWrapperTestConfig.class
 
 })
-public class KjerneinfoOrganisasjonEnhetKontaktinformasjonMapperConfigResolverTest {
+public class KjerneinfoMapperConfigResolverTest {
 
     @Inject
     private Wrapper<KodeverkmanagerBi> kodeverkManagerService;
