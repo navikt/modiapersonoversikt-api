@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Apningstider {
 
@@ -15,5 +16,9 @@ public class Apningstider {
         this.apningstider.clear();
         this.apningstider.addAll(apningstider);
         return this;
+    }
+
+    public Optional<Apningstid> getApningstid(Ukedag ukedag) {
+        return apningstider.stream().filter(apningstid -> apningstid.getUkedag() == ukedag).findFirst();
     }
 }
