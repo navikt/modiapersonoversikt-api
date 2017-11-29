@@ -44,6 +44,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhet.OrganisasjonEnhetV2EndpointConfig.NORG2_ORGANISASJON_ENHET_V2_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhetkontaktinformasjon.OrganisasjonEnhetKontaktinformasjonV1EndpointConfig.NORG2_ORGANISASJON_ENHET_KONTAKTINFORMASJON_V1_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
 import static no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerConsumerConfig.PLEIEPENGER_V1_MOCK_KEY;
@@ -133,6 +134,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Joark", JOARK_KEY),
                 new MockSetupModel("NORG", NORG_KEY),
                 new MockSetupModel("NORG2 OrganisasjonEnhetV2", NORG2_ORGANISASJON_ENHET_V2_KEY),
+                new MockSetupModel("NORG2 OrganisasjonEnhetKontaktinformasjonV1", NORG2_ORGANISASJON_ENHET_KONTAKTINFORMASJON_V1_KEY),
                 new MockSetupModel("NORG2 ArbeidsfordelingV1", NORG2_ARBEIDSFORDELING_V1_KEY),
                 new MockSetupModel("CMS Skrivestøtte", CMS_SKRIVESTOTTE_KEY),
                 new MockSetupModel("PensjonSak", PENSJONSAK_KEY),
