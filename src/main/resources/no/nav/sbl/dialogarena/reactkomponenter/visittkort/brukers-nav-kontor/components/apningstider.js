@@ -6,14 +6,14 @@ import { apningstiderType } from '../types';
 import Apningstid from './apningstid';
 
 function getApningstiderNoder(apningstider) {
-    const apningstiderNoder = [];
-    UKEDAGER.forEach(ukedag => {
+    const apningstiderNoder = UKEDAGER.map(ukedag => {
         let apningstidForUkedag = apningstider.apningstider.find(apningstid => apningstid.ukedag === ukedag);
         if (apningstidForUkedag) {
-            apningstiderNoder.push(<Apningstid key={ukedag} apningstid={apningstidForUkedag} />);
+            return <Apningstid key={ukedag} apningstid={apningstidForUkedag} />;
         }
+        return null;
     });
-    return apningstiderNoder;
+    return apningstiderNoder.filter(node => node);
 }
 
 function Apningstider({ apningstider }) {

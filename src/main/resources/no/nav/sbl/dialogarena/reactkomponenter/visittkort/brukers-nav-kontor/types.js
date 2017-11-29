@@ -33,9 +33,6 @@ export const organisasjonType = PT.shape({
     enhetId: PT.string.isRequired,
     enhetNavn: PT.string.isRequired,
     kontaktinformasjon: PT.shape({
-        publikumsmottak: PT.arrayOf(PT.shape({
-            besoeksadresse: besoeksadresseType.isRequired,
-            apningstider: apningstiderType.isRequired
-        }))
+        publikumsmottak: PT.arrayOf(publikumsmottakType).isRequired
     })
 });
