@@ -33,7 +33,7 @@ class BrukersNavKontor extends React.Component {
             organisasjon: undefined
         };
         if (this.props.organisasjonsenhetId) {
-            const url = `${API_BASE_URL}/organisasjoner/${this.props.organisasjonsenhetId}`;
+            const url = `${API_BASE_URL}/enheter/${this.props.organisasjonsenhetId}`;
             this.promise = Ajax.get(url);
         }
     }
