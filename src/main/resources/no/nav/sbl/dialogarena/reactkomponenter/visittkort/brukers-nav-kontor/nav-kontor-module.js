@@ -30,10 +30,15 @@ class BrukersNavKontor extends React.Component {
         this.state = {
             organisasjon: undefined
         };
-        const url = `${API_BASE_URL}/organisasjoner/${this.props.organisasjonsenhetId}`;
-        this.promise = Ajax.get(url);
+        if (this.props.organisasjonsenhetId) {
+            const url = `${API_BASE_URL}/organisasjoner/${this.props.organisasjonsenhetId}`;
+            this.promise = Ajax.get(url);
+        }
     }
     render() {
+        if (!this.props.organisasjonsenhetId) {
+            return null;
+        }
         return (
             <AsyncLoader promises={this.promise} toProp={"organisasjon"} >
                 <NavKontor />
