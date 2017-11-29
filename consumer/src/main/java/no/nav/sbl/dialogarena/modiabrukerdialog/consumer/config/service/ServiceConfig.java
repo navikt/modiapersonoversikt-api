@@ -17,8 +17,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PsakServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
@@ -69,8 +69,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SvarDelvisService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService) {
-        return new SvarDelvisServiceImpl(henvendelseUtsendingService);
+    public DelsvarService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService) {
+        return new DelsvarServiceImpl(henvendelseUtsendingService);
     }
 
     @Bean
