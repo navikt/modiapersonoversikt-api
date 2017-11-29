@@ -39,7 +39,10 @@ function lagTraadPanel(traad) {
 
 function lagDelviseSvarPanel(traad) {
     const delviseSvar = traad.filter(erDelvisSvar);
-    if (delviseSvar.length === 0 || erBesvart(traad)) return '';
+    if (delviseSvar.length === 0 || erBesvart(traad)) {
+        return null;
+    }
+
     const tittel = 'Tidligere delsvar';
     const skalVisesApen = true;
     return delviseSvar.length === 1
