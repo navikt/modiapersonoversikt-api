@@ -1,5 +1,5 @@
 import React from 'react';
-import EkspanderbartpanelBase from '../../ekspanderbartpanelBase/ekspanderbartpanel-base'
+import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 import sanitize from 'sanitize-html';
 import Utils from '../../utils/utils-module';

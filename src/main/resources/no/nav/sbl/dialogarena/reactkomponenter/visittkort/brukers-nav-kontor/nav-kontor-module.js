@@ -12,6 +12,7 @@ import DetaljertEnhetsInformasjon from './components/detaljert-enhets-informasjo
 function NavKontor({ organisasjon }) {
     return (
         <div className="nav-kontor-panel">
+            <div className="nav-ikon"></div>
             <EkspanderbartpanelBase
                 ariaTittel={"Brukers NAV-kontor"}
                 heading={<NavKontorHeader organisasjon={organisasjon} />}

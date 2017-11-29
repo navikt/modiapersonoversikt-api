@@ -1,5 +1,5 @@
 import React from 'react';
-import EkspanderbartpanelBase from '../../ekspanderbartpanelBase/ekspanderbartpanel-base'
+import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import PT from 'prop-types';
 
 function Kategoripanel(props) {
