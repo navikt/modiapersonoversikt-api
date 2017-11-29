@@ -109,7 +109,7 @@
         <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>8.0.5</saksoversikt.version>
         <varsling.modia.version>1.8</varsling.modia.version>
-        <modiabrukerdialog-api.version>8.3.12</modiabrukerdialog-api.version>
+        <modiabrukerdialog-api.version>8.3.13</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>7.1.21</sporsmalogsvar.version>
         <varsling.modia.version>1.10</varsling.modia.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
@@ -125,6 +125,7 @@
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
         <egenansatt-tjenestespesifikasjon.version>1.0.5</egenansatt-tjenestespesifikasjon.version>
         <pensjon-sak.version>1.0.3</pensjon-sak.version>
+        <organisasjon-enhet-kontaktinformasjon>1.1.0</organisasjon-enhet-kontaktinformasjon>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
     </properties>
@@ -565,6 +566,12 @@
                 <groupId>no.nav.tjenester</groupId>
                 <artifactId>nav-organisasjonEnhet-v2-tjenestespesifikasjon</artifactId>
                 <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
+                <classifier>jaxws</classifier>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.tjenester</groupId>
+                <artifactId>nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon</artifactId>
+                <version>${organisasjon-enhet-kontaktinformasjon}</version>
                 <classifier>jaxws</classifier>
             </dependency>
 
