@@ -70,7 +70,7 @@ public class OrganisasjonEnhetKontaktinformasjonMapper {
                 .orElse(null);
     }
 
-    private static Klokkeslett map(XMLGregorianCalendar aapentFraWS) {
-        return new Klokkeslett(aapentFraWS.getHour(), aapentFraWS.getMinute(), aapentFraWS.getSecond());
+    private static Klokkeslett map(XMLGregorianCalendar xmlGregorianCalendar) {
+        return new Klokkeslett(xmlGregorianCalendar.getHour(), xmlGregorianCalendar.getMinute(), xmlGregorianCalendar.getSecond());
     }
 }
