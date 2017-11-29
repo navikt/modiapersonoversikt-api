@@ -34,7 +34,7 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
         if(FeatureToggle.visFeature(Feature.NORG_ORGENHET_KONTAKTINFORMASJON)) {
             return new PingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV1", lagEndpoint());
         } else {
-            return new UnpingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV (feature togglet av)", "");
+            return new UnpingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV1 (feature togglet av)", "");
         }
     }
 
