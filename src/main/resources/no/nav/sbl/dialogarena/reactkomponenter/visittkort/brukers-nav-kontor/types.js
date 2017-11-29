@@ -24,16 +24,18 @@ export const apningstiderType = PT.shape({
     apningstider: PT.arrayOf(apningstidType).isRequired
 });
 
+export const publikumsmottakType = PT.shape({
+    besoeksadresse: besoeksadresseType.isRequired,
+    apningstider: apningstiderType.isRequired
+});
 
-export const organisasjonType = {
-    organisasjon: PT.shape({
-        enhetId: PT.string.isRequired,
-        enhetNavn: PT.string.isRequired,
-        kontaktinformasjon: PT.shape({
-            publikumsmottak: PT.arrayOf(PT.shape({
-                besoeksadresse: besoeksadresseType.isRequired,
-                apningstider: apningstiderType.isRequired
-            }))
-        })
+export const organisasjonType = PT.shape({
+    enhetId: PT.string.isRequired,
+    enhetNavn: PT.string.isRequired,
+    kontaktinformasjon: PT.shape({
+        publikumsmottak: PT.arrayOf(PT.shape({
+            besoeksadresse: besoeksadresseType.isRequired,
+            apningstider: apningstiderType.isRequired
+        }))
     })
-};
+});

@@ -3,22 +3,23 @@ import React from 'react';
 import { organisasjonType } from '../types';
 import Apningstider from './apningstider';
 import Adresse from './adresse';
+import AntallPublikumsmottakInformasjon from './publikumsmottak-informasjon';
 
-function DetaljertEnhetsInformasjon({ organisasjon }) {
+function DetaljertEnhetsinformasjon({ organisasjon }) {
     if (organisasjon.kontaktinformasjon.publikumsmottak.length === 0) {
         return <p>Ingen publikumsmottak</p>;
     }
     const publikumsmottak = organisasjon.kontaktinformasjon.publikumsmottak[0];
-    const flerePublikumsmottak = organisasjon.kontaktinformasjon.publikumsmottak.length > 1 ?
-        <p className="infoblokk">Det finnes flere publikumsmottak.</p> : <div />;
     return (
         <div>
             <Adresse adresse={publikumsmottak.besoeksadresse} />
-            {flerePublikumsmottak}
+            <AntallPublikumsmottakInformasjon publikumsmottak={organisasjon.kontaktinformasjon.publikumsmottak} />
             <Apningstider apningstider={publikumsmottak.apningstider} />
         </div>
     );
 }
-DetaljertEnhetsInformasjon.propTypes = organisasjonType;
+DetaljertEnhetsinformasjon.propTypes = {
+    organisasjon: organisasjonType
+};
 
-export default DetaljertEnhetsInformasjon;
+export default DetaljertEnhetsinformasjon;

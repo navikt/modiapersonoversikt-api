@@ -10,6 +10,8 @@ function NavKontorHeader({ organisasjon }) {
     );
 }
 
-NavKontorHeader.propTypes = organisasjonType;
+NavKontorHeader.propTypes = {
+    organisasjon: organisasjonType.isRequired
+};
 
 export default NavKontorHeader;
