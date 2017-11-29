@@ -1,5 +1,5 @@
 import React from 'react';
-import { OrganiasjonType } from '../types';
+import { organisasjonType } from '../types';
 
 function NavKontorHeader({ organisasjon }) {
     return (
@@ -10,6 +10,8 @@ function NavKontorHeader({ organisasjon }) {
     );
 }
 
-NavKontorHeader.propTypes = OrganiasjonType;
+NavKontorHeader.propTypes = {
+    organisasjon: organisasjonType.isRequired
+};
 
 export default NavKontorHeader;

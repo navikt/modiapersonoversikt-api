@@ -1,16 +1,33 @@
 import React from 'react';
-import { OrganiasjonType } from '../types';
+import PT from 'prop-types';
 
-function Apningstider({ organisasjon }) {
+import { UKEDAGER } from '../../../constants';
+import { apningstiderType } from '../types';
+import Apningstid from './apningstid';
+
+function getApningstiderNoder(apningstider) {
+    const apningstiderNoder = UKEDAGER.map(ukedag => {
+        let apningstidForUkedag = apningstider.apningstider.find(apningstid => apningstid.ukedag === ukedag);
+        if (apningstidForUkedag) {
+            return <Apningstid key={ukedag} apningstid={apningstidForUkedag} />;
+        }
+        return null;
+    });
+    return apningstiderNoder.filter(node => node);
+}
+
+function Apningstider({ apningstider }) {
+    const apningstiderNoder = getApningstiderNoder(apningstider);
     return (
         <div className="infoblokk">
             <h3 className="overskrift">Åpningstider</h3>
-            <p>{ 'Mandag' }</p>
+            {apningstiderNoder}
         </div>
     );
 }
 
-
-Apningstider.propTypes = OrganiasjonType;
+Apningstider.propTypes = PT.shape({
+    apningstid: apningstiderType
+}).isRequired;
 
 export default Apningstider;

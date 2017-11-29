@@ -1,17 +1,19 @@
 import React from 'react';
-import { OrganiasjonType } from '../types';
+import { besoeksadresseType } from '../types';
+import PT from 'prop-types';
 
-function Adresse({ organisasjon }) {
-    const publikumsmottak = organisasjon.kontaktinformasjon.publikumsmottak;
-    const gatenavn = publikumsmottak.length === 0 ? '' : publikumsmottak[0].besoeksadresse.gatenavn;
+function Adresse({ adresse }) {
+    const gatenavn = adresse.gatenavn;
+    const husnummer = adresse.husnummer;
+    const husbokstav = adresse.husbokstav || '';
     return (
         <div className="infoblokk">
             <h3 className={"overskrift"}>Adresse</h3>
-            <p>{gatenavn}</p>
+            <p>{gatenavn} {husnummer}{husbokstav}</p>
         </div>
     );
 }
 
-Adresse.propTypes = OrganiasjonType;
+Adresse.propTypes = PT.shape({ adresse: besoeksadresseType }).isRequired;
 
 export default Adresse;
