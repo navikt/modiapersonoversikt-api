@@ -129,7 +129,10 @@ function sokOppFnr(sendToWicket) {
 }
 function resetBruker(sendToWicket) {
     return function() {
-        sendToWicket && sendToWicket.send('fjernperson');
+        nullstillContext()
+            .then(function(){
+                sendToWicket && sendToWicket.send('fjernperson');
+            });
     }
 }
 function byttEnhet(enhet) {
