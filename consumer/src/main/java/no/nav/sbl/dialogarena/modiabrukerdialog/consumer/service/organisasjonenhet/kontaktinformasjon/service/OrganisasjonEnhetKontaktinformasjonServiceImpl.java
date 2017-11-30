@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.HentKontaktinformasjonForEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informasjon.FeiletEnhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkResponse;
 
@@ -16,9 +17,14 @@ public class OrganisasjonEnhetKontaktinformasjonServiceImpl implements Organisas
 
     @Override
     public OrganisasjonEnhetKontaktinformasjon hentKontaktinformasjon(String enhetId) {
-        return hentResponse(lagRequest(enhetId)).getEnhetListe().stream()
+        HentKontaktinformasjonForEnhetBolkResponse response = hentResponse(lagRequest(enhetId));
+        return response.getEnhetListe().stream()
                 .map(OrganisasjonEnhetKontaktinformasjonMapper::map)
-                .findFirst().orElseThrow(RuntimeException::new);
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(response.getFeiletEnhetListe().stream()
+                        .findFirst()
+                        .map(FeiletEnhet::getFeilmelding)
+                        .orElse("")));
     }
 
     private HentKontaktinformasjonForEnhetBolkRequest lagRequest(String enhetId) {
