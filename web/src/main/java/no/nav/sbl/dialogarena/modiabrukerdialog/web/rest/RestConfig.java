@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.sak.rest.SaksoversiktController;
@@ -14,6 +15,6 @@ public class RestConfig extends ResourceConfig {
     public RestConfig() {
         super(JacksonConfig.class, InformasjonController.class, SkrivestotteController.class, MeldingerController.class,
                 JournalforingController.class, VarslerController.class, DokumentController.class,
-                SaksoversiktController.class, DelsvarController.class, OppgaveController.class);
+                SaksoversiktController.class, DelsvarController.class, OppgaveController.class, EnhetController.class);
     }
 }
