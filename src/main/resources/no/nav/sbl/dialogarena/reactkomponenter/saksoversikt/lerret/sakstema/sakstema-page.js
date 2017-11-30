@@ -18,7 +18,7 @@ class SakstemaPage extends React.Component {
     }
 
     render() {
-        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost, filtreringsvalg } = this.props;
+        const { sakstema, valgtTema, velgSak, brukerNavn, visSide, velgJournalpost, filtreringsvalg, diskresjonskode, gt, norgUrl } = this.props;
 
         if (!sakstema || sakstema.length === 0) {
             return (
@@ -33,7 +33,6 @@ class SakstemaPage extends React.Component {
                     </h1>
                 </div>);
         }
-
         return (
             <div className="sakstema-container">
                 <section onKeyDown={this.keyDownHandler.bind(this)} className="saksoversikt-liste scrollpanel">
@@ -47,6 +46,9 @@ class SakstemaPage extends React.Component {
                         brukerNavn={brukerNavn}
                         velgJournalpost={velgJournalpost}
                         filtreringsvalg={filtreringsvalg}
+                        diskresjonskode={diskresjonskode}
+                        gt={gt}
+                        norgUrl={norgUrl}
                     />
                 </section>
             </div>
@@ -57,6 +59,7 @@ class SakstemaPage extends React.Component {
 SakstemaPage.propTypes = {
     sakstema: PT.array.isRequired,
     valgtTema: PT.object,
+    temakodeliste: PT.arrayOf(PT.String),
     velgSak: PT.func,
     brukerNavn: PT.string,
     visSide: PT.func.isRequired,
