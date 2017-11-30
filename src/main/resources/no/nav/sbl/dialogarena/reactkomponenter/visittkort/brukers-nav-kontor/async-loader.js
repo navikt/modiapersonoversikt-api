@@ -58,7 +58,7 @@ class AsyncLoader extends React.Component {
         if (this.state.status === 'rejected') {
             children = <AdvarselBoks tekst="Henting av brukers NAV-kontor mislyktes" />;
         } else if (this.state.status === 'pending') {
-            children = <NavFrontendSpinner type="XL" />;
+            children = <NavFrontendSpinner type="M" />;
         } else {
             const passingProps = {};
             passingProps[this.props.toProp] = this.state.data;
