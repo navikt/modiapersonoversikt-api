@@ -13,6 +13,7 @@ function NavKontor({ organisasjon, baseUrlAppAdeo }) {
         <div className="nav-kontor-panel">
             <div className="nav-ikon" />
             <EkspanderbartpanelBase
+                className="nav-kontor-info"
                 ariaTittel={"Brukers NAV-kontor"}
                 heading={<NavKontorHeader organisasjon={organisasjon} />}
             >
