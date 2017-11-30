@@ -10,16 +10,13 @@ import DetaljertEnhetsinformasjon from './components/detaljert-enhetsinformasjon
 
 function NavKontor({ organisasjon, baseUrlAppAdeo }) {
     return (
-        <div className="nav-kontor-panel">
-            <div className="nav-ikon" />
-            <EkspanderbartpanelBase
-                className="nav-kontor-info"
-                ariaTittel={"Brukers NAV-kontor"}
-                heading={<NavKontorHeader organisasjon={organisasjon} />}
-            >
-                <DetaljertEnhetsinformasjon organisasjon={organisasjon} baseUrlAppAdeo={baseUrlAppAdeo} />
-            </EkspanderbartpanelBase>
-        </div>
+        <EkspanderbartpanelBase
+            className="nav-kontor-info"
+            ariaTittel={"Brukers NAV-kontor"}
+            heading={<NavKontorHeader organisasjon={organisasjon} />}
+        >
+            <DetaljertEnhetsinformasjon organisasjon={organisasjon} baseUrlAppAdeo={baseUrlAppAdeo} />
+        </EkspanderbartpanelBase>
     );
 }
 NavKontor.propTypes = {
@@ -43,9 +40,12 @@ class BrukersNavKontor extends React.Component {
             return null;
         }
         return (
-            <AsyncLoader promises={this.promise} toProp={"organisasjon"} >
-                <NavKontor baseUrlAppAdeo={this.props.baseUrlAppAdeo} />
-            </AsyncLoader>
+            <div className="nav-kontor-panel">
+                <div className="nav-ikon" />
+                <AsyncLoader promises={this.promise} toProp={"organisasjon"} >
+                    <NavKontor baseUrlAppAdeo={this.props.baseUrlAppAdeo} />
+                </AsyncLoader>
+            </div>
         );
     }
 }

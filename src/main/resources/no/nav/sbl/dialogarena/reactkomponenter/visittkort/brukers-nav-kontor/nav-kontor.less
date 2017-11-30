@@ -40,10 +40,12 @@
     .ekspanderbartPanel__hode {
       background-color: #333333;
       border: 0;
-      padding: 0;
       text-align: start;
       color: inherit;
-      margin-bottom: 1.5em;
+      padding-bottom: 1.5em;
+      padding-left: 0;
+      padding-right: 0;
+      padding-top: 0;
       button {
         box-shadow: none;
       }
@@ -64,7 +66,7 @@
     }
 
     .infoblokk {
-      margin-bottom: 2em;
+      padding-bottom: 2em;
     }
 
     .apningstider {
@@ -75,4 +77,29 @@
       flex-basis: 50%;
     }
   }
+
+  svg:not(:root) {
+    overflow: hidden;
+  }
+
+  *,
+  ::after,
+  ::before {
+    box-sizing: border-box;
+  }
+
+  .spinner {
+    display: inline-block;
+    position: relative;
+    animation: rotering 2s linear infinite;
+    margin-left: 2em;
+  }
+
+  .spinner--m {
+    height: 32px;
+    width: 32px;
+    background-size: 32px 32px;
+    animation-duration: 1.1s;
+  }
+
 }

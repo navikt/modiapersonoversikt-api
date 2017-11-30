@@ -4,7 +4,7 @@ import { organisasjonType } from '../types';
 function NavKontorHeader({ organisasjon }) {
     return (
         <div>
-            <h3 className="overskrift">Brukers navkontor</h3>
+            <h3 className="overskrift">Brukers nav-kontor</h3>
             <p>{ `${organisasjon.enhetId} ${organisasjon.enhetNavn}` }</p>
         </div>
     );

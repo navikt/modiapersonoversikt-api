@@ -17,7 +17,10 @@ function getApningstiderNoder(apningstider) {
 }
 
 function Apningstider({ apningstider }) {
-    const apningstiderNoder = getApningstiderNoder(apningstider);
+    let apningstiderNoder = getApningstiderNoder(apningstider);
+    if (apningstiderNoder.length === 0) {
+        apningstiderNoder = <p>Ingen åpningstider registrert</p>;
+    }
     return (
         <div className="infoblokk">
             <h3 className="overskrift">Åpningstider</h3>
