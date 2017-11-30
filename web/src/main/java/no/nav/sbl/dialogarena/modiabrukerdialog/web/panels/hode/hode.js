@@ -14,14 +14,14 @@ function opprettWebSocket(callback) {
         return;
     }
 
-    const connection = new WebSocket(`wss://veilederflatehendelser${finnMiljoStreng()}.adeo.no/modiaeventdistribution/websocket`);
+    const connection = new WebSocket('wss://veilederflatehendelser' + finnMiljoStreng() + '.adeo.no/modiaeventdistribution/websocket');
     connection.onmessage = callback;
 
-    connection.onerror = function (error) {
+    connection.onerror = function onerror(error) {
         console.error(error);
     };
 
-    connection.onclose = function () {
+    connection.onclose = function onclose() {
         setTimeout(function () {
             opprettWebSocket(callback);
         }, 1000);
@@ -34,31 +34,34 @@ function fetchOkStatus(resp) {
     }
     return resp;
 }
+function toJson(resp) {
+    return resp.json();
+}
 
 function nullstillContext() {
-    return fetch(`https://modapp${finnMiljoStreng()}.adeo.no/modiacontextholder/api/context/nullstill`, {
+    return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/nullstill', {
         credentials: 'same-origin',
         method: 'DELETE'
     });
 }
 
 function hentContextBruker() {
-    return fetch(`https://modapp${finnMiljoStreng()}.adeo.no/modiacontextholder/api/context/aktivbruker`, { credentials: 'same-origin' })
+    return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/aktivbruker', { credentials: 'same-origin' })
         .then(fetchOkStatus)
-        .then((resp) => resp.json());
+        .then(toJson);
 }
 
 function hentContextEnhet() {
-    return fetch(`https://modapp${finnMiljoStreng()}.adeo.no/modiacontextholder/api/context/aktivenhet`, { credentials: 'same-origin' })
+    return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/aktivenhet', { credentials: 'same-origin' })
         .then(fetchOkStatus)
-        .then((resp) => resp.json());
+        .then(toJson);
 }
 
 function oppdaterContextBruker(fnr) {
     if (!fnr || fnr.lengt === 0) {
         return nullstillContext();
     } else {
-        return fetch(`https://modapp${finnMiljoStreng()}.adeo.no/modiacontextholder/api/context`, {
+        return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context', {
             credentials: 'same-origin',
             method: 'POST',
             body: JSON.stringify({ eventType: 'NY_AKTIV_BRUKER', verdi: fnr }),
@@ -70,7 +73,7 @@ function oppdaterContextBruker(fnr) {
 }
 
 function oppdaterContextEnhet(enhet) {
-    return fetch(`https://modapp${finnMiljoStreng()}.adeo.no/modiacontextholder/api/context`, {
+    return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context', {
         credentials: 'same-origin',
         method: 'POST',
         body: JSON.stringify({ eventType: 'NY_AKTIV_ENHET', verdi: enhet }),
@@ -92,7 +95,7 @@ function oppdatertValgtEnhet(valgtEnhet) {
 }
 
 function lastInnBruker(fnr) {
-    window.location = `https://modapp${finnMiljoStreng()}.adeo.no/modiabrukerdialog/hentPerson/${fnr}`;
+    window.location = 'https://modapp' + finnMiljoStreng() + '.adeo.no/modiabrukerdialog/hentPerson/' + fnr;
 }
 
 // Wicket integration
@@ -101,7 +104,7 @@ function JSWicket(url, component) {
     this.component = component;
 }
 
-JSWicket.prototype.send = function (action, data) {
+JSWicket.prototype.send = function send(action, data) {
     console.log('sending', this.url, this.component, action, data);
     Wicket.Ajax.ajax({
         'u': this.url,
@@ -162,9 +165,9 @@ function lagDecoratorConfig(fnr, autoSubmit, feilmelding) {
     return config;
 }
 const websocketCallbackMap = {
-    'NY_AKTIV_BRUKER': (fnr, redirectModal) => {
+    'NY_AKTIV_BRUKER': function(fnr, redirectModal) {
         hentContextBruker()
-            .then((data) => {
+            .then(function(data) {
                 if (data.aktivBruker === fnr) {
                     return;
                 }
@@ -179,17 +182,17 @@ const websocketCallbackMap = {
                 redirectModal.vis(data.aktivBruker, endreCallback, beholdCallback);
             });
     },
-    'NY_AKTIV_ENHET': (fnr, redirectModal) => {
+    'NY_AKTIV_ENHET': function(fnr, redirectModal) {
         hentContextEnhet()
-            .then((data) => console.log('data', data));
+            .then(function(data) { console.log('data', data); });
     },
 };
 
 // Hode init
 (function () {
-    let decoratorConfig = null; // Må legges hit for å kunne deles mellom `initHode` og `update`
+    let decoratorConfig = null; // Må legges hit for å kunne deles mellom 'initHode' og 'update'
 
-    window.initHode = function (callbackUrl, markupId, fnr, autoSubmit, feilmelding) {
+    window.initHode = function initHode(callbackUrl, markupId, fnr, autoSubmit, feilmelding) {
         // Setter opp wicket-callback-handler
         const sendToWicket = new JSWicket(callbackUrl, markupId);
         document.addEventListener('dekorator-hode-personsok', sokOppFnr(sendToWicket));
@@ -202,7 +205,7 @@ const websocketCallbackMap = {
         window.renderDecoratorHead(decoratorConfig, markupId);
 
         // Laster inn/Oppdater bruker ved sidelast
-        hentContextBruker().then((data) => {
+        hentContextBruker().then(function(data) {
             console.log('brukerIContext', data);
             if (data.aktivBruker !== fnr) {
                 if (fnr && fnr.length > 0) {
@@ -215,9 +218,9 @@ const websocketCallbackMap = {
 
 
         // Setter opp context-lyttere
-        opprettWebSocket((event) => {
+        opprettWebSocket(function(event) {
             const type = event.data;
-            const handler = websocketCallbackMap[type] || (() => console.warn('Ukjent event fra contextholder', event));
+            const handler = websocketCallbackMap[type] || (function() { console.warn('Ukjent event fra contextholder', event); });
 
             handler(fnr, redirectModal);
         });
