@@ -1,9 +1,10 @@
 import React from 'react';
 import PT from 'prop-types';
-import { isArray, includes, toArray } from 'lodash';
-import Snurrepipp from '../../utils/snurrepipp';
-import AdvarselBoks from '../../utils/advarsel-boks';
 import Q from 'q';
+import NavFrontendSpinner from 'nav-frontend-spinner';
+
+import { isArray, includes, toArray } from 'lodash';
+import AdvarselBoks from '../../utils/advarsel-boks';
 
 function ensureArray(arr) {
     return isArray(arr) ? arr : [arr];
@@ -55,9 +56,9 @@ class AsyncLoader extends React.Component {
     render() {
         let children;
         if (this.state.status === 'rejected') {
-            children = <AdvarselBoks tekst="Henting av data mislyktes" />;
+            children = <AdvarselBoks tekst="Henting av brukers NAV-kontor mislyktes" />;
         } else if (this.state.status === 'pending') {
-            children = <Snurrepipp {...this.props.snurrepipp} />;
+            children = <NavFrontendSpinner type="XL" />;
         } else {
             const passingProps = {};
             passingProps[this.props.toProp] = this.state.data;

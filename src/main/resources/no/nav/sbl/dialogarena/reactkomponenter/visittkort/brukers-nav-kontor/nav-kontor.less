@@ -75,4 +75,28 @@
       flex-basis: 50%;
     }
   }
+
+  svg:not(:root) {
+    overflow: hidden;
+  }
+
+  *,
+  ::after,
+  ::before {
+    box-sizing: border-box;
+  }
+
+  .spinner {
+    display: inline-block;
+    position: relative;
+    animation: rotering 2s linear infinite;
+  }
+
+  .spinner--xl {
+    height: 64px;
+    width: 64px;
+    background-size: 64px 64px;
+    animation-duration: 1.6s;
+  }
+
 }

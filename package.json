@@ -65,6 +65,8 @@
     "nav-frontend-paneler-style": "0.3.7",
     "nav-frontend-skjema": "0.1.18",
     "nav-frontend-skjema-style": "0.3.9",
+    "nav-frontend-spinner": "^0.1.20",
+    "nav-frontend-spinner-style": "^0.2.4",
     "nav-frontend-typografi": "1.0.12",
     "nav-frontend-typografi-style": "1.0.7",
     "prop-types": "15.6.0",
