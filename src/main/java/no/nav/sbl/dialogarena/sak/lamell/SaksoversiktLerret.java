@@ -21,12 +21,15 @@ public class SaksoversiktLerret extends Lerret {
             .done();
     private final ReactComponentPanel lerret;
 
-    public SaksoversiktLerret(String id, final String fnr, String brukerNavn) {
+    public SaksoversiktLerret(String id, final String fnr, final String gt, final String diskresjonskode, final String norgUrl, String brukerNavn) {
         super(id);
 
         lerret = new ReactComponentPanel("saksoversiktLerret", "SaksoversiktLerret", new HashMap<String, Object>() {{
             put("fnr", fnr);
             put("brukerNavn", brukerNavn);
+            put("norgUrl", norgUrl);
+            put("gt", gt);
+            put("disk", diskresjonskode);
         }});
 
         add(lerret);
@@ -46,7 +49,7 @@ public class SaksoversiktLerret extends Lerret {
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         String tema = feedItemPayload.getItemId();
-        lerret.call("callAction", "visTema", tema);
+        lerret.call("callAction", "visTema", tema);//GT, diskresjonskode og norg-url?
     }
 }
 
