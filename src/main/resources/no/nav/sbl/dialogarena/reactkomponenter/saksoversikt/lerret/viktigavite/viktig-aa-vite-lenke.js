@@ -30,18 +30,17 @@ class ViktigAViteLenke extends React.Component {
             temaer = valgtTema.temakode;
         }
 
-        let norglenke  = `${this.props.norgUrl}/#/startsok?gt=${this.props.gt}&tema=${temaer}`;
+        let norglenke  = `${this.props.norgUrl}/#/startsok?tema=${temaer}`;
+        if ( this.props.gt != null ) {
+            norglenke += `&gt=${this.props.gt}`;
+        }
         if( this.props.diskresjonskode === 'SPSF') {
             norglenke += `&disk=${this.props.diskresjonskode}`;
         }
 
-        console.log('VAVtemakodeliste', temakodeliste);
-
         const linktekst = `Viktig å vite om ${valgtTema.temanavn}`;
         const lenke = <li><a href="javascript:void(0);" onClick={this._redirect}>{linktekst}</a></li>;
         const skalViselenke = skalViseViktigAViteSideForTema(miljovariabler['temasider.viktigavitelenke'], valgtTema.temakode);
-
-        console.log(skalViselenke);
         return (
             <div className="viktig-aa-vite-container">
                 <div className="viktig-aa-vite-lenke">
