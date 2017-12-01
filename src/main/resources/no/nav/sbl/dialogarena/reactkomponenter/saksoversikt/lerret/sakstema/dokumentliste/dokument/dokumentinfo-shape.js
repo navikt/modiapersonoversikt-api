@@ -8,5 +8,6 @@ export default PT.shape({
     hoveddokument: PT.object.isRequired,
     vedlegg: PT.array,
     temakodeVisning: PT.string,
-    feilWrapper: PT.object.isRequired
+    feilWrapper: PT.object.isRequired,
+    tilhorendeSakid: PT.string
 });

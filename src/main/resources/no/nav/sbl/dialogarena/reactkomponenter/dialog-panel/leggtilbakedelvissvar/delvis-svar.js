@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PT from 'prop-types';
 import Ajax from '../../utils/ajax';
 import TraadVisning from '../traadvisning/traadvisning-module';
 import TekniskFeil from '../../feilmeldingsmodaler/teknisk-feil';
-import { Textarea } from 'nav-frontend-skjema';
+import {Textarea} from 'nav-frontend-skjema';
+import AlertStripe from 'nav-frontend-alertstriper';
 import Skrivestotte from '../../skrivestotte/skrivestotte-module';
-import { generateId } from '../../utils/utils-module';
-import { skrivestotteprops } from '../props';
+import {generateId} from '../../utils/utils-module';
+import {skrivestotteprops} from '../props';
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
 const DEFAULT_VALGT_TEMAGRUPPE = 'Velg Temagruppe';
@@ -30,6 +31,8 @@ class DelvisSvar extends Component {
             svarValue: '',
             valgtTemagruppe: DEFAULT_VALGT_TEMAGRUPPE,
             panelState: panelState.INITIALIZED,
+            valideringsFeil: false,
+            tekstValidFiel: false,
             temagruppeValidFeil: false
         };
     }
@@ -51,12 +54,20 @@ class DelvisSvar extends Component {
         return Ajax.post(url, data);
     }
 
-    validTemagruppe() {
-        return this.state.valgtTemagruppe !== DEFAULT_VALGT_TEMAGRUPPE;
+    validate() {
+        const ugyldigTemagruppe = this.state.valgtTemagruppe === DEFAULT_VALGT_TEMAGRUPPE;
+        const ugyldigTekst = this.state.svarValue.length === 0;
+        const valideringfeil = ugyldigTemagruppe || ugyldigTekst;
+        this.setState({
+            temagruppeValidFeil: ugyldigTemagruppe,
+            tekstValidFiel: ugyldigTekst,
+            valideringsFeil: valideringfeil
+        });
+        return !valideringfeil;
     }
 
     svarDelvis() {
-        this.validTemagruppe() ? this.leggTilbakeDelvisesvar() : this.setState({ temagruppeValidFeil: true }) ;
+        this.validate() && this.leggTilbakeDelvisesvar();
     }
 
     leggTilbakeDelvisesvar() {
@@ -73,18 +84,20 @@ class DelvisSvar extends Component {
     }
 
     velgTemagruppe(event) {
+        const ugyldigTemagruppe = event.target.value === DEFAULT_VALGT_TEMAGRUPPE;
         this.setState({
             valgtTemagruppe: event.target.value,
-            temagruppeValidFeil: !this.validTemagruppe()
+            temagruppeValidFeil: ugyldigTemagruppe,
+            valideringsFeil: ugyldigTemagruppe || this.state.tekstValidFiel
         });
     }
 
     handleSvarEndring(event) {
-        this.setState({ svarValue: event.target.value });
+        this.setState({svarValue: event.target.value});
     }
 
     feilmeldingCloseButtonCallback() {
-        this.setState({ feilmelding: null, panelState: panelState.INITIALIZED });
+        this.setState({feilmelding: null, panelState: panelState.INITIALIZED});
     }
 
     lagFeilmeldingModalHvisFeil() {
@@ -93,35 +106,56 @@ class DelvisSvar extends Component {
                 closeButtonCallback={this.feilmeldingCloseButtonCallback}
                 tekst={this.state.feilmelding} isOpen
             />) :
-            <div />;
+            <div/>;
     }
 
-    lagTemagruppeValg(){
+    lagTemagruppeValg() {
         return (Object.keys(this.props.temagruppeMapping)
-                      .map((key) =>
-                           <option key={key} value={key}>
-                                {this.props.temagruppeMapping[key]}
-                           </option>)
+                .map((key) =>
+                    <option key={key} value={key}>
+                        {this.props.temagruppeMapping[key]}
+                    </option>)
         );
     }
+
+    valideringsFeilmelding() {
+        return <AlertStripe type='advarsel' solid={true}>
+            <div>
+                {this.state.tekstValidFiel && <p>Tekstfeltet kan ikke være tomt.</p>}
+                {this.state.temagruppeValidFeil && <p>Temagruppe må være valgt.</p>}
+            </div>
+        </AlertStripe>;
+    }
+
+
 
     render() {
         const valgTemagruppe = this.lagTemagruppeValg();
         const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
         const hiddenLabel = <span className="vekk">Skriv delsvar</span>;
-
         return (
             <div>
-                <Skrivestotte {...this.props.skrivestotteprops} tekstfeltId={this.textId} ref={(input) => { this.skrivestoote = input; }} />
+                <Skrivestotte {...this.props.skrivestotteprops} tekstfeltId={this.textId} ref={(input) => {
+                    this.skrivestoote = input;
+                }}/>
 
                 <h3>Legg tilbake med delsvar</h3>
 
-                <TraadVisning traad={this.props.traad} />
+                <TraadVisning traad={this.props.traad}/>
+
+                {this.state.valideringsFeil && this.valideringsFeilmelding()}
 
                 <div className="svar">
                     <div className="svar-overskrift-boks">
                         <h1 className="overskrift medium"><span>Skriv delsvar</span></h1>
-                        <button className="skrivestotteToggle" id="skrivestotteToggler10c" title="Hurtigtast: ALT + C" onClick={() => { this.skrivestoote.vis(); }}> <span className="vekk">Skrivestøtte.</span> </button>
+                        <button
+                            className="skrivestotteToggle"
+                            id="skrivestotteToggler10c"
+                            title="Hurtigtast: ALT + C"
+                            onClick={() => { this.skrivestoote.vis(); }}
+                        >
+                            <span className="vekk">Skrivestøtte.</span>
+                        </button>
                     </div>
                     <Textarea
                         className="expandingtextarea"
