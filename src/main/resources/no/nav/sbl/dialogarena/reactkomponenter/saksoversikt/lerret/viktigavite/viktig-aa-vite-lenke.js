@@ -38,17 +38,17 @@ class ViktigAViteLenke extends React.Component {
         console.log('VAVtemakodeliste', temakodeliste);
 
         const linktekst = `Viktig å vite om ${valgtTema.temanavn}`;
-        const lenke = <a href="javascript:void(0);" onClick={this._redirect}>{linktekst}</a>;
+        const lenke = <li><a href="javascript:void(0);" onClick={this._redirect}>{linktekst}</a></li>;
         const skalViselenke = skalViseViktigAViteSideForTema(miljovariabler['temasider.viktigavitelenke'], valgtTema.temakode);
 
         console.log(skalViselenke);
         return (
             <div className="viktig-aa-vite-container">
                 <div className="viktig-aa-vite-lenke">
-                    <a href={norglenke} target="_blank">dummytekst Arbeidsfordeling i NORG</a>
-                    <div>
+                    <ul>
+                        <li><a href={norglenke} target="_blank">dummytekst Arbeidsfordeling i NORG</a></li>
                         {skalViselenke && lenke}
-                    </div>
+                    </ul>
                 </div>
             </div>
         );
