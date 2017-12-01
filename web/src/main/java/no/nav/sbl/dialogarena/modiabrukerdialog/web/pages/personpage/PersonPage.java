@@ -69,7 +69,17 @@ import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
+import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
+import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
+import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
@@ -191,10 +201,20 @@ public class PersonPage extends BasePage {
 
             return new GrunnInfo.Bruker(person.getFodselsnummer().getNummer())
                     .withPersonnavn(personfakta.getPersonnavn())
-                    .withEnhet(hentEnhet(personfakta));
+                    .withEnhet(hentEnhet(personfakta))
+                    .withDiskresjonskode(getDiskresjonskode(personfakta))
+                    .withGeografiskTilknytning(getGeografiskTilknytning(personfakta));
         } catch (Exception e) {
-            return new GrunnInfo.Bruker(fnr, "", "", "");
+            return new GrunnInfo.Bruker(fnr, "", "", "", "","");
         }
+    }
+
+    private String getGeografiskTilknytning(Personfakta personfakta) {
+        return personfakta.getGeografiskTilknytning() != null? personfakta.getGeografiskTilknytning().getValue(): "";
+    }
+
+    private String getDiskresjonskode(Personfakta personfakta) {
+        return personfakta.getDiskresjonskode() != null? personfakta.getDiskresjonskode().getValue(): "";
     }
 
     private GrunnInfo.Saksbehandler hentSaksbehandlerInfo() {
