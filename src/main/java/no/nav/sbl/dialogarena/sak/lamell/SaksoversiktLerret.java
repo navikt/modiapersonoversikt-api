@@ -29,7 +29,7 @@ public class SaksoversiktLerret extends Lerret {
             put("brukerNavn", brukerNavn);
             put("norgUrl", norgUrl);
             put("gt", gt);
-            put("disk", diskresjonskode);
+            put("diskresjonskode", diskresjonskode);
         }});
 
         add(lerret);
