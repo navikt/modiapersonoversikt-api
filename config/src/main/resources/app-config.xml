@@ -69,6 +69,9 @@
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <webservice alias="pensjon:PensjonSak_v1" mapToProperty="pensjon.sak.v1"/>
         <webservice alias="Journal_v2" mapToProperty="journal.v2"/>
+        <rest alias="kodeverksmapper.oppgavetype" mapToProperty="kodeverksmapper.oppgavetype"/>
+        <rest alias="kodeverksmapper.underkategori" mapToProperty="kodeverksmapper.underkategori"/>
+        <rest alias="kodeverksmapper.ping" mapToProperty="kodeverksmapper.ping"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->
