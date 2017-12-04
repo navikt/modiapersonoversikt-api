@@ -16,7 +16,6 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,11 +45,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
 
     @Inject
-    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, AnsattService ansattWS, Ruting ruting, ArbeidsfordelingV1Service arbeidsfordelingService) {
+    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, AnsattService ansattWS, ArbeidsfordelingV1Service arbeidsfordelingService) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.oppgaveWS = oppgaveWS;
         this.ansattWS = ansattWS;
-        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting, arbeidsfordelingService);
+        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, arbeidsfordelingService);
     }
 
     @Override

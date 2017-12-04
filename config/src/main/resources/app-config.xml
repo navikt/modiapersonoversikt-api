@@ -43,7 +43,6 @@
         <webservice alias="virksomhet:Sak_v1" mapToProperty="gsak.sak.v1"/>
         <webservice alias="virksomhet:BehandleSak_v1" mapToProperty="gsak.behandlesak.v1"/>
         <webservice alias="virksomhet:ArbeidOgAktivitet_v1" mapToProperty="arena.arbeidogaktivitet.v1"/>
-        <webservice alias="virksomhet:Ruting_v1" mapToProperty="gsak.ruting.v1"/>
         <webservice alias="virksomhet:Person_v3" mapToProperty="tps.person.v3"/>
         <webservice alias="virksomhet:BehandlePerson_v1" mapToProperty="tps.behandleperson.v1"/>
         <webservice alias="virksomhet:Organisasjon_v4" mapToProperty="organisasjonendpoint.v4"/>

@@ -21,19 +21,13 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.stubbing.OngoingStubbing;
 
 import javax.ws.rs.ForbiddenException;
-import java.util.ArrayList;
 import java.util.Collections;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.*;
@@ -52,7 +46,6 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private OppgaveV3 oppgaveServiceMock;
     private AnsattService ansattServiceMock;
     private OppgavebehandlingV3 oppgavebehandlingMock;
-    private Ruting rutingMock;
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private ArbeidsfordelingV1Service arbeidsfordelingMock;
 
@@ -73,23 +66,15 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     @BeforeEach
     void before() {
         mockTjenester();
-        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock, ansattServiceMock, rutingMock, arbeidsfordelingMock);
+        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock, ansattServiceMock, arbeidsfordelingMock);
     }
 
     private void mockTjenester() {
         oppgaveServiceMock = mock(OppgaveV3.class);
         ansattServiceMock = mockAnsattService();
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
-        rutingMock = mockRutingService();
         saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
         arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
-    }
-
-    private Ruting mockRutingService() {
-        Ruting rutingMock = mock(Ruting.class);
-        when(rutingMock.finnAnsvarligEnhetForOppgavetype(any()))
-                .thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(new ArrayList<>()));
-        return rutingMock;
     }
 
     private AnsattService mockAnsattService() {
@@ -138,12 +123,6 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         assertThat(endreOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
         assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
         assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhetId));
-    }
-
-    private OngoingStubbing<WSFinnAnsvarligEnhetForOppgavetypeResponse> mockRuting(String nyEnhet) {
-        return when(rutingMock.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class)))
-                .thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse()
-                        .withEnhetListe(Collections.singletonList(new WSEnhet().withEnhetId(nyEnhet))));
     }
 
     @Test
