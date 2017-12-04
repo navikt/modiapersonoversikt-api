@@ -10,6 +10,8 @@
           class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.ASBOGOSYSNAVKeyGenerator"/>
     <bean id="asbogosysansattlistekeygenerator"
           class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.ASBOGOSYSNAVAnsattListeKeyGenerator"/>
+    <bean id="organisasjonEnhetKontantinformasjonGenerator"
+          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.OrganisasjonEnhetKontantinformasjonKeyGenerator"/>
     <bean id="defaultkeygenerator"
           class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
 
@@ -99,6 +101,11 @@
             <cache:cacheable method="finn*" />
         </cache:caching>
     </cache:advice>
+    <cache:advice id="organisasjonEnhetKontantinformasjonAdvice" key-generator="organisasjonEnhetKontantinformasjonGenerator">
+        <cache:caching cache="organisasjonEnhetKontantinformasjonCache">
+            <cache:cacheable method="hent*" />
+        </cache:caching>
+    </cache:advice>
 
     <aop:config>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
@@ -116,6 +123,7 @@
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
         <aop:advisor advice-ref="pesysService" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
+        <aop:advisor advice-ref="organisasjonEnhetKontantinformasjonAdvice" pointcut="bean(organisasjonEnhetKontaktinformasjonV1)"/>
     </aop:config>
 
 </beans>

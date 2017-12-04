@@ -78,6 +78,16 @@
 		   diskExpiryThreadIntervalSeconds="120"
 		   memoryStoreEvictionPolicy="LRU"/>
 
+	<cache name="organisasjonEnhetKontantinformasjonCache" maxElementsInMemory="100"
+		   eternal="false"
+		   timeToIdleSeconds="300"
+		   timeToLiveSeconds="300"
+		   overflowToDisk="false"
+		   maxElementsOnDisk="1000"
+		   diskPersistent="false"
+		   diskExpiryThreadIntervalSeconds="120"
+		   memoryStoreEvictionPolicy="LRU"/>
+
 	<cache name="foreldrePengerCache" maxElementsInMemory="100"
 		   eternal="false"
 		   timeToIdleSeconds="300"
