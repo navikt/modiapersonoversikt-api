@@ -10,6 +10,8 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import java.util.List;
 
 public interface GsakService {
+    List<AnsattEnhet> hentForeslatteEnheter(String fnr, String tema, String type, Optional<GsakKodeTema.Underkategori> underkategori);
+
     boolean oppgaveKanManuelltAvsluttes(String oppgaveId);
 
     WSOppgave hentOppgave(String oppgaveId);

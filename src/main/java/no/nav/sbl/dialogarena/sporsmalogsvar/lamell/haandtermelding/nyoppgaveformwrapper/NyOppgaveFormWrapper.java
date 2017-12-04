@@ -5,7 +5,6 @@ import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
@@ -30,6 +29,7 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 
@@ -45,8 +45,6 @@ public class NyOppgaveFormWrapper extends Panel {
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
     @Inject
     private AnsattService ansattService;
-    @Inject
-    private ArbeidsfordelingV1Service arbeidsfordeling;
 
     private final InnboksVM innboksVM;
     private final List<AnsattEnhet> enheter, foreslatteEnheter;
@@ -106,6 +104,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 FeedbackLabel.create(prioritetVelger),
                 FeedbackLabel.create(beskrivelse)
         );
+
 
         form.add(setupOpprettOppgaveKnapp(innboksVM, feedbackPanelSuccess, feedbackPanelError));
         add(form, feedbackPanelSuccess);
@@ -241,6 +240,7 @@ public class NyOppgaveFormWrapper extends Panel {
         };
         typeDropdown.setRequired(true);
 
+
         typeContainer.setOutputMarkupPlaceholderTag(true);
 
         typeContainer.add(typeDropdown);
@@ -329,20 +329,12 @@ public class NyOppgaveFormWrapper extends Panel {
             return;
         }
         foreslatteEnheter.clear();
-        foreslatteEnheter.addAll(hentBehandlendeEnhet(nyOppgave));
+        foreslatteEnheter.addAll(gsakService.hentForeslatteEnheter(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode, optional(nyOppgave.underkategori)));
         if (foreslatteEnheter.size() == 1) {
             nyOppgave.enhet = foreslatteEnheter.get(0);
         } else {
             nyOppgave.enhet = null;
         }
-    }
-
-    private List<AnsattEnhet> hentBehandlendeEnhet(NyOppgave oppgave) {
-        return arbeidsfordeling
-                .finnBehandlendeEnhetListe(innboksVM.getFnr(),
-                        oppgave.tema.kode,
-                        oppgave.type.kode,
-                        oppgave.underkategori != null ? oppgave.underkategori.kode : null);
     }
 
     private void oppdaterAnsatteListe() {
