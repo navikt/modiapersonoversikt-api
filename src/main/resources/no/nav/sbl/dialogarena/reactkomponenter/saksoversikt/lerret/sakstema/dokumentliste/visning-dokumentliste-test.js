@@ -46,6 +46,7 @@ describe('VisningDokumentliste', () => {
         dato: fromDateToJSON(new Date())
     };
     function noop() {}
+    const getState = { lerret: { temakodeliste: []  }};
 
     it('Gir IngenDokumenterBidrag om temakode er bidrag og ingen dokumenter', () => {
         const props = {
@@ -79,14 +80,14 @@ describe('VisningDokumentliste', () => {
                 dokumentMetadata: [dokumentinfo, dokumentinfo],
                 brukerNavn: 'test',
                 visTema: false,
-                temakode: 'BID'
+                temakode: 'BID',
             },
             visSide: noop,
             velgJournalpost: noop,
-            filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
+            filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true },
+            temakodeliste: []
         };
 
-        const getState = {};
         const store = mockStore(getState);
         const element = renderIntoDocument(
             <Provider store={store}>
@@ -147,7 +148,6 @@ describe('VisningDokumentliste', () => {
             filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
         };
 
-        const getState = {};
         const store = mockStore(getState);
         const element = renderIntoDocument(
             <Provider store={store}>

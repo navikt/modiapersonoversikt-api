@@ -51,6 +51,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
     let _sakstema = resultat && resultat.length > 0 ? resultat
         .filter(fjernTommeTema(parseInt(miljovariabler.value['behandlingsstatus.synlig.antallDager'], 10)))
         .sort(nyesteSakstema) : [];
+    let temakodeliste = _sakstema.map(sakstema => sakstema.temakode);
     _sakstema = _sakstema.length > 1 ? lagAlleTema(_sakstema).concat(_sakstema) : _sakstema;
 
     const valgtTema = state.valgtTema ? state.valgtTema : _sakstema[0];
@@ -58,6 +59,7 @@ actionHandlers[AT.LAST_LERRET_DATA_OK] = (state, action) => {
         ...state,
         status,
         valgtTema,
+        temakodeliste,
         filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true },
         data: {
             sakstema: _sakstema,

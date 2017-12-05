@@ -89,6 +89,9 @@ export class SaksoversiktLerret extends React.Component {
 
 SaksoversiktLerret.propTypes = {
     fnr: PT.string.isRequired,
+    gt: PT.string.isRequired,
+    diskresjonskode: PT.string,
+    norgUrl: PT.string.isRequired,
     brukerNavn: PT.string.isRequired,
     hentLerretData: PT.func,
     velgSak: PT.func,
