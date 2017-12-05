@@ -18,8 +18,6 @@ class ViktigAViteLenke extends React.Component {
     }
 
     render() {
-        console.log('VAVLenke');
-        console.log(this.props);
         const { valgtTema, temakodeliste } = this.props;
         const { miljovariabler } = this.context;
 
