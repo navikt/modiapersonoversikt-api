@@ -574,6 +574,11 @@
                 <version>${organisasjon-enhet-kontaktinformasjon}</version>
                 <classifier>jaxws</classifier>
             </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>oppfolgingsinfo-v1-tjenestespesifikasjon</artifactId>
+                <version>1.0.4</version>
+            </dependency>
 
             <!--Modig-->
             <dependency>
