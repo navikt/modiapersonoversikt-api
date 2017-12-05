@@ -42,9 +42,11 @@ class BrukersNavKontor extends React.Component {
         return (
             <div className="nav-kontor-panel">
                 <div className="nav-ikon" />
-                <AsyncLoader promises={this.promise} toProp={"organisasjon"} >
-                    <NavKontor baseUrlAppAdeo={this.props.baseUrlAppAdeo} />
-                </AsyncLoader>
+                <div className="content">
+                    <AsyncLoader promises={this.promise} toProp={"organisasjon"} >
+                        <NavKontor baseUrlAppAdeo={this.props.baseUrlAppAdeo} />
+                    </AsyncLoader>
+                </div>
             </div>
         );
     }
