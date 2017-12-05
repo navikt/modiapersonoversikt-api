@@ -79,14 +79,15 @@ describe('VisningDokumentliste', () => {
                 dokumentMetadata: [dokumentinfo, dokumentinfo],
                 brukerNavn: 'test',
                 visTema: false,
-                temakode: 'BID'
+                temakode: 'BID',
             },
             visSide: noop,
             velgJournalpost: noop,
-            filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
+            filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true },
+            temakodeliste: []
         };
 
-        const getState = {};
+        const getState = { lerret: { temakodeliste: []  }};
         const store = mockStore(getState);
         const element = renderIntoDocument(
             <Provider store={store}>
@@ -147,7 +148,7 @@ describe('VisningDokumentliste', () => {
             filtreringsvalg: { NAV: true, BRUKER: true, ANDRE: true }
         };
 
-        const getState = {};
+        const getState = { lerret: { temakodeliste: []  }};
         const store = mockStore(getState);
         const element = renderIntoDocument(
             <Provider store={store}>
