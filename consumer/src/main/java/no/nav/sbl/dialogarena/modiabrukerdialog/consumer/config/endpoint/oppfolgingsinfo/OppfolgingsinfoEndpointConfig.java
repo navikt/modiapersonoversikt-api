@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusRequest;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusResponse;
+import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.WSOppfolgingsdata;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,7 +40,7 @@ public class OppfolgingsinfoEndpointConfig {
         return new OppfolgingsinfoV1() {
             @Override
             public OppfolgingsstatusResponse hentOppfolgingsstatus(OppfolgingsstatusRequest oppfolgingsstatusRequest) {
-                return new OppfolgingsstatusResponse();
+                return new OppfolgingsstatusResponse().withWsOppfolgingsdata(new WSOppfolgingsdata().withErUnderOppfolging(true));
             }
 
             @Override
