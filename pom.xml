@@ -95,7 +95,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>2.1.1-SNAPSHOT</personsok.version>
-        <kjerneinfo.versjon>5.3.3</kjerneinfo.versjon>
+        <kjerneinfo.versjon>5.3.4</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
@@ -573,6 +573,11 @@
                 <artifactId>nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon</artifactId>
                 <version>${organisasjon-enhet-kontaktinformasjon}</version>
                 <classifier>jaxws</classifier>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>oppfolgingsinfo-v1-tjenestespesifikasjon</artifactId>
+                <version>1.0.4</version>
             </dependency>
 
             <!--Modig-->
