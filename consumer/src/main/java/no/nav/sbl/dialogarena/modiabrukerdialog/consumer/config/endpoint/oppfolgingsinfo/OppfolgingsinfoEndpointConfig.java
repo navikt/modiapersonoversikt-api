@@ -40,7 +40,10 @@ public class OppfolgingsinfoEndpointConfig {
         return new OppfolgingsinfoV1() {
             @Override
             public OppfolgingsstatusResponse hentOppfolgingsstatus(OppfolgingsstatusRequest oppfolgingsstatusRequest) {
-                return new OppfolgingsstatusResponse().withWsOppfolgingsdata(new WSOppfolgingsdata().withErUnderOppfolging(true));
+                return new OppfolgingsstatusResponse()
+                        .withWsOppfolgingsdata(new WSOppfolgingsdata()
+                                .withErUnderOppfolging(true)
+                                .withVeilederIdent("***REMOVED***"));
             }
 
             @Override
