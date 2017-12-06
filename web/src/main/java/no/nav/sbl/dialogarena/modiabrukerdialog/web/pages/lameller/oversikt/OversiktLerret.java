@@ -36,7 +36,7 @@ public class OversiktLerret extends Lerret {
         add(new TimingMetricsBehaviour("oversikt").withPrefix("lerret."));
 
         List<Widget> widgets = new ArrayList<>(asList(
-                new OppfolgingWidget("kontrakter", "O"),
+                new OppfolgingWidget("kontrakter", "O", fnr),
                 new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
                 new MeldingerWidget("meldinger", "M", fnr)
         )
