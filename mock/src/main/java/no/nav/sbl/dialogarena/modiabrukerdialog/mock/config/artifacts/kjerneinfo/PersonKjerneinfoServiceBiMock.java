@@ -15,6 +15,7 @@ import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
+import org.joda.time.LocalDate;
 
 import java.util.Arrays;
 
@@ -54,6 +55,7 @@ public class PersonKjerneinfoServiceBiMock {
 
         Personfakta personfakta = new Personfakta();
         personfakta.setSivilstand(new Kodeverdi.With().value("SINGEL").done());
+        personfakta.setSivilstandFom(new LocalDate().withYear(1989).withMonthOfYear(5).withDayOfMonth(1));
         personfakta.setPersonnavn(lagPersonnavn("Test", "Testesen"));
         personfakta.setAdresse(lagMockAdresse());
         personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
