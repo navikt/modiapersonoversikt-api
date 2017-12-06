@@ -24,14 +24,16 @@ public class GrunnInfo implements Serializable {
     }
 
     public static class Bruker implements Serializable {
-        public String fnr, fornavn, etternavn, navn, navkontor;
+        public String fnr, fornavn, etternavn, navn, navkontor, geografiskTilknytning, diskresjonskode;
 
-        public Bruker(String fnr, String fornavn, String etternavn, String navkontor) {
+        public Bruker(String fnr, String fornavn, String etternavn, String navkontor, String geografiskTilknytning, String diskresjonskode) {
             this.fnr = fnr;
             this.fornavn = namifyString(fornavn);
             this.etternavn = namifyString(etternavn);
             this.navn = kombinerTilFulltNavn(this.fornavn, this.etternavn);
             this.navkontor = navkontor;
+            this.geografiskTilknytning = geografiskTilknytning;
+            this.diskresjonskode = diskresjonskode;
         }
 
         public Bruker(String fnr) {
@@ -47,6 +49,16 @@ public class GrunnInfo implements Serializable {
 
         public Bruker withEnhet(String enhet) {
             this.navkontor = enhet;
+            return this;
+        }
+
+        public Bruker withGeografiskTilknytning(String geografiskTilhorighet) {
+            this.geografiskTilknytning = geografiskTilhorighet;
+            return this;
+        }
+
+        public Bruker withDiskresjonskode( String diskresjonskode) {
+            this.diskresjonskode = diskresjonskode;
             return this;
         }
     }
