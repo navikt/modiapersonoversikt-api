@@ -31,10 +31,11 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import static java.lang.String.format;
-import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.String.format;
+import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class BasePage extends WebPage {
 
