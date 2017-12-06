@@ -7,6 +7,9 @@ import no.nav.kjerneinfo.kontrakter.ytelser.YtelseskontrakterLoader;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.rest.oppfolgingsinfo.Oppfolgingsinfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -112,4 +115,12 @@ public class LamellServicesAndLoaders {
     public EnforcementPoint pep() {
         return mock(EnforcementPoint.class);
     }
+
+    @Bean
+    public OppfolgingsinfoService oppfolgingsinfoService() {
+        OppfolgingsinfoService mock = mock(OppfolgingsinfoService.class);
+        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(new Oppfolgingsinfo(true,new Saksbehandler("Harald","Hårfagre", "z991028")));
+        return mock;
+    }
+
 }
