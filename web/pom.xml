@@ -35,15 +35,7 @@
         <!--Personsok-->
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>personsok-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-search</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-result</artifactId>
+            <artifactId>personsok-web</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
@@ -385,6 +377,11 @@
             <!-- Må være compile scope grunnet avhengighet til mock-modul -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-web</artifactId>
+            <version>2.1.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
