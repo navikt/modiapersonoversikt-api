@@ -94,7 +94,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <personsok.version>2.1.1-SNAPSHOT</personsok.version>
+        <personsok.version>2.1.0</personsok.version>
         <kjerneinfo.versjon>5.3.4</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>3.0.18</utbetaling.version>
