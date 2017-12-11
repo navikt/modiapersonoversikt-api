@@ -130,6 +130,8 @@
         <egenansatt-tjenestespesifikasjon.version>1.0.5</egenansatt-tjenestespesifikasjon.version>
         <pensjon-sak.version>1.0.3</pensjon-sak.version>
         <organisasjon-enhet-kontaktinformasjon>1.1.0</organisasjon-enhet-kontaktinformasjon>
+        <nav-fim-oppfoelging-v1-tjenestespesifikasjon-version>1.2.0</nav-fim-oppfoelging-v1-tjenestespesifikasjon-version>
+
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
     </properties>
@@ -578,6 +580,12 @@
                 <artifactId>oppfolgingsinfo-v1-tjenestespesifikasjon</artifactId>
                 <version>1.0.4</version>
             </dependency>
+            <dependency>
+                <groupId>no.nav.tjenester.fim</groupId>
+                <artifactId>nav-fim-oppfoelging-v1-tjenestespesifikasjon</artifactId>
+                <version>${nav-fim-oppfoelging-v1-tjenestespesifikasjon-version}</version>
+                <classifier>jaxws</classifier>
+            </dependency>
 
             <!--Modig-->
             <dependency>
@@ -639,13 +647,6 @@
                 <artifactId>test-config</artifactId>
                 <version>2017.10.30.09.52</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.dialogarena</groupId>
-                <artifactId>oidc-security</artifactId>
-                <version>${oidc.security.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
             </dependency>
             <dependency>
                 <groupId>org.picketbox</groupId>
