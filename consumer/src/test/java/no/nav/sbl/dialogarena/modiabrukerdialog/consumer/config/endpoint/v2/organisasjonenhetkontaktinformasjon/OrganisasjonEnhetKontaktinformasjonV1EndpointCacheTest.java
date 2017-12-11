@@ -15,7 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {Config.class})
@@ -40,14 +42,20 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends Cach
     }
 
     @Test
+    public void cacheEksisterer() {
+        Cache organisasjonEnhetKontantinformasjonCache = getCache().getCacheManager().getCache(CACHE_NAME);
+        assertThat(organisasjonEnhetKontantinformasjonCache, is(notNullValue()));
+    }
+    
+    @Test
     public void gjorIkkeSammeOppslagToGangerPaRad() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID));
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID));
 
         Cache organisasjonEnhetKontantinformasjonCache = getCache().getCacheManager().getCache(CACHE_NAME);
-        assertEquals(1, organisasjonEnhetKontantinformasjonCache.getSize());
-        assertEquals(1, organisasjonEnhetKontantinformasjonCache.getLiveCacheStatistics().getInMemoryHitCount());
-        assertEquals(1, organisasjonEnhetKontantinformasjonCache.getLiveCacheStatistics().getCacheMissCount());
+        assertThat(organisasjonEnhetKontantinformasjonCache.getSize(), is(1));
+        assertThat(organisasjonEnhetKontantinformasjonCache.getLiveCacheStatistics().getInMemoryHitCount(), is(1L));
+        assertThat(organisasjonEnhetKontantinformasjonCache.getLiveCacheStatistics().getCacheMissCount(), is(1L));
     }
 
     @Test
@@ -56,9 +64,9 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends Cach
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID_OPPSLAG_2));
 
         Cache cache = getCache().getCacheManager().getCache(CACHE_NAME);
-        assertEquals(2, cache.getSize());
-        assertEquals(0, cache.getLiveCacheStatistics().getInMemoryHitCount());
-        assertEquals(2, cache.getLiveCacheStatistics().getCacheMissCount());
+        assertThat(cache.getSize(), is(2));
+        assertThat(cache.getLiveCacheStatistics().getInMemoryHitCount(), is(0L));
+        assertThat(cache.getLiveCacheStatistics().getCacheMissCount(), is(2L));
     }
 
     private HentKontaktinformasjonForEnhetBolkRequest lagRequest(String enhetId) {
