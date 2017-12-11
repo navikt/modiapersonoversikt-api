@@ -10,10 +10,6 @@ function finnMiljoStreng() {
 }
 
 function opprettWebSocket(callback) {
-    if (window.location.hostname.indexOf('modapp') === -1) {
-        return;
-    }
-
     const connection = new WebSocket('wss://veilederflatehendelser' + finnMiljoStreng() + '.adeo.no/modiaeventdistribution/websocket');
     connection.onmessage = callback;
 
@@ -212,40 +208,43 @@ const websocketCallbackMap = {
         document.addEventListener('dekorator-hode-personsok', sokOppFnr(sendToWicket));
         document.addEventListener('dekorator-hode-fjernperson', resetBruker(sendToWicket));
 
-        // Laster inn/Oppdater bruker ved sidelast
-        Promise.all([hentContextBruker(), hentContextEnhet(), getMe()])
-            .then(function(data) {
-                var brukerData = data[0];
-                var enhetData = data[1];
-                var me = data[2];
+        // Ikke bruk contextholder lokalt
+        if (window.location.hostname.indexOf('modapp') >= 0) {
+            // Laster inn/Oppdater bruker ved sidelast
+            Promise.all([hentContextBruker(), hentContextEnhet(), getMe()])
+                .then(function(data) {
+                    var brukerData = data[0];
+                    var enhetData = data[1];
+                    var me = data[2];
 
-                console.log('brukerIContext', brukerData, enhetData, me);
-                if (brukerData.aktivBruker !== fnr) {
-                    if (fnr && fnr.length > 0) {
-                        oppdaterContextBruker(fnr);
-                    } else if (brukerData.aktivBruker) {
-                        lastInnBruker(brukerData.aktivBruker);
+                    console.log('brukerIContext', brukerData, enhetData, me);
+                    if (brukerData.aktivBruker !== fnr) {
+                        if (fnr && fnr.length > 0) {
+                            oppdaterContextBruker(fnr);
+                        } else if (brukerData.aktivBruker) {
+                            lastInnBruker(brukerData.aktivBruker);
+                        }
                     }
-                }
 
-                const valgtEnhet = enhetData.aktivEnhet || getCookie('saksbehandlerinnstillinger-'+me.ident);
-                oppdatertValgtEnhet(valgtEnhet);
+                    const valgtEnhet = enhetData.aktivEnhet || getCookie('saksbehandlerinnstillinger-'+me.ident);
+                    oppdatertValgtEnhet(valgtEnhet);
 
-                // Lager decorator og redirect modal
-                decoratorConfig = lagDecoratorConfig(fnr, valgtEnhet, autoSubmit, feilmelding);
-                redirectModal = lagRedirectModal();
-                console.log('config', decoratorConfig);
-                window.renderDecoratorHead(decoratorConfig, markupId);
+                    // Lager decorator og redirect modal
+                    decoratorConfig = lagDecoratorConfig(fnr, valgtEnhet, autoSubmit, feilmelding);
+                    redirectModal = lagRedirectModal();
+                    console.log('config', decoratorConfig);
+                    window.renderDecoratorHead(decoratorConfig, markupId);
+                });
+
+
+            // Setter opp context-lyttere
+            opprettWebSocket(function(event) {
+                const type = event.data;
+                const handler = websocketCallbackMap[type] || (function() { console.warn('Ukjent event fra contextholder', event); });
+
+                handler(markupId, fnr, redirectModal);
             });
-
-
-        // Setter opp context-lyttere
-        opprettWebSocket(function(event) {
-            const type = event.data;
-            const handler = websocketCallbackMap[type] || (function() { console.warn('Ukjent event fra contextholder', event); });
-
-            handler(markupId, fnr, redirectModal);
-        });
+        }
     };
     window.rerenderHode = function(markupId, config) {
         console.log('update config', config, markupId);
