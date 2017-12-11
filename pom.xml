@@ -96,7 +96,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>2.10.11-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>3.0.0-SNAPSHOT</reactkomponenter.version>
         <personsok.version>3.0.0-oidc-SNAPSHOT</personsok.version>
         <kjerneinfo.versjon>6.0.0-oidc-SNAPSHOT</kjerneinfo.versjon>
         <utbetaling.version>4.0.0-oidc-SNAPSHOT</utbetaling.version>
