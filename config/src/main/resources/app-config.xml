@@ -39,6 +39,7 @@
         <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
         <baseUrl alias="server.aktivitetsplan" mapToProperty="server.aktivitetsplan"/>
         <baseUrl alias="server.veilarbportefoljeflatefs" mapToProperty="server.veilarbportefoljeflatefs"/>
+        <baseUrl alias="server.norg2-frontend" mapToProperty="server.norg2-frontend"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
@@ -59,6 +60,7 @@
         <webservice alias="virksomhet:sykepenger_v2" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:DigitalKontakinformasjon_v1" mapToProperty="dkifendpoint"/>
         <webservice alias="virksomhet:OrganisasjonEnhet_v2" mapToProperty="norg2.organisasjonenhet.v2"/>
+        <webservice alias="virksomhet:OrganisasjonEnhetKontaktinformasjon_v1" mapToProperty="norg2.organisasjonenhetkontaktinformasjon.v1"/>
         <webservice alias="virksomhet:EgenAnsatt_V1" mapToProperty="egenansatt.v1" />
         <webservice alias="Utbetaling_v1" mapToProperty="utbetalingendpoint"/>
         <webservice alias="domene.Brukerdialog:Henvendelse_v2" mapToProperty="henvendelse.v2"/>
@@ -73,6 +75,7 @@
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
+        <baseUrl alias="app.adeo" mapToProperty="app.adeo"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
 

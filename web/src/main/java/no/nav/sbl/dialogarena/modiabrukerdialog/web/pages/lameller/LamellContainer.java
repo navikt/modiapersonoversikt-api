@@ -43,9 +43,13 @@ import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.BESVARES;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.visUtbetalinger;
-import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER_TYPE;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.PLEIEPENGER_TYPE;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER_TYPE;
 
 /**
  * Holder på lameller og tilhørende lerreter
@@ -215,7 +219,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest, GrunnInfo grunnInfo) {
-        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest, grunnInfo.bruker.navn));
+        String norgUrl = System.getProperty("server.norg2-frontend.url");
+        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest, grunnInfo.bruker.geografiskTilknytning, grunnInfo.bruker.diskresjonskode, norgUrl, grunnInfo.bruker.navn));
     }
 
     private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {

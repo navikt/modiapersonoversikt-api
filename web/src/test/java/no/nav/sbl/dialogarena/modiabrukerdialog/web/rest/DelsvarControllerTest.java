@@ -12,9 +12,9 @@ import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.SvarDelvisController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.SvarDelvisRESTRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarRestRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.HttpRequestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.SubjectHandlerUtil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -35,7 +35,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-class SvarDelvisControllerTest {
+class DelsvarControllerTest {
 
     public static final String BRUKERS_FNR = "10108000398";
     public static final String TRAAD_ID = "trådID";
@@ -44,7 +44,7 @@ class SvarDelvisControllerTest {
     private static final String VALGT_ENHET = "0300";
 
     private MockHttpServletRequest httpMockRequest;
-    private SvarDelvisController svarDelvisController;
+    private DelsvarController delsvarController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
 
     @BeforeAll
@@ -61,7 +61,7 @@ class SvarDelvisControllerTest {
     @BeforeEach
     void before() {
         httpMockRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET);
-        svarDelvisController = new SvarDelvisController(new SvarDelvisServiceImpl(setupHenvendelseUtsendingService()));
+        delsvarController = new DelsvarController(new DelsvarServiceImpl(setupHenvendelseUtsendingService()));
     }
 
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
@@ -112,7 +112,7 @@ class SvarDelvisControllerTest {
     void ferdigstillerHenvendelse() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        svarDelvisController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new SvarDelvisRESTRequest());
+        delsvarController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new DelsvarRestRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         assertEquals(argumentCaptor.getValue().getBehandlingsId().get(0), HENVENDELSES_ID);
@@ -123,7 +123,7 @@ class SvarDelvisControllerTest {
     void leserValgtEnhetFraCookie() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        svarDelvisController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new SvarDelvisRESTRequest());
+        delsvarController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new DelsvarRestRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) argumentCaptor.getValue().getAny();
@@ -133,7 +133,7 @@ class SvarDelvisControllerTest {
     @Test
     @DisplayName("Delvis svar returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        Response response = svarDelvisController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new SvarDelvisRESTRequest());
+        Response response = delsvarController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new DelsvarRestRequest());
 
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
     }

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.SvarDelvisRequest.SvarDelvisRequestBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class SvarDelvisServiceImplTest {
+class DelsvarServiceImplTest {
 
     public static final String BRUKERS_FNR = "10108000398";
     public static final String TRAAD_ID = "TRAAD_ID";
@@ -23,26 +23,27 @@ class SvarDelvisServiceImplTest {
     public static final String VALGT_ENHET = "0300";
 
     private HenvendelseUtsendingService henvendelseMock;
-    private SvarDelvisService svarDelvisService;
+    private DelsvarService delsvarService;
 
     @BeforeEach
     void before() {
         henvendelseMock = mock(HenvendelseUtsendingService.class);
         when(henvendelseMock.hentTraad(BRUKERS_FNR, TRAAD_ID, VALGT_ENHET)).thenReturn(Collections.singletonList(new Melding()));
-        svarDelvisService = new SvarDelvisServiceImpl(henvendelseMock);
+        delsvarService = new DelsvarServiceImpl(henvendelseMock);
     }
 
     @Test
-    @DisplayName("Ferdigstiller henvendelse med et delvis svar")
+    @DisplayName("Ferdigstiller henvendelse med delsvar")
     void ferdigstillerHenvendelse() throws Exception {
-        svarDelvisService.svarDelvis(lagRequest());
+        delsvarService.svarDelvis(lagRequest());
         ArgumentCaptor<Melding> argumentCaptor = ArgumentCaptor.forClass(Melding.class);
         verify(henvendelseMock).ferdigstillHenvendelse(argumentCaptor.capture(), any(), any(), anyString(), anyString());
 
-        assertAll("Delvis svar",
+        assertAll("Delsvar",
                 () -> assertEquals(SVAR, argumentCaptor.getValue().getFritekst()),
                 () -> assertEquals(Kanal.TEKST.name(), argumentCaptor.getValue().kanal),
                 () -> assertEquals(SAKSBEHANDLERS_IDENT, argumentCaptor.getValue().navIdent),
+                () -> assertEquals(SAKSBEHANDLERS_IDENT, argumentCaptor.getValue().eksternAktor),
                 () -> assertEquals(VALGT_ENHET, argumentCaptor.getValue().tilknyttetEnhet)
         );
 
@@ -54,13 +55,13 @@ class SvarDelvisServiceImplTest {
         String opprinneligFeil = "Opprinnelig feil";
         doThrow(new IllegalArgumentException(opprinneligFeil)).when(henvendelseMock).ferdigstillHenvendelse(any(), any(), any(), any(), any());
 
-        Throwable exception = assertThrows(RuntimeException.class, () -> svarDelvisService.svarDelvis(lagRequest()));
+        Throwable exception = assertThrows(RuntimeException.class, () -> delsvarService.svarDelvis(lagRequest()));
 
         assertEquals("Opprinnelig feil", exception.getCause().getMessage());
     }
 
-    private SvarDelvisRequest lagRequest() {
-        return new SvarDelvisRequestBuilder()
+    private DelsvarRequest lagRequest() {
+        return new DelsvarRequestBuilder()
                 .withNavIdent(SAKSBEHANDLERS_IDENT)
                 .withTraadId(TRAAD_ID)
                 .withSvar(SVAR)

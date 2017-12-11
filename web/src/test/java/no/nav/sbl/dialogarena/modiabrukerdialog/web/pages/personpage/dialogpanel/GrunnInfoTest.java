@@ -11,7 +11,7 @@ public class GrunnInfoTest {
     @Test
     public void brukersNavnFaarKorrekteVersaler() {
         GrunnInfo.Bruker bruker = new GrunnInfo.Bruker(
-                "123", "test-test", "o'testeson", "kontoret"
+                "123", "test-test", "o'testeson", "kontoret", "0314", ""
         );
 
         assertThat(bruker.navn, is(equalTo("Test-Test O'Testeson")));

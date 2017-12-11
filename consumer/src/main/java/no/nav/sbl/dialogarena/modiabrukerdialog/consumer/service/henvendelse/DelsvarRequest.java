@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
-public class SvarDelvisRequest {
+public class DelsvarRequest {
 
     public final String fodselsnummer;
     public final String traadId;
@@ -9,7 +9,7 @@ public class SvarDelvisRequest {
     public final String navIdent;
     public final String saksbehandlersValgteEnhet;
 
-    private SvarDelvisRequest(SvarDelvisRequestBuilder builder) {
+    private DelsvarRequest(DelsvarRequestBuilder builder) {
         this.fodselsnummer = builder.fodselsnummer;
         this.svar = builder.svar;
         this.traadId = builder.traadId;
@@ -18,7 +18,7 @@ public class SvarDelvisRequest {
         this.saksbehandlersValgteEnhet = builder.saksbehandlersValgteEnhet;
     }
 
-    public static class SvarDelvisRequestBuilder {
+    public static class DelsvarRequestBuilder {
         private String svar;
         private String fodselsnummer;
         private String traadId;
@@ -26,38 +26,38 @@ public class SvarDelvisRequest {
         private String navIdent;
         private String saksbehandlersValgteEnhet;
 
-        public SvarDelvisRequestBuilder withFodselsnummer(String fodselsnummer) {
+        public DelsvarRequestBuilder withFodselsnummer(String fodselsnummer) {
             this.fodselsnummer = fodselsnummer;
             return this;
         }
 
-        public SvarDelvisRequestBuilder withTraadId(String traadId) {
+        public DelsvarRequestBuilder withTraadId(String traadId) {
             this.traadId = traadId;
             return this;
         }
 
-        public SvarDelvisRequestBuilder withHenvendelseId(String henvendelseId) {
+        public DelsvarRequestBuilder withHenvendelseId(String henvendelseId) {
             this.henvendelseId = henvendelseId;
             return this;
         }
 
-        public SvarDelvisRequestBuilder withSvar(String svar) {
+        public DelsvarRequestBuilder withSvar(String svar) {
             this.svar = svar;
             return this;
         }
 
-        public SvarDelvisRequestBuilder withNavIdent(String navIdent) {
+        public DelsvarRequestBuilder withNavIdent(String navIdent) {
             this.navIdent = navIdent;
             return this;
         }
 
-        public SvarDelvisRequestBuilder withValgtEnhet(String saksbehandlersValgteEnhet) {
+        public DelsvarRequestBuilder withValgtEnhet(String saksbehandlersValgteEnhet) {
             this.saksbehandlersValgteEnhet = saksbehandlersValgteEnhet;
             return this;
         }
 
-        public SvarDelvisRequest build() {
-            return new SvarDelvisRequest(this);
+        public DelsvarRequest build() {
+            return new DelsvarRequest(this);
         }
     }
 
