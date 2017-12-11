@@ -37,6 +37,9 @@ public abstract class CacheTest {
     @BeforeClass
     public static void before() {
         System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
+        System.setProperty("no.nav.modig.security.sts.url", "");
+        System.setProperty("no.nav.modig.security.systemuser.username", "");
+        System.setProperty("no.nav.modig.security.systemuser.password", "");
     }
 
     @Before
