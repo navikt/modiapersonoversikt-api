@@ -13,29 +13,29 @@
     <name>modia-saksoversikt</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>8.0.6-SNAPSHOT</version>
+    <version>9.0.0-oidc-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.3.4.RELEASE</spring.version>
         <wicket.version>6.20.0</wicket.version>
         <mockito.core.version>1.10.19</mockito.core.version>
         <joda-time.version>2.7</joda-time.version>
         <slf4j.version>1.7.12</slf4j.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.12</junit.version>
 
         <!-- Egenlagde dependencies  -->
         <saksoversikt-service.version>2.3.1</saksoversikt-service.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
-        <modia-felleskomponenter.version>3.3</modia-felleskomponenter.version>
-        <modiabrukerdialog-api.version>8.3.2</modiabrukerdialog-api.version>
+        <modia-felleskomponenter.version>4.0-oidc-SNAPSHOT</modia-felleskomponenter.version>
+        <modiabrukerdialog-api.version>9.0.0-oidc-SNAPSHOT</modiabrukerdialog-api.version>
         <common-test.version>1.2</common-test.version>
         <modig-lang.version>2.0.5</modig-lang.version>
         <modig-content.version>2.0.13</modig-content.version>
         <modig-core.version>1.0.1</modig-core.version>
-        <modig.security.version>1.0.24</modig.security.version>
+        <oidc.security.version>2017.10.30.12.59</oidc.security.version>
         <reactkomponenter.version>2.9.3</reactkomponenter.version>
 
         <!-- Tjenester  -->
@@ -60,6 +60,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>reactkomponenter</artifactId>
             <version>${reactkomponenter.version}</version>
@@ -71,21 +83,9 @@
             <version>${wicket.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>3.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-authorization</artifactId>
-            <version>3.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>3.0.4</version>
-            <scope>test</scope>
-            <type>test-jar</type>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security-authorization</artifactId>
+            <version>2017.11.07.15.26</version>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
