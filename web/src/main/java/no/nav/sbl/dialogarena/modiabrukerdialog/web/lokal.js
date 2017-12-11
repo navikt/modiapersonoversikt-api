@@ -1,8 +1,7 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
-
-    $('#toggle-personsok').on('click', toggleAvansertSok);
+    $('.interndekorator').on('click', '#toggle-personsok', toggleAvansertSok);
     Modig.shortcutListener.on({key: 'A'}, toggleAvansertSok);
 
     Modig.shortcutListener.on({alt: true, keyCode: 114}, focusSearchField); // F3

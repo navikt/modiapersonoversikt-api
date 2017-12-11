@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util;
 
 import net.sf.ehcache.Ehcache;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -11,6 +11,8 @@ import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.inject.Inject;
+
+import static no.nav.brukerdialog.security.context.SubjectHandler.SUBJECTHANDLER_KEY;
 
 @ContextConfiguration(classes = {CacheConfiguration.class})
 public abstract class CacheTest {
@@ -34,14 +36,17 @@ public abstract class CacheTest {
 
     @BeforeClass
     public static void before() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
+        System.setProperty("no.nav.modig.security.sts.url", "");
+        System.setProperty("no.nav.modig.security.systemuser.username", "");
+        System.setProperty("no.nav.modig.security.systemuser.password", "");
     }
 
     @Before
     public void teardown() {
         getCache().removeAll();
-        getCache().getCacheManager().getCache(cachename).setStatisticsEnabled(true);
-        getCache().getCacheManager().getCache(cachename).clearStatistics();
+//        getCache().getCacheManager().getCache(cachename).setStatisticsEnabled(true);
+//        getCache().getCacheManager().getCache(cachename).clearStatistics();
     }
 
     protected Ehcache getCache() {

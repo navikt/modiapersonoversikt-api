@@ -1,8 +1,8 @@
 package no.nav.sbl.modiabrukerdialog.pdp.config.spring;
 
-import no.nav.modig.security.tilgangskontroll.policy.pdp.DecisionPoint;
-import no.nav.modig.security.tilgangskontroll.policy.pdp.picketlink.PicketLinkDecisionPoint;
-import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pdp.DecisionPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pdp.picketlink.PicketLinkDecisionPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import org.junit.Test;
 
 public class PdpConfigTest {

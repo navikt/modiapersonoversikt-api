@@ -6,6 +6,7 @@ import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWi
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -15,7 +16,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.Journalforing
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.metrics.MetricsFactory.createTimer;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -203,12 +203,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         return sporsmalErUbesvart() && sporsmal.erSporsmalSkriftlig();
     }
 
-    private boolean sporsmalErUbesvart(){
+    private boolean sporsmalErUbesvart() {
         return svar.stream()
-            .noneMatch((melding) ->
-                melding.meldingstype == Meldingstype.SVAR_OPPMOTE ||
-                melding.meldingstype == Meldingstype.SVAR_SKRIFTLIG ||
-                melding.meldingstype == Meldingstype.SVAR_TELEFON );
+                .noneMatch((melding) ->
+                        melding.meldingstype == Meldingstype.SVAR_OPPMOTE ||
+                                melding.meldingstype == Meldingstype.SVAR_SKRIFTLIG ||
+                                melding.meldingstype == Meldingstype.SVAR_TELEFON);
     }
 
     private void settOppModellMedDefaultKanalOgTemagruppe(HenvendelseVM henvendelseVM) {

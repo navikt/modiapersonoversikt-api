@@ -17,6 +17,10 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <context-param>
+        <param-name>oidc.statelessApplication</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
         <param-name>contextClass</param-name>
         <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
     </context-param>
@@ -36,18 +40,6 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Restricted</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>*</role-name>
-        </auth-constraint>
-        <user-data-constraint>
-            <transport-guarantee>NONE</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
-    <security-constraint>
-        <web-resource-collection>
             <web-resource-name>Public</web-resource-name>
             <url-pattern>/img/*</url-pattern>
             <url-pattern>/css/*</url-pattern>
@@ -57,15 +49,23 @@
             <url-pattern>/internal/selftest.json</url-pattern>
             <url-pattern>/internal/isAlive</url-pattern>
             <url-pattern>/internal/metrics/*</url-pattern>
+            <url-pattern>/rest/login</url-pattern>
         </web-resource-collection>
     </security-constraint>
-    <login-config>
-        <auth-method>FORM</auth-method>
-        <form-login-config>
-            <form-login-page>/login.html</form-login-page>
-            <form-error-page>/login.html?status=fail</form-error-page>
-        </form-login-config>
-    </login-config>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Restricted</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <!-- From Servlet spec 3.1 "**" means any authenticated user
+            ref: https://community.oracle.com/blogs/swchan2/2013/04/19/role-servlet-31-security-constraint -->
+            <role-name>**</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
     <security-role>
         <role-name>0000-GA-BD06_EndreKontaktAdresse</role-name>
     </security-role>
@@ -75,15 +75,6 @@
     <security-role>
         <role-name>0000-GA-BD06_EndreKontonummer</role-name>
     </security-role>
-
-    <servlet>
-        <servlet-name>metrics</servlet-name>
-        <servlet-class>com.codahale.metrics.servlets.MetricsServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>metrics</servlet-name>
-        <url-pattern>/internal/metrics/*</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>rest</servlet-name>
@@ -112,7 +103,7 @@
 
     <filter>
         <filter-name>MDCFilter</filter-name>
-        <filter-class>no.nav.modig.presentation.logging.session.MDCFilter</filter-class>
+        <filter-class>no.nav.modig.modia.logging.MDCFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>MDCFilter</filter-name>

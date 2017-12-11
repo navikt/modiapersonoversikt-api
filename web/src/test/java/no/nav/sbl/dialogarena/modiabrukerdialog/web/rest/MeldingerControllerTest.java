@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.SUBJECTHANDLER_KEY;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class MeldingerControllerTest {
 
     static {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
     }
 
     private HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);

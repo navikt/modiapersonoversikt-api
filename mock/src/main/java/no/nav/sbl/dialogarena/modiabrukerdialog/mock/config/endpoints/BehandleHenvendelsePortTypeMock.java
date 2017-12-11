@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static java.util.Arrays.asList;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 
@@ -25,6 +27,13 @@ public class BehandleHenvendelsePortTypeMock {
     }
 
     public static BehandleHenvendelsePortType createBehandleHenvendelsePortTypeMock() {
+        Optional<String> s = Optional.of("t");
+        List<String> t = asList("t");
+        t.stream().findFirst();
+
+        Optional.ofNullable(s.orElseGet(() -> t.stream().findFirst().orElse(null)));
+
+
         return new BehandleHenvendelsePortType() {
 
             @Override
