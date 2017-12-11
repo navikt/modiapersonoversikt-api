@@ -30,19 +30,9 @@ public class FocusHandler {
         target.appendJavaScript(String.format("$('#%s').focus()", JS_DEOKORATOR_SOKEFELT_HTML_ID));
     };
 
-    private static final Closure<Page> FOKUS_PERSON_NAVN = page -> {
-//        Venter på at visittkortet skal bli oppdatert
-//            if (page.getClass() == PersonPage.class) {
-//                AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-//                Label label = ComponentFinder.in(page).findWithId(Label.class, "personfakta.personnavn.fornavn");
-//                target.focusComponent(label);
-//            }
-    };
-
     private static final Map<String, Closure<Page>> EVENT_HANDLERS = new HashMap<String, Closure<Page>>() {{
         put(SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT, FOKUS_SOK_FELT);
         put(LeggTilbakePanel.LEGG_TILBAKE_FERDIG, FOKUS_SOK_FELT);
         put(Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG, FOKUS_SOK_FELT);
-        put(BasePage.SIDE_LASTET, FOKUS_PERSON_NAVN);
     }};
 }
