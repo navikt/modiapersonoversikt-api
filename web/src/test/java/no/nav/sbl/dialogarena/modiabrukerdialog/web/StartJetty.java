@@ -19,11 +19,6 @@ import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustSto
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
 
 public class StartJetty {
-    static {
-        System.setProperty("veilederident", "Z990844");
-        System.setProperty("veilederpassord", "***REMOVED***");
-        System.setProperty("testmiljo", "t6");
-    }
 
     public static final String SERVICEBRUKER = "srvmodiabrukerdialog";
     public static final String INNLOGGET_VEILEDER = FasitUtils.getVariable("veilederident");
