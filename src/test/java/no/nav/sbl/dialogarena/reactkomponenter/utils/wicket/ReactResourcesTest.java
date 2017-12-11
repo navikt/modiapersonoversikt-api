@@ -13,6 +13,7 @@ public class ReactResourcesTest {
     private final List<String> forventedeJSFiler = Collections.singletonList("build/reactkomponenter.js");
     private final List<String> forventedeLessFiler = Arrays.asList(
             "build/modal.less",
+            "build/redirect-modal.less",
             "build/sok-layout.less",
             "build/meldinger-sok.less",
             "build/knagginput.less",

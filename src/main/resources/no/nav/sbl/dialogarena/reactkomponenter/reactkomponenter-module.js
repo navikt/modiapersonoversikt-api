@@ -10,6 +10,7 @@ import PleiepengerPanel from './pleiepenger/pleiepenger-panel';
 import AlertStripeSuksessSolid from './alertstriper/alertstripe-module';
 import LeggTilbakeDelvisSvarPanel from './dialog-panel/leggtilbakedelvissvar/legg-tilbake-delvis-svar-module';
 import TraadVisning from './dialog-panel/traadvisning/traadvisning-module';
+import RedirectModal from './redirectmodal/redirectmodal-module';
 import BrukersNavKontor from './visittkort/brukers-nav-kontor/nav-kontor-module';
 
 import React from './nav-react';
@@ -28,6 +29,7 @@ window.ModiaJS = {
         AlertStripeSuksessSolid,
         LeggTilbakeDelvisSvarPanel,
         TraadVisning,
+        RedirectModal,
         BrukersNavKontor
     },
     InitializedComponents: {},
