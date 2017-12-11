@@ -4,7 +4,8 @@ public enum Feature {
 
     DELVISE_SVAR("visDelviseSvarFunksjonalitet", false),
     PLEIEPENGER("visPleiepenger", false),
-    ENDRE_NAVN("visEndreNavnFunksjonalitet", false);
+    ENDRE_NAVN("visEndreNavnFunksjonalitet", false),
+    NORG_ORGENHET_KONTAKTINFORMASJON("visOrganisasjonEnhetKontaktinformasjon", false);
 
     public final String propertyKey;
     public final boolean defaultValue;
