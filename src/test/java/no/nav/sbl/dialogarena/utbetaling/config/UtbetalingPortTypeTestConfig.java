@@ -1,12 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.config;
 
+import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonResponse;
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +21,7 @@ public class UtbetalingPortTypeTestConfig {
 
     @Bean
     public UtbetalingV1 utbetalingPortType() {
-        if(valueOf(getProperty("utbetal.endpoint.mock", "true"))) {
+        if (valueOf(getProperty("utbetal.endpoint.mock", "true"))) {
             return getUtbetalingV1Stub();
         }
         return createUtbetalingPortType();
@@ -39,7 +37,7 @@ public class UtbetalingPortTypeTestConfig {
             @Override
             public WSHentUtbetalingsinformasjonResponse hentUtbetalingsinformasjon(WSHentUtbetalingsinformasjonRequest request) throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
                 String ident = request.getId().getIdent();
-                if(ident == null) {
+                if (ident == null) {
                     ident = FNR;
                 }
                 return new WSHentUtbetalingsinformasjonResponse().withUtbetalingListe(getWsUtbetalinger(ident, request.getPeriode().getFom(), request.getPeriode().getTom()));
@@ -48,15 +46,12 @@ public class UtbetalingPortTypeTestConfig {
     }
 
     private UtbetalingV1 createUtbetalingPortType() {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:utbetaling/no/nav/tjeneste/virksomhet/utbetaling/v1/Binding.wsdl");
-        proxyFactoryBean.setAddress(getProperty("utbetalingendpoint.url"));
-        proxyFactoryBean.setServiceClass(UtbetalingV1.class);
-        proxyFactoryBean.setServiceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"));
-        proxyFactoryBean.setEndpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"));
-        proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
-        proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        return proxyFactoryBean.create(UtbetalingV1.class);
+        return new CXFClient<>(UtbetalingV1.class)
+                .wsdl("classpath:utbetaling/no/nav/tjeneste/virksomhet/utbetaling/v1/Binding.wsdl")
+                .serviceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"))
+                .endpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"))
+                .address(getProperty("utbetalingendpoint.url"))
+                .build();
     }
 
 }

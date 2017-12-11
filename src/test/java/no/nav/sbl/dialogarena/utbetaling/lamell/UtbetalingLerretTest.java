@@ -27,6 +27,7 @@ public class UtbetalingLerretTest extends AbstractWicketTest{
     @Override
     protected void setup() {
         applicationContext.putBean(service);
+        applicationContext.putBean("ArenaUrl");
 
         utbetalingLerret = new UtbetalingLerret("lerret", "");
         wicketTester.goToPageWith(utbetalingLerret);
