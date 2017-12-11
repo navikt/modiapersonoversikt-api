@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 
-public class OrganisasjonEnhetKontantinformasjonKeyGenerator extends SimpleKeyGenerator {
+public class OrganisasjonenhetKontaktinformasjonKeyGenerator extends SimpleKeyGenerator {
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
@@ -18,7 +18,8 @@ public class OrganisasjonEnhetKontantinformasjonKeyGenerator extends SimpleKeyGe
 
         HentKontaktinformasjonForEnhetBolkRequest request = (HentKontaktinformasjonForEnhetBolkRequest) params[0];
 
-        return super.generate(target, method, lagKey(request));    }
+        return super.generate(target, method, lagKey(request));
+    }
 
     private String lagKey(HentKontaktinformasjonForEnhetBolkRequest request) {
         return request.getEnhetIdListe().stream()

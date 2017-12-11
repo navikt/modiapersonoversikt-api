@@ -12,14 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
-class OrganisasjonEnhetKontantinformasjonKeyGeneratorTest {
+class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
 
-    private OrganisasjonEnhetKontantinformasjonKeyGenerator generator;
+    private OrganisasjonenhetKontaktinformasjonKeyGenerator generator;
     private Method method;
 
     @BeforeEach
     void beforeEach() throws NoSuchMethodException {
-        generator = new OrganisasjonEnhetKontantinformasjonKeyGenerator();
+        generator = new OrganisasjonenhetKontaktinformasjonKeyGenerator();
         method = OrganisasjonEnhetKontaktinformasjonV1.class.getMethod("hentKontaktinformasjonForEnhetBolk", HentKontaktinformasjonForEnhetBolkRequest.class);
     }
 

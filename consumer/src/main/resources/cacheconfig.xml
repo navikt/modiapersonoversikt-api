@@ -11,7 +11,7 @@
     <bean id="asbogosysansattlistekeygenerator"
           class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.ASBOGOSYSNAVAnsattListeKeyGenerator"/>
     <bean id="organisasjonEnhetKontantinformasjonGenerator"
-          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.OrganisasjonEnhetKontantinformasjonKeyGenerator"/>
+          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.OrganisasjonenhetKontaktinformasjonKeyGenerator"/>
     <bean id="defaultkeygenerator"
           class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
 
@@ -102,7 +102,7 @@
         </cache:caching>
     </cache:advice>
     <cache:advice id="organisasjonEnhetKontantinformasjonAdvice" key-generator="organisasjonEnhetKontantinformasjonGenerator">
-        <cache:caching cache="organisasjonEnhetKontantinformasjonCache">
+        <cache:caching cache="organisasjonEnhetKontaktinformasjonCache">
             <cache:cacheable method="hent*" />
         </cache:caching>
     </cache:advice>

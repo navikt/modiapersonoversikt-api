@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {Config.class})
 public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends CacheTest {
 
-    public static final String CACHE_NAME = "organisasjonEnhetKontantinformasjonCache";
+    public static final String CACHE_NAME = "organisasjonEnhetKontaktinformasjonCache";
     public static final String ENHET_ID = "1337";
     public static final String ENHET_ID_OPPSLAG_2 = "1500";
     public static final String ENHETSNAVN = "NAV Molde";

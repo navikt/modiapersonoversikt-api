@@ -78,7 +78,7 @@
 		   diskExpiryThreadIntervalSeconds="120"
 		   memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="organisasjonEnhetKontantinformasjonCache" maxElementsInMemory="100"
+	<cache name="organisasjonEnhetKontaktinformasjonCache" maxElementsInMemory="100"
 		   eternal="false"
 		   timeToIdleSeconds="300"
 		   timeToLiveSeconds="300"
