@@ -244,6 +244,15 @@ const websocketCallbackMap = {
 
                 handler(markupId, fnr, redirectModal);
             });
+        } else {
+            // Lager decorator og redirect modal for lokal kjøring
+            getMe()
+                .then(function(me) {
+                    decoratorConfig = lagDecoratorConfig(fnr, getCookie('saksbehandlerinnstillinger-' + me.ident), autoSubmit, feilmelding);
+                    redirectModal = lagRedirectModal();
+                    console.log('config', decoratorConfig);
+                    window.renderDecoratorHead(decoratorConfig, markupId);
+                });
         }
     };
     window.rerenderHode = function(markupId, config) {
