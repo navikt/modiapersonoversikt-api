@@ -8,7 +8,7 @@ import FiltrerteDokumenter from './filtrering/filtrerte-dokumenter';
 import FiltrerAvsender from './filtrering/filtrer-avsender';
 import ViktigAViteLenke from './../../viktigavite/viktig-aa-vite-lenke';
 
-const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide, filtreringsvalg }) => {
+const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide, filtreringsvalg, gt, diskresjonskode, norgUrl}) => {
     const dokumentlisteParam = { brukerNavn, visSide, velgJournalpost };
     dokumentlisteParam.visTema = valgtTema.temakode === 'alle';
 
@@ -30,7 +30,7 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
         }
         return (
             <div>
-                <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide} />
+                <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide} diskresjonskode={diskresjonskode} gt={gt} norgUrl={norgUrl} />
                 <IngenDokumenter ingenDokumenterHeader={ingendokumenter} />
             </div>
         );
@@ -44,7 +44,7 @@ const VisningDokumentliste = ({ valgtTema, brukerNavn, velgJournalpost, visSide,
     return (
         <div>
             <FiltrerAvsender alleredeValgt={filtreringsvalg} />
-            <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide} />
+            <ViktigAViteLenke valgtTema={valgtTema} visSide={visSide} diskresjonskode={diskresjonskode} gt={gt} norgUrl={norgUrl} />
             {infoMeldingDokumenterBidrag}
             { dokumentliste }
             <TidligereDokumenter />

@@ -24,8 +24,9 @@ public class ReactResourcesTest {
             "build/pleiepenger-panel.less",
             "build/delvis-svar.less",
             "build/traadvisning.less",
-            "build/nav-core-variabler.less"
-    );
+            "build/nav-core-variabler.less",
+            "build/nav-kontor.less"
+            );
 
     @Test
     public void frontModuleInneholderAlleForventedeJSFiler() throws Exception {

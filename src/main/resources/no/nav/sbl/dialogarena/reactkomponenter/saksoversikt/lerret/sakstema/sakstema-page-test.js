@@ -97,7 +97,7 @@ describe('SakstemaPage', () => {
             filtreringsvalg: {}
         };
 
-        const getState = {};
+        const getState = { lerret: { temakodeliste: []  }};
         const store = mockStore(getState);
 
         const element = renderIntoDocument(
