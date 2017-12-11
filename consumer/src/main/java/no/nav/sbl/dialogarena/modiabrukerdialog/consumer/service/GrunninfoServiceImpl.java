@@ -40,7 +40,7 @@ public class GrunninfoServiceImpl implements GrunninfoService {
                     .withPersonnavn(personfakta.getPersonnavn().getFornavn(), personfakta.getPersonnavn().getEtternavn())
                     .withEnhet(hentEnhet(personfakta));
         } catch (Exception e) {
-            return new GrunnInfo.Bruker(fnr, "", "", "");
+            return new GrunnInfo.Bruker(fnr, "", "", "", "", "");
         }
     }
 

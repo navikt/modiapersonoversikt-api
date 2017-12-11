@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfol
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusRequest;
@@ -21,19 +20,26 @@ public class OppfolgingsinfoEndpointConfig {
 
     @Bean
     public OppfolgingsinfoV1 oppfolgingsinfo() {
-        return createMetricsProxyWithInstanceSwitcher("oppfolginsinfoV1", lagEndpoint(), lagMockEndpoint(), MOCK_KEY, OppfolgingsinfoV1.class);
+        return createMetricsProxyWithInstanceSwitcher(
+                "oppfolginsinfoV1",
+                lagEndpoint().configureStsForOnBehalfOfWithJWT().build(),
+                lagMockEndpoint(),
+                MOCK_KEY,
+                OppfolgingsinfoV1.class
+        );
     }
 
-    private OppfolgingsinfoV1 lagEndpoint() {
+    private CXFClient<OppfolgingsinfoV1> lagEndpoint() {
         return new CXFClient<>(OppfolgingsinfoV1.class)
-                .address(System.getProperty(ENDPOINT_URL))
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
-                .build();
+                .address(System.getProperty(ENDPOINT_URL));
     }
 
     @Bean
     public Pingable oppfolgingsinfoPing() {
-        return new PingableWebService("Veilarboppfolging - Oppfolgingsinfov1", lagEndpoint());
+        return new PingableWebService(
+                "Veilarboppfolging - Oppfolgingsinfov1",
+                lagEndpoint().configureStsForSystemUserInFSS().build()
+        );
     }
 
     private OppfolgingsinfoV1 lagMockEndpoint() {

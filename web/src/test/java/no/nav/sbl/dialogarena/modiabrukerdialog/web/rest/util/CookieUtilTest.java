@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CookieUtilTest {
 
+    private static final String SAKSBEHANDLERS_IDENT = "z999666";
     private String VALGT_ENHET = "4300";
-    private String cookieNavn = CookieUtil.VALGT_ENHET_COOKIE_NAME_PREFIX + getSubjectHandler().getUid();;
 
     @BeforeAll
     static void before() {
