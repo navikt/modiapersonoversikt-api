@@ -3,15 +3,32 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.rest.oppfolgings
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 public class Oppfolgingsinfo {
 
     public final boolean erUnderOppfolging;
-    public final Saksbehandler saksbehandler;
-    public final AnsattEnhet saksbehandlerenhet;
+    private final Saksbehandler saksbehandler;
+    private final AnsattEnhet saksbehandlerenhet;
 
-    public Oppfolgingsinfo(boolean erUnderOppfolging, Saksbehandler saksbehandler) {
+    public Oppfolgingsinfo(Boolean erUnderOppfolging, Saksbehandler saksbehandler, AnsattEnhet saksbehandlerenhet) {
         this.erUnderOppfolging = erUnderOppfolging;
         this.saksbehandler = saksbehandler;
-        this.saksbehandlerenhet = new AnsattEnhet("0118", "NAV Aremark");
+        this.saksbehandlerenhet = saksbehandlerenhet;
     }
+
+    public boolean erUnderOppfolging() {
+        return erUnderOppfolging;
+    }
+
+    public Optional<Saksbehandler> getSaksbehandler() {
+        return ofNullable(saksbehandler);
+    }
+
+    public Optional<AnsattEnhet> getSaksbehandlerenhet() {
+        return ofNullable(saksbehandlerenhet);
+    }
+
 }

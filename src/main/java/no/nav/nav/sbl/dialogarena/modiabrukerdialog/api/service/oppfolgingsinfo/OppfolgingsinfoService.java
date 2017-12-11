@@ -3,6 +3,8 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.rest.oppfolgingsinfo.Oppfolgingsinfo;
 
+import java.util.Optional;
+
 public interface OppfolgingsinfoService {
-    Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer);
+    Optional<Oppfolgingsinfo> hentOppfolgingsinfo(String fodselsnummer);
 }
