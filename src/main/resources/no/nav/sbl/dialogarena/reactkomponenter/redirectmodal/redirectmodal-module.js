@@ -2,7 +2,7 @@ import React, { Component, PropTypes as PT } from 'react';
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 import Alertstripe from './../alertstriper/alertstripe-module';
 
-const tekst = "Du har endret bruker i et annet vindu. Di kan ikke jobbe med 2 brukere samtidig.\n" +
+const tekst = "Du har endret bruker i et annet vindu. Du kan ikke jobbe med 2 brukere samtidig.\n" +
     "                        Velger du å endre bruker mister du arbeidet du ikke har lagret.";
 
 class Redirectmodal extends Component {
