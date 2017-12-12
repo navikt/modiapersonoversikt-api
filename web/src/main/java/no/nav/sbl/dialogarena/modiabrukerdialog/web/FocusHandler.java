@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.modig.modia.utils.ComponentFinder;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
@@ -8,13 +7,14 @@ import org.apache.commons.collections15.Closure;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FocusHandler {
+
+    public static final String JS_DEOKORATOR_SOKEFELT_HTML_ID = "js-deokorator-sokefelt";
 
     public static void handleEvent(Page page, IEvent<?> event) {
         if (event.getPayload().getClass() == String.class) {
@@ -25,26 +25,14 @@ public class FocusHandler {
             }
         }
     }
-
     private static final Closure<Page> FOKUS_SOK_FELT = page -> {
         AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-        TextField input = ComponentFinder.in(page).findWithId(TextField.class, "foedselsnummerInput");
-        target.focusComponent(input);
-    };
-
-    private static final Closure<Page> FOKUS_PERSON_NAVN = page -> {
-//        Venter på at visittkortet skal bli oppdatert
-//            if (page.getClass() == PersonPage.class) {
-//                AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-//                Label label = ComponentFinder.in(page).findWithId(Label.class, "personfakta.personnavn.fornavn");
-//                target.focusComponent(label);
-//            }
+        target.appendJavaScript(String.format("$('#%s').focus()", JS_DEOKORATOR_SOKEFELT_HTML_ID));
     };
 
     private static final Map<String, Closure<Page>> EVENT_HANDLERS = new HashMap<String, Closure<Page>>() {{
         put(SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT, FOKUS_SOK_FELT);
         put(LeggTilbakePanel.LEGG_TILBAKE_FERDIG, FOKUS_SOK_FELT);
         put(Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG, FOKUS_SOK_FELT);
-        put(BasePage.SIDE_LASTET, FOKUS_PERSON_NAVN);
     }};
 }

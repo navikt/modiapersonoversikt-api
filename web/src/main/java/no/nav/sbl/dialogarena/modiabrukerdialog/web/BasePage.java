@@ -16,9 +16,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptUrlReferenceHeaderItem;
@@ -44,8 +42,6 @@ public class BasePage extends WebPage {
     private static String currentDomain = System.getProperty("current.domain", "");
 
     private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
-
-    public static final String SIDE_LASTET = "basepage.lastet";
 
     public static final ConditionalCssResource MODIA_LAYOUT_IE_CSS = new ConditionalCssResource(
             new CssResourceReference(BasePage.class, "css/felles/layout-ie9.css"), "screen", "lt IE 10");
@@ -93,12 +89,6 @@ public class BasePage extends WebPage {
 
         add(body);
         add(new TimingMetricsBehaviour().withPrefix("page."));
-        add(new AjaxEventBehavior("onload") {
-            @Override
-            protected void onEvent(AjaxRequestTarget ajaxRequestTarget) {
-                send(getPage(), Broadcast.DEPTH, SIDE_LASTET);
-            }
-        });
 
         ReactTekniskFeilModal tekniskFeilModal = new ReactTekniskFeilModal("tekniskFeil", pageParameters);
         add(tekniskFeilModal);
