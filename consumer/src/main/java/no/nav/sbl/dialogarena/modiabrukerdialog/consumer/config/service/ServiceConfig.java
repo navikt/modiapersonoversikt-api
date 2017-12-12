@@ -30,6 +30,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
@@ -137,8 +139,10 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppfolgingsinfoService oppfolgingsinfoService(OppfolgingsinfoV1 oppfolgingsinfoV1, LDAPService ldapService) {
-        return new OppfolgingsinfoServiceImpl(oppfolgingsinfoV1, ldapService);
+    public OppfolgingsinfoService oppfolgingsinfoService(OppfolgingsinfoV1 oppfolgingsinfoV1, LDAPService ldapService,
+                                                         AktoerPortType aktoerPortType, OppfoelgingPortType oppfoelgingPortType,
+                                                         OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
+        return new OppfolgingsinfoServiceImpl(oppfolgingsinfoV1, ldapService, aktoerPortType, oppfoelgingPortType, organisasjonEnhetV2Service);
     }
 
 }
