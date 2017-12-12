@@ -96,15 +96,15 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>3.0.0-SNAPSHOT</reactkomponenter.version>
-        <personsok.version>3.0.0-oidc-SNAPSHOT</personsok.version>
-        <kjerneinfo.versjon>6.0.0-oidc-SNAPSHOT</kjerneinfo.versjon>
-        <utbetaling.version>4.0.0-oidc-SNAPSHOT</utbetaling.version>
+        <reactkomponenter.version>3.0.0</reactkomponenter.version>
+        <personsok.version>4.0.2</personsok.version>
+        <kjerneinfo.versjon>6.0.0</kjerneinfo.versjon>
+        <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.0</saksoversikt.version>
-        <varsling.modia.version>2.0-oidc-SNAPSHOT</varsling.modia.version>
-        <modiabrukerdialog-api.version>9.0.0-oidc-SNAPSHOT</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>8.0.0-oidc-SNAPSHOT</sporsmalogsvar.version>
-        <modia-felleskomponenter.version>4.0-oidc-SNAPSHOT</modia-felleskomponenter.version>
+        <varsling.modia.version>2.0</varsling.modia.version>
+        <modiabrukerdialog-api.version>9.0.0</modiabrukerdialog-api.version>
+        <sporsmalogsvar.version>8.0.0</sporsmalogsvar.version>
+        <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
