@@ -92,7 +92,6 @@ public class PersonPageMockContext {
     @Bean
     public GrunninfoService grunninfoService() {
         return new GrunninfoServiceImpl();
-//        return mock(GrunninfoService.class);
     }
 
     @Bean
