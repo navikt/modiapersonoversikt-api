@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;

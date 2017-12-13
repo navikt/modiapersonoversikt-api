@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;

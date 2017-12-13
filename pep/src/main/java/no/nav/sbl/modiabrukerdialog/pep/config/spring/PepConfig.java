@@ -1,11 +1,11 @@
 package no.nav.sbl.modiabrukerdialog.pep.config.spring;
 
-import no.nav.modig.security.tilgangskontroll.config.AccessControlInterceptorConfig;
-import no.nav.modig.security.tilgangskontroll.policy.enrichers.EnvironmentRequestEnricher;
-import no.nav.modig.security.tilgangskontroll.policy.enrichers.SecurityContextRequestEnricher;
-import no.nav.modig.security.tilgangskontroll.policy.pdp.DecisionPoint;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.security.tilgangskontroll.policy.pep.PEPImpl;
+import no.nav.brukerdialog.security.tilgangskontroll.config.AccessControlInterceptorConfig;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.enrichers.EnvironmentRequestEnricher;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.enrichers.SecurityContextRequestEnricher;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pdp.DecisionPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.PEPImpl;
 import no.nav.sbl.modiabrukerdialog.pdp.config.spring.PdpConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

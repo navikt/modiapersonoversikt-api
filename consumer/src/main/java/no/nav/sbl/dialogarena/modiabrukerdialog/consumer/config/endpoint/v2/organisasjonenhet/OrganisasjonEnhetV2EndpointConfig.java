@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.org
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetV2Mock;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhetV2;
@@ -18,7 +17,7 @@ public class OrganisasjonEnhetV2EndpointConfig {
 
     @Bean
     public OrganisasjonEnhetV2 organisasjonEnhetV2() {
-        final OrganisasjonEnhetV2 organisasjonEnhetV2 = lagEndpoint();
+        final OrganisasjonEnhetV2 organisasjonEnhetV2 = lagEndpoint().configureStsForSystemUserInFSS().build();
         final OrganisasjonEnhetV2 organisasjonEnhetV2Mock = lagMockEnpoint();
 
         return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetV2", organisasjonEnhetV2,
@@ -34,11 +33,9 @@ public class OrganisasjonEnhetV2EndpointConfig {
         return OrganisasjonEnhetV2Mock.organisasjonEnhetV2();
     }
 
-    private OrganisasjonEnhetV2 lagEndpoint() {
+    private CXFClient<OrganisasjonEnhetV2> lagEndpoint() {
         return new CXFClient<>(OrganisasjonEnhetV2.class)
-                .address(System.getProperty("norg2.organisasjonenhet.v2.url"))
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
-                .build();
+                .address(System.getProperty("norg2.organisasjonenhet.v2.url"));
     }
 
 }

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 

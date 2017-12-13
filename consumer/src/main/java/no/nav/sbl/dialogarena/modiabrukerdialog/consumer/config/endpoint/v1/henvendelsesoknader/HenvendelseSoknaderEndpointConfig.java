@@ -2,9 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.hen
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
@@ -20,7 +17,7 @@ public class HenvendelseSoknaderEndpointConfig {
 
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
-        final HenvendelseSoknaderPortType prod = createHenvendelsePortType(new UserSAMLOutInterceptor());
+        final HenvendelseSoknaderPortType prod = createHenvendelsePortType().configureStsForOnBehalfOfWithJWT().build();
         final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("Henvendelsesoknader_v1", prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
@@ -28,17 +25,15 @@ public class HenvendelseSoknaderEndpointConfig {
 
     @Bean
     public Pingable pingHenvendelseSoknader() {
-        final HenvendelseSoknaderPortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
+        final HenvendelseSoknaderPortType ws = createHenvendelsePortType().configureStsForSystemUserInFSS().build();
         return new PingableWebService("Henvendelse soknader", ws);
     }
 
-    private HenvendelseSoknaderPortType createHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
+    private CXFClient<HenvendelseSoknaderPortType> createHenvendelsePortType() {
         return new CXFClient<>(HenvendelseSoknaderPortType.class)
                 .timeout(15000, 15000)
                 .wsdl("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsesoknader/v1/Soknader.wsdl")
-                .address(System.getProperty("henvendelser.ws.url"))
-                .withOutInterceptor(interceptor)
-                .build();
+                .address(System.getProperty("henvendelser.ws.url"));
     }
 
 }

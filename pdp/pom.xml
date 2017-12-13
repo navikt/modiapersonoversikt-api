@@ -18,14 +18,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security-authorization</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-pip</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-authorization</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

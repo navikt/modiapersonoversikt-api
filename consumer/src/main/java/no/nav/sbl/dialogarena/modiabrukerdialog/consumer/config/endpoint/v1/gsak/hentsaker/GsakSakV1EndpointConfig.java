@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsa
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +32,7 @@ public class GsakSakV1EndpointConfig {
         return new CXFClient<>(SakV1.class)
                 .timeout(15000, 15000)
                 .address(System.getProperty("gsak.sak.v1.url"))
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
+                .configureStsForSystemUserInFSS()
                 .build();
     }
 }

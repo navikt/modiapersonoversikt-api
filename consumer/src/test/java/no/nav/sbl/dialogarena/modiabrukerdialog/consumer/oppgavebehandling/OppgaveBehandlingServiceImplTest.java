@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import no.nav.modig.core.context.StaticSubjectHandler;
-import no.nav.modig.core.context.SubjectHandler;
+import no.nav.brukerdialog.security.context.StaticSubjectHandler;
+import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;

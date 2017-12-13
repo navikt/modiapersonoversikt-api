@@ -20,11 +20,36 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>test-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.picketbox</groupId>
+            <artifactId>picketbox</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.components</groupId>
+            <artifactId>geronimo-jaspi</artifactId>
+            <version>2.0.0</version>
+            <scope>test</scope>
+        </dependency>
         <!--Interne-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-consumer</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -61,10 +86,6 @@
         </dependency>
 
         <!--Kjerneinfo-->
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-hentperson</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-panel</artifactId>
@@ -142,10 +163,6 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>javax.servlet</artifactId>
-        </dependency>
         <!--Modig-->
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -173,29 +190,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-wicket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-authorization</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-loginmodule</artifactId>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
             <artifactId>modig-testcertificates</artifactId>
             <scope>test</scope>
         </dependency>
@@ -207,17 +201,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <type>test-jar</type>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-loginmodule</artifactId>
-            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -248,6 +231,10 @@
         </dependency>
 
         <!-- Spring -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

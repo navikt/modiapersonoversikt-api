@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
-import no.nav.modig.core.context.ModigSecurityConstants;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.SubjectHandlerUtils;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.modig.core.domain.IdentType;
+import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -59,7 +59,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     @BeforeAll
     static void beforeAll() {
         System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
         setInnloggetSaksbehandler();
     }
 
@@ -86,7 +86,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         Ruting rutingMock = mock(Ruting.class);
         when(rutingMock.finnAnsvarligEnhetForOppgavetype(any()))
                 .thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(new ArrayList<>()));
-        return rutingMock ;
+        return rutingMock;
     }
 
     private AnsattService mockAnsattService() {
