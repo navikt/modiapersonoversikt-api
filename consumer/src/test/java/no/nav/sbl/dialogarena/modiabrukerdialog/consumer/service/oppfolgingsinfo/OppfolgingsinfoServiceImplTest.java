@@ -11,6 +11,7 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
+import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.feil.WSSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusRequest;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusResponse;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.WSOppfolgingsdata;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -166,6 +168,46 @@ class OppfolgingsinfoServiceImplTest {
 
         verify(oppfolgingsenhetServiceMock).hentOppfolgingsenhet(stringArgumentCaptor.capture());
         assertThat(stringArgumentCaptor.getValue(), is(FODSELSNUMMER));
+    }
+
+    @Test
+    @DisplayName("Kaller ikke LDAP hvis bruker ikke er under oppfolging")
+    void kallerIkkeLDAPHvisIkkeUnderOppfolging() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse().withWsOppfolgingsdata(new WSOppfolgingsdata().withErUnderOppfolging(false)));
+
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
+
+        verify(ldapServiceMock, never()).hentSaksbehandler(anyString());
+    }
+
+    @Test
+    @DisplayName("Kaller ikke LDAP hvis bruker ikke har veileder")
+    void kallerIkkeLDAPHvisBrukerIkkeHarVeileder() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse().withWsOppfolgingsdata(new WSOppfolgingsdata().withErUnderOppfolging(true)));
+
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
+
+        verify(ldapServiceMock, never()).hentSaksbehandler(anyString());
+    }
+
+    @Test
+    @DisplayName("Kaster exception hvis Oppfolgingsinfo returnerer tom respons")
+    void kasterExceptionHvisOppfolgingsinfoReturnererTomResponse() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse());
+
+        assertThrows(RuntimeException.class, () -> oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER));
+    }
+
+    @Test
+    @DisplayName("Kaster exception hvis Oppfolgingsinfo returnerer WSSikkerhetsbegrensning")
+    void kasterExceptionHvisOppfolgingsinfoReturnererSikkerhetsbegrensning() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse().withWsSikkerhetsbegrensning(new WSSikkerhetsbegrensning()));
+
+        assertThrows(RuntimeException.class, () -> oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER));
     }
 
 }
