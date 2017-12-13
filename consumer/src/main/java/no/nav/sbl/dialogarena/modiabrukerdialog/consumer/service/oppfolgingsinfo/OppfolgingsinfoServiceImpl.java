@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.rest.oppfolgingsinfo.Oppfolgingsinfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsenhetService;
@@ -16,9 +15,6 @@ import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.WSOppfolgingsdata
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 public class OppfolgingsinfoServiceImpl implements OppfolgingsinfoService {
@@ -38,23 +34,21 @@ public class OppfolgingsinfoServiceImpl implements OppfolgingsinfoService {
         this.oppfolgingsenhetService = oppfolgingsenhetService;
     }
 
-    public Optional<Oppfolgingsinfo> hentOppfolgingsinfo(String fodselsnummer) {
+    public Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer) {
         String aktoerId = mapTilAktoerId(fodselsnummer);
 
         WSOppfolgingsdata oppfolgingsdata = hentOppfolgingsstatus(aktoerId);
 
-        if (oppfolgingsdata == null) {
-            return empty();
-        }
+        Oppfolgingsinfo oppfolgingsinfo = new Oppfolgingsinfo(oppfolgingsdata.isErUnderOppfolging());
 
-        Saksbehandler saksbehandler = ofNullable(oppfolgingsdata.getVeilederIdent())
+        ofNullable(oppfolgingsdata.getVeilederIdent())
                 .map(this::hentSaksbehandler)
-                .orElse(null);
+                .map(oppfolgingsinfo::withVeileder);
 
-        AnsattEnhet oppfolgingsenhet = oppfolgingsenhetService.hentOppfolgingsenhet(fodselsnummer)
-                .orElse(null);
+        oppfolgingsenhetService.hentOppfolgingsenhet(fodselsnummer)
+                .map(oppfolgingsinfo::withOppfolgingsenhet);
 
-        return Optional.of(new Oppfolgingsinfo(oppfolgingsdata.isErUnderOppfolging(), saksbehandler, oppfolgingsenhet));
+        return oppfolgingsinfo;
     }
 
     private Saksbehandler hentSaksbehandler(String veilederIdent) {
@@ -76,6 +70,9 @@ public class OppfolgingsinfoServiceImpl implements OppfolgingsinfoService {
 
         if (oppfolgingsstatusResponse.getWsSikkerhetsbegrensning() != null) {
             throw new RuntimeException("Saksbehandler har ikke tilgang til bruker med aktor-id: " + aktorId);
+        }
+        if (oppfolgingsstatusResponse.getWsOppfolgingsdata() == null) {
+            throw new RuntimeException("OppfolgingsinfoV1 returnerte ingen oppfolgingsdata");
         }
 
         return oppfolgingsstatusResponse.getWsOppfolgingsdata();

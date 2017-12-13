@@ -122,7 +122,9 @@ public class LamellServicesAndLoaders {
     @Bean
     public OppfolgingsinfoService oppfolgingsinfoService() {
         OppfolgingsinfoService mock = mock(OppfolgingsinfoService.class);
-        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(Optional.of(new Oppfolgingsinfo(true, new Saksbehandler("Harald", "Hårfagre", "z991028"), new AnsattEnhet("0118", "NAV Aremark"))));
+        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(new Oppfolgingsinfo(true)
+                .withVeileder(new Saksbehandler("Harald", "Hårfagre", "z991028"))
+                .withOppfolgingsenhet(new AnsattEnhet("0118", "NAV Aremark")));
         return mock;
     }
 

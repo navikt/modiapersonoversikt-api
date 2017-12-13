@@ -98,7 +98,7 @@ class OppfolgingsinfoServiceImplTest {
     @Test
     @DisplayName("Henter ut oppfølgingsflagget til bruker fra veilarboppfolging")
     void henterErUnderOppfolgingFraTjenesten() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         assertEquals(ER_UNDER_OPPFOLGING, oppfolgingsinfo.erUnderOppfolging);
     }
@@ -106,26 +106,26 @@ class OppfolgingsinfoServiceImplTest {
     @Test
     @DisplayName("Henter veileders navn fra veilarboppfolging")
     void henterVeiledernavnFraTjenesten() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        assertThat(oppfolgingsinfo.getSaksbehandler().get().etternavn, is(VEILEDER_ETTERNAVN));
-        assertThat(oppfolgingsinfo.getSaksbehandler().get().fornavn, is(VEILEDER_FORNAVN));
+        assertThat(oppfolgingsinfo.getVeileder().get().etternavn, is(VEILEDER_ETTERNAVN));
+        assertThat(oppfolgingsinfo.getVeileder().get().fornavn, is(VEILEDER_FORNAVN));
     }
 
     @Test
     @DisplayName("Returnerer oppfølgingsenhet-id")
     void returnererOppfolgingsenhetId() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        assertThat(oppfolgingsinfo.getSaksbehandlerenhet().get().enhetId, is(OPPFOELGINGSENHET_ID));
+        assertThat(oppfolgingsinfo.getOppfolgingsenhet().get().enhetId, is(OPPFOELGINGSENHET_ID));
     }
 
     @Test
     @DisplayName("Returnerer oppfølgingsenhetnavn")
     void returnererOppfolgingsenhetNavn() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        assertThat(oppfolgingsinfo.getSaksbehandlerenhet().get().enhetNavn, is(OPPFOELGINGSENHET_NAVN));
+        assertThat(oppfolgingsinfo.getOppfolgingsenhet().get().enhetNavn, is(OPPFOELGINGSENHET_NAVN));
     }
 
     @Test
@@ -133,7 +133,7 @@ class OppfolgingsinfoServiceImplTest {
     void kallerAktoerPortTypeMedRiktigFnr() throws HentAktoerIdForIdentPersonIkkeFunnet {
         ArgumentCaptor<HentAktoerIdForIdentRequest> argumentCaptor = ArgumentCaptor.forClass(HentAktoerIdForIdentRequest.class);
 
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         verify(aktoerPortTypeMock).hentAktoerIdForIdent(argumentCaptor.capture());
         assertThat(argumentCaptor.getValue().getIdent(), is(FODSELSNUMMER));
@@ -144,7 +144,7 @@ class OppfolgingsinfoServiceImplTest {
     void kallerOppfolgingsinfoMedRiktigAktoerId() {
         ArgumentCaptor<OppfolgingsstatusRequest> argumentCaptor = ArgumentCaptor.forClass(OppfolgingsstatusRequest.class);
 
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         verify(oppfolgingsinfoV1Mock).hentOppfolgingsstatus(argumentCaptor.capture());
         assertThat(argumentCaptor.getValue().getAktorId(), is(AKTOERID));
@@ -153,7 +153,7 @@ class OppfolgingsinfoServiceImplTest {
     @Test
     @DisplayName("Kaller LDAP med riktig veilederident")
     void kallerLdapMedRiktigVeilederident() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         verify(ldapServiceMock).hentSaksbehandler(stringArgumentCaptor.capture());
         assertThat(stringArgumentCaptor.getValue(), is(VEILEDER_IDENT));
@@ -162,7 +162,7 @@ class OppfolgingsinfoServiceImplTest {
     @Test
     @DisplayName("Kaller OppfolgingsenhetService med riktig fødselsnummer")
     void kallerOppfolgingsenhetServiceMedRiktigFodselsnummer() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         verify(oppfolgingsenhetServiceMock).hentOppfolgingsenhet(stringArgumentCaptor.capture());
         assertThat(stringArgumentCaptor.getValue(), is(FODSELSNUMMER));
