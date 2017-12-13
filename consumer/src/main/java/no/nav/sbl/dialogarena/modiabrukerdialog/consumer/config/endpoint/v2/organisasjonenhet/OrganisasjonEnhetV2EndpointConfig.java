@@ -17,7 +17,7 @@ public class OrganisasjonEnhetV2EndpointConfig {
 
     @Bean
     public OrganisasjonEnhetV2 organisasjonEnhetV2() {
-        final OrganisasjonEnhetV2 organisasjonEnhetV2 = lagEndpoint();
+        final OrganisasjonEnhetV2 organisasjonEnhetV2 = lagEndpoint().configureStsForOnBehalfOfWithJWT().build();
         final OrganisasjonEnhetV2 organisasjonEnhetV2Mock = lagMockEnpoint();
 
         return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetV2", organisasjonEnhetV2,
@@ -26,18 +26,17 @@ public class OrganisasjonEnhetV2EndpointConfig {
 
     @Bean
     public Pingable gsakOrganisasjonEnhetPing() {
-        return new PingableWebService("NORG2 - OrganisasjonEnhetV2", lagEndpoint());
+        return new PingableWebService("NORG2 - OrganisasjonEnhetV2",
+                lagEndpoint().configureStsForSystemUserInFSS().build());
     }
 
     private OrganisasjonEnhetV2 lagMockEnpoint() {
         return OrganisasjonEnhetV2Mock.organisasjonEnhetV2();
     }
 
-    private OrganisasjonEnhetV2 lagEndpoint() {
+    private CXFClient<OrganisasjonEnhetV2> lagEndpoint() {
         return new CXFClient<>(OrganisasjonEnhetV2.class)
-                .address(System.getProperty("norg2.organisasjonenhet.v2.url"))
-                .configureStsForSystemUserInFSS()
-                .build();
+                .address(System.getProperty("norg2.organisasjonenhet.v2.url"));
     }
 
 }
