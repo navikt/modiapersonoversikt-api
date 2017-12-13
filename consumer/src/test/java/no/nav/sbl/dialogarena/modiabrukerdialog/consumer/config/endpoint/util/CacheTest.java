@@ -45,8 +45,6 @@ public abstract class CacheTest {
     @Before
     public void teardown() {
         getCache().removeAll();
-//        getCache().getCacheManager().getCache(cachename).setStatisticsEnabled(true);
-//        getCache().getCacheManager().getCache(cachename).clearStatistics();
     }
 
     protected Ehcache getCache() {
