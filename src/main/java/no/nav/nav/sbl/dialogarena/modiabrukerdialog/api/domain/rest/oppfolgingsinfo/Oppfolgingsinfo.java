@@ -10,25 +10,33 @@ import static java.util.Optional.ofNullable;
 public class Oppfolgingsinfo {
 
     public final boolean erUnderOppfolging;
-    private final Saksbehandler saksbehandler;
-    private final AnsattEnhet saksbehandlerenhet;
+    private Saksbehandler veileder;
+    private AnsattEnhet oppfolgingsenhet;
 
-    public Oppfolgingsinfo(Boolean erUnderOppfolging, Saksbehandler saksbehandler, AnsattEnhet saksbehandlerenhet) {
+    public Oppfolgingsinfo(Boolean erUnderOppfolging) {
         this.erUnderOppfolging = erUnderOppfolging;
-        this.saksbehandler = saksbehandler;
-        this.saksbehandlerenhet = saksbehandlerenhet;
     }
 
     public boolean erUnderOppfolging() {
         return erUnderOppfolging;
     }
 
-    public Optional<Saksbehandler> getSaksbehandler() {
-        return ofNullable(saksbehandler);
+    public Optional<Saksbehandler> getVeileder() {
+        return ofNullable(veileder);
     }
 
-    public Optional<AnsattEnhet> getSaksbehandlerenhet() {
-        return ofNullable(saksbehandlerenhet);
+    public Optional<AnsattEnhet> getOppfolgingsenhet() {
+        return ofNullable(oppfolgingsenhet);
+    }
+
+    public Oppfolgingsinfo withVeileder(Saksbehandler veileder) {
+        this.veileder = veileder;
+        return this;
+    }
+
+    public Oppfolgingsinfo withOppfolgingsenhet(AnsattEnhet oppfolgingsenhet) {
+        this.oppfolgingsenhet = oppfolgingsenhet;
+        return this;
     }
 
 }
