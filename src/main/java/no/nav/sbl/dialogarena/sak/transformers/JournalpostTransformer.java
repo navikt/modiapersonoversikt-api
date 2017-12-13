@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappe
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,7 +28,7 @@ public class JournalpostTransformer {
     @Inject
     private BulletproofKodeverkService bulletproofKodeverkService;
 
-    public ResultatWrapper<DokumentMetadata> dokumentMetadataFraJournalPost(WSJournalpost journalpost, String fnr) throws RuntimeException {
+    public ResultatWrapper<DokumentMetadata> dokumentMetadataFraJournalPost(WSJournalpost journalpost, String fnr, String fagsakId) throws RuntimeException {
         Map<String, List<WSDokumentinfoRelasjon>> relasjoner = byggRelasjonsMap(journalpost);
         Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
@@ -59,6 +60,7 @@ public class JournalpostTransformer {
                 .withBaksystem(JOARK)
                 .withKategoriNotat(kategori)
                 .withTilhorendeSakid(journalpost.getGjelderSak().getSakId())
+                .withTilhorendeFagsakId(fagsakId)
                 .withTemakodeVisning((String) temanavnForTemakode.resultat), feilendeBaksystemer);
     }
 
