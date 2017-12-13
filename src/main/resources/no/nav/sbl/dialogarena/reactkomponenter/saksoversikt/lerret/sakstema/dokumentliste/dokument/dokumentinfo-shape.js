@@ -9,5 +9,6 @@ export default PT.shape({
     vedlegg: PT.array,
     temakodeVisning: PT.string,
     feilWrapper: PT.object.isRequired,
-    tilhorendeSakid: PT.string
+    tilhorendeSakid: PT.string,
+    tilhorendeFagsakId: PT.string
 });

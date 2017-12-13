@@ -25,15 +25,17 @@ class DokumentInfoElm extends React.Component {
     render() {
         const { dokumentinfo, visTema, brukerNavn, velgJournalpost, visSide } = this.props;
         const { retning, avsender, mottaker, navn, hoveddokument, vedlegg,
-                temakodeVisning, feilWrapper, kategoriNotat, tilhorendeSakid } = dokumentinfo;
-        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument"> {temakodeVisning} / {tilhorendeSakid} </p>
-                                           : <p className="tema-dokument"> {tilhorendeSakid} </p>;
+                temakodeVisning, feilWrapper, kategoriNotat, tilhorendeSakid, tilhorendeFagsakId } = dokumentinfo;
+
+        const sakId = tilhorendeFagsakId == null ? tilhorendeSakid : tilhorendeFagsakId;
+
+        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument"> {temakodeVisning} / {sakId} </p>
+                                           : <p className="tema-dokument"> {sakId} </p>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ?
             'dokument-kan-vises' : 'dokument-kan-ikke-vises';
         const skjultIngenTilgangTekst = kanViseDokument === 'dokument-kan-ikke-vises' ?
             <p className="vekk">Ikke tilgang til dokument</p> : '';
-
         return (
             <li className={`dokumentliste-element ${kanViseDokument}`} id={`${'a' + dokumentinfo.journalpostId}`}>
                 <article aria-label={hoveddokument.tittel}>
