@@ -7,14 +7,12 @@ import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.lenkepanel.LenkePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import org.apache.commons.lang3.StringUtils;
@@ -24,19 +22,15 @@ import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.servlet.http.Cookie;
 import java.util.Map;
 import java.util.Optional;
 
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
@@ -72,8 +66,6 @@ public class HentPersonPage extends BasePage {
                 oppgiBegrunnelseModal
         );
 
-        LenkePanel lenkePanel = new LenkePanel("lenkePanel", getVeiledersEnhetParameter());
-        add(lenkePanel);
         setUpSikkerhetstiltakspanel(pageParameters);
         configureModalWindow(oppgiBegrunnelseModal, pageParameters);
     }
@@ -195,13 +187,5 @@ public class HentPersonPage extends BasePage {
         } else {
             return null;
         }
-    }
-
-    private String getVeiledersEnhetParameter() {
-        WebRequest webRequest = (WebRequest) RequestCycle.get().getRequest();
-        Optional<Cookie> maybeNavEnhetCookie = webRequest.getCookies().stream()
-                .filter(cookie -> cookie.getName().equals(RestUtils.saksbehandlerInnstillingerCookieId()))
-                .findAny();
-        return maybeNavEnhetCookie.isPresent() ? maybeNavEnhetCookie.get().getValue() : "";
     }
 }
