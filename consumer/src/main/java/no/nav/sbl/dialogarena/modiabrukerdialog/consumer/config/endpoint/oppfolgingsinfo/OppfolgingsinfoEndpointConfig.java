@@ -11,17 +11,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class OppfolgingsinfoEndpointConfig {
 
-    private static final String MOCK_KEY = "start.oppfolgingsinfo.v1.withmock";
+    public static final String MOCK_KEY = "start.oppfolgingsinfo.v1.withmock";
     private static final String ENDPOINT_URL = "oppfolgingsinfo.v1.url";
 
     @Bean
     public OppfolgingsinfoV1 oppfolgingsinfo() {
         return createMetricsProxyWithInstanceSwitcher(
-                "oppfolginsinfoV1",
+                "oppfolgingsinfoV1",
                 lagEndpoint().configureStsForOnBehalfOfWithJWT().build(),
                 lagMockEndpoint(),
                 MOCK_KEY,
@@ -43,19 +46,15 @@ public class OppfolgingsinfoEndpointConfig {
     }
 
     private OppfolgingsinfoV1 lagMockEndpoint() {
-        return new OppfolgingsinfoV1() {
-            @Override
-            public OppfolgingsstatusResponse hentOppfolgingsstatus(OppfolgingsstatusRequest oppfolgingsstatusRequest) {
-                return new OppfolgingsstatusResponse()
+        OppfolgingsinfoV1 mock = mock(OppfolgingsinfoV1.class);
+
+        when(mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse()
                         .withWsOppfolgingsdata(new WSOppfolgingsdata()
                                 .withErUnderOppfolging(true)
-                                .withVeilederIdent("***REMOVED***"));
-            }
+                                .withVeilederIdent("***REMOVED***")));
 
-            @Override
-            public void ping() {
-
-            }
-        };
+        return mock;
     }
+
 }
