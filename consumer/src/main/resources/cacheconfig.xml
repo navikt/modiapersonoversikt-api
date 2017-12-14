@@ -111,6 +111,11 @@
             <cache:cacheable method="hent*" />
         </cache:caching>
     </cache:advice>
+    <cache:advice id="oppfolgingsAdvice" key-generator="defaultkeygenerator">
+        <cache:caching cache="oppfolgingCache">
+            <cache:cacheable method="hent*" />
+        </cache:caching>
+    </cache:advice>
 
     <aop:config>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
@@ -130,6 +135,7 @@
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
         <aop:advisor advice-ref="organisasjonEnhetKontantinformasjonAdvice" pointcut="bean(organisasjonEnhetKontaktinformasjonV1)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsinfo)"/>
+        <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingPortType)"/>
     </aop:config>
 
 </beans>
