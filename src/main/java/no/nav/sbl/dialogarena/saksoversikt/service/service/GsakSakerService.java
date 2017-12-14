@@ -33,6 +33,7 @@ public class GsakSakerService {
                     .stream()
                     .map(gsakSak -> new Sak()
                                         .withSaksId(gsakSak.getSakId())
+                                        .withFagsaksnummer(gsakSak.getFagsystemSakId())
                                         .withTemakode(gsakSak.getFagomraade().getValue())
                                         .withBaksystem(GSAK)
                                         .withFagsystem(gsakSak.getFagsystem().getValue())

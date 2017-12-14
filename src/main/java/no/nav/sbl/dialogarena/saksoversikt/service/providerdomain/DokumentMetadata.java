@@ -20,6 +20,7 @@ public class DokumentMetadata {
     private Entitet avsender;
     private Entitet mottaker;
     private String tilhorendeSakid;
+    private String tilhorendeFagsakId;
     private Set<Baksystem> baksystem = new HashSet<>();
     private String temakode;
     private String temakodeVisning;
@@ -184,5 +185,18 @@ public class DokumentMetadata {
 
     public KategoriNotat getKategoriNotat() {
         return kategoriNotat;
+    }
+
+    public String getTilhorendeFagsakId() {
+        return tilhorendeFagsakId;
+    }
+
+    public void setTilhorendeFagsakId(String tilhorendeFagsakId) {
+        this.tilhorendeFagsakId = tilhorendeFagsakId;
+    }
+
+    public DokumentMetadata withTilhorendeFagsakId(String tilhorendeFagsakId) {
+        this.tilhorendeFagsakId = tilhorendeFagsakId;
+        return this;
     }
 }
