@@ -38,9 +38,9 @@ public class Sak {
         return this.temakode;
     }
 
-    public String getFagsaksnummer() { return fagsaksnummer; }
-
-    public void setFagsaksnummer(String fagsaksnummer) { this.fagsaksnummer = fagsaksnummer; }
+    public String getFagsaksnummer() {
+        return fagsaksnummer;
+    }
 
     public String saksId() {
         return this.saksId;
