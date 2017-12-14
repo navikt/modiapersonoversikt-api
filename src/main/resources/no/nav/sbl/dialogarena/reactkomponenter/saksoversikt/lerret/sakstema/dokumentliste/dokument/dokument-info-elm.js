@@ -29,8 +29,8 @@ class DokumentInfoElm extends React.Component {
 
         const sakId = tilhorendeFagsakId == null ? tilhorendeSakid : tilhorendeFagsakId;
 
-        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument"> {temakodeVisning} / {sakId} </p>
-                                           : <p className="tema-dokument"> {sakId} </p>;
+        const temaHvisAlleTemaer = visTema ? <p className="tema-dokument"> {temakodeVisning} / SaksId: {sakId} </p>
+                                           : <p className="tema-dokument"> SaksId: {sakId} </p>;
         const dokumentdato = javaLocalDateTimeToJSDate(dokumentinfo.dato);
         const kanViseDokument = (!feilWrapper.inneholderFeil && kanViseDokumenter(hoveddokument, vedlegg)) ?
             'dokument-kan-vises' : 'dokument-kan-ikke-vises';
