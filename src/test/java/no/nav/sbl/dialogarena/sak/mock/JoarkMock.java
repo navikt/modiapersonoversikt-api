@@ -107,12 +107,12 @@ public class JoarkMock {
         return journalpost;
     }
 
-    public static WSJournalpost eksternDokumentinfoRelasjonListe() throws DatatypeConfigurationException {
+    public static WSJournalpost eksternDokumentinfoRelasjonListe(String saksId) throws DatatypeConfigurationException {
         WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId("1");
         journalpost.setArkivtema(lagArkivtema("DAG"));
         journalpost.setEksternPart(tredjePartsOrganisasjon());
-        journalpost.setGjelderSak(lagJoarkSak("1"));
+        journalpost.setGjelderSak(lagJoarkSak(saksId));
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
         journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
         journalpost.getDokumentinfoRelasjonListe()

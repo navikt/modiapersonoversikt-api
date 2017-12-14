@@ -3,11 +3,11 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksystemException;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentDokumentIkkeFunnet;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.journal.v2.HentJournalpostListeSikkerhetsbegrensning;
@@ -22,14 +22,11 @@ import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentJournalpostListeReq
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK_SIKKERHETSBEGRENSNING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
 import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER;
@@ -48,6 +45,8 @@ public class InnsynImpl implements Innsyn {
     private static final Logger logger = getLogger(InnsynImpl.class);
 
     public ResultatWrapper<List<DokumentMetadata>> hentTilgjengeligJournalpostListe(List<Sak> saker, String fnr) {
+        Map<String, Sak> saksMap = saker.stream().collect(toMap(Sak::getSaksId, Function.identity()));
+
         WSHentJournalpostListeRequest wsRequest = new WSHentJournalpostListeRequest();
         wsRequest.setSoekeFilter(new WSSoekeFilter().withJournalFiltrering(KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER));
         wsRequest.getSakListe().addAll(sakerTilJoarkSak(saker));
@@ -60,7 +59,7 @@ public class InnsynImpl implements Innsyn {
             List<ResultatWrapper<DokumentMetadata>> dokumentMetadataWrappers = joarkV2.hentJournalpostListe(wsRequest)
                     .getJournalpostListe()
                     .stream()
-                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp, fnr))
+                    .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp, fnr, saksMap.get(jp.getGjelderSak().getSakId()).getFagsaksnummer()))
                     .collect(toList());
 
             List<DokumentMetadata> dokumentMetadata = dokumentMetadataWrappers.stream()

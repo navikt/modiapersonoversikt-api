@@ -84,7 +84,6 @@ public class InnsynImplTest {
         assertThat(feilendeBaksystem, is(JOARK));
     }
 
-
     @Test
     public void hentTilgjengeligJournalpostListeOK() throws HentJournalpostListeSikkerhetsbegrensning, DatatypeConfigurationException {
         when(journalV2.hentJournalpostListe(any())).thenReturn(new WSHentJournalpostListeResponse().withJournalpostListe(
@@ -93,8 +92,8 @@ public class InnsynImplTest {
                 )
         ));
 
-        when(journalpostTransformer.dokumentMetadataFraJournalPost(any(), anyString())).thenReturn(new ResultatWrapper<>(new DokumentMetadata()));
-        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
+        when(journalpostTransformer.dokumentMetadataFraJournalPost(any(), anyString(), any(String.class))).thenReturn(new ResultatWrapper<>(new DokumentMetadata().withTilhorendeSakid("1").withTilhorendeFagsakId("fagsak1")));
+        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("1").withFagsaksnummer("fagsak1")), "12345678901");
 
         List<DokumentMetadata> dokumentmetadata = wrapper.resultat;
 
