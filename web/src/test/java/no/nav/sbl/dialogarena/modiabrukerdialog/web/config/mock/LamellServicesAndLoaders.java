@@ -1,14 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService;
 import no.nav.kjerneinfo.kontrakter.oppfolging.loader.OppfolgingsLoader;
 import no.nav.kjerneinfo.kontrakter.ytelser.YtelseskontrakterLoader;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.rest.oppfolgingsinfo.Oppfolgingsinfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -21,7 +22,9 @@ import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerService;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
-import no.nav.tjeneste.virksomhet.pleiepenger.v1.*;
+import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetUgyldigIdentNr;
+import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.meldinger.WSHentPleiepengerettighetRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -119,7 +122,9 @@ public class LamellServicesAndLoaders {
     @Bean
     public OppfolgingsinfoService oppfolgingsinfoService() {
         OppfolgingsinfoService mock = mock(OppfolgingsinfoService.class);
-        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(new Oppfolgingsinfo(true,new Saksbehandler("Harald","Hårfagre", "z991028")));
+        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(new Oppfolgingsinfo(true)
+                .withVeileder(new Saksbehandler("Harald", "Hårfagre", "z991028"))
+                .withOppfolgingsenhet(new AnsattEnhet("0118", "NAV Aremark")));
         return mock;
     }
 
