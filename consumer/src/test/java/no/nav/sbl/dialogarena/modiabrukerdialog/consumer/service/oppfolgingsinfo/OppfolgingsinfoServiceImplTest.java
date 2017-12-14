@@ -2,21 +2,16 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinf
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.rest.oppfolgingsinfo.Oppfolgingsinfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsenhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusUgyldigInput;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingsstatusRequest;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingsstatusResponse;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
+import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.feil.WSSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusRequest;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusResponse;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.WSOppfolgingsdata;
@@ -31,11 +26,10 @@ import java.util.Optional;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class OppfolgingsinfoServiceImplTest {
 
@@ -50,8 +44,7 @@ class OppfolgingsinfoServiceImplTest {
     private OppfolgingsinfoV1 oppfolgingsinfoV1Mock;
     private LDAPService ldapServiceMock;
     private AktoerPortType aktoerPortTypeMock;
-    private OppfoelgingPortType oppfoelgingPortTypeMock;
-    private OrganisasjonEnhetV2Service organisasjonEnhetV2ServiceMock;
+    private OppfolgingsenhetService oppfolgingsenhetServiceMock;
     private OppfolgingsinfoService oppfolgingsinfoServiceMock;
 
     @Captor
@@ -67,10 +60,16 @@ class OppfolgingsinfoServiceImplTest {
         oppfolgingsinfoV1Mock = mockOppfolginsinfoV1();
         ldapServiceMock = mockLdapService();
         aktoerPortTypeMock = mockAktoerPortType();
-        oppfoelgingPortTypeMock = mockOppfoelgingPortType();
-        organisasjonEnhetV2ServiceMock = mockOrganisasjonEnhetV2Service();
+        oppfolgingsenhetServiceMock = mockOppfolgingsenhetService();
         oppfolgingsinfoServiceMock = new OppfolgingsinfoServiceImpl(oppfolgingsinfoV1Mock, ldapServiceMock, aktoerPortTypeMock,
-                oppfoelgingPortTypeMock, organisasjonEnhetV2ServiceMock);
+                oppfolgingsenhetServiceMock);
+    }
+
+    private OppfolgingsenhetService mockOppfolgingsenhetService() {
+        OppfolgingsenhetService oppfolgingsenhetServiceMock = mock(OppfolgingsenhetService.class);
+        when(oppfolgingsenhetServiceMock.hentOppfolgingsenhet(anyString()))
+                .thenReturn(Optional.of(new AnsattEnhet(OPPFOELGINGSENHET_ID, OPPFOELGINGSENHET_NAVN)));
+        return oppfolgingsenhetServiceMock;
     }
 
     private OppfolgingsinfoV1 mockOppfolginsinfoV1() {
@@ -98,29 +97,10 @@ class OppfolgingsinfoServiceImplTest {
         return aktoerPortType;
     }
 
-    private OppfoelgingPortType mockOppfoelgingPortType() {
-        OppfoelgingPortType oppfoelgingPortType = mock(OppfoelgingPortType.class);
-        HentOppfoelgingsstatusResponse response = new HentOppfoelgingsstatusResponse();
-        response.setNavOppfoelgingsenhet(OPPFOELGINGSENHET_ID);
-        try {
-            when(oppfoelgingPortType.hentOppfoelgingsstatus(any())).thenReturn(response);
-        } catch (HentOppfoelgingsstatusPersonIkkeFunnet | HentOppfoelgingsstatusSikkerhetsbegrensning | HentOppfoelgingsstatusUgyldigInput hentOppfoelgingsstatusPersonIkkeFunnet) {
-            hentOppfoelgingsstatusPersonIkkeFunnet.printStackTrace();
-        }
-        return oppfoelgingPortType;
-    }
-
-    private OrganisasjonEnhetV2Service mockOrganisasjonEnhetV2Service() {
-        OrganisasjonEnhetV2Service organisasjonEnhetV2Service = mock(OrganisasjonEnhetV2Service.class);
-        when(organisasjonEnhetV2Service.hentEnhetGittEnhetId(anyString(), any()))
-                .thenReturn(Optional.of(new AnsattEnhet(OPPFOELGINGSENHET_ID, OPPFOELGINGSENHET_NAVN)));
-        return organisasjonEnhetV2Service;
-    }
-
     @Test
     @DisplayName("Henter ut oppfølgingsflagget til bruker fra veilarboppfolging")
     void henterErUnderOppfolgingFraTjenesten() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         assertEquals(ER_UNDER_OPPFOLGING, oppfolgingsinfo.erUnderOppfolging);
     }
@@ -128,26 +108,26 @@ class OppfolgingsinfoServiceImplTest {
     @Test
     @DisplayName("Henter veileders navn fra veilarboppfolging")
     void henterVeiledernavnFraTjenesten() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        assertThat(oppfolgingsinfo.getSaksbehandler().get().etternavn, is(VEILEDER_ETTERNAVN));
-        assertThat(oppfolgingsinfo.getSaksbehandler().get().fornavn, is(VEILEDER_FORNAVN));
+        assertThat(oppfolgingsinfo.getVeileder().get().etternavn, is(VEILEDER_ETTERNAVN));
+        assertThat(oppfolgingsinfo.getVeileder().get().fornavn, is(VEILEDER_FORNAVN));
     }
 
     @Test
     @DisplayName("Returnerer oppfølgingsenhet-id")
     void returnererOppfolgingsenhetId() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        assertThat(oppfolgingsinfo.getSaksbehandlerenhet().get().enhetId, is(OPPFOELGINGSENHET_ID));
+        assertThat(oppfolgingsinfo.getOppfolgingsenhet().get().enhetId, is(OPPFOELGINGSENHET_ID));
     }
 
     @Test
     @DisplayName("Returnerer oppfølgingsenhetnavn")
     void returnererOppfolgingsenhetNavn() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        assertThat(oppfolgingsinfo.getSaksbehandlerenhet().get().enhetNavn, is(OPPFOELGINGSENHET_NAVN));
+        assertThat(oppfolgingsinfo.getOppfolgingsenhet().get().enhetNavn, is(OPPFOELGINGSENHET_NAVN));
     }
 
     @Test
@@ -155,7 +135,7 @@ class OppfolgingsinfoServiceImplTest {
     void kallerAktoerPortTypeMedRiktigFnr() throws HentAktoerIdForIdentPersonIkkeFunnet {
         ArgumentCaptor<HentAktoerIdForIdentRequest> argumentCaptor = ArgumentCaptor.forClass(HentAktoerIdForIdentRequest.class);
 
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         verify(aktoerPortTypeMock).hentAktoerIdForIdent(argumentCaptor.capture());
         assertThat(argumentCaptor.getValue().getIdent(), is(FODSELSNUMMER));
@@ -166,7 +146,7 @@ class OppfolgingsinfoServiceImplTest {
     void kallerOppfolgingsinfoMedRiktigAktoerId() {
         ArgumentCaptor<OppfolgingsstatusRequest> argumentCaptor = ArgumentCaptor.forClass(OppfolgingsstatusRequest.class);
 
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         verify(oppfolgingsinfoV1Mock).hentOppfolgingsstatus(argumentCaptor.capture());
         assertThat(argumentCaptor.getValue().getAktorId(), is(AKTOERID));
@@ -175,33 +155,59 @@ class OppfolgingsinfoServiceImplTest {
     @Test
     @DisplayName("Kaller LDAP med riktig veilederident")
     void kallerLdapMedRiktigVeilederident() {
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
         verify(ldapServiceMock).hentSaksbehandler(stringArgumentCaptor.capture());
         assertThat(stringArgumentCaptor.getValue(), is(VEILEDER_IDENT));
     }
 
     @Test
-    @DisplayName("Kaller Arena med riktig fødselsnummer")
-    void kallerArenaMedRiktigFodselsnummer() throws Exception {
-        ArgumentCaptor<HentOppfoelgingsstatusRequest> argumentCaptor = ArgumentCaptor.forClass(HentOppfoelgingsstatusRequest.class);
+    @DisplayName("Kaller OppfolgingsenhetService med riktig fødselsnummer")
+    void kallerOppfolgingsenhetServiceMedRiktigFodselsnummer() {
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
-
-        verify(oppfoelgingPortTypeMock).hentOppfoelgingsstatus(argumentCaptor.capture());
-        assertThat(argumentCaptor.getValue().getPersonidentifikator(), is(FODSELSNUMMER));
+        verify(oppfolgingsenhetServiceMock).hentOppfolgingsenhet(stringArgumentCaptor.capture());
+        assertThat(stringArgumentCaptor.getValue(), is(FODSELSNUMMER));
     }
 
     @Test
-    @DisplayName("Kaller NORG med riktig enhetsid")
-    void kallerNorgMedRiktigEnhetsid() {
-        ArgumentCaptor<OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter> argumentCaptor =
-                ArgumentCaptor.forClass(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.class);
+    @DisplayName("Kaller ikke LDAP hvis bruker ikke er under oppfolging")
+    void kallerIkkeLDAPHvisIkkeUnderOppfolging() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse().withWsOppfolgingsdata(new WSOppfolgingsdata().withErUnderOppfolging(false)));
 
-        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER).get();
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
 
-        verify(organisasjonEnhetV2ServiceMock).hentEnhetGittEnhetId(stringArgumentCaptor.capture(), argumentCaptor.capture());
-        assertThat(stringArgumentCaptor.getValue(), is(OPPFOELGINGSENHET_ID));
+        verify(ldapServiceMock, never()).hentSaksbehandler(anyString());
+    }
+
+    @Test
+    @DisplayName("Kaller ikke LDAP hvis bruker ikke har veileder")
+    void kallerIkkeLDAPHvisBrukerIkkeHarVeileder() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse().withWsOppfolgingsdata(new WSOppfolgingsdata().withErUnderOppfolging(true)));
+
+        Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER);
+
+        verify(ldapServiceMock, never()).hentSaksbehandler(anyString());
+    }
+
+    @Test
+    @DisplayName("Kaster exception hvis Oppfolgingsinfo returnerer tom respons")
+    void kasterExceptionHvisOppfolgingsinfoReturnererTomResponse() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse());
+
+        assertThrows(RuntimeException.class, () -> oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER));
+    }
+
+    @Test
+    @DisplayName("Kaster exception hvis Oppfolgingsinfo returnerer WSSikkerhetsbegrensning")
+    void kasterExceptionHvisOppfolgingsinfoReturnererSikkerhetsbegrensning() {
+        when(oppfolgingsinfoV1Mock.hentOppfolgingsstatus(any(OppfolgingsstatusRequest.class)))
+                .thenReturn(new OppfolgingsstatusResponse().withWsSikkerhetsbegrensning(new WSSikkerhetsbegrensning()));
+
+        assertThrows(RuntimeException.class, () -> oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER));
     }
 
 }

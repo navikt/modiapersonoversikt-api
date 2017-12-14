@@ -9,7 +9,7 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktSer
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.rest.oppfolgingsinfo.Oppfolgingsinfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -122,7 +122,9 @@ public class LamellServicesAndLoaders {
     @Bean
     public OppfolgingsinfoService oppfolgingsinfoService() {
         OppfolgingsinfoService mock = mock(OppfolgingsinfoService.class);
-        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(Optional.of(new Oppfolgingsinfo(true, new Saksbehandler("Harald", "Hårfagre", "z991028"), new AnsattEnhet("0118", "NAV Aremark"))));
+        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(new Oppfolgingsinfo(true)
+                .withVeileder(new Saksbehandler("Harald", "Hårfagre", "z991028"))
+                .withOppfolgingsenhet(new AnsattEnhet("0118", "NAV Aremark")));
         return mock;
     }
 
