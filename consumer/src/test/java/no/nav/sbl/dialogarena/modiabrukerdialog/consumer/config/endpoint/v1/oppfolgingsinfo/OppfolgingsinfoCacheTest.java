@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.oppfolgingsinfo;
 
-import no.nav.metrics.proxy.MetricProxy;
-import no.nav.metrics.proxy.TimerProxy;
-import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfolgingsinfo.OppfolgingsinfoEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
@@ -13,13 +10,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.aop.framework.Advised;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
 
 import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfolgingsinfo.OppfolgingsinfoEndpointConfig.MOCK_KEY;
@@ -64,7 +58,7 @@ public class OppfolgingsinfoCacheTest extends CacheTest {
     }
 
     @Test
-    public void cacheManager_harEntryForOppfolgingsinfoCache_etterKallTilOppfolgingsinfo() throws Exception {
+    public void toKallTilHentOppfolgingsstatusMedSammeIdentGirBareEttTjenestekall() throws Exception {
         OppfolgingsstatusRequest request1 = new OppfolgingsstatusRequest().withAktorId(AKTOERID_1);
         OppfolgingsstatusRequest request2 = new OppfolgingsstatusRequest().withAktorId(AKTOERID_1);
 
@@ -78,7 +72,7 @@ public class OppfolgingsinfoCacheTest extends CacheTest {
     }
 
     @Test
-    public void cacheManager_harEntryForOppfolgingsinfoCache_etterKallTilOppfolgingsinfo2() throws Exception {
+    public void toKallTilHentOppfolgingsstatusMedForskjelligeIdenterGirToTjenestekall() throws Exception {
         OppfolgingsstatusRequest request1 = new OppfolgingsstatusRequest().withAktorId(AKTOERID_1);
         OppfolgingsstatusRequest request2 = new OppfolgingsstatusRequest().withAktorId(AKTOERID_2);
 
@@ -89,23 +83,6 @@ public class OppfolgingsinfoCacheTest extends CacheTest {
         verify(unwrappedOppfolgingsinfo, times(2)).hentOppfolgingsstatus(any());
 
         assertThat(response1.getWsOppfolgingsdata().isErUnderOppfolging(), is(not(response2.getWsOppfolgingsdata().isErUnderOppfolging())));
-    }
-
-    private static Object unwrapProxy(Object proxy) throws Exception {
-        Advised advised = (Advised) proxy;
-
-        Field h = Proxy.class.getDeclaredField("h");
-        Field object = MetricProxy.class.getDeclaredField("object");
-        Field alternative = InstanceSwitcher.class.getDeclaredField("alternative");
-
-        h.setAccessible(true);
-        object.setAccessible(true);
-        alternative.setAccessible(true);
-
-        TimerProxy p = (TimerProxy) h.get(advised.getTargetSource().getTarget());
-        InstanceSwitcher instanceSwitcher = (InstanceSwitcher) h.get(object.get(p));
-
-        return alternative.get(instanceSwitcher);
     }
 
 }

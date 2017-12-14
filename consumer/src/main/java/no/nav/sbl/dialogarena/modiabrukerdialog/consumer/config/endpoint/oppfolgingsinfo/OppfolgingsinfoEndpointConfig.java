@@ -24,7 +24,7 @@ public class OppfolgingsinfoEndpointConfig {
     @Bean
     public OppfolgingsinfoV1 oppfolgingsinfo() {
         return createMetricsProxyWithInstanceSwitcher(
-                "oppfolginsinfoV1",
+                "oppfolgingsinfoV1",
                 lagEndpoint().configureStsForOnBehalfOfWithJWT().build(),
                 lagMockEndpoint(),
                 MOCK_KEY,
