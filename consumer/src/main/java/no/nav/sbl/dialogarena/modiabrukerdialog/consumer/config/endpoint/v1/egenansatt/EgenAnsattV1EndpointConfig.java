@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.ege
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +12,11 @@ import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsPr
 @Configuration
 public class EgenAnsattV1EndpointConfig {
 
-    private static final String EGEN_ANSATT_KEY = "egenansatt.v1.url" ;
+    private static final String EGEN_ANSATT_KEY = "egenansatt.v1.url";
 
     @Bean
     public EgenAnsattV1 egenAnsattV1() {
-        final EgenAnsattV1 egenAnsattV1= lagEndpoint();
+        final EgenAnsattV1 egenAnsattV1 = lagEndpoint();
         final EgenAnsattV1 egenAnsattV1Mock = lagMockEndpoint();
 
         return createMetricsProxyWithInstanceSwitcher("egenAnsattV1", egenAnsattV1, egenAnsattV1Mock, EGEN_ANSATT_KEY, EgenAnsattV1.class);
@@ -37,7 +36,7 @@ public class EgenAnsattV1EndpointConfig {
     private EgenAnsattV1 lagEndpoint() {
         return new CXFClient<>(EgenAnsattV1.class)
                 .address(System.getProperty("egenansatt.v1.url"))
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
+                .configureStsForSystemUserInFSS()
                 .build();
     }
 

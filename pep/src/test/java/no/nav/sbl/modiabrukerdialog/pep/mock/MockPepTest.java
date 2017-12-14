@@ -1,10 +1,10 @@
 package no.nav.sbl.modiabrukerdialog.pep.mock;
 
-import no.nav.modig.security.tilgangskontroll.URN;
-import no.nav.modig.security.tilgangskontroll.policy.attributes.values.StringValue;
-import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.modig.security.tilgangskontroll.policy.request.attributes.ResourceAttribute;
-import no.nav.modig.security.tilgangskontroll.policy.response.Decision;
+import no.nav.brukerdialog.security.tilgangskontroll.URN;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.attributes.values.StringValue;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.ResourceAttribute;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.response.Decision;
 import org.junit.Before;
 import org.junit.Test;
 

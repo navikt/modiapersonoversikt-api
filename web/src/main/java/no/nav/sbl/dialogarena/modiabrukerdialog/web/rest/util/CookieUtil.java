@@ -1,25 +1,36 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util;
 
-import no.nav.modig.core.context.SubjectHandler;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerCookieId;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerTimeoutCookieId;
+
 public class CookieUtil {
-
-    public static final String VALGT_ENHET_COOKIE_NAME_PREFIX = "saksbehandlerinnstillinger-";
-
-    public static String getSaksbehandlersValgteEnhet(HttpServletRequest httpRequest) {
-        if (httpRequest.getCookies() == null) {
+    public static String getSaksbehandlersValgteEnhet(HttpServletRequest request) {
+        if (request.getCookies() == null) {
             throw new IllegalStateException("Ingen cookie er tilgjengelig på HTTP-requesten. Er du egentlig logget inn?");
         }
-        String innloggetSaksbehandlersIdent = SubjectHandler.getSubjectHandler().getUid();
-        return Arrays.stream(httpRequest.getCookies())
-                .filter(cookie -> cookie.getName().equals(VALGT_ENHET_COOKIE_NAME_PREFIX + innloggetSaksbehandlersIdent))
+
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals(saksbehandlerInnstillingerCookieId()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(IllegalStateException::new);
     }
 
+    public static void setSaksbehandlersValgteEnhet(HttpServletResponse response, String enhetId) {
+        Cookie enhetCookie = new Cookie(saksbehandlerInnstillingerCookieId(), enhetId);
+        enhetCookie.setMaxAge(3600 * 24 * 365);
+        enhetCookie.setPath("/modiabrukerdialog/");
+
+        Cookie timeoutCookie = new Cookie(saksbehandlerInnstillingerTimeoutCookieId(), "");
+        timeoutCookie.setMaxAge(3600 * 12);
+        timeoutCookie.setPath("/modiabrukerdialog/");
+
+        response.addCookie(enhetCookie);
+        response.addCookie(timeoutCookie);
+    }
 }

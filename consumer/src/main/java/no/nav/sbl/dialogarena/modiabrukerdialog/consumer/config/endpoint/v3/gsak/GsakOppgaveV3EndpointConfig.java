@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsa
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.*;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +17,7 @@ public class GsakOppgaveV3EndpointConfig {
 
     @Bean
     public OppgaveV3 gsakOppgavePortType() {
-        OppgaveV3 prod = createOppgavePortType(new UserSAMLOutInterceptor());
+        OppgaveV3 prod = createOppgavePortType().configureStsForOnBehalfOfWithJWT().build();
         OppgaveV3 mock = createOppgavePortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("OppgaveV3", prod, mock, GSAK_V3_KEY, OppgaveV3.class);
@@ -26,15 +25,13 @@ public class GsakOppgaveV3EndpointConfig {
 
     @Bean
     public Pingable gsakOppgavePing() {
-        final OppgaveV3 ws = createOppgavePortType(new SystemSAMLOutInterceptor());
+        final OppgaveV3 ws = createOppgavePortType().configureStsForSystemUserInFSS().build();
         return new PingableWebService("Gsak - oppgave", ws);
     }
 
-    private static OppgaveV3 createOppgavePortType(AbstractSAMLOutInterceptor interceptor) {
+    private static CXFClient<OppgaveV3> createOppgavePortType() {
         return new CXFClient<>(OppgaveV3.class)
-                .address(System.getProperty("gsak.oppgave.v3.url"))
-                .withOutInterceptor(interceptor)
-                .build();
+                .address(System.getProperty("gsak.oppgave.v3.url"));
     }
 
 }

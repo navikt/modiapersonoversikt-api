@@ -1,11 +1,11 @@
 package no.nav.sbl.modiabrukerdialog.pep.mock;
 
-import no.nav.modig.security.tilgangskontroll.policy.attributes.values.StringValue;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.modig.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
-import no.nav.modig.security.tilgangskontroll.policy.response.Decision;
-import no.nav.modig.security.tilgangskontroll.policy.response.PolicyResponse;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.attributes.values.StringValue;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.response.Decision;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.response.PolicyResponse;
 
 public class MockPep implements EnforcementPoint{
 

@@ -11,8 +11,7 @@ import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 
 import javax.ws.rs.ForbiddenException;
 import java.util.List;
-
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 class LeggTilbakeOppgaveIGsakDelegate {
 

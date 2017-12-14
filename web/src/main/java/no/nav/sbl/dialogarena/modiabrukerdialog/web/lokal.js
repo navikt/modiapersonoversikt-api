@@ -1,8 +1,7 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
-
-    $('#toggle-personsok').on('click', toggleAvansertSok);
+    $('.interndekorator').on('click', '#toggle-personsok', toggleAvansertSok);
     Modig.shortcutListener.on({key: 'A'}, toggleAvansertSok);
 
     Modig.shortcutListener.on({alt: true, keyCode: 114}, focusSearchField); // F3
@@ -109,13 +108,6 @@ jQuery(document).ready(function ($) {
     }
 
     function toggleAvansertSok() {
-        var portfolio = $('#portfolio');
-        if (portfolio.is(':visible')) {
-            portfolio.hide();
-        }
-        else {
-            portfolio.show();
-        }
         var personsokElement = $('#personsok'), toppmeny = $('.main > .menu-intern'),
             fornavnInput = $('#utvidetPersonsokForm').find('input[name="fornavn"]'), sokKnapp = $('#toggle-personsok'),
             dataApne = sokKnapp.attr('data-apne'),

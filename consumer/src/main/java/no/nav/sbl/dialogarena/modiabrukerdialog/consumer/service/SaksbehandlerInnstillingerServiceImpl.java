@@ -7,9 +7,10 @@ import org.apache.wicket.util.cookies.CookieUtils;
 import javax.inject.Inject;
 import java.util.List;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerCookieId;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerTimeoutCookieId;
 
 
 public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnstillingerService {
@@ -21,9 +22,6 @@ public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnst
         this.ansattService = ansattService;
     }
 
-    public static String saksbehandlerInnstillingerCookieId() {
-        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
-    }
 
     public String getSaksbehandlerValgtEnhet() {
         List<String> ansattEnhetsIdListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
@@ -68,10 +66,6 @@ public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnst
         CookieUtils cookieUtils = new CookieUtils();
         cookieUtils.getSettings().setMaxAge(3600 * 12);
         cookieUtils.save(saksbehandlerInnstillingerTimeoutCookieId(), "");
-    }
-
-    private String saksbehandlerInnstillingerTimeoutCookieId() {
-        return "saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid();
     }
 }
 

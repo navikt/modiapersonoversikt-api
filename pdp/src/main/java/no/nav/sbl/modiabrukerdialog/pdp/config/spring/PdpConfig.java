@@ -1,8 +1,8 @@
 package no.nav.sbl.modiabrukerdialog.pdp.config.spring;
 
-import no.nav.modig.security.tilgangskontroll.config.AccessControlInterceptorConfig;
-import no.nav.modig.security.tilgangskontroll.policy.pdp.DecisionPoint;
-import no.nav.modig.security.tilgangskontroll.policy.pdp.picketlink.PicketLinkDecisionPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.config.AccessControlInterceptorConfig;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pdp.DecisionPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pdp.picketlink.PicketLinkDecisionPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

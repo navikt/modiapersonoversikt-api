@@ -25,6 +25,12 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {AktorEndpointConfig.class})
 public class AktorCacheTest extends CacheTest {
 
+    static {
+        System.setProperty("no.nav.modig.security.sts.url","https://sts-t4.test.local/SecurityTokenServiceProvider/");
+        System.setProperty("no.nav.modig.security.systemuser.username","");
+        System.setProperty("no.nav.modig.security.systemuser.password","");
+    }
+
     public static final String AKTOR_CACHE = "aktorIdCache";
 
     @Inject

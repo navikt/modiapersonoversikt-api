@@ -6,9 +6,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTi
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +20,7 @@ public class SendUtHenvendelseEndpointConfig {
 
     @Bean
     public SendUtHenvendelsePortType sendUtHenvendelsePortType() {
-        SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType(new UserSAMLOutInterceptor());
+        SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType().configureStsForOnBehalfOfWithJWT().build();
         SendUtHenvendelsePortType mock = createSendUtHenvendelsePortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("SendUtHenvendelse", prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
@@ -31,20 +28,19 @@ public class SendUtHenvendelseEndpointConfig {
 
     @Bean
     public Pingable sendUtHenvendelsePing() {
-        final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType(new SystemSAMLOutInterceptor());
-        return new PingableWebService("Send ut henvendelse", ws);}
+        final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType().configureStsForSystemUserInFSS().build();
+        return new PingableWebService("Send ut henvendelse", ws);
+    }
 
-    private static SendUtHenvendelsePortType createSendUtHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
+    private static CXFClient<SendUtHenvendelsePortType> createSendUtHenvendelsePortType() {
         return new CXFClient<>(SendUtHenvendelsePortType.class)
                 .wsdl("classpath:SendUtHenvendelse.wsdl")
                 .address(System.getProperty("send.ut.henvendelse.url"))
-                .withOutInterceptor(interceptor)
                 .withProperty("jaxb.additionalContextClasses", new Class[]{
                         XMLHenvendelse.class,
                         XMLMetadataListe.class,
                         XMLMeldingFraBruker.class,
-                        XMLMeldingTilBruker.class})
-                .build();
+                        XMLMeldingTilBruker.class});
     }
 
 }
