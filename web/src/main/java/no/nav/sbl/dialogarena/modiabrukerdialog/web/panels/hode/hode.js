@@ -9,17 +9,21 @@ function finnMiljoStreng() {
     return host.substring(bindestrekIndex, dotIndex);
 }
 
-function opprettWebSocket(callback) {
+function opprettWebSocket(callback, errorhandler) {
     const connection = new WebSocket('wss://veilederflatehendelser' + finnMiljoStreng() + '.adeo.no/modiaeventdistribution/websocket');
-    connection.onmessage = callback;
+    connection.onmessage = function (event) {
+        errorhandler(undefined);
+        callback(event);
+    };
 
     connection.onerror = function onerror(error) {
         console.error(error);
+        errorhandler(error);
     };
 
     connection.onclose = function onclose() {
         setTimeout(function () {
-            opprettWebSocket(callback);
+            opprettWebSocket(callback, errorhandler);
         }, 1000);
     }
 }
@@ -124,7 +128,7 @@ JSWicket.prototype.send = function send(action, data) {
 };
 
 // Redirect modal
-function lagRedirectModal(endreCallback, beholdCallback) {
+function lagRedirectModal() {
     const modalComponent = ModiaJS.React.createElement(ModiaJS.Components.RedirectModal, {});
     return ModiaJS.ReactDOM.render(modalComponent, document.getElementById("feilmeldingsmodaler"));
 }
@@ -139,6 +143,8 @@ function resetBruker(sendToWicket) {
     return function() {
         nullstillContext()
             .then(function(){
+                sendToWicket && sendToWicket.send('fjernperson');
+            }, function(){
                 sendToWicket && sendToWicket.send('fjernperson');
             });
     }
@@ -171,94 +177,120 @@ function lagDecoratorConfig(fnr, initiellEnhet, autoSubmit, feilmelding) {
 
     return config;
 }
-const websocketCallbackMap = {
-    'NY_AKTIV_BRUKER': function(markupId, fnr, redirectModal) {
-        hentContextBruker()
-            .then(function(data) {
-                if (data.aktivBruker === fnr) {
-                    return;
-                }
-                const endreCallback = function() {
-                    lastInnBruker(data.aktivBruker);
-                };
-                const beholdCallback = function() {
-                    redirectModal.skjul();
-                    oppdaterContextBruker(fnr);
-                };
 
-                redirectModal.vis(data.aktivBruker, endreCallback, beholdCallback);
-            });
-    },
-    'NY_AKTIV_ENHET': function(markupId, fnr) {
-        hentContextEnhet()
-            .then(function(data) {
-                window.rerenderHode(markupId, lagDecoratorConfig(fnr, data.aktivEnhet, false, ''));
-            });
-    },
-};
+function settled(promises) {
+    return Promise.all(promises.map(function(promise) {
+        return promise.then(
+            function(v) { return { v: v, status: 'resolved' }; },
+            function(e) { return { e: e, status: 'rejected' }; }
+        );
+    }));
+}
 
 // Hode init
 (function () {
     let decoratorConfig = null; // Må legges hit for å kunne deles mellom 'initHode' og 'update'
     let redirectModal = null;
+    let decoratorFeilmelding = '';
+
+    const websocketCallbackMap = {
+        'NY_AKTIV_BRUKER': function(markupId, fnr, redirectModal) {
+            hentContextBruker()
+                .then(function(data) {
+                    if (data.aktivBruker === fnr) {
+                        return;
+                    }
+                    const endreCallback = function() {
+                        lastInnBruker(data.aktivBruker);
+                    };
+                    const beholdCallback = function() {
+                        redirectModal.skjul();
+                        oppdaterContextBruker(fnr);
+                    };
+
+                    redirectModal.vis(data.aktivBruker, endreCallback, beholdCallback);
+                });
+        },
+        'NY_AKTIV_ENHET': function(markupId, fnr) {
+            hentContextEnhet()
+                .then(function(data) {
+                    decoratorConfig = lagDecoratorConfig(fnr, data.aktivEnhet, false, decoratorFeilmelding || '');
+                    window.rerenderHode(markupId, decoratorConfig);
+                });
+        },
+    };
 
     window.initHode = function initHode(callbackUrl, markupId, fnr, autoSubmit, feilmelding) {
         // Setter opp wicket-callback-handler
         const sendToWicket = new JSWicket(callbackUrl, markupId);
+        redirectModal = lagRedirectModal();
         document.addEventListener('dekorator-hode-personsok', sokOppFnr(sendToWicket));
         document.addEventListener('dekorator-hode-fjernperson', resetBruker(sendToWicket));
 
         // Ikke bruk contextholder lokalt
         if (window.location.hostname.indexOf('modapp') >= 0) {
             // Laster inn/Oppdater bruker ved sidelast
-            Promise.all([hentContextBruker(), hentContextEnhet(), getMe()])
+            settled([hentContextBruker(), hentContextEnhet(), getMe()])
                 .then(function(data) {
                     var brukerData = data[0];
                     var enhetData = data[1];
                     var me = data[2];
 
-                    console.log('brukerIContext', brukerData, enhetData, me);
-                    if (brukerData.aktivBruker !== fnr) {
-                        if (fnr && fnr.length > 0) {
-                            oppdaterContextBruker(fnr);
-                        } else if (brukerData.aktivBruker) {
-                            lastInnBruker(brukerData.aktivBruker);
+                    if (brukerData.status !== 'resolved' || enhetData.status !== 'resolved' || me.status !== 'resolved') {
+                        decoratorFeilmelding = 'Feil ved uthenting av kontekst.';
+                        decoratorConfig = lagDecoratorConfig(fnr, null, autoSubmit, decoratorFeilmelding);
+                        window.renderDecoratorHead(decoratorConfig, markupId);
+                    } else {
+                        brukerData = brukerData.v;
+                        enhetData = enhetData.v;
+                        me = me.v;
+
+                        if (brukerData.aktivBruker !== fnr) {
+                            if (fnr && fnr.length > 0) {
+                                oppdaterContextBruker(fnr);
+                            } else if (brukerData.aktivBruker) {
+                                lastInnBruker(brukerData.aktivBruker);
+                            }
                         }
+
+                        decoratorFeilmelding = feilmelding || decoratorFeilmelding;
+                        const valgtEnhet = enhetData.aktivEnhet || getCookie('saksbehandlerinnstillinger-'+me.ident);
+                        oppdatertValgtEnhet(valgtEnhet);
+
+                        // Lager decorator og redirect modal
+                        decoratorConfig = lagDecoratorConfig(fnr, valgtEnhet, autoSubmit, decoratorFeilmelding);
+                        window.renderDecoratorHead(decoratorConfig, markupId);
+
+
+                        // Setter opp context-lyttere
+                        opprettWebSocket(function(event) {
+                            const type = event.data;
+                            const handler = websocketCallbackMap[type] || (function() { console.warn('Ukjent event fra contextholder', event); });
+
+                            handler(markupId, fnr, redirectModal);
+                        }, function (error) {
+                            decoratorFeilmelding = error ? 'Feil ved tilkobling av til eventdistribution' : '';
+                            decoratorConfig = lagDecoratorConfig(fnr, valgtEnhet, autoSubmit, decoratorFeilmelding);
+                            window.renderDecoratorHead(decoratorConfig, markupId);
+                        });
                     }
-
-                    const valgtEnhet = enhetData.aktivEnhet || getCookie('saksbehandlerinnstillinger-'+me.ident);
-                    oppdatertValgtEnhet(valgtEnhet);
-
-                    // Lager decorator og redirect modal
-                    decoratorConfig = lagDecoratorConfig(fnr, valgtEnhet, autoSubmit, feilmelding);
-                    redirectModal = lagRedirectModal();
-                    console.log('config', decoratorConfig);
-                    window.renderDecoratorHead(decoratorConfig, markupId);
                 });
-
-
-            // Setter opp context-lyttere
-            opprettWebSocket(function(event) {
-                const type = event.data;
-                const handler = websocketCallbackMap[type] || (function() { console.warn('Ukjent event fra contextholder', event); });
-
-                handler(markupId, fnr, redirectModal);
-            });
         } else {
             // Lager decorator og redirect modal for lokal kjøring
             getMe()
                 .then(function(me) {
-                    decoratorConfig = lagDecoratorConfig(fnr, getCookie('saksbehandlerinnstillinger-' + me.ident), autoSubmit, feilmelding);
-                    redirectModal = lagRedirectModal();
-                    console.log('config', decoratorConfig);
+                    decoratorFeilmelding = feilmelding || decoratorFeilmelding;
+                    decoratorConfig = lagDecoratorConfig(fnr, getCookie('saksbehandlerinnstillinger-' + me.ident), autoSubmit, decoratorFeilmelding);
                     window.renderDecoratorHead(decoratorConfig, markupId);
                 });
         }
     };
+
     window.rerenderHode = function(markupId, config) {
         console.log('update config', config, markupId);
         window.renderDecoratorHead(config, markupId);
     };
+
     window.updateHode = function (markupId, feilmelding) {
         let config = decoratorConfig;
         if (feilmelding && feilmelding.length > 0) {
