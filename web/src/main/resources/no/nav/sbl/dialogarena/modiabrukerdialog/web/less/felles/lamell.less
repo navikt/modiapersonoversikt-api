@@ -1,4 +1,44 @@
 /* Lameller */
+.lamell:not(.pleiepenger):not(.oversikt) DL {
+  margin: 0;
+  overflow: auto;
+  &.oppsummering {
+    margin-bottom: 2rem;
+  }
+  > * {
+    width: 50%;
+    float: left;
+  }
+  > *:nth-child(4n+3), > *:nth-child(4n+4) {
+    position: relative;
+    top: -1.2rem;
+    padding-left: 10px;
+  }
+  > *:nth-child(4n+5) {
+    margin-top: .8rem;
+    clear: left;
+    &:before {
+      content: "";
+      display: table;
+      width: 100%;
+    }
+  }
+  > *:nth-child(4n+2) {
+    clear: left;
+  }
+  DT {
+    text-transform: uppercase;
+    font-size: 0.857rem;
+    padding-top: .2rem;
+  }
+  DD {
+    margin: 3px 0 0 0;
+    position: relative;
+    min-height: 1rem;
+    font-weight: bold;
+  }
+}
+
 .lamell:not(.pleiepenger) {
 
   overflow: visible;
@@ -14,45 +54,6 @@
   }
   SMALL {
     color: #666;
-  }
-  DL {
-    margin: 0;
-    overflow: auto;
-    &.oppsummering {
-      margin-bottom: 2rem;
-    }
-    > * {
-      width: 50%;
-      float: left;
-    }
-    > *:nth-child(4n+3), > *:nth-child(4n+4) {
-      position: relative;
-      top: -1.2rem;
-      padding-left: 10px;
-    }
-    > *:nth-child(4n+5) {
-      margin-top: .8rem;
-      clear: left;
-      &:before {
-        content: "";
-        display: table;
-        width: 100%;
-      }
-    }
-    > *:nth-child(4n+2) {
-      clear: left;
-    }
-    DT {
-      text-transform: uppercase;
-      font-size: 0.857rem;
-      padding-top: .2rem;
-    }
-    DD {
-      margin: 3px 0 0 0;
-      position: relative;
-      min-height: 1rem;
-      font-weight: bold;
-    }
   }
   UL.oversikt {
     list-style-type: none;
