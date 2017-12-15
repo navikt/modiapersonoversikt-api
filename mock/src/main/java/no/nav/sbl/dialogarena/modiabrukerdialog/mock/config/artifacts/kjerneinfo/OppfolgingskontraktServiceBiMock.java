@@ -10,7 +10,6 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingskontraktListeResponse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -55,22 +54,8 @@ public class OppfolgingskontraktServiceBiMock {
         oppfoelgingskontrakt.setStatus("Aktiv");
         oppfoelgingskontrakt.setIhtGjeldendeVedtak(createVedtak(null, null, null, null));
         oppfoelgingskontrakt.getAvYtelse().add(createYtelseskontrakt(null, null, DateUtils.getRandomDate()));
-        oppfoelgingskontrakt.getMedPlan().addAll(Arrays.asList(
-                createPlan("Godkjent", "aktivitetsplan", "Beholde arbeid", null, null),
-                createPlan("Avbrutt", "individuellPlan", "Øke deltakelse eller mål om arbeid", null, null),
-                createPlan("Erstattet av ny", "Kvalifieringsprogram", "Skaffe arbeid", null, null)));
 
         return oppfoelgingskontrakt;
-    }
-
-    private static Plan createPlan(String status, String type, String hovedmal, Date fra, Date til) {
-        Plan plan = new Plan();
-        plan.setHovedmaal(hovedmal);
-        plan.setPlantype(type);
-        plan.setPlanstatus(status);
-        plan.setPeriode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
-
-        return plan;
     }
 
     private static Periode createPeriode(Date fom, Date tom) {
@@ -120,5 +105,4 @@ public class OppfolgingskontraktServiceBiMock {
         serviceGruppe.setServiceGruppe("Servicegruppe");
         return serviceGruppe;
     }
-
 }
