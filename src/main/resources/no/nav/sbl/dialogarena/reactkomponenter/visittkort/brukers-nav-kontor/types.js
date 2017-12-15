@@ -3,6 +3,8 @@ import PT from 'prop-types';
 export const besoeksadresseType = PT.shape({
     gatenavn: PT.string.isRequired,
     husnummer: PT.string.isRequired,
+    postnummer: PT.string.isRequired,
+    poststed: PT.string.isRequired,
     husbokstav: PT.string
 });
 
