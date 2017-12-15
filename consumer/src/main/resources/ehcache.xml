@@ -98,6 +98,16 @@
 		   diskExpiryThreadIntervalSeconds="120"
 		   memoryStoreEvictionPolicy="LRU"/>
 
+	<cache name="oppfolgingCache" maxElementsInMemory="100"
+		   eternal="false"
+		   timeToIdleSeconds="600"
+		   timeToLiveSeconds="600"
+		   overflowToDisk="true"
+		   maxElementsOnDisk="10000000"
+		   diskPersistent="false"
+		   diskExpiryThreadIntervalSeconds="120"
+		   memoryStoreEvictionPolicy="LRU"/>
+
 	<cache name="foreldrePengerCache" maxElementsInMemory="100"
 		   eternal="false"
 		   timeToIdleSeconds="300"
