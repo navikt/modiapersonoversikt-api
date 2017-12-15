@@ -43,7 +43,9 @@ public class OrganisasjonEnhetKontaktinformasjonMapper {
         return Optional.ofNullable(gateadresseWS).map(gateadresse -> new Gateadresse()
                 .withGatenavn(gateadresse.getGatenavn())
                 .withHusbokstav(gateadresse.getHusbokstav())
-                .withHusnummer(gateadresse.getHusnummer()))
+                .withHusnummer(gateadresse.getHusnummer())
+                .withPoststed(Optional.ofNullable(gateadresse.getPoststed().getTermnavn()).orElse(""))
+                .withPostnummer(Optional.ofNullable(gateadresse.getPoststed().getValue()).orElse("")))
                 .orElse(null);
     }
 
