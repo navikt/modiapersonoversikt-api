@@ -43,7 +43,7 @@ class ViktigAViteLenke extends React.Component {
             <div className="viktig-aa-vite-container">
                 <div className="viktig-aa-vite-lenke">
                     <ul>
-                        <li><a href={norglenke} target="_blank">Oversikt med enheter og tema de behandler</a></li>
+                        <li><a href={norglenke} target="_blank">Oversikt over enheter og tema de behandler</a></li>
                         {skalViselenke && lenke}
                     </ul>
                 </div>
