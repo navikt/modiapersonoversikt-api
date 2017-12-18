@@ -3,9 +3,8 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling;
 public enum Feature {
 
     DELVISE_SVAR("visDelviseSvarFunksjonalitet", false),
-    PLEIEPENGER("visPleiepenger", false),
-    ENDRE_NAVN("visEndreNavnFunksjonalitet", false),
-    NORG_ORGENHET_KONTAKTINFORMASJON("visOrganisasjonEnhetKontaktinformasjon", false);
+    PLEIEPENGER("visPleiepenger", true),
+    ENDRE_NAVN("visEndreNavnFunksjonalitet", false);
 
     public final String propertyKey;
     public final boolean defaultValue;
