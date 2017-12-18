@@ -38,7 +38,9 @@ public class GrunninfoServiceImpl implements GrunninfoService {
 
             return new GrunnInfo.Bruker(fnr)
                     .withPersonnavn(personfakta.getPersonnavn().getFornavn(), personfakta.getPersonnavn().getEtternavn())
-                    .withEnhet(hentEnhet(personfakta));
+                    .withEnhet(hentEnhet(personfakta))
+                    .withGeografiskTilknytning(personfakta.getGeografiskTilknytning() != null ? personfakta.getGeografiskTilknytning().getValue() : "")
+                    .withDiskresjonskode(personfakta.getDiskresjonskode() != null ? personfakta.getDiskresjonskode().getValue() : "");
         } catch (Exception e) {
             return new GrunnInfo.Bruker(fnr, "", "", "", "", "");
         }
