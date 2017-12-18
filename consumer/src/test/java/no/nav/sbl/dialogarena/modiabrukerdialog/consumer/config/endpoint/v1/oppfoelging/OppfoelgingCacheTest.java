@@ -6,11 +6,11 @@ import no.nav.metrics.proxy.TimerProxy;
 import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.Oppfoelgingskontrakt;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingskontraktListeRequest;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingskontraktListeResponse;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingsstatusRequest;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingsstatusResponse;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.WSOppfoelgingskontrakt;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusRequest;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusResponse;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -60,31 +60,31 @@ public class OppfoelgingCacheTest extends CacheTest {
         OppfoelgingPortType unwrapped = (OppfoelgingPortType) unwrapProxy(oppfolgingPortType);
         reset(unwrapped);
 
-        HentOppfoelgingsstatusResponse response1 = new HentOppfoelgingsstatusResponse();
+        WSHentOppfoelgingsstatusResponse response1 = new WSHentOppfoelgingsstatusResponse();
         response1.setNavOppfoelgingsenhet(OPPFOELGINGSENHET_1);
-        HentOppfoelgingsstatusResponse response2 = new HentOppfoelgingsstatusResponse();
+        WSHentOppfoelgingsstatusResponse response2 = new WSHentOppfoelgingsstatusResponse();
         response2.setNavOppfoelgingsenhet(OPPFOELGINGSENHET_2);
 
-        when(unwrapped.hentOppfoelgingsstatus(any(HentOppfoelgingsstatusRequest.class)))
+        when(unwrapped.hentOppfoelgingsstatus(any(WSHentOppfoelgingsstatusRequest.class)))
                 .thenReturn(response1, response2);
 
-        HentOppfoelgingskontraktListeResponse response3 = new HentOppfoelgingskontraktListeResponse();
-        response3.getOppfoelgingskontraktListe().add(new Oppfoelgingskontrakt());
-        HentOppfoelgingskontraktListeResponse response4 = new HentOppfoelgingskontraktListeResponse();
-        response4.getOppfoelgingskontraktListe().add(new Oppfoelgingskontrakt());
-        response4.getOppfoelgingskontraktListe().add(new Oppfoelgingskontrakt());
+        WSHentOppfoelgingskontraktListeResponse response3 = new WSHentOppfoelgingskontraktListeResponse();
+        response3.getOppfoelgingskontraktListe().add(new WSOppfoelgingskontrakt());
+        WSHentOppfoelgingskontraktListeResponse response4 = new WSHentOppfoelgingskontraktListeResponse();
+        response4.getOppfoelgingskontraktListe().add(new WSOppfoelgingskontrakt());
+        response4.getOppfoelgingskontraktListe().add(new WSOppfoelgingskontrakt());
 
-        when(unwrapped.hentOppfoelgingskontraktListe(any(HentOppfoelgingskontraktListeRequest.class)))
+        when(unwrapped.hentOppfoelgingskontraktListe(any(WSHentOppfoelgingskontraktListeRequest.class)))
                 .thenReturn(response3, response4);
     }
 
     @Test
     public void toKallTilHentOppfoelgingsstatusMedSammeIdentGirBareEttTjenestekall() throws Exception {
-        HentOppfoelgingsstatusRequest request1 = new HentOppfoelgingsstatusRequest();
+        WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_1);
 
-        HentOppfoelgingsstatusResponse response1 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
-        HentOppfoelgingsstatusResponse response2 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
+        WSHentOppfoelgingsstatusResponse response1 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
+        WSHentOppfoelgingsstatusResponse response2 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
 
         OppfoelgingPortType unwrappedOppfolgingsinfo = (OppfoelgingPortType) unwrapProxy(oppfolgingPortType);
         verify(unwrappedOppfolgingsinfo, times(1)).hentOppfoelgingsstatus(any());
@@ -94,13 +94,13 @@ public class OppfoelgingCacheTest extends CacheTest {
 
     @Test
     public void toKallTilHentOppfoelgingsstatusMedForskjelligeIdenterGirToTjenestekall() throws Exception {
-        HentOppfoelgingsstatusRequest request1 = new HentOppfoelgingsstatusRequest();
+        WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_1);
-        HentOppfoelgingsstatusRequest request2 = new HentOppfoelgingsstatusRequest();
+        WSHentOppfoelgingsstatusRequest request2 = new WSHentOppfoelgingsstatusRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_2);
 
-        HentOppfoelgingsstatusResponse response1 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
-        HentOppfoelgingsstatusResponse response2 = oppfolgingPortType.hentOppfoelgingsstatus(request2);
+        WSHentOppfoelgingsstatusResponse response1 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
+        WSHentOppfoelgingsstatusResponse response2 = oppfolgingPortType.hentOppfoelgingsstatus(request2);
 
         OppfoelgingPortType unwrappedOppfolgingsinfo = (OppfoelgingPortType) unwrapProxy(oppfolgingPortType);
         verify(unwrappedOppfolgingsinfo, times(2)).hentOppfoelgingsstatus(any());
@@ -110,11 +110,11 @@ public class OppfoelgingCacheTest extends CacheTest {
 
     @Test
     public void toKallTilHentOppfoelgingskontraktListeMedSammeIdentGirBareEttTjenestekall() throws Exception {
-        HentOppfoelgingskontraktListeRequest request1 = new HentOppfoelgingskontraktListeRequest();
+        WSHentOppfoelgingskontraktListeRequest request1 = new WSHentOppfoelgingskontraktListeRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_1);
 
-        HentOppfoelgingskontraktListeResponse response1 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
-        HentOppfoelgingskontraktListeResponse response2 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
+        WSHentOppfoelgingskontraktListeResponse response1 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
+        WSHentOppfoelgingskontraktListeResponse response2 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
 
         OppfoelgingPortType unwrappedOppfolgingsinfo = (OppfoelgingPortType) unwrapProxy(oppfolgingPortType);
         verify(unwrappedOppfolgingsinfo, times(1)).hentOppfoelgingskontraktListe(any());
@@ -124,13 +124,13 @@ public class OppfoelgingCacheTest extends CacheTest {
 
     @Test
     public void toKallTilHentOppfoelgingskontraktListeMedForskjelligeIdenterGirToTjenestekall() throws Exception {
-        HentOppfoelgingskontraktListeRequest request1 = new HentOppfoelgingskontraktListeRequest();
+        WSHentOppfoelgingskontraktListeRequest request1 = new WSHentOppfoelgingskontraktListeRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_1);
-        HentOppfoelgingskontraktListeRequest request2 = new HentOppfoelgingskontraktListeRequest();
+        WSHentOppfoelgingskontraktListeRequest request2 = new WSHentOppfoelgingskontraktListeRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_2);
 
-        HentOppfoelgingskontraktListeResponse response1 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
-        HentOppfoelgingskontraktListeResponse response2 = oppfolgingPortType.hentOppfoelgingskontraktListe(request2);
+        WSHentOppfoelgingskontraktListeResponse response1 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
+        WSHentOppfoelgingskontraktListeResponse response2 = oppfolgingPortType.hentOppfoelgingskontraktListe(request2);
 
         OppfoelgingPortType unwrappedOppfolgingsinfo = (OppfoelgingPortType) unwrapProxy(oppfolgingPortType);
         verify(unwrappedOppfolgingsinfo, times(2)).hentOppfoelgingskontraktListe(any());

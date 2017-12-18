@@ -32,9 +32,8 @@
             <artifactId>kontrakter-domain</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenester.fim</groupId>
-            <artifactId>nav-fim-oppfoelging-v1-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <!--dialogarena-common-->

@@ -98,7 +98,7 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>3.0.4</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.0.5</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.6</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
@@ -130,7 +130,8 @@
         <egenansatt-tjenestespesifikasjon.version>1.0.5</egenansatt-tjenestespesifikasjon.version>
         <pensjon-sak.version>1.0.3</pensjon-sak.version>
         <organisasjon-enhet-kontaktinformasjon>1.1.0</organisasjon-enhet-kontaktinformasjon>
-        <nav-fim-oppfoelging-v1-tjenestespesifikasjon-version>1.2.0</nav-fim-oppfoelging-v1-tjenestespesifikasjon-version>
+        <oppfoelging-v1-tjenestespesifikasjon-version>1.1.1</oppfoelging-v1-tjenestespesifikasjon-version>
+        <oppfolgingsinfo-v1-tjenestespesifikasjon.version>1.0.5</oppfolgingsinfo-v1-tjenestespesifikasjon.version>
 
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
@@ -578,13 +579,12 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>oppfolgingsinfo-v1-tjenestespesifikasjon</artifactId>
-                <version>1.0.4</version>
+                <version>${oppfolgingsinfo-v1-tjenestespesifikasjon.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenester.fim</groupId>
-                <artifactId>nav-fim-oppfoelging-v1-tjenestespesifikasjon</artifactId>
-                <version>${nav-fim-oppfoelging-v1-tjenestespesifikasjon-version}</version>
-                <classifier>jaxws</classifier>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
+                <version>${oppfoelging-v1-tjenestespesifikasjon-version}</version>
             </dependency>
 
             <!--Modig-->

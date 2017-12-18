@@ -7,8 +7,8 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusPersonIkk
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusUgyldigInput;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingsstatusRequest;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingsstatusResponse;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusRequest;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ class OppfolgingsenhetServiceImplTest {
 
     private OppfoelgingPortType mockOppfoelgingPortType() {
         OppfoelgingPortType oppfoelgingPortType = mock(OppfoelgingPortType.class);
-        HentOppfoelgingsstatusResponse response = new HentOppfoelgingsstatusResponse();
+        WSHentOppfoelgingsstatusResponse response = new WSHentOppfoelgingsstatusResponse();
         response.setNavOppfoelgingsenhet(OPPFOELGINGSENHET_ID);
         try {
             when(oppfoelgingPortType.hentOppfoelgingsstatus(any())).thenReturn(response);
@@ -70,7 +70,7 @@ class OppfolgingsenhetServiceImplTest {
     @Test
     @DisplayName("Kaller Arena med riktig fødselsnummer")
     void kallerArenaMedRiktigFodselsnummer() throws Exception {
-        ArgumentCaptor<HentOppfoelgingsstatusRequest> argumentCaptor = ArgumentCaptor.forClass(HentOppfoelgingsstatusRequest.class);
+        ArgumentCaptor<WSHentOppfoelgingsstatusRequest> argumentCaptor = ArgumentCaptor.forClass(WSHentOppfoelgingsstatusRequest.class);
 
         AnsattEnhet oppfolgingsinfo = oppfolgingsenhetServiceMock.hentOppfolgingsenhet(FODSELSNUMMER).get();
 
