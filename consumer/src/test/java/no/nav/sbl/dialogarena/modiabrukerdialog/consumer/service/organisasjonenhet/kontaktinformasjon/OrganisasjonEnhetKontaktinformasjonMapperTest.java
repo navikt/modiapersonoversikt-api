@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonMapper;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informasjon.*;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -26,6 +27,8 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
     public static final int ANTALL_PUBLIKUMSMOTTAK = 2;
     public static final String GATENAVN = "Islands Gate";
     public static final String ENHET_NAVN = "NAV Eidsvoll";
+    public static final String POSTNUMMER = "2080";
+    public static final String POSTSTED = "Eidsvoll";
     public static final String ENHET_ID = "1337";
     public static final String HUSNUMMER = "47";
     public static final String HUSBOKSTAV = "A";
@@ -36,7 +39,6 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
     public static final String STENGER_TIRSDAG_TIME = "18";
     public static final String STENGER_TIRSDAG_MINUTT = "0";
     public static final String STENGER_TIRSDAG_SEKUND = "17";
-
 
     @Test
     @DisplayName("Mapping av organisasjonsenhet")
@@ -64,33 +66,56 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
         );
     }
 
-    @Test
-    @DisplayName("Mapping av adresse for publikumsmottak")
-    void adresseMapping() {
-        Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+    @Nested
+    @DisplayName("Mapping av adresse")
+    class AdresseTester {
 
-        OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
+        @Test
+        @DisplayName("Mapping av adresse for publikumsmottak")
+        void adresseMapping() {
+            Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
 
-        no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse besoeksadresse = organisasjonEnhetKontaktinformasjon.getKontaktinformasjon().getPublikumsmottak().get(0).getBesoeksadresse();
+            OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
 
-        assertAll("Gateadressemapping",
-                () -> assertEquals(HUSNUMMER, besoeksadresse.getHusnummer()),
-                () -> assertEquals(HUSBOKSTAV, besoeksadresse.getHusbokstav()),
-                () -> assertEquals(GATENAVN, besoeksadresse.getGatenavn())
-        );
-    }
+            no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse besoeksadresse = organisasjonEnhetKontaktinformasjon.getKontaktinformasjon().getPublikumsmottak().get(0).getBesoeksadresse();
 
-    @Test
-    @DisplayName("Mapping av adresse når adresse er null")
-    void adresseMappingNaarAdresseErNull() {
-        Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
-        organisasjonsenhetWS.getKontaktinformasjon().getPublikumsmottakListe().get(0).setBesoeksadresse(null);
+            assertAll("Gateadressemapping",
+                    () -> assertEquals(HUSNUMMER, besoeksadresse.getHusnummer()),
+                    () -> assertEquals(HUSBOKSTAV, besoeksadresse.getHusbokstav()),
+                    () -> assertEquals(GATENAVN, besoeksadresse.getGatenavn()),
+                    () -> assertEquals(POSTNUMMER, besoeksadresse.getPostnummer()),
+                    () -> assertEquals(POSTSTED, besoeksadresse.getPoststed())
+            );
+        }
 
-        OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
+        @Test
+        @DisplayName("Mapping av adresse når adresse er null")
+        void narAdresseErNull() {
+            Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+            organisasjonsenhetWS.getKontaktinformasjon().getPublikumsmottakListe().get(0).setBesoeksadresse(null);
 
-        no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse besoeksadresse = organisasjonEnhetKontaktinformasjon.getKontaktinformasjon().getPublikumsmottak().get(0).getBesoeksadresse();
+            OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
 
-        assertNull(besoeksadresse);
+            no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse besoeksadresse = organisasjonEnhetKontaktinformasjon.getKontaktinformasjon().getPublikumsmottak().get(0).getBesoeksadresse();
+
+            assertNull(besoeksadresse);
+        }
+
+        @Test
+        @DisplayName("Mapping av adresse når kodeverk for postnummer er null")
+        void postnummerErNull() {
+            Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+            organisasjonsenhetWS.getKontaktinformasjon().getPublikumsmottakListe().get(0).getBesoeksadresse().getPoststed().setTermnavn(null);
+            organisasjonsenhetWS.getKontaktinformasjon().getPublikumsmottakListe().get(0).getBesoeksadresse().getPoststed().setValue(null);
+
+            OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
+
+            no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse besoeksadresse = organisasjonEnhetKontaktinformasjon.getKontaktinformasjon().getPublikumsmottak().get(0).getBesoeksadresse();
+
+            assertEquals("", besoeksadresse.getPostnummer());
+            assertEquals("", besoeksadresse.getPoststed());
+        }
+
     }
 
     @Test
@@ -150,7 +175,15 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
         gateadresse.setGatenavn(GATENAVN);
         gateadresse.setHusnummer(HUSNUMMER);
         gateadresse.setHusbokstav(HUSBOKSTAV);
+        gateadresse.setPoststed(mockPostnummer());
         return gateadresse;
+    }
+
+    private Postnummer mockPostnummer() {
+        Postnummer postnummer = new Postnummer();
+        postnummer.setTermnavn(POSTSTED);
+        postnummer.setValue(POSTNUMMER);
+        return postnummer;
     }
 
     private Aapningstider mockApningstider() {
