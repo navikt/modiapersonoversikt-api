@@ -5,7 +5,7 @@ import { publikumsmottakType } from '../types';
 
 function AntallPublikumsmottakInformasjon({ publikumsmottak }) {
     if (publikumsmottak.length > 1) {
-        return <p className="infoblokk">Det finnes flere publikumsmottak....</p>;
+        return <p className="infoblokk">Det finnes flere publikumsmottak</p>;
     }
     return null;
 }
