@@ -63,11 +63,20 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         String valgtEnhet = hentValgtEnhet(request);
         List<String> enhetsListe = ansattService.hentEnhetsliste().stream().map(ansattEnhet -> ansattEnhet.enhetId).collect(toList());
 
+        valgtEnhet = settEnhetDersomCookieIkkeErSatt(valgtEnhet, enhetsListe);
+
         if (!enhetsListe.contains(valgtEnhet)) {
             logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
             return false;
         }
         return true;
+    }
+
+    private String settEnhetDersomCookieIkkeErSatt(String valgtEnhet, List<String> enhetsListe) {
+        if("".equals(valgtEnhet)) {
+            valgtEnhet = enhetsListe.get(0);
+        }
+        return valgtEnhet;
     }
 
     public boolean harEnhetTilgangTilTema(String temakode, String valgtEnhet) {
