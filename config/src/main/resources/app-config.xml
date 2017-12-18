@@ -76,7 +76,6 @@
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
-        <baseUrl alias="app.adeo" mapToProperty="app.adeo"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
 
