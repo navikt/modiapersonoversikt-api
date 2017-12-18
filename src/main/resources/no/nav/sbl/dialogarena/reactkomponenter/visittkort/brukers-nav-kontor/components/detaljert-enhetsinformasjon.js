@@ -6,7 +6,7 @@ import Apningstider from './apningstider';
 import Adresse from './adresse';
 import AntallPublikumsmottakInformasjon from './publikumsmottak-informasjon';
 
-function DetaljertEnhetsinformasjon({ organisasjon, baseUrlAppAdeo }) {
+function DetaljertEnhetsinformasjon({ organisasjon, norg2FrontendBaseUrl }) {
     if (organisasjon.kontaktinformasjon.publikumsmottak.length === 0) {
         return <p>Ingen publikumsmottak</p>;
     }
@@ -17,7 +17,7 @@ function DetaljertEnhetsinformasjon({ organisasjon, baseUrlAppAdeo }) {
             <AntallPublikumsmottakInformasjon publikumsmottak={organisasjon.kontaktinformasjon.publikumsmottak} />
             <Apningstider apningstider={publikumsmottak.apningstider} />
             <a
-                href={`${baseUrlAppAdeo}/norg2/#/enhet/${organisasjon.enhetId}`}
+                href={`${norg2FrontendBaseUrl}/#/startsok?enhetNr=${organisasjon.enhetId}`}
                 target="_blank"
                 rel="noopener noreferrer"
             >
@@ -29,7 +29,7 @@ function DetaljertEnhetsinformasjon({ organisasjon, baseUrlAppAdeo }) {
 
 DetaljertEnhetsinformasjon.propTypes = {
     organisasjon: organisasjonType.isRequired,
-    baseUrlAppAdeo: PT.string.isRequired
+    norg2FrontendBaseUrl: PT.string.isRequired
 };
 
 export default DetaljertEnhetsinformasjon;

@@ -8,20 +8,20 @@ import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import NavKontorHeader from './components/header';
 import DetaljertEnhetsinformasjon from './components/detaljert-enhetsinformasjon';
 
-function NavKontor({ organisasjon, baseUrlAppAdeo }) {
+function NavKontor({ organisasjon, norg2FrontendBaseUrl }) {
     return (
         <EkspanderbartpanelBase
             className="nav-kontor-info"
             ariaTittel={"Brukers NAV-kontor"}
             heading={<NavKontorHeader organisasjon={organisasjon} />}
         >
-            <DetaljertEnhetsinformasjon organisasjon={organisasjon} baseUrlAppAdeo={baseUrlAppAdeo} />
+            <DetaljertEnhetsinformasjon organisasjon={organisasjon} norg2FrontendBaseUrl={norg2FrontendBaseUrl} />
         </EkspanderbartpanelBase>
     );
 }
 NavKontor.propTypes = {
     organisasjon: PT.object,
-    baseUrlAppAdeo: PT.string.isRequired
+    norg2FrontendBaseUrl: PT.string.isRequired
 };
 
 class BrukersNavKontor extends React.Component {
@@ -44,7 +44,7 @@ class BrukersNavKontor extends React.Component {
                 <div className="nav-ikon" />
                 <div className="content">
                     <AsyncLoader promises={this.promise} toProp={"organisasjon"} >
-                        <NavKontor baseUrlAppAdeo={this.props.baseUrlAppAdeo} />
+                        <NavKontor norg2FrontendBaseUrl={this.props.norg2FrontendBaseUrl} />
                     </AsyncLoader>
                 </div>
             </div>
@@ -53,7 +53,7 @@ class BrukersNavKontor extends React.Component {
 }
 BrukersNavKontor.propTypes = {
     organisasjonsenhetId: PT.string.isRequired,
-    baseUrlAppAdeo: PT.string.isRequired
+    norg2FrontendBaseUrl: PT.string.isRequired
 };
 
 export default BrukersNavKontor;
