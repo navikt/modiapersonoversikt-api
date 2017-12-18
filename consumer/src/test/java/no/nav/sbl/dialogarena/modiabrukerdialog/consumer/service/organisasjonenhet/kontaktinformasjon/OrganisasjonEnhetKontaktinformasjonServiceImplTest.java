@@ -150,11 +150,16 @@ class OrganisasjonEnhetKontaktinformasjonServiceImplTest {
 
     private Publikumsmottak mockPublikumsmottak() {
         Publikumsmottak publikumsmottak = new Publikumsmottak();
-        Gateadresse gateadresse = new Gateadresse();
-        gateadresse.setGatenavn(GATEADRESSE);
-        publikumsmottak.setBesoeksadresse(gateadresse);
+        publikumsmottak.setBesoeksadresse(mockGateadresse());
         publikumsmottak.setAapningstider(new Aapningstider());
         return publikumsmottak;
+    }
+
+    private Gateadresse mockGateadresse() {
+        Gateadresse gateadresse = new Gateadresse();
+        gateadresse.setGatenavn(GATEADRESSE);
+        gateadresse.setPoststed(new Postnummer());
+        return gateadresse;
     }
 
     private HentKontaktinformasjonForEnhetBolkResponse mockResponsMedFeiletEnhet() {
