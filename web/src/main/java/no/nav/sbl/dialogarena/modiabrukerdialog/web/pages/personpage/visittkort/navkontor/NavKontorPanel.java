@@ -13,7 +13,7 @@ public class NavKontorPanel extends AbstractKjerneInfoPanel {
 
 	public static final String BRUKERS_NAV_ENHET_WICKET_ID = "reactBrukersNavKontorContainer";
 	public static final String BRUKERS_NAV_KONTOR_REACT_MODULE_ID = "BrukersNavKontor";
-    public static final String APP_ADEO_URL_PROPERTY_KEY = "app.adeo.url";
+    public static final String NORG2_FRONTEND_BASE_URL_PROPERTY_KEY = "server.norg2-frontend.url";
 
     public NavKontorPanel(String id, String fnr) {
 		super(id, fnr);
@@ -26,7 +26,7 @@ public class NavKontorPanel extends AbstractKjerneInfoPanel {
 
     private HashMap<String, Object> getNavKontorProps() {
         HashMap<String, Object> props = new HashMap<>();
-        props.put("baseUrlAppAdeo", System.getProperty(APP_ADEO_URL_PROPERTY_KEY));
+        props.put("norg2FrontendBaseUrl", System.getProperty(NORG2_FRONTEND_BASE_URL_PROPERTY_KEY));
         String navKontorID = getAnsvarligEnhetId(personModel.getObject().getPersonfakta()).orElse("");
         props.put("organisasjonsenhetId", navKontorID);
         return props;
