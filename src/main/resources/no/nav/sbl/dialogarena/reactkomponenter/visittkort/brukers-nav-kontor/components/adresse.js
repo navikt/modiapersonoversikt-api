@@ -10,7 +10,7 @@ function Adresse({ adresse }) {
     const poststed = adresse.poststed;
     return (
         <div className="infoblokk">
-            <h3 className={"overskrift"}>Adresse</h3>
+            <h3 className={"overskrift"}>Besøksadresse</h3>
             <p>{gatenavn} {husnummer}{husbokstav}, {postnummer} {poststed}</p>
         </div>
     );
