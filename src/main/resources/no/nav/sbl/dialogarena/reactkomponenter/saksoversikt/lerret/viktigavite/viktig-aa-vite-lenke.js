@@ -29,7 +29,7 @@ class ViktigAViteLenke extends React.Component {
         }
 
         let norglenke  = `${this.props.norgUrl}/#/startsok?tema=${temaer}`;
-        if ( this.props.gt != null ) {
+        if ( this.props.gt != null  && this.props.gt != "") {
             norglenke += `&gt=${this.props.gt}`;
         }
         if( this.props.diskresjonskode === 'SPSF') {
