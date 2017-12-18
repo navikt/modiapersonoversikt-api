@@ -6,8 +6,8 @@
     display: flex;
 
     > a, input {
-      height: 32px;
-      line-height: 32px;
+      padding-top:5px;
+      padding-bottom:5px;
       float: right;
       background-color: white;
       border: 1px solid black;
@@ -22,6 +22,7 @@
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
+        border-radius: 4px 0 0 4px;
         &:hover {
           background-color: @blue;
           outline: none;
@@ -58,6 +59,10 @@
         font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 1.14rem;
         font-weight: 600;
+        padding-right: 30px;
+        padding-left: 30px;
+        margin-right:100px;
+        border-radius: 0 4px 4px 0;
         &:hover {
           border: 1px solid @blue;
         }
