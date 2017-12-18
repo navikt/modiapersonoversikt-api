@@ -31,14 +31,11 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
 
     @Bean
     public Pingable OrganisasjonEnhetKontaktinformasjonPing() {
-        if (FeatureToggle.visFeature(Feature.NORG_ORGENHET_KONTAKTINFORMASJON)) {
-            return new PingableWebService(
-                    "NORG2 - OrganisasjonEnhetKontaktinformasjonV1",
-                    lagEndpoint().configureStsForSystemUserInFSS().build()
-            );
-        } else {
-            return new UnpingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV1 (feature togglet av)", "");
-        }
+        return new PingableWebService(
+                "NORG2 - OrganisasjonEnhetKontaktinformasjonV1",
+                lagEndpoint().configureStsForSystemUserInFSS().build()
+        );
+
     }
 
     private OrganisasjonEnhetKontaktinformasjonV1 lagMockEnpoint() {

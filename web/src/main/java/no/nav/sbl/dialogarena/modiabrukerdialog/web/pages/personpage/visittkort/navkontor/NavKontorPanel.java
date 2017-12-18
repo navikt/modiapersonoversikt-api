@@ -1,4 +1,4 @@
-package no.nav.kjerneinfo.web.pages.kjerneinfo.panel.navkontor;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.visittkort.navkontor;
 
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
