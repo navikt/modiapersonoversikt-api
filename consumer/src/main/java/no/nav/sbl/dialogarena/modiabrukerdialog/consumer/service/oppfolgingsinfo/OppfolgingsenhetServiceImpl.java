@@ -7,7 +7,7 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusPersonIkk
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingsstatusUgyldigInput;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingsstatusRequest;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class OppfolgingsenhetServiceImpl implements OppfolgingsenhetService {
     }
 
     private Optional<String> hentOppfoelgingsenhetId(String fodselsnummer) {
-        HentOppfoelgingsstatusRequest request = new HentOppfoelgingsstatusRequest();
+        WSHentOppfoelgingsstatusRequest request = new WSHentOppfoelgingsstatusRequest();
         request.setPersonidentifikator(fodselsnummer);
         try {
             return ofNullable(oppfoelgingPortType.hentOppfoelgingsstatus(request).getNavOppfoelgingsenhet());

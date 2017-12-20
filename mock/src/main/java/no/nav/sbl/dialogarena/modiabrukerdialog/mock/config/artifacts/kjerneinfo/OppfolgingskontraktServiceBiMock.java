@@ -7,7 +7,7 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.Oppfolgingskontrakt
 import no.nav.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.kontrakter.domain.oppfolging.SYFOPunkt;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.HentOppfoelgingskontraktListeResponse;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class OppfolgingskontraktServiceBiMock {
     }
 
     private static OppfolgingskontraktResponse lagOppfolgingsMockRespons() {
-        HentOppfoelgingskontraktListeResponse respons = new HentOppfoelgingskontraktListeResponse();
+        WSHentOppfoelgingskontraktListeResponse respons = new WSHentOppfoelgingskontraktListeResponse();
         respons.getOppfoelgingskontraktListe().add(createOppfoelgingskontrakt());
         OppfolgingskontraktResponse returRespons = OppfolgingskontraktMapper.getInstance().map(respons, OppfolgingskontraktResponse.class);
         returRespons.setSyfoPunkter(createSYFOpunkter());
@@ -48,8 +48,8 @@ public class OppfolgingskontraktServiceBiMock {
         return syfoPunkter;
     }
 
-    private static Oppfoelgingskontrakt createOppfoelgingskontrakt() {
-        Oppfoelgingskontrakt oppfoelgingskontrakt = new Oppfoelgingskontrakt();
+    private static WSOppfoelgingskontrakt createOppfoelgingskontrakt() {
+        WSOppfoelgingskontrakt oppfoelgingskontrakt = new WSOppfoelgingskontrakt();
         oppfoelgingskontrakt.setGjelderBruker(createBruker());
         oppfoelgingskontrakt.setStatus("Aktiv");
         oppfoelgingskontrakt.setIhtGjeldendeVedtak(createVedtak(null, null, null, null));
@@ -58,50 +58,50 @@ public class OppfolgingskontraktServiceBiMock {
         return oppfoelgingskontrakt;
     }
 
-    private static Periode createPeriode(Date fom, Date tom) {
-        Periode periode = new Periode();
+    private static WSPeriode createPeriode(Date fom, Date tom) {
+        WSPeriode periode = new WSPeriode();
         periode.setFom(convertDateToXmlGregorianCalendar(fom));
         periode.setTom(convertDateToXmlGregorianCalendar(tom));
         return periode;
     }
 
-    private static Periode createRandomPeriode() {
+    private static WSPeriode createRandomPeriode() {
         Date[] datePair = getRandomDatePair();
         return createPeriode(datePair[0], datePair[1]);
     }
 
-    private static Ytelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottat) {
-        Ytelseskontrakt ytelseskontrakt = new Ytelseskontrakt();
+    private static WSYtelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottat) {
+        WSYtelseskontrakt ytelseskontrakt = new WSYtelseskontrakt();
         ytelseskontrakt.setDatoKravMottatt(datoKravMottat == null ? convertDateToXmlGregorianCalendar(new Date()) : convertDateToXmlGregorianCalendar(datoKravMottat));
         ytelseskontrakt.setStatus(status == null ? "YtelseskontraktStatus" : status);
         ytelseskontrakt.setYtelsestype(type == null ? "Ytelsestype" : type);
         return ytelseskontrakt;
     }
 
-    private static Vedtak createVedtak(String status, Date fra, Date til, Date datoKravMottatt) {
-        Vedtak vedtak = new Vedtak();
+    private static WSVedtak createVedtak(String status, Date fra, Date til, Date datoKravMottatt) {
+        WSVedtak vedtak = new WSVedtak();
         vedtak.setStatus(status == null ? YTELSESSTATUS_AKTIV : status);
         vedtak.setVedtaksperiode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
         vedtak.setOmYtelse(datoKravMottatt == null ? createYtelseskontrakt(null, null, new Date()) : createYtelseskontrakt(null, null, datoKravMottatt));
         return vedtak;
     }
 
-    private static Bruker createBruker() {
-        Bruker bruker = new Bruker();
+    private static WSBruker createBruker() {
+        WSBruker bruker = new WSBruker();
         bruker.setFormidlingsgruppe("50000");
         bruker.getServicegruppe().add(createServicegruppe());
         bruker.getMeldeplikt().add(createMeldeplikt());
         return bruker;
     }
 
-    private static Meldeplikt createMeldeplikt() {
-        Meldeplikt meldeplikt = new Meldeplikt();
+    private static WSMeldeplikt createMeldeplikt() {
+        WSMeldeplikt meldeplikt = new WSMeldeplikt();
         meldeplikt.setMeldeplikt(true);
         return meldeplikt;
     }
 
-    private static ServiceGruppe createServicegruppe() {
-        ServiceGruppe serviceGruppe = new ServiceGruppe();
+    private static WSServiceGruppe createServicegruppe() {
+        WSServiceGruppe serviceGruppe = new WSServiceGruppe();
         serviceGruppe.setServiceGruppe("Servicegruppe");
         return serviceGruppe;
     }
