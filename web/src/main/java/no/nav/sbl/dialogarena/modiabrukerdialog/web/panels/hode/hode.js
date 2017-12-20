@@ -50,7 +50,7 @@ function nullstillContext() {
 }
 
 function nullstillContextBruker() {
-    return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/nullstillAktivBruker', {
+    return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/aktivbruker', {
         credentials: 'same-origin',
         method: 'DELETE'
     });
