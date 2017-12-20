@@ -49,6 +49,13 @@ function nullstillContext() {
     });
 }
 
+function nullstillContextBruker() {
+    return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/aktivbruker', {
+        credentials: 'same-origin',
+        method: 'DELETE'
+    });
+}
+
 function hentContextBruker() {
     return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/aktivbruker', { credentials: 'same-origin' })
         .then(fetchOkStatus)
@@ -63,7 +70,7 @@ function hentContextEnhet() {
 
 function oppdaterContextBruker(fnr) {
     if (!fnr || fnr.length === 0) {
-        return nullstillContext();
+        return nullstillContextBruker();
     } else {
         return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context', {
             credentials: 'same-origin',
@@ -141,7 +148,7 @@ function sokOppFnr(sendToWicket) {
 }
 function resetBruker(sendToWicket) {
     return function() {
-        nullstillContext()
+        nullstillContextBruker()
             .then(function(){
                 sendToWicket && sendToWicket.send('fjernperson');
             }, function(){
