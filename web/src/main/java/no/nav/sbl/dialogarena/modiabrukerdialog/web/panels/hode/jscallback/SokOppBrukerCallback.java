@@ -43,9 +43,11 @@ public class SokOppBrukerCallback implements HodeCallback<String> {
                 Sikkerhetstiltak sikkerhetstiltak = personKjerneinfoServiceBi.hentSikkerhetstiltak(sikkerhetstiltakRequest);
                 if ( sikkerhetstiltak != null ) {
                     message = sikkerhetstiltak.getSikkerhetstiltaksbeskrivelse();
+                 } else {
+                    message = component.getString(ex.getMessage());
                 }
-            }
 
+            }
             if (isBlank(message)) {
                 message = ex.getMessage();
             }
