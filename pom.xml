@@ -98,7 +98,7 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>3.0.4</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.0.4</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.5</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
