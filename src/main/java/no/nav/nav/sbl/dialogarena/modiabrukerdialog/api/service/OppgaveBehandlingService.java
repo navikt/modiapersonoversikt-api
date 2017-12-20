@@ -1,0 +1,28 @@
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service;
+
+import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+
+public interface OppgaveBehandlingService {
+
+    void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet;
+
+    Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet);
+
+    void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet);
+
+    void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
+
+    void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request);
+
+    void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
+
+    boolean oppgaveErFerdigstilt(String oppgaveid);
+
+    class FikkIkkeTilordnet extends Exception {
+        public FikkIkkeTilordnet(Throwable cause) {
+            super(cause);
+        }
+    }
+}
