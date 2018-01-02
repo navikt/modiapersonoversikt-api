@@ -25,8 +25,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Service {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganisasjonEnhetV2ServiceImpl.class);
-    private static final String ORGENHET_v21_feature_toggle = "orgEnhet_2.1";
-    private static final String DEFAULT_ORGENHET21 = "false";
 
     @Inject
     private OrganisasjonEnhetV2 organisasjonEnhetService;
@@ -79,19 +77,15 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     private HentFullstendigEnhetListeRequest lagHentFullstendigEnhetListeRequest(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
         final HentFullstendigEnhetListeRequest request = new HentFullstendigEnhetListeRequest();
-        if (valueOf(getProperty(ORGENHET_v21_feature_toggle, DEFAULT_ORGENHET21))) {
-            request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
-        }
+        request.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
+
         return request;
     }
 
     private HentEnhetBolkRequest lagHentEnhetBolkRequest(String enhetId, WSOppgavebehandlerfilter oppgavebehandlerFilter) {
         HentEnhetBolkRequest hentEnhetBolkRequest = new HentEnhetBolkRequest();
-
         hentEnhetBolkRequest.getEnhetIdListe().addAll(Collections.singleton(enhetId));
-        if (valueOf(getProperty(ORGENHET_v21_feature_toggle, DEFAULT_ORGENHET21))) {
-            hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
-        }
+        hentEnhetBolkRequest.setOppgavebehandlerfilter(Oppgavebehandlerfilter.fromValue(oppgavebehandlerFilter.name()));
 
         return hentEnhetBolkRequest;
     }
