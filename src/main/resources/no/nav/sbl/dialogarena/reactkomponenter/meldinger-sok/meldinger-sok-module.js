@@ -1,5 +1,5 @@
 /* eslint "react/jsx-no-bind": 1 */
-import React from 'react';
+import React, {Component} from 'react';
 import Modal from './../modal/modal-module';
 import ListevisningKomponent from './listevisning';
 import ForhandsvisningKomponent from './forhandsvisning';
@@ -25,9 +25,9 @@ const modalConfig = {
     }
 };
 
-/* eslint "react/prefer-es6-class": 1 */
-const MeldingerSok = React.createClass({
-    getInitialState: function getInitialState() {
+class MeldingerSok extends Component {
+
+    componentWillMount() {
         this.store = new MeldingerSokStore($.extend({}, {
             fritekst: '',
             traader: [],
@@ -36,45 +36,38 @@ const MeldingerSok = React.createClass({
             listePanelId: Utils.generateId('sok-liste-'),
             forhandsvisningsPanelId: Utils.generateId('sok-forhandsvisningsPanelId-')
         }, this.props));
-        return this.store.getState();
-    },
-    componentDidMount: function componentDidMount() {
+        this.state = this.store.getState();
+    }
+    componentDidMount() {
         this.store.setContainerElement(this.refs.modal.portalElement);
-        this.store.addListener(this.storeChanged);
-    },
-    componentWillUnmount: function componentDidUnmount() {
-        this.store.removeListener(this.storeChanged);
-    },
-    onChangeProxy: function onChangeProxy(e) {
+        this.store.addListener(this.storeChanged.bind(this));
+    }
+    componentWillUnmount() {
+        this.store.removeListener(this.storeChanged.bind(this));
+    }
+    onChangeProxy(e) {
         const value = e.target.value;
         if (this.state.fritekst !== value) {
             this.store.onChange(e);
         }
-    },
-    keyDownHandler: function keyDownHandler(event) {
+    }
+    keyDownHandler(event) {
         if (event.keyCode === 13) {
             this.store.submit(this.skjul, event);
         }
-    },
-    vis: function vis(props = {}) {
+    }
+    vis(props = {}) {
         this.store.update(props);
         this.refs.modal.open();
-    },
-    skjul: function skjul() {
+    }
+    skjul() {
         this.refs.modal.close();
-    },
-    storeChanged: function storeChanged() {
+    }
+    storeChanged() {
         this.setState(this.store.getState());
-    },
-    render: function render() {
-        const tekstlistekomponenter = this.state.traader.map((traad) => <ListevisningKomponent
-            key={traad.traadId}
-            traad={traad}
-            valgtTraad={this.state.valgtTraad}
-            store={this.store}
-        />);
-        const erTom = this.state.traader.length === 0;
-        const sokVisning = (
+    }
+    lagSokVisning(erTom, tekstlistekomponenter) {
+        return (
             <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
                 <ScrollPortal
                     id={this.state.listePanelId}
@@ -95,10 +88,21 @@ const MeldingerSok = React.createClass({
                     aria-atomic="true"
                     aria-live="polite"
                 >
-                    <ForhandsvisningKomponent traad={this.state.valgtTraad} />
+                    <ForhandsvisningKomponent traad={this.state.valgtTraad}/>
                 </div>
             </div>
         );
+    }
+
+    lagVisninger() {
+        const tekstlistekomponenter = this.state.traader.map((traad) => <ListevisningKomponent
+            key={traad.traadId}
+            traad={traad}
+            valgtTraad={this.state.valgtTraad}
+            store={this.store}
+        />);
+        const erTom = this.state.traader.length === 0;
+        const sokVisning = this.lagSokVisning(erTom, tekstlistekomponenter);
         let tomInnhold;
         if (this.state.feilet) {
             tomInnhold = <h1 className="tom" role="alert" aria-atomic="true">Noe feilet</h1>;
@@ -117,6 +121,11 @@ const MeldingerSok = React.createClass({
                 {tomInnhold}
             </div>
         );
+        return {sokVisning, tomVisning};
+    }
+
+    render() {
+        const {sokVisning, tomVisning} = this.lagVisninger();
 
         return (
             <Modal
@@ -127,7 +136,7 @@ const MeldingerSok = React.createClass({
             >
                 <form
                     className="sok-layout meldinger-sok"
-                    onSubmit={this.store.submit.bind(this.store, this.skjul)}
+                    onSubmit={this.store.submit.bind(this.store, this.skjul.bind(this))}
                     onKeyDown={this.keyDownHandler}
                 >
                     <div tabIndex="-1" className="sok-container">
@@ -155,6 +164,6 @@ const MeldingerSok = React.createClass({
             </Modal>
         );
     }
-});
+}
 
-module.exports = MeldingerSok;
+export default MeldingerSok;
