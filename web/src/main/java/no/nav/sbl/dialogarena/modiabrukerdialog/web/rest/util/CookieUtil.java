@@ -9,6 +9,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.s
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerTimeoutCookieId;
 
 public class CookieUtil {
+
     public static String getSaksbehandlersValgteEnhet(HttpServletRequest request) {
         if (request.getCookies() == null) {
             throw new IllegalStateException("Ingen cookie er tilgjengelig på HTTP-requesten. Er du egentlig logget inn?");

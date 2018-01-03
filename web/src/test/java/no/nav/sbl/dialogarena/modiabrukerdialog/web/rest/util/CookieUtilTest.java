@@ -1,13 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util;
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.Cookie;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CookieUtilTest {
@@ -17,7 +15,7 @@ class CookieUtilTest {
 
     @BeforeAll
     static void before() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
     }
 
     @Test
