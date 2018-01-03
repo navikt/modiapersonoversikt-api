@@ -12,6 +12,7 @@ import LeggTilbakeDelvisSvarPanel from './dialog-panel/leggtilbakedelvissvar/leg
 import TraadVisning from './dialog-panel/traadvisning/traadvisning-module';
 import RedirectModal from './redirectmodal/redirectmodal-module';
 import BrukersNavKontor from './visittkort/brukers-nav-kontor/nav-kontor-module';
+import FolkeregistrertAdresse from './visittkort/adresse/folkeregistrert-adresse-module';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -30,7 +31,8 @@ window.ModiaJS = {
         LeggTilbakeDelvisSvarPanel,
         TraadVisning,
         RedirectModal,
-        BrukersNavKontor
+        BrukersNavKontor,
+        FolkeregistrertAdresse
     },
     InitializedComponents: {},
     React,
