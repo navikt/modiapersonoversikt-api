@@ -298,7 +298,6 @@ public class MeldingUtilsTest {
         assertThat(dokumentVarsel.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(dokumentVarsel.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(dokumentVarsel.statusTekst, is(innsendtVarsel.getDokumenttittel()));
-        assertThat(dokumentVarsel.getFritekst(), is(innsendtVarsel.getTemanavn()));
         assertThat(dokumentVarsel.erDokumentMelding, is(true));
         assertThat(dokumentVarsel.temagruppe, is(nullValue()));
 
