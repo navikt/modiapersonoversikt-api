@@ -99,7 +99,7 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>1619.20180103.1335</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.0.8</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.9</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
