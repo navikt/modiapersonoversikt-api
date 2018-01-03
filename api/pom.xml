@@ -5,20 +5,11 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>14.0.7-SNAPSHOT</version>
+        <version>14.0.9-SNAPSHOT</version>
     </parent>
 
     <name>${project.artifactId}</name>
     <artifactId>modiabrukerdialog-api</artifactId>
-
-    <properties>
-        <oidc.security.version>2017.10.30.12.59</oidc.security.version>
-        <spring.version>4.3.4.RELEASE</spring.version>
-        <jackson.version>2.5.4</jackson.version>
-        <javax.servlet.version>3.1.0</javax.servlet.version>
-        <modig.security.version>1.0.24</modig.security.version>
-        <slf4j.version>1.7.21</slf4j.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -93,6 +84,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!--TESTING-->
