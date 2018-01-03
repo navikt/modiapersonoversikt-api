@@ -21,8 +21,13 @@ class FolkeregistrertAdresse extends React.Component {
 
 FolkeregistrertAdresse.propTypes = {
     adresseType: PT.string.isRequired,
-    adresse: PT.object,
+    adresse: PT.any,
     tilleggsadresse: PT.string
+};
+
+FolkeregistrertAdresse.defaultProps = {
+    adresse: {},
+    tilleggsadresse: ''
 };
 
 export default FolkeregistrertAdresse;
