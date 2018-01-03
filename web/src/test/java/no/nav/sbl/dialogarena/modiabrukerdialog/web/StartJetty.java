@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import less.LessResourceMarker;
 import no.nav.brukerdialog.security.context.InternbrukerSubjectHandler;
 import no.nav.brukerdialog.security.domain.OidcCredential;
 import no.nav.dialogarena.config.fasit.FasitUtils;
@@ -8,9 +9,15 @@ import no.nav.dialogarena.config.security.ISSOProvider;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 import no.nav.sbl.dialogarena.test.SystemProperties;
 import org.apache.geronimo.components.jaspi.AuthConfigFactoryImpl;
+import org.eclipse.jetty.util.resource.JarResource;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.webapp.WebInfConfiguration;
 
 import javax.security.auth.message.config.AuthConfigFactory;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.System.setProperty;
 import static no.nav.modig.core.test.FilesAndDirs.TEST_RESOURCES;
@@ -64,6 +71,33 @@ public class StartJetty {
                 .overrideWebXml(new File(TEST_RESOURCES, "override-web.xml"))
                 .configureForJaspic()
                 .buildJetty();
+
+        // Servlet 3.0-specen fungerer ikke optimalt når man starter fra ide/jar.
+        // Bytter ut WebInfConfig med en subclass av den som manuelt legger til modig-frontend
+        byttUtWebInfConfiguration(jetty.context);
+
         jetty.start();
+    }
+
+    private static void byttUtWebInfConfiguration(WebAppContext context) {
+        String[] configurations = Arrays.stream(context.getConfigurationClasses())
+                .map(className -> {
+                    if (WebInfConfiguration.class.getName().equals(className)) {
+                        return CustomWebInfConfiguration.class.getName();
+                    } else {
+                        return className;
+                    }
+                })
+                .toArray(String[]::new);
+        context.setConfigurationClasses(configurations);
+    }
+
+    public static class CustomWebInfConfiguration extends WebInfConfiguration {
+        @Override
+        protected List<Resource> findJars(WebAppContext context) throws Exception {
+            List<Resource> jars = super.findJars(context);
+            jars.add(JarResource.newResource(LessResourceMarker.class.getProtectionDomain().getCodeSource().getLocation().toURI()));
+            return jars;
+        }
     }
 }
