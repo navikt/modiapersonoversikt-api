@@ -1,5 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.jboss.security.xacml.interfaces.XACMLConstants;
 import org.jboss.security.xacml.locators.AttributeLocator;
@@ -13,10 +14,8 @@ import org.jboss.security.xacml.util.JBossXACMLUtil;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider.context;
+import static java.util.stream.Collectors.toList;
 
 public class JournalfortTemaAttributeLocator extends AttributeLocator {
 
@@ -32,7 +31,7 @@ public class JournalfortTemaAttributeLocator extends AttributeLocator {
         this.attributeDesignatorSupported = true;
         this.attributeSelectorSupported = true;
         this.designatorTypes.add(0);
-        delegate = context.getBean(JournalfortTemaAttributeLocatorDelegate.class);
+        delegate = ApplicationContextProvider.context.getBean(JournalfortTemaAttributeLocatorDelegate.class);
     }
 
     @Override
