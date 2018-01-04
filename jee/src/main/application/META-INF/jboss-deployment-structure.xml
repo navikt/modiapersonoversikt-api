@@ -23,6 +23,7 @@
         <dependencies>
             <module name="javax.xml.ws.api" export="true"/>
             <module name="javax.jws.api" export="true"/>
+            <module name="org.apache.xerces" export="true"/>
         </dependencies>
     </sub-deployment>
 </jboss-deployment-structure>
