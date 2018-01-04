@@ -7,6 +7,7 @@ import Ajax from '../../utils/ajax';
 import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import NavKontorHeader from './components/header';
 import DetaljertEnhetsinformasjon from './components/detaljert-enhetsinformasjon';
+import IngenEnhet from './components/ingen-enhet';
 
 function NavKontor({ organisasjon, norg2FrontendBaseUrl }) {
     return (
@@ -37,7 +38,9 @@ class BrukersNavKontor extends React.Component {
     }
     render() {
         if (!this.props.organisasjonsenhetId) {
-            return null;
+            return (
+                <IngenEnhet/>
+            );
         }
         return (
             <div className="nav-kontor-panel">
