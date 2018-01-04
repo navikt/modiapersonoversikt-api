@@ -10,7 +10,7 @@ function Gateadresse({ adresse }) {
 Gateadresse.propTypes = {
     adresse: PT.shape({
         gatenavn: PT.string.isRequired,
-        husnumer: PT.string.isRequired,
+        husnummer: PT.string.isRequired,
         husbokstav: PT.string,
         bolignummer: PT.string,
         postnummer: PT.string.isRequired,
