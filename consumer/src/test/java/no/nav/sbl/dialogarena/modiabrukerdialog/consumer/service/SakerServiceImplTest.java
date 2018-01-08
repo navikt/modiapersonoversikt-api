@@ -2,12 +2,16 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
+import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakResponse;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
@@ -53,6 +57,7 @@ public class SakerServiceImplTest {
     private static final DateTime FIRE_DAGER_SIDEN = now().minusDays(4);
     private static final String FNR = "fnr";
     private static final String BEHANDLINGSKJEDEID = "behandlingsKjedeId";
+    public static final String SAKS_ID = "123";
 
     @Mock
     private SakV1 sakV1;
@@ -183,24 +188,38 @@ public class SakerServiceImplTest {
 
     @Test
     public void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak() throws Exception {
-        Sak sak = new Sak();
-        sak.temaKode = "GEN";
-        sak.finnesIGsak = false;
-        sak.fagsystemKode = GODKJENT_FAGSYSTEM_FOR_GENERELLE;
-        sak.sakstype = SAKSTYPE_GENERELL;
-        sak.opprettetDato = now();
-
-        String saksId = "123";
+        Sak sak = lagSak();
         String valgtNavEnhet = "0219";
 
         WSOpprettSakResponse opprettSakResponse = new WSOpprettSakResponse();
-        opprettSakResponse.setSakId(saksId);
+        opprettSakResponse.setSakId(SAKS_ID);
 
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(opprettSakResponse);
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtNavEnhet);
 
         sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak);
-        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, saksId, sak.temaKode, valgtNavEnhet);
+        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
+
+        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), "");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
+
+        sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
+
+        sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337");
     }
 
     private ArrayList<WSSak> createSaksliste() {
@@ -219,6 +238,16 @@ public class SakerServiceImplTest {
                 .withOpprettelsetidspunkt(opprettet)
                 .withSakstype(new WSSakstyper().withValue(sakstype))
                 .withFagsystem(new WSFagsystemer().withValue(fagsystem));
+    }
+
+    private Sak lagSak() {
+        Sak sak = new Sak();
+        sak.temaKode = "GEN";
+        sak.finnesIGsak = false;
+        sak.fagsystemKode = GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+        sak.sakstype = SAKSTYPE_GENERELL;
+        sak.opprettetDato = now();
+        return sak;
     }
 
 }

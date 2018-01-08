@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -8,6 +8,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerServic
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.KnyttBehandlingskjedeTilSakValidator;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
@@ -58,7 +59,6 @@ public class SakerServiceImpl implements SakerService {
     @Inject
     private PsakService psakService;
 
-
     @Override
     public List<Sak> hentSammensatteSaker(String fnr) {
         List<Sak> saker = hentSakerFraGsak(fnr);
@@ -84,6 +84,8 @@ public class SakerServiceImpl implements SakerService {
 
     @Override
     public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak, String enhet) throws JournalforingFeilet {
+        KnyttBehandlingskjedeTilSakValidator.validate(fnr, behandlingskjede, sak, enhet);
+
         if (!sak.finnesIPsak && !sak.finnesIGsak) {
             sak.saksId = optional(opprettSak(fnr, sak));
         }
@@ -197,7 +199,7 @@ public class SakerServiceImpl implements SakerService {
         }
     }
 
-    static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = wsSak -> {
+    public static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = wsSak -> {
         Sak sak = new Sak();
         sak.opprettetDato = wsSak.getOpprettelsetidspunkt();
         sak.saksId = optional(wsSak.getSakId());
