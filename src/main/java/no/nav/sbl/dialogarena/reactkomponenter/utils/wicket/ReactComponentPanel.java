@@ -9,7 +9,6 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
@@ -19,8 +18,7 @@ import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class ReactComponentPanel extends MarkupContainer {
 
-    @Inject
-    protected ObjectMapper mapper;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     protected static final String JS_REF_REACT = "window.ModiaJS.React";
     protected static final String JS_REF_REACTDOM = "window.ModiaJS.ReactDOM";
@@ -152,24 +150,17 @@ public class ReactComponentPanel extends MarkupContainer {
     private String serialize(Object obj) {
         StringWriter sw = new StringWriter();
         try {
-            ensureMapper();
-            mapper.writeValue(sw, obj);
+            this.mapper.writeValue(sw, obj);
         } catch (IOException e) {
             return "";
         }
-        return sw.toString();
-    }
 
-    private void ensureMapper() {
-        if (this.mapper == null) {
-            this.mapper = new ObjectMapper();
-        }
+        return sw.toString();
     }
 
     private <T> T deserialize(String string, Class<T> type) {
         try {
-            ensureMapper();
-            return mapper.readValue(string.getBytes(), type);
+            return this.mapper.readValue(string.getBytes(), type);
         } catch (IOException e) {
             return null;
         }

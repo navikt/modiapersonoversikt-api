@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.reactkomponenter.utils.wicket;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Before;
@@ -15,10 +13,8 @@ import java.util.Map;
 
 import static no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
 
 public class ReactComponentPanelTest {
 
@@ -62,7 +58,6 @@ public class ReactComponentPanelTest {
     public void javascriptInneholderRiktigeReferanserTilGlobaltScope() {
         String componentName = "component";
         ReactComponentPanel react = new ReactComponentPanel("id", componentName);
-        react.mapper = new ObjectMapper();
 
         String javaScript = react.initializeScript(componentName, new HashMap<>());
 
@@ -75,7 +70,6 @@ public class ReactComponentPanelTest {
     public void updateStateLeggerKorrektJSPaTarget() {
         String componentName = "component";
         ReactComponentPanel react = new ReactComponentPanel("id", componentName);
-        react.mapper = new ObjectMapper();
 
         Map<String, Object> props = new HashMap<String, Object>() {{
 
@@ -93,7 +87,6 @@ public class ReactComponentPanelTest {
         String componentName = "component";
         String wicketid = "wicketid";
         ReactComponentPanel panel = new ReactComponentPanel(wicketid, componentName);
-        panel.mapper = new ObjectMapper();
 
         String script = panel.createScript(componentName, new HashMap<>());
 
@@ -113,7 +106,6 @@ public class ReactComponentPanelTest {
         String methodName = "method";
         String wicketid = "wicketid";
         ReactComponentPanel panel = new ReactComponentPanel(wicketid, componentName);
-        panel.mapper = new ObjectMapper();
 
         String script = panel.callScript(methodName, "{}");
 
@@ -128,7 +120,6 @@ public class ReactComponentPanelTest {
         String componentName = "component";
         String wicketid = "wicketid";
         ReactComponentPanel panel = new ReactComponentPanel(wicketid, componentName);
-        panel.mapper = new ObjectMapper();
 
         String script = panel.renderScript();
 
