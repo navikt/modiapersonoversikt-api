@@ -1,9 +1,9 @@
 import React from 'react';
 import PT from 'prop-types';
-import ReactDOM from 'react-dom';
 import sanitize from 'sanitize-html';
 import format from 'string-format';
 import AntallMeldinger from './AntallMeldinger';
+import { Checkbox } from 'nav-frontend-skjema';
 
 const erValgtTekst = (traad, valgtTraad) => traad === valgtTraad;
 
@@ -14,7 +14,7 @@ class Listevisning extends React.Component {
     }
 
     tekstChangedProxy() {
-        this.props.store.traadChanged(this.props.traad, ReactDOM.findDOMNode(this).parentNode);
+        this.props.store.traadChanged(this.props.traad, this.node.parentNode);
     }
 
     shouldComponentUpdate({ valgtTraad }) {
@@ -42,19 +42,24 @@ class Listevisning extends React.Component {
             antallMeldingerIOpprinneligTraad,
             antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
         );
-
+        const checkBox = this.props.store.state.mode.visCheckbox
+            ? <Checkbox className="checkbox" label="" id={traad.traadId} /> : '';
         return (
-            <div className="sok-element">
+            <div className="sok-element" ref={node => this.node = node}>
                 <input id={`melding ${traad.key}`} name="tekstListeRadio" type="radio" readOnly checked={erValgt} onClick={this.tekstChangedProxy} />
                 <label htmlFor={`melding ${traad.key}`} className={cls}>
                     <div className={`melding-detaljer ${statusKlasse}`}>
-                        <div className={`statusIkon ${statusKlasse}`} aria-hidden="true"></div>
-                        <AntallMeldinger antall={antallMeldingerIOpprinneligTraad} />
-                        <p className="vekk">{statusIkonTekst}</p>
+                        <div className="melding-detaljer-venstre">
+                            <div className={`statusIkon ${statusKlasse}`} aria-hidden="true">
+                                <AntallMeldinger antall={antallMeldingerIOpprinneligTraad} />
+                                <p className="vekk">{statusIkonTekst}</p>
+                            </div>
+                            {checkBox}
+                        </div>
                         <div className="melding-data">
-                            <p className="opprettet" dangerouslySetInnerHTML={{ __html: dato }}></p>
-                            <p className={'meldingstatus'} dangerouslySetInnerHTML={{ __html: meldingsStatus }}></p>
-                            <p className="fritekst" dangerouslySetInnerHTML={{ __html: innhold }}></p>
+                            <p className="opprettet">{dato}</p>
+                            <p className="meldingstatus">{meldingsStatus}</p>
+                            <p className="fritekst">{innhold}</p>
                         </div>
                     </div>
                 </label>

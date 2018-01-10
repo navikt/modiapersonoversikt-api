@@ -25,7 +25,8 @@ public class ReactResourcesTest {
             "build/delvis-svar.less",
             "build/traadvisning.less",
             "build/nav-core-variabler.less",
-            "build/nav-kontor.less"
+            "build/nav-kontor.less",
+            "build/slaa-sammen-traader.less"
             );
 
     @Test

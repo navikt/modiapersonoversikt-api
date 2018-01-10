@@ -88,7 +88,7 @@ class MeldingerSok extends Component {
                     aria-atomic="true"
                     aria-live="polite"
                 >
-                    <ForhandsvisningKomponent traad={this.state.valgtTraad}/>
+                    <ForhandsvisningKomponent traad={this.state.valgtTraad} store={this.store}/>
                 </div>
             </div>
         );
@@ -165,5 +165,13 @@ class MeldingerSok extends Component {
         );
     }
 }
+
+MeldingerSok.defaultProps = {
+    mode: {
+        name: 'MeldingerSok',
+        visCheckbox: false,
+        submitButtonValue: 'Vis dialog'
+    }
+};
 
 export default MeldingerSok;

@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import MeldingerSok from './meldinger-sok/meldinger-sok-module';
-import SvarFlere from './svar-flere/svar-flere-module';
+import SlaaSammenTraader from './slaa-sammen-traader/slaa-sammen-traader-module';
 import Skrivestotte from './skrivestotte/skrivestotte-module';
 import JournalforingsPanel from './journalforing-panel/journalforing-panel-module';
 import VelgSakPanel from './velg-sak-panel/velg-sak-panel-module';
@@ -21,7 +21,7 @@ import ReactDOM from 'react-dom';
 window.ModiaJS = {
     Components: {
         MeldingerSok,
-        SvarFlere,
+        SlaaSammenTraader,
         Skrivestotte,
         JournalforingsPanel,
         VelgSakPanel,
