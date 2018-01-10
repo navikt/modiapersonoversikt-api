@@ -48,12 +48,24 @@ url.https://.insteadof=git://
 
 ## Test
 
-Tester kan kjøres på to måter:
+#### Kjøre tester i kommandolinje
+Tester kan kjøres i kommandolinje på to måter:
 
 1. `gulp test`
 2. `mvn test`, evt. `mvn clean install`
 
-##Tips
+#### Kjøre tester i intelliJ
+
+Sett opp intelliJ
+
+1. Installer nodeJS plugin ( `F:\programvare\idea\plugins\` )
+2. Run / Edit Configurations / Defaults / Mocha / Extra Mocha options: `--require ignore-styles --compilers js:babel-core/register" `
+
+Kjøre test
+
+* Høreklikk / Run
+
+## Tips
 
 * Marker node_modules mappen som ekskludert i IntelliJ. Høyreklikk på mappen, velg "Mark Directory As" og "Excluded".
 
