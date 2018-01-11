@@ -20,7 +20,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.h
 @Produces(APPLICATION_JSON)
 public class JournalforingController {
 
-    public static final String FEILMELDING_UTEN_ENHET = "Det er dessverre ikke mulig å journalføre henvendelsen. Forsøk å sette enhet på nytt.";
+    public static final String FEILMELDING_UTEN_ENHET = "Det er dessverre ikke mulig å journalføre henvendelsen. Du må velge enhet du jobber på vegne av på nytt. Bekreft enhet med å trykke på \"Velg\"-knappen.";
 
     private final SakerService sakerService;
 
