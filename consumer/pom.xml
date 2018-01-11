@@ -446,6 +446,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <!-- Må være compile scope grunnet avhengighet til mock-modul -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
