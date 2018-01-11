@@ -3,6 +3,17 @@ import PT from 'prop-types';
 import Snurrepipp from '../utils/snurrepipp';
 import Ajax from './../utils/ajax';
 
+function getFeilmelding(err) {
+    if (!err) {
+        return null;
+    } else if (err.length <= 0) {
+        return null;
+    } else if (!err[0].response || !err[0].response.body) {
+        return null;
+    }
+    return err[0].response.body.message;
+}
+
 class JournalforKnapp extends React.Component {
     constructor(props) {
         super(props);
@@ -27,9 +38,13 @@ class JournalforKnapp extends React.Component {
         journalforPromise.done(() => {
             this.props.traadJournalfort();
         });
-        journalforPromise.fail(() => {
+        journalforPromise.fail((err) => {
             this.setState({ sender: false });
-            this.props.feiletCallback();
+            if (getFeilmelding(err)) {
+                this.props.feiletCallback(getFeilmelding(err));
+            } else {
+                this.props.feiletCallback();
+            }
         });
     }
 
