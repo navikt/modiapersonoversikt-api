@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>13.5.18</version>
+        <version>13.5.19-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -444,6 +444,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.0.2</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <!-- Må være compile scope grunnet avhengighet til mock-modul -->
