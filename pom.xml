@@ -57,7 +57,8 @@
 
         <!-- egenlagde biblioteker -->
         <picketbox.version>4.9.6.Final</picketbox.version>
-        <oidc.security.version>2017.11.07.15.26</oidc.security.version>
+        <oidc.security-authorization.version>2017.11.07.15.26</oidc.security-authorization.version>
+        <oidc.security.version>2018.01.15.10.51</oidc.security.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig.wicket.version>3.9.2</modig.wicket.version>
@@ -98,13 +99,13 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>3.0.4</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.0.7</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.7.1</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
-        <saksoversikt.version>9.0.2</saksoversikt.version>
+        <saksoversikt.version>9.0.2.1</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
         <modiabrukerdialog-api.version>9.0.1</modiabrukerdialog-api.version>
-        <sporsmalogsvar.version>8.0.0</sporsmalogsvar.version>
-        <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
+        <sporsmalogsvar.version>8.0.2</sporsmalogsvar.version>
+        <modia-felleskomponenter.version>4.2.1</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
@@ -633,7 +634,7 @@
             <dependency>
                 <groupId>no.nav.dialogarena</groupId>
                 <artifactId>oidc-security-authorization</artifactId>
-                <version>${oidc.security.version}</version>
+                <version>${oidc.security-authorization.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.dialogarena</groupId>
