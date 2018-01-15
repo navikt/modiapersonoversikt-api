@@ -17,8 +17,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <oidc.security.version>2017.11.07.15.26</oidc.security.version>
-        <modig.security.version>3.0.4</modig.security.version>
+        <oidc.security-authorization.version>2017.11.07.15.26</oidc.security-authorization.version>
+        <oidc.security.version>2018.01.15.10.51</oidc.security.version>
         <wicket.version>6.20.0</wicket.version>
         <spring.version>4.3.4.RELEASE</spring.version>
         <lucene.version>4.10.2</lucene.version>
@@ -191,7 +191,7 @@
         <dependency>
             <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security-authorization</artifactId>
-            <version>${oidc.security.version}</version>
+            <version>${oidc.security-authorization.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
