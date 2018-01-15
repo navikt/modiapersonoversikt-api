@@ -13,7 +13,7 @@
     <name>modia-saksoversikt</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>9.0.2</version>
+    <version>9.0.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
