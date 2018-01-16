@@ -29,7 +29,7 @@
         <common.version>2017.11.07.15.26</common.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.12.1</junit.version>
-        <junit.jupiter.version>5.0.1</junit.jupiter.version>
+        <junit.jupiter.version>5.0.2</junit.jupiter.version>
         <args4j.version>2.0.23</args4j.version>
         <cxf.version>3.1.11</cxf.version>
         <ws.security.version>1.6.10</ws.security.version>
@@ -78,6 +78,7 @@
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
+        <reactkomponenter.version>c42ebb30a090ac40e157f5676efda43b4d4c98c1</reactkomponenter.version>
         <nav-metrics.version>2017.08.30.10.22</nav-metrics.version>
 
         <!-- java-avhengigheter -->
@@ -1042,6 +1043,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-core</artifactId>
                 <version>${hamcrest.version}</version>
@@ -1126,7 +1133,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-13.5.15</tag>
+        <tag>modiabrukerdialog-13.5.19</tag>
     </scm>
 
 </project>

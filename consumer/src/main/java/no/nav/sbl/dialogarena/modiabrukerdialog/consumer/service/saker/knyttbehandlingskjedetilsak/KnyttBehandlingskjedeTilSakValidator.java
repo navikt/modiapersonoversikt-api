@@ -26,7 +26,7 @@ public class KnyttBehandlingskjedeTilSakValidator {
             if (StringUtils.isEmpty(enhet)) {
                 String saksId = getSaksId(sak);
                 String behandlingskjedeString = getBehandlingskjedeId(behandlingskjede);
-                throw new IllegalArgumentException(String.format("Enhet-parameter må være tilstede for å kunne knytte behandlingskjede %s til sak %s.", behandlingskjedeString, saksId));
+                throw new EnhetIkkeSatt(String.format("Enhet-parameter må være tilstede for å kunne knytte behandlingskjede %s til sak %s.", behandlingskjedeString, saksId));
             }
         };
     }
