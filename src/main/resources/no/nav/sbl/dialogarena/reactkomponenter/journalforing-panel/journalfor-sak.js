@@ -19,9 +19,11 @@ class JournalforSak extends React.Component {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, 'traadJournalfort');
     }
 
-    journalforingFeilet() {
+    journalforingFeilet(err) {
+        const defaultFeilmelding = 'Noe gikk galt. Det er dessverre ikke mulig å journalføre henvendelser, prøv igjen senere.';
+        const feilmelding = err || defaultFeilmelding;
         this.setState({
-            feilmeldinger: ['Noe gikk galt. Det er dessverre ikke mulig å journalføre henvendelser, prøv igjen senere.']
+            feilmeldinger: [feilmelding]
         });
     }
 
