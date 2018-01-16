@@ -168,7 +168,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void vellykketGotoHentPersonPageErrortextAndWrongFnr() {
-        wicket.goTo(PersonPage.class, with().param("soektfnr", "wrongFnr").param("error", "errorMessage"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param("soektfnr", "wrongFnr").param("error", "errorMessage"))
                 .should().containPatterns("wrongFnr")
                 .should().containPatterns("errorMessage");
 
@@ -185,7 +185,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", testFnr));
         String sikkerhetstiltak =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
                         SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
@@ -195,7 +195,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldExtractErrortext() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", testFnr));
         String errorTxt =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
                         SokOppBrukerCallback.JSON_ERROR_TEXT);
@@ -204,7 +204,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldExtractErrortextAndFnr() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", "10108000398"));
         String errorTxt =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}",
                         SokOppBrukerCallback.JSON_ERROR_TEXT);
@@ -217,7 +217,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldExtractNullWhenFnrtExist() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", testFnr));
         String sikkerhetstiltak =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         Assert.assertNull(sikkerhetstiltak);
