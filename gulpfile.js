@@ -100,7 +100,7 @@ gulp.task('dev', function runDev() {
     });
 });
 
-gulp.task('default', function runDefault() {
+gulp.task('default', function runDefault(done) {
     bundleJS(false);
     lessTask({
         development: false,
@@ -111,6 +111,7 @@ gulp.task('default', function runDefault() {
         development: false,
         dest: config.targetPath
     });
+    done();
 });
 
 gulp.task('eslint', function () {
