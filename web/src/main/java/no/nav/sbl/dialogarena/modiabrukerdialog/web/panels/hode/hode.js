@@ -245,7 +245,7 @@ function settled(promises) {
             settled([hentContextBruker(), hentContextEnhet(), getMe(), getEnheter()])
                 .then(function(data) {
                     var brukerData = data[0];
-                    var enhetData = data[1];
+                    var contextEnhetData = data[1];
                     var me = data[2];
                     var enhetData = data[3];
 
@@ -255,7 +255,7 @@ function settled(promises) {
                         window.renderDecoratorHead(decoratorConfig, markupId);
                     } else {
                         brukerData = brukerData.v;
-                        enhetData = enhetData.v;
+                        contextEnhetData = contextEnhetData.v;
                         me = me.v;
                         enhetData = enhetData.v;
 
@@ -268,7 +268,7 @@ function settled(promises) {
                         }
 
                         decoratorFeilmelding = feilmelding || decoratorFeilmelding;
-                        const valgtEnhet = enhetData.aktivEnhet
+                        const valgtEnhet = contextEnhetData.aktivEnhet
                             || getCookie('saksbehandlerinnstillinger-'+me.ident)
                             || enhetData.enhetliste[0].enhetId;
                         oppdatertValgtEnhet(valgtEnhet);
