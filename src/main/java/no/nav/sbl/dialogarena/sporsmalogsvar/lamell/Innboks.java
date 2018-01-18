@@ -75,44 +75,44 @@ public class Innboks extends Lerret {
         final ReactComponentPanel meldingerSok = new ReactComponentPanel("meldingerSokContainer", "MeldingerSok", getMeldingerSokProps());
 
 
-        final WebMarkupContainer meldingerSokToggleContainer = new WebMarkupContainer("meldingerSokToggleContainer");
-        meldingerSokToggleContainer.setOutputMarkupId(true);
+        final WebMarkupContainer innboksButtonContainer = new WebMarkupContainer("innboksButtonContainer");
+        innboksButtonContainer.setOutputMarkupId(true);
         AjaxLink meldingerSokToggleButton = new SokKnapp("meldingerSokToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 meldingerSok.call("vis", getMeldingerSokProps());
-                target.add(meldingerSokToggleContainer);
+                target.add(innboksButtonContainer);
             }
         };
         meldingerSok.addCallback("oppdater", Void.class, (target, data) -> {
             innboksVM.oppdaterMeldinger();
             target.add(alleMeldingerPanel, traaddetaljerPanel);
         });
-        meldingerSokToggleContainer.add(meldingerSokToggleButton);
+        innboksButtonContainer.add(meldingerSokToggleButton);
 
-        final ReactComponentPanel svarFlere = new ReactComponentPanel("svarFlereContainer", "SvarFlere", getMeldingerSokProps());
-        AjaxLink svarFlereToggleButton = new SokKnapp("svarFlereToggle") {
+        final ReactComponentPanel slaaSammenTraader = new ReactComponentPanel("slaaSammenTraaderContainer", "SlaaSammenTraader", getSlaaSammenTraaderProps());
+        AjaxLink slaaSammenTraaderToggleButton = new SokKnapp("slaaSammenTraaderToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 // TODO
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
-                svarFlere.call("vis", getMeldingerSokProps());
-                target.add(meldingerSokToggleContainer);
+                slaaSammenTraader.call("vis", getSlaaSammenTraaderProps());
+                target.add(innboksButtonContainer);
             }
         };
-        svarFlere.addCallback("oppdater", Void.class, (target, data) -> {
+        slaaSammenTraader.addCallback("oppdater", Void.class, (target, data) -> {
             // TODO
 //            innboksVM.oppdaterMeldinger();
 //            target.add(alleMeldingerPanel, traaddetaljerPanel);
         });
-        meldingerSokToggleContainer.add(svarFlereToggleButton);
+        innboksButtonContainer.add(slaaSammenTraaderToggleButton);
 
         WebMarkupContainer feilmeldingPanel = visFeilMelding(innboksVM);
 
-        meldingsliste.add(meldingerSok, svarFlere, meldingerSokToggleContainer, alleMeldingerPanel);
+        meldingsliste.add(meldingerSok, slaaSammenTraader, innboksButtonContainer, alleMeldingerPanel);
         add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
     }
 
@@ -135,8 +135,9 @@ public class Innboks extends Lerret {
         return feilmeldingPanel;
     }
 
-    private Map<String, Object> getSvarFlereProps() {
-        return new HashMap<>();
+    private Map<String, Object> getSlaaSammenTraaderProps() {
+        Map<String, Object> props = getMeldingerSokProps();
+        return props;
     }
 
     private Map<String, Object> getMeldingerSokProps() {

@@ -7,17 +7,17 @@
 <wicket:panel>
     <div class="meldinglamell clearfix">
         <section wicket:id="meldingsliste" class="meldingsliste">
-            <div wicket:id="meldingerSokToggleContainer" class="clearfix innboksSokToggle">
-                <button wicket:id="meldingerSokToggle" class="knapp-liten" wicket:message="title:innboks.sok.knapp.title">
+            <div wicket:id="innboksButtonContainer" class="clearfix innboksSokToggle">
+                <button wicket:id="meldingerSokToggle" class="knapp-liten meldingerSokToggle" wicket:message="title:innboks.sok.knapp.title">
                     <wicket:message key="innboks.sok.knapp.tekst"/>
                 </button>
-                <button wicket:id="svarFlereToggle" class="knapp-liten" wicket:message="title:innboks.svarflere.knapp.title">
-                    <wicket:message key="innboks.svarflere.knapp.tekst"/>
+                <button wicket:id="slaaSammenTraaderToggle" class="knapp-liten slaaSammenTraaderToggle" wicket:message="title:innboks.slaaSammenTraader.knapp.title">
+                    <wicket:message key="innboks.slaaSammenTraader.knapp.tekst"/>
                 </button>
                 <img src="img/ajaxloader/graa/loader_graa_32.gif" alt="Snurrepipp" />
             </div>
             <div wicket:id="meldingerSokContainer"></div>
-            <div wicket:id="svarFlereContainer"></div>
+            <div wicket:id="slaaSammenTraaderContainer"></div>
             <div class="traad-liste-scroll">
                 <div wicket:id="meldinger" role="tablist" class="traad-liste-visning"></div>
             </div>
