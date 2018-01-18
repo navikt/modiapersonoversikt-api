@@ -22,6 +22,7 @@ class Alertstripe extends Component {
                 <Icon className="alertstripe__ikon" kind={config.ikon} />
                 <span className="alertstripe__tekst">
                     {this.props.tekst}
+                    {this.props.children}
                 </span>
             </div>
         );

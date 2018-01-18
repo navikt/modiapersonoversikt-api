@@ -27,6 +27,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less"),
                     new PackageResourceReference(ResourceReference.class, "build/delvis-svar.less"),
                     new PackageResourceReference(ResourceReference.class, "build/nav-kontor.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/traadvisning.less")
+                    new PackageResourceReference(ResourceReference.class, "build/traadvisning.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/flere-henvendelser-alert.less")
             ).done();
 }

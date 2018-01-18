@@ -14,6 +14,7 @@ import TraadVisning from './dialog-panel/traadvisning/traadvisning-module';
 import RedirectModal from './redirectmodal/redirectmodal-module';
 import BrukersNavKontor from './visittkort/brukers-nav-kontor/nav-kontor-module';
 import FolkeregistrertAdresse from './visittkort/adresse/folkeregistrert-adresse-module';
+import FlereHenvendelser from './dialog-panel/flere-henvendelser-alert/flere-henvendelser-alert-module';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -34,7 +35,8 @@ window.ModiaJS = {
         TraadVisning,
         RedirectModal,
         BrukersNavKontor,
-        FolkeregistrertAdresse
+        FolkeregistrertAdresse,
+        FlereHenvendelser
     },
     InitializedComponents: {},
     React,

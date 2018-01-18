@@ -26,7 +26,8 @@ public class ReactResourcesTest {
             "build/traadvisning.less",
             "build/nav-core-variabler.less",
             "build/nav-kontor.less",
-            "build/slaa-sammen-traader.less"
+            "build/slaa-sammen-traader.less",
+            "build/flere-henvendelser-alert.less"
             );
 
     @Test
