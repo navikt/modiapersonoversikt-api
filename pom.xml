@@ -98,7 +98,8 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>c42ebb30a090ac40e157f5676efda43b4d4c98c1</reactkomponenter.version>        <personsok.version>4.0.2</personsok.version>
+        <reactkomponenter.version>8520e2e0cf339bde0d68e15c49cb4e35c10a875a</reactkomponenter.version>
+        <personsok.version>4.0.2</personsok.version>
         <kjerneinfo.versjon>6.0.10</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2.1</saksoversikt.version>
