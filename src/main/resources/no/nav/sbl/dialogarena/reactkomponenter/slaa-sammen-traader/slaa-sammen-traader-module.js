@@ -1,80 +1,53 @@
-import React from 'react';
-import Modal from "../modal/modal-module";
+import React, { Component } from 'react';
 import MeldingerSok from "../meldinger-sok/meldinger-sok-module";
 
-const modalConfig = {
-    title: {
-        text: 'Slaa-sammen-traader-modal',
-        show: false,
-        tag: 'h1.vekk'
-    },
-    description: {
-        text: '',
-        show: false,
-        tag: 'div.vekk'
-    },
-    closeButton: {
-        text: 'Lukk slaa-sammen-traader-modal',
-        show: true,
-        tag: 'span.vekk'
-    }
-};
+function findCheckedBoxes() {
+    const boxes = document.querySelectorAll('.slaa-sammen-traader-visning .skjemaelement__input.checkboks');
+    return Array.from(boxes)
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.id);
+}
 
-class SlaaSammenTraader extends MeldingerSok {
+class SlaaSammenTraader extends Component {
 
-    callBack() {
-        const boxes = document.querySelectorAll('.slaa-sammen-traader-visning .skjemaelement__input.checkboks');
-        const checkedBoxes = Array.from(boxes)
-            .filter((checkbox) => checkbox.checked)
-            .map((checkbox) => checkbox.id);
-        return checkedBoxes;
+    constructor(props) {
+        super(props);
+        this.state = {
+            submitError: false,
+            vis: () => {}
+        };
     }
 
-    onSubmit(event) {
-        if (this.callBack().length < 2) {
-            this.store.update({
-                submitError: <p className="feedbacklabel">{this.props.mode.submitErrorMessage}</p>
+    onSubmit(event, state, lukkModalVindu) {
+        const checkedBoxes = findCheckedBoxes();
+        const mindreEnnToTraaderErValgt = checkedBoxes.length < 2;
+        if (mindreEnnToTraaderErValgt) {
+            this.setState({
+                submitError: true
             });
             event.preventDefault();
             return false;
         }
-        this.store.update({
-            submitError: '',
-            mode: { ...this.store.state.mode,
-                submitButtonValue: 'Laster..'
-            }
-        });
-        return this.callBack();
+        lukkModalVindu();
+        console.log('CheckedBoxes', checkedBoxes);
+        return checkedBoxes;
     }
 
     render() {
-    const { sokVisning, tomVisning } = this.lagVisninger();
         return (
-            <Modal
-                ref="modal"
-                title={modalConfig.title}
-                description={modalConfig.description}
-                closeButton={modalConfig.closeButton}
-            >
-                <form
-                    className="slaa-sammen-traader-visning"
-                    onSubmit={(event) => this.onSubmit(event)} /*this.store.submit.bind(this.store, this.skjul.bind(this))*/
-                >
-                    {sokVisning}
-                    {tomVisning}
-                </form>
-            </Modal>
+            <MeldingerSok
+                {...this.props}
+                className="slaa-sammen-traader-visning"
+                visSok={false}
+                visCheckbox={true}
+                submitButtonValue="Slå sammen valgte tråder"
+                submitErrorMessage="Du må velge minst to tråder som skal slåes sammen."
+                submitError={this.state.submitError}
+                onSubmit={(event, state, onSuccess) => this.onSubmit(event, state, onSuccess)}
+                setVisModalVindu={(func) => this.vis = func }
+            />
         );
     }
 }
-
-SlaaSammenTraader.defaultProps = {
-    mode: {
-        name: 'SlaSammenTraader',
-        visCheckbox: true,
-        submitButtonValue: 'Slå sammen valgte tråder',
-        submitErrorMessage: 'Du må velge minst to tråder som skal slåes sammen.'
-    }
-};
 
 export default SlaaSammenTraader;
