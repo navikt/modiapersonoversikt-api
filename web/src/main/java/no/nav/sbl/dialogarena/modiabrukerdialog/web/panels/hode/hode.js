@@ -42,6 +42,11 @@ function getMe() {
         .then(fetchOkStatus)
         .then(toJson);
 }
+function getEnheter() {
+    return fetch('/modiabrukerdialog/rest/hode/enheter', { credentials: 'same-origin'})
+        .then(fetchOkStatus)
+        .then(toJson);
+}
 function nullstillContext() {
     return fetch('https://modapp' + finnMiljoStreng() + '.adeo.no/modiacontextholder/api/context/nullstill', {
         credentials: 'same-origin',
@@ -237,11 +242,12 @@ function settled(promises) {
         // Ikke bruk contextholder lokalt
         if (window.location.hostname.indexOf('modapp') >= 0) {
             // Laster inn/Oppdater bruker ved sidelast
-            settled([hentContextBruker(), hentContextEnhet(), getMe()])
+            settled([hentContextBruker(), hentContextEnhet(), getMe(), getEnheter()])
                 .then(function(data) {
                     var brukerData = data[0];
                     var enhetData = data[1];
                     var me = data[2];
+                    var enhetData = data[3];
 
                     if (brukerData.status !== 'resolved' || enhetData.status !== 'resolved' || me.status !== 'resolved') {
                         decoratorFeilmelding = 'Feil ved uthenting av kontekst.';
@@ -251,6 +257,7 @@ function settled(promises) {
                         brukerData = brukerData.v;
                         enhetData = enhetData.v;
                         me = me.v;
+                        enhetData = enhetData.v;
 
                         if (brukerData.aktivBruker !== fnr) {
                             if (fnr && fnr.length > 0) {
@@ -261,7 +268,9 @@ function settled(promises) {
                         }
 
                         decoratorFeilmelding = feilmelding || decoratorFeilmelding;
-                        const valgtEnhet = enhetData.aktivEnhet || getCookie('saksbehandlerinnstillinger-'+me.ident);
+                        const valgtEnhet = enhetData.aktivEnhet
+                            || getCookie('saksbehandlerinnstillinger-'+me.ident)
+                            || enhetData.enhetliste[0].enhetId;
                         oppdatertValgtEnhet(valgtEnhet);
 
                         // Lager decorator og redirect modal

@@ -192,12 +192,10 @@ public class Hode extends WebMarkupContainer {
     }
 
     private Person getPersonKjerneinfo(String fnr, Component component) {
-        String fodselsnummer;
         if (fnr == null) {
-            fodselsnummer = "";
-        } else {
-            fodselsnummer = fnr.replaceAll("[^\\d]", "");
+            throw new IllegalStateException("Kan ikke hente kjerneinfo uten FNR");
         }
+        String fodselsnummer = fnr.replaceAll("[^\\d]", "");
         logger.info("Henter informasjon om person med fodselsnummer {}", fodselsnummer);
         HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fodselsnummer);
         String fnrBegrunnet = (String) component.getSession().getAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET);

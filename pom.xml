@@ -30,7 +30,7 @@
         <common.version>2017.11.07.15.26</common.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.12.1</junit.version>
-        <junit.jupiter.version>5.0.1</junit.jupiter.version>
+        <junit.jupiter.version>5.0.2</junit.jupiter.version>
         <args4j.version>2.0.23</args4j.version>
         <cxf.version>3.1.11</cxf.version>
         <ws.security.version>1.6.10</ws.security.version>
@@ -58,7 +58,8 @@
 
         <!-- egenlagde biblioteker -->
         <picketbox.version>4.9.6.Final</picketbox.version>
-        <oidc.security.version>2017.11.07.15.26</oidc.security.version>
+        <oidc.security-authorization.version>2017.11.07.15.26</oidc.security-authorization.version>
+        <oidc.security.version>2018.01.15.10.51</oidc.security.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig.wicket.version>3.9.2</modig.wicket.version>
@@ -78,7 +79,6 @@
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <common-test.version>1.2</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <reactkomponenter.version>c42ebb30a090ac40e157f5676efda43b4d4c98c1</reactkomponenter.version>
         <nav-metrics.version>2017.08.30.10.22</nav-metrics.version>
 
         <!-- java-avhengigheter -->
@@ -98,13 +98,12 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>1623.20180104.2029</reactkomponenter.version>
-        <personsok.version>4.0.2</personsok.version>
+        <reactkomponenter.version>c42ebb30a090ac40e157f5676efda43b4d4c98c1</reactkomponenter.version>        <personsok.version>4.0.2</personsok.version>
         <kjerneinfo.versjon>6.0.10</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
-        <saksoversikt.version>9.0.2</saksoversikt.version>
+        <saksoversikt.version>9.0.2.1</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <sporsmalogsvar.version>8.0.0</sporsmalogsvar.version>
+        <sporsmalogsvar.version>8.0.2</sporsmalogsvar.version>
         <modia-felleskomponenter.version>4.3</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
@@ -629,7 +628,7 @@
             <dependency>
                 <groupId>no.nav.dialogarena</groupId>
                 <artifactId>oidc-security-authorization</artifactId>
-                <version>${oidc.security.version}</version>
+                <version>${oidc.security-authorization.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.dialogarena</groupId>

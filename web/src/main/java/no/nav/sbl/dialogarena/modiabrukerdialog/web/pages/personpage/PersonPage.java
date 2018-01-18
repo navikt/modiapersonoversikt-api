@@ -51,6 +51,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -122,7 +123,11 @@ public class PersonPage extends BasePage {
 
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
-        fnr = pageParameters.get("fnr").toString();
+        if (pageParameters.get("fnr").isEmpty()) {
+            fnr = hentFodselsnummerFraRequest();
+        } else {
+            fnr = pageParameters.get("fnr").toString();
+        }
         sjekkTilgang(fnr, pageParameters);
         grunnInfo = grunninfoService.hentGrunninfo(fnr);
 
@@ -168,6 +173,10 @@ public class PersonPage extends BasePage {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
+    }
+
+    private String hentFodselsnummerFraRequest() {
+        return RequestCycle.get().getRequest().getUrl().getSegments().get(1);
     }
 
     private void clearSession() {
