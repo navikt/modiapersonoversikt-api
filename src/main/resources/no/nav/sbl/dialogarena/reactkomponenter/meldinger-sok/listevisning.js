@@ -42,7 +42,7 @@ class Listevisning extends React.Component {
             antallMeldingerIOpprinneligTraad,
             antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
         );
-        const checkBox = this.props.store.state.mode.visCheckbox
+        const checkBox = this.props.visCheckBox
             ? <Checkbox className="checkbox" label="" id={traad.traadId} /> : '';
         return (
             <div className="sok-element" ref={node => this.node = node}>
@@ -79,6 +79,7 @@ Listevisning.propTypes = {
         innhold: PT.string
     }),
     valgtTraad: PT.object.isRequired,
+    visCheckBox: PT.bool.isRequired,
     store: PT.object.isRequired
 };
 
