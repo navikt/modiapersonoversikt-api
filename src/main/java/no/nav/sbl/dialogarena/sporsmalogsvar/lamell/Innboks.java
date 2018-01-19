@@ -16,12 +16,17 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -87,9 +92,27 @@ public class Innboks extends Lerret {
         });
         meldingerSokToggleContainer.add(meldingerSokToggleButton);
 
+        final ReactComponentPanel svarFlere = new ReactComponentPanel("svarFlereContainer", "SvarFlere", getMeldingerSokProps());
+        AjaxLink svarFlereToggleButton = new SokKnapp("svarFlereToggle") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                // TODO
+                innboksVM.oppdaterMeldinger();
+                target.add(alleMeldingerPanel, traaddetaljerPanel);
+                svarFlere.call("vis", getMeldingerSokProps());
+                target.add(meldingerSokToggleContainer);
+            }
+        };
+        svarFlere.addCallback("oppdater", Void.class, (target, data) -> {
+            // TODO
+//            innboksVM.oppdaterMeldinger();
+//            target.add(alleMeldingerPanel, traaddetaljerPanel);
+        });
+        meldingerSokToggleContainer.add(svarFlereToggleButton);
+
         WebMarkupContainer feilmeldingPanel = visFeilMelding(innboksVM);
 
-        meldingsliste.add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel);
+        meldingsliste.add(meldingerSok, svarFlere, meldingerSokToggleContainer, alleMeldingerPanel);
         add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
     }
 
@@ -110,6 +133,10 @@ public class Innboks extends Lerret {
             innboksVM.setSessionOppgaveId(null);
         }
         return feilmeldingPanel;
+    }
+
+    private Map<String, Object> getSvarFlereProps() {
+        return new HashMap<>();
     }
 
     private Map<String, Object> getMeldingerSokProps() {
