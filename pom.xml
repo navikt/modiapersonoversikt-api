@@ -110,6 +110,7 @@
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
+        <tildeloppgave-v1-tjenestespesifikasjon.version>1.0.0</tildeloppgave-v1-tjenestespesifikasjon.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
@@ -385,6 +386,11 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
                 <version>${gsak.oppgave.tjenestespesifikasjon}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>tildeloppgave-v1-tjenestespesifikasjon</artifactId>
+                <version>${tildeloppgave-v1-tjenestespesifikasjon.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
