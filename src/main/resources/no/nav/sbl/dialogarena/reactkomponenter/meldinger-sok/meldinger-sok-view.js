@@ -1,11 +1,20 @@
 /* eslint "react/jsx-no-bind": 1 */
 import React from 'react';
 import ListevisningKomponent from './listevisning';
-import ForhandsvisningKomponent from './forhandsvisning';
+import Forhandsvisning from './forhandsvisning';
 import ScrollPortal from './../utils/scroll-portal';
 import PT from 'prop-types';
 
-function lagSokVisning(erTom, tekstlistekomponenter, props){
+function lagSokVisning(erTom, props){
+    const tekstlistekomponenter = props.state.traader.map((traad) =>
+            <ListevisningKomponent
+                key={traad.traadId}
+                traad={traad}
+                valgtTraad={props.state.valgtTraad}
+                store={props.store}
+                visCheckBox={props.state.visCheckbox}
+            />
+    );
     return (
         <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
             <ScrollPortal
@@ -27,7 +36,7 @@ function lagSokVisning(erTom, tekstlistekomponenter, props){
                 aria-atomic="true"
                 aria-live="polite"
             >
-                <ForhandsvisningKomponent
+                <Forhandsvisning
                     traad={props.state.valgtTraad}
                     submitButtonValue={props.state.submitButtonValue}
                     submitError={props.state.submitError}
@@ -39,15 +48,8 @@ function lagSokVisning(erTom, tekstlistekomponenter, props){
 }
 
 function lagVisninger(props){
-    const tekstlistekomponenter = props.state.traader.map((traad) => <ListevisningKomponent
-        key={traad.traadId}
-        traad={traad}
-        valgtTraad={props.state.valgtTraad}
-        store={props.store}
-        visCheckBox={props.state.visCheckbox}
-    />);
     const erTom = props.state.traader.length === 0;
-    const sokVisning = lagSokVisning(erTom, tekstlistekomponenter, props);
+    const sokVisning = lagSokVisning(erTom, props);
 
     let tomInnhold = (
         <div className="tom">

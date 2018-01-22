@@ -44,7 +44,8 @@ class SlaaSammenTraader extends Component {
                 submitErrorMessage="Du må velge minst to tråder som skal slåes sammen."
                 submitError={this.state.submitError}
                 onSubmit={(event, state, onSuccess) => this.onSubmit(event, state, onSuccess)}
-                setVisModalVindu={(func) => this.vis = func }
+                setVisModalVindu={(func) => this.vis = func}
+                modulNavn="SlaaSammenTraader"
             />
         );
     }

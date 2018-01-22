@@ -1,25 +1,29 @@
 import React from 'react';
 import Modal from './../modal/modal-module';
+import PT from 'prop-types';
 
-const modalConfig = {
-    title: {
-        text: 'Meldingersøk modal',
-        show: false,
-        tag: 'h1.vekk'
-    },
-    description: {
-        text: '',
-        show: false,
-        tag: 'div.vekk'
-    },
-    closeButton: {
-        text: 'Lukk meldingersøk modal',
-        show: true,
-        tag: 'span.vekk'
-    }
-};
+function getModalConfig(props) {
+    return {
+        title: {
+            text: `${props.moduleName} modal`,
+            show: false,
+            tag: 'h1.vekk'
+        },
+        description: {
+            text: '',
+            show: false,
+            tag: 'div.vekk'
+        },
+        closeButton: {
+            text: `Lukk ${props.moduleName.toLowerCase()} modal`,
+            show: true,
+            tag: 'span.vekk'
+        }
+    };
+}
 
 function MeldingerSokModal(props) {
+    const modalConfig = getModalConfig(props);
     return (
         <Modal
             ref={modal => props.setRef(modal)}
@@ -31,5 +35,9 @@ function MeldingerSokModal(props) {
         </Modal>
     );
 }
+
+MeldingerSokModal.propTypes = {
+    moduleName: PT.string.isRequired
+};
 
 export default MeldingerSokModal;

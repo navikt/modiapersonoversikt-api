@@ -58,7 +58,7 @@ class MeldingerSok extends Component {
 
     render() {
         return (
-            <MeldingerSokModal setRef={ref => this.modalRef = ref} >
+            <MeldingerSokModal setRef={ref => this.modalRef = ref} moduleName={this.props.modulNavn}>
                 <MeldingerSokView
                     onChangeProxy={e => this.onChangeProxy(e)}
                     keyDownHandler={e => this.keyDownHandler(e)}
@@ -72,6 +72,7 @@ class MeldingerSok extends Component {
 }
 
 MeldingerSok.propTypes = {
+    modulNavn: PT.string,
     visSok: PT.bool,
     visCheckbox: PT.bool,
     submitButtonValue: PT.string,
@@ -88,6 +89,7 @@ const defaultOnSubmit = (event, state, onSuccess) => {
 };
 
 MeldingerSok.defaultProps = {
+    modulNavn: 'Meldingersok',
     visSok: true,
     visCheckbox: false,
     submitButtonValue: 'Vis dialog',
