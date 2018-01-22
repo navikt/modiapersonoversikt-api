@@ -17,7 +17,7 @@ public class OrganisasjonEnhetV2EndpointConfig {
 
     @Bean
     public OrganisasjonEnhetV2 organisasjonEnhetV2() {
-        final OrganisasjonEnhetV2 organisasjonEnhetV2 = lagEndpoint().configureStsForOnBehalfOfWithJWT().build();
+        final OrganisasjonEnhetV2 organisasjonEnhetV2 = lagEndpoint().configureStsForSystemUserInFSS().build();
         final OrganisasjonEnhetV2 organisasjonEnhetV2Mock = lagMockEnpoint();
 
         return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetV2", organisasjonEnhetV2,
