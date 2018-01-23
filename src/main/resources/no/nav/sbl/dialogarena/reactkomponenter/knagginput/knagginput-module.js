@@ -1,5 +1,4 @@
-/* eslint "react/jsx-no-bind": 1 */
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PT from 'prop-types';
 
@@ -35,7 +34,7 @@ function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
 
 function IEHack() {
     // Dette er en IE hack.... Hvis man en gang i fremtiden ikke bruker IE 9, så kanskje man kan fjerne denne.
-    const $knaggcontainer = $(ReactDOM.findDOMNode(this.refs.knaggcontainer));
+    const $knaggcontainer = $(this.knaggcontainerRef);
     if (!$knaggcontainer.is(':visible')) {
         return;
     }
@@ -52,54 +51,37 @@ function IEHack() {
     // End IE hack
 }
 
-/* eslint "react/prefer-es6-class": 1 */
-const KnaggInput = React.createClass({
-    propTypes: {
-        'auto-focus': PT.bool,
-        'aria-controls': PT.string,
-        store: PT.object.isRequired,
-        tablisteId: PT.string.isRequired,
-        knagger: PT.array,
-        placeholder: PT.string,
-        fritekst: PT.string
-    },
-    getDefaultProps: function getDefaultProps() {
-        return {
-            knagger: [],
-            fritekst: '',
-            tablisteId: null
-        };
-    },
-    getInitialState: function getInitialState() {
-        return {
+class KnaggInput extends Component {
+    componentWillMount() {
+        this.state = {
             selectionStart: -1,
             selectionEnd: -1,
             focus: false
         };
-    },
-    componentDidMount: function componentDidMount() {
+    }
+    componentDidMount() {
         if (this.props['auto-focus']) {
-            ReactDOM.findDOMNode(this.refs.search).focus();
+            this.searchRef.focus();
         }
-    },
-    componentDidUpdate: function componentDidUpdate() {
+    }
+    componentDidUpdate() {
         IEHack.call(this);
-    },
-    onKeyDownProxy: function onKeyDownProxy(event) {
+    }
+    onKeyDownProxy(event) {
         this.setState({
-            selectionStart: ReactDOM.findDOMNode(this.refs.search).selectionStart,
-            selectionEnd: ReactDOM.findDOMNode(this.refs.search).selectionEnd
+            selectionStart: this.searchRef.selectionStart,
+            selectionEnd: this.searchRef.selectionEnd
         });
         this.props.store.onKeyDown(document.getElementById(this.props.tablisteId), event);
-    },
-    onChangeProxy: function onChangeProxy(event) {
+    }
+    onChangeProxy(event) {
         const value = event.target.value;
         if (this.props.fritekst !== value) {
             const data = finnKnaggerOgFritekst(value, this.props.knagger);
             this.props.store.onChange(data);
         }
-    },
-    handleKeyUp: function handleKeyUp(event) {
+    }
+    handleKeyUp(event) {
         const selectionStart = this.state.selectionStart;
         const selectionEnd = this.state.selectionEnd;
 
@@ -110,44 +92,43 @@ const KnaggInput = React.createClass({
             const nyeKnagger = this.props.knagger.slice(0);
             this.props.store.slettKnagg(nyeKnagger.pop());
         }
-    },
-    fjernKnagg: function fjernKnagg(knagg, event) {
+    }
+    fjernKnagg(knagg, event) {
         event.preventDefault();
 
         this.props.store.slettKnagg(knagg);
-        ReactDOM.findDOMNode(this.refs.search).focus();
-    },
-    focusHighlighting: function focusHighlighting(event) {
+        this.searchRef.focus();
+    }
+    focusHighlighting(event) {
         if (event.type === 'focus') {
             this.setState({ focus: true });
         } else {
             this.setState({ focus: false });
         }
-    },
-    render: function render() {
+    }
+    render() {
         let knagger = this.props.knagger.map((knagg) => (
-            <span className="knagg">
+            <span className="knagg" key={knagg}>
                 {knagg}
                 <button aria-label={'Fjern knagg: ' + knagg} onClick={this.fjernKnagg.bind(this, knagg)}></button>
             </span>
         ));
-
         return (
-            <div ref="knaggcontainer" className="knagg-input">
+            <div ref={ref => this.knaggcontainerRef = ref} className="knagg-input">
                 <div className={'knagger' + (this.state.focus ? ' focus' : '')}>
                     {knagger}
                     <input
                         type="text"
-                        ref="search"
+                        ref={ref => this.searchRef = ref}
                         className="search"
                         placeholder={this.props.placeholder}
                         value={this.props.fritekst}
                         title={this.props.placeholder}
-                        onChange={this.onChangeProxy}
-                        onKeyDown={this.onKeyDownProxy}
-                        onKeyUp={this.handleKeyUp}
-                        onFocus={this.focusHighlighting}
-                        onBlur={this.focusHighlighting}
+                        onChange={(e) => this.onChangeProxy(e)}
+                        onKeyDown={(e) => this.onKeyDownProxy(e)}
+                        onKeyUp={(e) => this.handleKeyUp(e)}
+                        onFocus={(e) => this.focusHighlighting(e)}
+                        onBlur={(e) => this.focusHighlighting(e)}
                         aria-label={ariaLabel(this.props)}
                         aria-controls={this.props['aria-controls']}
                     />
@@ -156,6 +137,22 @@ const KnaggInput = React.createClass({
             </div>
         );
     }
-});
+}
+
+KnaggInput.propTypes = {
+    'auto-focus': PT.bool,
+    'aria-controls': PT.string,
+    store: PT.object.isRequired,
+    tablisteId: PT.string.isRequired,
+    knagger: PT.array,
+    placeholder: PT.string,
+    fritekst: PT.string
+};
+
+KnaggInput.defaultProps = {
+    knagger: [],
+    fritekst: '',
+    tablisteId: null
+};
 
 module.exports = KnaggInput;

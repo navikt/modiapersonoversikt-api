@@ -19,6 +19,7 @@ describe('ForhandsvisningKomponent', () => {
     it('Skal rendre meldinger', () => {
         const element = shallow(<Forhandsvisning
             traad={TraadMock}
+            submitButtonValue=""
         />);
 
         expect(element.find('Melding').length).to.equal(1);
@@ -28,6 +29,7 @@ describe('ForhandsvisningKomponent', () => {
             traad={TraadMock}
             submitErrorMessage="Det skjedde en feil"
             submitError={true}
+            submitButtonValue=""
         />);
 
         expect(element.find('.velgPanel p').text()).to.equal("Det skjedde en feil");

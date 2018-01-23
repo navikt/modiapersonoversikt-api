@@ -1,5 +1,5 @@
 /* eslint "react/jsx-no-bind": 1 */
-import React from 'react';
+import React, { Component } from 'react';
 import Modal from './../modal/modal-module';
 import Utils from './../utils/utils-module';
 import TekstForhandsvisning from './tekst-forhandsvisning';
@@ -26,9 +26,9 @@ const modalConfig = {
     }
 };
 
-/* eslint "react/prefer-es6-class": 1 */
-const Skrivestotte = React.createClass({
-    getInitialState: function getInitialState() {
+class Skrivestotte extends Component {
+
+    componentWillMount() {
         this.store = new SkrivestotteStore($.extend({}, {
             knagger: [],
             fritekst: '',
@@ -38,31 +38,31 @@ const Skrivestotte = React.createClass({
             listePanelId: Utils.generateId('sok-layout-'),
             forhandsvisningsPanelId: Utils.generateId('sok-layout-')
         }, this.props));
-        return this.store.getState();
-    },
-    componentDidMount: function componentDidMount() {
-        this.store.setContainerElement(this.refs.modal.portalElement);
-        this.store.addListener(this.storeChanged);
+        this.state = this.store.getState();
+    }
+    componentDidMount() {
+        this.store.setContainerElement(this.modalRef.portalElement);
+        this.store.addListener(this.storeChanged.bind(this));
         this.store.onChange({ fritekst: this.state.fritekst, knagger: this.state.knagger });
-    },
-    componentWillUnmount: function componentDidUnmount() {
-        this.store.removeListener(this.storeChanged);
-    },
-    keyDownHandler: function keyDownHandler(event) {
+    }
+    componentWillUnmount() {
+        this.store.removeListener(this.storeChanged.bind(this));
+    }
+    keyDownHandler(event) {
         if (event.keyCode === 13) {
-            this.store.submit(this.skjul, event);
+            this.store.submit(() => this.skjul(), event);
         }
-    },
-    vis: function vis() {
-        this.refs.modal.open();
-    },
-    skjul: function skjul() {
-        this.refs.modal.close();
-    },
-    storeChanged: function storeChanged() {
+    }
+    vis() {
+        this.modalRef.open();
+    }
+    skjul() {
+        this.modalRef.close();
+    }
+    storeChanged() {
         this.setState(this.store.getState());
-    },
-    render: function render() {
+    }
+    render() {
         const tekstlistekomponenter = this.state.tekster.map((tekst) => (
             <TekstListeKomponent
                 key={tekst.key}
@@ -110,10 +110,9 @@ const Skrivestotte = React.createClass({
                 <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>
             </div>
         );
-
         return (
             <Modal
-                ref="modal"
+                ref={ref => this.modalRef = ref}
                 skipFocus={['.knagg > button']}
                 title={modalConfig.title}
                 description={modalConfig.description}
@@ -123,7 +122,7 @@ const Skrivestotte = React.createClass({
             >
                 <form
                     className="sok-layout tekstforslag"
-                    onSubmit={this.store.submit.bind(this.store, this.skjul)}
+                    onSubmit={this.store.submit.bind(this.store, () => this.skjul())}
                     onKeyDown={this.keyDownHandler}
                 >
                     <div tabIndex="-1" className="sok-container">
@@ -137,7 +136,7 @@ const Skrivestotte = React.createClass({
                     </div>
                     <fieldset className="wcag">
                         <legend>Tekst liste</legend>
-                    {sokVisning}
+                        {sokVisning}
                     </fieldset>
                     {tomVisning}
                     <input type="submit" value="submit" className="hidden" />
@@ -145,6 +144,6 @@ const Skrivestotte = React.createClass({
             </Modal>
         );
     }
-});
+}
 
 export default Skrivestotte;
